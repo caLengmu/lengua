@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국어 단어 Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        #uploadBtn { background-color: #28a745; color: white; }
+        #beginBtn { background-color: #007bff; color: white; }
+        #nextBtn { background-color: #ffc107; color: white; }
+        #submitText { background-color: #28a745; color: white; }
+        #startVoice { background-color: #17a2b8; color: white; }
+        #hintBtn { background-color: #d9534f; color: white; }
+        #closeModal { background-color: #6c757d; color: white; }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .speaker {
+            cursor: pointer;
+            font-size: 20px;
+            color: #007bff;
+        }
+        #quizModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #quizContent {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            width: 40%;
+        }
+        #textInput {
+            font-size: 20px;
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+        }
+        #hintText {
+            font-size: 20px;
+            margin-top: 10px;
+            color: #d9534f;
+        }
+        .alertBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 50px;
+            font-size: 50px;
+            color: white;
+            border-radius: 20px;
+            text-align: center;
+            width: 60%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .goodJob { background-color: #28a745; }
+        .tryAgain { background-color: #d9534f; }
+        td input[type="checkbox"] {
+            margin-top: 0px;  /* Align checkbox with text */
+            margin-left: 10px;
+        }
+        td {
+            vertical-align: middle;  /* Align content vertically in the center */
+        }
+        #quizQuestion {
+            font-size: 30px;  /* Enlarged the question text */
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #007bff;">한국어 단어 Builder</h1>
+    <input type="file" id="fileInput" accept=".xlsx">
+    <button id="uploadBtn">Import Excel</button>
+    <button id="beginBtn">시작</button>
+    <table id="dataTable"></table>
+    <div id="quizModal">
+        <div id="quizContent">
+            <p id="quizQuestion"></p>
+            <input type="text" id="textInput" placeholder="정답 입력(正答 入力)">
+            <button id="submitText">제출(提出)</button>
+            <button id="startVoice">🎤 말하기</button>
+            <button id="hintBtn">힌트</button>
+            <p id="hintText"></p>
+            <button id="nextBtn">다음</button>
+            <button id="closeModal">닫기</button>
+        </div>
+    </div>
+
+    <script>
+        let wordList = [];
+        let currentWord;
+        let hintShown = false;
+
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput').files[0];
+            if (!fileInput) {
+                alert('Please select an Excel file');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+                displayTable(jsonData);
+            };
+            reader.readAsArrayBuffer(fileInput);
+        });
+
+        function displayTable(data) {
+            const table = document.getElementById('dataTable');
+            table.innerHTML = '<tr><th>Korean</th><th>Chinese</th><th>Select</th></tr>';
+            wordList = [];
+            data.forEach((row, index) => {
+                if (index === 0 || row.length < 2 || !row[0] || !row[1]) return;
+
+                wordList.push({ en: row[0].split(' (')[0], zh: row[1], selected: false });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row[0]} <span class='speaker' onclick='speak("${row[0].split(' (')[0]}")'>🔊</span></td>
+                    <td>${row[1]}</td>
+                    <td><input type="checkbox" class="wordSelect" data-index="${wordList.length - 1}"></td>
+                `;
+                table.appendChild(tr);
+            });
+
+            // Add event listener for checkboxes
+            document.querySelectorAll('.wordSelect').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    wordList[index].selected = this.checked;
+                });
+            });
+        }
+
+        document.getElementById('beginBtn').addEventListener('click', function() {
+            const selectedWords = wordList.filter(word => word.selected);
+            if (selectedWords.length === 0) {
+                alert('Please select at least one word to start the quiz');
+                return;
+            }
+
+            currentWord = selectedWords[Math.floor(Math.random() * selectedWords.length)];
+            document.getElementById('quizQuestion').innerText = `"${currentWord.zh}"는 한국어로 어떻게 말하나요?`;
+            document.getElementById('textInput').value = '';
+            document.getElementById('hintText').innerText = '';
+            hintShown = false;
+            document.getElementById('quizModal').style.display = 'flex';
+
+        });
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('quizModal').style.display = 'none';
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            const selectedWords = wordList.filter(word => word.selected);
+            if (selectedWords.length === 0) {
+                alert('Please select at least one word to start the quiz');
+                return;
+            }
+            currentWord = selectedWords[Math.floor(Math.random() * selectedWords.length)];
+            document.getElementById('quizQuestion').innerText = `What is the Korean word for ${currentWord.zh}?`;
+            document.getElementById('textInput').value = '';
+            document.getElementById('hintText').innerText = '';
+            hintShown = false;
+
+            
+        });
+
+        document.getElementById('submitText').addEventListener('click', function() {
+            const userInput = document.getElementById('textInput').value.trim().toLowerCase();
+            const correctAnswer = currentWord.en.toLowerCase();
+            const alertBox = document.createElement('div');
+            alertBox.className = 'alertBox';
+            let message = '';
+            if (userInput === correctAnswer) {
+                alertBox.classList.add('goodJob');
+                message = '잘했어요!';
+                speakMessage(message);
+            } else {
+                alertBox.classList.add('tryAgain');
+                message = '다시 시도하세요!'; //시도=試圖
+                speakMessage(message);
+            }
+            alertBox.innerHTML = message;
+            document.body.appendChild(alertBox);
+            setTimeout(() => alertBox.remove(), 2000);
+        });
+
+        document.getElementById('startVoice').addEventListener('click', function() {
+            startSpeechRecognition();
+        });
+
+        function speak(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'ko-KR';
+            speechSynthesis.speak(utterance);
+        }
+
+        function speakMessage(message) {
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = 'ko-KR';
+            speechSynthesis.speak(utterance);
+        }
+
+        document.getElementById('hintBtn').addEventListener('click', function() {
+            if (!hintShown) {
+                const hint = currentWord.en.charAt(0).toUpperCase();  // Show first letter capitalized
+                document.getElementById('hintText').innerText = `The word starts with ${hint}`;
+                hintShown = true;
+            }
+        });
+
+        function startSpeechRecognition() {
+    if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+        alert('Your browser does not support speech recognition.');
+        return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'ko-KR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        let transcript = event.results[0][0].transcript.toLowerCase(); // 轉換成小寫
+        transcript = transcript.replace(/\.$/, ''); // 移除句點
+        document.getElementById('textInput').value = transcript;
+    };
+
+    recognition.onspeechend = function() {
+        recognition.stop();
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        alert('Speech recognition error: ' + event.error);
+    };
+}
+
+    </script>
+</body>
+</html>
