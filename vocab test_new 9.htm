@@ -182,14 +182,14 @@
             }
 
             currentWord = selectedWords[Math.floor(Math.random() * selectedWords.length)];
-            document.getElementById('quizQuestion').innerText = `What is the English word for ${currentWord.zh}?`;
+            document.getElementById('quizQuestion').innerText = `How do you say ${currentWord.zh} in English?`;
             document.getElementById('textInput').value = '';
             document.getElementById('hintText').innerText = '';
             hintShown = false;
             document.getElementById('quizModal').style.display = 'flex';
 
             // Automatically speak the question (English and Chinese)
-            speakMessage(`What is the English word for ${currentWord.zh}?`);
+            speakMessage(`How do you say ${currentWord.zh} in English?`);
         });
 
         document.getElementById('closeModal').addEventListener('click', function() {
@@ -203,13 +203,13 @@
                 return;
             }
             currentWord = selectedWords[Math.floor(Math.random() * selectedWords.length)];
-            document.getElementById('quizQuestion').innerText = `What is the English word for ${currentWord.zh}?`;
+            document.getElementById('quizQuestion').innerText = `How do you say ${currentWord.zh} in English?`;
             document.getElementById('textInput').value = '';
             document.getElementById('hintText').innerText = '';
             hintShown = false;
 
             // Automatically speak the next question (English and Chinese)
-            speakMessage(`What is the English word for ${currentWord.zh}?`);
+            speakMessage(`How do you say ${currentWord.zh} in English?`);
         });
 
         document.getElementById('submitText').addEventListener('click', function() {
