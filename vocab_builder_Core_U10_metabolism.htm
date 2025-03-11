@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Quiz</title>
+    <style>
+        :root {
+            --primary: #E8B4B8;
+            --secondary: #EED6D3;
+            --accent1: #67595E;
+            --accent2: #A49393;
+            --accent3: #8FB9AA;
+            --accent4: #D8E2DC;
+            --text: #2D232E;
+            --light-text: #594A4E;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--accent1);
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+        
+        .section-header {
+            background-color: var(--accent4);
+            padding: 10px;
+            margin: 20px 0 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+            color: var(--accent1);
+        }
+        
+        button#startQuiz {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: var(--accent3);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button#startQuiz:hover {
+            background-color: #7DA99A;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        thead {
+            background-color: var(--accent1);
+            color: white;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: var(--accent4);
+        }
+        
+        tbody tr:hover {
+            background-color: var(--secondary);
+        }
+        
+        .speaker-icon {
+            cursor: pointer;
+            margin-left: 8px;
+            color: var(--accent2);
+        }
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 900;
+        }
+        
+        .popup h2 {
+            margin-top: 0;
+            color: var(--accent1);
+        }
+        
+        .prompt {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .chinese-word {
+            font-weight: bold;
+            color: var(--accent1);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--accent4);
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .popup-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+            min-width: 100px;
+        }
+        
+        .popup-button:hover {
+            opacity: 0.9;
+        }
+        
+        #submitBtn {
+            background-color: var(--accent3);
+            color: white;
+        }
+        
+        #speakBtn {
+            background-color: var(--accent1);
+            color: white;
+        }
+        
+        #hintBtn {
+            background-color: var(--primary);
+            color: var(--text);
+        }
+        
+        #nextBtn {
+            background-color: var(--accent2);
+            color: white;
+        }
+        
+        #closeBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .feedback {
+            margin: 15px 0;
+            font-weight: bold;
+            min-height: 24px;
+        }
+        
+        .correct {
+            color: #4CAF50;
+        }
+        
+        .incorrect {
+            color: #f44336;
+        }
+        
+        .hint {
+            color: var(--accent1);
+            font-style: italic;
+        }
+        
+        .select-all-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .popup {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>核心字彙 U10: Metabolism</h1>
+        
+        <button id="startQuiz">Start Learning!</button>
+        
+        <table id="vocabularyTable">
+            <thead>
+                <tr>
+                    <th>Vocabulary</th>
+                    <th>Chinese Translation</th>
+                    <th class="select-column">
+                        <div class="select-all-container">
+                            <input type="checkbox" id="selectAll">
+                            <label for="selectAll">Select</label>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                                     <!-- vocabulary content -->
+                <tr>
+                    <td>comfort (n) <span class="speaker-icon">🔊</span></td>
+                    <td>安慰、慰藉</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>anxious (adj) <span class="speaker-icon">🔊</span></td>
+                    <td>焦慮的</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>fit (adj) <span class="speaker-icon">🔊</span></td>
+                    <td>健康的、健壯的 (= healthy and strong)</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>claim (v) <span class="speaker-icon">🔊</span></td>
+                    <td>宣稱(無法提出證明)</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>success (n) <span class="speaker-icon">🔊</span></td>
+                    <td>成功</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>weight (n) <span class="speaker-icon">🔊</span></td>
+                    <td>體重、重量</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>truth (n) <span class="speaker-icon">🔊</span></td>
+                    <td>真相 vs. lie</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>false (adj) <span class="speaker-icon">🔊</span></td>
+                    <td>假的、錯的 (= not true)</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>belief (n) <span class="speaker-icon">🔊</span></td>
+                    <td>信念</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>energy (n) <span class="speaker-icon">🔊</span></td>
+                    <td>精力、活力、能量</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>speed (n) <span class="speaker-icon">🔊</span></td>
+                    <td>速度</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>speed up <span class="speaker-icon">🔊</span></td>
+                    <td>[片語] (使)加速</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>effect (n) <span class="speaker-icon">🔊</span></td>
+                    <td>效果、影響</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>suggestion (n) <span class="speaker-icon">🔊</span></td>
+                    <td>建議</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>unrealistic (adj) <span class="speaker-icon">🔊</span></td>
+                    <td>不切實際的</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>accurate (adj) <span class="speaker-icon">🔊</span></td>
+                    <td>準確的</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>sensible (adj) <span class="speaker-icon">🔊</span></td>
+                    <td>理智的</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>fiction (n) <span class="speaker-icon">🔊</span></td>
+                    <td>1.虛構的事  2.小說(=虛構文學作品)</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+                <tr>
+                    <td>disguise (v, n) <span class="speaker-icon">🔊</span></td>
+                    <td>偽裝</td>
+                    <td><input type="checkbox" class="vocab-select"></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="popup" id="quizPopup">
+        <h2>Vocabulary Quiz</h2>
+        <div class="prompt">Say <span class="chinese-word" id="chineseWord"></span> in English</div>
+        
+        <div class="input-group">
+            <input type="text" id="answerInput" placeholder="Your answer...">
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+        <div class="hint" id="hintText"></div>
+        
+        <div class="button-group">
+            <button id="submitBtn" class="popup-button">Submit</button>
+            <button id="speakBtn" class="popup-button">Speak</button>
+            <button id="hintBtn" class="popup-button">Hint</button>
+            <button id="nextBtn" class="popup-button">Next</button>
+            <button id="closeBtn" class="popup-button">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize variables
+        let vocabulary = [];
+        let currentWordIndex = 0;
+        let recognition;
+        
+        // Speech synthesis setup
+        const synth = window.speechSynthesis;
+        
+        // DOM elements
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const vocabCheckboxes = document.querySelectorAll('.vocab-select');
+        const startQuizButton = document.getElementById('startQuiz');
+        const popup = document.getElementById('quizPopup');
+        const overlay = document.getElementById('overlay');
+        const chineseWordSpan = document.getElementById('chineseWord');
+        const answerInput = document.getElementById('answerInput');
+        const feedbackDiv = document.getElementById('feedback');
+        const hintTextDiv = document.getElementById('hintText');
+        const submitButton = document.getElementById('submitBtn');
+        const speakButton = document.getElementById('speakBtn');
+        const hintButton = document.getElementById('hintBtn');
+        const nextButton = document.getElementById('nextBtn');
+        const closeButton = document.getElementById('closeBtn');
+        const speakerIcons = document.querySelectorAll('.speaker-icon');
+        
+        // Add event listeners
+        selectAllCheckbox.addEventListener('change', toggleSelectAll);
+        startQuizButton.addEventListener('click', startQuiz);
+        submitButton.addEventListener('click', checkAnswer);
+        speakButton.addEventListener('click', toggleSpeechRecognition);
+        hintButton.addEventListener('click', showHint);
+        nextButton.addEventListener('click', nextWord);
+        closeButton.addEventListener('click', closeQuiz);
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // Add event listeners to speaker icons
+        speakerIcons.forEach(icon => {
+            icon.addEventListener('click', function() {
+                const wordText = this.parentElement.textContent.trim();
+                speakWord(extractWordForSpeech(wordText));
+            });
+        });
+        
+        // Helper function to extract the word for speech (exclude content in parentheses)
+        function extractWordForSpeech(text) {
+            return text.replace(/\([^)]*\)/g, '').replace('🔊', '').trim();
+        }
+        
+        // Toggle all checkboxes
+        function toggleSelectAll() {
+            const isChecked = selectAllCheckbox.checked;
+            vocabCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        }
+        
+        // Start the quiz
+        function startQuiz() {
+            // Get selected vocabulary
+            vocabulary = [];
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const checkbox = row.querySelector('.vocab-select');
+                if (checkbox && checkbox.checked) {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 2) {
+                        const englishWord = extractWordForSpeech(cells[0].textContent);
+                        const chineseTranslation = cells[1].textContent.trim();
+                        
+                        vocabulary.push({
+                            english: englishWord,
+                            chinese: chineseTranslation,
+                        });
+                    }
+                }
+            });
+            
+            if (vocabulary.length === 0) {
+                alert('Please select at least one vocabulary word.');
+                return;
+            }
+            
+            // Shuffle vocabulary
+            shuffleArray(vocabulary);
+            
+            // Show the first word
+            currentWordIndex = 0;
+            showWord();
+            
+            // Show popup
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            // Focus on input
+            answerInput.focus();
+        }
+        
+        // Show current word
+        function showWord() {
+            const currentWord = vocabulary[currentWordIndex];
+            chineseWordSpan.textContent = currentWord.chinese;
+            answerInput.value = '';
+            feedbackDiv.textContent = '';
+            feedbackDiv.className = 'feedback';
+            hintTextDiv.textContent = '';
+        }
+        
+        // Check answer
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase().replace(/[^\w\s]/gi, '');
+            const correctAnswer = vocabulary[currentWordIndex].english.toLowerCase().replace(/[^\w\s]/gi, '');
+            
+            if (userAnswer === correctAnswer) {
+                feedbackDiv.textContent = 'Well done!';
+                feedbackDiv.className = 'feedback correct';
+                speakText('Well done!');
+            } else {
+                feedbackDiv.textContent = 'Try again!';
+                feedbackDiv.className = 'feedback incorrect';
+                speakText('Try again!');
+            }
+        }
+        
+        // Show hint
+        function showHint() {
+            const correctAnswer = vocabulary[currentWordIndex].english;
+            const firstLetter = correctAnswer.charAt(0).toUpperCase();
+            hintTextDiv.textContent = `The word starts with ${firstLetter}`;
+        }
+        
+        // Next word
+        function nextWord() {
+            currentWordIndex = (currentWordIndex + 1) % vocabulary.length;
+            showWord();
+        }
+        
+        // Close quiz
+        function closeQuiz() {
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+            
+            // Stop recognition if active
+            if (recognition) {
+                recognition.stop();
+                speakButton.textContent = 'Speak';
+            }
+        }
+        
+        // Toggle speech recognition
+        function toggleSpeechRecognition() {
+            if (!recognition) {
+                // Initialize speech recognition if not already done
+                if ('webkitSpeechRecognition' in window) {
+                    recognition = new webkitSpeechRecognition();
+                } else if ('SpeechRecognition' in window) {
+                    recognition = new SpeechRecognition();
+                } else {
+                    alert('Speech recognition is not supported in your browser.');
+                    return;
+                }
+                
+                recognition.lang = 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onresult = function(event) {
+                    const speechResult = event.results[0][0].transcript.toLowerCase();
+                    answerInput.value = speechResult;
+                    speakButton.textContent = 'Speak';
+                };
+                
+                recognition.onend = function() {
+                    speakButton.textContent = 'Speak';
+                };
+                
+                recognition.start();
+                speakButton.textContent = 'Recording...';
+            } else {
+                recognition.stop();
+                recognition = null;
+                speakButton.textContent = 'Speak';
+            }
+        }
+        
+        // Speak text using TTS
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            synth.speak(utterance);
+        }
+        
+        // Speak a specific word
+        function speakWord(word) {
+            speakText(word);
+        }
+        
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
