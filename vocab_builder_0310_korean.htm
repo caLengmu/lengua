@@ -233,7 +233,7 @@
             color: white;
         }
 
-        .녹음 중{
+        .recording{
             background-color: var(--primary);
             animation: pulse 1.5s infinite;
         }
@@ -660,7 +660,7 @@
                 if (speakBtn.textContent === '🎤 말하기') {
                     recognition.start();
                     speakBtn.textContent = '녹음 중';
-                    speakBtn.classList.add('녹음 중');
+                    speakBtn.classList.add('recording');
                 } else {
                     recognition.stop();
                     speakBtn.textContent = '🎤 말하기';
