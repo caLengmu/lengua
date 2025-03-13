@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Quiz</title>
+    <style>
+        :root {
+            --primary: #E9B7A8;
+            --secondary: #D1495B;
+            --accent1: #00798C;
+            --accent2: #30638E;
+            --accent3: #003D5B;
+            --light: #EDDBCD;
+            --dark: #2A2B2A;
+            --background: #FAF4E0;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--accent3);
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+        }
+        
+        .start-button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .start-button:hover {
+            background-color: #c13a4b;
+            transform: translateY(-2px);
+        }
+        
+        .start-button:active {
+            transform: translateY(1px);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+        
+        th {
+            background-color: var(--accent1);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--light);
+        }
+        
+        tr:hover {
+            background-color: rgba(233, 183, 168, 0.2);
+        }
+        
+        .speaker-icon {
+            cursor: pointer;
+            vertical-align: middle;
+            margin-left: 8px;
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .speaker-icon:hover {
+            opacity: 1;
+        }
+        
+        .section-header {
+            background-color: var(--accent2);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .section-header td {
+            padding: 10px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--background);
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-title {
+            margin-top: 0;
+            color: var(--accent3);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark);
+            background: none;
+            border: none;
+            transition: color 0.3s;
+        }
+        
+        .close-button:hover {
+            color: var(--secondary);
+        }
+        
+        .quiz-prompt {
+            font-size: 1.4em;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            color: var(--dark);
+        }
+        
+        .quiz-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .quiz-input:focus {
+            border-color: var(--accent1);
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .quiz-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            min-width: 100px;
+            transition: background-color 0.3s, transform 0.2s;
+            color: white;
+        }
+        
+        .submit-button {
+            background-color: var(--accent1);
+        }
+        
+        .submit-button:hover {
+            background-color: #006a7c;
+        }
+        
+        .speak-button {
+            background-color: var(--accent2);
+        }
+        
+        .speak-button:hover {
+            background-color: #265179;
+        }
+        
+        .recording {
+            background-color: var(--secondary);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .hint-button {
+            background-color: var(--accent3);
+        }
+        
+        .hint-button:hover {
+            background-color: #002e45;
+        }
+        
+        .next-button {
+            background-color: var(--secondary);
+        }
+        
+        .next-button:hover {
+            background-color: #c13a4b;
+        }
+        
+        .exit-button {
+            background-color: var(--dark);
+        }
+        
+        .exit-button:hover {
+            background-color: #1a1b1a;
+        }
+        
+        .feedback {
+            font-size: 1.2em;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            background-color: rgba(144, 238, 144, 0.3);
+            color: #2e8b57;
+        }
+        
+        .incorrect {
+            background-color: rgba(255, 99, 71, 0.3);
+            color: #d32f2f;
+        }
+        
+        .hint {
+            background-color: rgba(255, 223, 186, 0.5);
+            color: #996633;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .select-all-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Live U6 The World's Most Dangerous Cheese</h1>
+        <button id="startButton" class="start-button">Start Learning!</button>
+        
+        <table id="vocabTable">
+            <thead>
+                <tr>
+                    <th>Vocabulary</th>
+                    <th>Chinese Translation</th>
+                    <th>
+                        <div class="select-all-container">
+                            <label for="selectAll">Select</label>
+                            <input type="checkbox" id="selectAll">
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Paragraph 1 -->
+                <tr class="section-header">
+                    <td colspan="3">Paragraph 1</td>
+                </tr>
+                <tr>
+                    <td>dangerous (adj.) <span class="speaker-icon" onclick="speakText('dangerous')">🔊</span></td>
+                    <td>危險的</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>tasty (adj.) <span class="speaker-icon" onclick="speakText('tasty')">🔊</span></td>
+                    <td>美味的</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>on one's own <span class="speaker-icon" onclick="speakText('on ones own')">🔊</span></td>
+                    <td>獨自</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>common (adj.) <span class="speaker-icon" onclick="speakText('common')">🔊</span></td>
+                    <td>常見的</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>think twice <span class="speaker-icon" onclick="speakText('think twice')">🔊</span></td>
+                    <td>三思</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>sample (v.) <span class="speaker-icon" onclick="speakText('sample')">🔊</span></td>
+                    <td>品嚐</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>slice (n.) <span class="speaker-icon" onclick="speakText('slice')">🔊</span></td>
+                    <td>片</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>set alarm bells ringing <span class="speaker-icon" onclick="speakText('set alarm bells ringing')">🔊</span></td>
+                    <td>敲響警鐘</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                
+                <!-- Paragraph 2 -->
+                <tr class="section-header">
+                    <td colspan="3">Paragraph 2</td>
+                </tr>
+                <tr>
+                    <td>be made from... <span class="speaker-icon" onclick="speakText('be made from')">🔊</span></td>
+                    <td>由...製成</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>produce (v.) <span class="speaker-icon" onclick="speakText('produce')">🔊</span></td>
+                    <td>製造、生產</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>island (n.) <span class="speaker-icon" onclick="speakText('island')">🔊</span></td>
+                    <td>島</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>thousands of... <span class="speaker-icon" onclick="speakText('thousands of')">🔊</span></td>
+                    <td>上千的</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>illegal (adj.) <span class="speaker-icon" onclick="speakText('illegal')">🔊</span></td>
+                    <td>非法的</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>across the European Union <span class="speaker-icon" onclick="speakText('across the European Union')">🔊</span></td>
+                    <td>在整個歐盟</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>flavor (n.) <span class="speaker-icon" onclick="speakText('flavor')">🔊</span></td>
+                    <td>口味</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>traditionally (adv.) <span class="speaker-icon" onclick="speakText('traditionally')">🔊</span></td>
+                    <td>傳統上</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>alive (adj.) <span class="speaker-icon" onclick="speakText('alive')">🔊</span></td>
+                    <td>活著的(vs. dead)</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>cause (v.) <span class="speaker-icon" onclick="speakText('cause')">🔊</span></td>
+                    <td>引起</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>consumer (n.) <span class="speaker-icon" onclick="speakText('consumer')">🔊</span></td>
+                    <td>消費者</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>suffer (v.) <span class="speaker-icon" onclick="speakText('suffer')">🔊</span></td>
+                    <td>遭受</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>including (prep.) <span class="speaker-icon" onclick="speakText('including')">🔊</span></td>
+                    <td>包括</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>vomit (v.) <span class="speaker-icon" onclick="speakText('vomit')">🔊</span></td>
+                    <td>嘔吐</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>pain (n.) <span class="speaker-icon" onclick="speakText('pain')">🔊</span></td>
+                    <td>痛苦</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>diner (n.) <span class="speaker-icon" onclick="speakText('diner')">🔊</span></td>
+                    <td>用餐者</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>hold your nose <span class="speaker-icon" onclick="speakText('hold your nose')">🔊</span></td>
+                    <td>捏住你的鼻子</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>avoid (v.) <span class="speaker-icon" onclick="speakText('avoid')">🔊</span></td>
+                    <td>避免</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>nostril (n.) <span class="speaker-icon" onclick="speakText('nostril')">🔊</span></td>
+                    <td>鼻孔</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>the Guinness World Records <span class="speaker-icon" onclick="speakText('the Guinness World Records')">🔊</span></td>
+                    <td>金氏世界紀錄</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>list something as... <span class="speaker-icon" onclick="speakText('list something as')">🔊</span></td>
+                    <td>把...列為...</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                
+                <!-- Paragraph 3 -->
+                <tr class="section-header">
+                    <td colspan="3">Paragraph 3</td>
+                </tr>
+                <tr>
+                    <td>see something as... <span class="speaker-icon" onclick="speakText('see something as')">🔊</span></td>
+                    <td>把...視為…(= regard sth as...)</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>fundamental (adj.) <span class="speaker-icon" onclick="speakText('fundamental')">🔊</span></td>
+                    <td>基本的</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>identity (n.) <span class="speaker-icon" onclick="speakText('identity')">🔊</span></td>
+                    <td>身份</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>risk (n.) <span class="speaker-icon" onclick="speakText('risk')">🔊</span></td>
+                    <td>風險</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+                <tr>
+                    <td>worth the risk <span class="speaker-icon" onclick="speakText('worth the risk')">🔊</span></td>
+                    <td>值得冒險</td>
+                    <td><input type="checkbox" class="word-select"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeModal">&times;</button>
+            <div id="quizPrompt" class="quiz-prompt"></div>
+            <input type="text" id="quizInput" class="quiz-input" placeholder="Your answer...">
+            <div id="feedbackMessage" class="feedback"></div>
+            <div id="hintText" class="hint"></div>
+            
+            <div class="button-group">
+                <button id="submitAnswer" class="quiz-button submit-button">Submit</button>
+                <button id="speakButton" class="quiz-button speak-button">Speak</button>
+                <button id="hintButton" class="quiz-button hint-button">Hint</button>
+                <button id="nextButton" class="quiz-button next-button">Next</button>
+                <button id="exitQuiz" class="quiz-button exit-button">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Text-to-Speech
+        const synth = window.speechSynthesis;
+        
+        // Function to speak text using TTS
+        function speakText(text) {
+            // Extract the word without parentheses content
+            const wordToSpeak = text.replace(/\([^)]*\)/g, '').trim();
+            
+            // Create utterance
+            const utterance = new SpeechSynthesisUtterance(wordToSpeak);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            
+            // Speak the text
+            synth.speak(utterance);
+        }
+        
+        // Variables for quiz
+        let selectedWords = [];
+        let currentWord = null;
+        let currentChineseTranslation = '';
+        let englishWord = '';
+        
+        // DOM Elements
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const wordCheckboxes = document.querySelectorAll('.word-select');
+        const startButton = document.getElementById('startButton');
+        const quizModal = document.getElementById('quizModal');
+        const closeModal = document.getElementById('closeModal');
+        const quizPrompt = document.getElementById('quizPrompt');
+        const quizInput = document.getElementById('quizInput');
+        const submitAnswer = document.getElementById('submitAnswer');
+        const speakButton = document.getElementById('speakButton');
+        const hintButton = document.getElementById('hintButton');
+        const nextButton = document.getElementById('nextButton');
+        const exitQuiz = document.getElementById('exitQuiz');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const hintText = document.getElementById('hintText');
+        
+        // Select All functionality
+        selectAllCheckbox.addEventListener('change', function() {
+            wordCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+        
+        // Start Quiz functionality
+        startButton.addEventListener('click', function() {
+            // Get selected words
+            selectedWords = [];
+            document.querySelectorAll('#vocabTable tbody tr').forEach(row => {
+                const checkbox = row.querySelector('.word-select');
+                if (checkbox && checkbox.checked) {
+                    const wordCell = row.querySelector('td:first-child');
+                    const chineseCell = row.querySelector('td:nth-child(2)');
+                    
+                    if (wordCell && chineseCell) {
+                        const fullText = wordCell.textContent.trim();
+                        // Extract the word without the part of speech in parentheses
+                        const wordMatch = fullText.match(/^([^(]+)/);
+                        
+                        if (wordMatch) {
+                            const word = wordMatch[1].trim();
+                            const chinese = chineseCell.textContent.trim();
+                            
+                            selectedWords.push({
+                                english: word,
+                                chinese: chinese,
+                                fullText: fullText
+                            });
+                        }
+                    }
+                }
+            });
+            
+            if (selectedWords.length > 0) {
+                // Show modal and start quiz
+                quizModal.style.display = 'flex';
+                selectNextWord();
+            } else {
+                alert('Please select at least one word to start the quiz.');
+            }
+        });
+        
+        // Close modal functionality
+        closeModal.addEventListener('click', closeQuizModal);
+        exitQuiz.addEventListener('click', closeQuizModal);
+        
+        function closeQuizModal() {
+            quizModal.style.display = 'none';
+            feedbackMessage.textContent = '';
+            feedbackMessage.className = 'feedback';
+            hintText.style.display = 'none';
+            quizInput.value = '';
+        }
+        
+        // Select next word
+        function selectNextWord() {
+            if (selectedWords.length > 0) {
+                // Randomly select a word
+                const randomIndex = Math.floor(Math.random() * selectedWords.length);
+                currentWord = selectedWords[randomIndex];
+                
+                // Set the prompt
+                currentChineseTranslation = currentWord.chinese;
+                englishWord = currentWord.english;
+                
+                quizPrompt.textContent = `Say "${currentChineseTranslation}" in English`;
+                
+                // Clear previous feedback and input
+                feedbackMessage.textContent = '';
+                feedbackMessage.className = 'feedback';
+                hintText.style.display = 'none';
+                quizInput.value = '';
+                quizInput.focus();
+            }
+        }
+        
+        // Submit answer functionality
+        submitAnswer.addEventListener('click', checkAnswer);
+        quizInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        function checkAnswer() {
+            const userAnswer = quizInput.value.trim().toLowerCase();
+            const correctAnswer = englishWord.toLowerCase();
+            
+            // Compare answers (ignoring case and punctuation)
+            if (userAnswer.replace(/[^\w\s]/g, '') === correctAnswer.replace(/[^\w\s]/g, '')) {
+                feedbackMessage.textContent = 'Well done!';
+                feedbackMessage.className = 'feedback correct';
+                speakText('Well done!');
+            } else {
+                feedbackMessage.textContent = 'Try again!';
+                feedbackMessage.className = 'feedback incorrect';
+                speakText('Try again!');
+            }
+        }
+        
+        // Next button functionality
+        nextButton.addEventListener('click', selectNextWord);
+        
+        // Hint button functionality
+        hintButton.addEventListener('click', function() {
+            const firstLetter = englishWord.charAt(0).toUpperCase();
+            hintText.textContent = `The word starts with "${firstLetter}"`;
+            hintText.style.display = 'block';
+        });
+        
+        // Web Speech API for speech recognition
+        let recognition;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                quizInput.value = transcript.toLowerCase();
+                speakButton.textContent = 'Speak';
+                speakButton.classList.remove('recording');
+                checkAnswer();
+            };
+            
+            recognition.onend = function() {
+                speakButton.textContent = 'Speak';
+                speakButton.classList.remove('recording');
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                speakButton.textContent = 'Speak';
+                speakButton.classList.remove('recording');
+            };
+        }
+        
+        // Speak button functionality
+        speakButton.addEventListener('click', function() {
+            if (recognition) {
+                if (speakButton.textContent === 'Speak') {
+                    recognition.start();
+                    speakButton.textContent = 'Recording';
+                    speakButton.classList.add('recording');
+                } else {
+                    recognition.stop();
+                    speakButton.textContent = 'Speak';
+                    speakButton.classList.remove('recording');
+                }
+            } else {
+                alert('Speech recognition is not supported in your browser.');
+            }
+        });
+    </script>
+</body>
+</html>
