@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korean Vocabulary Quiz</title>
+    <style>
+        :root {
+            --primary: #E94B3C;
+            --secondary: #2A2B2A;
+            --accent1: #6A7FDB;
+            --accent2: #2EC4B6;
+            --accent3: #F6C667;
+            --light: #F7F7F7;
+            --paper: #F5EFE0;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', 'Noto Sans JP', sans-serif;
+            background-color: var(--paper);
+            color: var(--secondary);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .start-button {
+            background-color: var(--accent2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .start-button:hover {
+            background-color: #259d92;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        #file-upload {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .upload-button {
+            background-color: var(--accent1);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-button:hover {
+            background-color: #5a6dbd;
+        }
+        
+        .download-link {
+            color: var(--accent1);
+            margin-right: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .download-link:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+        
+        th {
+            background-color: var(--secondary);
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(242, 242, 242, 0.5);
+        }
+        
+        .speaker-icon {
+            cursor: pointer;
+            margin-left: 8px;
+            color: var(--accent1);
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+        
+        .speed-selector {
+            margin-left: 10px;
+            padding: 4px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .header-cell {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Popup Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .quiz-prompt {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            color: var(--secondary);
+        }
+        
+        .quiz-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        
+        .quiz-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            transition: filter 0.2s;
+        }
+        
+        .quiz-button:hover {
+            filter: brightness(0.9);
+        }
+        
+        .submit-btn {
+            background-color: var(--accent2);
+        }
+        
+        .speak-btn {
+            background-color: var(--primary);
+        }
+        
+        .hint-btn {
+            background-color: var(--accent3);
+        }
+        
+        .next-btn {
+            background-color: var(--accent1);
+        }
+        
+        .close-btn {
+            background-color: var(--secondary);
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .feedback {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+        }
+        
+        .incorrect {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .quiz-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>한국어 어휘(語彙) 시험(試驗)</h1>
+        
+        <div class="controls">
+            <div class="main-controls">
+                <a href="https://drive.google.com/drive/folders/1m--fVtzTCv7bLUCduCBoja6K8-8LOy6q?usp=drive_link" class="download-link" target="_blank">Download Excel</a>
+                
+                <div class="input-wrapper">
+                    <button class="upload-button">Import Excel</button>
+                    <input type="file" id="file-upload" accept=".xlsx, .xls">
+                </div>
+            </div>
+        </div>
+        
+        <button class="start-button hidden">배우기 시작하세요!</button>
+        
+        <table id="vocabulary-table">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="header-cell">
+                            단어(單語)/ 문장(文章)
+                            <select class="speed-selector" id="ko-speed">
+                                <option value="1">1x</option>
+                                <option value="0.8">0.8x</option>
+                                <option value="0.6">0.6x</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th>번역(翻譯)</th>
+                    <th>
+                        <label>
+                            <input type="checkbox" id="select-all"> 선택(選擇)
+                        </label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="vocabulary-tbody">
+                <!-- Table content will be added here via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Quiz Popup -->
+    <div class="modal-overlay" id="quiz-modal">
+        <div class="modal-content">
+            <div class="quiz-prompt" id="quiz-prompt"></div>
+            <input type="text" class="quiz-input" id="quiz-input" placeholder="정답을 입력하세요...">
+            
+            <div class="quiz-buttons">
+                <button class="quiz-button submit-btn" id="submit-btn">제출(提出)</button>
+                <button class="quiz-button speak-btn" id="speak-btn">🎤 말하기</button>
+                <button class="quiz-button hint-btn" id="hint-btn">힌트</button>
+                <button class="quiz-button next-btn" id="next-btn">다음</button>
+            </div>
+            
+            <div class="feedback hidden" id="feedback"></div>
+            <div id="hint-text" class="hidden"></div>
+            
+            <button class="quiz-button close-btn" id="close-btn">닫기</button>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // Global variables
+        let vocabularyData = [];
+        let selectedIndices = [];
+        let currentIndex = -1;
+        let koreanSpeed = 1.0;
+        
+        // DOM elements
+        const fileUpload = document.getElementById('file-upload');
+        const vocabularyTbody = document.getElementById('vocabulary-tbody');
+        const selectAllCheckbox = document.getElementById('select-all');
+        const startButton = document.querySelector('.start-button');
+        const quizModal = document.getElementById('quiz-modal');
+        const quizPrompt = document.getElementById('quiz-prompt');
+        const quizInput = document.getElementById('quiz-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const speakBtn = document.getElementById('speak-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const feedback = document.getElementById('feedback');
+        const hintText = document.getElementById('hint-text');
+        const koSpeedSelector = document.getElementById('ko-speed');
+        
+        // Event listeners
+        fileUpload.addEventListener('change', handleFileUpload);
+        selectAllCheckbox.addEventListener('change', toggleSelectAll);
+        startButton.addEventListener('click', startQuiz);
+        submitBtn.addEventListener('click', checkAnswer);
+        speakBtn.addEventListener('click', startSpeechRecognition);
+        hintBtn.addEventListener('click', showHint);
+        nextBtn.addEventListener('click', showNextQuestion);
+        closeBtn.addEventListener('click', closeQuiz);
+        koSpeedSelector.addEventListener('change', updateKoreanSpeed);
+        
+        // Functions
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // Process the data
+                    if (jsonData.length > 0) {
+                        // Get the keys for vocabulary and translation columns
+                        const keys = Object.keys(jsonData[0]);
+                        if (keys.length >= 2) {
+                            vocabularyData = jsonData.map(row => ({
+                                korean: String(row[keys[0]]),
+                                translation: String(row[keys[1]])
+                            }));
+                            
+                            displayVocabularyTable();
+                            startButton.classList.remove('hidden');
+                        } else {
+                            alert('Excel file should have at least two columns');
+                        }
+                    } else {
+                        alert('No data found in the Excel file');
+                    }
+                } catch (error) {
+                    console.error('Error reading Excel file:', error);
+                    alert('Error reading Excel file. Please try again.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        
+        function displayVocabularyTable() {
+            vocabularyTbody.innerHTML = '';
+            
+            vocabularyData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                // Korean word column
+                const koreanCell = document.createElement('td');
+                koreanCell.textContent = item.korean;
+                const koreanSpeaker = document.createElement('span');
+                koreanSpeaker.className = 'speaker-icon';
+                koreanSpeaker.textContent = '🔊';
+                koreanSpeaker.addEventListener('click', () => {
+                    speakText(cleanTextForTTS(item.korean), 'ko-KR', koreanSpeed);
+                });
+                koreanCell.appendChild(koreanSpeaker);
+                row.appendChild(koreanCell);
+                
+                // Translation column
+                const translationCell = document.createElement('td');
+                translationCell.textContent = item.translation;
+                const translationSpeaker = document.createElement('span');
+                translationSpeaker.className = 'speaker-icon';
+                translationSpeaker.textContent = '🔊';
+                translationSpeaker.addEventListener('click', () => {
+                    speakText(cleanTextForTTS(item.translation), 'ja-JP');
+                });
+                translationCell.appendChild(translationSpeaker);
+                row.appendChild(translationCell);
+                
+                // Checkbox column
+                const checkboxCell = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.dataset.index = index;
+                checkbox.addEventListener('change', updateSelectedItems);
+                checkboxCell.appendChild(checkbox);
+                row.appendChild(checkboxCell);
+                
+                vocabularyTbody.appendChild(row);
+            });
+        }
+        
+        function cleanTextForTTS(text) {
+            // Remove content inside parentheses
+            return text.replace(/\([^)]*\)/g, '').trim();
+        }
+        
+        function speakText(text, lang, rate = 1.0) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = rate;
+            
+            // Find appropriate voice
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => voice.lang.startsWith(lang.split('-')[0]));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            
+            window.speechSynthesis.cancel(); // Cancel any ongoing speech
+            window.speechSynthesis.speak(utterance);
+        }
+        
+        function updateKoreanSpeed() {
+            koreanSpeed = parseFloat(koSpeedSelector.value);
+        }
+        
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('#vocabulary-tbody input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateSelectedItems();
+        }
+        
+        function updateSelectedItems() {
+            selectedIndices = [];
+            const checkboxes = document.querySelectorAll('#vocabulary-tbody input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedIndices.push(parseInt(checkbox.dataset.index));
+                }
+            });
+            
+            // Only show start button if items are selected
+            if (selectedIndices.length > 0) {
+                startButton.classList.remove('hidden');
+            } else {
+                startButton.classList.add('hidden');
+            }
+        }
+        
+        function startQuiz() {
+            if (selectedIndices.length === 0) {
+                alert('Please select at least one vocabulary item.');
+                return;
+            }
+            
+            // Shuffle selected indices for random order
+            shuffleArray(selectedIndices);
+            currentIndex = 0;
+            quizModal.classList.add('active');
+            showQuestion();
+            
+            // Reset input and feedback
+            quizInput.value = '';
+            feedback.classList.add('hidden');
+            hintText.classList.add('hidden');
+        }
+        
+        function showQuestion() {
+            const vocabIndex = selectedIndices[currentIndex];
+            const currentVocab = vocabularyData[vocabIndex];
+            quizPrompt.textContent = `"${currentVocab.translation}" 한국어로 말해주세요.`;
+            quizInput.value = '';
+            feedback.classList.add('hidden');
+            hintText.classList.add('hidden');
+        }
+        
+        function checkAnswer() {
+            const vocabIndex = selectedIndices[currentIndex];
+            const currentVocab = vocabularyData[vocabIndex];
+            const userAnswer = quizInput.value.trim().toLowerCase();
+            
+            // Clean the correct answer for comparison
+            let correctAnswer = cleanTextForTTS(currentVocab.korean).toLowerCase();
+            
+            // Handle slash in correct answer (multiple correct answers)
+            let isCorrect = false;
+            if (correctAnswer.includes('/')) {
+                const options = correctAnswer.split('/').map(opt => opt.trim());
+                isCorrect = options.some(option => 
+                    removeNonAlphanumeric(option) === removeNonAlphanumeric(userAnswer)
+                );
+            } else {
+                isCorrect = removeNonAlphanumeric(correctAnswer) === removeNonAlphanumeric(userAnswer);
+            }
+            
+            feedback.classList.remove('hidden', 'correct', 'incorrect');
+            
+            if (isCorrect) {
+                feedback.textContent = '잘했어요!';
+                feedback.classList.add('correct');
+                speakText('잘했어요!', 'ko-KR');
+            } else {
+                feedback.textContent = '다시 시도하세요!';
+                feedback.classList.add('incorrect');
+                speakText('다시 시도하세요!', 'ko-KR');
+            }
+        }
+        
+        function removeNonAlphanumeric(text) {
+            // Remove punctuation and spaces for comparison
+            return text.replace(/[^\p{L}\p{N}]/gu, '');
+        }
+        
+        function startSpeechRecognition() {
+            // Check for browser support
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Your browser does not support speech recognition.');
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.lang = 'ko-KR';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            
+            // Change button text
+            speakBtn.textContent = '녹음 중';
+            speakBtn.disabled = true;
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                quizInput.value = transcript;
+                checkAnswer();
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error', event.error);
+                speakBtn.textContent = '🎤 말하기';
+                speakBtn.disabled = false;
+            };
+            
+            recognition.onend = () => {
+                speakBtn.textContent = '🎤 말하기';
+                speakBtn.disabled = false;
+            };
+            
+            recognition.start();
+        }
+        
+        function showHint() {
+            const vocabIndex = selectedIndices[currentIndex];
+            const currentVocab = vocabularyData[vocabIndex];
+            const correctAnswer = cleanTextForTTS(currentVocab.korean);
+            
+            // Get first character
+            let firstChar = '';
+            if (correctAnswer.length > 0) {
+                firstChar = correctAnswer[0].toUpperCase();
+            }
+            
+            hintText.textContent = `The answer starts with ${firstChar}`;
+            hintText.classList.remove('hidden');
+        }
+        
+        function showNextQuestion() {
+            currentIndex = (currentIndex + 1) % selectedIndices.length;
+            showQuestion();
+        }
+        
+        function closeQuiz() {
+            quizModal.classList.remove('active');
+            window.speechSynthesis.cancel(); // Stop any ongoing speech
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // Initialize voices for Safari
+        function initVoices() {
+            return new Promise((resolve) => {
+                let voices = window.speechSynthesis.getVoices();
+                if (voices.length !== 0) {
+                    resolve(voices);
+                    return;
+                }
+                
+                window.speechSynthesis.onvoiceschanged = () => {
+                    voices = window.speechSynthesis.getVoices();
+                    resolve(voices);
+                };
+            });
+        }
+        
+        // Initialize voices when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            initVoices();
+        });
+    </script>
+</body>
+</html>
