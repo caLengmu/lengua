@@ -378,9 +378,9 @@ font-size: 30px;
             <div id="reveal-answer" class="reveal-answer"></div>
             <div class="button-group">
                 <button id="submit-btn" class="submit-btn">Submit</button>
-                <button id="speak-btn" class="speak-btn">Speak</button>
+                <button id="speak-btn" class="speak-btn">🎤 Speak</button>
                 <button id="hint-btn" class="hint-btn">Hint</button>
-                <button id="answer-btn" class="answer-btn">Answer</button>
+                <button id="answer-btn" class="answer-btn">🔑 Answer</button>
                 <button id="next-btn" class="next-btn">Next</button>
                 <button id="close-btn" class="close-btn">Close</button>
             </div>
@@ -428,18 +428,18 @@ font-size: 30px;
             recognition.onresult = function(event) {
                 const transcript = event.results[0][0].transcript.toLowerCase().trim();
                 answerInput.value = transcript;
-                speakBtn.textContent = 'Speak';
+                speakBtn.textContent = '🎤 Speak';
                 speakBtn.classList.remove('recording');
             };
 
             recognition.onend = function() {
-                speakBtn.textContent = 'Speak';
+                speakBtn.textContent = '🎤 Speak';
                 speakBtn.classList.remove('recording');
             };
 
             recognition.onerror = function(event) {
                 console.error('Speech recognition error', event.error);
-                speakBtn.textContent = 'Speak';
+                speakBtn.textContent = '🎤 Speak';
                 speakBtn.classList.remove('recording');
             };
         }
@@ -674,12 +674,12 @@ const data = new Uint8Array(e.target.result);
             const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
             
             if (normalizedUserAnswer === normalizedCorrectAnswer) {
-                feedbackEl.textContent = 'Well done!';
+                feedbackEl.textContent = 'Well done! 🏆😊👍';
                 feedbackEl.className = 'feedback correct';
                 speak('Well done!');
                 
             } else {
-                feedbackEl.textContent = 'Try again!';
+                feedbackEl.textContent = 'Try again! 🔥🔥🔥';
                 feedbackEl.className = 'feedback incorrect';
                 speak('Try again!');
             }
@@ -720,18 +720,18 @@ const data = new Uint8Array(e.target.result);
             }
             
             try {
-                if (speakBtn.textContent === 'Speak') {
+                if (speakBtn.textContent === '🎤 Speak') {
                     recognition.start();
                     speakBtn.textContent = 'Recording';
                     speakBtn.classList.add('recording');
                 } else {
                     recognition.stop();
-                    speakBtn.textContent = 'Speak';
+                    speakBtn.textContent = '🎤 Speak';
                     speakBtn.classList.remove('recording');
                 }
             } catch (error) {
                 console.error('Speech recognition error:', error);
-                speakBtn.textContent = 'Speak';
+                speakBtn.textContent = '🎤 Speak';
                 speakBtn.classList.remove('recording');
             }
         });
