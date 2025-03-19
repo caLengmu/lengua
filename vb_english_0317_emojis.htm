@@ -67,11 +67,6 @@
             box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .text-import-btn {
-            background-color: var(--accent3);
-            color: white;
-        }
-
         .import-btn {
             background-color: var(--secondary);
             color: var(--dark);
@@ -201,7 +196,7 @@
         .hint {
             color: var(--accent1);
             font-style: italic;
-            font-size: 25px;
+font-size: 25px;
             margin: 10px 0;
             min-height: 24px;
         }
@@ -292,42 +287,9 @@
         .reveal-answer {
             color: var(--primary);
             font-weight: bold;
-            font-size: 30px;
+font-size: 30px;
             margin: 10px 0;
             min-height: 27px;
-        }
-
-        /* Text import modal styles */
-        #text-import-modal .modal-content {
-            max-width: 600px;
-        }
-
-        #text-import-content {
-            width: 100%;
-            height: 200px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 16px;
-            border: 2px solid var(--mid);
-            border-radius: 6px;
-            box-sizing: border-box;
-            resize: vertical;
-        }
-
-        .import-instructions {
-            text-align: left;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: var(--dark);
-        }
-
-        .import-example {
-            background-color: rgba(0, 0, 0, 0.05);
-            padding: 10px;
-            border-radius: 4px;
-            font-family: monospace;
-            margin-bottom: 15px;
-            text-align: left;
         }
 
         /* Responsive adjustments */
@@ -372,20 +334,9 @@
                 </svg>
                 Download Excel
             </a>
-            
             <input type="file" id="file-input" accept=".xlsx, .xls, .csv">
             <button class="import-btn" id="import-btn">Import Excel</button>
-<a href="https://chatgpt.com/share/67d9b49e-5cc0-800a-96b0-b752c422ae6d" class="download-link" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Create Pairs
-            </a>
-
-        <button class="text-import-btn" id="text-import-btn">Text Import</button>
-</div>
+        </div>
         <button class="start-btn" id="start-btn" disabled>Start Learning!</button>
     </div>
 
@@ -417,29 +368,9 @@
         </tbody>
     </table>
 
-    <!-- Text Import Modal -->
-    <div id="text-import-modal" class="modal">
-        <div class="modal-content">
-            <h2>Text Import</h2>
-            <div class="import-instructions">
-                Enter your vocabulary pairs below with one pair per line using the format:
-                <div class="import-example">
-                    English = 英文<br>
-                    look at… = 看著…<br>
-                     listen to music = 聽音樂<br>
-		not only…but (also)… = 不只…還有…
-                </div>
-            <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
-            <div class="button-group">
-                <button id="text-import-submit-btn" class="submit-btn">Import</button>
-                <button id="text-import-close-btn" class="close-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quiz Modal -->
     <div id="quiz-modal" class="modal">
         <div class="modal-content">
+            
             <div id="prompt" class="prompt">Say "<span id="translation-prompt"></span>" in English.</div>
             <input type="text" id="answer-input" class="answer-input" placeholder="Type your answer here...">
             <div id="feedback" class="feedback"></div>
@@ -460,7 +391,6 @@
     <script>
         // DOM Elements
         const importBtn = document.getElementById('import-btn');
-        const textImportBtn = document.getElementById('text-import-btn');
         const fileInput = document.getElementById('file-input');
         const startBtn = document.getElementById('start-btn');
         const vocabularyTable = document.getElementById('vocabulary-table');
@@ -479,12 +409,6 @@
         const nextBtn = document.getElementById('next-btn');
         const closeBtn = document.getElementById('close-btn');
         const ttsSpeedSelect = document.getElementById('tts-speed');
-        
-        // Text Import Modal Elements
-        const textImportModal = document.getElementById('text-import-modal');
-        const textImportContent = document.getElementById('text-import-content');
-        const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
-        const textImportCloseBtn = document.getElementById('text-import-close-btn');
 
         // Variables
         let vocabularyData = [];
@@ -535,58 +459,6 @@
             speechRate = parseFloat(e.target.value);
         });
 
-        // Text Import button click handler
-        textImportBtn.addEventListener('click', () => {
-            textImportModal.style.display = 'flex';
-        });
-
-        // Text Import Close button click handler
-        textImportCloseBtn.addEventListener('click', () => {
-            textImportModal.style.display = 'none';
-        });
-
-        // Text Import Submit button click handler
-        textImportSubmitBtn.addEventListener('click', () => {
-            const text = textImportContent.value.trim();
-            if (!text) {
-                alert('Please enter vocabulary pairs before importing.');
-                return;
-            }
-            
-            processTextImport(text);
-            textImportModal.style.display = 'none';
-        });
-
-        // Process text import
-        function processTextImport(text) {
-            vocabularyData = [];
-            const lines = text.split('\n');
-            
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                
-                const parts = line.split('=');
-                if (parts.length < 2) continue;
-                
-                const vocabulary = parts[0].trim();
-                const translation = parts[1].trim();
-                
-                if (vocabulary && translation) {
-                    vocabularyData.push({
-                        vocabulary: vocabulary,
-                        translation: translation,
-                        selected: true
-                    });
-                }
-            }
-            
-            renderVocabularyTable();
-            if (vocabularyData.length > 0) {
-                startBtn.disabled = false;
-            }
-        }
-
         // Import button click handler
         importBtn.addEventListener('click', () => {
             fileInput.click();
@@ -599,7 +471,7 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
+const data = new Uint8Array(e.target.result);
                 let workbook;
                 
                 try {
@@ -876,6 +748,22 @@
                 recognition.stop();
             }
         });
+
+        // Add some sample data for testing
+        function addSampleData() {
+            vocabularyData = [
+                { vocabulary: "apple", translation: "りんご", selected: true },
+                { vocabulary: "book", translation: "本", selected: true },
+                { vocabulary: "cat", translation: "猫", selected: true },
+                { vocabulary: "dog (canine)", translation: "犬", selected: true },
+                { vocabulary: "elephant", translation: "象", selected: true }
+            ];
+            renderVocabularyTable();
+            startBtn.disabled = false;
+        }
+
+        // Uncomment to add sample data for testing
+        // addSampleData();
     </script>
 </body>
-</html>
+</html>v
