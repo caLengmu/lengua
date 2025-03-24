@@ -1130,28 +1130,31 @@ function submitAnswer() {
             }
         });
         
-        speakBtn.addEventListener('click', () => {
-            if (!recognition) {
-                alert('Speech recognition is not supported in your browser.');
-                return;
-            }
-            
-            try {
-                if (speakBtn.textContent === '🎤 Speak') {
-                    recognition.start();
-                    speakBtn.textContent = 'Recording';
-                    speakBtn.classList.add('recording');
-                } else {
-                    recognition.stop();
-                    speakBtn.textContent = '🎤 Speak';
-                    speakBtn.classList.remove('recording');
-                }
-            } catch (error) {
-                console.error('Speech recognition error:', error);
-                speakBtn.textContent = '🎤 Speak';
-                speakBtn.classList.remove('recording');
-            }
-        });
+       speakBtn.addEventListener('click', () => {
+    if (!recognition) {
+        alert('Speech recognition is not supported in your browser.');
+        return;
+    }
+
+    try {
+        recognition.lang = vocabLanguage; // Set recognition language to match column 1
+
+        if (speakBtn.textContent === '🎤 Speak') {
+            recognition.start();
+            speakBtn.textContent = 'Recording';
+            speakBtn.classList.add('recording');
+        } else {
+            recognition.stop();
+            speakBtn.textContent = '🎤 Speak';
+            speakBtn.classList.remove('recording');
+        }
+    } catch (error) {
+        console.error('Speech recognition error:', error);
+        speakBtn.textContent = '🎤 Speak';
+        speakBtn.classList.remove('recording');
+    }
+});
+
         
         hintBtn.addEventListener('click', showHint);
         
