@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -764,36 +765,34 @@
         });
         
         // Update vocabulary speaker icons to use vocab language and rate
-        function updateVocabSpeakerIcons() {
-            document.querySelectorAll('.vocab-speaker').forEach(icon => {
-                const word = icon.dataset.word;
-                
-                // Remove old click event listeners by cloning and replacing
-                const newIcon = icon.cloneNode(true);
-                icon.parentNode.replaceChild(newIcon, icon);
-                
-                // Add new event listener with current language and rate
-                newIcon.addEventListener('click', (e) => {
-                    speak(word, vocabLanguage, vocabSpeechRate);
-                });
-            });
-        }
+       
+function updateVocabSpeakerIcons() {
+    document.querySelectorAll('.vocab-speaker').forEach(icon => {
+        let word = icon.dataset.word.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses
+
+        const newIcon = icon.cloneNode(true);
+        icon.parentNode.replaceChild(newIcon, icon);
+
+        newIcon.addEventListener('click', () => {
+            speak(word, vocabLanguage, vocabSpeechRate);
+        });
+    });
+}
         
         // Update translation speaker icons to use translation language and rate
-        function updateTranslationSpeakerIcons() {
-            document.querySelectorAll('.translation-speaker').forEach(icon => {
-                const translation = icon.dataset.translation;
-                
-                // Remove old click event listeners by cloning and replacing
-                const newIcon = icon.cloneNode(true);
-                icon.parentNode.replaceChild(newIcon, icon);
-                
-                // Add new event listener with current language and rate
-                newIcon.addEventListener('click', (e) => {
-                    speak(translation, translationLanguage, translationSpeechRate);
-                });
-            });
-        }
+        
+function updateTranslationSpeakerIcons() {
+    document.querySelectorAll('.translation-speaker').forEach(icon => {
+        let translation = icon.dataset.translation.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses
+
+        const newIcon = icon.cloneNode(true);
+        icon.parentNode.replaceChild(newIcon, icon);
+
+        newIcon.addEventListener('click', () => {
+            speak(translation, translationLanguage, translationSpeechRate);
+        });
+    });
+}
 
 
         // AI Support button click handler
