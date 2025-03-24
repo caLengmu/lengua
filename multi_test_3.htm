@@ -490,13 +490,13 @@
             <tr>
                 <th>
                    
-                       <select id="tts-language">                       
+                       <select id="vocab-language">                       
                             <option value="ja-JP">日本語</option>
 <option value="ko-KR">한국어</option>
 <option value="es-ES">español</option>
 <option value="en-US">English</option>
                         </select>
-                        <select id="tts-speed">
+                        <select id="vocab-speed">
                             <option value="1">1x</option>
                             <option value="0.8">0.8x</option>
                             <option value="0.6">0.6x</option>
@@ -505,13 +505,19 @@
                    
                 </th>
                 <th>
-<select id="tts-language">            
-<option value="en-US">English</option>           
-                            <option value="ja-JP">日本語</option>
-<option value="ko-KR">한국어</option>
-<option value="es-ES">español</option>
-                        </select>
-Translation</th>
+                    <select id="translation-language">            
+                        <option value="en-US">English</option>           
+                        <option value="ja-JP">日本語</option>
+                        <option value="ko-KR">한국어</option>
+                        <option value="es-ES">español</option>
+                    </select>
+                    <select id="translation-speed">
+                        <option value="1">1x</option>
+                        <option value="0.8">0.8x</option>
+                        <option value="0.6">0.6x</option>
+                    </select>
+                    Translation
+                </th>
                 <th>
                     <label>
                         <input type="checkbox" id="select-all"> Select
@@ -614,8 +620,12 @@ Translation</th>
         const answerBtn = document.getElementById('answer-btn');
         const nextBtn = document.getElementById('next-btn');
         const closeBtn = document.getElementById('close-btn');
-        const ttsSpeedSelect = document.getElementById('tts-speed');
-        const ttsLanguageSelect = document.getElementById('tts-language');
+        
+        // TTS and language controls
+        const vocabLanguageSelect = document.getElementById('vocab-language');
+        const vocabSpeedSelect = document.getElementById('vocab-speed');
+        const translationLanguageSelect = document.getElementById('translation-language');
+        const translationSpeedSelect = document.getElementById('translation-speed');
         
         // Text Import Modal Elements
         const textImportModal = document.getElementById('text-import-modal');
@@ -635,14 +645,18 @@ Translation</th>
         let currentWordIndex = -1;
         let currentWord = null;
         let recognition = null;
-        let speechRate = 1;
-        let currentLanguage = 'en-US';
+        
+        // TTS variables
+        let vocabSpeechRate = 1;
+        let vocabLanguage = 'ja-JP';
+        let translationSpeechRate = 1;
+        let translationLanguage = 'en-US';
         
         // Language display names mapping
         const languageDisplayNames = {
             'en-US': 'English',
             'ko-KR': '한국어',
-'es-ES': 'español',
+            'es-ES': 'español',
             'ja-JP': '日本語'
         };
 
@@ -651,7 +665,7 @@ Translation</th>
         function initializeSpeechRecognition() {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.lang = currentLanguage;
+                recognition.lang = vocabLanguage;
                 recognition.continuous = false;
                 recognition.interimResults = false;
 
@@ -684,18 +698,18 @@ Translation</th>
 
 
         // Text-to-Speech function with language support
-        function speak(text) {
+        function speak(text, language, rate) {
             if ('speechSynthesis' in window) {
                 // Cancel any ongoing speech
                 speechSynthesis.cancel();
                 
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = currentLanguage;
-                utterance.rate = speechRate;
+                utterance.lang = language;
+                utterance.rate = rate;
                 
                 // Find a voice for the selected language if available
                 const voices = speechSynthesis.getVoices();
-                const languageVoices = voices.filter(voice => voice.lang.startsWith(currentLanguage.split('-')[0]));
+                const languageVoices = voices.filter(voice => voice.lang.startsWith(language.split('-')[0]));
                 
                 if (languageVoices.length > 0) {
                     utterance.voice = languageVoices[0];
@@ -720,39 +734,63 @@ Translation</th>
         }
 
 
-        // TTS Speed change handler
-        ttsSpeedSelect.addEventListener('change', (e) => {
-            speechRate = parseFloat(e.target.value);
+        // TTS Speed and Language change handlers
+        vocabSpeedSelect.addEventListener('change', (e) => {
+            vocabSpeechRate = parseFloat(e.target.value);
         });
         
-        // TTS Language change handler
-        ttsLanguageSelect.addEventListener('change', (e) => {
-            currentLanguage = e.target.value;
+        vocabLanguageSelect.addEventListener('change', (e) => {
+            vocabLanguage = e.target.value;
             
             // Update the language display in the quiz modal
-            selectedLanguageDisplay.textContent = languageDisplayNames[currentLanguage];
+            selectedLanguageDisplay.textContent = languageDisplayNames[vocabLanguage];
             
             // Reinitialize speech recognition with the new language
             if (recognition) {
-                recognition.lang = currentLanguage;
+                recognition.lang = vocabLanguage;
             }
             
             // Update speaker icons to use the new language
-            updateSpeakerIcons();
+            updateVocabSpeakerIcons();
         });
         
-        // Update speaker icons to use current language
-        function updateSpeakerIcons() {
-            document.querySelectorAll('.speaker-icon').forEach(icon => {
+        translationSpeedSelect.addEventListener('change', (e) => {
+            translationSpeechRate = parseFloat(e.target.value);
+        });
+        
+        translationLanguageSelect.addEventListener('change', (e) => {
+            translationLanguage = e.target.value;
+            updateTranslationSpeakerIcons();
+        });
+        
+        // Update vocabulary speaker icons to use vocab language and rate
+        function updateVocabSpeakerIcons() {
+            document.querySelectorAll('.vocab-speaker').forEach(icon => {
                 const word = icon.dataset.word;
                 
                 // Remove old click event listeners by cloning and replacing
                 const newIcon = icon.cloneNode(true);
                 icon.parentNode.replaceChild(newIcon, icon);
                 
-                // Add new event listener with current language
+                // Add new event listener with current language and rate
                 newIcon.addEventListener('click', (e) => {
-                    speak(word);
+                    speak(word, vocabLanguage, vocabSpeechRate);
+                });
+            });
+        }
+        
+        // Update translation speaker icons to use translation language and rate
+        function updateTranslationSpeakerIcons() {
+            document.querySelectorAll('.translation-speaker').forEach(icon => {
+                const translation = icon.dataset.translation;
+                
+                // Remove old click event listeners by cloning and replacing
+                const newIcon = icon.cloneNode(true);
+                icon.parentNode.replaceChild(newIcon, icon);
+                
+                // Add new event listener with current language and rate
+                newIcon.addEventListener('click', (e) => {
+                    speak(translation, translationLanguage, translationSpeechRate);
                 });
             });
         }
@@ -906,13 +944,17 @@ Translation</th>
                 
                 wordCell.innerHTML = `
                     ${item.vocabulary}
-                    <span class="speaker-icon" title="Listen" data-word="${cleanWord}">🔊</span>
+                    <span class="speaker-icon vocab-speaker" title="Listen" data-word="${cleanWord}">🔊</span>
                 `;
                 
-                // Translation column
+                // Translation column with speaker
                 const translationCell = document.createElement('td');
-                translationCell.textContent = item.translation;
+                translationCell.innerHTML = `
+                    ${item.translation}
+                    <span class="speaker-icon translation-speaker" title="Listen" data-translation="${item.translation}">🔊</span>
+                `;
                 
+                               
                 // Checkbox column
                 const checkboxCell = document.createElement('td');
                 const checkbox = document.createElement('input');
@@ -1038,29 +1080,25 @@ Translation</th>
         }
 
 
-        // Submit answer
-        function submitAnswer() {
-            if (!currentWord) return;
-            
-            const userAnswer = answerInput.value.trim().toLowerCase();
-            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
-            
-            // Compare answers (ignoring case and punctuation)
-            const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            
-            if (normalizedUserAnswer === normalizedCorrectAnswer) {
-                feedbackEl.textContent = 'Well done! 🏆😊👍';
-                feedbackEl.className = 'feedback correct';
-                speak('Well done!');
-                
-            } else {
-                feedbackEl.textContent = 'Try again! 🔥🔥🔥';
-                feedbackEl.className = 'feedback incorrect';
-                speak('Try again!');
-            }
-        }
+function submitAnswer() {
+    if (!currentWord) return;
 
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
+    
+    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+
+    if (normalizedUserAnswer === normalizedCorrectAnswer) {
+        feedbackEl.textContent = 'Well done! 🏆😊👍';
+        feedbackEl.className = 'feedback correct';
+        speak('Well done!', 'en-US', 1);
+    } else {
+        feedbackEl.textContent = 'Try again! 🔥🔥🔥';
+        feedbackEl.className = 'feedback incorrect';
+        speak('Try again!', 'en-US', 1);
+    }
+}
 
         // Show hint
         function showHint() {
@@ -1117,8 +1155,12 @@ Translation</th>
         
         hintBtn.addEventListener('click', showHint);
         
-        answerBtn.addEventListener('click', showAnswer);
-        
+answerBtn.addEventListener('click', () => {
+    if (!currentWord) return;
+    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+    revealAnswerEl.textContent = `${correctAnswer}`;
+    speak(correctAnswer, vocabLanguage, vocabSpeechRate);
+});        
         nextBtn.addEventListener('click', nextQuestion);
         
         closeBtn.addEventListener('click', () => {
