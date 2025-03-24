@@ -469,7 +469,7 @@
 
     <div class="controls">
         <div class="left-controls">
-            <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
+            <a href="https://drive.google.com/drive/folders/1m--fVtzTCv7bLUCduCBoja6K8-8LOy6q?usp=drive_link" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
@@ -764,11 +764,17 @@
             updateTranslationSpeakerIcons();
         });
         
-        // Update vocabulary speaker icons to use vocab language and rate
-       
+        // Function to clean text by removing parentheses, punctuations, and symbols
+function cleanText(text) {
+    return text.replace(/\(.*?\)/g, '') // Remove content in parentheses
+               .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|`]/g, '') // Remove punctuation and symbols
+               .trim();
+}
+
+// Update vocabulary speaker icons to use vocab language and rate, ignoring parentheses and symbols
 function updateVocabSpeakerIcons() {
     document.querySelectorAll('.vocab-speaker').forEach(icon => {
-        let word = icon.dataset.word.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses
+        let word = cleanText(icon.dataset.word);
 
         const newIcon = icon.cloneNode(true);
         icon.parentNode.replaceChild(newIcon, icon);
@@ -778,12 +784,11 @@ function updateVocabSpeakerIcons() {
         });
     });
 }
-        
-        // Update translation speaker icons to use translation language and rate
-        
+
+// Update translation speaker icons to use translation language and rate, ignoring parentheses and symbols
 function updateTranslationSpeakerIcons() {
     document.querySelectorAll('.translation-speaker').forEach(icon => {
-        let translation = icon.dataset.translation.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses
+        let translation = cleanText(icon.dataset.translation);
 
         const newIcon = icon.cloneNode(true);
         icon.parentNode.replaceChild(newIcon, icon);
@@ -793,6 +798,7 @@ function updateTranslationSpeakerIcons() {
         });
     });
 }
+
 
 
         // AI Support button click handler
@@ -1083,12 +1089,20 @@ function submitAnswer() {
     if (!currentWord) return;
 
     const userAnswer = answerInput.value.trim().toLowerCase();
-    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
-    
-    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-    const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const correctAnswers = currentWord.vocabulary
+        .replace(/\(.*?\)/g, '') // Remove content in parentheses
+        .split('/') // Split words by slash
+        .map(answer => answer.trim().toLowerCase()); // Trim and normalize each answer
 
-    if (normalizedUserAnswer === normalizedCorrectAnswer) {
+    // Normalize user answer (remove punctuation and symbols)
+    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, "");
+
+    // Check if user answer matches any of the possible correct answers
+    const isCorrect = correctAnswers.some(correct => 
+        normalizedUserAnswer === correct.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, "")
+    );
+
+    if (isCorrect) {
         feedbackEl.textContent = 'Well done! 🏆😊👍';
         feedbackEl.className = 'feedback correct';
         speak('Well done!', 'en-US', 1);
@@ -1098,6 +1112,7 @@ function submitAnswer() {
         speak('Try again!', 'en-US', 1);
     }
 }
+
 
         // Show hint
         function showHint() {
