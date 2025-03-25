@@ -166,28 +166,25 @@
         }
 
 
-/* General Modal Styling */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 100;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
 
-/* Responsive Modal Content */
+
+      /* Responsive Modal Styles */
 .modal-content {
     background-color: var(--light);
     width: 90%;
     max-width: 500px;
-    max-height: 90vh; /* Prevents popups from exceeding screen height */
-    overflow-y: auto; /* Enables scrolling inside the popup if content overflows */
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -200,8 +197,7 @@
 @media (max-width: 600px) {
     .modal-content {
         width: 95%;
-        max-width: 95%;
-        max-height: 85vh; /* Prevents popups from exceeding mobile screen height */
+        max-width: 90%;
         padding: 20px;
     }
     
