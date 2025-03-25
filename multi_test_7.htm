@@ -91,8 +91,8 @@
         .start-btn {
             background-color: var(--primary);
             color: white;
-            padding: 12px 24px;
-            font-size: 18px;
+            padding: 15px 25px;
+            font-size: 25px;
         }
 
 
@@ -463,7 +463,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Vocabulary Builder</h1>
+        <h1>🎯 Polyglot Trainer (8th ed.)</h1>
     </header>
 
 
@@ -481,7 +481,7 @@
             <input type="file" id="file-input" accept=".xlsx, .xls, .csv">
             <button class="import-btn" id="import-btn">📊 Import Excel</button>
         </div>
-        <button class="start-btn" id="start-btn" disabled>🚀 Start Learning!</button>
+        <button class="start-btn" id="start-btn" disabled>🚀 Start！</button>
 <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
     </div>
 
@@ -857,7 +857,7 @@ function updateTranslationSpeakerIcons() {
                     vocabularyData.push({
                         vocabulary: vocabulary,
                         translation: translation,
-                        selected: true
+                        selected: false
                     });
                 }
             }
@@ -904,90 +904,86 @@ function updateTranslationSpeakerIcons() {
         });
 
 
-        // Process imported data
-        function processImportedData(data) {
-            vocabularyData = [];
-            
-            // Skip header row if it exists
-            const startRow = data[0] && (typeof data[0][0] === 'string') && 
-                             (data[0][0].toLowerCase().includes('vocabulary') || 
-                              data[0][0].toLowerCase().includes('word')) ? 1 : 0;
-            
-            for (let i = startRow; i < data.length; i++) {
-                const row = data[i];
-                if (row.length >= 2 && row[0] && row[1]) {
-                    vocabularyData.push({
-                        vocabulary: row[0].toString().trim(),
-                        translation: row[1].toString().trim(),
-                        selected: true
-                    });
-                }
-            }
-            
-            renderVocabularyTable();
-            if (vocabularyData.length > 0) {
-                startBtn.disabled = false;
-            }
+  // Process imported data and ensure no vocabulary is pre-selected
+function processImportedData(data) {
+    vocabularyData = [];
+
+    // Skip header row if it exists
+    const startRow = data[0] && (typeof data[0][0] === 'string') && 
+                     (data[0][0].toLowerCase().includes('vocabulary') || 
+                      data[0][0].toLowerCase().includes('word')) ? 1 : 0;
+
+    for (let i = startRow; i < data.length; i++) {
+        const row = data[i];
+        if (row.length >= 2 && row[0] && row[1]) {
+            vocabularyData.push({
+                vocabulary: row[0].toString().trim(),
+                translation: row[1].toString().trim(),
+                selected: false // Ensure newly imported words are NOT selected by default
+            });
         }
+    }
+
+    renderVocabularyTable();
+    startBtn.disabled = vocabularyData.length === 0;
+}
 
 
-        // Render vocabulary table
-        function renderVocabularyTable() {
-            if (vocabularyData.length === 0) {
-                vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
-                return;
-            }
-            
-            vocabularyBody.innerHTML = '';
-            
-            vocabularyData.forEach((item, index) => {
-                const row = document.createElement('tr');
-                
-                // Vocabulary column with speaker
-                const wordCell = document.createElement('td');
-                const cleanWord = item.vocabulary.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses for TTS
-                
-                wordCell.innerHTML = `
-                    ${item.vocabulary}
-                    <span class="speaker-icon vocab-speaker" title="Listen" data-word="${cleanWord}">🔊</span>
-                `;
-                
-                // Translation column with speaker
-                const translationCell = document.createElement('td');
-                translationCell.innerHTML = `
-                    ${item.translation}
-                    <span class="speaker-icon translation-speaker" title="Listen" data-translation="${item.translation}">🔊</span>
-                `;
-                
-                               
-                // Checkbox column
-                const checkboxCell = document.createElement('td');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = item.selected;
-                checkbox.dataset.index = index;
-                checkbox.addEventListener('change', (e) => {
-                    vocabularyData[index].selected = e.target.checked;
-                    updateSelectAllCheckbox();
-                });
-                checkboxCell.appendChild(checkbox);
-                
-                row.appendChild(wordCell);
-                row.appendChild(translationCell);
-                row.appendChild(checkboxCell);
-                vocabularyBody.appendChild(row);
-            });
-            
-            // Add event listeners to speaker icons
-            document.querySelectorAll('.speaker-icon').forEach(icon => {
-                icon.addEventListener('click', (e) => {
-                    const word = e.target.dataset.word;
-                    speak(word);
-                });
-            });
-            
+
+// Render vocabulary table and ensure TTS uses the selected language settings
+function renderVocabularyTable() {
+    if (vocabularyData.length === 0) {
+        vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
+        return;
+    }
+
+    vocabularyBody.innerHTML = '';
+
+    vocabularyData.forEach((item, index) => {
+        const row = document.createElement('tr');
+
+        // Vocabulary column with speaker
+        const wordCell = document.createElement('td');
+        const cleanWord = cleanText(item.vocabulary); // Remove parentheses and symbols
+
+        wordCell.innerHTML = `
+            ${item.vocabulary}
+            <span class="speaker-icon vocab-speaker" title="Listen" data-word="${cleanWord}">🔊</span>
+        `;
+
+        // Translation column with speaker
+        const translationCell = document.createElement('td');
+        const cleanTranslation = cleanText(item.translation); // Remove parentheses and symbols
+
+        translationCell.innerHTML = `
+            ${item.translation}
+            <span class="speaker-icon translation-speaker" title="Listen" data-translation="${cleanTranslation}">🔊</span>
+        `;
+
+        // Checkbox column
+        const checkboxCell = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.selected;
+        checkbox.dataset.index = index;
+        checkbox.addEventListener('change', (e) => {
+            vocabularyData[index].selected = e.target.checked;
             updateSelectAllCheckbox();
-        }
+        });
+        checkboxCell.appendChild(checkbox);
+
+        row.appendChild(wordCell);
+        row.appendChild(translationCell);
+        row.appendChild(checkboxCell);
+        vocabularyBody.appendChild(row);
+    });
+
+    // Ensure TTS always functions with selected language
+    updateVocabSpeakerIcons();
+    updateTranslationSpeakerIcons();
+}
+        
+
 // Update "Select All" checkbox state
         function updateSelectAllCheckbox() {
             if (vocabularyData.length === 0) {
@@ -1089,20 +1085,12 @@ function submitAnswer() {
     if (!currentWord) return;
 
     const userAnswer = answerInput.value.trim().toLowerCase();
-    const correctAnswers = currentWord.vocabulary
-        .replace(/\(.*?\)/g, '') // Remove content in parentheses
-        .split('/') // Split words by slash
-        .map(answer => answer.trim().toLowerCase()); // Trim and normalize each answer
+    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
+    
+    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
 
-    // Normalize user answer (remove punctuation and symbols)
-    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, "");
-
-    // Check if user answer matches any of the possible correct answers
-    const isCorrect = correctAnswers.some(correct => 
-        normalizedUserAnswer === correct.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, "")
-    );
-
-    if (isCorrect) {
+    if (normalizedUserAnswer === normalizedCorrectAnswer) {
         feedbackEl.textContent = 'Well done! 🏆😊👍';
         feedbackEl.className = 'feedback correct';
         speak('Well done!', 'en-US', 1);
@@ -1112,7 +1100,6 @@ function submitAnswer() {
         speak('Try again!', 'en-US', 1);
     }
 }
-
 
         // Show hint
         function showHint() {
