@@ -180,41 +180,15 @@
         }
 
 
-      /* Responsive Modal Styles */
-.modal-content {
-    background-color: var(--light);
-    width: 90%;
-    max-width: 500px;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    position: relative;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Make modals adapt to smaller screens */
-@media (max-width: 600px) {
-    .modal-content {
-        width: 95%;
-        max-width: 90%;
-        padding: 20px;
-    }
-    
-    .import-example {
-        font-size: 14px;
-        padding: 8px;
-    }
-    
-    .button-group {
-        flex-direction: column;
-    }
-    
-    button {
-        width: 100%;
-    }
-}
-
+        .modal-content {
+            background-color: var(--light);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
 
 
         .modal h2 {
@@ -489,7 +463,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Polyglot Trainer</h1>
+        <h1>🎯 Polyglot Trainer (11th Ed.)</h1>
     </header>
 
 
@@ -1106,17 +1080,24 @@ function renderVocabularyTable() {
             translationPrompt.textContent = currentWord.translation;
         }
 
-
 function submitAnswer() {
     if (!currentWord) return;
 
     const userAnswer = answerInput.value.trim().toLowerCase();
-    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
     
-    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-    const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    // Process correct answers: remove parentheses, split by slash, and normalize
+    const correctAnswers = currentWord.vocabulary
+        .replace(/\(.*?\)/g, '') // Remove content in parentheses
+        .split('/') // Split words by slash
+        .map(answer => answer.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, '')); // Remove punctuation and symbols
 
-    if (normalizedUserAnswer === normalizedCorrectAnswer) {
+    // Normalize user answer (remove punctuation and symbols)
+    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, '');
+
+    // Check if user answer matches any of the possible correct answers
+    const isCorrect = correctAnswers.includes(normalizedUserAnswer);
+
+    if (isCorrect) {
         feedbackEl.textContent = 'Well done! 🏆😊👍';
         feedbackEl.className = 'feedback correct';
         speak('Well done!', 'en-US', 1);
