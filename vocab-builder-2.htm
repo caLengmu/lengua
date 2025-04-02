@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Builder</title>
+    <style>
+        :root {
+            --primary: #D33E43;      /* Vibrant Red */
+            --secondary: #F8B500;    /* Japanese Amber */
+            --accent1: #5D9CEC;      /* Sky Blue */
+            --accent2: #77B28C;      /* Matcha Green */
+            --accent3: #A06CD5;      /* Purple */
+            --dark: #2D2D2A;         /* Charcoal */
+            --light: #F8F3E6;        /* Off-white */
+            --mid: #888888;          /* Mid Gray */
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .left-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-import-btn {
+            background-color: var(--accent3);
+            color: white;
+        }
+
+        .import-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        .start-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 16px 25px;
+            font-size: 25px;
+        }
+
+.ai-support-btn {
+            background-color: var(--accent1);
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+        }
+
+        .download-link {
+            color: var(--accent1);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+            color: var(--primary);
+        }
+
+        .download-link svg {
+            margin-right: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--dark);
+            color: var(--light);
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .speaker-icon {
+            cursor: pointer;
+            color: var(--secondary);
+            margin-left: 8px;
+            font-size: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--light);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .prompt {
+            font-size: 24px;
+            margin: 20px 0;
+            color: var(--dark);
+            font-weight: bold;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border: 2px solid var(--mid);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .feedback {
+            margin: 15px 0;
+            font-size: 25px;
+            font-weight: bold;
+            min-height: 27px;
+        }
+
+        .correct {
+            color: var(--accent2);
+        }
+
+        .incorrect {
+            color: var(--primary);
+        }
+
+        .hint {
+            color: var(--accent1);
+            font-style: italic;
+            font-size: 25px;
+            margin: 10px 0;
+            min-height: 24px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .speak-btn {
+            background-color: var(--accent1);
+            color: white;
+        }
+
+        .hint-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        .answer-btn {
+            background-color: var(--accent3);
+            color: white;
+        }
+
+        .next-btn {
+            background-color: var(--accent2);
+            color: white;
+        }
+
+        .close-btn {
+            background-color: var(--mid);
+            color: white;
+        }
+
+        .recording {
+            background-color: var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--mid);
+            font-style: italic;
+        }
+
+        .tts-speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tts-speed-control select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid var(--mid);
+            background-color: white;
+            font-size: 14px;
+        }
+
+        .tts-speed-control label {
+            font-weight: bold;
+            color: white;
+        }
+
+        .reveal-answer {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 30px;
+            margin: 10px 0;
+            min-height: 27px;
+        }
+
+        /* Text import modal styles */
+        #text-import-modal .modal-content {
+            max-width: 600px;
+        }
+
+        #text-import-content {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 16px;
+            border: 2px solid var(--mid);
+            border-radius: 6px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .import-instructions {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .import-example {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+/* AI Support Modal Styles */
+        #ai-support-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .ai-support-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .ai-support-link {
+            background-color: var(--accent1);
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-support-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .left-controls {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+.right-controls {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .ai-support-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 Vocabulary Builder (2nd Ed.)</h1>
+    </header>
+
+    <div class="controls">
+        <div class="left-controls">
+            <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download
+            </a>
+            <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+            <input type="file" id="file-input" accept=".xlsx, .xls, .csv">
+            <button class="import-btn" id="import-btn">📊 Import Excel</button>
+        </div>
+        <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
+<button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+    </div>
+
+    <table id="vocabulary-table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="tts-speed-control">
+                        <label for="tts-speed">Vocabulary</label>
+                        <select id="tts-speed">
+                            <option value="1">1x</option>
+                            <option value="0.8">0.8x</option>
+                            <option value="0.6">0.6x</option>
+                        </select>
+                    </div>
+                </th>
+                <th>Translation</th>
+                <th>
+                    <label>
+                        <input type="checkbox" id="select-all"> Select
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="vocabulary-body">
+            <tr>
+                <td colspan="3" class="no-data">Import your vocabulary list to get started</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Text Import Modal -->
+    <div id="text-import-modal" class="modal">
+        <div class="modal-content">
+            <h2>Import Text</h2>
+            <div class="import-instructions">
+               依照以下格式輸入英文詞彙及中文翻譯
+                <div class="import-example">
+                    English = 英文<br>
+                    look at... = 看著...<br>
+                    listen to music = 聽音樂<br>
+                                    </div>
+1.點選"Download"鍵並開啟Word檔<br>  
+2.使用快速鍵Ctrl+A (全選)、Ctrl+C (複製)及Ctrl+V (貼上)以匯入學習內容
+            </div>
+            <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
+            <div class="button-group">
+                <button id="text-import-submit-btn" class="submit-btn">Import</button>
+                <button id="text-import-close-btn" class="close-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+<!-- AI Support Modal -->
+    <div id="ai-support-modal" class="modal">
+        <div class="modal-content">
+            <h2>💡 AI Support</h2>
+            <div class="ai-support-links">
+                                               <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">📌 互動問答</a>
+                                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成故事 / 短文</a>
+<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 填空題</a>
+<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 中譯英</a>
+<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗</a>
+            </div>
+            <div class="button-group">
+                <button id="ai-support-close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="modal">
+        <div class="modal-content">
+            <div id="prompt" class="prompt">Say "<span id="translation-prompt"></span>" in English.</div>
+            <input type="text" id="answer-input" class="answer-input" placeholder="Type your answer here...">
+            <div id="feedback" class="feedback"></div>
+            <div id="hint-text" class="hint"></div>
+            <div id="reveal-answer" class="reveal-answer"></div>
+            <div class="button-group">
+                <button id="submit-btn" class="submit-btn">Submit</button>
+                <button id="speak-btn" class="speak-btn">🎤 Speak</button>
+                <button id="hint-btn" class="hint-btn">Hint</button>
+                <button id="answer-btn" class="answer-btn">🔑 Answer</button>
+                <button id="next-btn" class="next-btn">Next</button>
+                <button id="close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // DOM Elements
+        const importBtn = document.getElementById('import-btn');
+        const textImportBtn = document.getElementById('text-import-btn');
+        const fileInput = document.getElementById('file-input');
+        const startBtn = document.getElementById('start-btn');
+const aiSupportBtn = document.getElementById('ai-support-btn');
+        const vocabularyTable = document.getElementById('vocabulary-table');
+        const vocabularyBody = document.getElementById('vocabulary-body');
+        const selectAllCheckbox = document.getElementById('select-all');
+        const quizModal = document.getElementById('quiz-modal');
+        const translationPrompt = document.getElementById('translation-prompt');
+        const answerInput = document.getElementById('answer-input');
+        const feedbackEl = document.getElementById('feedback');
+        const hintTextEl = document.getElementById('hint-text');
+        const revealAnswerEl = document.getElementById('reveal-answer');
+        const submitBtn = document.getElementById('submit-btn');
+        const speakBtn = document.getElementById('speak-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const answerBtn = document.getElementById('answer-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const ttsSpeedSelect = document.getElementById('tts-speed');
+        
+        // Text Import Modal Elements
+        const textImportModal = document.getElementById('text-import-modal');
+        const textImportContent = document.getElementById('text-import-content');
+        const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
+        const textImportCloseBtn = document.getElementById('text-import-close-btn');
+
+// AI Support Modal Elements
+        const aiSupportModal = document.getElementById('ai-support-modal');
+        const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+
+        // Variables
+        let vocabularyData = [];
+        let currentQuizWords = [];
+        let currentWordIndex = -1;
+        let currentWord = null;
+        let recognition = null;
+        let speechRate = 1;
+
+        // Initialize Speech Recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript.toLowerCase().trim();
+                answerInput.value = transcript;
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            };
+
+            recognition.onend = function() {
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            };
+        }
+
+        // Text-to-Speech function
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = speechRate;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // TTS Speed change handler
+        ttsSpeedSelect.addEventListener('change', (e) => {
+            speechRate = parseFloat(e.target.value);
+        });
+
+// AI Support button click handler
+        aiSupportBtn.addEventListener('click', () => {
+            aiSupportModal.style.display = 'flex';
+        });
+
+        // AI Support Close button click handler
+        aiSupportCloseBtn.addEventListener('click', () => {
+            aiSupportModal.style.display = 'none';
+        });
+
+        // Text Import button click handler
+        textImportBtn.addEventListener('click', () => {
+            textImportModal.style.display = 'flex';
+        });
+
+        // Text Import Close button click handler
+        textImportCloseBtn.addEventListener('click', () => {
+            textImportModal.style.display = 'none';
+        });
+
+        // Text Import Submit button click handler
+        textImportSubmitBtn.addEventListener('click', () => {
+            const text = textImportContent.value.trim();
+            if (!text) {
+                alert('Please enter vocabulary pairs before importing.');
+                return;
+            }
+            
+            processTextImport(text);
+            textImportModal.style.display = 'none';
+        });
+
+        // Process text import
+        function processTextImport(text) {
+            vocabularyData = [];
+            const lines = text.split('\n');
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const parts = line.split('=');
+                if (parts.length < 2) continue;
+                
+                const vocabulary = parts[0].trim();
+                const translation = parts[1].trim();
+                
+                if (vocabulary && translation) {
+                    vocabularyData.push({
+                        vocabulary: vocabulary,
+                        translation: translation,
+                        selected: true
+                    });
+                }
+            }
+            
+            renderVocabularyTable();
+            if (vocabularyData.length > 0) {
+                startBtn.disabled = false;
+            }
+        }
+
+        // Import button click handler
+        importBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                let workbook;
+                
+                try {
+                    workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // Process data - assuming first row might be headers
+                    processImportedData(jsonData);
+                } catch (error) {
+                    alert('Error processing file. Please ensure it\'s a valid Excel or CSV file.');
+                    console.error(error);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Process imported data
+        function processImportedData(data) {
+            vocabularyData = [];
+            
+            // Skip header row if it exists
+            const startRow = data[0] && (typeof data[0][0] === 'string') && 
+                             (data[0][0].toLowerCase().includes('vocabulary') || 
+                              data[0][0].toLowerCase().includes('word')) ? 1 : 0;
+            
+            for (let i = startRow; i < data.length; i++) {
+                const row = data[i];
+                if (row.length >= 2 && row[0] && row[1]) {
+                    vocabularyData.push({
+                        vocabulary: row[0].toString().trim(),
+                        translation: row[1].toString().trim(),
+                        selected: true
+                    });
+                }
+            }
+            
+            renderVocabularyTable();
+            if (vocabularyData.length > 0) {
+                startBtn.disabled = false;
+            }
+        }
+
+        // Render vocabulary table
+        function renderVocabularyTable() {
+            if (vocabularyData.length === 0) {
+                vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
+                return;
+            }
+            
+            vocabularyBody.innerHTML = '';
+            
+            vocabularyData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                // Vocabulary column with speaker
+                const wordCell = document.createElement('td');
+                const cleanWord = item.vocabulary.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses for TTS
+                
+                wordCell.innerHTML = `
+                    ${item.vocabulary}
+                    <span class="speaker-icon" title="Listen" data-word="${cleanWord}">🔊</span>
+                `;
+                
+                // Translation column
+                const translationCell = document.createElement('td');
+                translationCell.textContent = item.translation;
+                
+                // Checkbox column
+                const checkboxCell = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = item.selected;
+                checkbox.dataset.index = index;
+                checkbox.addEventListener('change', (e) => {
+                    vocabularyData[index].selected = e.target.checked;
+                    updateSelectAllCheckbox();
+                });
+                checkboxCell.appendChild(checkbox);
+                
+                row.appendChild(wordCell);
+                row.appendChild(translationCell);
+                row.appendChild(checkboxCell);
+                vocabularyBody.appendChild(row);
+            });
+            
+            // Add event listeners to speaker icons
+            document.querySelectorAll('.speaker-icon').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    const word = e.target.dataset.word;
+                    speak(word);
+                });
+            });
+            
+            updateSelectAllCheckbox();
+        }
+
+        // Update "Select All" checkbox state
+        function updateSelectAllCheckbox() {
+            if (vocabularyData.length === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+                return;
+            }
+            
+            const selectedCount = vocabularyData.filter(item => item.selected).length;
+            
+            if (selectedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (selectedCount === vocabularyData.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        // Select All checkbox handler
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            
+            vocabularyData.forEach(item => {
+                item.selected = isChecked;
+            });
+            
+            document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // Start Quiz button handler
+        startBtn.addEventListener('click', () => {
+            currentQuizWords = vocabularyData.filter(item => item.selected);
+            
+            if (currentQuizWords.length === 0) {
+                alert('Please select at least one vocabulary word to start the quiz.');
+                return;
+            }
+            
+            startQuiz();
+        });
+
+        // Start the quiz
+        function startQuiz() {
+            resetQuiz();
+            quizModal.style.display = 'flex';
+            nextQuestion();
+        }
+
+        // Reset quiz state
+        function resetQuiz() {
+            currentWordIndex = -1;
+            currentWord = null;
+            answerInput.value = '';
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'feedback';
+            hintTextEl.textContent = '';
+            revealAnswerEl.textContent = '';
+        }
+
+        // Load the next question
+        function nextQuestion() {
+            // Reset UI elements
+            answerInput.value = '';
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'feedback';
+            hintTextEl.textContent = '';
+            revealAnswerEl.textContent = '';
+            
+            // Randomly select next word
+            const previousIndex = currentWordIndex;
+            
+            // If only one word, just use it
+            if (currentQuizWords.length === 1) {
+                currentWordIndex = 0;
+            } else {
+                // Make sure we don't get the same word twice in a row
+                do {
+                    currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+                } while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+            }
+            
+            currentWord = currentQuizWords[currentWordIndex];
+            translationPrompt.textContent = currentWord.translation;
+        }
+
+        // Submit answer
+        function submitAnswer() {
+            if (!currentWord) return;
+            
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
+            
+            // Compare answers (ignoring case and punctuation)
+            const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                feedbackEl.textContent = 'Well done! 🏆😊👍';
+                feedbackEl.className = 'feedback correct';
+                speak('Well done!');
+                
+            } else {
+                feedbackEl.textContent = 'Try again! 🔥🔥🔥';
+                feedbackEl.className = 'feedback incorrect';
+                speak('Try again!');
+            }
+        }
+
+        // Show hint
+        function showHint() {
+            if (!currentWord) return;
+            
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+            const firstLetter = correctAnswer.charAt(0).toUpperCase();
+            
+            hintTextEl.textContent = `The answer starts with the letter ${firstLetter}.`;
+        }
+
+        // Show answer
+        function showAnswer() {
+            if (!currentWord) return;
+            
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+            revealAnswerEl.textContent = `${correctAnswer}`;
+            speak(correctAnswer);
+        }
+
+        // Event Listeners for Quiz Modal
+        submitBtn.addEventListener('click', submitAnswer);
+        
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+        
+        speakBtn.addEventListener('click', () => {
+            if (!recognition) {
+                alert('Speech recognition is not supported in your browser.');
+                return;
+            }
+            
+            try {
+                if (speakBtn.textContent === '🎤 Speak') {
+                    recognition.start();
+                    speakBtn.textContent = 'Recording';
+                    speakBtn.classList.add('recording');
+                } else {
+                    recognition.stop();
+                    speakBtn.textContent = '🎤 Speak';
+                    speakBtn.classList.remove('recording');
+                }
+            } catch (error) {
+                console.error('Speech recognition error:', error);
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            }
+        });
+        
+        hintBtn.addEventListener('click', showHint);
+        
+        answerBtn.addEventListener('click', showAnswer);
+        
+        nextBtn.addEventListener('click', nextQuestion);
+        
+        closeBtn.addEventListener('click', () => {
+            quizModal.style.display = 'none';
+            if (recognition) {
+                recognition.stop();
+            }
+        });
+    </script>
+</body>
+</html>
