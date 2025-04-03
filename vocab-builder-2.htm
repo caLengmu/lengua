@@ -214,9 +214,8 @@
         }
 
         .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 20px;
         }
@@ -462,17 +461,17 @@
             <div class="import-instructions">
                依照以下格式輸入英文詞彙及中文翻譯
                 <div class="import-example">
-                    English = 英文<br>
-                    look at... = 看著...<br>
+                    English = 英文<br>                
                     listen to music = 聽音樂<br>
                                     </div>
-1.點選"Download"鍵並開啟Word檔<br>  
-2.使用快速鍵Ctrl+A (全選)、Ctrl+C (複製)及Ctrl+V (貼上)以匯入學習內容
-            </div>
+1.點選"Download"鍵並開啟文字檔<br>  
+2.使用快速鍵Ctrl+A (全選)、Ctrl+C (複製)及Ctrl+V (貼上)以匯入學習內容 
+</div>
             <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
             <div class="button-group">
                 <button id="text-import-submit-btn" class="submit-btn">Import</button>
-                <button id="text-import-close-btn" class="close-btn">Cancel</button>
+<button id="text-import-clear-btn" class="hint-btn">Clear</button>
+                <button id="text-import-close-btn" class="close-btn">Close</button>
             </div>
         </div>
     </div>
@@ -543,6 +542,7 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
         const textImportContent = document.getElementById('text-import-content');
         const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
         const textImportCloseBtn = document.getElementById('text-import-close-btn');
+const textImportClearBtn = document.getElementById('text-import-clear-btn');
 
 // AI Support Modal Elements
         const aiSupportModal = document.getElementById('ai-support-modal');
@@ -628,6 +628,11 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
             processTextImport(text);
             textImportModal.style.display = 'none';
         });
+
+// Text Import Clear button click handler
+textImportClearBtn.addEventListener('click', () => {
+    textImportContent.value = '';
+});
 
         // Process text import
         function processTextImport(text) {
