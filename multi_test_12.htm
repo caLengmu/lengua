@@ -36,7 +36,7 @@
 
         h1 {
             color: var(--primary);
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
@@ -86,26 +86,6 @@
             color: var(--dark);
         }
 
-.input-container {
-    position: relative;
-    width: 100%;
-}
-
-.clear-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 16px;
-    color: var(--mid);
-    transition: color 0.2s ease;
-}
-
-.clear-btn:hover {
-    color: var(--primary);
-}
 
         .start-btn {
             background-color: var(--primary);
@@ -567,13 +547,11 @@
 1. Click "Download" for learning materials.<br> 
 2. Keyboard shortcuts: Ctrl+A (select all), Ctrl+C (copy), Ctrl+V (paste)<br>
 3. Use AI support for further learning with the copied materials.
-            </div>
-           <div class="input-container">
-    <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
-    <button type="button" id="clear-text-btn" class="clear-btn" title="Clear text">✕</button>
-</div>
+            
+            <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
             <div class="button-group">
                 <button id="text-import-submit-btn" class="submit-btn">Import</button>
+ <button id="text-import-clear-btn" class="hint-btn">Clear</button>
                 <button id="text-import-close-btn" class="close-btn">Cancel</button>
             </div>
         </div>
@@ -643,7 +621,6 @@
         const answerBtn = document.getElementById('answer-btn');
         const nextBtn = document.getElementById('next-btn');
         const closeBtn = document.getElementById('close-btn');
-const clearTextBtn = document.getElementById('clear-text-btn');
         
         // TTS and language controls
         const vocabLanguageSelect = document.getElementById('vocab-language');
@@ -656,6 +633,7 @@ const clearTextBtn = document.getElementById('clear-text-btn');
         const textImportContent = document.getElementById('text-import-content');
         const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
         const textImportCloseBtn = document.getElementById('text-import-close-btn');
+const textImportClearBtn = document.getElementById('text-import-clear-btn');
 
 
         // AI Support Modal Elements
@@ -860,6 +838,10 @@ function updateTranslationSpeakerIcons() {
             textImportModal.style.display = 'none';
         });
 
+// Text Import Clear button click handler
+textImportClearBtn.addEventListener('click', () => {
+    textImportContent.value = '';
+});
 
         // Process text import
         function processTextImport(text) {
@@ -896,12 +878,6 @@ function updateTranslationSpeakerIcons() {
         importBtn.addEventListener('click', () => {
             fileInput.click();
         });
-
-// Add this with your other event listeners
-clearTextBtn.addEventListener('click', () => {
-    textImportContent.value = '';
-    textImportContent.focus();
-});
 
 
         // File input change handler
