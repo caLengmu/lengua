@@ -461,7 +461,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Polyglot Trainer (#12.2)</h1>
+        <h1>🎯 Polyglot Trainer (12.2)</h1>
     </header>
 
 
@@ -764,8 +764,8 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         
         // Function to clean text by removing parentheses, punctuations, and symbols
 function cleanText(text) {
-    return text.replace(/\(.*\)/g, '') // Remove content in parentheses
-               .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>@[\]\\|`]/g, '') // Remove punctuation and symbols
+    return text.replace(/\(.*?\)/g, '') // Remove content in parentheses
+               .replace(/[,\/#!$%\^&\*;:{}=\-_`~()"<>@[\]\\|`]/g, '') // Remove punctuation and symbols
                .trim();
 }
 
@@ -1089,12 +1089,12 @@ function submitAnswer() {
     
     // Process correct answers: remove parentheses, split by slash, and normalize
     const correctAnswers = currentWord.vocabulary
-        .replace(/\(.*\)/g, '') // Remove content in parentheses
+        .replace(/\(.*?\)/g, '') // Remove content in parentheses
         .split('/') // Split words by slash
-        .map(answer => answer.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>@[\]\\|]/g, '')); // Remove punctuation and symbols
+        .map(answer => answer.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"<>?'’…@[\]\\|]/g, '')); // Remove punctuation and symbols
 
     // Normalize user answer (remove punctuation and symbols)
-    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>@[\]\\|]/g, '');
+    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, '');
 
     // Check if user answer matches any of the possible correct answers
     const isCorrect = correctAnswers.includes(normalizedUserAnswer);
@@ -1114,7 +1114,7 @@ function submitAnswer() {
         function showHint() {
             if (!currentWord) return;
             
-            const correctAnswer = currentWord.vocabulary.replace(/\(.*\)/g, '').trim();
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
             const firstLetter = correctAnswer.charAt(0).toUpperCase();
             
             hintTextEl.textContent = `The answer starts with ${firstLetter}.`;
@@ -1125,7 +1125,7 @@ function submitAnswer() {
         function showAnswer() {
             if (!currentWord) return;
             
-            const correctAnswer = currentWord.vocabulary.replace(/\(.*\)/g, '').trim();
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
             revealAnswerEl.textContent = `${correctAnswer}`;
             speak(correctAnswer);
         }
@@ -1170,7 +1170,7 @@ function submitAnswer() {
         
 answerBtn.addEventListener('click', () => {
     if (!currentWord) return;
-    const correctAnswer = currentWord.vocabulary.replace(/\(.*\)/g, '').trim();
+    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
     revealAnswerEl.textContent = `${correctAnswer}`;
     speak(correctAnswer, vocabLanguage, vocabSpeechRate);
 });        
