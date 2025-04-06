@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocab Builder</title>
+    <title>Polyglot Trainer</title>
     <style>
         :root {
             --primary: #D33E43;      /* Vibrant Red */
@@ -37,7 +36,7 @@
 
         h1 {
             color: var(--primary);
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
@@ -245,9 +244,8 @@
 
 
         .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+             display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 20px;
         }
@@ -463,7 +461,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Polyglot Trainer (8th ed.)</h1>
+        <h1>🎯 Polyglot Trainer (#12.2)</h1>
     </header>
 
 
@@ -542,16 +540,15 @@
                 Enter your vocabulary pairs below with one pair per line using the format:
                 <div class="import-example">
                     English = 英文<br>
-                    look at... = 看著...<br>
                     listen to music = 聽音樂
                 </div>
 1. Click "Download" for learning materials.<br> 
 2. Keyboard shortcuts: Ctrl+A (select all), Ctrl+C (copy), Ctrl+V (paste)<br>
-3. Use AI support for further learning with the copied materials.
             </div>
             <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
             <div class="button-group">
                 <button id="text-import-submit-btn" class="submit-btn">Import</button>
+ <button id="text-import-clear-btn" class="hint-btn">Clear</button>
                 <button id="text-import-close-btn" class="close-btn">Cancel</button>
             </div>
         </div>
@@ -633,6 +630,7 @@
         const textImportContent = document.getElementById('text-import-content');
         const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
         const textImportCloseBtn = document.getElementById('text-import-close-btn');
+const textImportClearBtn = document.getElementById('text-import-clear-btn');
 
 
         // AI Support Modal Elements
@@ -767,7 +765,7 @@
         // Function to clean text by removing parentheses, punctuations, and symbols
 function cleanText(text) {
     return text.replace(/\(.*?\)/g, '') // Remove content in parentheses
-               .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|`]/g, '') // Remove punctuation and symbols
+               .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>@[\]\\|`]/g, '') // Remove punctuation and symbols
                .trim();
 }
 
@@ -837,6 +835,10 @@ function updateTranslationSpeakerIcons() {
             textImportModal.style.display = 'none';
         });
 
+// Text Import Clear button click handler
+textImportClearBtn.addEventListener('click', () => {
+    textImportContent.value = '';
+});
 
         // Process text import
         function processTextImport(text) {
@@ -1080,17 +1082,24 @@ function renderVocabularyTable() {
             translationPrompt.textContent = currentWord.translation;
         }
 
-
 function submitAnswer() {
     if (!currentWord) return;
 
     const userAnswer = answerInput.value.trim().toLowerCase();
-    const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
     
-    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-    const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    // Process correct answers: remove parentheses, split by slash, and normalize
+    const correctAnswers = currentWord.vocabulary
+        .replace(/\(.*?\)/g, '') // Remove content in parentheses
+        .split('/') // Split words by slash
+        .map(answer => answer.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>@[\]\\|]/g, '')); // Remove punctuation and symbols
 
-    if (normalizedUserAnswer === normalizedCorrectAnswer) {
+    // Normalize user answer (remove punctuation and symbols)
+    const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()"'<>@[\]\\|]/g, '');
+
+    // Check if user answer matches any of the possible correct answers
+    const isCorrect = correctAnswers.includes(normalizedUserAnswer);
+
+    if (isCorrect) {
         feedbackEl.textContent = 'Well done! 🏆😊👍';
         feedbackEl.className = 'feedback correct';
         speak('Well done!', 'en-US', 1);
