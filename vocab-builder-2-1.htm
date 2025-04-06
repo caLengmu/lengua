@@ -405,7 +405,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Vocabulary Builder (2.0)</h1>
+        <h1>🎯 Vocabulary Builder (2.1)</h1>
     </header>
 
     <div class="controls">
@@ -875,8 +875,8 @@ textImportClearBtn.addEventListener('click', () => {
             const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
             
             // Compare answers (ignoring case and punctuation)
-            const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedUserAnswer = userAnswer.replace(/[.,?'’\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedCorrectAnswer = correctAnswer.replace(/[.,?'’\/#!$%\^&\*;:{}=\-_`~()]/g, "");
             
             if (normalizedUserAnswer === normalizedCorrectAnswer) {
                 feedbackEl.textContent = 'Well done! 🏆😊👍';
