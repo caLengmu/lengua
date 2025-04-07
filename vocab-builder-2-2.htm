@@ -405,7 +405,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Vocabulary Builder (2.1)</h1>
+        <h1>🎯 Vocabulary Builder (2.2)</h1>
     </header>
 
     <div class="controls">
@@ -869,26 +869,33 @@ textImportClearBtn.addEventListener('click', () => {
 
         // Submit answer
         function submitAnswer() {
-            if (!currentWord) return;
-            
-            const userAnswer = answerInput.value.trim().toLowerCase();
-            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
-            
-            // Compare answers (ignoring case and punctuation)
-            const normalizedUserAnswer = userAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            const normalizedCorrectAnswer = correctAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            
-            if (normalizedUserAnswer === normalizedCorrectAnswer) {
-                feedbackEl.textContent = 'Well done! 🏆😊👍';
-                feedbackEl.className = 'feedback correct';
-                speak('Well done!');
-                
-            } else {
-                feedbackEl.textContent = 'Try again! 🔥🔥🔥';
-                feedbackEl.className = 'feedback incorrect';
-                speak('Try again!');
-            }
-        }
+    if (!currentWord) return;
+    
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    // Split the vocabulary by slash and clean each option
+    const correctAnswers = currentWord.vocabulary
+        .split('/')
+        .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
+    
+    // Normalize user answer (remove punctuation)
+    const normalizedUserAnswer = userAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    
+    // Check if user's answer matches any of the correct options
+    const isCorrect = correctAnswers.some(answer => {
+        const normalizedAnswer = answer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        return normalizedUserAnswer === normalizedAnswer;
+    });
+    
+    if (isCorrect) {
+        feedbackEl.textContent = 'Well done! 🏆😊👍';
+        feedbackEl.className = 'feedback correct';
+        speak('Well done!');
+    } else {
+        feedbackEl.textContent = 'Try again! 🔥🔥🔥';
+        feedbackEl.className = 'feedback incorrect';
+        speak('Try again!');
+    }
+}
 
         // Show hint
         function showHint() {
