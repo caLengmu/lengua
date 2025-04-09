@@ -399,36 +399,64 @@
             }
 
 
-
 .date-info {
     position: absolute;
     top: 20px;
     right: 20px;
     text-align: right;
-    font-size: 16px;
+    font-size: 14px;
+    line-height: 1.6;
     color: var(--dark);
     background-color: rgba(255, 255, 255, 0.9);
     padding: 10px 15px;
     border-radius: 8px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     display: flex;
-    gap: 15px;
+    flex-direction: column; /* Change to column for vertical display */
+    gap: 5px;
     font-weight: bold;
+    max-width: 90%; /* Prevent overflow on small screens */
+    z-index: 10; /* Ensure it stays above other elements */
 }
 
 .date-info span {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    white-space: nowrap; /* Prevent line breaks within each date item */
 }
 
 .date-info .emoji {
-    margin-right: 5px;
-    font-size: 20px;
+    margin-right: 8px;
+    font-size: 16px;
 }
 
 .date-info .countdown {
     color: var(--primary);
+    margin: 0 3px;
 }
+
+/* Add media queries for mobile responsiveness */
+@media (max-width: 768px) {
+    .date-info {
+        position: static; /* Position in normal flow on mobile */
+        margin: 0 auto 15px auto; /* Center it and add margin below */
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        right: auto;
+        top: auto;
+    }
+    
+    .date-info span {
+        justify-content: center; /* Center content on mobile */
+    }
+    
+    header {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 
             .ai-support-links {
                 grid-template-columns: 1fr;
@@ -941,6 +969,7 @@ textImportClearBtn.addEventListener('click', () => {
             }
         });
 
+
 // Date information display
 function updateDateInfo() {
     const dateInfoEl = document.getElementById('date-info');
@@ -968,12 +997,14 @@ function updateDateInfo() {
     collegeExamDate.setHours(0, 0, 0, 0);
     const daysUntilCollegeExam = Math.ceil((collegeExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
     
-    // Update the HTML - all on one line with styled elements
+    // Update the HTML - each item on separate line
     dateInfoEl.innerHTML = `
-      
-        <span><span class="emoji">📚</span> <span class="countdown">${daysUntilCollegeExam}</span> days left until 116年學測</span>
+        <span><span class="emoji">📅</span> Today's date: ${taiwanDate}</span>
+        <span><span class="emoji">⏰</span><span class="countdown">${daysUntilExam}</span> days left until 段考</span>
+        <span><span class="emoji">📚</span><span class="countdown">${daysUntilCollegeExam}</span> days left until 116學測</span>
     `;
 }
+
 
 // Update date information when page loads
 updateDateInfo();
