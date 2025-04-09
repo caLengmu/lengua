@@ -38,14 +38,12 @@
             letter-spacing: 1px;
         }
 
-      .controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px; /* Increased from 20px to 30px for better spacing */
-    position: relative; /* Add this to ensure proper positioning context */
-    z-index: 1; /* Add this to make sure controls stay above other elements */
-}
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
         .left-controls {
             display: flex;
@@ -74,7 +72,10 @@
             color: white;
         }
 
-     
+        .import-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
 
         .start-btn {
             background-color: var(--primary);
@@ -108,15 +109,13 @@
             margin-right: 6px;
         }
 
-      table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    clear: both; /* Add this to ensure the table clears any floated elements */
-    display: table; /* Explicitly set to table display */
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
         th, td {
             padding: 12px 15px;
@@ -398,38 +397,6 @@
                 width: 100%;
             }
 
-
-
-.date-info {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    text-align: right;
-    font-size: 16px;
-    color: var(--dark);
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px 15px;
-    border-radius: 8px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    gap: 15px;
-    font-weight: bold;
-}
-
-.date-info span {
-    display: inline-flex;
-    align-items: center;
-}
-
-.date-info .emoji {
-    margin-right: 5px;
-    font-size: 20px;
-}
-
-.date-info .countdown {
-    color: var(--primary);
-}
-
             .ai-support-links {
                 grid-template-columns: 1fr;
             }
@@ -438,27 +405,26 @@
 </head>
 <body>
     <header>
-<div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.3)</h1>
+        <h1>🎯 Vocabulary Builder (2.2)</h1>
     </header>
 
-</div>
-
     <div class="controls">
-    <div class="left-controls">
-        <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download
-        </a>
-        <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+        <div class="left-controls">
+            <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download
+            </a>
+            <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+            <input type="file" id="file-input" accept=".xlsx, .xls, .csv">
+            <button class="import-btn" id="import-btn">📊 Import Excel</button>
+        </div>
+        <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
+<button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
     </div>
-    <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
-    <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
-</div>
 
     <table id="vocabulary-table">
         <thead>
@@ -546,12 +512,12 @@
         </div>
     </div>
 
- 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         // DOM Elements
-      
+        const importBtn = document.getElementById('import-btn');
         const textImportBtn = document.getElementById('text-import-btn');
-     
+        const fileInput = document.getElementById('file-input');
         const startBtn = document.getElementById('start-btn');
 const aiSupportBtn = document.getElementById('ai-support-btn');
         const vocabularyTable = document.getElementById('vocabulary-table');
@@ -698,9 +664,63 @@ textImportClearBtn.addEventListener('click', () => {
             }
         }
 
-      
+        // Import button click handler
+        importBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
 
-       
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                let workbook;
+                
+                try {
+                    workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // Process data - assuming first row might be headers
+                    processImportedData(jsonData);
+                } catch (error) {
+                    alert('Error processing file. Please ensure it\'s a valid Excel or CSV file.');
+                    console.error(error);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Process imported data
+        function processImportedData(data) {
+            vocabularyData = [];
+            
+            // Skip header row if it exists
+            const startRow = data[0] && (typeof data[0][0] === 'string') && 
+                             (data[0][0].toLowerCase().includes('vocabulary') || 
+                              data[0][0].toLowerCase().includes('word')) ? 1 : 0;
+            
+            for (let i = startRow; i < data.length; i++) {
+                const row = data[i];
+                if (row.length >= 2 && row[0] && row[1]) {
+                    vocabularyData.push({
+                        vocabulary: row[0].toString().trim(),
+                        translation: row[1].toString().trim(),
+                        selected: true
+                    });
+                }
+            }
+            
+            renderVocabularyTable();
+            if (vocabularyData.length > 0) {
+                startBtn.disabled = false;
+            }
+        }
 
         // Render vocabulary table
         function renderVocabularyTable() {
@@ -940,48 +960,6 @@ textImportClearBtn.addEventListener('click', () => {
                 recognition.stop();
             }
         });
-
-// Date information display
-function updateDateInfo() {
-    const dateInfoEl = document.getElementById('date-info');
-    
-    // Get current date in Taiwan timezone
-    const options = { 
-        timeZone: 'Asia/Taipei',
-        weekday: 'long', 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric'
-    };
-    const today = new Date();
-    const taiwanDate = today.toLocaleDateString('en-US', options);
-    
-    // Calculate days until 段考 (May 12, 2025)
-    const examDate = new Date('May 12, 2025');
-    examDate.setHours(0, 0, 0, 0);
-    const todayNoTime = new Date(today);
-    todayNoTime.setHours(0, 0, 0, 0);
-    const daysUntilExam = Math.ceil((examDate - todayNoTime) / (1000 * 60 * 60 * 24));
-    
-    // Calculate days until 116學測 (January 16, 2027)
-    const collegeExamDate = new Date('January 16, 2027');
-    collegeExamDate.setHours(0, 0, 0, 0);
-    const daysUntilCollegeExam = Math.ceil((collegeExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
-    
-    // Update the HTML - all on one line with styled elements
-    dateInfoEl.innerHTML = `
-        <span><span class="emoji">📅Today's date:</span> ${taiwanDate}</span>
-        <span><span class="emoji">⏰</span> <span class="countdown">${daysUntilExam}</span> days left until 段考</span>
-        <span><span class="emoji">📚</span> <span class="countdown">${daysUntilCollegeExam}</span> days left until 116年學測</span>
-    `;
-}
-
-// Update date information when page loads
-updateDateInfo();
-
-// Update date information every minute
-setInterval(updateDateInfo, 60000);
-
     </script>
 </body>
 </html>
