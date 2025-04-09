@@ -38,12 +38,34 @@
             letter-spacing: 1px;
         }
 
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+
+#password-modal {
+    display: flex; /* Show by default */
+    z-index: 1000; /* Ensure it's above everything else */
+}
+
+#password-modal .modal-content {
+    max-width: 400px;
+}
+
+#password-modal h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+#password-modal p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+      .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px; /* Increased from 20px to 30px for better spacing */
+    position: relative; /* Add this to ensure proper positioning context */
+    z-index: 1; /* Add this to make sure controls stay above other elements */
+}
 
         .left-controls {
             display: flex;
@@ -72,16 +94,13 @@
             color: white;
         }
 
-        .import-btn {
-            background-color: var(--secondary);
-            color: var(--dark);
-        }
+     
 
         .start-btn {
             background-color: var(--primary);
             color: white;
-            padding: 12px 24px;
-            font-size: 18px;
+            padding: 16px 25px;
+            font-size: 25px;
         }
 
 .ai-support-btn {
@@ -109,13 +128,15 @@
             margin-right: 6px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+      table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    clear: both; /* Add this to ensure the table clears any floated elements */
+    display: table; /* Explicitly set to table display */
+}
 
         th, td {
             padding: 12px 15px;
@@ -214,9 +235,8 @@
         }
 
         .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 20px;
         }
@@ -398,6 +418,66 @@
                 width: 100%;
             }
 
+
+.date-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-align: right;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Change to column for vertical display */
+    gap: 5px;
+    font-weight: bold;
+    max-width: 90%; /* Prevent overflow on small screens */
+    z-index: 10; /* Ensure it stays above other elements */
+}
+
+.date-info span {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevent line breaks within each date item */
+}
+
+.date-info .emoji {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.date-info .countdown {
+    color: var(--primary);
+    margin: 0 3px;
+}
+
+/* Add media queries for mobile responsiveness */
+@media (max-width: 768px) {
+    .date-info {
+        position: static; /* Position in normal flow on mobile */
+        margin: 0 auto 15px auto; /* Center it and add margin below */
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        right: auto;
+        top: auto;
+    }
+    
+    .date-info span {
+        justify-content: center; /* Center content on mobile */
+    }
+    
+    header {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
             .ai-support-links {
                 grid-template-columns: 1fr;
             }
@@ -406,26 +486,27 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Vocabulary Builder</h1>
+<div id="date-info" class="date-info"></div>
+        <h1>🎯 Vocabulary Builder (2.3)</h1>
     </header>
 
+</div>
+
     <div class="controls">
-        <div class="left-controls">
-            <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download
-            </a>
-            <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
-            <input type="file" id="file-input" accept=".xlsx, .xls, .csv">
-            <button class="import-btn" id="import-btn">📊 Import Excel</button>
-        </div>
-        <button class="start-btn" id="start-btn" disabled>🚀 Start Learning!</button>
-<button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+    <div class="left-controls">
+        <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download
+        </a>
+        <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
+    <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
+    <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+</div>
 
     <table id="vocabulary-table">
         <thead>
@@ -434,9 +515,9 @@
                     <div class="tts-speed-control">
                         <label for="tts-speed">Vocabulary</label>
                         <select id="tts-speed">
-                            <option value="1">1x</option>
-                            <option value="0.8">0.8x</option>
                             <option value="0.6">0.6x</option>
+                            <option value="0.8">0.8x</option>
+                            <option value="1">1x</option>                                                       
                         </select>
                     </div>
                 </th>
@@ -460,20 +541,19 @@
         <div class="modal-content">
             <h2>Import Text</h2>
             <div class="import-instructions">
-                Enter your vocabulary pairs below with one pair per line using the format:
+               依照以下格式輸入英文詞彙及中文翻譯
                 <div class="import-example">
-                    English = 英文<br>
-                    look at... = 看著...<br>
-                    listen to music = 聽音樂
-                </div>
-1. Click "Download" for learning materials.<br> 
-2. Keyboard shortcuts: Ctrl+A (select all), Ctrl+C (copy), Ctrl+V (paste)<br>
-3. Use AI support for further learning with the copied materials.
-            </div>
+                    English = 英文<br>                
+                    listen to music = 聽音樂<br>
+                                    </div>
+1.點選"Download"鍵並開啟文字檔<br>  
+2.使用快速鍵Ctrl+A (全選)、Ctrl+C (複製)及Ctrl+V (貼上)以匯入學習內容 
+</div>
             <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
             <div class="button-group">
                 <button id="text-import-submit-btn" class="submit-btn">Import</button>
-                <button id="text-import-close-btn" class="close-btn">Cancel</button>
+<button id="text-import-clear-btn" class="hint-btn">Clear</button>
+                <button id="text-import-close-btn" class="close-btn">Close</button>
             </div>
         </div>
     </div>
@@ -483,16 +563,11 @@
         <div class="modal-content">
             <h2>💡 AI Support</h2>
             <div class="ai-support-links">
-                <a href="https://chatgpt.com/share/67d9b49e-5cc0-800a-96b0-b752c422ae6d" class="ai-support-link" target="_blank">生成中文翻譯(匯入用)</a>
-                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成例句</a>
-                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成英文定義</a>
-                <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">📌 互動問答</a>
-                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成對話</a>
-                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成故事 / 短文</a>
+                                               <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">📌 互動問答</a>
+                                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成故事 / 短文</a>
 <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 填空題</a>
-<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 中譯英</a>
+<a href="https://chatgpt.com/share/67f619dd-d668-800a-af6e-696897e751e7" class="ai-support-link" target="_blank">[Quiz] 中譯英 (學測難度)</a>
 <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗</a>
-<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 文意選填</a>
             </div>
             <div class="button-group">
                 <button id="ai-support-close-btn" class="close-btn">Close</button>
@@ -519,12 +594,12 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+ 
     <script>
         // DOM Elements
-        const importBtn = document.getElementById('import-btn');
+      
         const textImportBtn = document.getElementById('text-import-btn');
-        const fileInput = document.getElementById('file-input');
+     
         const startBtn = document.getElementById('start-btn');
 const aiSupportBtn = document.getElementById('ai-support-btn');
         const vocabularyTable = document.getElementById('vocabulary-table');
@@ -549,6 +624,7 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
         const textImportContent = document.getElementById('text-import-content');
         const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
         const textImportCloseBtn = document.getElementById('text-import-close-btn');
+const textImportClearBtn = document.getElementById('text-import-clear-btn');
 
 // AI Support Modal Elements
         const aiSupportModal = document.getElementById('ai-support-modal');
@@ -635,6 +711,11 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
             textImportModal.style.display = 'none';
         });
 
+// Text Import Clear button click handler
+textImportClearBtn.addEventListener('click', () => {
+    textImportContent.value = '';
+});
+
         // Process text import
         function processTextImport(text) {
             vocabularyData = [];
@@ -665,63 +746,9 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
             }
         }
 
-        // Import button click handler
-        importBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
+      
 
-        // File input change handler
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                let workbook;
-                
-                try {
-                    workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    
-                    // Process data - assuming first row might be headers
-                    processImportedData(jsonData);
-                } catch (error) {
-                    alert('Error processing file. Please ensure it\'s a valid Excel or CSV file.');
-                    console.error(error);
-                }
-            };
-            
-            reader.readAsArrayBuffer(file);
-        });
-
-        // Process imported data
-        function processImportedData(data) {
-            vocabularyData = [];
-            
-            // Skip header row if it exists
-            const startRow = data[0] && (typeof data[0][0] === 'string') && 
-                             (data[0][0].toLowerCase().includes('vocabulary') || 
-                              data[0][0].toLowerCase().includes('word')) ? 1 : 0;
-            
-            for (let i = startRow; i < data.length; i++) {
-                const row = data[i];
-                if (row.length >= 2 && row[0] && row[1]) {
-                    vocabularyData.push({
-                        vocabulary: row[0].toString().trim(),
-                        translation: row[1].toString().trim(),
-                        selected: true
-                    });
-                }
-            }
-            
-            renderVocabularyTable();
-            if (vocabularyData.length > 0) {
-                startBtn.disabled = false;
-            }
-        }
+       
 
         // Render vocabulary table
         function renderVocabularyTable() {
@@ -870,26 +897,33 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
 
         // Submit answer
         function submitAnswer() {
-            if (!currentWord) return;
-            
-            const userAnswer = answerInput.value.trim().toLowerCase();
-            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim().toLowerCase();
-            
-            // Compare answers (ignoring case and punctuation)
-            const normalizedUserAnswer = userAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            const normalizedCorrectAnswer = correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-            
-            if (normalizedUserAnswer === normalizedCorrectAnswer) {
-                feedbackEl.textContent = 'Well done! 🏆😊👍';
-                feedbackEl.className = 'feedback correct';
-                speak('Well done!');
-                
-            } else {
-                feedbackEl.textContent = 'Try again! 🔥🔥🔥';
-                feedbackEl.className = 'feedback incorrect';
-                speak('Try again!');
-            }
-        }
+    if (!currentWord) return;
+    
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    // Split the vocabulary by slash and clean each option
+    const correctAnswers = currentWord.vocabulary
+        .split('/')
+        .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
+    
+    // Normalize user answer (remove punctuation)
+    const normalizedUserAnswer = userAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    
+    // Check if user's answer matches any of the correct options
+    const isCorrect = correctAnswers.some(answer => {
+        const normalizedAnswer = answer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        return normalizedUserAnswer === normalizedAnswer;
+    });
+    
+    if (isCorrect) {
+        feedbackEl.textContent = 'Well done! 🏆😊👍';
+        feedbackEl.className = 'feedback correct';
+        speak('Well done!');
+    } else {
+        feedbackEl.textContent = 'Try again! 🔥🔥🔥';
+        feedbackEl.className = 'feedback incorrect';
+        speak('Try again!');
+    }
+}
 
         // Show hint
         function showHint() {
@@ -954,6 +988,166 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
                 recognition.stop();
             }
         });
+
+
+// Date information display
+function updateDateInfo() {
+    const dateInfoEl = document.getElementById('date-info');
+    
+    // Get current date in Taiwan timezone
+    const options = { 
+        timeZone: 'Asia/Taipei',
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric'
+    };
+    const today = new Date();
+    const taiwanDate = today.toLocaleDateString('en-US', options);
+    
+    // Calculate days until 段考 (May 12, 2025)
+    const examDate = new Date('May 12, 2025');
+    examDate.setHours(0, 0, 0, 0);
+    const todayNoTime = new Date(today);
+    todayNoTime.setHours(0, 0, 0, 0);
+    const daysUntilExam = Math.ceil((examDate - todayNoTime) / (1000 * 60 * 60 * 24));
+    
+    // Calculate days until 116學測 (January 16, 2027)
+    const collegeExamDate = new Date('January 16, 2027');
+    collegeExamDate.setHours(0, 0, 0, 0);
+    const daysUntilCollegeExam = Math.ceil((collegeExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
+    
+    // Update the HTML - each item on separate line
+    dateInfoEl.innerHTML = `
+        <span><span class="emoji">📅</span>${taiwanDate}</span>
+        <span><span class="emoji">⏰</span><span class="countdown">${daysUntilExam}</span> days until 段考</span>
+        <span><span class="emoji">📚</span><span class="countdown">${daysUntilCollegeExam}</span> days until 116學測</span>
+    `;
+}
+
+
+// Update date information when page loads
+updateDateInfo();
+
+// Update date information every minute
+setInterval(updateDateInfo, 60000);
+
+// Password functionality
+const passwordModal = document.getElementById('password-modal');
+const passwordInput = document.getElementById('password-input');
+const passwordFeedback = document.getElementById('password-feedback');
+const speakPasswordBtn = document.getElementById('speak-password-btn');
+const submitPasswordBtn = document.getElementById('submit-password-btn');
+let passwordRecognition = null;
+
+// Initialize password speech recognition
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    passwordRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    passwordRecognition.lang = 'en-US';
+    passwordRecognition.continuous = false;
+    passwordRecognition.interimResults = false;
+
+    passwordRecognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        passwordInput.value = transcript;
+        speakPasswordBtn.textContent = '🎤 Say the password';
+        speakPasswordBtn.classList.remove('recording');
+    };
+
+    passwordRecognition.onend = function() {
+        speakPasswordBtn.textContent = '🎤 Say the password';
+        speakPasswordBtn.classList.remove('recording');
+    };
+
+    passwordRecognition.onerror = function(event) {
+        console.error('Speech recognition error', event.error);
+        speakPasswordBtn.textContent = '🎤 Say the password';
+        speakPasswordBtn.classList.remove('recording');
+    };
+}
+
+// Speaking wrong password message
+function speakWrongPassword() {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance("Wrong password. Do you love English?");
+        utterance.lang = 'en-US';
+        utterance.rate = speechRate;
+        speechSynthesis.speak(utterance);
+    }
+}
+
+// Check password
+function checkPassword() {
+    const correctPassword = "I love English!";
+    const enteredPassword = passwordInput.value;
+    
+    // Clean up passwords for comparison (ignore case and punctuation)
+    const cleanCorrect = correctPassword.toLowerCase().replace(/[.,?!;:{}()\[\]\-_]/g, "");
+    const cleanEntered = enteredPassword.toLowerCase().replace(/[.,?!;:{}()\[\]\-_]/g, "");
+    
+    if (cleanEntered === cleanCorrect) {
+        // Password is correct
+        passwordModal.style.display = 'none';
+    } else {
+        // Password is incorrect
+        passwordFeedback.textContent = 'Wrong password. Do you love English?';
+        passwordFeedback.className = 'feedback incorrect';
+        speakWrongPassword();
+    }
+}
+
+// Event listeners for password modal
+speakPasswordBtn.addEventListener('click', () => {
+    if (!passwordRecognition) {
+        alert('Speech recognition is not supported in your browser.');
+        return;
+    }
+    
+    try {
+        if (speakPasswordBtn.textContent === '🎤 Say the password') {
+            passwordRecognition.start();
+            speakPasswordBtn.textContent = 'Recording';
+            speakPasswordBtn.classList.add('recording');
+        } else {
+            passwordRecognition.stop();
+            speakPasswordBtn.textContent = '🎤 Say the password';
+            speakPasswordBtn.classList.remove('recording');
+        }
+    } catch (error) {
+        console.error('Speech recognition error:', error);
+        speakPasswordBtn.textContent = '🎤 Say the password';
+        speakPasswordBtn.classList.remove('recording');
+    }
+});
+
+submitPasswordBtn.addEventListener('click', checkPassword);
+
+passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        checkPassword();
+    }
+});
+
+// Show password modal when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    passwordModal.style.display = 'flex';
+});
+
     </script>
+
+<!-- Password Modal -->
+<div id="password-modal" class="modal">
+    <div class="modal-content">
+        <h2>Password Required</h2>
+        <p>Please say the password to access the vocabulary builder.</p>
+        <input type="text" id="password-input" class="answer-input" placeholder="Type or speak the password...">
+        <div id="password-feedback" class="feedback"></div>
+        <div class="button-group">
+            <button id="speak-password-btn" class="speak-btn">🎤 Say the password</button>
+            <button id="submit-password-btn" class="submit-btn">Submit</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
