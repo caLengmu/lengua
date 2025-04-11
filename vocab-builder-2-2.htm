@@ -746,7 +746,7 @@ textImportClearBtn.addEventListener('click', () => {
                 
                 // Vocabulary column with speaker
                 const wordCell = document.createElement('td');
-                const cleanWord = item.vocabulary.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses for TTS
+                const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').trim(); // Remove content in parentheses for TTS
                 
                 wordCell.innerHTML = `
                     ${item.vocabulary}
