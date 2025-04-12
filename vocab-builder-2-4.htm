@@ -38,26 +38,6 @@
             letter-spacing: 1px;
         }
 
-
-#password-modal {
-    display: flex; /* Show by default */
-    z-index: 1000; /* Ensure it's above everything else */
-}
-
-#password-modal .modal-content {
-    max-width: 400px;
-}
-
-#password-modal h2 {
-    color: var(--primary);
-    margin-bottom: 20px;
-}
-
-#password-modal p {
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
       .controls {
     display: flex;
     justify-content: space-between;
@@ -90,8 +70,8 @@
         }
 
         .text-import-btn {
-            background-color: var(--accent3);
-            color: white;
+            background-color: var(--secondary);
+            color: black;
         }
 
      
@@ -110,23 +90,8 @@
             font-size: 18px;
         }
 
-        .download-link {
-            color: var(--accent1);
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-        }
+        
 
-        .download-link:hover {
-            text-decoration: underline;
-            color: var(--primary);
-        }
-
-        .download-link svg {
-            margin-right: 6px;
-        }
 
       table {
     width: 100%;
@@ -324,38 +289,99 @@
             min-height: 27px;
         }
 
-        /* Text import modal styles */
-        #text-import-modal .modal-content {
-            max-width: 600px;
-        }
+       /* Text Import Modal Styles - Updated for Button Sets */
+/* Updated textarea style to handle larger content */
+#text-import-content {
+    width: 100%;
+    height: 200px; /* Increased height to accommodate more text */
+    padding: 12px;
+    margin: 15px 0;
+    font-size: 14px; /* Slightly smaller font for more content */
+    border: 2px solid var(--mid);
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+    white-space: pre-wrap; /* Preserves line breaks and spaces */
+    font-family: monospace; /* Monospace font for better alignment */
+    overflow-y: auto; /* Add scroll if content exceeds height */
+}
 
-        #text-import-content {
-            width: 100%;
-            height: 200px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 16px;
-            border: 2px solid var(--mid);
-            border-radius: 6px;
-            box-sizing: border-box;
-            resize: vertical;
-        }
+/* Make the modal larger to accommodate the expanded content */
+#text-import-modal .modal-content {
+    max-width: 800px;
+    max-height: 90vh; /* Limit maximum height */
+    overflow-y: auto; /* Add scroll for very large content */
+}
 
-        .import-instructions {
-            text-align: left;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: var(--dark);
-        }
+/* Button set styling adjustments */
+.preset-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
 
-        .import-example {
-            background-color: rgba(0, 0, 0, 0.05);
-            padding: 10px;
-            border-radius: 4px;
-            font-family: monospace;
-            margin-bottom: 15px;
-            text-align: left;
-        }
+.button-set {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+.button-set h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: var(--dark);
+}
+
+.preset-btn {
+    margin: 5px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    font-weight: normal;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.textbook-btn {
+    background-color: var(--accent1);
+    color: white;
+}
+
+.live-btn {
+    background-color: var(--accent2);
+    color: white;
+}
+
+.core-btn {
+    background-color: var(--accent3);
+    color: white;
+}
+
+.other-btn {
+    background-color: var(--secondary);
+    color: var(--dark);
+}
+
+#text-import-content {
+    width: 100%;
+    height: 100px; /* Reduced height to take up 1/5 of the modal */
+    padding: 12px;
+    margin: 15px 0;
+    font-size: 16px;
+    border: 2px solid var(--mid);
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+@media (max-width: 600px) {
+    .preset-buttons {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* AI Support Modal Styles */
         #ai-support-modal .modal-content {
@@ -487,21 +513,16 @@
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.3)</h1>
+        <h1>🎯 Vocabulary Builder (2.4)</h1>
     </header>
 
 </div>
 
     <div class="controls">
     <div class="left-controls">
-        <a href="https://drive.google.com/drive/folders/1tdHguQxZLr72ztOZZOAOtr6o5B6Ole9U?usp=sharing" class="download-link" target="_blank">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download
-        </a>
+        
+
+
         <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
     <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
@@ -537,37 +558,70 @@
     </table>
 
     <!-- Text Import Modal -->
-    <div id="text-import-modal" class="modal">
-        <div class="modal-content">
-            <h2>Import Text</h2>
-            <div class="import-instructions">
-               依照以下格式輸入英文詞彙及中文翻譯
-                <div class="import-example">
-                    English = 英文<br>                
-                    listen to music = 聽音樂<br>
-                                    </div>
-1.點選"Download"鍵並開啟文字檔<br>  
-2.使用快速鍵Ctrl+A (全選)、Ctrl+C (複製)及Ctrl+V (貼上)以匯入學習內容 
-</div>
-            <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
-            <div class="button-group">
-                <button id="text-import-submit-btn" class="submit-btn">Import</button>
-<button id="text-import-clear-btn" class="hint-btn">Clear</button>
-                <button id="text-import-close-btn" class="close-btn">Close</button>
+<div id="text-import-modal" class="modal">
+    <div class="modal-content">
+        <h2>Import Text</h2>
+        
+        <!-- Button Sets -->
+        <div class="preset-buttons">
+            <!-- Textbook Buttons -->
+            <div class="button-set textbook-buttons">
+                <h3>Textbook</h3>
+                <button class="preset-btn textbook-btn" data-preset="b2l4">B2 L4</button>
+                <button class="preset-btn textbook-btn" data-preset="b2l5">B2 L5</button>
+                <button class="preset-btn textbook-btn" data-preset="b2l6">B2 L6</button>
+            </div>
+            
+            <!-- Live Magazine Buttons -->
+            <div class="button-set live-buttons">
+                <h3>Live Magazine</h3>
+                <button class="preset-btn live-btn" data-preset="liveU91">U9 #1</button>
+<button class="preset-btn live-btn" data-preset="liveU92">U9 #2</button>
+                <button class="preset-btn live-btn" data-preset="liveU111">U11 #1</button>
+<button class="preset-btn live-btn" data-preset="liveU112">U11 #2</button>
+                <button class="preset-btn live-btn" data-preset="liveU10">U10</button>
+                <button class="preset-btn live-btn" data-preset="liveU14">U14</button>
+            </div>
+            
+            <!-- 核心字彙 Buttons -->
+            <div class="button-set core-buttons">
+                <h3>核心字彙</h3>
+                <button class="preset-btn core-btn" data-preset="coreU13">U13</button>
+                <button class="preset-btn core-btn" data-preset="coreU14">U14</button>
+                <button class="preset-btn core-btn" data-preset="coreU15">U15</button>
+            </div>
+            
+            <!-- Other Button -->
+            <div class="button-set other-buttons">
+                <h3>Other</h3>
+                <button class="preset-btn other-btn" data-preset="other">Other</button>
             </div>
         </div>
+        
+        <!-- Text Import Field -->
+        <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
+        
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button id="text-import-submit-btn" class="submit-btn">Import</button>
+            <button id="text-import-clear-btn" class="hint-btn">Clear</button>
+            <button id="text-import-close-btn" class="close-btn">Close</button>
+        </div>
     </div>
+</div>
 
 <!-- AI Support Modal -->
     <div id="ai-support-modal" class="modal">
         <div class="modal-content">
             <h2>💡 AI Support</h2>
             <div class="ai-support-links">
-                                               <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">📌 互動問答</a>
-                                <a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)生成故事 / 短文</a>
-<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 填空題</a>
-<a href="https://chatgpt.com/share/67f619dd-d668-800a-af6e-696897e751e7" class="ai-support-link" target="_blank">[Quiz] 中譯英 (學測難度)</a>
-<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗</a>
+<a href="https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/" class="ai-support-link" target="_blank">🔍 劍橋中英雙解字典</a>
+                                               <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank"> 💬 互動問答</a>
+                                <a href="https://tobespecified" class="ai-support-link" target="_blank">☕ (未完成)生成故事 / 短文</a>
+<a href="https://chatgpt.com/share/67f896d4-e3a4-800a-9169-b0f385820e3e" class="ai-support-link" target="_blank">[Quiz] 填空題 ✏️</a>
+<a href="https://chatgpt.com/share/67f7329b-e008-800a-9c06-df50ec1bb977" class="ai-support-link" target="_blank">[Quiz] 中譯英 (入門) 😃 </a>
+<a href="https://chatgpt.com/share/67f619dd-d668-800a-af6e-696897e751e7" class="ai-support-link" target="_blank">[Quiz] 中譯英 (學測難度) 😖</a>
+<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗 ⏳</a>
             </div>
             <div class="button-group">
                 <button id="ai-support-close-btn" class="close-btn">Close</button>
@@ -636,7 +690,7 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         let currentWordIndex = -1;
         let currentWord = null;
         let recognition = null;
-        let speechRate = 1;
+        let speechRate = 0.6;
 
         // Initialize Speech Recognition
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -698,6 +752,196 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         textImportCloseBtn.addEventListener('click', () => {
             textImportModal.style.display = 'none';
         });
+
+// Preset vocabulary data
+const presetVocabulary = {
+    b2l4: `◎前半部 = ...
+male (adj, n)    =男性(的)
+female (adj, n) =女性(的)
+region (n) =地區
+forbid (v) =禁止(v)
+continue (v)     =繼續(v)
+education (n)  =教育(n)
+principal (n)    =校長
+equal (adj)      =平等的
+control (v)       =控制
+annoy (v) =使生氣
+threat (n) =威脅(n)
+       
+◎後半部(second half) = ...
+surgery (n)      =手術
+recover (v)       =恢復(v)
+sign (v)    =簽署
+persuade (v)    =說服(v)
+adopt (v) =1.採用
+adopt (v) =2.收養
+policy (n) =政策
+ensure (v)        =確保
+establish (v)    =建立(v)
+honor (n) =1.榮譽
+honor (n) =2.榮幸
+weapon (n)     =武器
+
+◎詞類變化(different parts of speech)=...
+regional (adj) = 區域的
+continuous (adj) = 持續的
+educate (v) = 教育(v)
+educational (adj) = 教育的、有教育意義的
+principal (adj) = 主要的(＝main)
+equality (n) = 平等(n)
+threaten (v) = 威脅、恐嚇(v)
+recovery (n) = 恢復、康復(n)
+persuasion (n) = 說服(n)
+persuasive (adj) = 有說服力的
+establishment (n) = 建立(n)
+honor (v) = 尊敬、表揚(v)
+honorable (adj) = 值得尊敬的
+
+◎片語(phrases & idioms) = ...
+take notice (of...)     =[片語]注意、留意(t… n…)
+blow up   =[片語]爆炸、炸毀(b… u…)
+take away        =[片語]拿走、移除(t… a…)
+speak out =[片語]公開發聲(s… o…)
+call for...  =[片語]呼籲、要求(c… f…)`,
+    b2l5: `1`,
+    b2l6: `1`,
+    liveU91: `1`,
+liveU92: `1`,
+    liveU111: `lasting (adj)	=持久的
+appeal	=吸引力
+film	=電影(＝movie)
+mark (v)	=標誌、紀念
+encounter	=遇到
+be based on...	=[片語]以...為依據
+in part	=[片語]部分地
+century	=世紀
+tale	=故事
+
+follow-up	=後續
+adventure	=冒險
+portray	=描述、描繪
+advanced	=先進的
+ancient	=古老的
+civilization	=文明
+sink/sank/sunk	=下沉
+beneath	=在…下面(＝under)
+be forced to do something =被迫做某事
+adapt to...	=適應…
+watery	=1.含水的 2.(飲料等)味道淡的
+structure	=結構；建築物
+director	=導演
+take credit for...	=[片語]因…而得功勞
+impressive	=令人印象深刻的
+far from...	=[片語]遠非...、完全不…
+original	=原本的、獨創的
+
+mention	=提到
+philosopher	=哲學家
+describe	=描述
+island	=島嶼
+nation	=國家
+protect	=保護
+confident	=有信心的
+seek / sought	=尋找(＝look for)
+take over...	=接管
+beat/ beat/ beaten	=打敗
+war	=戰爭
+destroy	=破壞
+earthquake	=地震
+`,
+liveU112: `flood	=洪水、淹水
+make up	=[片語]編造(故事等)
+moral	=道德的
+account 	=記述、描述(n)
+genuine	=真正的、真誠的
+historical	=有關歷史的
+event	=事件
+according to...	=根據…
+be located in a place	=位於某地(＝lie in a place)
+beyond	=超出範圍之外
+strait	=海峽
+despite	=儘管(＝in spite of)
+researcher	=研究人員
+point to...	=指向…
+put forward	=[片語]提出(想法等)
+location	=地點
+claim	=聲稱
+lie in a place	=位於某地(＝be located in a place)
+remain	=仍然是、維持
+hide / hid / hidden	=躲藏、隱藏
+
+realistic	=務實的
+suffer	=受苦、遭受
+natural disaster	=天然災害
+over the course of	=[片語]在…期間
+with sth in mind	=[片語]考慮到…
+specifically	=特意地、具體地
+area	=區域
+frequent	=頻繁的
+active volcano	=活火山
+
+technology	=科技
+advance	=前進、進步
+perhaps	=也許(＝maybe)
+remind sb of...	=讓某人想起…
+`,
+    liveU10: `1`,
+    liveU14: `1`,
+    coreU13: `cartoon (n) = 1.(報紙上的)漫畫  2.卡通
+character (n) = 角色
+comic (book) = 漫畫書
+strip (n) = 條狀物(如：布條、紙條等)
+comic strip (n) = (報紙上的)四格連環漫畫
+spark (v) = 激起、引發
+intense (adj) = 強烈的、激烈的
+argument (n) = 爭論
+illustration (n) = 插圖
+before long (adv) = 不久、馬上(=soon)
+revise (n) = 修改
+lock = (n)鎖 (v)鎖起來
+voice = (n)聲音  (v)用言語表達
+opinion (n) = 意見、看法
+proof (n) = 證據
+comment (n) = 評論
+imply (v) = 暗示、暗指
+interpret (v) = 解釋、詮釋
+secondary (adj) = 次要的(vs. primary 主要的)`,
+    coreU14: `amazing (adj) = 1.驚人的(very surprising) 2.very good
+crop (n) = 農作物
+influence (n, v) = 影響
+mankind (n) = 人類(all humans; the human race)
+significant (adj) = 1.重要的(important)  2.顯著的(noticeable)
+significantly (adv) = 顯著地
+corn (n) = 玉米
+wheat (n) = 小麥
+climate (n) = 氣候(vs. weather)
+sauce (n) = 醬汁
+means (n) = 方法；手段
+namely (adv) = 也就是說、更確切地說
+prove (v) = 證明(v)
+value (n) = 價值
+protein (n) = 蛋白質
+basis (n) = 基礎
+increase (v) = 增加(v)
+increasingly (+ adj) = 越來越…(-ly + adj.)
+diet (n) = 1.飲食 2.節食
+go on a diet = 控制飲食、節食
+importance (n) = 重要性
+delicious (adj) = 美味的`
+,
+    coreU15: `1`,
+    other: `1`
+};
+
+// Add event listeners to all preset buttons
+document.querySelectorAll('.preset-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const presetKey = button.dataset.preset;
+        if (presetVocabulary[presetKey]) {
+            textImportContent.value = presetVocabulary[presetKey];
+        }
+    });
+});
 
         // Text Import Submit button click handler
         textImportSubmitBtn.addEventListener('click', () => {
@@ -764,7 +1008,7 @@ textImportClearBtn.addEventListener('click', () => {
                 
                 // Vocabulary column with speaker
                 const wordCell = document.createElement('td');
-                const cleanWord = item.vocabulary.replace(/\(.*?\)/g, '').trim(); // Remove content in parentheses for TTS
+                const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').trim(); // Remove content in parentheses for TTS
                 
                 wordCell.innerHTML = `
                     ${item.vocabulary}
@@ -1019,7 +1263,7 @@ function updateDateInfo() {
     
     // Update the HTML - each item on separate line
     dateInfoEl.innerHTML = `
-        <span><span class="emoji">📅</span>${taiwanDate}</span>
+        <span><span class="emoji">📅</span>${taiwanDate}</span><br>
         <span><span class="emoji">⏰</span><span class="countdown">${daysUntilExam}</span> days until 段考</span>
         <span><span class="emoji">📚</span><span class="countdown">${daysUntilCollegeExam}</span> days until 116學測</span>
     `;
@@ -1032,122 +1276,6 @@ updateDateInfo();
 // Update date information every minute
 setInterval(updateDateInfo, 60000);
 
-// Password functionality
-const passwordModal = document.getElementById('password-modal');
-const passwordInput = document.getElementById('password-input');
-const passwordFeedback = document.getElementById('password-feedback');
-const speakPasswordBtn = document.getElementById('speak-password-btn');
-const submitPasswordBtn = document.getElementById('submit-password-btn');
-let passwordRecognition = null;
-
-// Initialize password speech recognition
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    passwordRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    passwordRecognition.lang = 'en-US';
-    passwordRecognition.continuous = false;
-    passwordRecognition.interimResults = false;
-
-    passwordRecognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        passwordInput.value = transcript;
-        speakPasswordBtn.textContent = '🎤 Say the password';
-        speakPasswordBtn.classList.remove('recording');
-    };
-
-    passwordRecognition.onend = function() {
-        speakPasswordBtn.textContent = '🎤 Say the password';
-        speakPasswordBtn.classList.remove('recording');
-    };
-
-    passwordRecognition.onerror = function(event) {
-        console.error('Speech recognition error', event.error);
-        speakPasswordBtn.textContent = '🎤 Say the password';
-        speakPasswordBtn.classList.remove('recording');
-    };
-}
-
-// Speaking wrong password message
-function speakWrongPassword() {
-    if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance("Wrong password. Do you love English?");
-        utterance.lang = 'en-US';
-        utterance.rate = speechRate;
-        speechSynthesis.speak(utterance);
-    }
-}
-
-// Check password
-function checkPassword() {
-    const correctPassword = "I love English!";
-    const enteredPassword = passwordInput.value;
-    
-    // Clean up passwords for comparison (ignore case and punctuation)
-    const cleanCorrect = correctPassword.toLowerCase().replace(/[.,?!;:{}()\[\]\-_]/g, "");
-    const cleanEntered = enteredPassword.toLowerCase().replace(/[.,?!;:{}()\[\]\-_]/g, "");
-    
-    if (cleanEntered === cleanCorrect) {
-        // Password is correct
-        passwordModal.style.display = 'none';
-    } else {
-        // Password is incorrect
-        passwordFeedback.textContent = 'Wrong password. Do you love English?';
-        passwordFeedback.className = 'feedback incorrect';
-        speakWrongPassword();
-    }
-}
-
-// Event listeners for password modal
-speakPasswordBtn.addEventListener('click', () => {
-    if (!passwordRecognition) {
-        alert('Speech recognition is not supported in your browser.');
-        return;
-    }
-    
-    try {
-        if (speakPasswordBtn.textContent === '🎤 Say the password') {
-            passwordRecognition.start();
-            speakPasswordBtn.textContent = 'Recording';
-            speakPasswordBtn.classList.add('recording');
-        } else {
-            passwordRecognition.stop();
-            speakPasswordBtn.textContent = '🎤 Say the password';
-            speakPasswordBtn.classList.remove('recording');
-        }
-    } catch (error) {
-        console.error('Speech recognition error:', error);
-        speakPasswordBtn.textContent = '🎤 Say the password';
-        speakPasswordBtn.classList.remove('recording');
-    }
-});
-
-submitPasswordBtn.addEventListener('click', checkPassword);
-
-passwordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        checkPassword();
-    }
-});
-
-// Show password modal when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    passwordModal.style.display = 'flex';
-});
-
     </script>
-
-<!-- Password Modal -->
-<div id="password-modal" class="modal">
-    <div class="modal-content">
-        <h2>Password Required</h2>
-        <p>Please say the password to access the vocabulary builder.</p>
-        <input type="text" id="password-input" class="answer-input" placeholder="Type or speak the password...">
-        <div id="password-feedback" class="feedback"></div>
-        <div class="button-group">
-            <button id="speak-password-btn" class="speak-btn">🎤 Say the password</button>
-            <button id="submit-password-btn" class="submit-btn">Submit</button>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
