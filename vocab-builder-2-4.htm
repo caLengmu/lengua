@@ -236,6 +236,11 @@
             color: white;
         }
 
+.copy-btn {
+    background-color: var(--accent3);
+    color: white;
+}
+
         .recording {
             background-color: var(--primary);
             animation: pulse 1.5s infinite;
@@ -601,12 +606,14 @@
         <!-- Text Import Field -->
         <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
         
-        <!-- Action Buttons -->
-        <div class="button-group">
-            <button id="text-import-submit-btn" class="submit-btn">Import</button>
-            <button id="text-import-clear-btn" class="hint-btn">Clear</button>
-            <button id="text-import-close-btn" class="close-btn">Close</button>
-        </div>
+<!-- Action Buttons -->
+<div class="button-group">
+    <button id="text-import-submit-btn" class="submit-btn">Import</button>
+    <button id="text-import-copy-btn" class="copy-btn">Copy</button>
+    <button id="text-import-clear-btn" class="hint-btn">Clear</button>
+    <button id="text-import-close-btn" class="close-btn">Close</button>
+</div>        
+
     </div>
 </div>
 
@@ -616,7 +623,8 @@
             <h2>💡 AI Support</h2>
             <div class="ai-support-links">
 <a href="https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/" class="ai-support-link" target="_blank">🔍 劍橋中英雙解字典</a>
-                                               <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank"> 💬 互動問答</a>
+                                              <a href="https://chatgpt.com/share/67fb4661-ab40-800a-91e1-84af81f0382b" class="ai-support-link" target="_blank">🌟 生成例句+中譯</a>
+ <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>
                                 <a href="https://tobespecified" class="ai-support-link" target="_blank">☕ (未完成)生成故事 / 短文</a>
 <a href="https://chatgpt.com/share/67f896d4-e3a4-800a-9169-b0f385820e3e" class="ai-support-link" target="_blank">[Quiz] 填空題 ✏️</a>
 <a href="https://chatgpt.com/share/67f7329b-e008-800a-9c06-df50ec1bb977" class="ai-support-link" target="_blank">[Quiz] 中譯英 (入門) 😃 </a>
@@ -991,7 +999,33 @@ textImportClearBtn.addEventListener('click', () => {
         }
 
       
+// Copy button click handler
+const textImportCopyBtn = document.getElementById('text-import-copy-btn');
 
+textImportCopyBtn.addEventListener('click', () => {
+    const textToCopy = textImportContent.value;
+    if (!textToCopy) {
+        alert('No text to copy.');
+        return;
+    }
+    
+    // Copy text to clipboard
+    navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+            // Provide visual feedback
+            const originalText = textImportCopyBtn.textContent;
+            textImportCopyBtn.textContent = 'Copied!';
+            
+            // Revert button text after a short delay
+            setTimeout(() => {
+                textImportCopyBtn.textContent = originalText;
+            }, 1500);
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy text. Please try again.');
+        });
+});
        
 
         // Render vocabulary table
