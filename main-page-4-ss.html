@@ -187,7 +187,7 @@
             <!-- Pikachu image -->
             <div class="pikachu-container">
                 <div class="pikachu-img">
-                    <img src="sloth_transparent.png" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="sloth_transparent.png" alt="Pikachu" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
             
@@ -227,18 +227,10 @@
                 weekday: 'long'
             };
             
-            // Format 12-hour time
-            const timeOptions = {
-                timeZone: 'Asia/Taipei',
-                hour: 'numeric',
-                minute: 'numeric',
-                
-                hour12: true
-            };
+          
             
             const taiwanDate = now.toLocaleDateString('en-US', options);
-            const taiwanTime = now.toLocaleTimeString('en-US', timeOptions);
-            
+           
             // Calculate days until midterm (May 12, 2025)
             const midtermDate = new Date('2025-05-12T00:00:00+08:00');
             const midtermDiff = Math.ceil((midtermDate - now) / (1000 * 60 * 60 * 24));
@@ -249,7 +241,7 @@
             
             // Update the dates div
             document.getElementById('dates').innerHTML = `
-                📅 ${taiwanDate} at ${taiwanTime}<br>
+                📅 ${taiwanDate}<br>
                 ⏰ ${midtermDiff} days until 段考<br>
                 📚 ${examDiff} days until 116年學測
             `;
