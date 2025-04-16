@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,14 +8,27 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
             background-color: #f5e7b6; /* Warm cream background */
             font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 100vh;
+            max-height: 900px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .bubble {
@@ -27,12 +39,12 @@
             position: absolute;
             box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3), -1px -1px 3px rgba(255, 255, 255, 0.7);
             transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
             background-color: #e4926e; /* Retro orange */
             color: #1a1a1a;
             text-decoration: none;
             font-weight: bold;
             cursor: pointer;
+            z-index: 1;
         }
 
         .bubble:hover {
@@ -41,14 +53,16 @@
         }
 
         .main-bubble {
-            width: 300px;
-            height: 300px;
+            width: 260px;
+            height: 260px;
             background-color: #c03a2b; /* Deeper red */
-            z-index: 10;
+            z-index: 2;
             flex-direction: column;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            font-size: 16px;
+            font-size: 15px;
+            position: relative;
+            cursor: pointer;
         }
 
         .main-bubble-content {
@@ -60,74 +74,148 @@
         }
 
         .pikachu-img {
-            width: 150px;
-            height: 150px;
-            margin: 10px auto;
+            width: 120px;
+            height: 120px;
+            margin: 5px auto;
             border-radius: 50%;
             background-color: #fdcd3b;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
         .dates {
-            margin-bottom: 10px;
             color: #fffcf2;
+            font-size: 14px;
+            margin-bottom: 5px;
         }
 
-        .quote {
+        .speech-bubble {
+            position: absolute;
+            top: -40px;
+            right: -120px;
+            width: 220px;
+            background-color: #fffcf2;
+            color: #333;
+            padding: 15px;
+            border-radius: 20px;
             font-style: italic;
             font-size: 14px;
-            color: #fffcf2;
-            margin-top: 10px;
-            padding: 5px;
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            text-align: left;
+            display: none; /* Hidden by default, shown when clicked */
+        }
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-right-color: #fffcf2;
+            border-left: 0;
+            margin-left: -15px;
         }
 
         .small-bubble {
-            width: 100px;
-            height: 100px;
-            background-color: #5e9ca3; /* Teal */
-            font-size: 18px;
+            width: 80px;
+            height: 80px;
+            font-size: 16px;
             color: #fffcf2;
         }
 
         /* Unique colors for each satellite bubble */
-        .small-bubble:nth-child(2) { background-color: #5e9ca3; } /* Teal */
-        .small-bubble:nth-child(3) { background-color: #7a97b9; } /* Blue */
-        .small-bubble:nth-child(4) { background-color: #b086a8; } /* Purple */
-        .small-bubble:nth-child(5) { background-color: #d68189; } /* Pink */
-        .small-bubble:nth-child(6) { background-color: #e4c26e; } /* Yellow */
-        .small-bubble:nth-child(7) { background-color: #85a677; } /* Green */
+        .bubble-1 { background-color: #5e9ca3; } /* Teal */
+        .bubble-2 { background-color: #7a97b9; } /* Blue */
+        .bubble-3 { background-color: #b086a8; } /* Purple */
+        .bubble-4 { background-color: #d68189; } /* Pink */
+        .bubble-5 { background-color: #e4c26e; } /* Yellow */
+        .bubble-6 { background-color: #85a677; } /* Green */
+
+        /* Responsive layout for bubbles */
+        @media (max-width: 768px) {
+            .container {
+                height: auto;
+                min-height: 100vh;
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .main-bubble {
+                position: relative;
+                margin: 20px auto;
+                width: 220px;
+                height: 220px;
+            }
+            
+            .pikachu-img {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .bubble-links {
+                position: relative;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 240px;
+                width: 100%;
+                z-index: 1;
+            }
+            
+            .small-bubble {
+                position: relative;
+                margin: 10px;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+            }
+            
+            .speech-bubble {
+                top: -20px;
+                right: -80px;
+                width: 180px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Main bubble -->
-    <div class="bubble main-bubble">
-        <div class="main-bubble-content">
-            <div class="dates" id="dates">
-                <!-- Date info will be loaded via JavaScript -->
+    <div class="container">
+        <!-- Main bubble -->
+        <div class="bubble main-bubble" id="mainBubble">
+            <div class="main-bubble-content">
+                <div class="dates" id="dates">
+                    <!-- Date info will be loaded via JavaScript -->
+                </div>
+                
+                <div class="pikachu-img">
+                    <img src="/api/placeholder/120/120" alt="Pikachu" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
             </div>
             
-            <div class="pikachu-img">
-                <img src="sloth_transparent.png" alt="Pikachu" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            
-            <div class="quote" id="quote">
+            <!-- Speech bubble for quote (hidden by default) -->
+            <div class="speech-bubble" id="quote">
                 <!-- Quote will be loaded via JavaScript -->
             </div>
         </div>
+        
+        <!-- Surrounding bubbles -->
+        <div class="bubble-links">
+            <a href="https://claude.ai" class="bubble small-bubble bubble-1" style="top: 20%; left: 25%;">Link</a>
+            <a href="https://claude.ai" class="bubble small-bubble bubble-2" style="top: 20%; right: 25%;">Link</a>
+            <a href="https://claude.ai" class="bubble small-bubble bubble-3" style="top: 40%; right: 10%;">Link</a>
+            <a href="https://claude.ai" class="bubble small-bubble bubble-4" style="bottom: 20%; right: 25%;">Link</a>
+            <a href="https://claude.ai" class="bubble small-bubble bubble-5" style="bottom: 20%; left: 25%;">Link</a>
+            <a href="https://claude.ai" class="bubble small-bubble bubble-6" style="top: 40%; left: 10%;">Link</a>
+        </div>
     </div>
-    
-    <!-- Surrounding bubbles -->
-    <a href="https://claude.ai" class="bubble small-bubble" style="top: 15%; left: 30%;">Link</a>
-    <a href="https://claude.ai" class="bubble small-bubble" style="top: 15%; right: 30%;">Link</a>
-    <a href="https://claude.ai" class="bubble small-bubble" style="top: 40%; right: 15%;">Link</a>
-    <a href="https://claude.ai" class="bubble small-bubble" style="bottom: 15%; right: 30%;">Link</a>
-    <a href="https://claude.ai" class="bubble small-bubble" style="bottom: 15%; left: 30%;">Link</a>
-    <a href="https://claude.ai" class="bubble small-bubble" style="top: 40%; left: 15%;">Link</a>
 
     <script>
         // Function to update dates and countdown
@@ -140,7 +228,7 @@
                 day: 'numeric',
                 weekday: 'long'
             };
-            const taiwanDate = new Date().toLocaleDateString('zh-TW', options);
+            const taiwanDate = new Date().toLocaleDateString('en-US', options);
             
             // Calculate days until midterm (May 12, 2025)
             const today = new Date();
@@ -154,8 +242,8 @@
             // Update the dates div
             document.getElementById('dates').innerHTML = `
                 ${taiwanDate}<br>
-                距離段考還有 ${midtermDiff} 天<br>
-                距離116年學測還有 ${examDiff} 天
+                ${midtermDiff} days until 段考<br>
+                ${examDiff} days until 116年學測
             `;
         }
         
@@ -176,10 +264,38 @@
             document.getElementById('quote').textContent = quotes[randomIndex];
         }
         
-        // Initialize on page load
+        // Toggle speech bubble visibility when main bubble is clicked
         document.addEventListener('DOMContentLoaded', function() {
+            const mainBubble = document.getElementById('mainBubble');
+            const speechBubble = document.getElementById('quote');
+            let isQuoteVisible = false;
+            
+            mainBubble.addEventListener('click', function() {
+                if (!isQuoteVisible) {
+                    speechBubble.style.display = 'block';
+                    isQuoteVisible = true;
+                } else {
+                    speechBubble.style.display = 'none';
+                    isQuoteVisible = false;
+                }
+            });
+            
+            // Initialize dates and quote
             updateDates();
             displayRandomQuote();
+            
+            // Check for mobile devices and apply layout changes if needed
+            function checkMobile() {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.container').classList.add('mobile-layout');
+                } else {
+                    document.querySelector('.container').classList.remove('mobile-layout');
+                }
+            }
+            
+            // Run on load and resize
+            checkMobile();
+            window.addEventListener('resize', checkMobile);
         });
         
         // Update dates and quote once a day (checking every hour)
