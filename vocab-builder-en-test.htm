@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Builder</title>
+    <style>
+        :root {
+            --primary: #D33E43;      /* Vibrant Red */
+            --secondary: #F8B500;    /* Japanese Amber */
+            --accent1: #5D9CEC;      /* Sky Blue */
+            --accent2: #77B28C;      /* Matcha Green */
+            --accent3: #A06CD5;      /* Purple */
+            --dark: #2D2D2A;         /* Charcoal */
+            --light: #F8F3E6;        /* Off-white */
+            --mid: #888888;          /* Mid Gray */
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+      .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px; /* Increased from 20px to 30px for better spacing */
+    position: relative; /* Add this to ensure proper positioning context */
+    z-index: 1; /* Add this to make sure controls stay above other elements */
+}
+
+        .left-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-import-btn {
+            background-color: var(--secondary);
+            color: black;
+        }
+
+     
+
+        .start-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 16px 25px;
+            font-size: 25px;
+        }
+
+.ai-support-btn {
+            background-color: var(--accent1);
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+        }
+
+        
+
+
+      table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    clear: both; /* Add this to ensure the table clears any floated elements */
+    display: table; /* Explicitly set to table display */
+}
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--dark);
+            color: var(--light);
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .speaker-icon {
+            cursor: pointer;
+            color: var(--secondary);
+            margin-left: 8px;
+            font-size: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--light);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .prompt {
+            font-size: 24px;
+            margin: 20px 0;
+            color: var(--dark);
+            font-weight: bold;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border: 2px solid var(--mid);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .feedback {
+            margin: 15px 0;
+            font-size: 25px;
+            font-weight: bold;
+            min-height: 27px;
+        }
+
+        .correct {
+            color: var(--accent2);
+        }
+
+        .incorrect {
+            color: var(--primary);
+        }
+
+        .hint {
+            color: var(--accent1);
+            font-style: italic;
+            font-size: 25px;
+            margin: 10px 0;
+            min-height: 24px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .speak-btn {
+            background-color: var(--accent1);
+            color: white;
+        }
+
+        .hint-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        .answer-btn {
+            background-color: var(--accent3);
+            color: white;
+        }
+
+        .next-btn {
+            background-color: var(--accent2);
+            color: white;
+        }
+
+        .close-btn {
+            background-color: var(--mid);
+            color: white;
+        }
+
+.copy-btn {
+    background-color: var(--accent3);
+    color: white;
+}
+
+        .recording {
+            background-color: var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--mid);
+            font-style: italic;
+        }
+
+        .tts-speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tts-speed-control select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid var(--mid);
+            background-color: white;
+            font-size: 14px;
+        }
+
+        .tts-speed-control label {
+            font-weight: bold;
+            color: white;
+        }
+
+        .reveal-answer {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 30px;
+            margin: 10px 0;
+            min-height: 27px;
+        }
+
+       /* Text Import Modal Styles - Updated for Button Sets */
+/* Updated textarea style to handle larger content */
+#text-import-content {
+    width: 100%;
+    height: 200px; /* Increased height to accommodate more text */
+    padding: 12px;
+    margin: 15px 0;
+    font-size: 14px; /* Slightly smaller font for more content */
+    border: 2px solid var(--mid);
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+    white-space: pre-wrap; /* Preserves line breaks and spaces */
+    font-family: monospace; /* Monospace font for better alignment */
+    overflow-y: auto; /* Add scroll if content exceeds height */
+}
+
+/* Make the modal larger to accommodate the expanded content */
+#text-import-modal .modal-content {
+    max-width: 800px;
+    max-height: 90vh; /* Limit maximum height */
+    overflow-y: auto; /* Add scroll for very large content */
+}
+
+/* Button set styling adjustments */
+.preset-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.button-set {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+.button-set h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: var(--dark);
+}
+
+.preset-btn {
+    margin: 5px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    font-weight: normal;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.textbook-btn {
+    background-color: var(--accent1);
+    color: white;
+}
+
+.live-btn {
+    background-color: var(--accent2);
+    color: white;
+}
+
+.core-btn {
+    background-color: var(--accent3);
+    color: white;
+}
+
+.other-btn {
+    background-color: var(--secondary);
+    color: var(--dark);
+}
+
+#text-import-content {
+    width: 100%;
+    height: 100px; /* Reduced height to take up 1/5 of the modal */
+    padding: 12px;
+    margin: 15px 0;
+    font-size: 16px;
+    border: 2px solid var(--mid);
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+@media (max-width: 600px) {
+    .preset-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* AI Support Modal Styles */
+        #ai-support-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .ai-support-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .ai-support-link {
+            background-color: var(--accent1);
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-support-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .left-controls {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+.right-controls {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+
+.date-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-align: right;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Change to column for vertical display */
+    gap: 5px;
+    font-weight: bold;
+    max-width: 90%; /* Prevent overflow on small screens */
+    z-index: 10; /* Ensure it stays above other elements */
+}
+
+.date-info span {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevent line breaks within each date item */
+}
+
+.date-info .emoji {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.date-info .countdown {
+    color: var(--primary);
+    margin: 0 3px;
+}
+
+/* Add media queries for mobile responsiveness */
+@media (max-width: 768px) {
+    .date-info {
+        position: static; /* Position in normal flow on mobile */
+        margin: 0 auto 15px auto; /* Center it and add margin below */
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        right: auto;
+        top: auto;
+    }
+    
+    .date-info span {
+        justify-content: center; /* Center content on mobile */
+    }
+    
+    header {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+            .ai-support-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+.visitor-counter {
+    margin-top: 40px;
+    text-align: center;
+    padding: 15px;
+    color: var(--dark);
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#visitor-count {
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+<div id="date-info" class="date-info"></div>
+        <h1>🎯 Vocabulary Builder (2.4)</h1>
+    </header>
+
+</div>
+
+    <div class="controls">
+    <div class="left-controls">
+        
+
+
+        <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+    </div>
+    <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
+    <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+</div>
+
+    <table id="vocabulary-table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="tts-speed-control">
+                        <label for="tts-speed">Vocabulary</label>
+                        <select id="tts-speed">
+                            <option value="0.6">0.6x</option>
+                            <option value="0.8">0.8x</option>
+                            <option value="1">1x</option>                                                       
+                        </select>
+                    </div>
+                </th>
+                <th>Translation</th>
+                <th>
+                    <label>
+                        <input type="checkbox" id="select-all"> Select
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="vocabulary-body">
+            <tr>
+                <td colspan="3" class="no-data">Import your vocabulary list to get started</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Text Import Modal -->
+<div id="text-import-modal" class="modal">
+    <div class="modal-content">
+        <h2>Import Text</h2>
+        
+        <!-- Button Sets -->
+        <div class="preset-buttons">
+            <!-- Textbook Buttons -->
+            <div class="button-set textbook-buttons">
+                <h3>Textbook</h3>
+                <button class="preset-btn textbook-btn" data-preset="b2l4">B2 L4</button>
+                <button class="preset-btn textbook-btn" data-preset="b2l5">B2 L5</button>
+                <button class="preset-btn textbook-btn" data-preset="b2l6">B2 L6</button>
+            </div>
+            
+            <!-- Live Magazine Buttons -->
+            <div class="button-set live-buttons">
+                <h3>Live Magazine</h3>
+                <button class="preset-btn live-btn" data-preset="liveU91">U9 #1</button>
+<button class="preset-btn live-btn" data-preset="liveU92">U9 #2</button>
+                <button class="preset-btn live-btn" data-preset="liveU111">U11 #1</button>
+<button class="preset-btn live-btn" data-preset="liveU112">U11 #2</button>
+                <button class="preset-btn live-btn" data-preset="liveU10">U10</button>
+                <button class="preset-btn live-btn" data-preset="liveU14">U14</button>
+            </div>
+            
+            <!-- 核心字彙 Buttons -->
+            <div class="button-set core-buttons">
+                <h3>核心字彙</h3>
+                <button class="preset-btn core-btn" data-preset="coreU13">U13</button>
+                <button class="preset-btn core-btn" data-preset="coreU14">U14</button>
+                <button class="preset-btn core-btn" data-preset="coreU15">U15</button>
+            </div>
+            
+            <!-- Other Button -->
+            <div class="button-set other-buttons">
+                <h3>Other</h3>
+                <button class="preset-btn other-btn" data-preset="other">Other</button>
+            </div>
+        </div>
+        
+        <!-- Text Import Field -->
+        <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
+        
+<!-- Action Buttons -->
+<div class="button-group">
+    <button id="text-import-submit-btn" class="submit-btn">Import</button>
+    <button id="text-import-copy-btn" class="copy-btn">Copy</button>
+    <button id="text-import-clear-btn" class="hint-btn">Clear</button>
+    <button id="text-import-close-btn" class="close-btn">Close</button>
+</div>        
+
+    </div>
+</div>
+
+<!-- AI Support Modal -->
+    <div id="ai-support-modal" class="modal">
+        <div class="modal-content">
+            <h2>💡 AI Support</h2>
+            <div class="ai-support-links">
+<a href="https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/" class="ai-support-link" target="_blank">🔍 劍橋中英雙解字典</a>
+                                              <a href="https://chatgpt.com/share/67fb4661-ab40-800a-91e1-84af81f0382b" class="ai-support-link" target="_blank">🌟 生成例句+中譯</a>
+ <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>
+                                <a href="https://tobespecified" class="ai-support-link" target="_blank">☕ (未完成)生成故事 / 短文</a>
+<a href="https://chatgpt.com/share/67f896d4-e3a4-800a-9169-b0f385820e3e" class="ai-support-link" target="_blank">[Quiz] 填空題 ✏️</a>
+<a href="https://chatgpt.com/share/67f7329b-e008-800a-9c06-df50ec1bb977" class="ai-support-link" target="_blank">[Quiz] 中譯英 (入門) 😃 </a>
+<a href="https://chatgpt.com/share/67f619dd-d668-800a-af6e-696897e751e7" class="ai-support-link" target="_blank">[Quiz] 中譯英 (學測難度) 😖</a>
+<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗 ⏳</a>
+            </div>
+            <div class="button-group">
+                <button id="ai-support-close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="modal">
+        <div class="modal-content">
+            <div id="prompt" class="prompt">Say "<span id="translation-prompt"></span>" in English.</div>
+            <input type="text" id="answer-input" class="answer-input" placeholder="Type your answer here...">
+            <div id="feedback" class="feedback"></div>
+            <div id="hint-text" class="hint"></div>
+            <div id="reveal-answer" class="reveal-answer"></div>
+            <div class="button-group">
+                <button id="submit-btn" class="submit-btn">Submit</button>
+                <button id="speak-btn" class="speak-btn">🎤 Speak</button>
+                <button id="hint-btn" class="hint-btn">Hint</button>
+                <button id="answer-btn" class="answer-btn">🔑 Answer</button>
+                <button id="next-btn" class="next-btn">Next</button>
+                <button id="close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+ 
+    <script>
+        // DOM Elements
+      
+        const textImportBtn = document.getElementById('text-import-btn');
+     
+        const startBtn = document.getElementById('start-btn');
+const aiSupportBtn = document.getElementById('ai-support-btn');
+        const vocabularyTable = document.getElementById('vocabulary-table');
+        const vocabularyBody = document.getElementById('vocabulary-body');
+        const selectAllCheckbox = document.getElementById('select-all');
+        const quizModal = document.getElementById('quiz-modal');
+        const translationPrompt = document.getElementById('translation-prompt');
+        const answerInput = document.getElementById('answer-input');
+        const feedbackEl = document.getElementById('feedback');
+        const hintTextEl = document.getElementById('hint-text');
+        const revealAnswerEl = document.getElementById('reveal-answer');
+        const submitBtn = document.getElementById('submit-btn');
+        const speakBtn = document.getElementById('speak-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const answerBtn = document.getElementById('answer-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const ttsSpeedSelect = document.getElementById('tts-speed');
+        
+        // Text Import Modal Elements
+        const textImportModal = document.getElementById('text-import-modal');
+        const textImportContent = document.getElementById('text-import-content');
+        const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
+        const textImportCloseBtn = document.getElementById('text-import-close-btn');
+const textImportClearBtn = document.getElementById('text-import-clear-btn');
+
+// AI Support Modal Elements
+        const aiSupportModal = document.getElementById('ai-support-modal');
+        const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+
+        // Variables
+        let vocabularyData = [];
+        let currentQuizWords = [];
+        let currentWordIndex = -1;
+        let currentWord = null;
+        let recognition = null;
+        let speechRate = 0.6;
+
+        // Initialize Speech Recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript.toLowerCase().trim();
+                answerInput.value = transcript;
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            };
+
+            recognition.onend = function() {
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            };
+        }
+
+        // Text-to-Speech function
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = speechRate;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // TTS Speed change handler
+        ttsSpeedSelect.addEventListener('change', (e) => {
+            speechRate = parseFloat(e.target.value);
+        });
+
+// AI Support button click handler
+        aiSupportBtn.addEventListener('click', () => {
+            aiSupportModal.style.display = 'flex';
+        });
+
+        // AI Support Close button click handler
+        aiSupportCloseBtn.addEventListener('click', () => {
+            aiSupportModal.style.display = 'none';
+        });
+
+        // Text Import button click handler
+        textImportBtn.addEventListener('click', () => {
+            textImportModal.style.display = 'flex';
+        });
+
+        // Text Import Close button click handler
+        textImportCloseBtn.addEventListener('click', () => {
+            textImportModal.style.display = 'none';
+        });
+
+// Preset vocabulary data
+const presetVocabulary = {
+
+    b2l4: `
+B2 L4 Malala
+
+◎前半部 = ...
+male (adj, n)    =男性(的)
+female (adj, n) =女性(的)
+region (n) =地區
+forbid (v) =禁止(v)
+continue (v)     =繼續(v)
+education (n)  =教育(n)
+principal (n)    =校長
+equal (adj)      =平等的
+control (v)       =控制
+annoy (v) =使生氣
+threat (n) =威脅(n)
+       ◎後半部(second half) = ...
+surgery (n)      =手術
+recover (v)       =恢復(v)
+sign (v)    =簽署
+persuade (v)    =說服(v)
+adopt (v) =1.採用
+adopt (v) =2.收養
+policy (n) =政策
+ensure (v)        =確保
+establish (v)    =建立(v)
+honor (n) =1.榮譽
+honor (n) =2.榮幸
+weapon (n)     =武器
+◎詞類變化(different parts of speech)=...
+regional (adj) = 區域的
+continuous (adj) = 持續的
+educate (v) = 教育(v)
+educational (adj) = 教育的、有教育意義的
+principal (adj) = 主要的(＝main)
+equality (n) = 平等(n)
+threaten (v) = 威脅、恐嚇(v)
+recovery (n) = 恢復、康復(n)
+persuasion (n) = 說服(n)
+persuasive (adj) = 有說服力的
+establishment (n) = 建立(n)
+honor (v) = 尊敬、表揚(v)
+honorable (adj) = 值得尊敬的
+◎片語(phrases & idioms) = ...
+take notice (of...)     =[片語]注意、留意(t… n…)
+blow up   =[片語]爆炸、炸毀(b… u…)
+take away        =[片語]拿走、移除(t… a…)
+speak out =[片語]公開發聲(s… o…)
+call for...  =[片語]呼籲、要求(c… f…)`,
+
+    b2l5: `
+to be updated
+
+`,
+
+    b2l6: `
+to be updated 
+
+`,
+
+    liveU91: `
+to be updated 
+
+`,
+
+liveU92: `
+to be updated 
+
+`,
+
+    liveU111: `
+Live U11 Atlantis #1
+
+lasting (adj)	=持久的
+appeal	=吸引力
+film	=電影(＝movie)
+mark (v)	=標誌、紀念
+encounter	=遇到
+be based on...	=[片語]以...為依據
+in part	=[片語]部分地
+century	=世紀
+tale	=故事
+follow-up	=後續
+adventure	=冒險
+portray	=描述、描繪
+advanced	=先進的
+ancient	=古老的
+civilization	=文明
+sink/sank/sunk	=下沉
+beneath	=在…下面(＝under)
+be forced to do something =被迫做某事
+adapt to...	=適應…
+watery	=1.含水的 2.(飲料等)味道淡的
+structure	=結構；建築物
+director	=導演
+take credit for...	=[片語]因…而得功勞
+impressive	=令人印象深刻的
+far from...	=[片語]遠非...、完全不…
+original	=原本的、獨創的
+mention	=提到
+philosopher	=哲學家
+describe	=描述
+island	=島嶼
+nation	=國家
+protect	=保護
+confident	=有信心的
+seek / sought	=尋找(＝look for)
+take over...	=接管
+beat/ beat/ beaten	=打敗
+war	=戰爭
+destroy	=破壞
+earthquake	=地震`,
+
+liveU112: `
+Live U11 Atlantis #2 
+
+flood	=洪水、淹水
+make up	=[片語]編造(故事等)
+moral	=道德的
+account 	=記述、描述(n)
+genuine	=真正的、真誠的
+historical	=有關歷史的
+event	=事件
+according to...	=根據…
+be located in a place	=位於某地(＝lie in a place)
+beyond	=超出範圍之外
+strait	=海峽
+despite	=儘管(＝in spite of)
+researcher	=研究人員
+point to...	=指向…
+put forward	=[片語]提出(想法等)
+location	=地點
+claim	=聲稱
+lie in a place	=位於某地(＝be located in a place)
+remain	=仍然是、維持
+hide / hid / hidden	=躲藏、隱藏
+realistic	=務實的
+suffer	=受苦、遭受
+natural disaster	=天然災害
+over the course of	=[片語]在…期間
+with sth in mind	=[片語]考慮到…
+specifically	=特意地、具體地
+area	=區域
+frequent	=頻繁的
+active volcano	=活火山
+technology	=科技
+advance	=前進、進步
+perhaps	=也許(＝maybe)
+remind sb of...	=讓某人想起…`,
+
+    liveU10: `
+to be updated 
+
+`,
+
+    liveU14: `
+Live U14 Bracelet 
+
+era (n) = 時代
+tour (n) = 1.旅行 2.巡迴演出
+constantly (adv) = 持續地
+break the record = 打破紀錄
+record-breaking (adj) = 破紀錄的
+sales (n) = 銷售量
+tale (n) = 故事
+wherever = 無論哪裡
+craft (n) = 工藝、手工藝
+roof (n) = 屋頂
+go through the roof = [片語] 激增、暴增 (g… t… the r…)
+exchange (v) = 交換
+friendship (n) = 友誼
+bracelet (n) = 手鍊
+root (n) = 根源、起源
+have one’s roots in... = [片語] 根源於... (h… one’s r… i…)
+indigenous (adj) = 本地的、原住民的
+weave (v) = 編織
+similar (adj) = 相似的
+particularly (adv) = 特別地
+hippy/hippie (n) = 嬉皮
+take up = [片語] 開始採用/從事...(t… u…)
+include (v) = 包含
+bright (adj) = 明亮的、鮮豔的
+bead (n) = 珠子
+feature (v) = 以…為特色
+slogan (n) = 口號、標語
+over time = [片語] 隨著時間過去 (o… t…)
+(dream/wish) come true = (夢想/願望)成真、實現
+wonderful (adj) = 極好的 (w…)
+affordable (adj) = 付得起的
+wonderfully affordable = 價格非常實惠 (w…ly a…)
+personal (adj) = 個人的
+celebrate (v) = 慶祝
+currently (adv) = 目前、當前
+trend (n) = 趨勢、潮流
+gather (v) = (使)聚集
+material (n) = 材料
+creative (adj) = 有創意的
+trade (v) = 1.交換 2.交易
+design (n) = 設計
+bestie (n) = 最好的朋友
+`,
+
+    coreU13: `
+核心單U13
+
+cartoon (n) = 1.(報紙上的)漫畫  2.卡通
+character (n) = 角色
+comic (book) = 漫畫書
+strip (n) = 條狀物(如：布條、紙條等)
+comic strip (n) = (報紙上的)四格連環漫畫
+spark (v) = 激起、引發
+intense (adj) = 強烈的、激烈的
+argument (n) = 爭論
+illustration (n) = 插圖
+before long (adv) = 不久、馬上(＝soon)
+revise (n) = 修改
+lock = (n)鎖 (v)鎖起來
+voice = (n)聲音  (v)用言語表達
+opinion (n) = 意見、看法
+proof (n) = 證據
+comment (n) = 評論
+imply (v) = 暗示、暗指
+interpret (v) = 解釋、詮釋
+secondary (adj) = 次要的(vs. primary ＝主要的)`,
+
+    coreU14: `
+核心單U14
+
+amazing (adj) = 1.驚人的(＝very surprising) 2.very good
+crop (n) = 農作物
+influence (n, v) = 影響
+mankind (n) = 人類(＝all humans; the human race)
+significant (adj) = 1.重要的(＝important)  2.顯著的(＝noticeable)
+significantly (adv) = 顯著地
+corn (n) = 玉米
+wheat (n) = 小麥
+climate (n) = 氣候(vs. weather天氣)
+sauce (n) = 醬汁
+means (n) = 方法；手段
+namely (adv) = 也就是說、更確切地說
+prove (v) = 證明(v)
+value (n) = 價值
+protein (n) = 蛋白質
+basis (n) = 基礎
+increase (v) = 增加(v)
+increasingly (+ adj) = 越來越…(-ly + adj.)
+diet (n) = 1.飲食 2.節食
+go on a diet = 控制飲食、節食
+importance (n) = 重要性
+delicious (adj) = 美味的`,
+
+    coreU15: `
+核心單U15
+
+risk (n) = 風險
+disappear (v) = 消失(vs. appear＝出現)
+completely (adv) = 完全地
+creature (n) = (會移動的or想像中的)生物，如：各種動物、龍、人魚等(P.S.不包括植物！)
+stubborn (adj) = 固執的
+favor  (v) = 偏愛
+favor (n) = 幫忙、恩惠
+bother (v) = 1.打擾  2.使擔心、使煩惱
+refuse (v) = 拒絕
+mate (v) = 交配
+mate (n) = 1.(動物的)配偶  2.同伴(classmate, teammate, roommate)
+put off (v) = 1.延後  2.使反感、使打消念頭
+sensitive (adj) = 敏感的
+contain (v) = 包含
+information (n) = 資訊
+communicate (v) = 溝通
+activity (n) = 活動
+disturb (v) = 打斷、干擾
+locate (v) = 找出…的位置(＝find out)
+affect (v) = 影響(＝influence)
+behavior (n) = 行為`,
+
+    other: `
+to be updated 
+`
+};
+
+
+
+
+
+
+
+// Add event listeners to all preset buttons
+document.querySelectorAll('.preset-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const presetKey = button.dataset.preset;
+        if (presetVocabulary[presetKey]) {
+            textImportContent.value = presetVocabulary[presetKey];
+        }
+    });
+});
+
+        // Text Import Submit button click handler
+        textImportSubmitBtn.addEventListener('click', () => {
+            const text = textImportContent.value.trim();
+            if (!text) {
+                alert('Please enter vocabulary pairs before importing.');
+                return;
+            }
+            
+            processTextImport(text);
+            textImportModal.style.display = 'none';
+        });
+
+// Text Import Clear button click handler
+textImportClearBtn.addEventListener('click', () => {
+    textImportContent.value = '';
+});
+
+        // Process text import
+        function processTextImport(text) {
+            vocabularyData = [];
+            const lines = text.split('\n');
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const parts = line.split('=');
+                if (parts.length < 2) continue;
+                
+                const vocabulary = parts[0].trim();
+                const translation = parts[1].trim();
+                
+                if (vocabulary && translation) {
+                    vocabularyData.push({
+                        vocabulary: vocabulary,
+                        translation: translation,
+                        selected: true
+                    });
+                }
+            }
+            
+            renderVocabularyTable();
+            if (vocabularyData.length > 0) {
+                startBtn.disabled = false;
+            }
+        }
+
+      
+// Copy button click handler
+const textImportCopyBtn = document.getElementById('text-import-copy-btn');
+
+textImportCopyBtn.addEventListener('click', () => {
+    const textToCopy = textImportContent.value;
+    if (!textToCopy) {
+        alert('No text to copy.');
+        return;
+    }
+    
+    // Copy text to clipboard
+    navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+            // Provide visual feedback
+            const originalText = textImportCopyBtn.textContent;
+            textImportCopyBtn.textContent = 'Copied!';
+            
+            // Revert button text after a short delay
+            setTimeout(() => {
+                textImportCopyBtn.textContent = originalText;
+            }, 1500);
+        })
+        .catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy text. Please try again.');
+        });
+});
+       
+
+        // Render vocabulary table
+        function renderVocabularyTable() {
+            if (vocabularyData.length === 0) {
+                vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
+                return;
+            }
+            
+            vocabularyBody.innerHTML = '';
+            
+            vocabularyData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                // Vocabulary column with speaker
+                const wordCell = document.createElement('td');
+                const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').trim(); // Remove content in parentheses for TTS
+                
+                wordCell.innerHTML = `
+                    ${item.vocabulary}
+                    <span class="speaker-icon" title="Listen" data-word="${cleanWord}">🔊</span>
+                `;
+                
+                // Translation column
+                const translationCell = document.createElement('td');
+                translationCell.textContent = item.translation;
+                
+                // Checkbox column
+                const checkboxCell = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = item.selected;
+                checkbox.dataset.index = index;
+                checkbox.addEventListener('change', (e) => {
+                    vocabularyData[index].selected = e.target.checked;
+                    updateSelectAllCheckbox();
+                });
+                checkboxCell.appendChild(checkbox);
+                
+                row.appendChild(wordCell);
+                row.appendChild(translationCell);
+                row.appendChild(checkboxCell);
+                vocabularyBody.appendChild(row);
+            });
+            
+            // Add event listeners to speaker icons
+            document.querySelectorAll('.speaker-icon').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    const word = e.target.dataset.word;
+                    speak(word);
+                });
+            });
+            
+            updateSelectAllCheckbox();
+        }
+
+        // Update "Select All" checkbox state
+        function updateSelectAllCheckbox() {
+            if (vocabularyData.length === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+                return;
+            }
+            
+            const selectedCount = vocabularyData.filter(item => item.selected).length;
+            
+            if (selectedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (selectedCount === vocabularyData.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        // Select All checkbox handler
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            
+            vocabularyData.forEach(item => {
+                item.selected = isChecked;
+            });
+            
+            document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // Start Quiz button handler
+        startBtn.addEventListener('click', () => {
+            currentQuizWords = vocabularyData.filter(item => item.selected);
+            
+            if (currentQuizWords.length === 0) {
+                alert('Please select at least one vocabulary word to start the quiz.');
+                return;
+            }
+            
+            startQuiz();
+        });
+
+        // Start the quiz
+        function startQuiz() {
+            resetQuiz();
+            quizModal.style.display = 'flex';
+            nextQuestion();
+        }
+
+        // Reset quiz state
+        function resetQuiz() {
+            currentWordIndex = -1;
+            currentWord = null;
+            answerInput.value = '';
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'feedback';
+            hintTextEl.textContent = '';
+            revealAnswerEl.textContent = '';
+        }
+
+        // Load the next question
+        function nextQuestion() {
+            // Reset UI elements
+            answerInput.value = '';
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'feedback';
+            hintTextEl.textContent = '';
+            revealAnswerEl.textContent = '';
+            
+            // Randomly select next word
+            const previousIndex = currentWordIndex;
+            
+            // If only one word, just use it
+            if (currentQuizWords.length === 1) {
+                currentWordIndex = 0;
+            } else {
+                // Make sure we don't get the same word twice in a row
+                do {
+                    currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+                } while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+            }
+            
+            currentWord = currentQuizWords[currentWordIndex];
+            translationPrompt.textContent = currentWord.translation;
+        }
+
+        // Submit answer
+        function submitAnswer() {
+    if (!currentWord) return;
+    
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    // Split the vocabulary by slash and clean each option
+    const correctAnswers = currentWord.vocabulary
+        .split('/')
+        .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
+    
+    // Normalize user answer (remove punctuation)
+    const normalizedUserAnswer = userAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    
+    // Check if user's answer matches any of the correct options
+    const isCorrect = correctAnswers.some(answer => {
+        const normalizedAnswer = answer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        return normalizedUserAnswer === normalizedAnswer;
+    });
+    
+    if (isCorrect) {
+        feedbackEl.textContent = 'Well done! 🏆😊👍';
+        feedbackEl.className = 'feedback correct';
+        speak('Well done!');
+    } else {
+        feedbackEl.textContent = 'Try again! 🔥🔥🔥';
+        feedbackEl.className = 'feedback incorrect';
+        speak('Try again!');
+    }
+}
+
+        // Show hint
+        function showHint() {
+            if (!currentWord) return;
+            
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+            const firstLetter = correctAnswer.charAt(0).toUpperCase();
+            
+            hintTextEl.textContent = `The answer starts with the letter ${firstLetter}.`;
+        }
+
+        // Show answer
+        function showAnswer() {
+            if (!currentWord) return;
+            
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+            revealAnswerEl.textContent = `${correctAnswer}`;
+            speak(correctAnswer);
+        }
+
+        // Event Listeners for Quiz Modal
+        submitBtn.addEventListener('click', submitAnswer);
+        
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+        
+        speakBtn.addEventListener('click', () => {
+            if (!recognition) {
+                alert('Speech recognition is not supported in your browser.');
+                return;
+            }
+            
+            try {
+                if (speakBtn.textContent === '🎤 Speak') {
+                    recognition.start();
+                    speakBtn.textContent = 'Recording';
+                    speakBtn.classList.add('recording');
+                } else {
+                    recognition.stop();
+                    speakBtn.textContent = '🎤 Speak';
+                    speakBtn.classList.remove('recording');
+                }
+            } catch (error) {
+                console.error('Speech recognition error:', error);
+                speakBtn.textContent = '🎤 Speak';
+                speakBtn.classList.remove('recording');
+            }
+        });
+        
+        hintBtn.addEventListener('click', showHint);
+        
+        answerBtn.addEventListener('click', showAnswer);
+        
+        nextBtn.addEventListener('click', nextQuestion);
+        
+        closeBtn.addEventListener('click', () => {
+            quizModal.style.display = 'none';
+            if (recognition) {
+                recognition.stop();
+            }
+        });
+
+
+// Date information display
+function updateDateInfo() {
+    const dateInfoEl = document.getElementById('date-info');
+    
+    // Get current date in Taiwan timezone
+    const options = { 
+        timeZone: 'Asia/Taipei',
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric'
+    };
+    const today = new Date();
+    const taiwanDate = today.toLocaleDateString('en-US', options);
+    
+    // Calculate days until 段考 (May 12, 2025)
+    const examDate = new Date('May 12, 2025');
+    examDate.setHours(0, 0, 0, 0);
+    const todayNoTime = new Date(today);
+    todayNoTime.setHours(0, 0, 0, 0);
+    const daysUntilExam = Math.ceil((examDate - todayNoTime) / (1000 * 60 * 60 * 24));
+    
+    // Calculate days until 116學測 (January 16, 2027)
+    const collegeExamDate = new Date('January 16, 2027');
+    collegeExamDate.setHours(0, 0, 0, 0);
+    const daysUntilCollegeExam = Math.ceil((collegeExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
+    
+    // Update the HTML - each item on separate line
+    dateInfoEl.innerHTML = `
+        <span><span class="emoji">📅</span>${taiwanDate}</span><br>
+        <span><span class="emoji">⏰</span><span class="countdown">${daysUntilExam}</span> days until 段考</span>
+        <span><span class="emoji">📚</span><span class="countdown">${daysUntilCollegeExam}</span> days until 116學測</span>
+    `;
+}
+
+
+// Update date information when page loads
+updateDateInfo();
+
+// Update date information every minute
+setInterval(updateDateInfo, 60000);
+
+    </script>
+
+<footer class="visitor-counter">
+    <div id="visitor-count">👥 Loading visitor count...</div>
+</footer>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Add this to the end of your existing <script> section -->
+<script>
+    // Firebase visitor counter
+    function initVisitorCounter() {
+        // Your Firebase configuration - REPLACE WITH YOUR ACTUAL VALUES
+        const firebaseConfig = {
+            apiKey: "AIzaSyBFhmaAZmBtsM5DKoxgy1G-RouRKsrjYsA",
+            authDomain: "vocab-builder-visitor-counter.firebaseapp.co",
+            databaseURL: "https://vocab-builder-visitor-counter-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "vocab-builder-visitor-counter",
+            storageBucket: "vocab-builder-visitor-counter.firebasestorage.app",
+            messagingSenderId: "648587683861",
+            appId: "1:648587683861:web:dcb777160dabb4cbf8c61c"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Get today's date in YYYY-MM-DD format in Taiwan timezone
+        const today = new Date();
+        const taiwanDate = new Date(today.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+        const dateStr = taiwanDate.getFullYear() + '-' + 
+                       (taiwanDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                       taiwanDate.getDate().toString().padStart(2, '0');
+
+        // Reference to today's visitor count
+        const visitorCountRef = database.ref('visitorCount/' + dateStr);
+
+        // Function to update visitor display
+        function updateVisitorDisplay(count) {
+            const visitorCountEl = document.getElementById('visitor-count');
+            if (count === 1) {
+                visitorCountEl.innerHTML = `🚶 ${count} person has visited the website today.`;
+            } else {
+                visitorCountEl.innerHTML = `🚶 ${count} people have visited the website today.`;
+            }
+        }
+
+        // Check if this browser has already been counted today
+        const hasVisitedToday = localStorage.getItem('visited_' + dateStr);
+        
+        if (!hasVisitedToday) {
+            // Increment the count using a transaction
+            visitorCountRef.transaction((currentCount) => {
+                return (currentCount || 0) + 1;
+            }, (error, committed, snapshot) => {
+                if (error) {
+                    console.error('Transaction failed:', error);
+                } else if (committed) {
+                    // Mark this browser as counted for today
+                    localStorage.setItem('visited_' + dateStr, 'true');
+                    updateVisitorDisplay(snapshot.val());
+                }
+            });
+        } else {
+            // Just get the current count without incrementing
+            visitorCountRef.once('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                updateVisitorDisplay(count);
+            });
+        }
+
+        // Listen for count changes
+        visitorCountRef.on('value', (snapshot) => {
+            const count = snapshot.val() || 0;
+            updateVisitorDisplay(count);
+        });
+    }
+
+    // Call the function to initialize the visitor counter
+    try {
+        initVisitorCounter();
+    } catch (e) {
+        console.error("Error initializing visitor counter:", e);
+        document.getElementById('visitor-count').innerHTML = "🚶 Visitor count unavailable";
+    }
+</script>
+
+
+</body>
+</html>
