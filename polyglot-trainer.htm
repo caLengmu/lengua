@@ -461,7 +461,7 @@
 </head>
 <body>
     <header>
-        <h1>🎯 Polyglot Trainer (12.2)</h1>
+        <h1>🎯 Polyglot Trainer (12.3)</h1>
     </header>
 
 
@@ -496,9 +496,9 @@
 <option value="en-US">English</option>
                         </select>
                         <select id="vocab-speed">
+                                                        <option value="0.6">0.6x</option>
+<option value="0.8">0.8x</option>
                             <option value="1">1x</option>
-                            <option value="0.8">0.8x</option>
-                            <option value="0.6">0.6x</option>
                         </select>
                        Vocabulary
                    
@@ -519,7 +519,7 @@
                 </th>
                 <th>
                     <label>
-                        <input type="checkbox" id="select-all"> Select
+                        <input type="checkbox" id="select-all"> Select All
                     </label>
                 </th>
             </tr>
@@ -646,7 +646,7 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         let recognition = null;
         
         // TTS variables
-        let vocabSpeechRate = 1;
+        let vocabSpeechRate = 0.6;
         let vocabLanguage = 'ja-JP';
         let translationSpeechRate = 1;
         let translationLanguage = 'en-US';
@@ -841,34 +841,51 @@ textImportClearBtn.addEventListener('click', () => {
 });
 
         // Process text import
-        function processTextImport(text) {
-            vocabularyData = [];
-            const lines = text.split('\n');
-            
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                
-                const parts = line.split('=');
-                if (parts.length < 2) continue;
-                
-                const vocabulary = parts[0].trim();
-                const translation = parts[1].trim();
-                
-                if (vocabulary && translation) {
-                    vocabularyData.push({
-                        vocabulary: vocabulary,
-                        translation: translation,
-                        selected: false
-                    });
-                }
-            }
-            
-            renderVocabularyTable();
-            if (vocabularyData.length > 0) {
-                startBtn.disabled = false;
-            }
+function processTextImport(text) {
+    vocabularyData = [];
+    const lines = text.split('\n');
+    
+    let currentSection = null;
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        // Check if this line is a section header (contains ◎)
+        if (line.includes('◎')) {
+            currentSection = line;
+            vocabularyData.push({
+                isHeader: true,
+                headerText: line,
+                vocabulary: line,
+                translation: "",
+                selected: false
+            });
+            continue;
         }
+        
+        const parts = line.split('=');
+        if (parts.length < 2) continue;
+        
+        const vocabulary = parts[0].trim();
+        const translation = parts[1].trim();
+        
+        if (vocabulary && translation) {
+            vocabularyData.push({
+                isHeader: false,
+                section: currentSection,
+                vocabulary: vocabulary,
+                translation: translation,
+                selected: false
+            });
+        }
+    }
+    
+    renderVocabularyTable();
+    if (vocabularyData.length > 0) {
+        startBtn.disabled = false;
+    }
+}
 
 
         // Import button click handler
@@ -906,10 +923,12 @@ textImportClearBtn.addEventListener('click', () => {
         });
 
 
-  // Process imported data and ensure no vocabulary is pre-selected
+ // Process imported data from Excel/CSV
 function processImportedData(data) {
     vocabularyData = [];
-
+    
+    let currentSection = null;
+    
     // Skip header row if it exists
     const startRow = data[0] && (typeof data[0][0] === 'string') && 
                      (data[0][0].toLowerCase().includes('vocabulary') || 
@@ -917,11 +936,30 @@ function processImportedData(data) {
 
     for (let i = startRow; i < data.length; i++) {
         const row = data[i];
+        
+        // Skip empty rows
+        if (!row || !row.length) continue;
+        
+        // Check if this row is a section header
+        if (row[0] && typeof row[0] === 'string' && row[0].includes('◎')) {
+            currentSection = row[0];
+            vocabularyData.push({
+                isHeader: true,
+                headerText: row[0],
+                vocabulary: row[0],
+                translation: row[1] || "",
+                selected: false
+            });
+            continue;
+        }
+        
         if (row.length >= 2 && row[0] && row[1]) {
             vocabularyData.push({
+                isHeader: false,
+                section: currentSection,
                 vocabulary: row[0].toString().trim(),
                 translation: row[1].toString().trim(),
-                selected: false // Ensure newly imported words are NOT selected by default
+                selected: false
             });
         }
     }
@@ -932,7 +970,7 @@ function processImportedData(data) {
 
 
 
-// Render vocabulary table and ensure TTS uses the selected language settings
+// Render vocabulary table with section headers
 function renderVocabularyTable() {
     if (vocabularyData.length === 0) {
         vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
@@ -940,42 +978,117 @@ function renderVocabularyTable() {
     }
 
     vocabularyBody.innerHTML = '';
+    let sections = new Set();
+    
+    // First, collect all section names
+    vocabularyData.forEach(item => {
+        if (item.isHeader) {
+            sections.add(item.headerText);
+        }
+    });
 
     vocabularyData.forEach((item, index) => {
         const row = document.createElement('tr');
+        
+        // Style for section headers
+        if (item.isHeader) {
+            row.style.backgroundColor = '#2D2D2A';
+            row.style.color = 'white';
+            row.style.fontWeight = 'bold';
+        }
 
         // Vocabulary column with speaker
         const wordCell = document.createElement('td');
-        const cleanWord = cleanText(item.vocabulary); // Remove parentheses and symbols
+        
+        if (item.isHeader) {
+            // For section headers
+            wordCell.textContent = item.headerText;
+            wordCell.colSpan = 2; // Span across word and translation columns
+        } else {
+            // For regular vocabulary items
+            const cleanWord = cleanText(item.vocabulary);
+            wordCell.innerHTML = `
+                ${item.vocabulary}
+                <span class="speaker-icon vocab-speaker" title="Listen" data-word="${cleanWord}">🔊</span>
+            `;
+        }
 
-        wordCell.innerHTML = `
-            ${item.vocabulary}
-            <span class="speaker-icon vocab-speaker" title="Listen" data-word="${cleanWord}">🔊</span>
-        `;
-
-        // Translation column with speaker
+        // Translation column with speaker (only for non-headers)
         const translationCell = document.createElement('td');
-        const cleanTranslation = cleanText(item.translation); // Remove parentheses and symbols
-
-        translationCell.innerHTML = `
-            ${item.translation}
-            <span class="speaker-icon translation-speaker" title="Listen" data-translation="${cleanTranslation}">🔊</span>
-        `;
+        if (!item.isHeader) {
+            const cleanTranslation = cleanText(item.translation);
+            translationCell.innerHTML = `
+                ${item.translation}
+                <span class="speaker-icon translation-speaker" title="Listen" data-translation="${cleanTranslation}">🔊</span>
+            `;
+        }
 
         // Checkbox column
         const checkboxCell = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = item.selected;
-        checkbox.dataset.index = index;
-        checkbox.addEventListener('change', (e) => {
-            vocabularyData[index].selected = e.target.checked;
-            updateSelectAllCheckbox();
-        });
-        checkboxCell.appendChild(checkbox);
+        
+        if (item.isHeader) {
+            // Section header: add "select all in section" checkbox
+            const sectionCheckbox = document.createElement('input');
+            sectionCheckbox.type = 'checkbox';
+            sectionCheckbox.title = 'Select all in this section';
+            sectionCheckbox.dataset.section = item.headerText;
+            
+            // Check initial state based on items in this section
+            const sectionItems = vocabularyData.filter(vItem => 
+                !vItem.isHeader && vItem.section === item.headerText);
+            const allSelected = sectionItems.length > 0 && 
+                sectionItems.every(vItem => vItem.selected);
+            const someSelected = sectionItems.some(vItem => vItem.selected);
+            
+            sectionCheckbox.checked = allSelected;
+            sectionCheckbox.indeterminate = !allSelected && someSelected;
+            
+            // Add event listener for section checkbox
+            sectionCheckbox.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                const sectionName = e.target.dataset.section;
+                
+                // Update all items in this section
+                vocabularyData.forEach((vItem, vIndex) => {
+                    if (!vItem.isHeader && vItem.section === sectionName) {
+                        vItem.selected = isChecked;
+                        
+                        // Also update the checkbox UI
+                        const itemCheckbox = document.querySelector(`#vocabulary-body input[data-index="${vIndex}"]`);
+                        if (itemCheckbox) {
+                            itemCheckbox.checked = isChecked;
+                        }
+                    }
+                });
+                
+                // Update main "Select All" checkbox state
+                updateSelectAllCheckbox();
+            });
+            
+            checkboxCell.appendChild(sectionCheckbox);
+        } else {
+            // Regular item: add normal checkbox
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = item.selected;
+            checkbox.dataset.index = index;
+            checkbox.addEventListener('change', (e) => {
+                vocabularyData[index].selected = e.target.checked;
+                
+                // Update section checkbox state if this item belongs to a section
+                if (item.section) {
+                    updateSectionCheckbox(item.section);
+                }
+                
+                updateSelectAllCheckbox();
+            });
+            checkboxCell.appendChild(checkbox);
+        }
 
         row.appendChild(wordCell);
-        row.appendChild(translationCell);
+        if (!item.isHeader) {
+            row.appendChild(translationCell);
+        }
         row.appendChild(checkboxCell);
         vocabularyBody.appendChild(row);
     });
@@ -984,43 +1097,75 @@ function renderVocabularyTable() {
     updateVocabSpeakerIcons();
     updateTranslationSpeakerIcons();
 }
-        
+
+// Update section checkbox state
+function updateSectionCheckbox(sectionName) {
+    const sectionItems = vocabularyData.filter(item => 
+        !item.isHeader && item.section === sectionName);
+    
+    const allSelected = sectionItems.length > 0 && 
+        sectionItems.every(item => item.selected);
+    const someSelected = sectionItems.some(item => item.selected);
+    
+    const sectionCheckbox = document.querySelector(`#vocabulary-body input[data-section="${sectionName}"]`);
+    if (sectionCheckbox) {
+        sectionCheckbox.checked = allSelected;
+        sectionCheckbox.indeterminate = !allSelected && someSelected;
+    }
+}
 
 // Update "Select All" checkbox state
-        function updateSelectAllCheckbox() {
-            if (vocabularyData.length === 0) {
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = false;
-                return;
-            }
+function updateSelectAllCheckbox() {
+    // Filter out header items for selection status
+    const nonHeaderItems = vocabularyData.filter(item => !item.isHeader);
+    
+    if (nonHeaderItems.length === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+        return;
+    }
+    
+    const selectedCount = nonHeaderItems.filter(item => item.selected).length;
+    
+    if (selectedCount === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    } else if (selectedCount === nonHeaderItems.length) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+    } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+    }
+}
+
+// Select All checkbox handler
+selectAllCheckbox.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    
+    vocabularyData.forEach((item, index) => {
+        // Don't change header items
+        if (!item.isHeader) {
+            item.selected = isChecked;
             
-            const selectedCount = vocabularyData.filter(item => item.selected).length;
-            
-            if (selectedCount === 0) {
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = false;
-            } else if (selectedCount === vocabularyData.length) {
-                selectAllCheckbox.checked = true;
-                selectAllCheckbox.indeterminate = false;
-            } else {
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = true;
+            // Update UI checkboxes
+            const itemCheckbox = document.querySelector(`#vocabulary-body input[data-index="${index}"]`);
+            if (itemCheckbox) {
+                itemCheckbox.checked = isChecked;
             }
         }
-
-
-        // Select All checkbox handler
-        selectAllCheckbox.addEventListener('change', (e) => {
-            const isChecked = e.target.checked;
-            
-            vocabularyData.forEach(item => {
-                item.selected = isChecked;
-            });
-            
-            document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
-        });
+    });
+    
+    // Update all section checkboxes
+    const sections = new Set();
+    vocabularyData.forEach(item => {
+        if (item.section) sections.add(item.section);
+    });
+    
+    sections.forEach(section => {
+        updateSectionCheckbox(section);
+    });
+});
 
 
         // Start Quiz button handler
