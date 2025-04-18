@@ -294,6 +294,16 @@
             min-height: 27px;
         }
 
+.section-header {
+    background-color: var(--dark);
+    color: var(--light);
+    font-weight: bold;
+}
+
+.section-header td {
+    padding: 10px 15px;
+}
+
        /* Text Import Modal Styles - Updated for Button Sets */
 /* Updated textarea style to handle larger content */
 #text-import-content {
@@ -534,7 +544,7 @@
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.4)</h1>
+        <h1>🎯 Vocabulary Builder (2.6)</h1>
     </header>
 
 </div>
@@ -783,7 +793,7 @@ const presetVocabulary = {
     b2l4: `
 B2 L4 Malala
 
-◎前半部 = ...
+◎前半部 
 male (adj, n)    =男性(的)
 female (adj, n) =女性(的)
 region (n) =地區
@@ -795,7 +805,7 @@ equal (adj)      =平等的
 control (v)       =控制
 annoy (v) =使生氣
 threat (n) =威脅(n)
-       ◎後半部(second half) = ...
+       ◎後半部(second half) 
 surgery (n)      =手術
 recover (v)       =恢復(v)
 sign (v)    =簽署
@@ -808,7 +818,7 @@ establish (v)    =建立(v)
 honor (n) =1.榮譽
 honor (n) =2.榮幸
 weapon (n)     =武器
-◎詞類變化(different parts of speech)=...
+◎詞類變化(different parts of speech)
 regional (adj) = 區域的
 continuous (adj) = 持續的
 educate (v) = 教育(v)
@@ -822,7 +832,7 @@ persuasive (adj) = 有說服力的
 establishment (n) = 建立(n)
 honor (v) = 尊敬、表揚(v)
 honorable (adj) = 值得尊敬的
-◎片語(phrases & idioms) = ...
+◎片語(phrases & idioms) 
 take notice (of...)     =[片語]注意、留意(t… n…)
 blow up   =[片語]爆炸、炸毀(b… u…)
 take away        =[片語]拿走、移除(t… a…)
@@ -835,8 +845,55 @@ to be updated
 `,
 
     b2l6: `
-to be updated 
 
+B2 L6 Wonder
+    
+◎前半部(first half) 
+awful (adj)	=糟糕的
+stare (v)	=盯著看(v)
+whisper (v)	=低聲說(v)
+rude (adj)	 =無禮的
+tease (v)	=嘲弄
+purposely (adv)	=故意地
+scary (adj)	=可怕的
+overhear (v)	=無意中聽到
+incident (n)	=(不好的)事件
+cruel (adj)	=殘忍的
+pretend (v)	=假裝(v)
+genuine (adj)	=真誠的(adj)
+
+◎後半部(second half) 
+apologize (v)	=道歉(v)
+gradually (adv)	=逐漸地
+approach (v)	=接近(v)
+absolute (adj)	=絕對的
+defend (v)	 =防守、保衛(v)
+bully (n)	=霸凌者
+ceremony (n)	=典禮、儀式
+
+◎詞類變化(different parts of speech)
+stare (n)	=盯著看(n)
+whisper (n)	=低語聲(n)
+purpose (n)	=目的
+scare (v)	=使害怕
+cruelty (n)	 =殘忍(n)
+genuinely (adv)	 =真誠地
+apology (n)	=道歉(n)
+gradual (adj)	=逐漸的(adj)
+approach (n)	=接近(n)
+absolutely (adv)	=完全地
+defense (n)	=防禦；辯護(n)
+bully (v)	=欺負、霸凌(v)
+
+◎片語(phrases & idioms) 
+fit in	 = [片語] 融入
+around the corner	= [片語] 即將到來(a… the c…)
+sick to one's stomach	= [片語] 感到反胃、難過or憤怒(s… t… o… s…)
+make peace	= [片語] 和好
+make fun of	= [片語] 嘲笑
+at least	= [片語] 至少
+apart from...	= [片語] 除了…之外(＝1. besides…  2. except…)
+not... anymore	= [片語] 不再…
 `,
 
     liveU91: `
@@ -850,8 +907,9 @@ to be updated
 `,
 
     liveU111: `
-Live U11 Atlantis #1
+Live U11 Atlantis May 24
 
+◎Paragraph 1
 lasting (adj)	=持久的
 appeal	=吸引力
 film	=電影(＝movie)
@@ -861,13 +919,14 @@ be based on...	=[片語]以...為依據
 in part	=[片語]部分地
 century	=世紀
 tale	=故事
+◎Paragraph 2
 follow-up	=後續
 adventure	=冒險
 portray	=描述、描繪
 advanced	=先進的
 ancient	=古老的
 civilization	=文明
-sink/sank/sunk	=下沉
+sink / sank / sunk	=下沉
 beneath	=在…下面(＝under)
 be forced to do something =被迫做某事
 adapt to...	=適應…
@@ -878,6 +937,7 @@ take credit for...	=[片語]因…而得功勞
 impressive	=令人印象深刻的
 far from...	=[片語]遠非...、完全不…
 original	=原本的、獨創的
+◎Paragraph 3
 mention	=提到
 philosopher	=哲學家
 describe	=描述
@@ -885,16 +945,17 @@ island	=島嶼
 nation	=國家
 protect	=保護
 confident	=有信心的
-seek / sought	=尋找(＝look for)
+seek / sought / sought	=尋找(＝look for)
 take over...	=接管
-beat/ beat/ beaten	=打敗
+beat / beat / beaten	=打敗
 war	=戰爭
 destroy	=破壞
 earthquake	=地震`,
 
 liveU112: `
-Live U11 Atlantis #2 
+Live U11 Atlantis May 25
 
+◎Paragraph 1
 flood	=洪水、淹水
 make up	=[片語]編造(故事等)
 moral	=道德的
@@ -915,6 +976,7 @@ claim	=聲稱
 lie in a place	=位於某地(＝be located in a place)
 remain	=仍然是、維持
 hide / hid / hidden	=躲藏、隱藏
+◎Paragraph 2
 realistic	=務實的
 suffer	=受苦、遭受
 natural disaster	=天然災害
@@ -924,10 +986,16 @@ specifically	=特意地、具體地
 area	=區域
 frequent	=頻繁的
 active volcano	=活火山
+◎Paragraph 3
 technology	=科技
 advance	=前進、進步
 perhaps	=也許(＝maybe)
-remind sb of...	=讓某人想起…`,
+remind sb of...	=讓某人想起…
+mysterious	=神祕的
+inspire	=啟發；激勵
+explore	=探索；探險
+`,
+
 
     liveU10: `
 to be updated 
@@ -937,6 +1005,7 @@ to be updated
     liveU14: `
 Live U14 Bracelet 
 
+◎Paragraph 1
 era (n) = 時代
 tour (n) = 1.旅行 2.巡迴演出
 constantly (adv) = 持續地
@@ -951,6 +1020,7 @@ go through the roof = [片語] 激增、暴增 (g… t… the r…)
 exchange (v) = 交換
 friendship (n) = 友誼
 bracelet (n) = 手鍊
+◎Paragraph 2
 root (n) = 根源、起源
 have one’s roots in... = [片語] 根源於... (h… one’s r… i…)
 indigenous (adj) = 本地的、原住民的
@@ -959,6 +1029,7 @@ similar (adj) = 相似的
 particularly (adv) = 特別地
 hippy/hippie (n) = 嬉皮
 take up = [片語] 開始採用/從事...(t… u…)
+◎Paragraph 3
 include (v) = 包含
 bright (adj) = 明亮的、鮮豔的
 bead (n) = 珠子
@@ -966,9 +1037,10 @@ feature (v) = 以…為特色
 slogan (n) = 口號、標語
 over time = [片語] 隨著時間過去 (o… t…)
 (dream/wish) come true = (夢想/願望)成真、實現
+◎Paragraph 4
 wonderful (adj) = 極好的 (w…)
 affordable (adj) = 付得起的
-wonderfully affordable = 價格非常實惠 (w…ly a…)
+wonderfully affordable = 價格非常實惠的 (w…ly a…)
 personal (adj) = 個人的
 celebrate (v) = 慶祝
 currently (adv) = 目前、當前
@@ -1093,35 +1165,44 @@ textImportClearBtn.addEventListener('click', () => {
     textImportContent.value = '';
 });
 
-        // Process text import
-        function processTextImport(text) {
-            vocabularyData = [];
-            const lines = text.split('\n');
-            
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                
-                const parts = line.split('=');
-                if (parts.length < 2) continue;
-                
-                const vocabulary = parts[0].trim();
-                const translation = parts[1].trim();
-                
-                if (vocabulary && translation) {
-                    vocabularyData.push({
-                        vocabulary: vocabulary,
-                        translation: translation,
-                        selected: true
-                    });
-                }
-            }
-            
-            renderVocabularyTable();
-            if (vocabularyData.length > 0) {
-                startBtn.disabled = false;
-            }
+        
+function processTextImport(text) {
+    vocabularyData = [];
+    const lines = text.split('\n');
+    
+    let currentSection = "Default";
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        // Check if this is a section header
+        if (line.includes('◎') || line.includes('=...') || line.startsWith('#')) {
+            currentSection = line.replace('◎', '').replace('=...', '').replace('#', '').trim();
+            continue;
         }
+        
+        const parts = line.split('=');
+        if (parts.length < 2) continue;
+        
+        const vocabulary = parts[0].trim();
+        const translation = parts[1].trim();
+        
+        if (vocabulary && translation) {
+            vocabularyData.push({
+                vocabulary: vocabulary,
+                translation: translation,
+                selected: true,
+                section: currentSection
+            });
+        }
+    }
+    
+    renderVocabularyTable();
+    if (vocabularyData.length > 0) {
+        startBtn.disabled = false;
+    }
+}
 
       
 // Copy button click handler
@@ -1153,94 +1234,177 @@ textImportCopyBtn.addEventListener('click', () => {
 });
        
 
-        // Render vocabulary table
         function renderVocabularyTable() {
-            if (vocabularyData.length === 0) {
-                vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
-                return;
-            }
+    if (vocabularyData.length === 0) {
+        vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">Import your vocabulary list to get started</td></tr>';
+        return;
+    }
+    
+    vocabularyBody.innerHTML = '';
+    
+    // Group items by section
+    const sectionMap = {};
+    vocabularyData.forEach(item => {
+        if (!sectionMap[item.section]) {
+            sectionMap[item.section] = [];
+        }
+        sectionMap[item.section].push(item);
+    });
+    
+    // Render each section
+    Object.keys(sectionMap).forEach(sectionName => {
+        const sectionItems = sectionMap[sectionName];
+        
+        // Add section header row
+        const sectionRow = document.createElement('tr');
+        sectionRow.className = 'section-header';
+        
+        const sectionCell = document.createElement('td');
+        sectionCell.colSpan = 2;
+        sectionCell.textContent = sectionName;
+        sectionCell.style.fontWeight = 'bold';
+        sectionCell.style.backgroundColor = 'var(--dark)';
+        sectionCell.style.color = 'var(--light)';
+        sectionCell.style.padding = '10px 15px';
+        
+        const sectionCheckCell = document.createElement('td');
+        const sectionCheckbox = document.createElement('input');
+        sectionCheckbox.type = 'checkbox';
+        sectionCheckbox.checked = sectionItems.every(item => item.selected);
+        sectionCheckbox.dataset.section = sectionName;
+        sectionCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            const section = e.target.dataset.section;
             
-            vocabularyBody.innerHTML = '';
-            
+            // Update all items in this section
             vocabularyData.forEach((item, index) => {
-                const row = document.createElement('tr');
-                
-                // Vocabulary column with speaker
-                const wordCell = document.createElement('td');
-                const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').trim(); // Remove content in parentheses for TTS
-                
-                wordCell.innerHTML = `
-                    ${item.vocabulary}
-                    <span class="speaker-icon" title="Listen" data-word="${cleanWord}">🔊</span>
-                `;
-                
-                // Translation column
-                const translationCell = document.createElement('td');
-                translationCell.textContent = item.translation;
-                
-                // Checkbox column
-                const checkboxCell = document.createElement('td');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = item.selected;
-                checkbox.dataset.index = index;
-                checkbox.addEventListener('change', (e) => {
-                    vocabularyData[index].selected = e.target.checked;
-                    updateSelectAllCheckbox();
-                });
-                checkboxCell.appendChild(checkbox);
-                
-                row.appendChild(wordCell);
-                row.appendChild(translationCell);
-                row.appendChild(checkboxCell);
-                vocabularyBody.appendChild(row);
-            });
-            
-            // Add event listeners to speaker icons
-            document.querySelectorAll('.speaker-icon').forEach(icon => {
-                icon.addEventListener('click', (e) => {
-                    const word = e.target.dataset.word;
-                    speak(word);
-                });
+                if (item.section === section) {
+                    item.selected = isChecked;
+                    // Also update the displayed checkboxes
+                    const checkbox = document.querySelector(`input[data-index="${index}"]`);
+                    if (checkbox) checkbox.checked = isChecked;
+                }
             });
             
             updateSelectAllCheckbox();
-        }
-
-        // Update "Select All" checkbox state
-        function updateSelectAllCheckbox() {
-            if (vocabularyData.length === 0) {
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = false;
-                return;
-            }
-            
-            const selectedCount = vocabularyData.filter(item => item.selected).length;
-            
-            if (selectedCount === 0) {
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = false;
-            } else if (selectedCount === vocabularyData.length) {
-                selectAllCheckbox.checked = true;
-                selectAllCheckbox.indeterminate = false;
-            } else {
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = true;
-            }
-        }
-
-        // Select All checkbox handler
-        selectAllCheckbox.addEventListener('change', (e) => {
-            const isChecked = e.target.checked;
-            
-            vocabularyData.forEach(item => {
-                item.selected = isChecked;
-            });
-            
-            document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
         });
+        
+        sectionCheckCell.appendChild(sectionCheckbox);
+        sectionRow.appendChild(sectionCell);
+        sectionRow.appendChild(sectionCheckCell);
+        vocabularyBody.appendChild(sectionRow);
+        
+        // Add vocabulary items for this section
+        sectionItems.forEach((item, localIndex) => {
+            const index = vocabularyData.findIndex(vItem => 
+                vItem.vocabulary === item.vocabulary && 
+                vItem.translation === item.translation);
+            
+            const row = document.createElement('tr');
+            
+            // Vocabulary column with speaker
+            const wordCell = document.createElement('td');
+            const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').trim();
+            
+            wordCell.innerHTML = `
+                ${item.vocabulary}
+                <span class="speaker-icon" title="Listen" data-word="${cleanWord}">🔊</span>
+            `;
+            
+            // Translation column
+            const translationCell = document.createElement('td');
+            translationCell.textContent = item.translation;
+            
+            // Checkbox column
+            const checkboxCell = document.createElement('td');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = item.selected;
+            checkbox.dataset.index = index;
+            checkbox.dataset.section = item.section;
+            checkbox.addEventListener('change', (e) => {
+                vocabularyData[index].selected = e.target.checked;
+                updateSectionCheckbox(item.section);
+                updateSelectAllCheckbox();
+            });
+            checkboxCell.appendChild(checkbox);
+            
+            row.appendChild(wordCell);
+            row.appendChild(translationCell);
+            row.appendChild(checkboxCell);
+            vocabularyBody.appendChild(row);
+        });
+    });
+    
+    // Add event listeners to speaker icons
+    document.querySelectorAll('.speaker-icon').forEach(icon => {
+        icon.addEventListener('click', (e) => {
+            const word = e.target.dataset.word;
+            speak(word);
+        });
+    });
+    
+    updateSelectAllCheckbox();
+}
+
+
+function updateSectionCheckbox(sectionName) {
+    const sectionItems = vocabularyData.filter(item => item.section === sectionName);
+    const allSelected = sectionItems.every(item => item.selected);
+    const noneSelected = sectionItems.every(item => !item.selected);
+    
+    const sectionCheckbox = document.querySelector(`input[data-section="${sectionName}"]`);
+    if (sectionCheckbox) {
+        sectionCheckbox.checked = allSelected;
+        sectionCheckbox.indeterminate = !allSelected && !noneSelected;
+    }
+}
+
+
+
+
+
+
+
+
+        // modify the Update "Select All" checkbox state
+        
+function updateSelectAllCheckbox() {
+    if (vocabularyData.length === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+        return;
+    }
+    
+    const selectedCount = vocabularyData.filter(item => item.selected).length;
+    
+    if (selectedCount === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    } else if (selectedCount === vocabularyData.length) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+    } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+    }
+}
+
+//Update the global "Select All" checkbox handler
+       selectAllCheckbox.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    
+    vocabularyData.forEach(item => {
+        item.selected = isChecked;
+    });
+    
+    document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = isChecked;
+        if (checkbox.dataset.section) {
+            checkbox.indeterminate = false;
+        }
+    });
+});
 
         // Start Quiz button handler
         startBtn.addEventListener('click', () => {
@@ -1478,9 +1642,9 @@ setInterval(updateDateInfo, 60000);
         function updateVisitorDisplay(count) {
             const visitorCountEl = document.getElementById('visitor-count');
             if (count === 1) {
-                visitorCountEl.innerHTML = `🚶 ${count} person has visited the website today.`;
+                visitorCountEl.innerHTML = `🎉 ${count} person has visited this website today.`;
             } else {
-                visitorCountEl.innerHTML = `🚶 ${count} people have visited the website today.`;
+                visitorCountEl.innerHTML = `🎉 ${count} people have visited this website today.`;
             }
         }
 
@@ -1520,7 +1684,7 @@ setInterval(updateDateInfo, 60000);
         initVisitorCounter();
     } catch (e) {
         console.error("Error initializing visitor counter:", e);
-        document.getElementById('visitor-count').innerHTML = "🚶 Visitor count unavailable";
+        document.getElementById('visitor-count').innerHTML = "😅 Visitor count unavailable";
     }
 </script>
 
