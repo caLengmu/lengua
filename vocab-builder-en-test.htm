@@ -301,6 +301,8 @@
 }
 
 .section-header td {
+background-color: var(--dark);
+    color: var(--light);
     padding: 10px 15px;
 }
 
@@ -576,7 +578,7 @@
                 <th>Translation</th>
                 <th>
                     <label>
-                        <input type="checkbox" id="select-all"> Select
+                        <input type="checkbox" id="select-all"> Select All
                     </label>
                 </th>
             </tr>
@@ -1642,9 +1644,9 @@ setInterval(updateDateInfo, 60000);
         function updateVisitorDisplay(count) {
             const visitorCountEl = document.getElementById('visitor-count');
             if (count === 1) {
-                visitorCountEl.innerHTML = `🎉 ${count} person has visited this website today.`;
+                visitorCountEl.innerHTML = `👋  ${count} person has visited this website today.`;
             } else {
-                visitorCountEl.innerHTML = `🎉 ${count} people have visited this website today.`;
+                visitorCountEl.innerHTML = `👋  ${count} people have visited this website today.`;
             }
         }
 
