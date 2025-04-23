@@ -546,7 +546,7 @@ background-color: var(--dark);
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.6)</h1>
+        <h1>🎯 Vocabulary Builder (2.7)</h1>
     </header>
 
 </div>
@@ -1605,6 +1605,8 @@ setInterval(updateDateInfo, 60000);
 
 <footer class="visitor-counter">
     <div id="visitor-count">👥 Loading visitor count...</div>
+    <div id="total-visitor-count">📊 Loading total visitors...</div>
+    <div id="unique-visitor-count">👤 Loading unique visitors...</div>
 </footer>
 
 <!-- Firebase SDK -->
@@ -1613,81 +1615,148 @@ setInterval(updateDateInfo, 60000);
 
 <!-- Add this to the end of your existing <script> section -->
 <script>
-    // Firebase visitor counter
-    function initVisitorCounter() {
-        // Your Firebase configuration - REPLACE WITH YOUR ACTUAL VALUES
-        const firebaseConfig = {
-            apiKey: "AIzaSyBFhmaAZmBtsM5DKoxgy1G-RouRKsrjYsA",
-            authDomain: "vocab-builder-visitor-counter.firebaseapp.co",
-            databaseURL: "https://vocab-builder-visitor-counter-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "vocab-builder-visitor-counter",
-            storageBucket: "vocab-builder-visitor-counter.firebasestorage.app",
-            messagingSenderId: "648587683861",
-            appId: "1:648587683861:web:dcb777160dabb4cbf8c61c"
-        };
+    
+// Firebase visitor counter
+function initVisitorCounter() {
+    // Your Firebase configuration - KEEP EXISTING VALUES
+    const firebaseConfig = {
+        apiKey: "AIzaSyBFhmaAZmBtsM5DKoxgy1G-RouRKsrjYsA",
+        authDomain: "vocab-builder-visitor-counter.firebaseapp.co",
+        databaseURL: "https://vocab-builder-visitor-counter-default-rtdb.asia-southeast1.firebasedatabase.app/",
+        projectId: "vocab-builder-visitor-counter",
+        storageBucket: "vocab-builder-visitor-counter.firebasestorage.app",
+        messagingSenderId: "648587683861",
+        appId: "1:648587683861:web:dcb777160dabb4cbf8c61c"
+    };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-        // Get today's date in YYYY-MM-DD format in Taiwan timezone
-        const today = new Date();
-        const taiwanDate = new Date(today.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
-        const dateStr = taiwanDate.getFullYear() + '-' + 
-                       (taiwanDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
-                       taiwanDate.getDate().toString().padStart(2, '0');
+    // Get today's date in YYYY-MM-DD format in Taiwan timezone
+    const today = new Date();
+    const taiwanDate = new Date(today.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+    const dateStr = taiwanDate.getFullYear() + '-' + 
+                   (taiwanDate.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                   taiwanDate.getDate().toString().padStart(2, '0');
 
-        // Reference to today's visitor count
-        const visitorCountRef = database.ref('visitorCount/' + dateStr);
+    // References to various counters
+    const dailyVisitorCountRef = database.ref('visitorCount/' + dateStr);
+    const totalVisitorCountRef = database.ref('totalVisitorCount');
+    const uniqueVisitorsRef = database.ref('uniqueVisitors');
 
-        // Function to update visitor display
-        function updateVisitorDisplay(count) {
-            const visitorCountEl = document.getElementById('visitor-count');
-            if (count === 1) {
-                visitorCountEl.innerHTML = `👋  ${count} person has visited this website today.`;
-            } else {
-                visitorCountEl.innerHTML = `👋  ${count} people have visited this website today.`;
-            }
-        }
-
-        // Check if this browser has already been counted today
-        const hasVisitedToday = localStorage.getItem('visited_' + dateStr);
+    // Generate a semi-unique browser ID (not as reliable as server-side IP tracking but works client-side)
+    function generateBrowserId() {
+        // Create a simple fingerprint based on browser info
+        const browserInfo = navigator.userAgent + 
+                          screen.width + 'x' + screen.height + 
+                          navigator.language + 
+                          (navigator.plugins ? navigator.plugins.length : '');
         
-        if (!hasVisitedToday) {
-            // Increment the count using a transaction
-            visitorCountRef.transaction((currentCount) => {
-                return (currentCount || 0) + 1;
-            }, (error, committed, snapshot) => {
-                if (error) {
-                    console.error('Transaction failed:', error);
-                } else if (committed) {
-                    // Mark this browser as counted for today
-                    localStorage.setItem('visited_' + dateStr, 'true');
-                    updateVisitorDisplay(snapshot.val());
-                }
-            });
-        } else {
-            // Just get the current count without incrementing
-            visitorCountRef.once('value', (snapshot) => {
-                const count = snapshot.val() || 0;
-                updateVisitorDisplay(count);
-            });
+        // Create a hash from the browser info
+        let hash = 0;
+        for (let i = 0; i < browserInfo.length; i++) {
+            const char = browserInfo.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
         }
+        return 'browser_' + Math.abs(hash);
+    }
 
-        // Listen for count changes
-        visitorCountRef.on('value', (snapshot) => {
-            const count = snapshot.val() || 0;
-            updateVisitorDisplay(count);
+    const browserId = generateBrowserId();
+
+    // Function to update visitor displays
+    function updateVisitorDisplays(dailyCount, totalCount, uniqueCount) {
+        const dailyVisitorEl = document.getElementById('visitor-count');
+        const totalVisitorEl = document.getElementById('total-visitor-count');
+        const uniqueVisitorEl = document.getElementById('unique-visitor-count');
+        
+        if (dailyCount === 1) {
+            dailyVisitorEl.innerHTML = `👋 ${dailyCount} person has visited this website today.`;
+        } else {
+            dailyVisitorEl.innerHTML = `👋 ${dailyCount} people have visited this website today.`;
+        }
+        
+        totalVisitorEl.innerHTML = `📊 Total visits: ${totalCount}`;
+        uniqueVisitorEl.innerHTML = `👤 Unique visitors: ${uniqueCount}`;
+    }
+
+    // Check if this browser has already been counted today
+    const hasVisitedToday = localStorage.getItem('visited_' + dateStr);
+    
+    if (!hasVisitedToday) {
+        // Transaction to increment daily count
+        dailyVisitorCountRef.transaction((currentCount) => {
+            return (currentCount || 0) + 1;
+        }, (error, committed) => {
+            if (error) {
+                console.error('Daily count transaction failed:', error);
+            } else if (committed) {
+                // Mark this browser as counted for today
+                localStorage.setItem('visited_' + dateStr, 'true');
+                
+                // Also increment total visitor count
+                totalVisitorCountRef.transaction((currentTotal) => {
+                    return (currentTotal || 0) + 1;
+                }, (error) => {
+                    if (error) console.error('Total count transaction failed:', error);
+                });
+            }
+        });
+
+        // Check if this is a new unique visitor
+        uniqueVisitorsRef.child(browserId).once('value', (snapshot) => {
+            if (!snapshot.exists()) {
+                // This is a new visitor, add them to unique visitors
+                uniqueVisitorsRef.child(browserId).set(true);
+                // Increment unique visitors count
+                uniqueVisitorsRef.child('count').transaction((currentCount) => {
+                    return (currentCount || 0) + 1;
+                });
+            }
         });
     }
 
-    // Call the function to initialize the visitor counter
-    try {
-        initVisitorCounter();
-    } catch (e) {
-        console.error("Error initializing visitor counter:", e);
-        document.getElementById('visitor-count').innerHTML = "😅 Visitor count unavailable";
-    }
+    // Get all counts for display
+    Promise.all([
+        dailyVisitorCountRef.once('value'),
+        totalVisitorCountRef.once('value'),
+        uniqueVisitorsRef.child('count').once('value')
+    ]).then(([dailySnapshot, totalSnapshot, uniqueSnapshot]) => {
+        const dailyCount = dailySnapshot.val() || 0;
+        const totalCount = totalSnapshot.val() || 0;
+        const uniqueCount = uniqueSnapshot.val() || 0;
+        
+        updateVisitorDisplays(dailyCount, totalCount, uniqueCount);
+    });
+
+    // Listen for count changes
+    dailyVisitorCountRef.on('value', (snapshot) => {
+        const dailyCount = snapshot.val() || 0;
+        
+        // Get the other counts too when daily updates
+        Promise.all([
+            totalVisitorCountRef.once('value'),
+            uniqueVisitorsRef.child('count').once('value')
+        ]).then(([totalSnapshot, uniqueSnapshot]) => {
+            const totalCount = totalSnapshot.val() || 0;
+            const uniqueCount = uniqueSnapshot.val() || 0;
+            
+            updateVisitorDisplays(dailyCount, totalCount, uniqueCount);
+        });
+    });
+}
+
+// Call the function to initialize the visitor counter
+try {
+    initVisitorCounter();
+} catch (e) {
+    console.error("Error initializing visitor counter:", e);
+    document.getElementById('visitor-count').innerHTML = "😅 Daily visitor count unavailable";
+    document.getElementById('total-visitor-count').innerHTML = "😅 Total visitor count unavailable";
+    document.getElementById('unique-visitor-count').innerHTML = "😅 Unique visitor count unavailable";
+}
+
 </script>
 
 
