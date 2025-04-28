@@ -2080,11 +2080,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show the popup when the page loads
   const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
   
-  // Check if the user has seen the popup today
-  const todayStr = new Date().toLocaleDateString();
-  const hasSeenPopupToday = localStorage.getItem('refreshReminder_' + todayStr);
   
-  if (!hasSeenPopupToday) {
     // Show popup after a slight delay for better user experience
     setTimeout(() => {
       refreshReminderPopup.style.display = 'flex';
@@ -2098,8 +2094,7 @@ document.addEventListener('DOMContentLoaded', () => {
   closeReminderBtn.addEventListener('click', () => {
     refreshReminderPopup.style.display = 'none';
     
-    // Mark that user has seen the popup today
-    localStorage.setItem('refreshReminder_' + todayStr, 'true');
+  
   });
 });
 </script>
