@@ -541,7 +541,6 @@ background-color: var(--dark);
     font-weight: bold;
 }
 
-<style>
 /* Refresh Reminder Popup Styles */
 .popup-container {
   position: fixed;
@@ -663,7 +662,6 @@ background-color: var(--dark);
     top: -12px;
   }
 }
-</style>
 
     </style>
 </head>
@@ -2074,30 +2072,22 @@ setInterval(updateDateInfo, 60000);
         document.getElementById('visitor-count').innerHTML = "😅 Visitor count unavailable";
     }
 
-<script>
 // Refresh Reminder Popup functionality
 document.addEventListener('DOMContentLoaded', () => {
   // Show the popup when the page loads
   const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
   
-  
-    // Show popup after a slight delay for better user experience
-    setTimeout(() => {
-      refreshReminderPopup.style.display = 'flex';
-    }, 1000);
-  } else {
-    refreshReminderPopup.style.display = 'none';
-  }
+  // Show popup after a slight delay for better user experience
+  setTimeout(() => {
+    refreshReminderPopup.style.display = 'flex';
+  }, 1000);
   
   // Add event listener to close button
   const closeReminderBtn = document.getElementById('close-reminder-btn');
   closeReminderBtn.addEventListener('click', () => {
     refreshReminderPopup.style.display = 'none';
-    
-  
   });
 });
-</script>
 
 </script>
 
