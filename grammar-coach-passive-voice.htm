@@ -7,55 +7,59 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 900px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
             background-color: #f5f5f5;
         }
         h1, h2 {
             color: #2c3e50;
             text-align: center;
+            font-size: 1.5rem;
+            margin: 10px 0;
         }
         .container {
             background-color: white;
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            padding: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
         }
         .example {
             display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+            flex-direction: column;
+            margin-bottom: 10px;
             border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
         .example img {
-            width: 180px;
-            height: 150px;
+            width: 100%;
+            height: auto;
+            max-height: 180px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-right: 20px;
+            border-radius: 6px;
+            margin-bottom: 10px;
         }
         .example-text {
-            flex-grow: 1;
+            width: 100%;
         }
         .sentence {
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin-bottom: 8px;
         }
         .explanation {
             color: #7f8c8d;
             font-style: italic;
+            font-size: 14px;
         }
         .btn {
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
+            font-size: 14px;
+            margin: 3px;
             transition: background-color 0.3s;
         }
         .btn-record {
@@ -97,84 +101,80 @@
         .speaker-icon {
             cursor: pointer;
             color: #3498db;
-            margin-left: 10px;
+            margin-left: 5px;
         }
         .quiz-container {
             display: none;
             text-align: center;
         }
         .quiz-image {
-            width: 300px;
-            height: 250px;
+            width: 100%;
+            max-height: 200px;
             object-fit: cover;
-            border-radius: 8px;
-            margin: 20px auto;
+            border-radius: 6px;
+            margin: 10px auto;
             display: block;
         }
         .quiz-question {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin: 10px 0;
         }
         .controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 5px;
+            margin-top: 10px;
         }
         .mic-status {
             font-style: italic;
             color: #7f8c8d;
-            margin: 10px 0;
+            margin: 5px 0;
+            font-size: 12px;
         }
-        .user-answer {
-            margin: 15px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            min-height: 40px;
-            background-color: #f9f9f9;
-        }
-        .answer-input {
+        .unified-input {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 16px;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 5px;
+            box-sizing: border-box;
         }
         .progress-container {
             width: 100%;
-            height: 20px;
+            height: 15px;
             background-color: #f1f1f1;
-            border-radius: 10px;
-            margin: 20px 0;
+            border-radius: 8px;
+            margin: 10px 0;
             overflow: hidden;
         }
         .progress-bar {
             height: 100%;
             background-color: #4CAF50;
             text-align: center;
-            line-height: 20px;
+            line-height: 15px;
             color: white;
+            font-size: 12px;
             transition: width 0.5s;
         }
         .result-container {
             display: none;
             text-align: center;
-            margin: 20px 0;
-            padding: 20px;
+            margin: 10px 0;
+            padding: 10px;
             background-color: #f9f9f9;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         .result-text {
-            font-size: 20px;
-            margin-bottom: 15px;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
         .feedback {
             font-weight: bold;
-            font-size: 20px;
-            margin: 15px 0;
-            min-height: 30px;
+            font-size: 16px;
+            margin: 10px 0;
+            min-height: 20px;
         }
         .correct {
             color: #2ecc71;
@@ -186,9 +186,27 @@
             display: none;
         }
         .intro-text {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        @media (min-width: 768px) {
+            body {
+                max-width: 700px;
+                padding: 20px;
+            }
+            .example {
+                flex-direction: row;
+                align-items: center;
+            }
+            .example img {
+                width: 150px;
+                margin-right: 15px;
+                margin-bottom: 0;
+            }
+            h1, h2 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -261,19 +279,19 @@
         
         <div class="quiz-question" id="quizQuestion">What happened to...?</div>
         
-        <div class="mic-status" id="micStatus">Press the microphone button to speak your answer, or type below.</div>
+        <div class="mic-status" id="micStatus">Speak or type your answer below.</div>
         
-        <div class="user-answer" id="userAnswer"></div>
-        <input type="text" class="answer-input" id="textInput" placeholder="Type your answer here...">
+        <!-- Unified input field for both text and voice -->
+        <input type="text" class="unified-input" id="unifiedInput" placeholder="Speak or type your answer here...">
         
         <div class="feedback" id="feedback"></div>
         
         <div class="controls">
-            <button class="btn btn-record" id="recordBtn">🎤 Record Answer</button>
-            <button class="btn btn-check" id="checkAnswerBtn">Check Answer</button>
-            <button class="btn btn-show" id="showAnswerBtn">Show Answer</button>
-            <button class="btn btn-next" id="nextQuestionBtn" disabled>Next Question</button>
-            <button class="btn btn-end" id="endQuizBtn">End Quiz</button>
+            <button class="btn btn-record" id="recordBtn">🎤</button>
+            <button class="btn btn-check" id="checkAnswerBtn">Check</button>
+            <button class="btn btn-show" id="showAnswerBtn">Show</button>
+            <button class="btn btn-next" id="nextQuestionBtn" disabled>Next</button>
+            <button class="btn btn-end" id="endQuizBtn">End</button>
         </div>
         
         <div class="result-container" id="resultContainer">
@@ -365,12 +383,11 @@
         const quizQuestion = document.getElementById('quizQuestion');
         const recordBtn = document.getElementById('recordBtn');
         const micStatus = document.getElementById('micStatus');
-        const userAnswer = document.getElementById('userAnswer');
+        const unifiedInput = document.getElementById('unifiedInput');
         const feedback = document.getElementById('feedback');
         const checkAnswerBtn = document.getElementById('checkAnswerBtn');
         const showAnswerBtn = document.getElementById('showAnswerBtn');
         const nextQuestionBtn = document.getElementById('nextQuestionBtn');
-        const textInput = document.getElementById('textInput');
         const progressBar = document.getElementById('progressBar');
         const resultContainer = document.getElementById('resultContainer');
         const resultText = document.getElementById('resultText');
@@ -389,26 +406,26 @@
                 
                 recognition.onresult = function(event) {
                     const transcript = event.results[0][0].transcript;
-                    userAnswer.textContent = transcript;
-                    micStatus.textContent = "Speech recognized! Click 'Check Answer' to verify.";
+                    unifiedInput.value = transcript;
+                    micStatus.textContent = "Speech recognized! Click 'Check' to verify.";
                     checkAnswerBtn.disabled = false;
                     isRecording = false;
-                    recordBtn.textContent = "🎤 Record Answer";
+                    recordBtn.textContent = "🎤";
                 };
                 
                 recognition.onspeechend = function() {
                     recognition.stop();
                     isRecording = false;
-                    recordBtn.textContent = "🎤 Record Answer";
+                    recordBtn.textContent = "🎤";
                 };
                 
                 recognition.onerror = function(event) {
-                    micStatus.textContent = "Error occurred in recognition: " + event.error;
+                    micStatus.textContent = "Error: " + event.error;
                     isRecording = false;
-                    recordBtn.textContent = "🎤 Record Answer";
+                    recordBtn.textContent = "🎤";
                 };
             } else {
-                micStatus.textContent = "Speech recognition not supported by your browser. Try using Chrome.";
+                micStatus.textContent = "Speech recognition not supported. Use Chrome browser.";
                 recordBtn.disabled = true;
             }
         }
@@ -418,10 +435,10 @@
             if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
-                utterance.rate = 0.8;  // Changed from 0.9 to 0.8 per requirement
+                utterance.rate = 0.8;  // Speech rate
                 window.speechSynthesis.speak(utterance);
             } else {
-                alert("Text-to-speech is not supported by your browser.");
+                alert("Text-to-speech not supported by your browser.");
             }
         }
         
@@ -436,11 +453,10 @@
             speakText(currentQuestion.question);
             
             // Reset UI elements
-            userAnswer.textContent = "";
-            textInput.value = "";
+            unifiedInput.value = "";
             feedback.textContent = "";
             feedback.className = "feedback";
-            micStatus.textContent = "Press the microphone button to speak your answer, or type below.";
+            micStatus.textContent = "Speak or type your answer below.";
             nextQuestionBtn.disabled = true;
             
             // Update progress bar
@@ -452,7 +468,7 @@
         // Show the correct answer
         function showAnswer() {
             const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            feedback.textContent = "Correct answer: " + currentQuestion.answer;
+            feedback.textContent = "Answer: " + currentQuestion.answer;
             feedback.className = "feedback";
             speakText(currentQuestion.answer);
             nextQuestionBtn.disabled = false;
@@ -461,12 +477,8 @@
         // Check the answer
         function checkAnswer() {
             const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            // Get answer from either voice input or text input
-            let userResponseText = userAnswer.textContent.toLowerCase().trim();
-            if (userResponseText === "" && textInput.value.trim() !== "") {
-                userResponseText = textInput.value.toLowerCase().trim();
-                userAnswer.textContent = textInput.value.trim();
-            }
+            // Get answer from unified input field
+            let userResponseText = unifiedInput.value.toLowerCase().trim();
             
             const correctAnswerText = currentQuestion.answer.toLowerCase();
             
@@ -516,7 +528,7 @@
             resultContainer.style.display = 'block';
             
             // Create result message
-            const resultMessage = `You got ${correctAnswers} out of ${shuffledQuestions.length} questions correct! ${getEncouragementMessage(correctAnswers, shuffledQuestions.length)}`;
+            const resultMessage = `You got ${correctAnswers} out of ${shuffledQuestions.length} correct! ${getEncouragementMessage(correctAnswers, shuffledQuestions.length)}`;
             resultText.textContent = resultMessage;
             speakText(resultMessage);
         }
@@ -525,13 +537,13 @@
         function getEncouragementMessage(correct, total) {
             const percentage = (correct / total) * 100;
             if (percentage >= 90) {
-                return "Excellent work! You've mastered passive voice!";
+                return "Excellent work!";
             } else if (percentage >= 70) {
-                return "Great job! Keep practicing to master passive voice completely!";
+                return "Great job!";
             } else if (percentage >= 50) {
-                return "Good effort! With more practice, you'll improve even more!";
+                return "Good effort!";
             } else {
-                return "Keep practicing! Passive voice takes time to master!";
+                return "Keep practicing!";
             }
         }
         
@@ -623,25 +635,19 @@
         
         recordBtn.addEventListener('click', function() {
             if (!isRecording) {
-                userAnswer.textContent = "";
-                textInput.value = "";
+                unifiedInput.value = "";
                 feedback.textContent = "";
                 
                 recognition.start();
                 isRecording = true;
-                recordBtn.textContent = "🔴 Recording...";
+                recordBtn.textContent = "🔴";
                 micStatus.textContent = "Listening... Speak now!";
             } else {
                 recognition.stop();
                 isRecording = false;
-                recordBtn.textContent = "🎤 Record Answer";
-                micStatus.textContent = "Recording stopped. Click record again to retry.";
+                recordBtn.textContent = "🎤";
+                micStatus.textContent = "Recording stopped.";
             }
-        });
-        
-        // Enable checking answer with text input
-        textInput.addEventListener('input', function() {
-            userAnswer.textContent = this.value;
         });
         
         checkAnswerBtn.addEventListener('click', checkAnswer);
