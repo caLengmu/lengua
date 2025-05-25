@@ -83,6 +83,12 @@
             font-size: 25px;
         }
 
+ .multiple-choice-btn {
+            background-color: var(--accent3);
+            color: white;
+            padding: 16px 25px;
+            font-size: 25px;
+        }
 
 .ai-support-btn {
             background-color: var(--accent1);
@@ -737,7 +743,7 @@ background-color: var(--dark);
 
         <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
-<button class="start-btn" id="multiple-choice-btn" disabled>🚕 看英選中</button>
+<button class="multiple-choice-btn" id="multiple-choice-btn" disabled>🚕 看英選中</button>
     <button class="start-btn" id="start-btn" disabled>✈️ 看中唸英</button>
 
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
@@ -750,8 +756,8 @@ background-color: var(--dark);
                     <div class="tts-speed-control">
                         <label for="tts-speed">Vocabulary</label>
                         <select id="tts-speed">
-                            <option value="0.6">0.6x</option>
                             <option value="0.8">0.8x</option>
+                            <option value="0.6">0.6x</option>                            
                             <option value="1">1x</option>                                                       
                         </select>
                     </div>
@@ -943,7 +949,7 @@ const mcCloseBtn = document.getElementById('mc-close-btn');
         let currentWordIndex = -1;
         let currentWord = null;
         let recognition = null;
-        let speechRate = 0.6;
+        let speechRate = 0.8;
 
 // 第五步：新增多選題相關變數
 let currentMCWord = null;
@@ -1898,9 +1904,9 @@ function selectChoice(choice, optionElement) {
   // 檢查答案
   if (choice === correctChoice) {
     optionElement.classList.add('correct');
-    mcFeedbackEl.textContent = 'Well done! 🏆😊👍';
+    mcFeedbackEl.textContent = 'Nice shot! ✅🏀🧺😊';
     mcFeedbackEl.className = 'feedback correct';
-    speak('Well done!');
+    speak('Nice shot!');
   } else {
     optionElement.classList.add('incorrect');
     // 顯示正確答案
@@ -1909,9 +1915,9 @@ function selectChoice(choice, optionElement) {
         option.classList.add('correct');
       }
     });
-    mcFeedbackEl.textContent = 'Try again! 🔥🔥🔥';
+    mcFeedbackEl.textContent = 'You missed! ❌🏀💥😤';
     mcFeedbackEl.className = 'feedback incorrect';
-    speak('Try again!');
+    speak('You missed!');
   }
 }
 
