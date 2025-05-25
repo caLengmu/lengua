@@ -83,6 +83,13 @@
             font-size: 25px;
         }
 
+ .multiple-choice-btn {
+            background-color: var(--accent3);
+            color: white;
+            padding: 16px 25px;
+            font-size: 25px;
+        }
+
 .ai-support-btn {
             background-color: var(--accent1);
             color: white;
@@ -663,12 +670,68 @@ background-color: var(--dark);
   }
 }
 
+.choice-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 30px 0;
+  padding: 20px;
+}
+
+.choice-option {
+  background-color: white;
+  border: 3px solid var(--mid);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-option:hover {
+  border-color: var(--primary);
+  background-color: var(--light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="0" y="24" font-size="24">👆</text></svg>'), pointer;
+}
+
+.choice-option.selected {
+  border-width: 4px;
+  font-weight: bolder;
+}
+
+.choice-option.correct {
+  background-color: var(--accent2);
+  color: white;
+  border-color: var(--accent2);
+}
+
+.choice-option.incorrect {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.choice-option.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+
+
     </style>
 </head>
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.6)</h1>
+        <h1>🎯 Vocabulary Builder (2.7)</h1>
     </header>
 
 </div>
@@ -680,7 +743,9 @@ background-color: var(--dark);
 
         <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
-    <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
+<button class="multiple-choice-btn" id="multiple-choice-btn" disabled>🚕 看英選中</button>
+    <button class="start-btn" id="start-btn" disabled>✈️ 看中唸英</button>
+
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
 </div>
 
@@ -691,8 +756,8 @@ background-color: var(--dark);
                     <div class="tts-speed-control">
                         <label for="tts-speed">Vocabulary</label>
                         <select id="tts-speed">
-                            <option value="0.6">0.6x</option>
                             <option value="0.8">0.8x</option>
+                            <option value="0.6">0.6x</option>                            
                             <option value="1">1x</option>                                                       
                         </select>
                     </div>
@@ -811,6 +876,26 @@ background-color: var(--dark);
         </div>
     </div>
 
+<div id="multiple-choice-modal" class="modal">
+  <div class="modal-content">
+    <div id="vocab-word" class="prompt">
+      <span id="vocabulary-prompt"></span>
+      <span class="speaker-icon" id="vocab-speaker" title="Listen">🔊</span>
+    </div>
+    
+    <div id="choice-options" class="choice-options">
+      <!-- 選項將由JavaScript動態生成 -->
+    </div>
+    
+    <div id="mc-feedback" class="feedback"></div>
+    <div id="mc-reveal-answer" class="reveal-answer"></div>
+    
+    <div class="button-group">
+<button id="mc-next-btn" class="next-btn">Next</button>
+<button id="mc-close-btn" class="close-btn">Close</button>
+</div>
+  </div>
+</div>
  
     <script>
         // DOM Elements
@@ -847,13 +932,29 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         const aiSupportModal = document.getElementById('ai-support-modal');
         const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
 
+// 第四步：新增JavaScript變數和DOM元素 (在現有變數區域新增)
+const multipleChoiceBtn = document.getElementById('multiple-choice-btn');
+const multipleChoiceModal = document.getElementById('multiple-choice-modal');
+const vocabularyPrompt = document.getElementById('vocabulary-prompt');
+const vocabSpeaker = document.getElementById('vocab-speaker');
+const choiceOptions = document.getElementById('choice-options');
+const mcFeedbackEl = document.getElementById('mc-feedback');
+const mcRevealAnswerEl = document.getElementById('mc-reveal-answer');
+const mcNextBtn = document.getElementById('mc-next-btn');
+const mcCloseBtn = document.getElementById('mc-close-btn');
+
         // Variables
         let vocabularyData = [];
         let currentQuizWords = [];
         let currentWordIndex = -1;
         let currentWord = null;
         let recognition = null;
-        let speechRate = 0.6;
+        let speechRate = 0.8;
+
+// 第五步：新增多選題相關變數
+let currentMCWord = null;
+let correctChoice = '';
+let selectedChoice = '';
 
         // Initialize Speech Recognition
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -955,7 +1056,7 @@ broaden your horizons	=[片語]拓展你的視野
 technological (adj)	=技術的
 worth (n)	=價值(＝value)
 a worthy winner	= 實至名歸的贏家
-	The scientist is worthy of respect. = 這位科學家值得尊敬(＝The scientist deserves to be respected.)
+	The scientist is worthy of respect. = 這位科學家值得尊敬)
 foundation (n)	=1.建立　2.基金會
 increase (n)	=增加(n)
 increasingly (+ Adj) =越來越...(+ Adj.)
@@ -1301,7 +1402,7 @@ document.querySelectorAll('.preset-btn').forEach(button => {
         textImportSubmitBtn.addEventListener('click', () => {
             const text = textImportContent.value.trim();
             if (!text) {
-                alert('Please enter vocabulary pairs before importing.');
+                alert('欄位中沒有可供匯入的資料，請自行輸入中英文配對(如：English = 英文)，或點選預設的單字表。');
                 return;
             }
             
@@ -1350,6 +1451,7 @@ function processTextImport(text) {
     renderVocabularyTable();
     if (vocabularyData.length > 0) {
         startBtn.disabled = false;
+multipleChoiceBtn.disabled = false; // 新增這一行
     }
 }
 
@@ -1560,7 +1662,7 @@ function updateSelectAllCheckbox() {
             currentQuizWords = vocabularyData.filter(item => item.selected);
             
             if (currentQuizWords.length === 0) {
-                alert('Please select at least one vocabulary word to start the quiz.');
+                alert('至少勾選 1個單字 才能開始此測驗！');
                 return;
             }
             
@@ -1705,6 +1807,149 @@ function updateSelectAllCheckbox() {
             }
         });
 
+// 第七步：新增多選題按鈕事件監聽器
+multipleChoiceBtn.addEventListener('click', () => {
+  currentQuizWords = vocabularyData.filter(item => item.selected);
+  if (currentQuizWords.length < 4) {
+    alert('至少勾選 4個單字 才能開始此測驗！');
+    return;
+  }
+  startMultipleChoiceQuiz();
+});
+
+// 第八步：新增多選題主要功能函數
+function startMultipleChoiceQuiz() {
+  resetMultipleChoiceQuiz();
+  multipleChoiceModal.style.display = 'flex';
+  nextMultipleChoiceQuestion();
+}
+
+function resetMultipleChoiceQuiz() {
+  currentMCWord = null;
+  selectedChoice = '';
+  correctChoice = '';
+  mcFeedbackEl.textContent = '';
+  mcFeedbackEl.className = 'feedback';
+  mcRevealAnswerEl.textContent = '';
+  choiceOptions.innerHTML = '';
+}
+
+function nextMultipleChoiceQuestion() {
+  // 重置UI元素
+  mcFeedbackEl.textContent = '';
+  mcFeedbackEl.className = 'feedback';
+  mcRevealAnswerEl.textContent = '';
+  selectedChoice = '';
+
+  // 隨機選擇一個單字
+  const randomIndex = Math.floor(Math.random() * currentQuizWords.length);
+  currentMCWord = currentQuizWords[randomIndex];
+  
+  // 清理並顯示vocabulary
+  const cleanVocab = currentMCWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+  vocabularyPrompt.textContent = cleanVocab;
+  correctChoice = currentMCWord.translation;
+
+  // 生成選項
+  generateChoices();
+}
+
+function generateChoices() {
+  // 獲取正確答案
+  const correctAnswer = currentMCWord.translation;
+  
+  // 獲取其他3個錯誤選項
+  const otherWords = currentQuizWords.filter(word => word.translation !== correctAnswer);
+  const wrongChoices = [];
+  
+  while (wrongChoices.length < 3 && wrongChoices.length < otherWords.length) {
+    const randomWord = otherWords[Math.floor(Math.random() * otherWords.length)];
+    if (!wrongChoices.includes(randomWord.translation)) {
+      wrongChoices.push(randomWord.translation);
+    }
+  }
+  
+  // 組合所有選項並打亂順序
+  const allChoices = [correctAnswer, ...wrongChoices];
+  const shuffledChoices = allChoices.sort(() => Math.random() - 0.5);
+  
+  // 生成選項HTML
+  choiceOptions.innerHTML = '';
+  shuffledChoices.forEach((choice, index) => {
+    const optionDiv = document.createElement('div');
+    optionDiv.className = 'choice-option';
+    optionDiv.textContent = choice;
+    optionDiv.dataset.choice = choice;
+    
+    optionDiv.addEventListener('click', () => selectChoice(choice, optionDiv));
+    
+    choiceOptions.appendChild(optionDiv);
+  });
+}
+
+function selectChoice(choice, optionElement) {
+  // 如果已經選擇過，不允許再選
+  if (selectedChoice) return;
+  
+  selectedChoice = choice;
+  
+  // 禁用所有選項
+  document.querySelectorAll('.choice-option').forEach(option => {
+    option.classList.add('disabled');
+  });
+  
+  // 標記選中的選項
+  optionElement.classList.add('selected');
+  
+  // 檢查答案
+  if (choice === correctChoice) {
+    optionElement.classList.add('correct');
+    mcFeedbackEl.textContent = 'Nice shot! ✅🏀🧺😊';
+    mcFeedbackEl.className = 'feedback correct';
+    speak('Nice shot!');
+  } else {
+    optionElement.classList.add('incorrect');
+    // 顯示正確答案
+    document.querySelectorAll('.choice-option').forEach(option => {
+      if (option.dataset.choice === correctChoice) {
+        option.classList.add('correct');
+      }
+    });
+    mcFeedbackEl.textContent = 'You missed! ❌🏀💥😤';
+    mcFeedbackEl.className = 'feedback incorrect';
+    speak('You missed!');
+  }
+}
+
+function showMCAnswer() {
+  if (!currentMCWord) return;
+  
+  mcRevealAnswerEl.textContent = `Correct answer: ${correctChoice}`;
+  
+  // 高亮正確答案
+  document.querySelectorAll('.choice-option').forEach(option => {
+    if (option.dataset.choice === correctChoice) {
+      option.classList.add('correct');
+    }
+    option.classList.add('disabled');
+  });
+  
+  selectedChoice = correctChoice; // 防止再次選擇
+}
+
+// 第九步：新增事件監聽器
+vocabSpeaker.addEventListener('click', () => {
+  if (currentMCWord) {
+    const cleanVocab = currentMCWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+    speak(cleanVocab);
+  }
+});
+
+mcNextBtn.addEventListener('click', nextMultipleChoiceQuestion);
+
+mcCloseBtn.addEventListener('click', () => {
+  multipleChoiceModal.style.display = 'none';
+});
 
 // Date information display
 function updateDateInfo() {
@@ -1761,11 +2006,15 @@ setInterval(updateDateInfo, 60000);
         <img src="dodoro_transparent.png" alt="Image Not Found" width="150">
       </div>
       <div class="speech-bubble">
-        <p class="english-text">Please click the refresh button 🔄 for the latest update!</p>
-        <p class="chinese-text">請點擊重新整理按鈕 🔄 以獲取最新更新！</p>
+        <p class="english-text">1.點擊「重新整理(refresh)」🔄 以獲取更新！</p>
+       
+        <p class="chinese-text">2.若手機上的🔊無法運作，表示「文字轉語音」功能經過更新，重開機即可解決。</p>
+
+        <p class="chinese-text">3.本網頁使用Windows系統開發，較適合Android系統的手機，某些iPhone會有🔊異常問題，未來會設法解決。</p>
+
       </div>
     </div>
-    <button id="close-reminder-btn" class="close-reminder-btn">Okay. I'll do it.</button>
+    <button id="close-reminder-btn" class="close-reminder-btn">OK. I got it.</button>
   </div>
 </div>
 
