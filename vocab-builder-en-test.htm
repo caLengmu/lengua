@@ -1402,7 +1402,7 @@ document.querySelectorAll('.preset-btn').forEach(button => {
         textImportSubmitBtn.addEventListener('click', () => {
             const text = textImportContent.value.trim();
             if (!text) {
-                alert('Please enter vocabulary pairs before importing.');
+                alert('欄位中沒有可供匯入的資料，請自行輸入中英文配對(如：English = 英文)，或點選預設的單字表。');
                 return;
             }
             
@@ -1662,7 +1662,7 @@ function updateSelectAllCheckbox() {
             currentQuizWords = vocabularyData.filter(item => item.selected);
             
             if (currentQuizWords.length === 0) {
-                alert('Please select at least one vocabulary word to start the quiz.');
+                alert('至少勾選 1個單字 才能開始此測驗！');
                 return;
             }
             
@@ -1811,7 +1811,7 @@ function updateSelectAllCheckbox() {
 multipleChoiceBtn.addEventListener('click', () => {
   currentQuizWords = vocabularyData.filter(item => item.selected);
   if (currentQuizWords.length < 4) {
-    alert('Please select at least 4 vocabulary words to start the multiple choice quiz.');
+    alert('至少勾選 4個單字 才能開始此測驗！');
     return;
   }
   startMultipleChoiceQuiz();
