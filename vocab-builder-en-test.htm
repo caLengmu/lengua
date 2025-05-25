@@ -83,6 +83,7 @@
             font-size: 25px;
         }
 
+
 .ai-support-btn {
             background-color: var(--accent1);
             color: white;
@@ -663,12 +664,68 @@ background-color: var(--dark);
   }
 }
 
+.choice-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 30px 0;
+  padding: 20px;
+}
+
+.choice-option {
+  background-color: white;
+  border: 3px solid var(--mid);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-option:hover {
+  border-color: var(--primary);
+  background-color: var(--light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="0" y="24" font-size="24">👆</text></svg>'), pointer;
+}
+
+.choice-option.selected {
+  border-width: 4px;
+  font-weight: bolder;
+}
+
+.choice-option.correct {
+  background-color: var(--accent2);
+  color: white;
+  border-color: var(--accent2);
+}
+
+.choice-option.incorrect {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.choice-option.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+
+
     </style>
 </head>
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.6)</h1>
+        <h1>🎯 Vocabulary Builder (2.7)</h1>
     </header>
 
 </div>
@@ -680,8 +737,9 @@ background-color: var(--dark);
 
         <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
-    <button class="start-btn" id="start-btn" disabled>🚀 Start!</button>
-<button class="start-btn" id="multiple-choice-btn" disabled>看英選中</button>
+<button class="start-btn" id="multiple-choice-btn" disabled>🚕 看英選中</button>
+    <button class="start-btn" id="start-btn" disabled>✈️ 看中唸英</button>
+
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
 </div>
 
@@ -827,9 +885,9 @@ background-color: var(--dark);
     <div id="mc-reveal-answer" class="reveal-answer"></div>
     
     <div class="button-group">
-      <button id="mc-answer-btn" class="answer-btn">🔑 Answer</button>
-      <button id="mc-close-btn" class="close-btn">Close</button>
-    </div>
+<button id="mc-next-btn" class="next-btn">Next</button>
+<button id="mc-close-btn" class="close-btn">Close</button>
+</div>
   </div>
 </div>
  
@@ -876,7 +934,7 @@ const vocabSpeaker = document.getElementById('vocab-speaker');
 const choiceOptions = document.getElementById('choice-options');
 const mcFeedbackEl = document.getElementById('mc-feedback');
 const mcRevealAnswerEl = document.getElementById('mc-reveal-answer');
-const mcAnswerBtn = document.getElementById('mc-answer-btn');
+const mcNextBtn = document.getElementById('mc-next-btn');
 const mcCloseBtn = document.getElementById('mc-close-btn');
 
         // Variables
@@ -1881,7 +1939,7 @@ vocabSpeaker.addEventListener('click', () => {
   }
 });
 
-mcAnswerBtn.addEventListener('click', showMCAnswer);
+mcNextBtn.addEventListener('click', nextMultipleChoiceQuestion);
 
 mcCloseBtn.addEventListener('click', () => {
   multipleChoiceModal.style.display = 'none';
@@ -1942,11 +2000,18 @@ setInterval(updateDateInfo, 60000);
         <img src="dodoro_transparent.png" alt="Image Not Found" width="150">
       </div>
       <div class="speech-bubble">
-        <p class="english-text">Please click the refresh button 🔄 for the latest update!</p>
-        <p class="chinese-text">請點擊重新整理按鈕 🔄 以獲取最新更新！</p>
+        <p class="english-text">1. Click the "refresh" button 🔄 for the update!</p>
+        <p class="chinese-text">(點擊「重新整理」按鈕 🔄 以獲取更新！)</p>
+
+ <p class="english-text">2. If the 🔊 on your phone is not working, it means the 'Text-to-Speech' feature has been updated. Just restart your phone. </p>
+        <p class="chinese-text">(若手機上的🔊無法運作，表示「文字轉語音」功能經過更新，重開機即可解決。)</p>
+
+ <p class="english-text">3. This webpage was made on Windows and works better with Android phones. Some iPhones may have 🔊 sound issues, and we’ll try to fix that in the future.</p>
+        <p class="chinese-text">(本網頁使用Windows系統開發，較適合Android系統的手機，某些iPhone會有🔊異常問題，未來會設法解決。)</p>
+
       </div>
     </div>
-    <button id="close-reminder-btn" class="close-reminder-btn">Okay. I'll do it.</button>
+    <button id="close-reminder-btn" class="close-reminder-btn">OK. I got it.</button>
   </div>
 </div>
 
@@ -2054,5 +2119,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
-
