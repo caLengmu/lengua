@@ -1715,22 +1715,22 @@ function updateSelectAllCheckbox() {
         .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
     
     // Normalize user answer (remove punctuation)
-    const normalizedUserAnswer = userAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const normalizedUserAnswer = userAnswer.replace(/[.～。、・？,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
     
     // Check if user's answer matches any of the correct options
     const isCorrect = correctAnswers.some(answer => {
-        const normalizedAnswer = answer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        const normalizedAnswer = answer.replace(/[.～。、・？,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
         return normalizedUserAnswer === normalizedAnswer;
     });
     
     if (isCorrect) {
-        feedbackEl.textContent = 'Well done! 🏆😊👍';
+        feedbackEl.textContent = 'よくできたね！ 🏆😊👍';
         feedbackEl.className = 'feedback correct';
-        speak('Well done!');
+        speak('よくできたね！');
     } else {
-        feedbackEl.textContent = 'Try again! 🔥🔥🔥';
+        feedbackEl.textContent = 'もう一回やってみて！ 🔥🔥🔥';
         feedbackEl.className = 'feedback incorrect';
-        speak('Try again!');
+        speak('もう一回やってみて！');
     }
 }
 
@@ -1895,9 +1895,9 @@ function selectChoice(choice, optionElement) {
   // 檢查答案
   if (choice === correctChoice) {
     optionElement.classList.add('correct');
-    mcFeedbackEl.textContent = 'よくできました! ✅🏀🧺😊';
+    mcFeedbackEl.textContent = 'やったね！ ✅🏀🧺😊';
     mcFeedbackEl.className = 'feedback correct';
-    speak('よくできました!');
+    speak('やったね！');
   } else {
     optionElement.classList.add('incorrect');
     // 顯示正確答案
@@ -1906,9 +1906,9 @@ function selectChoice(choice, optionElement) {
         option.classList.add('correct');
       }
     });
-    mcFeedbackEl.textContent = '頑張ってください! ❌🏀💥😤';
+    mcFeedbackEl.textContent = '頑張ってね! ❌🏀💥😤';
     mcFeedbackEl.className = 'feedback incorrect';
-    speak('頑張ってください!');
+    speak('頑張ってね!');
   }
 }
 
