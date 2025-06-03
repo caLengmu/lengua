@@ -1466,8 +1466,8 @@ function processTextImport(text) {
         if (!line) continue;
         
         // Check if this is a section header
-        if (line.includes('◎') || line.includes('=...') || line.startsWith('#')) {
-            currentSection = line.replace('◎', '').replace('=...', '').replace('#', '').trim();
+        if (line.includes('◎') || line.includes('*') || line.startsWith('*')) {
+            currentSection = line.replace('◎', '').replace('*', '').replace('*', '').trim();
             continue;
         }
         
