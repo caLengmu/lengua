@@ -1715,11 +1715,11 @@ function updateSelectAllCheckbox() {
         .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
     
     // Normalize user answer (remove punctuation)
-    const normalizedUserAnswer = userAnswer.replace(/[.～。、・？,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const normalizedUserAnswer = userAnswer.replace(/[.～。、・？（）,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
     
     // Check if user's answer matches any of the correct options
     const isCorrect = correctAnswers.some(answer => {
-        const normalizedAnswer = answer.replace(/[.～。、・？,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        const normalizedAnswer = answer.replace(/[.～。、・？（）,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
         return normalizedUserAnswer === normalizedAnswer;
     });
     
