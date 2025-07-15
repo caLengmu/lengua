@@ -1236,10 +1236,10 @@ function submitAnswer() {
     const correctAnswers = currentWord.vocabulary
         .replace(/\(.*?\)/g, '') // Remove content in parentheses
         .split('/') // Split words by slash
-        .map(answer => answer.trim().toLowerCase().replace(/[.～。、・？,\/#!$%\^&\*;:{}=\-_`~()"<>?'’…@[\]\\|]/g, '')); // Remove punctuation and symbols
+        .map(answer => answer.trim().toLowerCase().replace(/[.～。、・「」！？,\/#!$%\^&\*;:{}=\-_`~()"<>?'’…@[\]\\|]/g, '')); // Remove punctuation and symbols
 
     // Normalize user answer (remove punctuation and symbols)
-    const normalizedUserAnswer = userAnswer.replace(/[.～。、・？,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, '');
+    const normalizedUserAnswer = userAnswer.replace(/[.～。、・「」！？,\/#!$%\^&\*;:{}=\-_`~()"'<>?@[\]\\|]/g, '');
 
     // Check if user answer matches any of the possible correct answers
     const isCorrect = correctAnswers.includes(normalizedUserAnswer);
