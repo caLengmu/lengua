@@ -74,17 +74,16 @@
             color: black;
         }
 
-     
+     .english-to-chinese-btn {
+    background-color: var(--accent3);
+    color: white;
+    padding: 16px 25px;
+    font-size: 20px;
+}
+
 
         .start-btn {
             background-color: var(--primary);
-            color: white;
-            padding: 16px 25px;
-            font-size: 25px;
-        }
-
- .multiple-choice-btn {
-            background-color: var(--accent3);
             color: white;
             padding: 16px 25px;
             font-size: 25px;
@@ -668,70 +667,15 @@ background-color: var(--dark);
   .speech-bubble:after {
     top: -12px;
   }
+
 }
-
-.choice-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin: 30px 0;
-  padding: 20px;
-}
-
-.choice-option {
-  background-color: white;
-  border: 3px solid var(--mid);
-  border-radius: 12px;
-  padding: 20px;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  min-height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.choice-option:hover {
-  border-color: var(--primary);
-  background-color: var(--light);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text x="0" y="24" font-size="24">👆</text></svg>'), pointer;
-}
-
-.choice-option.selected {
-  border-width: 4px;
-  font-weight: bolder;
-}
-
-.choice-option.correct {
-  background-color: var(--accent2);
-  color: white;
-  border-color: var(--accent2);
-}
-
-.choice-option.incorrect {
-  background-color: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.choice-option.disabled {
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-
 
     </style>
 </head>
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.7)</h1>
+        <h1>🎯 Vocabulary Builder (2.8)</h1>
     </header>
 
 </div>
@@ -743,9 +687,8 @@ background-color: var(--dark);
 
         <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
-<button class="multiple-choice-btn" id="multiple-choice-btn" disabled>🚕 看英選中</button>
-    <button class="start-btn" id="start-btn" disabled>✈️ 看中唸英</button>
-
+<button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👌 英 → 中</button>
+    <button class="start-btn" id="start-btn" disabled>👍 中 → 英</button>
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
 </div>
 
@@ -756,8 +699,8 @@ background-color: var(--dark);
                     <div class="tts-speed-control">
                         <label for="tts-speed">Vocabulary</label>
                         <select id="tts-speed">
+                            <option value="0.6">0.6x</option>
                             <option value="0.8">0.8x</option>
-                            <option value="0.6">0.6x</option>                            
                             <option value="1">1x</option>                                                       
                         </select>
                     </div>
@@ -787,9 +730,9 @@ background-color: var(--dark);
             <!-- Textbook Buttons -->
             <div class="button-set textbook-buttons">
                 <h3>Textbook</h3>
-                <button class="preset-btn textbook-btn" data-preset="b2l7">B2 L7</button>
-                <button class="preset-btn textbook-btn" data-preset="b2l8">B2 L8</button>
-                <button class="preset-btn textbook-btn" data-preset="b2l9">B2 L9</button>
+                <button class="preset-btn textbook-btn" data-preset="b3l1">B3 L1 (自読)</button>
+                <button class="preset-btn textbook-btn" data-preset="b3l2">B3 L2</button>
+                <button class="preset-btn textbook-btn" data-preset="b3l3">B3 L3</button>
             </div>
             
             <!-- Live Magazine Buttons -->
@@ -807,9 +750,9 @@ background-color: var(--dark);
             <!-- 核心字彙 Buttons -->
             <div class="button-set core-buttons">
                 <h3>核心字彙</h3>
-                <button class="preset-btn core-btn" data-preset="coreU16">U16</button>
-                <button class="preset-btn core-btn" data-preset="coreU17">U17</button>
-                <button class="preset-btn core-btn" data-preset="coreU18">U18</button>
+                <button class="preset-btn core-btn" data-preset="coreP2U1">P2 U1</button>
+                <button class="preset-btn core-btn" data-preset="coreP2U2">P2 U2</button>
+                <button class="preset-btn core-btn" data-preset="coreP2U3">P2 U3</button>
             </div>
             
             <!-- Other Button -->
@@ -857,6 +800,30 @@ background-color: var(--dark);
         </div>
     </div>
 
+<!-- English to Chinese Quiz Modal -->
+<div id="english-to-chinese-modal" class="modal">
+    <div class="modal-content">
+        <div class="prompt">Think about how to say this in Chinese and then check the answer.</div>
+        
+        <div style="font-size: 28px; font-weight: bold; color: var(--primary); margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <span id="english-word-display"></span>
+            <span class="speaker-icon" id="english-word-speaker" title="Listen" style="cursor: pointer; color: var(--secondary); font-size: 24px;">🔊</span>
+        </div>
+        
+        <div id="chinese-answer-display" class="reveal-answer" style="display: none;"></div>
+        <div id="check-question" style="display: none; font-size: 23px; color: var(--accent1); margin-top: 10px;">Did you get it right?</div>
+        
+        <div style="margin-top: 30px;">
+            <button id="check-answer-btn" class="submit-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">Check Answer</button>
+            
+            <div class="button-group">
+                <button id="english-next-btn" class="next-btn">Next</button>
+                <button id="english-close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Quiz Modal -->
     <div id="quiz-modal" class="modal">
         <div class="modal-content">
@@ -866,9 +833,9 @@ background-color: var(--dark);
             <div id="hint-text" class="hint"></div>
             <div id="reveal-answer" class="reveal-answer"></div>
             <div class="button-group">
-                <button id="submit-btn" class="submit-btn">Submit</button>
+                <button id="submit-btn" class="submit-btn">✔️❌ Submit</button>
                 <button id="speak-btn" class="speak-btn">🎤 Speak</button>
-                <button id="hint-btn" class="hint-btn">Hint</button>
+                <button id="hint-btn" class="hint-btn">🧩 Hint</button>
                 <button id="answer-btn" class="answer-btn">🔑 Answer</button>
                 <button id="next-btn" class="next-btn">Next</button>
                 <button id="close-btn" class="close-btn">Close</button>
@@ -876,30 +843,21 @@ background-color: var(--dark);
         </div>
     </div>
 
-<div id="multiple-choice-modal" class="modal">
-  <div class="modal-content">
-    <div id="vocab-word" class="prompt">
-      <span id="vocabulary-prompt"></span>
-      <span class="speaker-icon" id="vocab-speaker" title="Listen">🔊</span>
-    </div>
-    
-    <div id="choice-options" class="choice-options">
-      <!-- 選項將由JavaScript動態生成 -->
-    </div>
-    
-    <div id="mc-feedback" class="feedback"></div>
-    <div id="mc-reveal-answer" class="reveal-answer"></div>
-    
-    <div class="button-group">
-<button id="mc-next-btn" class="next-btn">Next</button>
-<button id="mc-close-btn" class="close-btn">Close</button>
-</div>
-  </div>
-</div>
  
     <script>
         // DOM Elements
       
+// English to Chinese Quiz Modal Elements
+const englishToChineseBtn = document.getElementById('english-to-chinese-btn');
+const englishToChineseModal = document.getElementById('english-to-chinese-modal');
+const englishWordDisplay = document.getElementById('english-word-display');
+const englishWordSpeaker = document.getElementById('english-word-speaker');
+const chineseAnswerDisplay = document.getElementById('chinese-answer-display');
+const checkQuestion = document.getElementById('check-question');
+const checkAnswerBtn = document.getElementById('check-answer-btn');
+const englishNextBtn = document.getElementById('english-next-btn');
+const englishCloseBtn = document.getElementById('english-close-btn');
+
         const textImportBtn = document.getElementById('text-import-btn');
      
         const startBtn = document.getElementById('start-btn');
@@ -932,29 +890,17 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         const aiSupportModal = document.getElementById('ai-support-modal');
         const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
 
-// 第四步：新增JavaScript變數和DOM元素 (在現有變數區域新增)
-const multipleChoiceBtn = document.getElementById('multiple-choice-btn');
-const multipleChoiceModal = document.getElementById('multiple-choice-modal');
-const vocabularyPrompt = document.getElementById('vocabulary-prompt');
-const vocabSpeaker = document.getElementById('vocab-speaker');
-const choiceOptions = document.getElementById('choice-options');
-const mcFeedbackEl = document.getElementById('mc-feedback');
-const mcRevealAnswerEl = document.getElementById('mc-reveal-answer');
-const mcNextBtn = document.getElementById('mc-next-btn');
-const mcCloseBtn = document.getElementById('mc-close-btn');
-
         // Variables
         let vocabularyData = [];
         let currentQuizWords = [];
         let currentWordIndex = -1;
         let currentWord = null;
         let recognition = null;
-        let speechRate = 0.8;
+        let speechRate = 0.6;
 
-// 第五步：新增多選題相關變數
-let currentMCWord = null;
-let correctChoice = '';
-let selectedChoice = '';
+let currentEnglishQuizWords = [];
+let currentEnglishWordIndex = -1;
+let currentEnglishWord = null;
 
         // Initialize Speech Recognition
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -1020,262 +966,92 @@ let selectedChoice = '';
 // Preset vocabulary data
 const presetVocabulary = {
 
-    b2l7: `
-◎First Half (#1-#12)
-seek (v)	=尋求、尋找
-audience (n)	=觀眾、聽眾
-series (n)	=系列
-technology =(n)	科技
-worth (adj)	=1.價值…的($) 	2.值得…的
-found (v)	=創立、建立
-conference (n)	=會議、研討會
-increase (v)	=增加、提升(v)
-organize (v)	=1.組織、籌辦 　2.整理、安排
-broad (adj)	=1.寬的　2.廣泛的
-range (n)	=1.種類、系列 　2.範圍
-
-◎Second Half (#13-#21)
-field (n)	=1.田野　2.領域
-philosophy =(n)	哲學
-launch (v) = 	1.發射(飛彈等)	　2.推出(產品等)	　3.發起(活動等)
-collect (v)	=收集
-numerous (adj)	=許多的(＝many)
-celebrity (n)	=名人
-fascinate (v)	=使著迷
-fiction (n)	=小說、虛構故事
-discuss (v)	=討論(v)
-method (n)	=方法
-◎片語(Phrases & Idioms)
-as well as...	=[片語]以及…
-for free	=[片語]免費
-at present	=[片語]目前
-give something a try	=[片語]嘗試某事
-broaden your horizons	=[片語]拓展你的視野
-
-◎詞類變化(different parts of speech)
-technological (adj)	=技術的
-worth (n)	=價值(＝value)
-a worthy winner	= 實至名歸的贏家
-	The scientist is worthy of respect. = 這位科學家值得尊敬(＝The scientist deserves to be respected.)
-foundation (n)	=1.建立　2.基金會
-increase (n)	=增加(n)
-increasingly (+ Adj) =越來越...(+ Adj.)
-organizer (n)	=主辦人
-organization (n)	=組織、機構
-broaden (v)	=擴展
-range from A to B	=範圍涵蓋A到B
-collection (n)	=收藏品
-fascination (n)	=著迷(n)
-discussion (n)	=討論(n)
-`,
-
-    b2l8: `
-
+    b3l1: `
 
 `,
 
-    b2l9: `
+    b3l2: `
+◎Vocabulary—First Half (#1-#11)
+innovate (v)	=創新(v)
+promise (v)	=承諾(v)
+material (n)	=材料、原料
+mention (v)	=提到、說到(v)
+structure (n)	=結構
+capable (adj)	=有能力的
+collaborate (v)	=合作(v) (＝cooperate)
+architect (n)	=建築師
+graduate (v)	=畢業(v)
+construct (v)	=建造(v)
+slight (adj)	=些微的
+
+◎詞類變化補充
+innovative (adj)	=創新的
+innovation (n)	=創新(n)
+promise (n)	=承諾(n)
+capability (n)	=能力(＝ ability)
+collaboration (n)	=合作(n) (＝cooperation)
+architecture (n)	=1.建築學 	2.建築風格
+graduation (n)	=畢業(n)
+a college graduate (n)	=一個大學畢業生
+construction (n)	=1.建造 2.建築物
+constructive (adj)	=建設性的、有益的
+slightly (adv)	=稍微地
+
+◎Vocabulary--Second Half (#12-#20)
+rank (v)	=排名(v)
+unique (adj)	=獨特的
+adjust (v)	=調整(v)
+rely (v)	=依靠
+feedback (n)	=回饋、意見
+element (n)	=元素、要素
+stable (adj)	=穩定的
+route (n)	=路線
+explore (v)	=探索(v)
+
+◎詞類變化補充
+ranking (n)	=排名(n)
+adjustment (n)	=調整(n)
+reliable (adj)	=可靠的
+elementary (adj)	=基礎的、初級的
+stability (n)	=穩定、穩固(n)
+exploration (n)	=探索(n)
+
+◎Phrases & Idioms 
+trial and error	=反覆試驗
+in charge (of...)	=負責…
+figure out	=想出(方法等)、弄清楚
+roll up one’s sleeves	=捲起袖子(=開始行動)
+get down to…	=開始認真做…
+
+
+`,
+
+    b3l3: `
 
 
 `,
 
     liveU71: `
 
-◎Paragraph 1
-unexpected	=意想不到的
-hit theaters	=[片語](在戲院)上映
-lengthy	=冗長的、長時間的
-run time	=播放時間
-significant	=重要的(＝important)
-emperor	=皇帝
-leave out	=遺漏
-◎Paragraph 2
-fort	=堡壘
-come across...	=偶然發現
-carve	=雕刻
-writing system	=書寫系統
-alphabet	 =字母系統
-script	=1.(某語言的)文字(如：the Latin script) 	2.劇本
-military officer	=軍官
-in charge (of...)	=[片語]負責管理
-significance	=重要性(＝importance)
-property	=財產、所有物
-army	=軍隊、陸軍
-◎Paragraph 3
-mere	=僅僅
-defeat	=打敗
-terms	=條款
-treaty	=條約
-riches (n)	=財富、財產(＝wealth)
-place (v)	=放置(＝ put)
-ship (v)	=運送
-remain	=維持某狀態
-to this day	=[片語]直到今天
-
-
 `,
 
 liveU72: `
-
-◎Paragraph 1
-ancient	=古代的
-century	=世紀
-die out	=[片語]滅絕、消失
-scholar	=學者
-text	=文字
-code	=密碼、代碼
-decode	=破解(密碼等)
-decipher	=破譯(難懂的文字或符號)
-◎Paragraph 2
-perhaps	=或許(＝ maybe)
-celebrate	=1.慶祝 	2.讚揚(＝praise)
-allow someone to do something	=1.允許	2.使能夠(＝ enable)
-as a result	=結果、因此(＝ therefore ＝ thus)
-blossom	=1.開花	2.蓬勃發展
-fascinating	=令人著迷的
-era	=時代
-expand	=擴大、擴展
-◎Paragraph 3
-likely (adv)	=很可能地(＝probably)
-legacy	=1.遺產 	2.留下的影響
-live on	= 繼續存在
-in recent years	=近年來
-teach oneself	=自學
-educational	=有教育意義的
-software	=軟體
-in honor of...	=[片語]向…致敬
-remarkable	=卓越的；了不起的
 
 
 `,
 
     liveU141: `
 
-◎Paragraphs 1 & 2
-
-battle (n)	=戰鬥
-battle (v)	=與…奮戰
-rot 	=腐爛
-the press =	1.報刊 2.出版社
-record (v)	=記錄
-refer to...	 =指的是…
-general  = 一般的；普遍的
-decline	=減少；衰退
-mental	=心理的；精神的
-effort	=努力
-among	=在…之中
-population	=人口
-digital	=數位的
-digital age	=數位時代
-term	=用語；術語
-value	=價值
-content	=內容
-typically	=通常；一般來說
-social media	=社群媒體
-harmful	=有害的
-impact	=影響；衝擊
-overconsume=	過度攝取/使用
-screen time	=看螢幕的時間
-negatively	=負面地(vs. positively)
-function (n)	=功能
-function (v)	=發揮作用；運作
-
-◎Paragraph 3
-background	=背景
-focus on...	=專注於...
-result in...	=導致...(＝cause＝lead to…)
-similarly	=同樣地
-adult	=成人
-news feed	= (社群媒體的)動態消息
-over time	 =隨著時間推移、漸漸地
-reduce	=減少
-productivity	=生產力
-creativity	 =創造力
-attention span	=注意力持續時間
-
-
-
-
-
-
-
 `,
 
 liveU142: `
-◎Paragraph 1
-effect	=影響(n) (＝influence ＝impact)
-permanent	=永久的
-method	=方法
-practice	=1.練習 	2.習慣性做某事
-mindfulness	= 專注覺察當下的身心感受，類似冥想(中文譯為「正念」)
-involve	=涉及；包含
-throughout (+ time)=	在整段時間中
-throughout (+ place)=	遍佈整個地點
-for instance	=舉例來說(＝for example)
-breathe	=呼吸
-calm	=使平靜；冷靜
-expert	=專家
-recommend	=推薦
--free (e.g. sugar-free, carefree, rent-free) =	無...的(如：無糖的、無憂無慮的、免租金的)
-
-◎Paragraphs 2 & 3
-strategy	=策略
-take up (+ activity)	=開始從事某活動
-technology	=科技
-aim to do something	=目標是…
-replace	=替代
-journal 	=1.日記 2.期刊
-journaling	=寫日記
-board game	=桌遊
-adventure	=冒險
-research	=研究
-significantly	=明顯地；顯著地
-mood	=心情
-make a difference	=[片語]產生影響
-aside from...	=除了…之外(＝1.besides... 2.except for…)
-make time for...	=為…騰出時間
-loved ones	=摯愛的家人/親人
-well-being	=幸福、安康
-recognize	=1.認出 2.承認、接受(事實)
-risk	=風險
-sharp	=1.鋒利的、尖的 	2.精明敏銳的
-
 
 
 `,
 
 
     liveU3: `
-migrant	=移民
-attempt (+ to V)	= 試圖... (＝try to V)
-cross (v)	=穿越
-channel	=　1.頻道 2.通道
-the English Channel	　=英吉利海峽
-the Taiwan Strait =  台灣海峽
-journey	=旅程
-desperate	=因絕望而不顧一切的
-port	=港口
-passage	=通道；通過
-fill up the bottle with water	=把瓶子裝滿水
-garage	=車庫
-charge (v)	=充電
-cable	=電線
-allow someone to do something	=允許某人做某事
-homeless	=無家可歸的
-essential	=必需的
-find directions	=找到方向
-stay in touch with... 	=和…保持聯繫
-translate	=翻譯
-seek	 =尋求
-generous	=慷慨的
-affectionate	=親切的；有愛心的
-granny	=奶奶（口語）
-charger	=充電器
-be on board with...	=[片語]同意；支持…
-operation	=行動
-shut down	=關閉
-yet	=然而；但
-keep (on) doing something	=持續做某事
+
 `,
 
  liveU51: `
@@ -1288,88 +1064,14 @@ keep (on) doing something	=持續做某事
 
 `,
 
-    coreU16: `
-核心單U16
-
-perfume (n) = 香水
-develop (v) = 1.發展 2.開發 3.洗(照片)
-pleasant (adj) = 令人愉悅的、宜人的
-expand (v) = 擴展
-possibility (n) = 可能性
-entry (n) = 1.進入 2.條目(如：a dictionary entry)
-spray (v) = 噴灑；噴霧
-amount (n) = 數量
-blend (v) = 混合
-outcome (n) = 結果(＝result)
-concept (n) = 概念
-shift (n) = 1.轉變 2.輪班(如：a day/night shift 日/夜班)
-conventional (adj) = 傳統的、依照常規的
-overcome (v) = 克服
-boldness (n) = 大膽
-favorable (adj) = 1.獲得讚許的 2.有利的
-review (n) = 1.評論 2.複習
-rumor (n) = 謠言
-It is rumored that... / Rumor has it that... = 謠傳...
-deliver (v) = 運送、遞送
-
+    coreP2U1: `
+核心單P2 U1
 `,
 
-    coreU17: `
-核心單U17
-
-specific (adj) = 1.特定的 2.確切的(vs. general 籠統的)
-analyze (v) = 分析
-location (n) = 位置
-remote (adj) = 偏遠的
-recognize (v) = 認出；辨識
-harmony (n) = 和諧
-determine (v) = 1.決定、影響 2.判定、確定
-accuracy (n) = 準確
-vary (v) = 有差異、不同
-various (adj) = 各式各樣的(＝many different)
-rare (adj) = 稀有的
-rarely (adv) = 幾乎不(＝seldom, almost never)
-occasion (n) = 場合、時機
-cooperate (v) = 合作
-exchange (v, n) = 交換
-ignore (v) = 忽視
-function = (n)功能  (v)起作用
-territory (n) = 領土
-survive (v) = 生存
-identify (v) = 1.識別(身份)  2.發現、找出(＝find out)
-evidence (n) = 證據
-capacity (n) = 1.能力(＝ability) 2.容納人數
-demonstrate (v) = 示範
-scratch (v) = 抓、搔
-
-
+    coreP2U2: `
 `,
 
-    coreU18: `
-核心單U18
-
-cinema (n) = 1.電影院(＝movie theater)  2.電影業
-essential (adj) = 必要的
-entertainment (n) = 娛樂
-direct (v) = 1.指揮、領導 2.執導(電影)
-silence (n) = 寂靜
-fair (n) = 園遊會(school fair)、市集、展覽會(book fair, car fair)
-fair (adj) = 公平的
-stage (n) = 1.舞台 2.階段
-inventor (n) = 發明家
-proper (adj) = 適當的
-decade (n) = 十年
-nearly (adv) = 幾乎、將近
-dialogue (n) = 對話
-creativity (n) = 創造力
-career (n) = 職涯、事業
-fame (n) = 名聲
-hardship (n) = 困苦
-dramatically (adv) = 1.戲劇性地 2.大幅地
-switch (v) = 轉換
-light switch (n) = 電燈開關
-emergence (n) = 出現、興起
-
+    coreP2U3: `
 `,
 
     other1: `
@@ -1402,7 +1104,7 @@ document.querySelectorAll('.preset-btn').forEach(button => {
         textImportSubmitBtn.addEventListener('click', () => {
             const text = textImportContent.value.trim();
             if (!text) {
-                alert('欄位中沒有可供匯入的資料，請自行輸入中英文配對(如：English = 英文)，或點選預設的單字表。');
+                alert('Please enter vocabulary pairs before importing.');
                 return;
             }
             
@@ -1451,7 +1153,7 @@ function processTextImport(text) {
     renderVocabularyTable();
     if (vocabularyData.length > 0) {
         startBtn.disabled = false;
-multipleChoiceBtn.disabled = false; // 新增這一行
+englishToChineseBtn.disabled = false;
     }
 }
 
@@ -1657,12 +1359,36 @@ function updateSelectAllCheckbox() {
     });
 });
 
+// English to Chinese Quiz button handler
+englishToChineseBtn.addEventListener('click', () => {
+    currentEnglishQuizWords = vocabularyData.filter(item => item.selected);
+    if (currentEnglishQuizWords.length === 0) {
+        alert('Please select at least one vocabulary word to start the quiz.');
+        return;
+    }
+    startEnglishToChineseQuiz();
+});
+
+// English to Chinese Quiz Modal event listeners
+checkAnswerBtn.addEventListener('click', showChineseAnswer);
+englishNextBtn.addEventListener('click', nextEnglishQuestion);
+englishCloseBtn.addEventListener('click', () => {
+    englishToChineseModal.style.display = 'none';
+});
+
+englishWordSpeaker.addEventListener('click', () => {
+    if (currentEnglishWord) {
+        const cleanWord = currentEnglishWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+        speak(cleanWord);
+    }
+});
+
         // Start Quiz button handler
         startBtn.addEventListener('click', () => {
             currentQuizWords = vocabularyData.filter(item => item.selected);
             
             if (currentQuizWords.length === 0) {
-                alert('至少勾選 1個單字 才能開始此測驗！');
+                alert('Please select at least one vocabulary word to start the quiz.');
                 return;
             }
             
@@ -1807,149 +1533,55 @@ function updateSelectAllCheckbox() {
             }
         });
 
-// 第七步：新增多選題按鈕事件監聽器
-multipleChoiceBtn.addEventListener('click', () => {
-  currentQuizWords = vocabularyData.filter(item => item.selected);
-  if (currentQuizWords.length < 4) {
-    alert('至少勾選 4個單字 才能開始此測驗！');
-    return;
-  }
-  startMultipleChoiceQuiz();
-});
-
-// 第八步：新增多選題主要功能函數
-function startMultipleChoiceQuiz() {
-  resetMultipleChoiceQuiz();
-  multipleChoiceModal.style.display = 'flex';
-  nextMultipleChoiceQuestion();
+// Start English to Chinese Quiz
+function startEnglishToChineseQuiz() {
+    resetEnglishToChineseQuiz();
+    englishToChineseModal.style.display = 'flex';
+    nextEnglishQuestion();
 }
 
-function resetMultipleChoiceQuiz() {
-  currentMCWord = null;
-  selectedChoice = '';
-  correctChoice = '';
-  mcFeedbackEl.textContent = '';
-  mcFeedbackEl.className = 'feedback';
-  mcRevealAnswerEl.textContent = '';
-  choiceOptions.innerHTML = '';
+// Reset English to Chinese quiz state
+function resetEnglishToChineseQuiz() {
+    currentEnglishWordIndex = -1;
+    currentEnglishWord = null;
+    chineseAnswerDisplay.style.display = 'none';
+    checkQuestion.style.display = 'none';
+    checkAnswerBtn.style.display = 'block';
 }
 
-function nextMultipleChoiceQuestion() {
-  // 重置UI元素
-  mcFeedbackEl.textContent = '';
-  mcFeedbackEl.className = 'feedback';
-  mcRevealAnswerEl.textContent = '';
-  selectedChoice = '';
-
-  // 隨機選擇一個單字
-  const randomIndex = Math.floor(Math.random() * currentQuizWords.length);
-  currentMCWord = currentQuizWords[randomIndex];
-  
-  // 清理並顯示vocabulary
-  const cleanVocab = currentMCWord.vocabulary.replace(/\(.*?\)/g, '').trim();
-  vocabularyPrompt.textContent = cleanVocab;
-  correctChoice = currentMCWord.translation;
-
-  // 生成選項
-  generateChoices();
-}
-
-function generateChoices() {
-  // 獲取正確答案
-  const correctAnswer = currentMCWord.translation;
-  
-  // 獲取其他3個錯誤選項
-  const otherWords = currentQuizWords.filter(word => word.translation !== correctAnswer);
-  const wrongChoices = [];
-  
-  while (wrongChoices.length < 3 && wrongChoices.length < otherWords.length) {
-    const randomWord = otherWords[Math.floor(Math.random() * otherWords.length)];
-    if (!wrongChoices.includes(randomWord.translation)) {
-      wrongChoices.push(randomWord.translation);
-    }
-  }
-  
-  // 組合所有選項並打亂順序
-  const allChoices = [correctAnswer, ...wrongChoices];
-  const shuffledChoices = allChoices.sort(() => Math.random() - 0.5);
-  
-  // 生成選項HTML
-  choiceOptions.innerHTML = '';
-  shuffledChoices.forEach((choice, index) => {
-    const optionDiv = document.createElement('div');
-    optionDiv.className = 'choice-option';
-    optionDiv.textContent = choice;
-    optionDiv.dataset.choice = choice;
+// Load next English question
+function nextEnglishQuestion() {
+    // Reset UI elements
+    chineseAnswerDisplay.style.display = 'none';
+    checkQuestion.style.display = 'none';
+    checkAnswerBtn.style.display = 'block';
     
-    optionDiv.addEventListener('click', () => selectChoice(choice, optionDiv));
+    // Randomly select next word
+    const previousIndex = currentEnglishWordIndex;
     
-    choiceOptions.appendChild(optionDiv);
-  });
-}
-
-function selectChoice(choice, optionElement) {
-  // 如果已經選擇過，不允許再選
-  if (selectedChoice) return;
-  
-  selectedChoice = choice;
-  
-  // 禁用所有選項
-  document.querySelectorAll('.choice-option').forEach(option => {
-    option.classList.add('disabled');
-  });
-  
-  // 標記選中的選項
-  optionElement.classList.add('selected');
-  
-  // 檢查答案
-  if (choice === correctChoice) {
-    optionElement.classList.add('correct');
-    mcFeedbackEl.textContent = 'Nice shot! ✅🏀🧺😊';
-    mcFeedbackEl.className = 'feedback correct';
-    speak('Nice shot!');
-  } else {
-    optionElement.classList.add('incorrect');
-    // 顯示正確答案
-    document.querySelectorAll('.choice-option').forEach(option => {
-      if (option.dataset.choice === correctChoice) {
-        option.classList.add('correct');
-      }
-    });
-    mcFeedbackEl.textContent = 'You missed! ❌🏀💥😤';
-    mcFeedbackEl.className = 'feedback incorrect';
-    speak('You missed!');
-  }
-}
-
-function showMCAnswer() {
-  if (!currentMCWord) return;
-  
-  mcRevealAnswerEl.textContent = `Correct answer: ${correctChoice}`;
-  
-  // 高亮正確答案
-  document.querySelectorAll('.choice-option').forEach(option => {
-    if (option.dataset.choice === correctChoice) {
-      option.classList.add('correct');
+    if (currentEnglishQuizWords.length === 1) {
+        currentEnglishWordIndex = 0;
+    } else {
+        do {
+            currentEnglishWordIndex = Math.floor(Math.random() * currentEnglishQuizWords.length);
+        } while (currentEnglishWordIndex === previousIndex && currentEnglishQuizWords.length > 1);
     }
-    option.classList.add('disabled');
-  });
-  
-  selectedChoice = correctChoice; // 防止再次選擇
+    
+    currentEnglishWord = currentEnglishQuizWords[currentEnglishWordIndex];
+    const cleanWord = currentEnglishWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+    englishWordDisplay.textContent = cleanWord;
 }
 
-// 第九步：新增事件監聽器
-vocabSpeaker.addEventListener('click', () => {
-  if (currentMCWord) {
-    const cleanVocab = currentMCWord.vocabulary.replace(/\(.*?\)/g, '').trim();
-    speak(cleanVocab);
-  }
-});
+// Show Chinese answer
+function showChineseAnswer() {
+    if (!currentEnglishWord) return;
+    
+    chineseAnswerDisplay.textContent = currentEnglishWord.translation;
+    chineseAnswerDisplay.style.display = 'block';
+    checkQuestion.style.display = 'block';
+    checkAnswerBtn.style.display = 'none';
+}
 
-mcNextBtn.addEventListener('click', nextMultipleChoiceQuestion);
-
-mcCloseBtn.addEventListener('click', () => {
-  multipleChoiceModal.style.display = 'none';
-});
 
 // Date information display
 function updateDateInfo() {
@@ -2006,15 +1638,17 @@ setInterval(updateDateInfo, 60000);
         <img src="dodoro_transparent.png" alt="Image Not Found" width="150">
       </div>
       <div class="speech-bubble">
-        <p class="english-text">1.點擊「重新整理(refresh)」🔄 以獲取更新！</p>
+        
+<p class="english-text">1.每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</p>
        
         <p class="chinese-text">2.若手機上的🔊無法運作，表示「文字轉語音」功能經過更新，重開機即可解決。</p>
 
-        <p class="chinese-text">3.本網頁使用Windows系統開發，較適合Android系統的手機，某些iPhone會有🔊異常問題，未來會設法解決。</p>
+        <p class="chinese-text">3.本網頁較適合Android系統的手機，某些iPhone會有🔊異常問題，未來會設法解決。</p>
 
       </div>
     </div>
     <button id="close-reminder-btn" class="close-reminder-btn">OK. I got it.</button>
+
   </div>
 </div>
 
@@ -2122,4 +1756,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
 
