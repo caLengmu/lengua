@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Table</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 40px;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .category-section {
+            margin-bottom: 30px;
+        }
+
+        .category-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 15px 25px;
+            font-size: 32px;
+            border: 2px solid #007bff;
+            background-color: #fff;
+            color: #007bff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .category-btn:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .category-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .vocab-container {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 30px 0 20px 0;
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .vocab-table th {
+            background-color: #f8f9fa;
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+            font-size: 36px;
+        }
+
+        .vocab-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+
+        .vocab-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .speaker-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            margin-left: 10px;
+            color: #007bff;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .speaker-btn:hover {
+            background-color: #e7f1ff;
+        }
+
+        .word-with-audio {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                font-size: 28px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .category-title {
+                font-size: 24px;
+            }
+
+            .category-btn {
+                font-size: 20px;
+                padding: 12px 20px;
+                min-width: 120px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .vocab-table th {
+                font-size: 20px;
+                padding: 15px 10px;
+            }
+
+            .vocab-table td {
+                font-size: 18px;
+                padding: 15px 10px;
+            }
+
+            .speaker-btn {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 24px;
+                padding: 10px;
+            }
+
+            .category-btn {
+                font-size: 18px;
+                padding: 10px 15px;
+                min-width: 100px;
+            }
+
+            .vocab-table th {
+                font-size: 18px;
+                padding: 12px 8px;
+            }
+
+            .vocab-table td {
+                font-size: 16px;
+                padding: 12px 8px;
+            }
+
+            .speaker-btn {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vocabulary Table</h1>
+        
+        <div class="category-section">
+            <div class="category-title">Textbook</div>
+            <div class="button-group">
+                <button class="category-btn" onclick="loadVocab('textbook', 'B3 L1')">B3 L1</button>
+                <button class="category-btn" onclick="loadVocab('textbook', 'B3 L2')">B3 L2</button>
+                <button class="category-btn" onclick="loadVocab('textbook', 'B3 L3')">B3 L3</button>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <div class="category-title">Magazine</div>
+            <div class="button-group">
+                <button class="category-btn" onclick="loadVocab('magazine', 'U4')">U4</button>
+                <button class="category-btn" onclick="loadVocab('magazine', 'U9')">U9</button>
+                <button class="category-btn" onclick="loadVocab('magazine', 'U11')">U11</button>
+                <button class="category-btn" onclick="loadVocab('magazine', 'U13')">U13</button>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <div class="category-title">核心字彙</div>
+            <div class="button-group">
+                <button class="category-btn" onclick="loadVocab('core', 'P2 U1')">P2 U1</button>
+                <button class="category-btn" onclick="loadVocab('core', 'P2 U2')">P2 U2</button>
+                <button class="category-btn" onclick="loadVocab('core', 'P2 U3')">P2 U3</button>
+            </div>
+        </div>
+
+        <div class="vocab-container" id="vocabContainer">
+            <div class="no-data">Select a category to display vocabulary</div>
+        </div>
+    </div>
+
+    <script>
+        // Built-in database - easily expandable
+        const vocabDatabase = {
+            textbook: {
+                'B3 L1': [],
+                'B3 L2': [
+                    '◎Paragraph 1',
+'salmon # 鮭魚 # Many salmon swim in the river every summer. # 每年夏天有許多鮭魚在河裡游。',
+'term # 專有名詞/術語 # “Life cycle” is a term in science. # 「生命週期」是科學中的一個術語。',
+'chaos # 混亂 # There was chaos in the street after the storm. # 暴風雨後街上出現混亂。',
+'bring to mind # 使想起 # This photo brings to mind my happy childhood. # 這張照片讓我想起快樂的童年。',
+'chain # 連鎖店 # Family Mart is a famous chain store. # 全家是有名的連鎖店。',
+'take place # 發生/舉行 # The festival will take place next week. # 這個節日將在下週舉行。',
+'surge (v.) # 群湧、蜂擁 # Salmon surge upstream to lay their eggs. # 鮭魚蜂擁逆流而上產卵。',
+'upstream # 上游 # The fish swim upstream to spawn. # 魚逆流到上游產卵。',
+'spawn* # 產卵 # The salmon swim to the river to spawn. # 鮭魚游到河裡產卵。',
+'fascinating # 迷人的 # The life cycle of salmon is fascinating. # 鮭魚的生命週期很迷人。',
+'life cycle # 生命週期 # The butterfly has an interesting life cycle. # 蝴蝶有一個有趣的生命週期。',
+'dramatic # 戲劇性的/驚人的 # The eagle made a dramatic dive into the water. # 老鷹戲劇性地衝入水中。',
+'viral* # 爆紅的 # The funny video went viral on social media. # 這個有趣的影片在社群媒體上爆紅。',
+'promotion # 宣傳/促銷 # The store has a big promotion this weekend. # 這家店週末有大型促銷。',
+'surge # 急升、猛增 # Prices surged after the news about oil. # 石油消息傳出後，價格急升。',
+'湧現、湧上心頭 # A feeling of hope surged in her heart. # 一種希望的感覺湧上她的心頭。',
+'◎Paragraph 2',
+'freshwater* # 淡水 # Salmon live in freshwater when they are young. # 鮭魚小時候住在淡水裡。',
+'stream # 小溪 # A small stream runs behind my house. # 我家後面有一條小溪。',
+'start as # 以…開始 # Salmon start as small eggs in the water. # 鮭魚一開始是水中的小卵。',
+'lay-laid-laid # 產(卵) # The fish laid eggs on the riverbed. # 魚在河床上產卵。',
+'gravel # 礫石 # Fish eggs are safe under the gravel. # 魚卵在礫石下很安全。',
+'go through # 經歷 # Salmon go through many changes in life. # 鮭魚一生經歷許多變化。',
+'stage # 階段 # The butterfly has four stages in its life. # 蝴蝶的一生有四個階段。',
+'on one’s way to N. # 在去…的路上 # The salmon died on its way to the sea. # 鮭魚在去海洋的路上死了。',
+'journey # 旅行 # The birds journey south for the winter. # 鳥在冬天旅行到南方。',
+'downstream # 順流而下 # The boat moved downstream very quickly. # 小船很快地往下游走。',
+'gather # 聚集 # Many people gather to watch the salmon. # 很多人聚集來看鮭魚。',
+'adapt to + N # 適應 # Animals adapt to the cold weather. # 動物會適應寒冷的天氣。',
+'concentration # 濃度；集中 # There is a high concentration of salt in the water. # 水裡的鹽分濃度很高',
+'silvery* # 銀白色的 # The fish has a silvery body. # 這條魚有銀白色的身體。',
+'scale # 魚鱗 # The fish has shiny scales. # 這條魚有閃亮的魚鱗。',
+'protect … from N. # 保護…免於 # Mothers protect babies from danger. # 母親會保護寶寶免於危險。',
+'predator # 捕食者 # Lions are predators in the wild. # 獅子是野外的捕食者',
+'◎Paragraph 3',
+'mature # 成熟的 # When salmon mature, they are ready to swim back to the river and lay eggs. # 當鮭魚成熟時，它們準備游回河裡產卵。',
+'extreme # 極端的 # The desert has extreme heat during the day and very cold nights. # 沙漠白天有極端的高溫，晚上非常冷。',
+'physical # 身體的 # Running a marathon is a physical challenge that needs strength and energy. # 跑馬拉松是一種需要力量和能量的身體挑戰。',
+'exhausting # 令人筋疲力盡的 # Climbing the tall mountain was very exhausting, but we felt happy at the top. # 爬高山非常累人，但到達山頂時我們很開心。',
+'guide (v.) # 引導 # The teacher will guide the students through the museum and explain the history. # 老師會引導學生參觀博物館並解釋歷史。',
+'instinct # 本能 # Birds fly south in winter by instinct, not by learning. # 鳥類在冬天往南飛是靠本能，不是靠學習。',
+'current # 水流 # The river’s current was strong, so the children did not swim in it. # 河裡的水流很強，所以孩子們沒有去游泳。',
+'leap # 跳躍 # The salmon must leap out of the water to pass the waterfall. # 鮭魚必須跳躍出水面才能越過瀑布。',
+'waterfall # 瀑布 # We saw a tall waterfall falling into a deep pool. # 我們看到一個高高的瀑布流進深潭。',
+'rot (v.) # 腐爛 # The fruit will rot if you leave it outside for too many days. # 水果放在外面太多天就會腐爛。',
+'earn # 賺得；贏得 # He works hard every day to earn money for his family. # 他每天努力工作來賺錢養家。',
+'nickname # 綽號 # His friends call him “Tiger” as a nickname because he runs very fast. # 他的朋友給他取了“老虎”這個綽號，因為他跑得很快。',
+'◎Paragraph 1',
+'keystone # 基石 # Bees are a keystone species in many ecosystems. # 蜜蜂是許多生態系中的基石物種。',
+'species # 物種 # This forest has many different species of birds. # 這片森林有許多不同物種的鳥。',
+'play a central role in N. # 在…中扮演重要角色 # Trees play a central role in keeping the air clean. # 樹木在保持空氣清潔中扮演重要角色。',
+'ecosystem # 生態系 # Rivers and forests form a healthy ecosystem. # 河流和森林形成健康的生態系。',
+'nutrient # 營養 # Plants need sunlight and nutrients to grow. # 植物需要陽光和養分才能生長。',
+'sustain # 支撐；維持 # These plants sustain many small animals in the forest. # 這些植物維持森林中許多小動物的生存。',
+'feed # 餵養；提供食物 # Birds feed on insects in the garden. # 鳥在花園裡以昆蟲為食。',
+'benefit (v.) # 受益；有益於 # Clean water benefits everyone in the town. # 乾淨的水對鎮上的每個人都有益。',
+'fertilize* # 施肥 # Farmers fertilize the soil to grow healthy crops. # 農夫施肥讓土壤長出健康的作物。',
+'soil # 土壤 # Plants grow well in rich soil with water and nutrients. # 植物在富含水分和養分的土壤中生長良好。',
+'in addition to N. # 除了…之外 # In addition to rice, farmers grow vegetables. # 除了稻米，農夫還種蔬菜。',
+'ecological # 生態的 # Protecting the forest is important for ecological balance. # 保護森林對生態平衡很重要。',
+'value # 價值；重視 # This tree has great value for the local community. # 這棵樹對當地社區有很大的價值。',
+'throughout # 遍及；整個 # Birds migrate throughout the country in winter. # 鳥在冬天遍及整個國家遷徙。',
+'range # 範圍 # Wolves live in a wide range of forests. # 狼生活在廣闊的森林範圍內。',
+'community # 社區；群體 # The village community works together to clean the river. # 村莊社區一起清理河流。',
+'rely on # 依賴 # Farmers rely on rain for water. # 農夫依賴雨水。',
+'valuable # 有價值的 # Clean air is a valuable resource for all living things. # 乾淨的空氣對所有生物都是有價值的。',
+'source # 來源 # Rivers are a source of water for animals and people. # 河流是動物和人類的水來源。',
+'basis # 基礎 # Soil is the basis for growing healthy plants. # 土壤是種植健康植物的基礎。',
+'economy # 經濟 # Fishing is important for the town’s economy. # 捕魚對這個鎮的經濟很重要。',
+'◎Paragraph 2',
+'despite + N # 儘管 # Despite the rain, we went for a walk in the park. # 儘管下雨，我們還是去公園散步。',
+'environmental # 環境的 # Factories must follow environmental rules to protect nature. # 工廠必須遵守環境規則以保護自然。',
+'economic # 經濟的 # Tourism brings economic benefits to the town. # 旅遊給小鎮帶來經濟利益。',
+'threat # 威脅 # Pollution is a serious threat to animals in the river. # 污染對河裡的動物是一個嚴重的威脅。',
+'on several fronts # 在多方面 # We must fight climate change on several fronts. # 我們必須在多方面應對氣候變化。',
+'climate change # 氣候變化 # Climate change can cause storms, floods, and heat waves. # 氣候變化會造成暴風雨、洪水和熱浪。',
+'waters # 水域 # Many fish live in fresh waters like rivers and lakes. # 許多魚生活在淡水水域中，例如河流和湖泊',
+'affect # 影響 # Air pollution can affect people’s health. # 空氣污染會影響人們的健康。',
+'migration # 遷徙 # Birds migration happens every year in spring and autumn. # 鳥類的遷徙每年在春天和秋天發生。',
+'pattern # 模式 # Farmers study weather patterns to grow crops better. # 農夫研究天氣模式以更好地種植作物。',
+'dam # 水壩 # The dam stops water and creates a lake. # 水壩阻擋水流，形成湖泊。',
+'pollution # 污染 # Factories can cause pollution in rivers and air. # 工廠會造成河流和空氣的污染。',
+'degrade* # 破壞 # Cutting trees can degrade the forest land. # 砍樹會破壞森林土地。',
+'habitat # 棲息地 # Many animals lose their habitat because of cities. # 許多動物因城市而失去棲息地。',
+'furthermore # 此外 # Furthermore, planting trees helps clean the air. # 此外，種樹有助於清潔空氣。',
+'further # 更遠地；進一步 # We need to study further to understand the problem. # 我們需要進一步研究以了解問題。',
+'reduce # 減少 # We should reduce waste to protect the environment. # 我們應該減少廢棄物以保護環境。',
+'shrink # 收縮；減少 # The forest is shrinking because of human activities. # 森林因人類活動而縮小。',
+'population # 人口 # The city has a large population of over one million people. # 這個城市有超過一百萬人的人口。',
+'deal with # 處理 # We must deal with pollution to save animals. # 我們必須處理污染以保護動物。',
+'require # 需要 # Protecting forests requires effort from everyone. # 保護森林需要每個人的努力。',
+'responsibility to VR. # 做…的責任 # People have a responsibility to protect nature. # 人們有保護自然的責任。',
+'ultimately # 最終 # Ultimately, our choices affect the health of the Earth. # 最終，我們的選擇會影響地球的健康。',
+'lie with # 責任在於某人 # The decision to save the forest lies with the community. # 保護森林的決定取決於社區。',
+'lie-lay-lain # 躺下 # I lie on the bed to rest after school. # 我放學後躺下在床上休息。',
+'位於 # The town lies next to the river. # 這個小鎮位於河邊。',
+'存在 # Many species lie hidden in the deep forest. # 許多物種存在於深林之中。',
+'在於 # The problem lies in the old system. # 問題在於舊的系統。',
+'◎Paragraph 3',
+'support # 支持 # People support saving trees to protect the forest. # 人們支持保護森林以保護樹木。',
+'push for # 力求；爭取 # Students push for better school lunches. # 學生力求更好的學校午餐。',
+'protective # 保護的 # Parents are protective of their children. # 父母對孩子很保護。',
+'policy # 政策 # The government made a new policy to clean the rivers. # 政府制定了新的政策來清理河流。',
+'individual # 個人 # Each individual can help reduce pollution. # 每個個人都可以幫助減少污染。',
+'generation # 世代 # Young generation cares about the environment. # 年輕的世代關心環境。',
+'deserve # 值得 # People who work hard deserve a rest. # 辛苦工作的人應該值得休息。',
+'thriving # 繁榮的；興旺的 # The garden is thriving with flowers and vegetables. # 花園裡的花和蔬菜都茁壯成長。'
+                ],
+                'B3 L3': []
+            },
+            magazine: {
+                'U4': [],
+                'U9': [],
+                'U11': [],
+                'U13': []
+            },
+            core: {
+                'P2 U1': [],
+                'P2 U2': [],
+                'P2 U3': []
+            }
+        };
+
+        // Text-to-speech function
+        function speakText(text, lang = 'en-US') {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('Text-to-speech not supported in your browser');
+            }
+        }
+
+        // Load vocabulary data
+        function loadVocab(category, lesson) {
+            // Clear previous active states
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Set active state for clicked button
+            event.target.classList.add('active');
+
+            const data = vocabDatabase[category][lesson];
+            const container = document.getElementById('vocabContainer');
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="no-data">No vocabulary data available for this selection</div>';
+                return;
+            }
+
+            let html = '';
+            let currentSection = '';
+            let currentTableRows = '';
+
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                
+                if (item.startsWith('◎')) {
+                    // If we have accumulated table rows, close the previous table
+                    if (currentTableRows) {
+                        html += `
+                            <table class="vocab-table">
+                                <thead>
+                                    <tr>
+                                        <th>English</th>
+                                        <th>Chinese</th>
+                                        <th>Example Sentence</th>
+                                        <th>Translation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${currentTableRows}
+                                </tbody>
+                            </table>
+                        `;
+                        currentTableRows = '';
+                    }
+                    
+                    // Start new section
+                    currentSection = item.substring(1); // Remove ◎ symbol
+                    html += `<div class="section-title">${currentSection}</div>`;
+                } else {
+                    // Parse vocabulary entry
+                    const parts = item.split(' # ');
+                    if (parts.length === 4) {
+                        const [english, chinese, example, translation] = parts;
+                        currentTableRows += `
+                            <tr>
+                                <td>
+                                    <div class="word-with-audio">
+                                        ${english}
+                                        <button class="speaker-btn" onclick="speakText('${english.replace(/'/g, "\\'")}', 'en-US')" title="Speak English">🔊</button>
+                                    </div>
+                                </td>
+                                <td>${chinese}</td>
+                                <td>
+                                    <div class="word-with-audio">
+                                        ${example}
+                                        <button class="speaker-btn" onclick="speakText('${example.replace(/'/g, "\\'")}', 'en-US')" title="Speak Example">🔊</button>
+                                    </div>
+                                </td>
+                                <td>${translation}</td>
+                            </tr>
+                        `;
+                    }
+                }
+            }
+
+            // Close the final table if there are remaining rows
+            if (currentTableRows) {
+                html += `
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+                                <th>English</th>
+                                <th>Chinese</th>
+                                <th>Example Sentence</th>
+                                <th>Translation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${currentTableRows}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Optional: Load a default vocabulary set
+            // loadVocab('textbook', 'B3 L2');
+        });
+    </script>
+</body>
+</html>
