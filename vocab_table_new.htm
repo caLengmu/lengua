@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Table</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .button-categories {
+            margin-bottom: 30px;
+        }
+
+        .category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .vocab-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .vocab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .vocab-button:active {
+            transform: translateY(0);
+        }
+
+        .vocab-table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            min-height: 200px;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #0984e3;
+        }
+
+        .vocab-item {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: background-color 0.2s ease;
+        }
+
+        .vocab-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .vocab-item:last-child {
+            border-bottom: none;
+        }
+
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .audio-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .speaker-btn {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+        }
+
+        .speaker-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+        }
+
+        .stop-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(225, 112, 85, 0.3);
+        }
+
+        .vocab-content {
+            flex: 1;
+        }
+
+        .vocab-word {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 8px;
+        }
+
+        .vocab-definition {
+            color: #636e72;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .vocab-example {
+            font-style: italic;
+            color: #74b9ff;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #74b9ff;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+            font-size: 1.1rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+            }
+
+            .button-group {
+                gap: 8px;
+            }
+
+            .vocab-button {
+                padding: 10px 14px;
+                font-size: 13px;
+                flex: 1;
+                min-width: calc(50% - 4px);
+            }
+
+            .vocab-item {
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .audio-controls {
+                flex-direction: row;
+                align-self: stretch;
+                justify-content: flex-start;
+            }
+
+            .audio-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+
+            .vocab-word {
+                font-size: 1.1rem;
+            }
+
+            .category-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .vocab-button {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vocabulary Table</h1>
+        
+        <div class="button-categories">
+            <div class="category">
+                <div class="category-title">Textbook</div>
+                <div class="button-group">
+                    <button class="vocab-button" onclick="loadVocab('B3L1')">B3 L1</button>
+                    <button class="vocab-button" onclick="loadVocab('B3L2')">B3 L2</button>
+                    <button class="vocab-button" onclick="loadVocab('B3L3')">B3 L3</button>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">Magazine</div>
+                <div class="button-group">
+                    <button class="vocab-button" onclick="loadVocab('U4')">U4</button>
+                    <button class="vocab-button" onclick="loadVocab('U9')">U9</button>
+                    <button class="vocab-button" onclick="loadVocab('U11')">U11</button>
+                    <button class="vocab-button" onclick="loadVocab('U13')">U13</button>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">核心字彙</div>
+                <div class="button-group">
+                    <button class="vocab-button" onclick="loadVocab('P2U1')">P2 U1</button>
+                    <button class="vocab-button" onclick="loadVocab('P2U2')">P2 U2</button>
+                    <button class="vocab-button" onclick="loadVocab('P2U3')">P2 U3</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="vocab-table-container">
+            <div id="vocabTable">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <div class="empty-state-text">Select a category above to load vocabulary</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Built-in database - can be expanded
+        const vocabDatabase = {
+            'B3L2': [
+                {
+                    section: 'Paragraph 1',
+                    words: [
+                        {
+                            word: 'innovative (adj) (創新的)',
+                            definition: 'The smart boy always has innovative ideas. (這個聰明的男孩總是有創新的想法。)',
+                            example: '(這個聰明的男孩總是有創新的想法。)'
+                        },
+                        {
+                            word: 'promise (v) (承諾)',
+                            definition: 'She promised to help me with my homework.',
+                            example: '(她承諾會幫我寫功課。)'
+                        }
+                    ]
+                }
+            ],
+            'B3L1': [],
+            'B3L3': [],
+            'U4': [],
+            'U9': [],
+            'U11': [],
+            'U13': [],
+            'P2U1': [],
+            'P2U2': [],
+            'P2U3': []
+        };
+
+        let currentSpeech = null;
+
+        function loadVocab(category) {
+            const vocabTable = document.getElementById('vocabTable');
+            const data = vocabDatabase[category];
+            
+            if (!data || data.length === 0) {
+                vocabTable.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">No vocabulary data available for ${category}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            
+            data.forEach(section => {
+                html += `<div class="section-header">◎ ${section.section}</div>`;
+                
+                section.words.forEach(item => {
+                    html += `
+                        <div class="vocab-item">
+                            <div class="audio-controls">
+                                <button class="audio-btn speaker-btn" onclick="speakText('${item.word}', '${item.definition}')" title="Play">
+                                    🔊
+                                </button>
+                                <button class="audio-btn stop-btn" onclick="stopSpeech()" title="Stop">
+                                    ⏹️
+                                </button>
+                            </div>
+                            <div class="vocab-content">
+                                <div class="vocab-word">${item.word}</div>
+                                <div class="vocab-definition">${item.definition}</div>
+                                <div class="vocab-example">${item.example}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+            vocabTable.innerHTML = html;
+        }
+
+        function speakText(word, definition) {
+            // Stop any current speech
+            stopSpeech();
+            
+            // Clean text for TTS (remove asterisks and content in parentheses/brackets)
+            const cleanWord = word.replace(/\*/g, '').replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '').trim();
+            const cleanDefinition = definition.replace(/\*/g, '').replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '').trim();
+            
+            const textToSpeak = cleanWord + '. ' + cleanDefinition;
+            
+            currentSpeech = new SpeechSynthesisUtterance(textToSpeak);
+            currentSpeech.lang = 'en-US';
+            currentSpeech.rate = 0.8;
+            currentSpeech.pitch = 1;
+            
+            currentSpeech.onend = function() {
+                currentSpeech = null;
+            };
+            
+            currentSpeech.onerror = function() {
+                currentSpeech = null;
+            };
+            
+            speechSynthesis.speak(currentSpeech);
+        }
+
+        function stopSpeech() {
+            if (currentSpeech) {
+                speechSynthesis.cancel();
+                currentSpeech = null;
+            }
+        }
+
+        // Clean up speech synthesis when page is unloaded
+        window.addEventListener('beforeunload', stopSpeech);
+    </script>
+</body>
+</html>
