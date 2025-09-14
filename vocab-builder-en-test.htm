@@ -1257,7 +1257,7 @@ textImportCopyBtn.addEventListener('click', () => {
             
             // Vocabulary column with speaker
             const wordCell = document.createElement('td');
-            const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').trim();
+            const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
             
             wordCell.innerHTML = `
                 ${item.vocabulary}
@@ -1378,7 +1378,7 @@ englishCloseBtn.addEventListener('click', () => {
 
 englishWordSpeaker.addEventListener('click', () => {
     if (currentEnglishWord) {
-        const cleanWord = currentEnglishWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+        const cleanWord = currentEnglishWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
         speak(cleanWord);
     }
 });
@@ -1483,7 +1483,7 @@ englishWordSpeaker.addEventListener('click', () => {
         function showAnswer() {
             if (!currentWord) return;
             
-            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+            const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
             revealAnswerEl.textContent = `${correctAnswer}`;
             speak(correctAnswer);
         }
@@ -1756,4 +1756,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
