@@ -528,9 +528,10 @@
         // Text-to-speech function
         function speakText(text, lang = 'en-US') {
     if ('speechSynthesis' in window) {
-        // NEW LINE: Remove content in parentheses before speaking
-        const cleanText = text.replace(/\([^)]*\)/g, '').trim();
-        
+       
+        // NEW LINE: Remove parentheses, asterisks, AND square brackets
+const cleanText = text.replace(/\([^)]*\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+
         const utterance = new SpeechSynthesisUtterance(cleanText);  // Use cleanText instead of text
         utterance.lang = lang;
         utterance.rate = 0.8;
