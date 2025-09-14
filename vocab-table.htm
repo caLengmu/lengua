@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Table</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 2.5em;
+        }
+        
+        .button-categories {
+            margin-bottom: 30px;
+        }
+        
+        .category {
+            margin-bottom: 25px;
+        }
+        
+        .category-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .vocab-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .vocab-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .vocab-btn.active {
+            background-color: #e74c3c;
+        }
+        
+        .vocab-table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        
+        .section-header {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+        
+        .vocab-row {
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .audio-controls {
+            width: 80px;
+            text-align: center;
+            padding: 15px 10px;
+            vertical-align: top;
+        }
+        
+        .content-cell {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .vocab-word {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .example-sentence {
+            font-style: italic;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 2px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        
+        .audio-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .play-btn {
+            color: #27ae60;
+        }
+        
+        .stop-btn {
+            color: #e74c3c;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .category-buttons {
+                justify-content: center;
+            }
+            
+            .vocab-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            .audio-controls {
+                width: 60px;
+                padding: 10px 5px;
+            }
+            
+            .content-cell {
+                padding: 12px;
+            }
+            
+            .vocab-word {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vocabulary Table</h1>
+        
+        <div class="button-categories">
+            <div class="category">
+                <div class="category-title">Textbook</div>
+                <div class="category-buttons">
+                    <button class="vocab-btn" data-category="textbook" data-lesson="B3_L1">B3 L1</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="B3_L2">B3 L2</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="B3_L3">B3 L3</button>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">Magazine</div>
+                <div class="category-buttons">
+                    <button class="vocab-btn" data-category="magazine" data-lesson="U4">U4</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="U9">U9</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="U11">U11</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="U13">U13</button>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">核心字彙</div>
+                <div class="category-buttons">
+                    <button class="vocab-btn" data-category="core" data-lesson="P2_U1">P2 U1</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="P2_U2">P2 U2</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="P2_U3">P2 U3</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="vocab-table-container">
+            <table class="vocab-table" id="vocabTable">
+                <tbody id="vocabTableBody">
+                    <tr class="no-data">
+                        <td colspan="2">Select a lesson to display vocabulary</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Built-in database - can be expanded
+        const vocabDatabase = {
+            B3_L2: [
+    {
+        "section": "◎Vocabulary—First Half (#1-#11)",
+        "words": [
+            {
+                "word": "innovate (v) (創新)",
+                "example": "The company wants to innovate new products. (公司想要創新新產品。)"
+            },
+            {
+                "word": "promise (v) (承諾)",
+                "example": "She promised to help me with my homework. (她承諾會幫我寫功課。)"
+            },
+            {
+                "word": "material (n) (材料、原料)",
+                "example": "Wood is a common building material. (木頭是一種常見的建材。)"
+            },
+            {
+                "word": "mention (v) (提到、說到)",
+                "example": "He didn’t mention the problem in the meeting. (他在會議中沒有提到這個問題。)"
+            },
+            {
+                "word": "structure (n) (結構)",
+                "example": "The building has a strong structure. (這棟建築的結構很堅固。)"
+            },
+            {
+                "word": "capable (adj) (有能力的)",
+                "example": "She is capable of solving difficult problems. (她有能力解決困難的問題。)"
+            },
+            {
+                "word": "collaborate (v) (合作)",
+                "example": "Two artists will collaborate on this project. (兩位藝術家將在這個專案中合作。)"
+            },
+            {
+                "word": "architect (n) (建築師)",
+                "example": "The architect designed a beautiful house. (這位建築師設計了一棟漂亮的房子)"
+            },
+            {
+                "word": "graduate (v) (畢業)",
+                "example": "He will graduate from college next year. (他明年將從大學畢業。)"
+            },
+            {
+                "word": "construct (v) (建造)",
+                "example": "They will construct a new bridge here. (他們將在這裡建一座新橋。)"
+            },
+            {
+                "word": "slight (adj) (些微的)",
+                "example": "There is a slight difference between the two plans. (這兩個計畫之間有些微的差別。)"
+            }
+        ]
+    },
+    {
+        "section": "◎詞類變化補充",
+        "words": [
+            {
+                "word": "innovative (adj) (創新的)",
+                "example": "The company makes innovative products. (這家公司製作創新的產品。)"
+            },
+            {
+                "word": "innovation (n) (創新)",
+                "example": "Smartphones are a big innovation. (智慧型手機是一個很大的創新)"
+            },
+            {
+                "word": "promise (n) (承諾)",
+                "example": "He made a promise to help me. (他答應要幫我。)"
+            },
+            {
+                "word": "capability (n) (能力(= ability))",
+                "example": "The robot has the capability to clean. (這個機器人有清潔的能力。)"
+            },
+            {
+                "word": "collaboration (n) (合作)",
+                "example": "This project needs collaboration. (這個計畫需要合作。)"
+            },
+            {
+                "word": "architecture (n) (1.建築學)",
+                "example": "He studied architecture in college and became an architect. (他在大學就讀建築學並成了建築師)"
+            },
+            {
+                "word": "architecture (n) (2.建築風格)",
+                "example": "Daxi Old Street is famous for Baroque architecture. (大溪老街因巴洛克建築風格而聞名)"
+            },
+            {
+                "word": "graduation (n) (畢業)",
+                "example": "After graduation, she worked in show business. (畢業後，她進入演藝圈工作)"
+            },
+            {
+                "word": "a graduate (n) (畢業生)",
+                "example": "He is a college graduate. (他是大學畢業生。)"
+            },
+            {
+                "word": "construction (n) (1.建造 2.建築物)",
+                "example": "The website is under construction(=being constructed). (該網站正在創建中。)"
+            },
+            {
+                "word": "constructive (adj) (建設性的、有益的)",
+                "example": "She gave me constructive advice. (她給了我有益的建議。)"
+            },
+            {
+                "word": "slightly (adv) (稍微地)",
+                "example": "The bag is slightly heavy. (這個包稍微有點重。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Vocabulary--Second Half (#12-#20)",
+        "words": [
+            {
+                "word": "rank (v) (排名)",
+                "example": "Our school team ranks first in the city. (我們學校的隊伍在市裡排名第一)"
+            },
+            {
+                "word": "unique (adj) (獨特的)",
+                "example": "The artist has a unique style of painting. (這個藝術家有一種獨特的繪畫風格)"
+            },
+            {
+                "word": "adjust (v) (調整)",
+                "example": "I need to adjust my chair to sit comfortably. (我需要調整椅子來坐得舒服。)"
+            },
+            {
+                "word": "rely (v) (依靠)",
+                "example": "Babies rely on their parents for food. (嬰兒依靠父母提供食物。)"
+            },
+            {
+                "word": "feedback (n) (回饋、意見)",
+                "example": "The teacher gave me good feedback on my homework. (老師給了我作業的好回饋。)"
+            },
+            {
+                "word": "element (n) (元素、要素)",
+                "example": "Water is an important element of life. (水是生命重要的元素。)"
+            },
+            {
+                "word": "stable (adj) (穩定的)",
+                "example": "The table is very stable and does not shake. (這張桌子很穩定，不會晃動。)"
+            },
+            {
+                "word": "route (n) (路線)",
+                "example": "This bus route goes to the airport. (這條公車路線通往機場。)"
+            },
+            {
+                "word": "explore (v) (探索)",
+                "example": "We will explore the forest tomorrow. (我們明天要去探索森林。)"
+            }
+        ]
+    },
+    {
+        "section": "◎詞類變化補充",
+        "words": [
+            {
+                "word": "ranking (n) (排名)",
+                "example": "Our team has the top ranking. (我們隊伍排名第一。)"
+            },
+            {
+                "word": "adjustment (n) (調整)",
+                "example": "I made an adjustment to my schedule. (我調整了一下我的行程表。)"
+            },
+            {
+                "word": "reliable (adj) (可靠的)",
+                "example": "I am lucky to have some reliable friends. (我很幸運擁有幾個可靠的朋友)"
+            },
+            {
+                "word": "elementary (adj) (基礎的、初級的)",
+                "example": "She has an elementary knowledge of science. (她有基礎的科學知識。)"
+            },
+            {
+                "word": "stability (n) (穩定、穩固)",
+                "example": "They’re looking for stability in their lives. (他們在尋求生活的穩定。)"
+            },
+            {
+                "word": "exploration (n) (探索)",
+                "example": "Space exploration is exciting. (太空探索很令人興奮。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Phrases & Idioms",
+        "words": [
+            {
+                "word": "trial and error (反覆試驗)",
+                "example": "We learned by trial and error. (我們透過不斷嘗試與錯誤來學習)"
+            },
+            {
+                "word": "in charge (of sth) (負責…)",
+                "example": "She is in charge of the project. (她負責這個專案計畫or專題報告)"
+            },
+            {
+                "word": "figure out (想出(方法等)、弄清楚)",
+                "example": "I can’t figure out this puzzle. (我弄不清楚這個謎題)"
+            },
+            {
+                "word": "roll up one’s sleeves (捲起袖子(=開始行動))",
+                "example": "He rolled up his sleeves to fix the bike. (他捲起袖子開始修腳踏車)"
+            },
+            {
+                "word": "get down to… (開始認真做…)",
+                "example": "Let’s get down to homework. (我們開始認真寫功課吧)"
+            }
+        ]
+    }
+],
+            
+            'B3L1': [],
+            'B3L3': [],
+            'U4': [],
+            'U9': [
+
+    {
+        "section": "◎Paragraph 1",
+        "words": [
+            {
+                "word": "salmon (鮭魚)",
+                "example": "Many salmon swim in the river every summer. (每年夏天有許多鮭魚在河裡游。)"
+            },
+            {
+                "word": "term (專有名詞/術語)",
+                "example": "“Life cycle” is a term in science. (「生命週期」是科學中的一個術語。)"
+            },
+            {
+                "word": "chaos (混亂)",
+                "example": "There was chaos in the street after the storm. (暴風雨後街上出現混亂。)"
+            },
+            {
+                "word": "bring to mind (使想起)",
+                "example": "This photo brings to mind my happy childhood. (這張照片讓我想起快樂的童年。)"
+            },
+            {
+                "word": "chain (連鎖店)",
+                "example": "Family Mart is a famous chain store. (全家是有名的連鎖店。)"
+            },
+            {
+                "word": "take place (發生/舉行)",
+                "example": "The festival will take place next week. (這個節日將在下週舉行。)"
+            },
+            {
+                "word": "surge (v.) (群湧、蜂擁)",
+                "example": "Salmon surge upstream to lay their eggs. (鮭魚蜂擁逆流而上產卵。)"
+            },
+            {
+                "word": "upstream (上游)",
+                "example": "The fish swim upstream to spawn. (魚逆流到上游產卵。)"
+            },
+            {
+                "word": "spawn* (產卵)",
+                "example": "The salmon swim to the river to spawn. (鮭魚游到河裡產卵。)"
+            },
+            {
+                "word": "fascinating (迷人的)",
+                "example": "The life cycle of salmon is fascinating. (鮭魚的生命週期很迷人。)"
+            },
+            {
+                "word": "life cycle (生命週期)",
+                "example": "The butterfly has an interesting life cycle. (蝴蝶有一個有趣的生命週期。)"
+            },
+            {
+                "word": "dramatic (戲劇性的/驚人的)",
+                "example": "The eagle made a dramatic dive into the water. (老鷹戲劇性地衝入水中。)"
+            },
+            {
+                "word": "viral* (爆紅的)",
+                "example": "The funny video went viral on social media. (這個有趣的影片在社群媒體上爆紅。)"
+            },
+            {
+                "word": "promotion (宣傳/促銷)",
+                "example": "The store has a big promotion this weekend. (這家店週末有大型促銷。)"
+            },
+            {
+                "word": "surge (急升、猛增)",
+                "example": "Prices surged after the news about oil. (石油消息傳出後，價格急升。)"
+            },
+            {
+                "word": "surge (湧現、湧上心頭)",
+                "example": "A feeling of hope surged in her heart. (一種希望的感覺湧上她的心頭。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 2",
+        "words": [
+            {
+                "word": "freshwater* (淡水)",
+                "example": "Salmon live in freshwater when they are young. (鮭魚小時候住在淡水裡。)"
+            },
+            {
+                "word": "stream (小溪)",
+                "example": "A small stream runs behind my house. (我家後面有一條小溪。)"
+            },
+            {
+                "word": "start as (以…開始)",
+                "example": "Salmon start as small eggs in the water. (鮭魚一開始是水中的小卵。)"
+            },
+            {
+                "word": "lay / laid / laid (產(卵))",
+                "example": "The fish laid eggs on the riverbed. (魚在河床上產卵。)"
+            },
+            {
+                "word": "gravel (礫石)",
+                "example": "Fish eggs are safe under the gravel. (魚卵在礫石下很安全。)"
+            },
+            {
+                "word": "go through… (經歷)",
+                "example": "Salmon go through many changes in life. (鮭魚一生經歷許多變化。)"
+            },
+            {
+                "word": "stage (階段)",
+                "example": "The butterfly has four stages in its life. (蝴蝶的一生有四個階段。)"
+            },
+            {
+                "word": "on one’s way to... (在去…的路上)",
+                "example": "The salmon died on its way to the sea. (鮭魚在去海洋的路上死了。)"
+            },
+            {
+                "word": "journey (旅行)",
+                "example": "The birds journey south for the winter. (鳥在冬天旅行到南方。)"
+            },
+            {
+                "word": "downstream (順流而下)",
+                "example": "The boat moved downstream very quickly. (小船很快地往下游走。)"
+            },
+            {
+                "word": "gather (聚集)",
+                "example": "Many people gather to watch the salmon. (很多人聚集來看鮭魚。)"
+            },
+            {
+                "word": "adapt to… (適應)",
+                "example": "Animals adapt to the cold weather. (動物會適應寒冷的天氣。)"
+            },
+            {
+                "word": "concentration (濃度；集中)",
+                "example": "There is a high concentration of salt in the water. (水裡的鹽分濃度很高)"
+            },
+            {
+                "word": "silvery* (銀白色的)",
+                "example": "The fish has a silvery body. (這條魚有銀白色的身體。)"
+            },
+            {
+                "word": "scale (魚鱗)",
+                "example": "The fish has shiny scales. (這條魚有閃亮的魚鱗。)"
+            },
+            {
+                "word": "protect… from… (保護…免於)",
+                "example": "Mothers protect babies from danger. (母親會保護寶寶免於危險。)"
+            },
+            {
+                "word": "predator (捕食者)",
+                "example": "Lions are predators in the wild. (獅子是野外的捕食者)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 3",
+        "words": [
+            {
+                "word": "mature (成熟的)",
+                "example": "When salmon mature, they are ready to swim back to the river and lay eggs. (當鮭魚成熟時，它們準備游回河裡產卵。)"
+            },
+            {
+                "word": "extreme (極端的)",
+                "example": "The desert has extreme heat during the day and very cold nights. (沙漠白天有極端的高溫，晚上非常冷。)"
+            },
+            {
+                "word": "physical (身體的)",
+                "example": "Running a marathon is a physical challenge that needs strength and energy. (跑馬拉松是一種需要力量和能量的身體挑戰。)"
+            },
+            {
+                "word": "exhausting (令人筋疲力盡的)",
+                "example": "Climbing the tall mountain was very exhausting, but we felt happy at the top. (爬高山非常累人，但到達山頂時我們很開心。)"
+            },
+            {
+                "word": "guide (v.) (引導)",
+                "example": "The teacher will guide the students through the museum and explain the history. (老師會引導學生參觀博物館並解釋歷史。)"
+            },
+            {
+                "word": "instinct (本能)",
+                "example": "Birds fly south in winter by instinct, not by learning. (鳥類在冬天往南飛是靠本能，不是靠學習。)"
+            },
+            {
+                "word": "current (水流)",
+                "example": "The river’s current was strong, so the children did not swim in it. (河裡的水流很強，所以孩子們沒有去游泳。)"
+            },
+            {
+                "word": "leap (跳躍)",
+                "example": "The salmon must leap out of the water to pass the waterfall. (鮭魚必須跳躍出水面才能越過瀑布。)"
+            },
+            {
+                "word": "waterfall (瀑布)",
+                "example": "We saw a tall waterfall falling into a deep pool. (我們看到一個高高的瀑布流進深潭。)"
+            },
+            {
+                "word": "rot (v.) (腐爛)",
+                "example": "The fruit will rot if you leave it outside for too many days. (水果放在外面太多天就會腐爛。)"
+            },
+            {
+                "word": "earn (賺得；贏得)",
+                "example": "He works hard every day to earn money for his family. (他每天努力工作來賺錢養家。)"
+            },
+            {
+                "word": "nickname (綽號)",
+                "example": "His friends call him “Tiger” as a nickname because he runs very fast. (他的朋友給他取了“老虎”這個綽號，因為他跑得很快。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 1",
+        "words": [
+            {
+                "word": "keystone (基石)",
+                "example": "Bees are a keystone species in many ecosystems. (蜜蜂是許多生態系中的基石物種。)"
+            },
+            {
+                "word": "species (物種)",
+                "example": "This forest has many different species of birds. (這片森林有許多不同物種的鳥。)"
+            },
+            {
+                "word": "play a central role in… (在…中扮演重要角色)",
+                "example": "Trees play a central role in keeping the air clean. (樹木在保持空氣清潔中扮演重要角色。)"
+            },
+            {
+                "word": "ecosystem (生態系)",
+                "example": "Rivers and forests form a healthy ecosystem. (河流和森林形成健康的生態系。)"
+            },
+            {
+                "word": "nutrient (營養)",
+                "example": "Plants need sunlight and nutrients to grow. (植物需要陽光和養分才能生長。)"
+            },
+            {
+                "word": "sustain (支撐；維持)",
+                "example": "These plants sustain many small animals in the forest. (這些植物維持森林中許多小動物的生存。)"
+            },
+            {
+                "word": "feed (餵養；提供食物)",
+                "example": "Birds feed on insects in the garden. (鳥在花園裡以昆蟲為食。)"
+            },
+            {
+                "word": "benefit (v.) (受益；有益於)",
+                "example": "Clean water benefits everyone in the town. (乾淨的水對鎮上的每個人都有益。)"
+            },
+            {
+                "word": "fertilize* (施肥)",
+                "example": "Farmers fertilize the soil to grow healthy crops. (農夫施肥讓土壤長出健康的作物。)"
+            },
+            {
+                "word": "soil (土壤)",
+                "example": "Plants grow well in rich soil with water and nutrients. (植物在富含水分和養分的土壤中生長良好。)"
+            },
+            {
+                "word": "in addition to… (除了…之外)",
+                "example": "In addition to rice, farmers grow vegetables. (除了稻米，農夫還種蔬菜。)"
+            },
+            {
+                "word": "ecological (生態的)",
+                "example": "Protecting the forest is important for ecological balance. (保護森林對生態平衡很重要。)"
+            },
+            {
+                "word": "value (價值；重視)",
+                "example": "This tree has great value for the local community. (這棵樹對當地社區有很大的價值。)"
+            },
+            {
+                "word": "throughout (遍及；整個)",
+                "example": "Birds migrate throughout the country in winter. (鳥在冬天遍及整個國家遷徙。)"
+            },
+            {
+                "word": "range (範圍)",
+                "example": "Wolves live in a wide range of forests. (狼生活在廣闊的森林範圍內。)"
+            },
+            {
+                "word": "community (社區；群體)",
+                "example": "The village community works together to clean the river. (村莊社區一起清理河流。)"
+            },
+            {
+                "word": "rely on… (依賴)",
+                "example": "Farmers rely on rain for water. (農夫依賴雨水。)"
+            },
+            {
+                "word": "valuable (有價值的)",
+                "example": "Clean air is a valuable resource for all living things. (乾淨的空氣對所有生物都是有價值的。)"
+            },
+            {
+                "word": "source (來源)",
+                "example": "Rivers are a source of water for animals and people. (河流是動物和人類的水來源。)"
+            },
+            {
+                "word": "basis (基礎)",
+                "example": "Soil is the basis for growing healthy plants. (土壤是種植健康植物的基礎。)"
+            },
+            {
+                "word": "economy (經濟)",
+                "example": "Fishing is important for the town’s economy. (捕魚對這個鎮的經濟很重要。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 2",
+        "words": [
+            {
+                "word": "despite + N (儘管)",
+                "example": "Despite the rain, we went for a walk in the park. (儘管下雨，我們還是去公園散步。)"
+            },
+            {
+                "word": "environmental (環境的)",
+                "example": "Factories must follow environmental rules to protect nature. (工廠必須遵守環境規則以保護自然。)"
+            },
+            {
+                "word": "economic (經濟的)",
+                "example": "Tourism brings economic benefits to the town. (旅遊給小鎮帶來經濟利益。)"
+            },
+            {
+                "word": "threat (威脅)",
+                "example": "Pollution is a serious threat to animals in the river. (污染對河裡的動物是一個嚴重的威脅。)"
+            },
+            {
+                "word": "on several fronts (在多方面)",
+                "example": "We must fight climate change on several fronts. (我們必須在多方面應對氣候變化。)"
+            },
+            {
+                "word": "climate change (氣候變化)",
+                "example": "Climate change can cause storms, floods, and heat waves. (氣候變化會造成暴風雨、洪水和熱浪。)"
+            },
+            {
+                "word": "waters (水域)",
+                "example": "Many fish live in fresh waters like rivers and lakes. (許多魚生活在淡水水域中，例如河流和湖泊)"
+            },
+            {
+                "word": "affect (影響)",
+                "example": "Air pollution can affect people’s health. (空氣污染會影響人們的健康。)"
+            },
+            {
+                "word": "migration (遷徙)",
+                "example": "Birds migration happens every year in spring and autumn. (鳥類的遷徙每年在春天和秋天發生。)"
+            },
+            {
+                "word": "pattern (模式)",
+                "example": "Farmers study weather patterns to grow crops better. (農夫研究天氣模式以更好地種植作物。)"
+            },
+            {
+                "word": "dam (水壩)",
+                "example": "The dam stops water and creates a lake. (水壩阻擋水流，形成湖泊。)"
+            },
+            {
+                "word": "pollution (污染)",
+                "example": "Factories can cause pollution in rivers and air. (工廠會造成河流和空氣的污染。)"
+            },
+            {
+                "word": "degrade* (破壞)",
+                "example": "Cutting trees can degrade the forest land. (砍樹會破壞森林土地。)"
+            },
+            {
+                "word": "habitat (棲息地)",
+                "example": "Many animals lose their habitat because of cities. (許多動物因城市而失去棲息地。)"
+            },
+            {
+                "word": "furthermore (此外)",
+                "example": "Furthermore, planting trees helps clean the air. (此外，種樹有助於清潔空氣。)"
+            },
+            {
+                "word": "further (更遠地；進一步)",
+                "example": "We need to study further to understand the problem. (我們需要進一步研究以了解問題。)"
+            },
+            {
+                "word": "reduce (減少)",
+                "example": "We should reduce waste to protect the environment. (我們應該減少廢棄物以保護環境。)"
+            },
+            {
+                "word": "shrink (收縮；減少)",
+                "example": "The forest is shrinking because of human activities. (森林因人類活動而縮小。)"
+            },
+            {
+                "word": "population (人口)",
+                "example": "The city has a large population of over one million people. (這個城市有超過一百萬人的人口。)"
+            },
+            {
+                "word": "deal with (處理)",
+                "example": "We must deal with pollution to save animals. (我們必須處理污染以保護動物。)"
+            },
+            {
+                "word": "require (需要)",
+                "example": "Protecting forests requires effort from everyone. (保護森林需要每個人的努力。)"
+            },
+            {
+                "word": "responsibility to do something (做…的責任)",
+                "example": "People have a responsibility to protect nature. (人們有保護自然的責任。)"
+            },
+            {
+                "word": "ultimately (最終)",
+                "example": "Ultimately, our choices affect the health of the Earth. (最終，我們的選擇會影響地球的健康。)"
+            },
+            {
+                "word": "(responsibility) lie with someone (責任在於某人)",
+                "example": "The decision to save the forest lies with the community. (保護森林的決定取決於社區。)"
+            },
+            {
+                "word": "lie / lay / lain (躺下)",
+                "example": "I lie on the bed to rest after school. (我放學後躺下在床上休息。)"
+            },
+            {
+                "word": "lie (位於)",
+                "example": "The town lies next to the river. (這個小鎮位於河邊。)"
+            },
+            {
+                "word": "lie (存在)",
+                "example": "Many species lie hidden in the deep forest. (許多物種存在於深林之中。)"
+            },
+            {
+                "word": "lie (在於)",
+                "example": "The problem lies in the old system. (問題在於舊的系統。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 3",
+        "words": [
+            {
+                "word": "support (支持)",
+                "example": "People support saving trees to protect the forest. (人們支持保護森林以保護樹木。)"
+            },
+            {
+                "word": "push for (力求；爭取)",
+                "example": "Students push for better school lunches. (學生力求更好的學校午餐。)"
+            },
+            {
+                "word": "protective (保護的)",
+                "example": "Parents are protective of their children. (父母對孩子很保護。)"
+            },
+            {
+                "word": "policy (政策)",
+                "example": "The government made a new policy to clean the rivers. (政府制定了新的政策來清理河流。)"
+            },
+            {
+                "word": "individual (個人)",
+                "example": "Each individual can help reduce pollution. (每個個人都可以幫助減少污染。)"
+            },
+            {
+                "word": "generation (世代)",
+                "example": "Young generation cares about the environment. (年輕的世代關心環境。)"
+            },
+            {
+                "word": "deserve (值得)",
+                "example": "People who work hard deserve a rest. (辛苦工作的人應該值得休息。)"
+            },
+            {
+                "word": "thriving (繁榮的；興旺的)",
+                "example": "The garden is thriving with flowers and vegetables. (花園裡的花和蔬菜都茁壯成長。)"
+            }
+        ]
+    }
+
+
+],
+            'U11': [
+
+    {
+        "section": "◎Paragraph 1",
+        "words": [
+            {
+                "word": "have in common (有共同點)",
+                "example": "The two friends have in common a love for baseball. (這兩位朋友有共同的棒球愛好。)"
+            },
+            {
+                "word": "rely on (依靠、依賴)",
+                "example": "Babies rely on their parents for food and care. (嬰兒依靠父母提供食物和照顧。)"
+            },
+            {
+                "word": "be made with (用…製成 (列舉其中一部分))",
+                "example": "This salad is made with tomatoes and cheese. (這份沙拉是用番茄和起司做的。)"
+            },
+            {
+                "word": "be made from (用…製成 (看不到))",
+                "example": "Paper is made from wood. (紙是由木頭製成的。)"
+            },
+            {
+                "word": "rarely (很少、難得)",
+                "example": "She rarely eats fast food because she likes cooking at home. (她很少吃速食，因為喜歡在家煮飯。)"
+            },
+            {
+                "word": "device (裝置、設備)",
+                "example": "A phone is a device that helps people talk to each other. (手機是一種幫助人們互相通話的裝置。)"
+            },
+            {
+                "word": "simply (只是、簡單地)",
+                "example": "He was simply tired after a long day at school. (他只是上了一整天學後感到很累。)"
+            },
+            {
+                "word": "function (功能、作用)",
+                "example": "The main function of a pen is to write. (筆的主要功能是用來寫)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 2",
+        "words": [
+            {
+                "word": "in simple terms (簡單來說)",
+                "example": "In simple terms, the earth goes around the sun. (簡單來說，地球繞著太陽轉。)"
+            },
+            {
+                "word": "material (材料)",
+                "example": "This bag is made of soft material. (這個包包是用柔軟的材料做的。)"
+            },
+            {
+                "word": "flow (流動)",
+                "example": "Rivers flow into the sea. (河流流入海洋。)"
+            },
+            {
+                "word": "electricity (電)",
+                "example": "We use electricity to turn on the TV. (我們用電來打開電視。)"
+            },
+            {
+                "word": "electronic (電子的)",
+                "example": "She bought an electronic dictionary to learn English. (她買了一本電子字典來學英文。)"
+            },
+            {
+                "word": "metal (金屬)",
+                "example": "The door is made of metal. (這扇門是金屬做的。)"
+            },
+            {
+                "word": "conduct (electricity) (傳導（電）；執行)",
+                "example": "① Copper can conduct electricity. ② The teacher will conduct the test tomorrow. (① 銅可以傳導電。② 老師明天要執行考試。)"
+            },
+            {
+                "word": "adjust (調整)",
+                "example": "You can adjust the mirror to see better. (你可以調整鏡子來看得更清楚。)"
+            },
+            {
+                "word": "block (阻止)",
+                "example": "The tree blocks the way. (那棵樹擋住了路。)"
+            },
+            {
+                "word": "to a ... degree (到…的程度)",
+                "example": "He was angry to a high degree when he lost the game. (當他輸掉比賽時，他生氣到很大的程度。)"
+            },
+            {
+                "word": "various (各種的)",
+                "example": "The park has various flowers in spring. (公園在春天有各種花。)"
+            },
+            {
+                "word": "in other words (換句話說)",
+                "example": "In other words, the movie is too long. (換句話說，那部電影太長了。)"
+            },
+            {
+                "word": "miniature (微型的)",
+                "example": "He has a miniature train set. (他有一組微型火車。)"
+            },
+            {
+                "word": "cop (警察)",
+                "example": "The cop stopped the car. (警察攔下了那輛車。)"
+            },
+            {
+                "word": "suit (v.) (使…適合)",
+                "example": "This job suits him because he likes talking to people. (這份工作很適合他，因為他喜歡跟人說話。)"
+            },
+            {
+                "word": "tiny (極小的)",
+                "example": "There is a tiny bug on the wall. (牆上有一隻小小的蟲。)"
+            },
+            {
+                "word": "device (裝置)",
+                "example": "This device can take photos and send them. (這個裝置可以拍照並傳送。)"
+            },
+            {
+                "word": "microchip (微晶片)",
+                "example": "The cat has a microchip inside her body. (那隻貓的體內有一個微晶片。)"
+            },
+            {
+                "word": "in turn (繼而)",
+                "example": "The baby cried, and in turn the mother held him. (嬰兒哭了，母親繼而抱起他。)"
+            },
+            {
+                "word": "in turn (依次地)",
+                "example": "They cleaned the room in turn. (他們依次打掃房間。)"
+            },
+            {
+                "word": "fundamental (基本的)",
+                "example": "Sleep is a fundamental need for health. (睡眠是健康的基本需求。)"
+            },
+            {
+                "word": "component (組件)",
+                "example": "A phone has many small components inside. (手機裡有很多小組件。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 3",
+        "words": [
+            {
+                "word": "utterly* (完全地)",
+                "example": "I was utterly surprised by the big gift from my friend. (我對朋友送的大禮完全驚訝。)"
+            },
+            {
+                "word": "transform (轉變)",
+                "example": "The small seed can transform into a big tree. (小種子可以轉變成大樹。)"
+            },
+            {
+                "word": "shrink-shrank-shrunk (收縮)",
+                "example": "My shirt shrank after I washed it with hot water. (我的襯衫用熱水洗後縮小了。)"
+            },
+            {
+                "word": "dramatically (戲劇性地 / 明顯地)",
+                "example": "The weather changed dramatically in one hour. (天氣在一小時內明顯改變了。)"
+            },
+            {
+                "word": "because of (因為)",
+                "example": "We stayed home because of the rain. (因為下雨，我們待在家裡。)"
+            },
+            {
+                "word": "increasingly (日益地)",
+                "example": "More people are increasingly using electric cars these days. (現在越來越多人使用電動車。)"
+            },
+            {
+                "word": "chip (晶片)",
+                "example": "The phone has a small chip inside to store information. (這支手機裡有一個小晶片儲存資訊。)"
+            },
+            {
+                "word": "enable (使…有能力)",
+                "example": "This app enables students to learn English easily. (這個應用程式使學生能輕鬆學英文。)"
+            },
+            {
+                "word": "element (元素)",
+                "example": "Oxygen is an important element for humans to live. (氧氣是人類生存的重要元素。)"
+            },
+            {
+                "word": "modify (修改)",
+                "example": "I need to modify my essay before I submit it. (我需要在交作業前修改我的文章。)"
+            },
+            {
+                "word": "act as (擔任 / 充當)",
+                "example": "This box can act as a small table. (這個箱子可以充當小桌子。)"
+            },
+            {
+                "word": "switch (開關 / 切換)",
+                "example": "Please press the switch to turn on the light. (請按開關開燈。)"
+            },
+            {
+                "word": "signal (信號)",
+                "example": "The traffic light gives a signal to stop or go. (紅綠燈給出停或走的信號。)"
+            },
+            {
+                "word": "form (形成, v.)",
+                "example": "Clouds form shapes in the sky. (雲在天空中形成各種形狀)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 1",
+        "words": [
+            {
+                "word": "electronics (電子產品)",
+                "example": "My brother likes electronics such as phones and tablets. (我弟弟喜歡電子產品，例如手機和平板。)"
+            },
+            {
+                "word": "tablet (平板)",
+                "example": "I use a tablet to read books and watch videos. (我用平板閱讀書籍和看影片。)"
+            },
+            {
+                "word": "console (n.) (遊戲主機)",
+                "example": "He plays games on his new game console every day. (他每天都在新的遊戲主機上玩遊戲。)"
+            },
+            {
+                "word": "contain (包含)",
+                "example": "This box contains pencils and erasers. (這個盒子裡包含鉛筆和橡皮擦。)"
+            },
+            {
+                "word": "processor* (處理器)",
+                "example": "The tablet has a fast processor to run many apps. (平板有快速處理器可以運行許多應用程式。)"
+            },
+            {
+                "word": "memory chips (記憶晶片)",
+                "example": "The computer has memory chips to store information. (電腦有記憶晶片來儲存資訊。)"
+            },
+            {
+                "word": "communication (通訊)",
+                "example": "Phones are used for communication between people. (電話用於人與人之間的通訊。)"
+            },
+            {
+                "word": "store (v.) (儲存)",
+                "example": "I store my photos on my tablet. (我把照片儲存在平板裡。)"
+            },
+            {
+                "word": "server (伺服器)",
+                "example": "The game runs on a server far away. (遊戲運行在遠端的伺服器上。)"
+            },
+            {
+                "word": "run on (運行於, 靠...運作)",
+                "example": "This tablet runs on the latest system. (這個平板運行最新的系統。)"
+            },
+            {
+                "word": "advanced (先進的)",
+                "example": "This is an advanced electronic device with many features. (這是一個功能很多的先進電子裝置。)"
+            },
+            {
+                "word": "stream (串流播放)",
+                "example": "I watch movies by streaming them on the tablet. (我透過平板串流觀看電影。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 2",
+        "words": [
+            {
+                "word": "play a key role in (在…扮演重要角色)",
+                "example": "Batteries play a key role in keeping devices working. (電池在讓裝置運作上扮演重要角色。)"
+            },
+            {
+                "word": "electric (電的 / 電動的)",
+                "example": "This car is electric and does not use gas. (這輛車是電動的，不用汽油。)"
+            },
+            {
+                "word": "manage (管理)",
+                "example": "I manage my time to do homework and play games. (我管理我的時間來做功課和玩遊戲。)"
+            },
+            {
+                "word": "maintain (維持 / 保養)",
+                "example": "We need to maintain the microwave so it works well. (我們需要保養微波爐，使它運作良好。)"
+            },
+            {
+                "word": "battery (電池)",
+                "example": "The tablet has a battery that lasts all day. (這個平板有一個能用一整天的電池。)"
+            },
+            {
+                "word": "energy (能源)",
+                "example": "Solar panels give energy to the house. (太陽能板給房子提供能量。)"
+            },
+            {
+                "word": "efficiency (效率)",
+                "example": "This microwave has high efficiency and cooks food fast. (這台微波爐效率高，可以快速加熱食物。)"
+            },
+            {
+                "word": "feature (n.) (特點)",
+                "example": "One feature of the tablet is a big screen. (這個平板的特點是大螢幕。)"
+            },
+            {
+                "word": "navigation* (導航)",
+                "example": "GPS helps with navigation when we drive. (GPS 幫助我們開車時導航。)"
+            },
+            {
+                "word": "appliance (家用電器)",
+                "example": "A microwave is a common kitchen appliance. (微波爐是常見的廚房家用電器。)"
+            },
+            {
+                "word": "microwave (微波爐)",
+                "example": "I heat my food in the microwave. (我用微波爐加熱食物。)"
+            },
+            {
+                "word": "automate* ((使)自動化)",
+                "example": "The factory wants to automate its work to save time. (工廠想要把工作自動化來節省時間。)"
+            },
+            {
+                "word": "improve (改善)",
+                "example": "I improve my English by reading books every day. (我每天閱讀書籍來改善英文能力。)"
+            },
+            {
+                "word": "track (v.) (追蹤)",
+                "example": "The app can track how many steps I walk. (這個應用程式可以追蹤我走了多少步。)"
+            },
+            {
+                "word": "expiration* (到期)",
+                "example": "Check the expiration date on the food box. (查看食品盒上的到期日。)"
+            },
+            {
+                "word": "recipe (食譜)",
+                "example": "I use a recipe to cook spaghetti. (我用食譜煮義大利麵。)"
+            },
+            {
+                "word": "thanks to (多虧了)",
+                "example": "Thanks to the battery, the tablet works all day. (多虧了電池，平板可以用一整天。)"
+            }
+        ]
+    },
+    {
+        "section": "◎Paragraph 3",
+        "words": [
+            {
+                "word": "be crucial to N. (對…至關重要)",
+                "example": "Good sleep is crucial to good health. (良好的睡眠對健康至關重要。)"
+            },
+            {
+                "word": "behind the scenes (幕後)",
+                "example": "Many people work hard behind the scenes of a movie. (許多人在電影的幕後努力工作。)"
+            },
+            {
+                "word": "scene (場景；景象)",
+                "example": "The final scene of the movie was very exciting. (電影的最後一個場景非常精彩。)"
+            },
+            {
+                "word": "digital (數位的)",
+                "example": "Many students use digital books instead of paper books. (許多學生使用數位書籍而不是紙本書。)"
+            },
+            {
+                "word": "at a time (一次；同時)",
+                "example": "Please talk one at a time in class. (請在課堂上一個一個說話。)"
+            }
+        ]
+    },
+    {
+        "section": "◎補充",
+        "words": [
+            {
+                "word": "electronic (adj.) (指「電子的」，靠電路晶片運作)",
+                "example": "This is an electronic watch. (這是一隻電子錶。)"
+            },
+            {
+                "word": "electronics (n.) (名詞，「電子學」或「電子設備」)",
+                "example": "He works in electronics. (他從事電子相關工作。)"
+            },
+            {
+                "word": "electricity (n.) (指「電」本身)",
+                "example": "We need electricity to turn on the lights. (我們需要電才能開燈。)"
+            },
+            {
+                "word": "electrical (adj.) (指「與電有關的」，通常修飾設備、系統)",
+                "example": "The house has many electrical problems. (這棟房子有很多電力問題。)"
+            },
+            {
+                "word": "electric (adj.) (指「用電的」「由電驅動的」)",
+                "example": "She drives an electric car. (她開電動車。)"
+            }
+        ]
+    }
+
+],
+            'U13': [],
+            'P2U1': [],
+            'P2U2': [],
+            'P2U3': []
+
+        };
+
+        let currentSpeech = null;
+
+        // Function to clean text for TTS (remove asterisks and content in parentheses/square brackets)
+        function cleanTextForTTS(text) {
+            return text
+                .replace(/\*/g, '') // Remove asterisks
+.replace(/\//g, '') // Remove slashes
+                .replace(/\([^)]*\)/g, '') // Remove content in parentheses
+                .replace(/\[[^\]]*\]/g, '') // Remove content in square brackets
+                .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+                .trim();
+        }
+
+        // Function to speak text
+        function speakText(text) {
+            if (currentSpeech) {
+                speechSynthesis.cancel();
+            }
+            
+            const cleanedText = cleanTextForTTS(text);
+            if (cleanedText.trim() === '') return;
+            
+            currentSpeech = new SpeechSynthesisUtterance(cleanedText);
+            currentSpeech.lang = 'en-US';
+            currentSpeech.rate = 0.8;
+            
+            currentSpeech.onend = function() {
+                currentSpeech = null;
+            };
+            
+            speechSynthesis.speak(currentSpeech);
+        }
+
+        // Function to stop speech
+        function stopSpeech() {
+            if (currentSpeech) {
+                speechSynthesis.cancel();
+                currentSpeech = null;
+            }
+        }
+
+        // Function to load vocabulary data
+        function loadVocabulary(lessonKey) {
+            const tableBody = document.getElementById('vocabTableBody');
+            const data = vocabDatabase[lessonKey];
+            
+            if (!data) {
+                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available for this lesson</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            
+            data.forEach(section => {
+                // Add section header
+                html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
+                
+                // Add vocabulary words
+                section.words.forEach(item => {
+                    const fullText = `${item.word}. ${item.example}`;
+                    html += `
+                        <tr class="vocab-row">
+                            <td class="audio-controls">
+                                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                            </td>
+                            <td class="content-cell">
+                                <div class="vocab-word">${item.word}</div>
+                                <div class="example-sentence">${item.example}</div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+            
+            tableBody.innerHTML = html;
+        }
+
+        // Event listeners for buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.vocab-btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Load vocabulary data
+                    const lessonKey = this.getAttribute('data-lesson');
+                    loadVocabulary(lessonKey);
+                });
+            });
+        });
+
+        // Stop speech when page is unloaded
+        window.addEventListener('beforeunload', function() {
+            stopSpeech();
+        });
+    </script>
+</body>
+</html>
