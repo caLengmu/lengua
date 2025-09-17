@@ -79,6 +79,42 @@ font-weight: bold;
             background-color: #e74c3c;
         }
         
+.speed-control-section {
+            margin: 30px 0;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .speed-label {
+            font-weight: bold;
+            color: #495057;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+        
+        .speed-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .speed-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .speed-btn.active-speed {
+            background-color: #28a745;
+        }
+
         .vocab-table-container {
             margin-top: 30px;
             overflow-x: auto;
@@ -186,10 +222,28 @@ font-weight: bold;
                 padding: 12px;
             }
             
-            .vocab-word {
+.vocab-word {
                 font-size: 1.5em;
             }
-        }
+            
+            .speed-control-section {
+                margin: 20px 0;
+                padding: 10px;
+            }
+            
+            .speed-label {
+                display: block;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+            
+            .speed-btn {
+                padding: 10px 14px;
+                margin: 2px;
+                font-size: 13px;
+            }
+        }           
+
     </style>
 </head>
 <body>
@@ -226,6 +280,13 @@ font-weight: bold;
             </div>
         </div>
         
+<div class="speed-control-section">
+            <span class="speed-label">Speed:</span>
+            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
+            <button class="speed-btn" data-speed="0.85">0.85x</button>
+            <button class="speed-btn" data-speed="0.7">0.7x</button>
+        </div>
+
         <div class="vocab-table-container">
             <table class="vocab-table" id="vocabTable">
                 <tbody id="vocabTableBody">
@@ -2343,6 +2404,7 @@ font-weight: bold;
         };
 
         let currentSpeech = null;
+let speechRate = 1.0; // Default speech rate
 
         // Function to clean text for TTS (remove asterisks and content in parentheses/square brackets)
         function cleanTextForTTS(text) {
@@ -2366,7 +2428,7 @@ font-weight: bold;
             
             currentSpeech = new SpeechSynthesisUtterance(cleanedText);
             currentSpeech.lang = 'en-US';
-            currentSpeech.rate = 0.7;
+            currentSpeech.rate = speechRate;
             
             currentSpeech.onend = function() {
                 currentSpeech = null;
@@ -2435,8 +2497,30 @@ font-weight: bold;
                     // Load vocabulary data
                     const lessonKey = this.getAttribute('data-lesson');
                     loadVocabulary(lessonKey);
+   
+});
+            
+            // Event listeners for speed control buttons
+            const speedButtons = document.querySelectorAll('.speed-btn');
+            
+            speedButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all speed buttons
+                    speedButtons.forEach(btn => btn.classList.remove('active-speed'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active-speed');
+                    
+                    // Update speech rate
+                    speechRate = parseFloat(this.getAttribute('data-speed'));
+                    
+                    // Stop current speech if playing
+                    stopSpeech();
                 });
             });
+        });
+
+
         });
 
         // Stop speech when page is unloaded
