@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulary List</title>
-    <style>
-        * {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulary List</title>
+  <style>
+    
+ * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -242,15 +243,15 @@ font-weight: bold;
                 margin: 2px;
                 font-size: 13px;
             }
-        }           
+        } 
 
-    </style>
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Vocabulary List (1.5)</h1>
-        
-        <div class="button-categories">
+  <div class="container">
+    <h1>Vocabulary List (2.0)</h1>
+
+    <div class="button-categories">
             <div class="category">
                 <div class="category-title">Textbook</div>
                 <div class="category-buttons">
@@ -279,28 +280,31 @@ font-weight: bold;
                 </div>
             </div>
         </div>
-        
-<div class="speed-control-section">
-            <span class="speed-label">Speed:</span>
- <button class="speed-btn" data-speed="1.2x">1.2x</button>
-            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
-            <button class="speed-btn" data-speed="0.85">0.85x</button>
-            <button class="speed-btn" data-speed="0.7">0.7x</button>
-        </div>
 
-        <div class="vocab-table-container">
-            <table class="vocab-table" id="vocabTable">
-                <tbody id="vocabTableBody">
-                    <tr class="no-data">
-                        <td colspan="2">Select a lesson to display vocabulary</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <!-- Speed Control -->
+    <div class="speed-control-section">
+      <span class="speed-label">Speed:</span>
+      <button class="speed-btn" data-speed="1.2">1.2x</button>
+      <button class="speed-btn active-speed" data-speed="1.0">1x</button>
+      <button class="speed-btn" data-speed="0.8">0.8x</button>
+      <button class="speed-btn" data-speed="0.6">0.6x</button>
     </div>
 
-    <script>
-        // Built-in database - can be expanded
+    <!-- Table -->
+    <div class="vocab-table-container">
+      <table class="vocab-table" id="vocabTable">
+        <tbody id="vocabTableBody">
+          <tr class="no-data">
+            <td colspan="2">Select a lesson to display vocabulary</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+
+// Built-in database - can be expanded
         const vocabDatabase = {
             B3_L2: [
     {
@@ -502,334 +506,7 @@ font-weight: bold;
     }
 ],
             
-            'B3_L1': [
-
-{
-    "section": "◎Paragraph 1",
-    "words": [
-        {
-            "word": "champion (冠軍 = champ) (n) (冠軍)",
-            "example": "He is the boxing champion. (他是拳擊冠軍。)"
-        },
-        {
-            "word": "champion (捍衛者 = supporter) (n) (捍衛者)",
-            "example": "She is a champion of human rights. (她是人權捍衛者。)"
-        },
-        {
-            "word": "universe (n) (宇宙)",
-            "example": "The universe is very big. (宇宙非常大。)"
-        },
-        {
-            "word": "be known as... (以...聞名；被稱為...)",
-            "example": "Taiwan is known as the 'Kingdom of Fruits'. (台灣被稱為「水果王國」。)"
-        },
-        {
-            "word": "create (v) (創造)",
-            "example": "God created the world in seven days. (上帝在七天內創造了世界。)"
-        },
-        {
-            "word": "human being (n) (人類)",
-            "example": "Human beings are social animals. (人類是群居動物。)"
-        },
-        {
-            "word": "clay (n) (黏土)",
-            "example": "The artist used clay to make a bowl. (這位藝術家使用黏土做了一個碗。)"
-        },
-        {
-            "word": "living creature (n) (動物，不含植物！)",
-            "example": "Fish are living creatures that live in water. (魚是生活在水中的生物。)"
-        },
-        {
-            "word": "on earth (在地球上)",
-            "example": "There are many kinds of animals on earth. (地球上有許多種類的動物。)"
-        },
-        {
-            "word": "quality (n) (特質、品質)",
-            "example": "A good leader has many good qualities. (一位好的領導者有很多好的特質。)"
-        },
-        {
-            "word": "speed (n) (速度)",
-            "example": "The car can travel at a high speed. (這輛車可以高速行駛。)"
-        },
-        {
-            "word": "strength (n) (力量)",
-            "example": "He has a lot of strength in his arms. (他的手臂很有力量。)"
-        },
-        {
-            "word": "fur (n) (毛皮)",
-            "example": "The cat has soft fur. (這隻貓有柔軟的毛皮。)"
-        },
-        {
-            "word": "wing (n) (翅膀)",
-            "example": "Birds use their wings to fly. (鳥使用翅膀飛翔。)"
-        },
-        {
-            "word": "by the time... (到...的時候)",
-            "example": "By the time I got home, my parents had already left. (我到家的時候，我爸媽已經離開了。)"
-        },
-        {
-            "word": "get to... (= arrive at...) (到達...)",
-            "example": "What time did you get to the station? (你幾點到達車站的？)"
-        },
-        {
-            "word": "run out of... (用完...)",
-            "example": "We ran out of milk, so I have to go to the store. (我們牛奶喝完了，所以我必須去商店。)"
-        },
-        {
-            "word": "make up for... (彌補...)",
-            "example": "I'll buy you a meal to make up for being late. (我請你吃飯來彌補我遲到。)"
-        },
-        {
-            "word": "weak (adj) (弱的 vs. strong)",
-            "example": "He is too weak to lift the box. (他太弱了，無法舉起這個箱子。)"
-        },
-        {
-            "word": "state (n) (狀態)",
-            "example": "The house is in a bad state after the storm. (暴風雨後，房子處於糟糕的狀態。)"
-        },
-        {
-            "word": "enable (v) (使能夠)",
-            "example": "This tool enables me to finish the work faster. (這個工具使我能更快完成工作。)"
-        },
-        {
-            "word": "stand upright (直立站著)",
-            "example": "He was so tired that he couldn't stand upright. (他太累了，無法直立站著。)"
-        },
-        {
-            "word": "not only...but also... (不僅...而且...)",
-            "example": "He is not only smart but also hardworking. (他不僅聰明而且勤奮。)"
-        },
-        {
-            "word": "generous (adj) (慷慨的)",
-            "example": "He is generous with his time and money. (他很慷慨地付出時間和金錢。)"
-        },
-        {
-            "word": "so that... (為了...；以便...)",
-            "example": "I am studying hard so that I can get good grades. (我努力讀書以便能得到好成績。)"
-        },
-        {
-            "word": "tool (n) (工具)",
-            "example": "A hammer is a useful tool. (榔頭是個有用的工具。)"
-        }
-    ]
-},
-{
-    "section": "◎Paragraph 2",
-    "words": [
-        {
-            "word": "conflict (n) (衝突)",
-            "example": "There was a conflict between the two countries. (這兩國之間有衝突。)"
-        },
-        {
-            "word": "Olympian gods (n) (奧林匹斯眾神)",
-            "example": "Zeus is the king of the Olympian gods. (宙斯是奧林匹斯眾神之王。)"
-        },
-        {
-            "word": "distribution (n) (分配)",
-            "example": "The distribution of food was fair. (食物的分配很公平。)"
-        },
-        {
-            "word": "make sacrifices (做出犧牲)",
-            "example": "Parents make sacrifices for their children. (父母為孩子們做出犧牲。)"
-        },
-        {
-            "word": "a sacrifice to God (向神獻祭)",
-            "example": "The people made a sacrifice to God for rain. (人們向神獻祭以求雨。)"
-        },
-        {
-            "word": "trick someone (into doing something) (欺騙某人(做某事))",
-            "example": "He tricked me into giving him my money. (他欺騙我把錢給他。)"
-        },
-        {
-            "word": "benefit (n) (好處)",
-            "example": "Exercise has many health benefits. (運動有很多健康好處。)"
-        },
-        {
-            "word": "slaughter (v) (屠宰)",
-            "example": "The farmer will slaughter a pig for the party. (農夫將會為派對屠宰一頭豬。)"
-        },
-        {
-            "word": "offering (= a gift to please someone) (n) (用以取悅某人的禮物)",
-            "example": "The people brought offerings to the temple. (人們帶獻禮到廟宇。)"
-        },
-        {
-            "word": "an offering to God (獻給神的供品)",
-            "example": "They placed an offering to God on the altar. (他們將獻給神的供品放在祭壇上。)"
-        },
-        {
-            "word": "accept someone’s offer (接受某人的提議)",
-            "example": "I accepted his offer to help. (我接受了他幫忙的提議。)"
-        },
-        {
-            "word": "turn down someone’s offer (拒絕某人的提議)",
-            "example": "She turned down his offer to go to the movies. (她拒絕了他去看電影的提議。)"
-        },
-        {
-            "word": "special offer (n) (特價)",
-            "example": "The store has a special offer on shoes this week. (這家店這週鞋子有特價。)"
-        },
-        {
-            "word": "a pile of... (一堆...)",
-            "example": "There is a pile of clothes on the floor. (地板上有一堆衣服。)"
-        },
-        {
-            "word": "bone (n) (骨頭)",
-            "example": "Dogs like to chew on bones. (狗喜歡啃骨頭。)"
-        },
-        {
-            "word": "shiny (adj) (閃亮的)",
-            "example": "The new car has a shiny coat of paint. (這輛新車有一層閃亮的油漆。)"
-        },
-        {
-            "word": "fat (n) (脂肪)",
-            "example": "Eating too much fat can be bad for your health. (吃太多脂肪對你的健康有害。)"
-        },
-        {
-            "word": "underneath (= under) (prep) (在...下方)",
-            "example": "The cat is hiding underneath the bed. (貓藏在床下面。)"
-        },
-        {
-            "word": "instead (adv) (代替)",
-            "example": "I didn't have a pen, so I used a pencil instead. (我沒有筆，所以我用鉛筆代替。)"
-        },
-        {
-            "word": "end up (最終...)",
-            "example": "We ended up staying at home because of the rain. (因為下雨，我們最終待在家裡。)"
-        },
-        {
-            "word": "nothing but... (除了...之外沒有別的)",
-            "example": "The room was nothing but books. (這個房間除了書之外沒有別的。)"
-        },
-        {
-            "word": "as a result (結果)",
-            "example": "It rained, and as a result, the game was canceled. (下雨了，結果比賽被取消了。)"
-        },
-        {
-            "word": "from now on (從現在起)",
-            "example": "From now on, I will study every day. (從現在起，我會每天讀書。)"
-        },
-        {
-            "word": "from that day on (從那一天起)",
-            "example": "From that day on, we became good friends. (從那一天起，我們成了好朋友。)"
-        }
-    ]
-},
-{
-    "section": "◎Paragraph 3",
-    "words": [
-        {
-            "word": "be angry about... (對...生氣)",
-            "example": "She is angry about the low grade. (她對低分感到生氣。)"
-        },
-        {
-            "word": "starve (v) (挨餓)",
-            "example": "He was so hungry he felt like he would starve. (他餓到覺得自己會餓死。)"
-        },
-        {
-            "word": "freeze (v) (結冰)",
-            "example": "Water will freeze when it is cold enough. (水在足夠冷的時候會結冰。)"
-        },
-        {
-            "word": "be able to V (能夠做某事)",
-            "example": "I am able to speak three languages. (我會說三種語言。)"
-        },
-        {
-            "word": "be unable to V (不能夠做某事)",
-            "example": "She was unable to come to the party. (她無法來參加派對。)"
-        },
-        {
-            "word": "weapon (n) (武器)",
-            "example": "The sword is a powerful weapon. (這把劍是一種強大的武器。)"
-        },
-        {
-            "word": "to live in a cave (住在洞穴中)",
-            "example": "Ancient people used to live in a cave. (古代人曾經住在洞穴裡。)"
-        },
-        {
-            "word": "fall victim to... (成為...的受害者)",
-            "example": "He fell victim to a scam. (他成為詐騙的受害者。)"
-        },
-        {
-            "word": "wild (adj) (野生的)",
-            "example": "We saw some wild animals in the forest. (我們在森林裡看到一些野生動物。)"
-        },
-        {
-            "word": "beast (n) (野獸)",
-            "example": "The hero fought a fierce beast. (這位英雄與一隻兇猛的野獸戰鬥。)"
-        },
-        {
-            "word": "miserable (adj) (悲慘的)",
-            "example": "He felt miserable after losing his job. (他失業後感到很悲慘。)"
-        },
-        {
-            "word": "the stalk or stem of a flower (花莖)",
-            "example": "I held the flower by its stalk(= stem). (我握住花莖。)"
-        },
-        {
-            "word": "light / lit / lit (v) (點燃)",
-            "example": "He used a match to light the fire. (他用火柴點燃了火。)"
-        },
-        {
-            "word": "hollow (adj) (中空的)",
-            "example": "The tree has a hollow trunk. (這棵樹有一個中空的樹幹。)"
-        }
-    ]
-},
-{
-    "section": "◎Paragraph 4",
-    "words": [
-        {
-            "word": "be furious about... (對...感到狂怒)",
-            "example": "He was furious about the lost money. (他對丟失的錢感到非常憤怒。)"
-        },
-        {
-            "word": "theft (n) (偷竊)",
-            "example": "The police are investigating the theft of the car. (警方正在調查汽車竊盜案。)"
-        },
-        {
-            "word": "punish (v) (懲罰)",
-            "example": "The teacher punished the student for being late. (老師懲罰了遲到的學生。)"
-        },
-        {
-            "word": "banish (v) (放逐)",
-            "example": "The king banished the traitor from the kingdom. (國王將叛徒放逐出王國。)"
-        },
-        {
-            "word": "be chained to a tree (被鏈子鎖在樹上)",
-            "example": "The dog was chained to a tree. (這隻狗被鏈子鎖在樹上。)"
-        },
-        {
-            "word": "feed on... (以...為食)",
-            "example": "Pandas feed on bamboo. (熊貓以竹子為食。)"
-        },
-        {
-            "word": "liver (n) (肝臟)",
-            "example": "The liver is an important organ in our body. (肝臟是我們體內一個重要的器官。)"
-        },
-        {
-            "word": "gnaw (v) (啃咬)",
-            "example": "The mouse gnawed on the cheese. (老鼠啃咬著起司。)"
-        },
-        {
-            "word": "torture (v) (折磨)",
-            "example": "The loud music tortured my ears. (巨大的音樂折磨了我的耳朵。)"
-        },
-        {
-            "word": "until the end of time (直到時間盡頭)",
-            "example": "I will love you until the end of time. (我會愛你直到時間盡頭。)"
-        },
-        {
-            "word": "set the stage for... (為...創造條件)",
-            "example": "The invention of the wheel set the stage for modern transportation. (車輪的發明為現代交通創造了條件。)"
-        },
-        {
-            "word": "civilization (n) (文明)",
-            "example": "Ancient Egypt was a great civilization. (古埃及是一個偉大的文明。)"
-        }
-    ]
-}
-
-],
+            'B3_L1': [],
             'B3_L3': [
 
     {
@@ -2731,130 +2408,125 @@ font-weight: bold;
 
         };
 
-        let currentSpeech = null;
-let speechRate = 1.0; // Default speech rate
 
-        // Function to clean text for TTS (remove asterisks and content in parentheses/square brackets)
-        function cleanTextForTTS(text) {
-            return text
-                .replace(/\*/g, '') // Remove asterisks
-.replace(/\//g, '') // Remove slashes
-                .replace(/\([^)]*\)/g, '') // Remove content in parentheses
-                .replace(/\[[^\]]*\]/g, '') // Remove content in square brackets
-                .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-                .trim();
-        }
 
-        // Function to speak text
-        function speakText(text) {
-            if (currentSpeech) {
-                speechSynthesis.cancel();
-            }
-            
-            const cleanedText = cleanTextForTTS(text);
-            if (cleanedText.trim() === '') return;
-            
-            currentSpeech = new SpeechSynthesisUtterance(cleanedText);
-            currentSpeech.lang = 'en-US';
-            currentSpeech.rate = speechRate;
-            
-            currentSpeech.onend = function() {
-                currentSpeech = null;
-            };
-            
-            speechSynthesis.speak(currentSpeech);
-        }
+    let currentSpeech = null;
+    let speechRate = 1.0;
+    let voices = [];
 
-        // Function to stop speech
-        function stopSpeech() {
-            if (currentSpeech) {
-                speechSynthesis.cancel();
-                currentSpeech = null;
-            }
-        }
+    // Ensure voices are loaded (important for iOS Safari)
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      if (!voices.length) {
+        // Trigger iOS voice loading
+        const dummy = new SpeechSynthesisUtterance('');
+        speechSynthesis.speak(dummy);
+        voices = speechSynthesis.getVoices();
+      }
+    }
 
-        // Function to load vocabulary data
-        function loadVocabulary(lessonKey) {
-            const tableBody = document.getElementById('vocabTableBody');
-            const data = vocabDatabase[lessonKey];
-            
-            if (!data) {
-                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available for this lesson</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            
-            data.forEach(section => {
-                // Add section header
-                html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
-                
-                // Add vocabulary words
-                section.words.forEach(item => {
-                    const fullText = `${item.word}. ${item.example}`;
-                    html += `
-                        <tr class="vocab-row">
-                            <td class="audio-controls">
-                                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
-                            </td>
-                            <td class="content-cell">
-                                <div class="vocab-word">${item.word}</div>
-                                <div class="example-sentence">${item.example}</div>
-                            </td>
-                        </tr>
-                    `;
-                });
-            });
-            
-            tableBody.innerHTML = html;
-        }
+    // Pick best English voice (prioritize Samantha on iOS)
+    function getEnglishVoice() {
+      if (!voices.length) loadVoices();
+      let voice = voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+      return voice || null;
+    }
 
-        // Event listeners for buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.vocab-btn');
-            
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    buttons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Load vocabulary data
-                    const lessonKey = this.getAttribute('data-lesson');
-                    loadVocabulary(lessonKey);
-   
-});
-            
-            // Event listeners for speed control buttons
-            const speedButtons = document.querySelectorAll('.speed-btn');
-            
-            speedButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all speed buttons
-                    speedButtons.forEach(btn => btn.classList.remove('active-speed'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active-speed');
-                    
-                    // Update speech rate
-                    speechRate = parseFloat(this.getAttribute('data-speed'));
-                    
-                    // Stop current speech if playing
-                    stopSpeech();
-                });
-            });
+    // Clean text for TTS
+    function cleanTextForTTS(text) {
+      return text.replace(/\*/g, '')
+                 .replace(/\//g, '')
+                 .replace(/\([^)]*\)/g, '')
+                 .replace(/\[[^\]]*\]/g, '')
+                 .replace(/\s+/g, ' ')
+                 .trim();
+    }
+
+    // Speak text
+    function speakText(text) {
+      stopSpeech();
+      const cleaned = cleanTextForTTS(text);
+      if (!cleaned) return;
+
+      const utterance = new SpeechSynthesisUtterance(cleaned);
+      utterance.lang = 'en-US';
+      utterance.rate = speechRate;
+
+      const voice = getEnglishVoice();
+      if (voice) utterance.voice = voice;
+
+      utterance.onend = () => { currentSpeech = null; };
+      currentSpeech = utterance;
+      speechSynthesis.speak(utterance);
+    }
+
+    // Stop speech
+    function stopSpeech() {
+      if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+      }
+      currentSpeech = null;
+    }
+
+    // Load vocabulary (example only, since your vocabDatabase isn’t included)
+    function loadVocabulary(lessonKey) {
+      const tableBody = document.getElementById('vocabTableBody');
+      const data = vocabDatabase[lessonKey];
+
+      if (!data) {
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available</td></tr>';
+        return;
+      }
+
+      let html = '';
+      data.forEach(section => {
+        html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
+        section.words.forEach(item => {
+          const fullText = `${item.word}. ${item.example}`;
+          html += `
+            <tr class="vocab-row">
+              <td class="audio-controls">
+                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+              </td>
+              <td class="content-cell">
+                <div class="vocab-word">${item.word}</div>
+                <div class="example-sentence">${item.example}</div>
+              </td>
+            </tr>
+          `;
         });
+      });
+      tableBody.innerHTML = html;
+    }
 
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load voices after user interaction (iOS requirement)
+      document.body.addEventListener('click', () => loadVoices(), { once: true });
 
+      const lessonButtons = document.querySelectorAll('.vocab-btn');
+      lessonButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          lessonButtons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const lessonKey = this.getAttribute('data-lesson');
+          loadVocabulary(lessonKey);
         });
+      });
 
-        // Stop speech when page is unloaded
-        window.addEventListener('beforeunload', function() {
-            stopSpeech();
+      const speedButtons = document.querySelectorAll('.speed-btn');
+      speedButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          speedButtons.forEach(b => b.classList.remove('active-speed'));
+          this.classList.add('active-speed');
+          speechRate = parseFloat(this.getAttribute('data-speed'));
+          stopSpeech();
         });
-    </script>
+      });
+    });
+
+    window.addEventListener('beforeunload', () => stopSpeech());
+  </script>
 </body>
 </html>
