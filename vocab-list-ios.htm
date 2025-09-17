@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulary List</title>
-    <style>
-        * {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulary List</title>
+  <style>
+    
+ * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -17,8 +18,6 @@
             color: #333;
             line-height: 1.6;
             padding: 20px;
-            -webkit-user-select: none;
-            user-select: none;
         }
         
         .container {
@@ -35,21 +34,6 @@
             margin-bottom: 30px;
             color: #2c3e50;
             font-size: 2.5em;
-        }
-        
-        .tts-init-notice {
-            background-color: #e3f2fd;
-            border: 1px solid #2196f3;
-            color: #1976d2;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .tts-init-notice.hidden {
-            display: none;
         }
         
         .button-categories {
@@ -83,13 +67,12 @@
             padding: 12px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
+font-weight: bold;
             font-size: 14px;
             transition: background-color 0.3s;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
         }
         
-        .vocab-btn:hover, .vocab-btn:active {
+        .vocab-btn:hover {
             background-color: #2980b9;
         }
         
@@ -97,7 +80,7 @@
             background-color: #e74c3c;
         }
         
-        .speed-control-section {
+.speed-control-section {
             margin: 30px 0;
             text-align: center;
             padding: 15px;
@@ -123,10 +106,9 @@
             cursor: pointer;
             font-size: 14px;
             transition: background-color 0.3s;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
         }
         
-        .speed-btn:hover, .speed-btn:active {
+        .speed-btn:hover {
             background-color: #5a6268;
         }
         
@@ -185,55 +167,25 @@
         
         .audio-btn {
             background: none;
-            border: 2px solid transparent;
+            border: none;
             cursor: pointer;
             font-size: 20px;
             margin: 2px;
-            padding: 8px;
-            border-radius: 6px;
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-            min-width: 40px;
-            min-height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
         }
         
-        .audio-btn:hover, .audio-btn:active {
-            transform: scale(1.1);
+        .audio-btn:hover {
+            background-color: #f0f0f0;
         }
         
         .play-btn {
             color: #27ae60;
-            background-color: rgba(39, 174, 96, 0.1);
-        }
-        
-        .play-btn:hover, .play-btn:active {
-            background-color: rgba(39, 174, 96, 0.2);
-            border-color: #27ae60;
-        }
-        
-        .play-btn.playing {
-            background-color: rgba(39, 174, 96, 0.3);
-            border-color: #27ae60;
-            animation: pulse 1s infinite;
         }
         
         .stop-btn {
             color: #e74c3c;
-            background-color: rgba(231, 76, 60, 0.1);
-        }
-        
-        .stop-btn:hover, .stop-btn:active {
-            background-color: rgba(231, 76, 60, 0.2);
-            border-color: #e74c3c;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
         }
         
         .no-data {
@@ -257,13 +209,13 @@
             }
             
             .vocab-btn {
-                font-weight: bold;
+font-weight: bold;
                 padding: 10px 15px;
                 font-size: 13px;
             }
             
             .audio-controls {
-                width: 70px;
+                width: 60px;
                 padding: 10px 5px;
             }
             
@@ -271,12 +223,8 @@
                 padding: 12px;
             }
             
-            .vocab-word {
-                font-size: 1.3em;
-            }
-            
-            .example-sentence {
-                font-size: 1.2em;
+.vocab-word {
+                font-size: 1.5em;
             }
             
             .speed-control-section {
@@ -295,26 +243,15 @@
                 margin: 2px;
                 font-size: 13px;
             }
-            
-            .audio-btn {
-                font-size: 18px;
-                padding: 6px;
-                min-width: 36px;
-                min-height: 36px;
-            }
-        }           
+        } 
 
-    </style>
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Vocabulary List</h1>
-        
-        <div class="tts-init-notice" id="ttsNotice">
-            📱 For iOS users: Tap any play button to initialize audio. TTS will work after first interaction.
-        </div>
-        
-        <div class="button-categories">
+  <div class="container">
+    <h1>Vocabulary List (1.5 for iOS)</h1>
+
+    <div class="button-categories">
             <div class="category">
                 <div class="category-title">Textbook</div>
                 <div class="category-buttons">
@@ -343,38 +280,31 @@
                 </div>
             </div>
         </div>
-        
-        <div class="speed-control-section">
-            <span class="speed-label">Speed:</span>
-            <button class="speed-btn" data-speed="1.2">1.2x</button>
-            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
-            <button class="speed-btn" data-speed="0.85">0.85x</button>
-            <button class="speed-btn" data-speed="0.7">0.7x</button>
-        </div>
 
-        <div class="vocab-table-container">
-            <table class="vocab-table" id="vocabTable">
-                <tbody id="vocabTableBody">
-                    <tr class="no-data">
-                        <td colspan="2">Select a lesson to display vocabulary</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <!-- Speed Control -->
+    <div class="speed-control-section">
+      <span class="speed-label">Speed:</span>
+      <button class="speed-btn" data-speed="1.2">1.2x</button>
+      <button class="speed-btn active-speed" data-speed="1.0">1x</button>
+      <button class="speed-btn" data-speed="0.85">0.85x</button>
+      <button class="speed-btn" data-speed="0.7">0.7x</button>
     </div>
 
-    <script>
-        // TTS State Management
-        let currentSpeech = null;
-        let speechRate = 1.0;
-        let ttsInitialized = false;
-        let currentPlayButton = null;
-        
-        // iOS Detection
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        
-       // Built-in database - can be expanded
-       
+    <!-- Table -->
+    <div class="vocab-table-container">
+      <table class="vocab-table" id="vocabTable">
+        <tbody id="vocabTableBody">
+          <tr class="no-data">
+            <td colspan="2">Select a lesson to display vocabulary</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+
+// Built-in database - can be expanded
         const vocabDatabase = {
             B3_L2: [
     {
@@ -2480,244 +2410,123 @@
 
 
 
+    let currentSpeech = null;
+    let speechRate = 1.0;
+    let voices = [];
 
+    // Ensure voices are loaded (important for iOS Safari)
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      if (!voices.length) {
+        // Trigger iOS voice loading
+        const dummy = new SpeechSynthesisUtterance('');
+        speechSynthesis.speak(dummy);
+        voices = speechSynthesis.getVoices();
+      }
+    }
 
-        // iOS-optimized TTS initialization
-        function initializeTTS() {
-            if (ttsInitialized) return Promise.resolve();
-            
-            return new Promise((resolve) => {
-                // Create a silent utterance to wake up iOS TTS
-                const testUtterance = new SpeechSynthesisUtterance(' ');
-                testUtterance.volume = 0.01;
-                testUtterance.rate = 1;
-                testUtterance.lang = 'en-US';
-                
-                testUtterance.onstart = function() {
-                    ttsInitialized = true;
-                    document.getElementById('ttsNotice').classList.add('hidden');
-                    resolve();
-                };
-                
-                testUtterance.onend = function() {
-                    if (!ttsInitialized) {
-                        ttsInitialized = true;
-                        document.getElementById('ttsNotice').classList.add('hidden');
-                        resolve();
-                    }
-                };
-                
-                testUtterance.onerror = function() {
-                    ttsInitialized = true;
-                    resolve();
-                };
-                
-                // For iOS, we need to call this in response to user interaction
-                speechSynthesis.speak(testUtterance);
-                
-                // Backup timeout
-                setTimeout(() => {
-                    if (!ttsInitialized) {
-                        ttsInitialized = true;
-                        document.getElementById('ttsNotice').classList.add('hidden');
-                        resolve();
-                    }
-                }, 500);
-            });
-        }
+    // Pick best English voice (prioritize Samantha on iOS)
+    function getEnglishVoice() {
+      if (!voices.length) loadVoices();
+      let voice = voices.find(v => v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+      return voice || null;
+    }
 
-        // Function to clean text for TTS
-        function cleanTextForTTS(text) {
-            return text
-                .replace(/\*/g, '')
-                .replace(/\//g, ' or ')
-                .replace(/\([^)]*\)/g, '')
-                .replace(/\[[^\]]*\]/g, '')
-                .replace(/[^\w\s.,!?-]/g, ' ')
-                .replace(/\s+/g, ' ')
-                .trim();
-        }
+    // Clean text for TTS
+    function cleanTextForTTS(text) {
+      return text.replace(/\*/g, '')
+                 .replace(/\//g, '')
+                 .replace(/\([^)]*\)/g, '')
+                 .replace(/\[[^\]]*\]/g, '')
+                 .replace(/\s+/g, ' ')
+                 .trim();
+    }
 
-        // iOS-optimized speech function
-        function speakText(text, playButton) {
-            // Stop any current speech first
-            stopSpeech();
-            
-            const cleanedText = cleanTextForTTS(text);
-            if (cleanedText.trim() === '') return;
-            
-            // Initialize TTS if needed (especially for iOS)
-            initializeTTS().then(() => {
-                // Short delay to ensure TTS is ready
-                setTimeout(() => {
-                    currentSpeech = new SpeechSynthesisUtterance(cleanedText);
-                    currentSpeech.lang = 'en-US';
-                    currentSpeech.rate = speechRate;
-                    currentSpeech.volume = 1.0;
-                    currentSpeech.pitch = 1.0;
-                    
-                    // Set current play button
-                    currentPlayButton = playButton;
-                    if (currentPlayButton) {
-                        currentPlayButton.classList.add('playing');
-                    }
-                    
-                    currentSpeech.onstart = function() {
-                        console.log('Speech started');
-                    };
-                    
-                    currentSpeech.onend = function() {
-                        console.log('Speech ended');
-                        currentSpeech = null;
-                        if (currentPlayButton) {
-                            currentPlayButton.classList.remove('playing');
-                            currentPlayButton = null;
-                        }
-                    };
-                    
-                    currentSpeech.onerror = function(event) {
-                        console.log('Speech error:', event.error);
-                        currentSpeech = null;
-                        if (currentPlayButton) {
-                            currentPlayButton.classList.remove('playing');
-                            currentPlayButton = null;
-                        }
-                    };
-                    
-                    currentSpeech.onpause = function() {
-                        if (currentPlayButton) {
-                            currentPlayButton.classList.remove('playing');
-                        }
-                    };
-                    
-                    currentSpeech.onresume = function() {
-                        if (currentPlayButton) {
-                            currentPlayButton.classList.add('playing');
-                        }
-                    };
-                    
-                    // Speak the text
-                    speechSynthesis.speak(currentSpeech);
-                }, isIOS ? 100 : 0);
-            });
-        }
+    // Speak text
+    function speakText(text) {
+      stopSpeech();
+      const cleaned = cleanTextForTTS(text);
+      if (!cleaned) return;
 
-        // Function to stop speech
-        function stopSpeech() {
-            if (currentSpeech) {
-                speechSynthesis.cancel();
-                currentSpeech = null;
-            }
-            if (currentPlayButton) {
-                currentPlayButton.classList.remove('playing');
-                currentPlayButton = null;
-            }
-        }
+      const utterance = new SpeechSynthesisUtterance(cleaned);
+      utterance.lang = 'en-US';
+      utterance.rate = speechRate;
 
-        // Function to load vocabulary data
-        function loadVocabulary(lessonKey) {
-            const tableBody = document.getElementById('vocabTableBody');
-            const data = vocabDatabase[lessonKey];
-            
-            if (!data) {
-                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available for this lesson</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            
-            data.forEach(section => {
-                html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
-                
-                section.words.forEach((item, index) => {
-                    const fullText = `${item.word}. ${item.example}`;
-                    const buttonId = `play-${lessonKey}-${index}`;
-                    
-                    html += `
-                        <tr class="vocab-row">
-                            <td class="audio-controls">
-                                <button class="audio-btn play-btn" id="${buttonId}" data-text="${fullText.replace(/"/g, '&quot;')}">🔊</button>
-                                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
-                            </td>
-                            <td class="content-cell">
-                                <div class="vocab-word">${item.word}</div>
-                                <div class="example-sentence">${item.example}</div>
-                            </td>
-                        </tr>
-                    `;
-                });
-            });
-            
-            tableBody.innerHTML = html;
-            
-            // Add event listeners to new play buttons
-            tableBody.querySelectorAll('.play-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const text = this.getAttribute('data-text');
-                    speakText(text, this);
-                });
-                
-                // Add touch events for better iOS support
-                button.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                });
-            });
-        }
+      const voice = getEnglishVoice();
+      if (voice) utterance.voice = voice;
 
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Vocabulary buttons
-            const buttons = document.querySelectorAll('.vocab-btn');
-            
-            buttons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    buttons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const lessonKey = this.getAttribute('data-lesson');
-                    loadVocabulary(lessonKey);
-                });
-            });
-            
-            // Speed control buttons
-            const speedButtons = document.querySelectorAll('.speed-btn');
-            
-            speedButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    speedButtons.forEach(btn => btn.classList.remove('active-speed'));
-                    this.classList.add('active-speed');
-                    
-                    speechRate = parseFloat(this.getAttribute('data-speed'));
-                    stopSpeech();
-                });
-            });
+      utterance.onend = () => { currentSpeech = null; };
+      currentSpeech = utterance;
+      speechSynthesis.speak(utterance);
+    }
+
+    // Stop speech
+    function stopSpeech() {
+      if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+      }
+      currentSpeech = null;
+    }
+
+    // Load vocabulary (example only, since your vocabDatabase isn’t included)
+    function loadVocabulary(lessonKey) {
+      const tableBody = document.getElementById('vocabTableBody');
+      const data = vocabDatabase[lessonKey];
+
+      if (!data) {
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available</td></tr>';
+        return;
+      }
+
+      let html = '';
+      data.forEach(section => {
+        html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
+        section.words.forEach(item => {
+          const fullText = `${item.word}. ${item.example}`;
+          html += `
+            <tr class="vocab-row">
+              <td class="audio-controls">
+                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+              </td>
+              <td class="content-cell">
+                <div class="vocab-word">${item.word}</div>
+                <div class="example-sentence">${item.example}</div>
+              </td>
+            </tr>
+          `;
         });
+      });
+      tableBody.innerHTML = html;
+    }
 
-        // Handle page visibility changes (iOS background handling)
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                stopSpeech();
-            }
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load voices after user interaction (iOS requirement)
+      document.body.addEventListener('click', () => loadVoices(), { once: true });
+
+      const lessonButtons = document.querySelectorAll('.vocab-btn');
+      lessonButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          lessonButtons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const lessonKey = this.getAttribute('data-lesson');
+          loadVocabulary(lessonKey);
         });
+      });
 
-        // Handle page unload
-        window.addEventListener('beforeunload', function() {
-            stopSpeech();
+      const speedButtons = document.querySelectorAll('.speed-btn');
+      speedButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          speedButtons.forEach(b => b.classList.remove('active-speed'));
+          this.classList.add('active-speed');
+          speechRate = parseFloat(this.getAttribute('data-speed'));
+          stopSpeech();
         });
+      });
+    });
 
-        // iOS-specific: Handle audio interruption
-        if (isIOS) {
-            document.addEventListener('touchstart', function() {
-                if (!ttsInitialized) {
-                    initializeTTS();
-                }
-            }, { once: true });
-        }
-    </script>
+    window.addEventListener('beforeunload', () => stopSpeech());
+  </script>
 </body>
 </html>
