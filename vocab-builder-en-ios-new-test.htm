@@ -1742,18 +1742,18 @@ function handleChoiceClick(button, selectedChoice) {
         
         // Show time-based feedback
         let feedbackMessage = '';
-        if (responseTime < 1.5) {
+        if (responseTime < 2) {
             feedbackMessage = 'Perfect! ⚡';
             speak('Perfect!');
-        } else if (responseTime < 2.5) {
+        } else if (responseTime < 3) {
             feedbackMessage = 'Good! 👍';
             speak('Good!');
-        } else if (responseTime < 3.5) {
-            feedbackMessage = 'Go faster! ⏰';
-            speak('Go faster!');
+        } else if (responseTime < 5) {
+            feedbackMessage = 'Faster! ⏰';
+            speak('Faster!');
         } else {
-            feedbackMessage = 'What took you so long? 😴';
-            speak('What took you so long?');
+            feedbackMessage = 'Too late... 😴';
+            speak('Too late...');
         }
         
         timerFeedback.textContent = `${feedbackMessage} (It took you ${responseTime.toFixed(1)} seconds.)`;
@@ -1767,9 +1767,9 @@ function handleChoiceClick(button, selectedChoice) {
             }
         });
         
-        timerFeedback.textContent = 'You missed! 😓❌';
+        timerFeedback.textContent = 'Uh-oh! 😓❌';
         timerFeedback.className = 'timer-feedback incorrect';
-        speak('You missed!');
+        speak('Uh-oh!');
         
         listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
     }
