@@ -1745,10 +1745,10 @@ function handleChoiceClick(button, selectedChoice) {
         if (responseTime < 2) {
             feedbackMessage = 'Perfect! ⚡';
             speak('Perfect!');
-        } else if (responseTime < 3) {
+        } else if (responseTime < 3.5) {
             feedbackMessage = 'Good! 👍';
             speak('Good!');
-        } else if (responseTime < 5) {
+        } else if (responseTime < 6) {
             feedbackMessage = 'Faster! ⏰';
             speak('Faster!');
         } else {
@@ -1767,9 +1767,9 @@ function handleChoiceClick(button, selectedChoice) {
             }
         });
         
-        timerFeedback.textContent = 'Uh-oh! 😓❌';
+        timerFeedback.textContent = 'You missed! 😓❌';
         timerFeedback.className = 'timer-feedback incorrect';
-        speak('Uh-oh!');
+        speak('You missed!');
         
         listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
     }
@@ -2200,3 +2200,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+
