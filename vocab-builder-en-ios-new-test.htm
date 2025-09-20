@@ -836,7 +836,7 @@ background-color: var(--dark);
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.8 iOS)</h1>
+        <h1>🎯 Vocabulary Builder (3.0 iOS)</h1>
     </header>
 
 </div>
@@ -845,9 +845,9 @@ background-color: var(--dark);
     <div class="left-controls">
         <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
     </div>
-    <button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👌 英 → 中</button>
+    <button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👀 看英想中</button>
     <button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聽英選中</button>
-    <button class="start-btn" id="start-btn" disabled>👍 中 → 英</button>
+    <button class="start-btn" id="start-btn" disabled>🎤 看中說英</button>
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
 </div>
 
@@ -987,7 +987,7 @@ background-color: var(--dark);
         
         <!-- Answer Display Section -->
         <div class="listen-answer-section">
-            <div id="listen-answer-display" class="listen-answer-display">Click the speaker to hear the word</div>
+            <div id="listen-answer-display" class="listen-answer-display">Click the speaker</div>
             <div class="listen-speaker" id="listen-speaker" title="Play Audio">🔊</div>
         </div>
         
@@ -1018,9 +1018,9 @@ background-color: var(--dark);
             <div id="hint-text" class="hint"></div>
             <div id="reveal-answer" class="reveal-answer"></div>
             <div class="button-group">
-                <button id="submit-btn" class="submit-btn">✔️❌ Submit</button>
+                <button id="submit-btn" class="submit-btn">✅ or ❎</button>
                 <button id="speak-btn" class="speak-btn">🎤 Speak</button>
-                <button id="hint-btn" class="hint-btn">🧩 Hint</button>
+                <button id="hint-btn" class="hint-btn">❓ Hint</button>
                 <button id="answer-btn" class="answer-btn">🔑 Answer</button>
                 <button id="next-btn" class="next-btn">Next</button>
                 <button id="close-btn" class="close-btn">Close</button>
@@ -1647,12 +1647,12 @@ function updateSelectAllCheckbox() {
 function startListenAndChooseQuiz() {
     currentListenQuizWords = vocabularyData.filter(item => item.selected);
     if (currentListenQuizWords.length === 0) {
-        alert('Please select at least one vocabulary word to start the quiz.');
+        alert('Please select at least one vocabulary word to start the quiz. (請選擇至少一個詞彙以進行此測驗)');
         return;
     }
     
-    if (currentListenQuizWords.length < 10) {
-        alert('You need at least 10 vocabulary words for this quiz mode.');
+    if (currentListenQuizWords.length < 8) {
+        alert('Please select at least 8 vocabulary words for this quiz. (請選擇至少8個詞彙以進行此測驗)');
         return;
     }
     
@@ -1666,7 +1666,7 @@ function resetListenAndChooseQuiz() {
     currentListenWord = null;
     questionStartTime = null;
     isAnswered = false;
-    listenAnswerDisplay.textContent = 'Click the speaker to hear the word';
+    listenAnswerDisplay.textContent = 'Click the speaker';
     timerFeedback.textContent = '';
 }
 
@@ -1674,7 +1674,7 @@ function nextListenQuestion() {
     // Reset state
     isAnswered = false;
     questionStartTime = null;
-    listenAnswerDisplay.textContent = 'Click the speaker to hear the word';
+    listenAnswerDisplay.textContent = 'Click the speaker';
     timerFeedback.textContent = '';
     
     // Select random word
@@ -1703,7 +1703,7 @@ function generateChoices() {
     
     // Randomly select 9 other translations
     const shuffled = otherTranslations.sort(() => 0.5 - Math.random());
-    const selectedChoices = shuffled.slice(0, 9);
+    const selectedChoices = shuffled.slice(0, 7);
     
     // Add the correct answer
     const allChoices = [...selectedChoices, currentListenWord.translation];
@@ -1738,25 +1738,25 @@ function handleChoiceClick(button, selectedChoice) {
     
     if (isCorrect) {
         button.classList.add('correct');
-        listenAnswerDisplay.textContent = currentListenWord.translation;
+        listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
         
         // Show time-based feedback
         let feedbackMessage = '';
-        if (responseTime < 1) {
+        if (responseTime < 1.5) {
             feedbackMessage = 'Perfect! ⚡';
             speak('Perfect!');
-        } else if (responseTime < 1.5) {
+        } else if (responseTime < 2.5) {
             feedbackMessage = 'Good! 👍';
             speak('Good!');
-        } else if (responseTime < 3) {
+        } else if (responseTime < 3.5) {
             feedbackMessage = 'Go faster! ⏰';
             speak('Go faster!');
         } else {
-            feedbackMessage = 'Are you tired? 😴';
-            speak('Are you tired?');
+            feedbackMessage = 'What took you so long? 😴';
+            speak('What took you so long?');
         }
         
-        timerFeedback.textContent = `${feedbackMessage} (${responseTime.toFixed(1)}s)`;
+        timerFeedback.textContent = `${feedbackMessage} (It took you ${responseTime.toFixed(1)} seconds.)`;
         timerFeedback.className = 'timer-feedback correct';
     } else {
         button.classList.add('incorrect');
@@ -1767,11 +1767,11 @@ function handleChoiceClick(button, selectedChoice) {
             }
         });
         
-        timerFeedback.textContent = 'Try again! 🔥🔥🔥';
+        timerFeedback.textContent = 'You missed! 😓❌';
         timerFeedback.className = 'timer-feedback incorrect';
-        speak('Try again!');
+        speak('You missed!');
         
-        listenAnswerDisplay.textContent = currentListenWord.translation;
+        listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
     }
 }
 
@@ -2083,7 +2083,7 @@ document.addEventListener('click', function initOnFirstClick() {
   <div class="popup-content">
     <div class="popup-layout">
       <div class="pikachu-image">
-        <img src="dodoro_transparent.png" alt="Image Not Found" width="150">
+        <img src="dinotaeng_walking.png" alt="Image Not Found" width="150">
       </div>
       <div class="speech-bubble">
         
