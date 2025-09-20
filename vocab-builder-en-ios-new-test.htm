@@ -1651,8 +1651,8 @@ function startListenAndChooseQuiz() {
         return;
     }
     
-    if (currentListenQuizWords.length < 8) {
-        alert('Please select at least 8 vocabulary words for this quiz. (請選擇至少8個詞彙以進行此測驗)');
+    if (currentListenQuizWords.length < 10) {
+        alert('Please select at least 10 vocabulary words for this quiz. (請選擇至少10個詞彙以進行此測驗)');
         return;
     }
     
@@ -1703,7 +1703,7 @@ function generateChoices() {
     
     // Randomly select 9 other translations
     const shuffled = otherTranslations.sort(() => 0.5 - Math.random());
-    const selectedChoices = shuffled.slice(0, 7);
+    const selectedChoices = shuffled.slice(0, 9);
     
     // Add the correct answer
     const allChoices = [...selectedChoices, currentListenWord.translation];
@@ -2200,4 +2200,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-
