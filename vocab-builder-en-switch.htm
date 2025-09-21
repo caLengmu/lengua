@@ -868,12 +868,12 @@ background-color: var(--dark);
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (3.0 iOS)</h1>
+        <h1>🎯 Vocabulary Builder (4.0)</h1>
         <div class="tts-system-selector">
             <label for="tts-system">System of my phone: </label>
             <select id="tts-system">
-                <option value="android">Android</option>
-                <option value="ios" selected>iOS</option>
+                <option value="android" selected>Android</option>
+                <option value="ios">iOS</option>
             </select>
         </div>
     </header>
@@ -1127,6 +1127,7 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
 
         // Variables
+let isSpeaking = false;
         let vocabularyData = [];
         let currentQuizWords = [];
         let currentWordIndex = -1;
@@ -1149,7 +1150,7 @@ let isAnswered = false;
         // Global variables for TTS voice management
         let voices = [];
         let voicesLoaded = false;
-        let currentTTSSystem = 'ios'; // Default to iOS
+        let currentTTSSystem = 'android'; // Default to Android
 
         // Load voices function - improved for iOS
         function loadVoices() {
@@ -1242,88 +1243,101 @@ let isAnswered = false;
         }
 
         // Improved speak function with system-specific optimizations
-        function speak(text) {
-            if (!('speechSynthesis' in window)) {
-                console.warn('Speech synthesis not supported');
-                return;
-            }
+function speak(text) {
+    console.log('Speak function called with:', text, 'System:', currentTTSSystem);
+    
+    if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported');
+        return;
+    }
 
-            // Stop any ongoing speech
-            speechSynthesis.cancel();
-            
-            // Clean the text
-            const cleanText = text.replace(/[()[\]*]/g, '').trim();
-            
-            if (!cleanText) return;
+    // Clean the text
+    const cleanText = text.replace(/[()[\]*]/g, '').trim();
+    
+    if (!cleanText) return;
 
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            
-            // Set the voice if available
-            const preferredVoice = getEnglishVoice();
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            }
-            
-            // System-specific settings
-            utterance.lang = 'en-US';
-            utterance.rate = speechRate;
-            utterance.pitch = 1.0;
-            utterance.volume = 1.0;
-            
-            if (currentTTSSystem === 'ios') {
-                // iOS-specific optimizations
-                utterance.rate = Math.max(0.5, speechRate * 0.9); // Slightly slower for iOS
-            } else {
-                // Android-specific optimizations
-                utterance.rate = speechRate;
-                utterance.pitch = 0.95; // Slightly lower pitch for Android
-            }
-            
-            // Error handling
-            utterance.onerror = function(event) {
-                console.error('Speech synthesis error:', event.error);
-                
-                // Retry with default voice if there's an error
-                if (event.error === 'voice-unavailable' && preferredVoice) {
-                    const retryUtterance = new SpeechSynthesisUtterance(cleanText);
-                    retryUtterance.lang = 'en-US';
-                    retryUtterance.rate = speechRate;
-                    speechSynthesis.speak(retryUtterance);
-                }
-            };
-            
-            utterance.onstart = function() {
-                console.log(`Speech started using ${currentTTSSystem} optimization`);
-            };
-            
-            utterance.onend = function() {
-                console.log('Speech ended');
-            };
-
-            // Speak with system-specific handling
-            try {
-                if (currentTTSSystem === 'ios') {
-                    // For iOS, ensure immediate execution after user interaction
-                    speechSynthesis.speak(utterance);
-                } else {
-                    // For Android, can be more direct
-                    speechSynthesis.speak(utterance);
-                }
-            } catch (error) {
-                console.error('Failed to start speech synthesis:', error);
-            }
+    // CRITICAL: Stop all speech and wait before starting new speech
+    speechSynthesis.cancel();
+    
+    // Wait a moment for the cancellation to complete
+    setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        
+        // Set the voice if available
+        const preferredVoice = getEnglishVoice();
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
         }
+        
+        // System-specific settings
+        utterance.lang = 'en-US';
+        utterance.rate = speechRate;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        if (currentTTSSystem === 'ios') {
+            utterance.rate = Math.max(0.5, speechRate * 0.9);
+        } else {
+            utterance.rate = speechRate;
+            utterance.pitch = 0.95;
+        }
+        
+        utterance.onstart = function() {
+            console.log('Speech started successfully');
+        };
+        
+        // Add this to the utterance.onend function inside speak():
+utterance.onend = function() {
+    console.log('Speech ended normally');
+    isSpeaking = false; // Add this line
+};
+
+// And add this to the utterance.onerror function:
+utterance.onerror = function(event) {
+    console.error('Speech error:', event.error);
+    isSpeaking = false; // Add this line
+    
+    // Rest of error handling...
+};
+
+        try {
+            speechSynthesis.speak(utterance);
+        } catch (error) {
+            console.error('Failed to start speech synthesis:', error);
+        }
+    }, 100); // 100ms delay to ensure cancellation completes
+} 
+
 
         // Initialize voices when page loads
-        async function initializeTTS() {
-            await loadVoices();
-            
-            // Listen for voices changed event (important for iOS)
-            speechSynthesis.addEventListener('voiceschanged', () => {
-                console.log('Voices changed event fired');
-                loadVoices();
-            });
-        }
+        // Replace the initializeTTS function with this:
+async function initializeTTS() {
+    console.log('Initializing TTS...');
+    
+    // Force a speech synthesis call to wake up the system
+    const testUtterance = new SpeechSynthesisUtterance('');
+    testUtterance.volume = 0;
+    speechSynthesis.speak(testUtterance);
+    
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    await loadVoices();
+    
+    // Double-check voice loading
+    if (voices.length === 0) {
+        console.log('No voices found, trying again...');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await loadVoices();
+    }
+    
+    console.log('TTS initialization complete. Voices:', voices.length);
+    
+    // Listen for voices changed event
+    speechSynthesis.addEventListener('voiceschanged', () => {
+        console.log('Voices changed event fired');
+        loadVoices();
+    });
+}
 
         // Initialize Speech Recognition
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -1904,10 +1918,27 @@ englishCloseBtn.addEventListener('click', () => {
     englishToChineseModal.style.display = 'none';
 });
 
-englishWordSpeaker.addEventListener('click', () => {
+// Replace the existing englishWordSpeaker event listener with this:
+englishWordSpeaker.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isSpeaking) {
+        console.log('Already speaking, ignoring click');
+        return;
+    }
+    
     if (currentEnglishWord) {
+        isSpeaking = true;
         const cleanWord = currentEnglishWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+        console.log('About to speak:', cleanWord);
+        
         speak(cleanWord);
+        
+        // Reset the flag after a reasonable time
+        setTimeout(() => {
+            isSpeaking = false;
+        }, 3000);
     }
 });
 
@@ -2062,10 +2093,25 @@ englishWordSpeaker.addEventListener('click', () => {
         });
 
 // Start English to Chinese Quiz
+// Replace the existing startEnglishToChineseQuiz function with this:
 function startEnglishToChineseQuiz() {
-    resetEnglishToChineseQuiz();
-    englishToChineseModal.style.display = 'flex';
-    nextEnglishQuestion();
+    console.log('Starting English to Chinese quiz');
+    console.log('Voices loaded:', voicesLoaded, 'Voice count:', voices.length);
+    
+    // Force voice loading if not ready
+    if (!voicesLoaded || voices.length === 0) {
+        console.log('Loading voices before starting quiz...');
+        loadVoices().then(() => {
+            console.log('Voices loaded, starting quiz');
+            resetEnglishToChineseQuiz();
+            englishToChineseModal.style.display = 'flex';
+            nextEnglishQuestion();
+        });
+    } else {
+        resetEnglishToChineseQuiz();
+        englishToChineseModal.style.display = 'flex';
+        nextEnglishQuestion();
+    }
 }
 
 // Reset English to Chinese quiz state
