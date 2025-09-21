@@ -983,7 +983,7 @@ background-color: var(--dark);
 <!-- Listen and Choose Modal -->
 <div id="listen-choose-modal" class="modal">
     <div class="modal-content">
-        <h3>🎧 Listen and Choose</h3>
+        <h2>🎧 Listen and Choose</h2>
         
         <!-- Answer Display Section -->
         <div class="listen-answer-section">
@@ -1647,12 +1647,12 @@ function updateSelectAllCheckbox() {
 function startListenAndChooseQuiz() {
     currentListenQuizWords = vocabularyData.filter(item => item.selected);
     if (currentListenQuizWords.length === 0) {
-        alert('Please select at least one vocabulary word to start the quiz. (請選擇至少一個詞彙以進行此測驗)');
+        alert('Please select at least 8 vocabulary words for this quiz. (請選擇至少8個單字以進行此測驗)');
         return;
     }
     
-    if (currentListenQuizWords.length < 10) {
-        alert('Please select at least 10 vocabulary words for this quiz. (請選擇至少10個詞彙以進行此測驗)');
+    if (currentListenQuizWords.length < 8) {
+        alert('Please select at least 8 vocabulary words for this quiz. (請選擇至少8個單字以進行此測驗)');
         return;
     }
     
@@ -1703,7 +1703,7 @@ function generateChoices() {
     
     // Randomly select 9 other translations
     const shuffled = otherTranslations.sort(() => 0.5 - Math.random());
-    const selectedChoices = shuffled.slice(0, 9);
+    const selectedChoices = shuffled.slice(0, 7);
     
     // Add the correct answer
     const allChoices = [...selectedChoices, currentListenWord.translation];
@@ -1800,7 +1800,7 @@ listenCloseBtn.addEventListener('click', () => {
 englishToChineseBtn.addEventListener('click', () => {
     currentEnglishQuizWords = vocabularyData.filter(item => item.selected);
     if (currentEnglishQuizWords.length === 0) {
-        alert('Please select at least one vocabulary word to start the quiz.');
+        alert('Please select at least one vocabulary word to start the quiz. (請選擇至少一個單字以進行測驗)');
         return;
     }
     startEnglishToChineseQuiz();
@@ -1825,7 +1825,7 @@ englishWordSpeaker.addEventListener('click', () => {
             currentQuizWords = vocabularyData.filter(item => item.selected);
             
             if (currentQuizWords.length === 0) {
-                alert('Please select at least one vocabulary word to start the quiz.');
+                alert('Please select at least one vocabulary word to start the quiz. (請選擇至少一個單字以進行測驗)');
                 return;
             }
             
@@ -2200,6 +2200,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-
 
 
