@@ -1913,7 +1913,7 @@ englishWordSpeaker.addEventListener('click', () => {
             const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
             const firstLetter = correctAnswer.charAt(0).toUpperCase();
             
-            hintTextEl.textContent = `The answer starts with the letter ${firstLetter}.`;
+            hintTextEl.textContent = `It starts with the letter ${firstLetter}.`;
         }
 
         // Show answer
@@ -2200,5 +2200,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+
 
 
