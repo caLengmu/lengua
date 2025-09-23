@@ -134,8 +134,60 @@
             font-size: 18px;
         }
 
-        
+        /* Quiz Mode Selector Styles */
+        .quiz-mode-selector {
+            background-color: white;
+            border: 2px solid var(--mid);
+            border-radius: 10px;
+            padding: 3px;
+            margin: 3px 0;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+            
+        .mode-options {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
 
+        .mode-option {
+    display: flex;
+    align-items: center; /* 改為水平對齊 */
+    cursor: pointer;
+    padding: 10px 15px; /* 調整 padding */
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+}
+
+        .mode-option:hover {
+            background-color: rgba(93, 156, 236, 0.1);
+            border-color: var(--accent1);
+        }
+
+        .mode-option input[type="radio"] {
+    margin: 0 8px 0 0; /* 改為右邊距 */
+    transform: scale(1.2);
+}
+
+        .mode-option .option-text {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--dark);
+                    }
+
+                .mode-option input[type="radio"]:checked + .option-text {
+            color: var(--primary);
+        }
+
+        /* Responsive adjustments for quiz mode selector */
+       @media (max-width: 600px) {
+    .mode-option {
+        padding: 10px;
+    }
+}
 
       table {
     width: 100%;
@@ -868,9 +920,9 @@ background-color: var(--dark);
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (4.0)</h1>
+        <h1>🎯 Vocabulary Builder (3.6)</h1>
         <div class="tts-system-selector">
-            <label for="tts-system">System of my phone: </label>
+            <label for="tts-system">System: </label>
             <select id="tts-system">
                 <option value="android" selected>Android</option>
                 <option value="ios">iOS</option>
@@ -882,12 +934,26 @@ background-color: var(--dark);
 
     <div class="controls">
     <div class="left-controls">
-        <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+        <button class="text-import-btn" id="text-import-btn">📝 Load Vocab</button>
     </div>
     <button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👀 看英想中</button>
     <button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聽英選中</button>
     <button class="start-btn" id="start-btn" disabled>🎤 看中唸英</button>
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+</div>
+
+    <!-- Quiz Mode Selector -->
+<div class="quiz-mode-selector">
+    <div class="mode-options">
+        <label class="mode-option">
+            <input type="radio" name="quiz-mode" value="sequential" checked>
+            <span class="option-text">➡️ Sequential (按順序)</span>
+        </label>
+        <label class="mode-option">
+            <input type="radio" name="quiz-mode" value="random">
+            <span class="option-text">🔀 Random (隨機)</span>
+        </label>
+    </div>
 </div>
 
     <table id="vocabulary-table">
@@ -898,7 +964,7 @@ background-color: var(--dark);
                         <label for="tts-speed">Vocabulary</label>
                         <select id="tts-speed">
                             <option value="0.6">0.6x</option>
-                            <option value="0.8">0.8x</option>
+                            <option value="0.8" selected>0.8x</option>
                             <option value="1">1x</option>                                                       
                         </select>
                     </div>
@@ -921,7 +987,7 @@ background-color: var(--dark);
     <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
     <div class="modal-content">
-        <h2>Import Text</h2>
+        <h2>Load Vocabulary</h2>
         
         <!-- Button Sets -->
         <div class="preset-buttons">
@@ -966,7 +1032,7 @@ background-color: var(--dark);
         
 <!-- Action Buttons -->
 <div class="button-group">
-    <button id="text-import-submit-btn" class="submit-btn">Import</button>
+    <button id="text-import-submit-btn" class="submit-btn">Load</button>
     <button id="text-import-copy-btn" class="copy-btn">Copy</button>
     <button id="text-import-clear-btn" class="hint-btn">Clear</button>
     <button id="text-import-close-btn" class="close-btn">Close</button>
@@ -982,12 +1048,10 @@ background-color: var(--dark);
             <div class="ai-support-links">
 <a href="https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/" class="ai-support-link" target="_blank">🔍 劍橋中英雙解字典</a>
                                               <a href="https://chatgpt.com/share/67fb4661-ab40-800a-91e1-84af81f0382b" class="ai-support-link" target="_blank">🌟 生成例句+中譯</a>
- <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>
-                                <a href="https://tobespecified" class="ai-support-link" target="_blank">☕ (未完成)生成故事 / 短文</a>
+ <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>                              
 <a href="https://chatgpt.com/share/67f896d4-e3a4-800a-9169-b0f385820e3e" class="ai-support-link" target="_blank">[Quiz] 填空題 ✏️</a>
 <a href="https://chatgpt.com/share/67f7329b-e008-800a-9c06-df50ec1bb977" class="ai-support-link" target="_blank">[Quiz] 中譯英 (入門) 😃 </a>
 <a href="https://chatgpt.com/share/67f619dd-d668-800a-af6e-696897e751e7" class="ai-support-link" target="_blank">[Quiz] 中譯英 (學測難度) 😖</a>
-<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗 ⏳</a>
             </div>
             <div class="button-group">
                 <button id="ai-support-close-btn" class="close-btn">Close</button>
@@ -1134,6 +1198,7 @@ let isSpeaking = false;
         let currentWord = null;
         let recognition = null;
         let speechRate = 0.6;
+        let quizMode = 'sequential'; // New variable to track quiz mode
 
 let currentEnglishQuizWords = [];
 let currentEnglishWordIndex = -1;
@@ -1381,6 +1446,14 @@ async function initializeTTS() {
             });
         });
 
+        // Quiz Mode change handler
+        document.addEventListener('change', (e) => {
+            if (e.target.name === 'quiz-mode') {
+                quizMode = e.target.value;
+                console.log(`Quiz mode changed to: ${quizMode}`);
+            }
+        });
+
 // AI Support button click handler
         aiSupportBtn.addEventListener('click', () => {
             aiSupportModal.style.display = 'flex';
@@ -1404,9 +1477,7 @@ async function initializeTTS() {
 // Preset vocabulary data
 const presetVocabulary = {
 
-    b3l1: `
-
-`,
+    b3l1: ` `, // Empty - will show "no content" message
 
     b3l2: `
 ◎Vocabulary—First Half (#1-#11)
@@ -1428,70 +1499,210 @@ feedback (n)	=回饋、意見
 
 `,
 
-    b3l3: `
+    b3l3: ` `, // Empty - will show "no content" message
 
+    maga1: ` `, // Empty - will show "no content" message
 
-`,
+    maga2: ` `, // Empty - will show "no content" message
 
-    maga1: `
+    maga3: ` `, // Empty - will show "no content" message
 
-`,
+    maga4: ` `, // Empty - will show "no content" message
 
-maga2: `
+    maga5: ` `, // Empty - will show "no content" message
 
+    maga6: ` `, // Empty - will show "no content" message
 
-`,
+    maga7: ` `, // Empty - will show "no content" message
 
-    maga3: `
+    coreP2U1: ` `, // Empty - will show "no content" message
 
-`,
+    coreP2U2: ` `, // Empty - will show "no content" message
 
-maga4: `
+    coreP2U3: `◎Vocabulary #1-#10
+invention (n) = 發明
+brilliant (adj) = 傑出的；聰穎的
+complete (adj) = 完整的；完全的
+complete (v) = 完成
+accident (n) = 意外；事故
+material (n) = 材料；物質
+explode (v) = 爆炸
+control (v) = 控制
+control (n) = 控制；管理
+in a… manner = 以…方式
+◎Example sentences #1-#10
+The telephone was an important invention. = 電話是一項重要的發明。
+She had a brilliant idea. = 她有一個聰明的點子。
+The puzzle is complete. = 這個拼圖已經完整了。
+I will complete my homework tonight. = 我今晚會完成作業。
+He had an accident on his way to school. = 他上學的路上發生了意外。
+We need more material for the project. = 我們的專案需要更多材料。
+The fireworks will explode at midnight. = 煙火會在午夜爆炸。
+I need to control my anger. = 我需要控制我的憤怒。
+The control of the machine is easy. = 操作這台機器很簡單。
+She spoke in a polite manner. = 她以禮貌的方式說話。
+◎Vocabulary #11-#20
+manners (n) = 禮貌；舉止
+amateur (adj) = 業餘的
+amateur (n) = 業餘愛好者
+burst (v) = 破裂；爆炸
+burst into laughter = 突然大笑
+burst into tears = 突然大哭
+flame (n) = 火焰
+prosper (v) = 繁榮；興旺
+universally (adv) = 普遍地；全體地
+ray (n) = 光線
+◎Example sentences #11-#20
+Good manners are important at the table. = 餐桌上的禮貌很重要。
+She is an amateur painter. = 她是一位業餘畫家。
+He is an amateur at tennis. = 他是一個網球業餘愛好者。
+The balloon will burst soon. = 氣球很快就會爆裂。
+The children burst into laughter. = 孩子們突然大笑起來。
+She burst into tears after hearing the news. = 聽到這個消息後，她突然大哭。
+The candle has a small flame. = 蠟燭有一個小火焰。
+The business began to prosper. = 生意開始繁榮。
+This idea is universally accepted. = 這個想法被普遍接受。
+A ray of light shone through the window. = 一道光線透過窗戶照進來。
+◎Vocabulary #21-#31
+a ray of hope = 一線希望
+object (n) = 物體；目標
+to object to… = 反對…
+contribution (n) = 貢獻；捐獻
+medal (n) = 獎牌
+earnings (n) = 收入；收益
+deserted (adj) = 荒廢的；空無一人的
+a culture of cells = 細胞培養
+apparently (adv) = 顯然地；表面上
+modestly (adv) = 謙虛地；適度地
+clumsy (adj) = 笨拙的；不靈巧的
 
+◎Example sentences #21-#31
+There is a ray of hope for the sick child. = 對那個生病的孩子有一線希望。
+The object on the table is a vase. = 桌上的物體是一個花瓶。
+I object to this plan. = 我反對這個計畫。
+Her contribution helped the team succeed. = 她的貢獻幫助團隊成功。
+He won a gold medal. = 他贏得了一枚金牌。
+His earnings are higher this year. = 他的收入今年更高。
+The village was deserted after the storm. = 暴風雨後，村莊變得荒廢。
+The scientists grew a culture of cells. = 科學家培養了一個細胞培養物。
+Apparently, she is very busy today. = 顯然，她今天非常忙。
+He modestly accepted the praise. = 他謙虛地接受了讚美。
+He is clumsy and often drops things. = 他很笨拙，經常掉東西。
+`, // Empty - will show "no content" message
 
-`,
-
-
-    maga5: `
-
-`,
-
- maga6: `
-
-
-`,
-
-    maga7: `
-
-
-`,
-
-    coreP2U1: `
-核心單P2 U1
-`,
-
-    coreP2U2: `
-`,
-
-    coreP2U3: `
-`,
-
-    other1: `
-
-
-`,
-other2: `
-
-`
+    other1: ` `, // Empty - will show "no content" message
+    
+    other2: ` ` // Empty - will show "no content" message
 
 };
 
-// Add event listeners to all preset buttons
+// Function to check if content is empty
+function isContentEmpty(content) {
+    // Remove all whitespace, newlines, and common separators
+    const cleaned = content.replace(/\s+/g, '').replace(/[◎=]/g, '');
+    return cleaned.length === 0;
+}
+
+// Function to show "no content" message
+function showNoContentMessage() {
+    // Create a temporary overlay message
+    const messageOverlay = document.createElement('div');
+    messageOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+    
+    const messageBox = document.createElement('div');
+    messageBox.style.cssText = `
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        margin: 0 20px;
+    `;
+    
+    messageBox.innerHTML = `
+        <h3 style="color: var(--primary); margin-bottom: 15px;">⚠️ No Content Available</h3>
+        <p style="font-size: 18px; margin-bottom: 10px;">Please wait for updates.</p>
+        <p style="font-size: 16px; color: var(--mid); margin-bottom: 20px;">目前暫無內容，請等待更新</p>
+        <button id="close-no-content-msg" style="
+            background-color: var(--accent1);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        ">OK</button>
+    `;
+    
+    messageOverlay.appendChild(messageBox);
+    document.body.appendChild(messageOverlay);
+    
+    // Close message when OK is clicked
+    document.getElementById('close-no-content-msg').addEventListener('click', () => {
+        document.body.removeChild(messageOverlay);
+    });
+    
+    // Close message when clicking outside
+    messageOverlay.addEventListener('click', (e) => {
+        if (e.target === messageOverlay) {
+            document.body.removeChild(messageOverlay);
+        }
+    });
+}
+
+// Updated preset button event listeners with auto-import and close functionality
 document.querySelectorAll('.preset-btn').forEach(button => {
     button.addEventListener('click', () => {
         const presetKey = button.dataset.preset;
+        
         if (presetVocabulary[presetKey]) {
-            textImportContent.value = presetVocabulary[presetKey];
+            const content = presetVocabulary[presetKey];
+            
+            // Check if content is empty
+            if (isContentEmpty(content)) {
+                showNoContentMessage();
+                return;
+            }
+            
+            // Content exists, so import it and close modal
+            processTextImport(content);
+            textImportModal.style.display = 'none';
+            
+            // Optional: Show a brief success message
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: var(--accent2);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            successMessage.textContent = `✅ ${button.textContent} loaded successfully!`;
+            document.body.appendChild(successMessage);
+            
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                if (document.body.contains(successMessage)) {
+                    document.body.removeChild(successMessage);
+                }
+            }, 3000);
         }
     });
 });
@@ -1782,15 +1993,20 @@ function nextListenQuestion() {
     listenAnswerDisplay.textContent = 'Click the speaker';
     timerFeedback.textContent = '';
     
-    // Select random word
-    const previousIndex = currentListenWordIndex;
-    
-    if (currentListenQuizWords.length === 1) {
-        currentListenWordIndex = 0;
+    if (quizMode === 'sequential') {
+        // Sequential mode: go through words in order
+        currentListenWordIndex = (currentListenWordIndex + 1) % currentListenQuizWords.length;
     } else {
-        do {
-            currentListenWordIndex = Math.floor(Math.random() * currentListenQuizWords.length);
-        } while (currentListenWordIndex === previousIndex && currentListenQuizWords.length > 1);
+        // Random mode: select random word
+        const previousIndex = currentListenWordIndex;
+        
+        if (currentListenQuizWords.length === 1) {
+            currentListenWordIndex = 0;
+        } else {
+            do {
+                currentListenWordIndex = Math.floor(Math.random() * currentListenQuizWords.length);
+            } while (currentListenWordIndex === previousIndex && currentListenQuizWords.length > 1);
+        }
     }
     
     currentListenWord = currentListenQuizWords[currentListenWordIndex];
@@ -1963,7 +2179,7 @@ englishWordSpeaker.addEventListener('click', (e) => {
 
         // Reset quiz state
         function resetQuiz() {
-            currentWordIndex = -1;
+            currentWordIndex = -1; // Always start from -1 so first question becomes index 0
             currentWord = null;
             answerInput.value = '';
             feedbackEl.textContent = '';
@@ -1981,17 +2197,22 @@ englishWordSpeaker.addEventListener('click', (e) => {
             hintTextEl.textContent = '';
             revealAnswerEl.textContent = '';
             
-            // Randomly select next word
-            const previousIndex = currentWordIndex;
-            
-            // If only one word, just use it
-            if (currentQuizWords.length === 1) {
-                currentWordIndex = 0;
+            if (quizMode === 'sequential') {
+                // Sequential mode: go through words in order
+                currentWordIndex = (currentWordIndex + 1) % currentQuizWords.length;
             } else {
-                // Make sure we don't get the same word twice in a row
-                do {
-                    currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
-                } while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+                // Random mode: randomly select next word
+                const previousIndex = currentWordIndex;
+                
+                // If only one word, just use it
+                if (currentQuizWords.length === 1) {
+                    currentWordIndex = 0;
+                } else {
+                    // Make sure we don't get the same word twice in a row
+                    do {
+                        currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+                    } while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+                }
             }
             
             currentWord = currentQuizWords[currentWordIndex];
@@ -2130,15 +2351,20 @@ function nextEnglishQuestion() {
     checkQuestion.style.display = 'none';
     checkAnswerBtn.style.display = 'block';
     
-    // Randomly select next word
-    const previousIndex = currentEnglishWordIndex;
-    
-    if (currentEnglishQuizWords.length === 1) {
-        currentEnglishWordIndex = 0;
+    if (quizMode === 'sequential') {
+        // Sequential mode: go through words in order
+        currentEnglishWordIndex = (currentEnglishWordIndex + 1) % currentEnglishQuizWords.length;
     } else {
-        do {
-            currentEnglishWordIndex = Math.floor(Math.random() * currentEnglishQuizWords.length);
-        } while (currentEnglishWordIndex === previousIndex && currentEnglishQuizWords.length > 1);
+        // Random mode: randomly select next word
+        const previousIndex = currentEnglishWordIndex;
+        
+        if (currentEnglishQuizWords.length === 1) {
+            currentEnglishWordIndex = 0;
+        } else {
+            do {
+                currentEnglishWordIndex = Math.floor(Math.random() * currentEnglishQuizWords.length);
+            } while (currentEnglishWordIndex === previousIndex && currentEnglishQuizWords.length > 1);
+        }
     }
     
     currentEnglishWord = currentEnglishQuizWords[currentEnglishWordIndex];
@@ -2226,9 +2452,9 @@ document.addEventListener('click', function initOnFirstClick() {
         
 <p class="english-text">1.每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</p>
        
-        <p class="chinese-text">2.若手機上的🔊無法運作，表示「文字轉語音」功能經過更新，重開機即可解決。</p>
+        <p class="chinese-text">2.iPhone及iPad使用者需將system(系統)切換成iOS，🔊才能正常運作。</p>
 
-        <p class="chinese-text">3.本網頁現已優化iOS系統相容性，iPhone用戶的🔊功能應正常運作。</p>
+        <p class="chinese-text">3.手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
 
       </div>
     </div>
@@ -2338,3 +2564,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 
+</body>
+</html>
