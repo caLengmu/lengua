@@ -31,6 +31,38 @@
             margin-bottom: 30px;
         }
 
+        .tts-system-selector {
+            margin-top: 15px;
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .tts-system-selector label {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .tts-system-selector select {
+            padding: 8px 12px;
+            border: 2px solid var(--mid);
+            border-radius: 6px;
+            background-color: white;
+            color: var(--dark);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .tts-system-selector select:hover {
+            border-color: var(--accent1);
+        }
+
+        .tts-system-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         h1 {
             color: var(--primary);
             font-size: 2.5rem;
@@ -81,12 +113,18 @@
     font-size: 20px;
 }
 
+        .listen-choose-btn {
+            background-color: var(--accent2);
+            color: white;
+            padding: 16px 25px;
+            font-size: 20px;
+        }
 
         .start-btn {
             background-color: var(--primary);
             color: white;
             padding: 16px 25px;
-            font-size: 25px;
+            font-size: 20px;
         }
 
 .ai-support-btn {
@@ -96,8 +134,60 @@
             font-size: 18px;
         }
 
-        
+        /* Quiz Mode Selector Styles */
+        .quiz-mode-selector {
+            background-color: white;
+            border: 2px solid var(--mid);
+            border-radius: 10px;
+            padding: 3px;
+            margin: 3px 0;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+            
+        .mode-options {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
 
+        .mode-option {
+    display: flex;
+    align-items: center; /* 改為水平對齊 */
+    cursor: pointer;
+    padding: 10px 15px; /* 調整 padding */
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+}
+
+        .mode-option:hover {
+            background-color: rgba(93, 156, 236, 0.1);
+            border-color: var(--accent1);
+        }
+
+        .mode-option input[type="radio"] {
+    margin: 0 8px 0 0; /* 改為右邊距 */
+    transform: scale(1.2);
+}
+
+        .mode-option .option-text {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--dark);
+                    }
+
+                .mode-option input[type="radio"]:checked + .option-text {
+            color: var(--primary);
+        }
+
+        /* Responsive adjustments for quiz mode selector */
+       @media (max-width: 600px) {
+    .mode-option {
+        padding: 10px;
+    }
+}
 
       table {
     width: 100%;
@@ -437,6 +527,135 @@ background-color: var(--dark);
             box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
         }
 
+        /* Listen and Choose Modal Styles */
+        #listen-choose-modal .modal-content {
+            max-width: 100%;
+            width: 95%;
+            max-height: 95vh;
+            padding: 15px;
+        }
+
+        .listen-answer-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .listen-answer-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            min-height: 30px;
+            padding: 10px 15px;
+            border: 2px solid var(--mid);
+            border-radius: 8px;
+            background-color: white;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .listen-speaker {
+            cursor: pointer;
+            color: var(--secondary);
+            font-size: 28px;
+            padding: 8px;
+            border-radius: 50%;
+            background-color: rgba(248, 181, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .listen-speaker:hover {
+            background-color: rgba(248, 181, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .timer-feedback-section {
+            margin-bottom: 25px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-feedback {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+            max-width: 100%;
+        }
+
+        .choice-button {
+            padding: 15px 10px;
+            border: 2px solid var(--mid);
+            border-radius: 8px;
+            background-color: white;
+            color: var(--dark);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .choice-button:hover {
+            background-color: var(--accent1);
+            color: white;
+            border-color: var(--accent1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .choice-button.correct {
+            background-color: var(--accent2);
+            color: white;
+            border-color: var(--accent2);
+        }
+
+        .choice-button.incorrect {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .choice-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .listen-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .listen-next-btn {
+            background-color: var(--accent2);
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+        }
+
+        .listen-close-btn {
+            background-color: var(--mid);
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 600px) {
             .button-group {
@@ -467,6 +686,27 @@ background-color: var(--dark);
                 width: 100%;
             }
 
+            .choices-grid {
+                gap: 10px;
+            }
+
+            .choice-button {
+                padding: 12px 8px;
+                font-size: 14px;
+                min-height: 50px;
+            }
+
+            .listen-answer-display {
+                font-size: 20px;
+            }
+
+            .listen-speaker {
+                font-size: 24px;
+            }
+
+            .timer-feedback {
+                font-size: 18px;
+            }
 
 .date-info {
     position: absolute;
@@ -529,6 +769,11 @@ background-color: var(--dark);
 
             .ai-support-links {
                 grid-template-columns: 1fr;
+            }
+
+            #listen-choose-modal .modal-content {
+                width: 98%;
+                padding: 10px;
             }
         }
 
@@ -675,21 +920,40 @@ background-color: var(--dark);
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (2.8)</h1>
+        <h1>🎯 Vocabulary Builder (3.6)</h1>
+        <div class="tts-system-selector">
+            <label for="tts-system">System: </label>
+            <select id="tts-system">
+                <option value="android" selected>Android</option>
+                <option value="ios">iOS</option>
+            </select>
+        </div>
     </header>
 
 </div>
 
     <div class="controls">
     <div class="left-controls">
-        
-
-
-        <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+        <button class="text-import-btn" id="text-import-btn">📝 Load Vocab</button>
     </div>
-<button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👌 英 → 中</button>
-    <button class="start-btn" id="start-btn" disabled>👍 中 → 英</button>
+    <button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👀 看英想中</button>
+    <button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聽英選中</button>
+    <button class="start-btn" id="start-btn" disabled>🎤 看中唸英</button>
     <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+</div>
+
+    <!-- Quiz Mode Selector -->
+<div class="quiz-mode-selector">
+    <div class="mode-options">
+        <label class="mode-option">
+            <input type="radio" name="quiz-mode" value="sequential" checked>
+            <span class="option-text">➡️ Sequential (按順序)</span>
+        </label>
+        <label class="mode-option">
+            <input type="radio" name="quiz-mode" value="random">
+            <span class="option-text">🔀 Random (隨機)</span>
+        </label>
+    </div>
 </div>
 
     <table id="vocabulary-table">
@@ -700,7 +964,7 @@ background-color: var(--dark);
                         <label for="tts-speed">Vocabulary</label>
                         <select id="tts-speed">
                             <option value="0.6">0.6x</option>
-                            <option value="0.8">0.8x</option>
+                            <option value="0.8" selected>0.8x</option>
                             <option value="1">1x</option>                                                       
                         </select>
                     </div>
@@ -723,7 +987,7 @@ background-color: var(--dark);
     <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
     <div class="modal-content">
-        <h2>Import Text</h2>
+        <h2>Load Vocabulary</h2>
         
         <!-- Button Sets -->
         <div class="preset-buttons">
@@ -760,9 +1024,6 @@ background-color: var(--dark);
                 <h3>Other</h3>
                 <button class="preset-btn other-btn" data-preset="other1">other 1</button>
 <button class="preset-btn other-btn" data-preset="other2">other 2</button>
-
-
-
             </div>
         </div>
         
@@ -771,7 +1032,7 @@ background-color: var(--dark);
         
 <!-- Action Buttons -->
 <div class="button-group">
-    <button id="text-import-submit-btn" class="submit-btn">Import</button>
+    <button id="text-import-submit-btn" class="submit-btn">Load</button>
     <button id="text-import-copy-btn" class="copy-btn">Copy</button>
     <button id="text-import-clear-btn" class="hint-btn">Clear</button>
     <button id="text-import-close-btn" class="close-btn">Close</button>
@@ -787,18 +1048,17 @@ background-color: var(--dark);
             <div class="ai-support-links">
 <a href="https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/" class="ai-support-link" target="_blank">🔍 劍橋中英雙解字典</a>
                                               <a href="https://chatgpt.com/share/67fb4661-ab40-800a-91e1-84af81f0382b" class="ai-support-link" target="_blank">🌟 生成例句+中譯</a>
- <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>
-                                <a href="https://tobespecified" class="ai-support-link" target="_blank">☕ (未完成)生成故事 / 短文</a>
+ <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>                              
 <a href="https://chatgpt.com/share/67f896d4-e3a4-800a-9169-b0f385820e3e" class="ai-support-link" target="_blank">[Quiz] 填空題 ✏️</a>
 <a href="https://chatgpt.com/share/67f7329b-e008-800a-9c06-df50ec1bb977" class="ai-support-link" target="_blank">[Quiz] 中譯英 (入門) 😃 </a>
 <a href="https://chatgpt.com/share/67f619dd-d668-800a-af6e-696897e751e7" class="ai-support-link" target="_blank">[Quiz] 中譯英 (學測難度) 😖</a>
-<a href="https://tobespecified" class="ai-support-link" target="_blank">(未完成)[Quiz] 閱讀測驗 ⏳</a>
             </div>
             <div class="button-group">
                 <button id="ai-support-close-btn" class="close-btn">Close</button>
             </div>
         </div>
     </div>
+
 
 <!-- English to Chinese Quiz Modal -->
 <div id="english-to-chinese-modal" class="modal">
@@ -824,6 +1084,35 @@ background-color: var(--dark);
     </div>
 </div>
 
+<!-- Listen and Choose Modal -->
+<div id="listen-choose-modal" class="modal">
+    <div class="modal-content">
+        <h2>🎧 Listen and Choose</h2>
+        
+        <!-- Answer Display Section -->
+        <div class="listen-answer-section">
+            <div id="listen-answer-display" class="listen-answer-display">Click the speaker</div>
+            <div class="listen-speaker" id="listen-speaker" title="Play Audio">🔊</div>
+        </div>
+        
+        <!-- Timer and Feedback Section -->
+        <div class="timer-feedback-section">
+            <div id="timer-feedback" class="timer-feedback"></div>
+        </div>
+        
+        <!-- Choices Grid -->
+        <div id="choices-grid" class="choices-grid">
+            <!-- Choices will be dynamically generated -->
+        </div>
+        
+        <!-- Control Buttons -->
+        <div class="listen-controls">
+            <button id="listen-next-btn" class="listen-next-btn">Next</button>
+            <button id="listen-close-btn" class="listen-close-btn">Close</button>
+        </div>
+    </div>
+</div>
+
     <!-- Quiz Modal -->
     <div id="quiz-modal" class="modal">
         <div class="modal-content">
@@ -833,9 +1122,9 @@ background-color: var(--dark);
             <div id="hint-text" class="hint"></div>
             <div id="reveal-answer" class="reveal-answer"></div>
             <div class="button-group">
-                <button id="submit-btn" class="submit-btn">✔️❌ Submit</button>
+                <button id="submit-btn" class="submit-btn">✅ or ❎</button>
                 <button id="speak-btn" class="speak-btn">🎤 Speak</button>
-                <button id="hint-btn" class="hint-btn">🧩 Hint</button>
+                <button id="hint-btn" class="hint-btn">❓ Hint</button>
                 <button id="answer-btn" class="answer-btn">🔑 Answer</button>
                 <button id="next-btn" class="next-btn">Next</button>
                 <button id="close-btn" class="close-btn">Close</button>
@@ -858,6 +1147,16 @@ const checkAnswerBtn = document.getElementById('check-answer-btn');
 const englishNextBtn = document.getElementById('english-next-btn');
 const englishCloseBtn = document.getElementById('english-close-btn');
 
+// Listen and Choose Modal Elements
+const listenChooseBtn = document.getElementById('listen-choose-btn');
+const listenChooseModal = document.getElementById('listen-choose-modal');
+const listenAnswerDisplay = document.getElementById('listen-answer-display');
+const listenSpeaker = document.getElementById('listen-speaker');
+const timerFeedback = document.getElementById('timer-feedback');
+const choicesGrid = document.getElementById('choices-grid');
+const listenNextBtn = document.getElementById('listen-next-btn');
+const listenCloseBtn = document.getElementById('listen-close-btn');
+
         const textImportBtn = document.getElementById('text-import-btn');
      
         const startBtn = document.getElementById('start-btn');
@@ -878,6 +1177,7 @@ const aiSupportBtn = document.getElementById('ai-support-btn');
         const nextBtn = document.getElementById('next-btn');
         const closeBtn = document.getElementById('close-btn');
         const ttsSpeedSelect = document.getElementById('tts-speed');
+        const ttsSystemSelect = document.getElementById('tts-system');
         
         // Text Import Modal Elements
         const textImportModal = document.getElementById('text-import-modal');
@@ -891,16 +1191,218 @@ const textImportClearBtn = document.getElementById('text-import-clear-btn');
         const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
 
         // Variables
+let isSpeaking = false;
         let vocabularyData = [];
         let currentQuizWords = [];
         let currentWordIndex = -1;
         let currentWord = null;
         let recognition = null;
         let speechRate = 0.6;
+        let quizMode = 'sequential'; // New variable to track quiz mode
 
 let currentEnglishQuizWords = [];
 let currentEnglishWordIndex = -1;
 let currentEnglishWord = null;
+
+// Listen and Choose Quiz Variables
+let currentListenQuizWords = [];
+let currentListenWordIndex = -1;
+let currentListenWord = null;
+let questionStartTime = null;
+let isAnswered = false;
+
+        // ===== iOS-COMPATIBLE TTS FUNCTIONS =====
+        // Global variables for TTS voice management
+        let voices = [];
+        let voicesLoaded = false;
+        let currentTTSSystem = 'android'; // Default to Android
+
+        // Load voices function - improved for iOS
+        function loadVoices() {
+            return new Promise((resolve) => {
+                voices = speechSynthesis.getVoices();
+                
+                if (voices.length > 0) {
+                    voicesLoaded = true;
+                    console.log('Voices loaded:', voices.length);
+                    resolve(voices);
+                } else {
+                    // For iOS Safari, we need to trigger speech synthesis first
+                    const utterance = new SpeechSynthesisUtterance('');
+                    utterance.volume = 0;
+                    speechSynthesis.speak(utterance);
+                    
+                    // Wait a bit and try again
+                    setTimeout(() => {
+                        voices = speechSynthesis.getVoices();
+                        voicesLoaded = true;
+                        console.log('Voices loaded after trigger:', voices.length);
+                        resolve(voices);
+                    }, 100);
+                }
+            });
+        }
+
+        // Get the best English voice based on selected system
+        function getEnglishVoice() {
+            if (!voicesLoaded || voices.length === 0) {
+                return null;
+            }
+            
+            if (currentTTSSystem === 'ios') {
+                // Priority order for iOS voices
+                const iosPreferredVoices = [
+                    'Samantha', // iOS US English female
+                    'Tom', // iOS US English male
+                    'Alex', // macOS/iOS English
+                    'Karen', // iOS Australian English
+                    'Moira' // iOS Irish English
+                ];
+                
+                // Try to find preferred iOS voices first
+                for (const voiceName of iosPreferredVoices) {
+                    const voice = voices.find(v => v.name.includes(voiceName));
+                    if (voice) {
+                        console.log('Using iOS voice:', voice.name);
+                        return voice;
+                    }
+                }
+            } else {
+                // Priority order for Android voices
+                const androidPreferredVoices = [
+                    'Google US English', // Android Google TTS
+                    'English (United States)', // Android system TTS
+                    'en-US-language', // Android variant
+                    'English United States', // Another Android variant
+                    'Chrome OS US English' // Chrome OS
+                ];
+                
+                // Try to find preferred Android voices first
+                for (const voiceName of androidPreferredVoices) {
+                    const voice = voices.find(v => 
+                        v.name.includes(voiceName) || 
+                        v.name.toLowerCase().includes(voiceName.toLowerCase())
+                    );
+                    if (voice) {
+                        console.log('Using Android voice:', voice.name);
+                        return voice;
+                    }
+                }
+            }
+            
+            // Fallback: find any English voice
+            const englishVoice = voices.find(v => 
+                v.lang === 'en-US' || 
+                v.lang.startsWith('en-') ||
+                v.name.toLowerCase().includes('english')
+            );
+            
+            if (englishVoice) {
+                console.log(`Using fallback English voice for ${currentTTSSystem}:`, englishVoice.name);
+                return englishVoice;
+            }
+            
+            // Last resort: use the first available voice
+            console.log(`Using first available voice for ${currentTTSSystem}:`, voices[0]?.name);
+            return voices[0] || null;
+        }
+
+        // Improved speak function with system-specific optimizations
+function speak(text) {
+    console.log('Speak function called with:', text, 'System:', currentTTSSystem);
+    
+    if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported');
+        return;
+    }
+
+    // Clean the text
+    const cleanText = text.replace(/[()[\]*]/g, '').trim();
+    
+    if (!cleanText) return;
+
+    // CRITICAL: Stop all speech and wait before starting new speech
+    speechSynthesis.cancel();
+    
+    // Wait a moment for the cancellation to complete
+    setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        
+        // Set the voice if available
+        const preferredVoice = getEnglishVoice();
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+        
+        // System-specific settings
+        utterance.lang = 'en-US';
+        utterance.rate = speechRate;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        if (currentTTSSystem === 'ios') {
+            utterance.rate = Math.max(0.5, speechRate * 0.9);
+        } else {
+            utterance.rate = speechRate;
+            utterance.pitch = 0.95;
+        }
+        
+        utterance.onstart = function() {
+            console.log('Speech started successfully');
+        };
+        
+        // Add this to the utterance.onend function inside speak():
+utterance.onend = function() {
+    console.log('Speech ended normally');
+    isSpeaking = false; // Add this line
+};
+
+// And add this to the utterance.onerror function:
+utterance.onerror = function(event) {
+    console.error('Speech error:', event.error);
+    isSpeaking = false; // Add this line
+    
+    // Rest of error handling...
+};
+
+        try {
+            speechSynthesis.speak(utterance);
+        } catch (error) {
+            console.error('Failed to start speech synthesis:', error);
+        }
+    }, 100); // 100ms delay to ensure cancellation completes
+} 
+
+
+        // Initialize voices when page loads
+        // Replace the initializeTTS function with this:
+async function initializeTTS() {
+    console.log('Initializing TTS...');
+    
+    // Force a speech synthesis call to wake up the system
+    const testUtterance = new SpeechSynthesisUtterance('');
+    testUtterance.volume = 0;
+    speechSynthesis.speak(testUtterance);
+    
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    await loadVoices();
+    
+    // Double-check voice loading
+    if (voices.length === 0) {
+        console.log('No voices found, trying again...');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await loadVoices();
+    }
+    
+    console.log('TTS initialization complete. Voices:', voices.length);
+    
+    // Listen for voices changed event
+    speechSynthesis.addEventListener('voiceschanged', () => {
+        console.log('Voices changed event fired');
+        loadVoices();
+    });
+}
 
         // Initialize Speech Recognition
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -928,19 +1430,28 @@ let currentEnglishWord = null;
             };
         }
 
-        // Text-to-Speech function
-        function speak(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = speechRate;
-                speechSynthesis.speak(utterance);
-            }
-        }
-
         // TTS Speed change handler
         ttsSpeedSelect.addEventListener('change', (e) => {
             speechRate = parseFloat(e.target.value);
+        });
+
+        // TTS System change handler
+        ttsSystemSelect.addEventListener('change', (e) => {
+            currentTTSSystem = e.target.value;
+            console.log(`Switched to ${currentTTSSystem} TTS system`);
+            
+            // Reload voices for the new system
+            loadVoices().then(() => {
+                console.log(`Voice loading complete for ${currentTTSSystem}`);
+            });
+        });
+
+        // Quiz Mode change handler
+        document.addEventListener('change', (e) => {
+            if (e.target.name === 'quiz-mode') {
+                quizMode = e.target.value;
+                console.log(`Quiz mode changed to: ${quizMode}`);
+            }
         });
 
 // AI Support button click handler
@@ -966,9 +1477,7 @@ let currentEnglishWord = null;
 // Preset vocabulary data
 const presetVocabulary = {
 
-    b3l1: `
-
-`,
+    b3l1: ` `, // Empty - will show "no content" message
 
     b3l2: `
 ◎Vocabulary—First Half (#1-#11)
@@ -977,25 +1486,7 @@ promise (v)	=承諾(v)
 material (n)	=材料、原料
 mention (v)	=提到、說到(v)
 structure (n)	=結構
-capable (adj)	=有能力的
-collaborate (v)	=合作(v) (＝cooperate)
-architect (n)	=建築師
-graduate (v)	=畢業(v)
-construct (v)	=建造(v)
-slight (adj)	=些微的
 
-◎詞類變化補充(First Half)
-innovative (adj)	=創新的
-innovation (n)	=創新(n)
-promise (n)	=承諾(n)
-capability (n)	=能力(＝ ability)
-collaboration (n)	=合作(n) (＝cooperation)
-architecture (n)	=1.建築學 	2.建築風格
-graduation (n)	=畢業(n)
-a college graduate (n)	=一個大學畢業生
-construction (n)	=1.建造 2.建築物
-constructive (adj)	=建設性的、有益的
-slightly (adv)	=稍微地
 
 ◎Vocabulary--Second Half (#12-#20)
 rank (v)	=排名(v)
@@ -1003,99 +1494,294 @@ unique (adj)	=獨特的
 adjust (v)	=調整(v)
 rely (v)	=依靠
 feedback (n)	=回饋、意見
-element (n)	=元素、要素
-stable (adj)	=穩定的
-route (n)	=路線
-explore (v)	=探索(v)
 
-◎詞類變化補充(Second Half)
-ranking (n)	=排名(n)
-adjustment (n)	=調整(n)
-reliable (adj)	=可靠的
-elementary (adj)	=基礎的、初級的
-stability (n)	=穩定、穩固(n)
-exploration (n)	=探索(n)
-
-◎Phrases & Idioms 
-trial and error	=反覆試驗
-in charge (of...)	=負責…(管理、做決定等)
-figure out	=想出(方法等)、弄清楚
-roll up one’s sleeves	=捲起袖子(=開始行動)
-get down to…	=開始認真做…
 
 
 `,
 
     b3l3: `
+◎Paragraph 1
+champion (n) = 1.冠軍  2.捍衛者
+universe (n) = 宇宙
+be known as… = 被稱為…
+create (v) = 創造
+human being (n) = 人類(＝human, humankind)
+clay (n) = 黏土
+living creature (n) = 會動的生物、動物(不包括植物！)
+on earth = 在地球上
+quality (n) = 品質
+speed (n) = 速度
+strength (n) = 力量
+fur (n) = 毛皮
+wing (n) = 翅膀
+by the time… = 到了…的時候
+get to…= 到達…(＝ arrive at…)
+run out of… = [片語] 用完…
+make up for… = [片語] 彌補…
+weak (adj) = 虛弱的
+state (n) = 狀態
+enable (v) = 使能夠
+stand upright = 直立站立
+not only…but also… = 不僅…而且…
+generous (adj) = 慷慨的
+so that… = 以便…
+tool (n) = 工具
+◎Paragraph 2
+conflict (n) = 衝突(n)
+Olympian gods (n) = 奧林匹斯眾神
+distribution (n) = 分配(n)
+make sacrifices = 做出犧牲
+a sacrifice to God = 獻給神的祭品
+trick someone (into doing something) = 欺騙某人（去做某事）
+benefit (n) = 好處
+slaughter (v) = 屠殺
+an offering to God = 給神的供品
+accept someone’s offer = 接受某人的提議
+turn down someone’s offer = 拒絕某人的提議
+special offer = 特別優惠
+a pile of… = 一堆…
+bone (n) = 骨頭
+shiny fat (n) = 發亮的脂肪
+underneath = 在…下面(＝under)
+instead = 反而；作為替代
+end up = [片語] 結果變成…
+nothing but… = 只有…；不過是…
+as a result = [片語] 結果、因此
+from now on = 從現在起
+from that day on = 從那天起
+◎Paragraph 3
+be angry about… = 對…生氣
+starve (v) = 挨餓
+freeze (v) = 凍僵
+be able to… = 有能力(做某事)
+be unable to… = 無法(做某事)
+weapon (n) = 武器
+to live in a cave = 住在洞穴裡
+fall victim to… = [片語] 成為…的受害者
+wild (adj) = 野生的
+beast (n) = 野獸
+miserable (adj) = 悲慘的
+the stalk or stem of a flower (n) = 花梗或莖
+light a match = 點燃火柴
+hollow (adj) = 中空的
+◎Paragraph 4
+be furious about… = 對…極度憤怒(> be angry about…)
+theft (n) = 竊盜
+punish (v) = 懲罰
+banish (v) = 放逐
+be chained to a tree = 被鎖鏈拴在樹上
+feed on… = [片語] 以…為食
+liver (n) = 肝臟
+gnaw (v) = 啃咬
+torture (v) = 折磨
+until the end of time = 直到時間的盡頭
+set the stage for… = [片語] 為…創造條件、促成
+civilization (n) = 文明
 
+ `, 
 
-`,
+    maga1: ` `, // Empty - will show "no content" message
 
-    maga1: `
+    maga2: ` `, // Empty - will show "no content" message
 
-`,
+    maga3: ` `, // Empty - will show "no content" message
 
-maga2: `
+    maga4: ` `, // Empty - will show "no content" message
 
+    maga5: ` `, // Empty - will show "no content" message
 
-`,
+    maga6: ` `, // Empty - will show "no content" message
 
-    maga3: `
+    maga7: ` `, // Empty - will show "no content" message
 
-`,
+    coreP2U1: ` `, // Empty - will show "no content" message
 
-maga4: `
+    coreP2U2: ` `, // Empty - will show "no content" message
 
+    coreP2U3: `◎Vocabulary #1-#10
+invention (n) = 發明
+brilliant (adj) = 傑出的；聰穎的
+complete (adj) = 完整的；完全的
+complete (v) = 完成
+accident (n) = 意外；事故
+material (n) = 材料；物質
+explode (v) = 爆炸
+control (v) = 控制
+control (n) = 控制；管理
+in a… manner = 以…方式
+◎Example sentences #1-#10
+The telephone was an important invention. = 電話是一項重要的發明。
+She had a brilliant idea. = 她有一個聰明的點子。
+The puzzle is complete. = 這個拼圖已經完整了。
+I will complete my homework tonight. = 我今晚會完成作業。
+He had an accident on his way to school. = 他上學的路上發生了意外。
+We need more material for the project. = 我們的專案需要更多材料。
+The fireworks will explode at midnight. = 煙火會在午夜爆炸。
+I need to control my anger. = 我需要控制我的憤怒。
+The control of the machine is easy. = 操作這台機器很簡單。
+She spoke in a polite manner. = 她以禮貌的方式說話。
+◎Vocabulary #11-#20
+manners (n) = 禮貌；舉止
+amateur (adj) = 業餘的
+amateur (n) = 業餘愛好者
+burst (v) = 破裂；爆炸
+burst into laughter = 突然大笑
+burst into tears = 突然大哭
+flame (n) = 火焰
+prosper (v) = 繁榮；興旺
+universally (adv) = 普遍地；全體地
+ray (n) = 光線
+◎Example sentences #11-#20
+Good manners are important at the table. = 餐桌上的禮貌很重要。
+She is an amateur painter. = 她是一位業餘畫家。
+He is an amateur at tennis. = 他是一個網球業餘愛好者。
+The balloon will burst soon. = 氣球很快就會爆裂。
+The children burst into laughter. = 孩子們突然大笑起來。
+She burst into tears after hearing the news. = 聽到這個消息後，她突然大哭。
+The candle has a small flame. = 蠟燭有一個小火焰。
+The business began to prosper. = 生意開始繁榮。
+This idea is universally accepted. = 這個想法被普遍接受。
+A ray of light shone through the window. = 一道光線透過窗戶照進來。
+◎Vocabulary #21-#31
+a ray of hope = 一線希望
+object (n) = 物體；目標
+to object to… = 反對…
+contribution (n) = 貢獻；捐獻
+medal (n) = 獎牌
+earnings (n) = 收入；收益
+deserted (adj) = 荒廢的；空無一人的
+a culture of cells = 細胞培養
+apparently (adv) = 顯然地；表面上
+modestly (adv) = 謙虛地；適度地
+clumsy (adj) = 笨拙的；不靈巧的
 
-`,
+◎Example sentences #21-#31
+There is a ray of hope for the sick child. = 對那個生病的孩子有一線希望。
+The object on the table is a vase. = 桌上的物體是一個花瓶。
+I object to this plan. = 我反對這個計畫。
+Her contribution helped the team succeed. = 她的貢獻幫助團隊成功。
+He won a gold medal. = 他贏得了一枚金牌。
+His earnings are higher this year. = 他的收入今年更高。
+The village was deserted after the storm. = 暴風雨後，村莊變得荒廢。
+The scientists grew a culture of cells. = 科學家培養了一個細胞培養物。
+Apparently, she is very busy today. = 顯然，她今天非常忙。
+He modestly accepted the praise. = 他謙虛地接受了讚美。
+He is clumsy and often drops things. = 他很笨拙，經常掉東西。
+`, // Empty - will show "no content" message
 
-
-    maga5: `
-
-`,
-
- maga6: `
-
-
-`,
-
-    maga7: `
-
-
-`,
-
-    coreP2U1: `
-核心單P2 U1
-`,
-
-    coreP2U2: `
-`,
-
-    coreP2U3: `
-`,
-
-    other1: `
-
-
-`,
-other2: `
-
-`
+    other1: ` `, // Empty - will show "no content" message
+    
+    other2: ` ` // Empty - will show "no content" message
 
 };
 
+// Function to check if content is empty
+function isContentEmpty(content) {
+    // Remove all whitespace, newlines, and common separators
+    const cleaned = content.replace(/\s+/g, '').replace(/[◎=]/g, '');
+    return cleaned.length === 0;
+}
 
+// Function to show "no content" message
+function showNoContentMessage() {
+    // Create a temporary overlay message
+    const messageOverlay = document.createElement('div');
+    messageOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    `;
+    
+    const messageBox = document.createElement('div');
+    messageBox.style.cssText = `
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        margin: 0 20px;
+    `;
+    
+    messageBox.innerHTML = `
+        <h3 style="color: var(--primary); margin-bottom: 15px;">⚠️ No Content Available</h3>
+        <p style="font-size: 18px; margin-bottom: 10px;">Please wait for updates.</p>
+        <p style="font-size: 16px; color: var(--mid); margin-bottom: 20px;">目前暫無內容，請等待更新</p>
+        <button id="close-no-content-msg" style="
+            background-color: var(--accent1);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        ">OK</button>
+    `;
+    
+    messageOverlay.appendChild(messageBox);
+    document.body.appendChild(messageOverlay);
+    
+    // Close message when OK is clicked
+    document.getElementById('close-no-content-msg').addEventListener('click', () => {
+        document.body.removeChild(messageOverlay);
+    });
+    
+    // Close message when clicking outside
+    messageOverlay.addEventListener('click', (e) => {
+        if (e.target === messageOverlay) {
+            document.body.removeChild(messageOverlay);
+        }
+    });
+}
 
-
-
-
-
-// Add event listeners to all preset buttons
+// Updated preset button event listeners with auto-import and close functionality
 document.querySelectorAll('.preset-btn').forEach(button => {
     button.addEventListener('click', () => {
         const presetKey = button.dataset.preset;
+        
         if (presetVocabulary[presetKey]) {
-            textImportContent.value = presetVocabulary[presetKey];
+            const content = presetVocabulary[presetKey];
+            
+            // Check if content is empty
+            if (isContentEmpty(content)) {
+                showNoContentMessage();
+                return;
+            }
+            
+            // Content exists, so import it and close modal
+            processTextImport(content);
+            textImportModal.style.display = 'none';
+            
+            // Optional: Show a brief success message
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: var(--accent2);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            successMessage.textContent = `✅ ${button.textContent} loaded successfully!`;
+            document.body.appendChild(successMessage);
+            
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                if (document.body.contains(successMessage)) {
+                    document.body.removeChild(successMessage);
+                }
+            }, 3000);
         }
     });
 });
@@ -1153,7 +1839,8 @@ function processTextImport(text) {
     renderVocabularyTable();
     if (vocabularyData.length > 0) {
         startBtn.disabled = false;
-englishToChineseBtn.disabled = false;
+        englishToChineseBtn.disabled = false;
+        listenChooseBtn.disabled = false;
     }
 }
 
@@ -1289,7 +1976,7 @@ textImportCopyBtn.addEventListener('click', () => {
         });
     });
     
-    // Add event listeners to speaker icons
+    // Add event listeners to speaker icons with iOS-optimized TTS
     document.querySelectorAll('.speaker-icon').forEach(icon => {
         icon.addEventListener('click', (e) => {
             const word = e.target.dataset.word;
@@ -1313,14 +2000,6 @@ function updateSectionCheckbox(sectionName) {
     }
 }
 
-
-
-
-
-
-
-
-        // modify the Update "Select All" checkbox state
         
 function updateSelectAllCheckbox() {
     if (vocabularyData.length === 0) {
@@ -1359,11 +2038,169 @@ function updateSelectAllCheckbox() {
     });
 });
 
+// Listen and Choose Quiz Functions
+function startListenAndChooseQuiz() {
+    currentListenQuizWords = vocabularyData.filter(item => item.selected);
+    if (currentListenQuizWords.length === 0) {
+        alert('Please select at least 8 vocabulary words for this quiz. (請選擇至少8個單字以進行此測驗)');
+        return;
+    }
+    
+    if (currentListenQuizWords.length < 8) {
+        alert('Please select at least 8 vocabulary words for this quiz. (請選擇至少8個單字以進行此測驗)');
+        return;
+    }
+    
+    resetListenAndChooseQuiz();
+    listenChooseModal.style.display = 'flex';
+    nextListenQuestion();
+}
+
+function resetListenAndChooseQuiz() {
+    currentListenWordIndex = -1;
+    currentListenWord = null;
+    questionStartTime = null;
+    isAnswered = false;
+    listenAnswerDisplay.textContent = 'Click the speaker';
+    timerFeedback.textContent = '';
+}
+
+function nextListenQuestion() {
+    // Reset state
+    isAnswered = false;
+    questionStartTime = null;
+    listenAnswerDisplay.textContent = 'Click the speaker';
+    timerFeedback.textContent = '';
+    
+    if (quizMode === 'sequential') {
+        // Sequential mode: go through words in order
+        currentListenWordIndex = (currentListenWordIndex + 1) % currentListenQuizWords.length;
+    } else {
+        // Random mode: select random word
+        const previousIndex = currentListenWordIndex;
+        
+        if (currentListenQuizWords.length === 1) {
+            currentListenWordIndex = 0;
+        } else {
+            do {
+                currentListenWordIndex = Math.floor(Math.random() * currentListenQuizWords.length);
+            } while (currentListenWordIndex === previousIndex && currentListenQuizWords.length > 1);
+        }
+    }
+    
+    currentListenWord = currentListenQuizWords[currentListenWordIndex];
+    
+    generateChoices();
+}
+
+function generateChoices() {
+    if (!currentListenWord) return;
+    
+    // Get all available translations except the current one
+    const otherTranslations = currentListenQuizWords
+        .filter(item => item.translation !== currentListenWord.translation)
+        .map(item => item.translation);
+    
+    // Randomly select 9 other translations
+    const shuffled = otherTranslations.sort(() => 0.5 - Math.random());
+    const selectedChoices = shuffled.slice(0, 7);
+    
+    // Add the correct answer
+    const allChoices = [...selectedChoices, currentListenWord.translation];
+    
+    // Shuffle all choices
+    const finalChoices = allChoices.sort(() => 0.5 - Math.random());
+    
+    // Clear and populate choices grid
+    choicesGrid.innerHTML = '';
+    
+    finalChoices.forEach(choice => {
+        const button = document.createElement('button');
+        button.className = 'choice-button';
+        button.textContent = choice;
+        button.addEventListener('click', () => handleChoiceClick(button, choice));
+        choicesGrid.appendChild(button);
+    });
+}
+
+function handleChoiceClick(button, selectedChoice) {
+    if (isAnswered) return;
+    
+    isAnswered = true;
+    const responseTime = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 0;
+    
+    // Disable all buttons
+    document.querySelectorAll('.choice-button').forEach(btn => {
+        btn.disabled = true;
+    });
+    
+    const isCorrect = selectedChoice === currentListenWord.translation;
+    
+    if (isCorrect) {
+        button.classList.add('correct');
+        listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+        
+        // Show time-based feedback
+        let feedbackMessage = '';
+        if (responseTime < 2) {
+            feedbackMessage = 'Perfect! ⚡';
+            speak('Perfect!');
+        } else if (responseTime < 3.5) {
+            feedbackMessage = 'Good! 👍';
+            speak('Good!');
+        } else if (responseTime < 6) {
+            feedbackMessage = 'Faster! ⏰';
+            speak('Faster!');
+        } else {
+            feedbackMessage = 'Too late... 😴';
+            speak('Too late...');
+        }
+        
+        timerFeedback.textContent = `${feedbackMessage} (It took you ${responseTime.toFixed(1)} seconds.)`;
+        timerFeedback.className = 'timer-feedback correct';
+    } else {
+        button.classList.add('incorrect');
+        // Highlight the correct answer
+        document.querySelectorAll('.choice-button').forEach(btn => {
+            if (btn.textContent === currentListenWord.translation) {
+                btn.classList.add('correct');
+            }
+        });
+        
+        timerFeedback.textContent = 'You missed! 😓❌';
+        timerFeedback.className = 'timer-feedback incorrect';
+        speak('You missed!');
+        
+        listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+    }
+}
+
+// Listen and Choose event handlers
+listenChooseBtn.addEventListener('click', startListenAndChooseQuiz);
+
+listenSpeaker.addEventListener('click', () => {
+    if (currentListenWord && !isAnswered) {
+        const cleanWord = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+        speak(cleanWord);
+        
+        // Start timing from first play
+        if (!questionStartTime) {
+            questionStartTime = Date.now();
+        }
+    }
+});
+
+listenNextBtn.addEventListener('click', nextListenQuestion);
+
+listenCloseBtn.addEventListener('click', () => {
+    listenChooseModal.style.display = 'none';
+});
+
 // English to Chinese Quiz button handler
 englishToChineseBtn.addEventListener('click', () => {
     currentEnglishQuizWords = vocabularyData.filter(item => item.selected);
     if (currentEnglishQuizWords.length === 0) {
-        alert('Please select at least one vocabulary word to start the quiz.');
+        alert('Please select at least one vocabulary word to start the quiz. (請選擇至少一個單字以進行測驗)');
         return;
     }
     startEnglishToChineseQuiz();
@@ -1376,10 +2213,27 @@ englishCloseBtn.addEventListener('click', () => {
     englishToChineseModal.style.display = 'none';
 });
 
-englishWordSpeaker.addEventListener('click', () => {
+// Replace the existing englishWordSpeaker event listener with this:
+englishWordSpeaker.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isSpeaking) {
+        console.log('Already speaking, ignoring click');
+        return;
+    }
+    
     if (currentEnglishWord) {
+        isSpeaking = true;
         const cleanWord = currentEnglishWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+        console.log('About to speak:', cleanWord);
+        
         speak(cleanWord);
+        
+        // Reset the flag after a reasonable time
+        setTimeout(() => {
+            isSpeaking = false;
+        }, 3000);
     }
 });
 
@@ -1388,7 +2242,7 @@ englishWordSpeaker.addEventListener('click', () => {
             currentQuizWords = vocabularyData.filter(item => item.selected);
             
             if (currentQuizWords.length === 0) {
-                alert('Please select at least one vocabulary word to start the quiz.');
+                alert('Please select at least one vocabulary word to start the quiz. (請選擇至少一個單字以進行測驗)');
                 return;
             }
             
@@ -1404,7 +2258,7 @@ englishWordSpeaker.addEventListener('click', () => {
 
         // Reset quiz state
         function resetQuiz() {
-            currentWordIndex = -1;
+            currentWordIndex = -1; // Always start from -1 so first question becomes index 0
             currentWord = null;
             answerInput.value = '';
             feedbackEl.textContent = '';
@@ -1422,17 +2276,22 @@ englishWordSpeaker.addEventListener('click', () => {
             hintTextEl.textContent = '';
             revealAnswerEl.textContent = '';
             
-            // Randomly select next word
-            const previousIndex = currentWordIndex;
-            
-            // If only one word, just use it
-            if (currentQuizWords.length === 1) {
-                currentWordIndex = 0;
+            if (quizMode === 'sequential') {
+                // Sequential mode: go through words in order
+                currentWordIndex = (currentWordIndex + 1) % currentQuizWords.length;
             } else {
-                // Make sure we don't get the same word twice in a row
-                do {
-                    currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
-                } while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+                // Random mode: randomly select next word
+                const previousIndex = currentWordIndex;
+                
+                // If only one word, just use it
+                if (currentQuizWords.length === 1) {
+                    currentWordIndex = 0;
+                } else {
+                    // Make sure we don't get the same word twice in a row
+                    do {
+                        currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+                    } while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+                }
             }
             
             currentWord = currentQuizWords[currentWordIndex];
@@ -1450,11 +2309,11 @@ englishWordSpeaker.addEventListener('click', () => {
         .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
     
     // Normalize user answer (remove punctuation)
-    const normalizedUserAnswer = userAnswer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const normalizedUserAnswer = userAnswer.replace(/[.,?''…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
     
     // Check if user's answer matches any of the correct options
     const isCorrect = correctAnswers.some(answer => {
-        const normalizedAnswer = answer.replace(/[.,?'’…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        const normalizedAnswer = answer.replace(/[.,?''…\/#!$%\^&\*;:{}=\-_`~()]/g, "");
         return normalizedUserAnswer === normalizedAnswer;
     });
     
@@ -1476,7 +2335,7 @@ englishWordSpeaker.addEventListener('click', () => {
             const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
             const firstLetter = correctAnswer.charAt(0).toUpperCase();
             
-            hintTextEl.textContent = `The answer starts with the letter ${firstLetter}.`;
+            hintTextEl.textContent = `It starts with the letter ${firstLetter}.`;
         }
 
         // Show answer
@@ -1534,10 +2393,25 @@ englishWordSpeaker.addEventListener('click', () => {
         });
 
 // Start English to Chinese Quiz
+// Replace the existing startEnglishToChineseQuiz function with this:
 function startEnglishToChineseQuiz() {
-    resetEnglishToChineseQuiz();
-    englishToChineseModal.style.display = 'flex';
-    nextEnglishQuestion();
+    console.log('Starting English to Chinese quiz');
+    console.log('Voices loaded:', voicesLoaded, 'Voice count:', voices.length);
+    
+    // Force voice loading if not ready
+    if (!voicesLoaded || voices.length === 0) {
+        console.log('Loading voices before starting quiz...');
+        loadVoices().then(() => {
+            console.log('Voices loaded, starting quiz');
+            resetEnglishToChineseQuiz();
+            englishToChineseModal.style.display = 'flex';
+            nextEnglishQuestion();
+        });
+    } else {
+        resetEnglishToChineseQuiz();
+        englishToChineseModal.style.display = 'flex';
+        nextEnglishQuestion();
+    }
 }
 
 // Reset English to Chinese quiz state
@@ -1556,15 +2430,20 @@ function nextEnglishQuestion() {
     checkQuestion.style.display = 'none';
     checkAnswerBtn.style.display = 'block';
     
-    // Randomly select next word
-    const previousIndex = currentEnglishWordIndex;
-    
-    if (currentEnglishQuizWords.length === 1) {
-        currentEnglishWordIndex = 0;
+    if (quizMode === 'sequential') {
+        // Sequential mode: go through words in order
+        currentEnglishWordIndex = (currentEnglishWordIndex + 1) % currentEnglishQuizWords.length;
     } else {
-        do {
-            currentEnglishWordIndex = Math.floor(Math.random() * currentEnglishQuizWords.length);
-        } while (currentEnglishWordIndex === previousIndex && currentEnglishQuizWords.length > 1);
+        // Random mode: randomly select next word
+        const previousIndex = currentEnglishWordIndex;
+        
+        if (currentEnglishQuizWords.length === 1) {
+            currentEnglishWordIndex = 0;
+        } else {
+            do {
+                currentEnglishWordIndex = Math.floor(Math.random() * currentEnglishQuizWords.length);
+            } while (currentEnglishWordIndex === previousIndex && currentEnglishQuizWords.length > 1);
+        }
     }
     
     currentEnglishWord = currentEnglishQuizWords[currentEnglishWordIndex];
@@ -1581,7 +2460,6 @@ function showChineseAnswer() {
     checkQuestion.style.display = 'block';
     checkAnswerBtn.style.display = 'none';
 }
-
 
 // Date information display
 function updateDateInfo() {
@@ -1618,12 +2496,24 @@ function updateDateInfo() {
     `;
 }
 
-
 // Update date information when page loads
 updateDateInfo();
 
 // Update date information every minute
 setInterval(updateDateInfo, 60000);
+
+
+// Initialize TTS when page loads - IMPORTANT FOR iOS
+document.addEventListener('DOMContentLoaded', () => {
+    initializeTTS();
+});
+
+// Also initialize on first user interaction (iOS requirement)
+document.addEventListener('click', function initOnFirstClick() {
+    initializeTTS();
+    // Remove this listener after first execution
+    document.removeEventListener('click', initOnFirstClick);
+}, { once: true });
 
     </script>
 
@@ -1641,9 +2531,9 @@ setInterval(updateDateInfo, 60000);
         
 <p class="english-text">1.每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</p>
        
-        <p class="chinese-text">2.若手機上的🔊無法運作，表示「文字轉語音」功能經過更新，重開機即可解決。</p>
+        <p class="chinese-text">2.iPhone及iPad使用者需將system(系統)切換成iOS，🔊才能正常運作。</p>
 
-        <p class="chinese-text">3.本網頁的🔊較適合Android系統，iPhone使用者請至 https://calengmu.github.io/lengua/vocab-builder-en-ios.htm</p>
+        <p class="chinese-text">3.手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
 
       </div>
     </div>
@@ -1752,7 +2642,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-
 
 </body>
 </html>
