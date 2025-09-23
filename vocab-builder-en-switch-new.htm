@@ -139,18 +139,11 @@
             background-color: white;
             border: 2px solid var(--mid);
             border-radius: 10px;
-            padding: 20px;
-            margin: 25px 0;
+            padding: 3px;
+            margin: 3px 0;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
-
-        .quiz-mode-selector h3 {
-            margin: 0 0 15px 0;
-            color: var(--primary);
-            font-size: 18px;
-            text-align: center;
-        }
-
+            
         .mode-options {
             display: flex;
             justify-content: space-around;
@@ -158,17 +151,16 @@
         }
 
         .mode-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            padding: 15px;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            flex: 1;
-            text-align: center;
-        }
+    display: flex;
+    align-items: center; /* 改為水平對齊 */
+    cursor: pointer;
+    padding: 10px 15px; /* 調整 padding */
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+}
 
         .mode-option:hover {
             background-color: rgba(93, 156, 236, 0.1);
@@ -176,37 +168,26 @@
         }
 
         .mode-option input[type="radio"] {
-            margin: 0 0 8px 0;
-            transform: scale(1.2);
-        }
+    margin: 0 8px 0 0; /* 改為右邊距 */
+    transform: scale(1.2);
+}
 
         .mode-option .option-text {
             font-weight: bold;
             font-size: 16px;
             color: var(--dark);
-            margin-bottom: 5px;
-        }
+                    }
 
-        .mode-option small {
-            color: var(--mid);
-            font-size: 13px;
-        }
-
-        .mode-option input[type="radio"]:checked + .option-text {
+                .mode-option input[type="radio"]:checked + .option-text {
             color: var(--primary);
         }
 
         /* Responsive adjustments for quiz mode selector */
-        @media (max-width: 600px) {
-            .mode-options {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .mode-option {
-                padding: 12px;
-            }
-        }
+       @media (max-width: 600px) {
+    .mode-option {
+        padding: 10px;
+    }
+}
 
       table {
     width: 100%;
@@ -939,9 +920,9 @@ background-color: var(--dark);
 <body>
     <header>
 <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (5.0)</h1>
+        <h1>🎯 Vocabulary Builder (3.5)</h1>
         <div class="tts-system-selector">
-            <label for="tts-system">System of my phone: </label>
+            <label for="tts-system">System: </label>
             <select id="tts-system">
                 <option value="android" selected>Android</option>
                 <option value="ios">iOS</option>
@@ -953,7 +934,7 @@ background-color: var(--dark);
 
     <div class="controls">
     <div class="left-controls">
-        <button class="text-import-btn" id="text-import-btn">📝 Import Text</button>
+        <button class="text-import-btn" id="text-import-btn">📝 Load Vocab</button>
     </div>
     <button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👀 看英想中</button>
     <button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聽英選中</button>
@@ -962,21 +943,18 @@ background-color: var(--dark);
 </div>
 
     <!-- Quiz Mode Selector -->
-    <div class="quiz-mode-selector">
-        <h3>📋 Quiz Mode (測驗模式)</h3>
-        <div class="mode-options">            
-            <label class="mode-option">
-    <input type="radio" name="quiz-mode" value="sequential" checked>
-    <span class="option-text">📝 Sequential (順序)</span>
-    <small>Words appear in table order</small>
-</label>
-<label class="mode-option">
-    <input type="radio" name="quiz-mode" value="random">
-    <span class="option-text">🔀 Random (隨機)</span>
-    <small>Words appear in random order</small>
-</label>
-        </div>
+<div class="quiz-mode-selector">
+    <div class="mode-options">
+        <label class="mode-option">
+            <input type="radio" name="quiz-mode" value="sequential" checked>
+            <span class="option-text">➡️ Sequential (按順序)</span>
+        </label>
+        <label class="mode-option">
+            <input type="radio" name="quiz-mode" value="random">
+            <span class="option-text">🔀 Random (隨機)</span>
+        </label>
     </div>
+</div>
 
     <table id="vocabulary-table">
         <thead>
@@ -1009,7 +987,7 @@ background-color: var(--dark);
     <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
     <div class="modal-content">
-        <h2>Import Text</h2>
+        <h2>Load Vocabulary</h2>
         
         <!-- Button Sets -->
         <div class="preset-buttons">
@@ -1054,7 +1032,7 @@ background-color: var(--dark);
         
 <!-- Action Buttons -->
 <div class="button-group">
-    <button id="text-import-submit-btn" class="submit-btn">Import</button>
+    <button id="text-import-submit-btn" class="submit-btn">Load</button>
     <button id="text-import-copy-btn" class="copy-btn">Copy</button>
     <button id="text-import-clear-btn" class="hint-btn">Clear</button>
     <button id="text-import-close-btn" class="close-btn">Close</button>
