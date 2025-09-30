@@ -1673,19 +1673,19 @@ have something in common = [片語] 有共同點
 rely on… (v) = 依靠…
 tiny (adj) = 微小的
 a piece of technology (n) = 一項科技產品
-(be made with…) This cake is made with eggs and flour. = [由…製成] 這個蛋糕是用蛋和麵粉做的。(使用某物作為零件或原料之一 vs. be made from… & be made of…)
+(be made with) This cake is made with eggs and flour. = [由…製成] 這個蛋糕是用蛋和麵粉做的。(使用某物作為零件或原料之一 vs. be made from… & be made of…)
 semi- = 一半的、半… (如：semifinal半決賽，即四強賽)
 semiconductor (n) = 半導體
-in fact = 事實上
-rarely (adv) = 很少地
+in fact = [片語] 事實上
+rarely (adv) = 幾乎不(＝seldom ＝almost never)
 device (n) = 裝置
-simply (adv) = 簡單地
+simply (adv) = 1.僅僅、只不過(＝only, just)  2.表示「強調」(＝just)  
 function (v) = 運作；起作用
 ◎Sept. 22—Paragraph 2
 exactly (adv) = 正確地；完全地
 in simple terms = 簡單來說
 material (n) = 材料
-the flow of… = …的流動
+flow (n/v) = 流動
 electricity (n) = 電
 metal (n) = 金屬
 conduct electricity or heat = 傳導 電或熱
@@ -2837,10 +2837,10 @@ He is clumsy and often drops things. = 他很笨拙，經常掉東西。
                 .split('/')
                 .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
 
-            const normalizedUserAnswer = userAnswer.replace(/[.,?'''.../#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedUserAnswer = userAnswer.replace(/[.,?'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
 
             const isCorrect = correctAnswers.some(answer => {
-                const normalizedAnswer = answer.replace(/[.,?'''.../#!$%\^&\*;:{}=\-_`~()]/g, "");
+                const normalizedAnswer = answer.replace(/[.,?'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
                 return normalizedUserAnswer === normalizedAnswer;
             });
 
