@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japanese Vocab Builder</title>
+<style>
+:root {
+--primary: #E63946;
+--secondary: #F77F00;
+--accent1: #06AED5;
+--accent2: #2A9D8F;
+--accent3: #9D4EDD;
+--dark: #2D2D2A;
+--light: #FFF8F0;
+--mid: #888888;
+}
+
+* {
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+background-color: var(--light);
+color: var(--dark);
+max-width: 900px;
+margin: 0 auto;
+padding: 20px;
+line-height: 1.6;
+}
+
+header {
+text-align: center;
+margin-bottom: 30px;
+position: relative;
+}
+
+h1 {
+color: var(--primary);
+font-size: 2.5rem;
+margin-bottom: 10px;
+letter-spacing: 1px;
+}
+
+.subtitle {
+color: var(--mid);
+font-size: 1.1rem;
+margin-bottom: 15px;
+}
+
+.tts-system-selector {
+margin-top: 15px;
+font-size: 16px;
+color: var(--dark);
+}
+
+.tts-system-selector label {
+font-weight: bold;
+margin-right: 8px;
+}
+
+.tts-system-selector select {
+padding: 8px 12px;
+border: 2px solid var(--mid);
+border-radius: 6px;
+background-color: white;
+color: var(--dark);
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
+transition: border-color 0.2s ease;
+}
+
+.controls {
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 30px;
+flex-wrap: wrap;
+gap: 10px;
+}
+
+button {
+padding: 10px 16px;
+border: none;
+border-radius: 6px;
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
+transition: all 0.2s ease;
+box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover:not(:disabled) {
+transform: translateY(-2px);
+box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.text-import-btn {
+background-color: var(--secondary);
+color: black;
+}
+
+.kanji-reading-btn {
+background-color: var(--accent3);
+color: white;
+padding: 14px 20px;
+font-size: 18px;
+}
+
+.listen-choose-btn {
+background-color: var(--accent2);
+color: white;
+padding: 14px 20px;
+font-size: 18px;
+}
+
+.start-btn {
+background-color: var(--primary);
+color: white;
+padding: 14px 20px;
+font-size: 18px;
+}
+
+.ai-support-btn {
+background-color: var(--accent1);
+color: white;
+padding: 12px 24px;
+font-size: 18px;
+}
+
+.quiz-mode-selector {
+background-color: white;
+border: 2px solid var(--mid);
+border-radius: 10px;
+padding: 8px;
+margin: 15px 0;
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mode-options {
+display: flex;
+justify-content: space-around;
+gap: 20px;
+}
+
+.mode-option {
+display: flex;
+align-items: center;
+cursor: pointer;
+padding: 10px 15px;
+border: 2px solid transparent;
+border-radius: 8px;
+transition: all 0.3s ease;
+flex: 1;
+text-align: center;
+justify-content: center;
+}
+
+.mode-option:hover {
+background-color: rgba(6, 174, 213, 0.1);
+border-color: var(--accent1);
+}
+
+.mode-option input[type="radio"] {
+margin-right: 8px;
+}
+
+.mode-option .option-text {
+font-weight: bold;
+font-size: 16px;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+background-color: white;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid #ddd;
+}
+
+th {
+background-color: var(--dark);
+color: var(--light);
+font-weight: bold;
+}
+
+tr:hover {
+background-color: rgba(0, 0, 0, 0.03);
+}
+
+.japanese-word {
+font-size: 20px;
+font-weight: bold;
+}
+
+.reading {
+font-size: 14px;
+color: var(--mid);
+margin-left: 8px;
+}
+
+.speaker-icon {
+cursor: pointer;
+color: var(--secondary);
+margin-left: 8px;
+font-size: 20px;
+transition: transform 0.2s;
+display: inline-block;
+}
+
+.speaker-icon:hover {
+transform: scale(1.2);
+}
+
+.modal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.6);
+z-index: 100;
+justify-content: center;
+align-items: center;
+overflow-y: auto;
+}
+
+.modal-content {
+background-color: var(--light);
+width: 90%;
+max-width: 500px;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+text-align: center;
+margin: 20px auto;
+}
+
+.prompt {
+font-size: 20px;
+margin: 20px 0;
+color: var(--dark);
+font-weight: bold;
+}
+
+.word-display {
+font-size: 36px;
+font-weight: bold;
+color: var(--primary);
+margin: 20px 0;
+padding: 15px;
+background-color: white;
+border-radius: 8px;
+border: 2px solid var(--mid);
+}
+
+.answer-input {
+width: 100%;
+padding: 12px;
+font-size: 18px;
+margin-bottom: 15px;
+border: 2px solid var(--mid);
+border-radius: 6px;
+font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+}
+
+.feedback {
+margin: 15px 0;
+font-size: 25px;
+font-weight: bold;
+min-height: 30px;
+}
+
+.correct {
+color: var(--accent2);
+}
+
+.incorrect {
+color: var(--primary);
+}
+
+.hint {
+color: var(--accent1);
+font-style: italic;
+font-size: 20px;
+margin: 10px 0;
+min-height: 25px;
+}
+
+.reveal-answer {
+color: var(--primary);
+font-weight: bold;
+font-size: 28px;
+margin: 15px 0;
+min-height: 30px;
+padding: 10px;
+background-color: white;
+border-radius: 8px;
+}
+
+.button-group {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-top: 20px;
+}
+
+.submit-btn { background-color: var(--primary); color: white; }
+.speak-btn { background-color: var(--accent1); color: white; }
+.hint-btn { background-color: var(--secondary); color: var(--dark); }
+.answer-btn { background-color: var(--accent3); color: white; }
+.next-btn { background-color: var(--accent2); color: white; }
+.close-btn { background-color: var(--mid); color: white; }
+
+.date-info {
+position: absolute;
+top: 0;
+right: 0;
+text-align: right;
+font-size: 13px;
+line-height: 1.8;
+color: var(--dark);
+background-color: rgba(255, 255, 255, 0.9);
+padding: 10px 15px;
+border-radius: 8px;
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+font-weight: bold;
+z-index: 10;
+}
+
+.countdown {
+color: var(--primary);
+font-weight: bold;
+}
+
+#text-import-content {
+width: 100%;
+height: 150px;
+padding: 12px;
+margin: 15px 0;
+font-size: 16px;
+border: 2px solid var(--mid);
+border-radius: 6px;
+resize: vertical;
+font-family: 'Hiragino Sans', 'Noto Sans JP', monospace;
+}
+
+#text-import-modal .modal-content {
+max-width: 700px;
+}
+
+.preset-buttons {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 15px;
+margin-bottom: 20px;
+}
+
+.button-set {
+border: 1px solid #ddd;
+border-radius: 8px;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.02);
+}
+
+.button-set h3 {
+margin-top: 0;
+margin-bottom: 10px;
+font-size: 16px;
+color: var(--dark);
+}
+
+.preset-btn {
+margin: 5px;
+padding: 8px 12px;
+border-radius: 4px;
+font-size: 14px;
+cursor: pointer;
+font-weight: normal;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.jlpt-btn { background-color: var(--accent1); color: white; }
+.core-btn { background-color: var(--accent3); color: white; }
+.grammar-btn { background-color: var(--accent2); color: white; }
+.kanji-btn { background-color: var(--secondary); color: var(--dark); }
+
+.choices-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 12px;
+margin-bottom: 25px;
+}
+
+.choice-button {
+padding: 15px 10px;
+border: 2px solid var(--mid);
+border-radius: 8px;
+background-color: white;
+color: var(--dark);
+font-size: 16px;
+cursor: pointer;
+transition: all 0.2s ease;
+min-height: 60px;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+
+.choice-button:hover:not(:disabled) {
+background-color: var(--accent1);
+color: white;
+border-color: var(--accent1);
+transform: translateY(-2px);
+}
+
+.choice-button.correct {
+background-color: var(--accent2);
+color: white;
+border-color: var(--accent2);
+}
+
+.choice-button.incorrect {
+background-color: var(--primary);
+color: white;
+border-color: var(--primary);
+}
+
+.choice-button:disabled {
+cursor: not-allowed;
+}
+
+.listen-section {
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 20px 0;
+gap: 15px;
+}
+
+.listen-display {
+font-size: 24px;
+font-weight: bold;
+color: var(--primary);
+min-height: 40px;
+padding: 15px;
+flex-grow: 1;
+text-align: center;
+background-color: white;
+border-radius: 8px;
+border: 2px solid var(--mid);
+}
+
+.listen-speaker {
+cursor: pointer;
+color: var(--secondary);
+font-size: 32px;
+padding: 10px;
+border-radius: 50%;
+background-color: rgba(247, 127, 0, 0.1);
+transition: all 0.2s ease;
+}
+
+.listen-speaker:hover {
+background-color: rgba(247, 127, 0, 0.2);
+transform: scale(1.1);
+}
+
+.timer-feedback {
+font-size: 20px;
+font-weight: bold;
+text-align: center;
+min-height: 35px;
+margin-bottom: 20px;
+}
+
+.info-section {
+background-color: white;
+padding: 15px;
+border-radius: 8px;
+margin: 15px 0;
+border: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+h1 {
+font-size: 2rem;
+}
+
+.date-info {
+position: static;
+margin: 0 auto 15px auto;
+width: 100%;
+text-align: center;
+}
+
+.controls {
+flex-direction: column;
+width: 100%;
+}
+
+.controls button {
+width: 100%;
+}
+
+.preset-buttons {
+grid-template-columns: 1fr;
+}
+
+.word-display {
+font-size: 28px;
+}
+
+.modal-content {
+width: 95%;
+padding: 20px;
+}
+}
+</style>
+</head>
+<body>
+<header>
+<div id="date-info" class="date-info"></div>
+<h1>🎌 Japanese Vocabulary Builder</h1>
+<p class="subtitle">N5-N4 → N3 準備中</p>
+<div class="tts-system-selector">
+<label for="tts-system">TTS System:</label>
+<select id="tts-system">
+<option value="android" selected>Android</option>
+<option value="ios">iOS</option>
+</select>
+</div>
+</header>
+
+<div class="controls">
+<button class="text-import-btn" id="text-import-btn">📝 単語を読み込む</button>
+<button class="kanji-reading-btn" id="kanji-reading-btn" disabled>📖 漢字→読み</button>
+<button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聴解練習</button>
+<button class="start-btn" id="start-btn" disabled>✍️ 意味→日本語</button>
+<button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+</div>
+
+<div class="quiz-mode-selector">
+<div class="mode-options">
+<label class="mode-option">
+<input type="radio" name="quiz-mode" value="sequential" checked>
+<span class="option-text">➡️ 順番に</span>
+</label>
+<label class="mode-option">
+<input type="radio" name="quiz-mode" value="random">
+<span class="option-text">🔀 ランダム</span>
+</label>
+</div>
+</div>
+
+<table id="vocabulary-table">
+<thead>
+<tr>
+<th>日本語 (Japanese)</th>
+<th>意味 (Meaning)</th>
+<th><label><input type="checkbox" id="select-all"> 全選択</label></th>
+</tr>
+</thead>
+<tbody id="vocabulary-body">
+<tr>
+<td colspan="3" style="text-align: center; padding: 40px; color: var(--mid);">
+単語リストを読み込んでください<br>
+<small>Load vocabulary to get started</small>
+</td>
+</tr>
+</tbody>
+</table>
+
+<!-- Text Import Modal -->
+<div id="text-import-modal" class="modal">
+<div class="modal-content">
+<h2>📚 単語を読み込む</h2>
+<p style="font-size: 14px; color: var(--mid); margin-bottom: 15px;">
+Format: 日本語(reading) = meaning<br>
+Example: 勉強(べんきょう) = study
+</p>
+<div class="preset-buttons">
+<div class="button-set">
+<h3>📘 JLPT N3</h3>
+<button class="preset-btn jlpt-btn" data-preset="n3basic">基本語彙</button>
+<button class="preset-btn jlpt-btn" data-preset="n3verbs">動詞</button>
+<button class="preset-btn jlpt-btn" data-preset="n3adj">形容詞</button>
+</div>
+<div class="button-set">
+<h3>⭐ Core Vocab</h3>
+<button class="preset-btn core-btn" data-preset="core1">Core 1</button>
+<button class="preset-btn core-btn" data-preset="core2">Core 2</button>
+</div>
+</div>
+<textarea id="text-import-content" placeholder="日本語 = 意味&#10;例: 勉強(べんきょう) = study&#10;桜 = cherry blossom"></textarea>
+<div class="button-group">
+<button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
+<button id="text-import-clear-btn" class="hint-btn">🗑️ Clear</button>
+<button id="text-import-close-btn" class="close-btn">Close</button>
+</div>
+</div>
+</div>
+
+<!-- AI Support Modal -->
+<div id="ai-support-modal" class="modal">
+<div class="modal-content">
+<h2>💡 AI Support</h2>
+<div class="info-section">
+<p><strong>Claude or ChatGPT can help you:</strong></p>
+<ul style="text-align: left; margin: 10px 0;">
+<li>Generate example sentences in Japanese</li>
+<li>Explain grammar points (N5-N3 level)</li>
+<li>Practice conversations</li>
+<li>Create custom vocabulary lists</li>
+<li>Check your Japanese writing</li>
+<li>Quiz you on particles and conjugations</li>
+</ul>
+<p style="margin-top: 15px; font-size: 14px; color: var(--mid);">
+Simply paste your vocabulary list and ask for help!
+</p>
+</div>
+<div class="button-group">
+<button id="ai-support-close-btn" class="close-btn">Close</button>
+</div>
+</div>
+</div>
+
+<!-- Kanji to Reading Quiz Modal -->
+<div id="kanji-reading-modal" class="modal">
+<div class="modal-content">
+<div class="prompt">この漢字の読み方は？<br><small>What is the reading?</small></div>
+<div class="word-display" id="kanji-display"></div>
+<div id="meaning-display" style="font-size: 18px; color: var(--mid); margin: 10px 0;"></div>
+<div id="reading-answer-display" class="reveal-answer" style="display: none;"></div>
+<div style="margin-top: 30px;">
+<button id="show-reading-btn" class="submit-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">答えを見る (Show Answer)</button>
+<div class="button-group">
+<button id="kanji-next-btn" class="next-btn">Next →</button>
+<button id="kanji-close-btn" class="close-btn">Close</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Listen and Choose Modal -->
+<div id="listen-choose-modal" class="modal">
+<div class="modal-content" style="max-width: 600px;">
+<h2>🎧 聴解練習 (Listening Practice)</h2>
+<div class="listen-section">
+<div id="listen-answer-display" class="listen-display">
+スピーカーをクリック<br><small>Click speaker</small>
+</div>
+<div class="listen-speaker" id="listen-speaker" title="Play Audio">🔊</div>
+</div>
+<div id="timer-feedback" class="timer-feedback"></div>
+<div id="choices-grid" class="choices-grid"></div>
+<div class="button-group">
+<button id="listen-next-btn" class="next-btn">Next →</button>
+<button id="listen-close-btn" class="close-btn">Close</button>
+</div>
+</div>
+</div>
+
+<!-- Main Quiz Modal -->
+<div id="quiz-modal" class="modal">
+<div class="modal-content">
+<div class="prompt">日本語で何と言いますか？<br><small>How do you say this in Japanese?</small></div>
+<div id="meaning-prompt" style="font-size: 24px; font-weight: bold; color: var(--accent1); margin: 15px 0; padding: 15px; background-color: white; border-radius: 8px;"></div>
+<input type="text" id="answer-input" class="answer-input" placeholder="ここに入力... (Type here)">
+<div id="feedback" class="feedback"></div>
+<div id="hint-text" class="hint"></div>
+<div id="reveal-answer" class="reveal-answer"></div>
+<div class="button-group">
+<button id="submit-btn" class="submit-btn">✅ Check</button>
+<button id="hint-btn" class="hint-btn">❓ Hint</button>
+<button id="answer-btn" class="answer-btn">🔑 Answer</button>
+<button id="next-btn" class="next-btn">Next →</button>
+<button id="close-btn" class="close-btn">Close</button>
+</div>
+</div>
+</div>
+
+<script>
+// ===== DOM ELEMENTS =====
+const textImportBtn = document.getElementById('text-import-btn');
+const startBtn = document.getElementById('start-btn');
+const kanjiReadingBtn = document.getElementById('kanji-reading-btn');
+const listenChooseBtn = document.getElementById('listen-choose-btn');
+const aiSupportBtn = document.getElementById('ai-support-btn');
+const vocabularyBody = document.getElementById('vocabulary-body');
+const selectAllCheckbox = document.getElementById('select-all');
+const ttsSystemSelect = document.getElementById('tts-system');
+const textImportModal = document.getElementById('text-import-modal');
+const textImportContent = document.getElementById('text-import-content');
+const aiSupportModal = document.getElementById('ai-support-modal');
+const kanjiReadingModal = document.getElementById('kanji-reading-modal');
+const listenChooseModal = document.getElementById('listen-choose-modal');
+const quizModal = document.getElementById('quiz-modal');
+
+// ===== VARIABLES =====
+let vocabularyData = [];
+let currentQuizWords = [];
+let currentWordIndex = -1;
+let currentWord = null;
+let quizMode = 'sequential';
+let currentTTSSystem = 'android';
+let voices = [];
+let voicesLoaded = false;
+let questionStartTime = null;
+let isAnswered = false;
+
+// ===== TTS FUNCTIONS =====
+function loadVoices() {
+  return new Promise((resolve) => {
+    voices = speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      voicesLoaded = true;
+      console.log('Voices loaded:', voices.length);
+      resolve(voices);
+    } else {
+      setTimeout(() => {
+        voices = speechSynthesis.getVoices();
+        voicesLoaded = true;
+        console.log('Voices loaded after delay:', voices.length);
+        resolve(voices);
+      }, 100);
+    }
+  });
+}
+
+function getJapaneseVoice() {
+  if (!voicesLoaded || voices.length === 0) return null;
+  
+  const japaneseVoice = voices.find(v => 
+    v.lang === 'ja-JP' || 
+    v.lang.startsWith('ja-') ||
+    v.name.includes('Japanese') ||
+    v.name.includes('Kyoko') ||
+    v.name.includes('Otoya')
+  );
+  
+  if (japaneseVoice) {
+    console.log('Using Japanese voice:', japaneseVoice.name);
+    return japaneseVoice;
+  }
+  
+  console.log('No Japanese voice found, using default');
+  return voices[0] || null;
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) {
+    console.warn('Speech synthesis not supported');
+    return;
+  }
+  
+  const cleanText = text.replace(/[\(\)\[\]\*]/g, '').trim();
+  if (!cleanText) return;
+  
+  speechSynthesis.cancel();
+  
+  setTimeout(() => {
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    const preferredVoice = getJapaneseVoice();
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+    
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.8;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    utterance.onstart = () => console.log('Speech started');
+    utterance.onend = () => console.log('Speech ended');
+    utterance.onerror = (e) => console.error('Speech error:', e);
+    
+    speechSynthesis.speak(utterance);
+  }, 100);
+}
+
+async function initializeTTS() {
+  console.log('Initializing TTS...');
+  const testUtterance = new SpeechSynthesisUtterance('');
+  testUtterance.volume = 0;
+  speechSynthesis.speak(testUtterance);
+  
+  await new Promise(resolve => setTimeout(resolve, 200));
+  await loadVoices();
+  
+  speechSynthesis.addEventListener('voiceschanged', () => {
+    console.log('Voices changed');
+    loadVoices();
+  });
+}
+
+// ===== EVENT LISTENERS =====
+ttsSystemSelect.addEventListener('change', (e) => {
+  currentTTSSystem = e.target.value;
+  console.log(`Switched to ${currentTTSSystem} TTS system`);
+  loadVoices();
+});
+
+document.addEventListener('change', (e) => {
+  if (e.target.name === 'quiz-mode') {
+    quizMode = e.target.value;
+    console.log(`Quiz mode: ${quizMode}`);
+  }
+});
+
+aiSupportBtn.addEventListener('click', () => {
+  aiSupportModal.style.display = 'flex';
+});
+
+document.getElementById('ai-support-close-btn').addEventListener('click', () => {
+  aiSupportModal.style.display = 'none';
+});
+
+textImportBtn.addEventListener('click', () => {
+  textImportModal.style.display = 'flex';
+});
+
+document.getElementById('text-import-close-btn').addEventListener('click', () => {
+  textImportModal.style.display = 'none';
+});
+
+// ===== PRESET VOCABULARY =====
+const presetVocabulary = {
+  n3basic: `
+◎ N3 基本動詞
+勉強(べんきょう) = study
+仕事(しごと) = work, job
+生活(せいかつ) = life, living
+経験(けいけん) = experience
+注意(ちゅうい) = attention, care
+連絡(れんらく) = contact, communication
+説明(せつめい) = explanation
+準備(じゅんび) = preparation
+計画(けいかく) = plan
+約束(やくそく) = promise, appointment
+`,
+  n3verbs: `
+◎ N3 重要動詞
+決める = to decide
+集める = to collect, gather
+続ける = to continue
+変える = to change
+増える = to increase
+減る = to decrease
+選ぶ = to choose, select
+比べる = to compare
+確かめる = to confirm, check
+`,
+  n3adj: `
+◎ N3 形容詞
+便利(べんり) = convenient
+不便(ふべん) = inconvenient
+複雑(ふくざつ) = complicated, complex
+簡単(かんたん) = simple, easy
+丁寧(ていねい) = polite, careful
+真面目(まじめ) = serious, earnest
+大切(たいせつ) = important, precious
+`,
+  core1: ``,
+  core2: ``
+};
+
+document.querySelectorAll('.preset-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const presetKey = button.dataset.preset;
+    const content = presetVocabulary[presetKey];
+    
+    if (!content || content.trim() === '') {
+      alert('コンテンツは準備中です\nContent is being prepared');
+      return;
+    }
+    
+    processTextImport(content);
+    textImportModal.style.display = 'none';
+    
+    const message = document.createElement('div');
+    message.style.cssText = `
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--accent2); color: white; padding: 15px 25px;
+      border-radius: 8px; font-weight: bold; z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    `;
+    message.textContent = `✅ ${button.textContent} loaded!`;
+    document.body.appendChild(message);
+    setTimeout(() => document.body.removeChild(message), 2000);
+  });
+});
+
+document.getElementById('text-import-submit-btn').addEventListener('click', () => {
+  const text = textImportContent.value.trim();
+  if (!text) {
+    alert('単語を入力してください\nPlease enter vocabulary');
+    return;
+  }
+  processTextImport(text);
+  textImportModal.style.display = 'none';
+});
+
+document.getElementById('text-import-clear-btn').addEventListener('click', () => {
+  textImportContent.value = '';
+});
+
+// ===== PROCESS TEXT IMPORT =====
+function processTextImport(text) {
+  vocabularyData = [];
+  const lines = text.split('\n');
+  let currentSection = "Default";
+  
+  for (let line of lines) {
+    line = line.trim();
+    if (!line) continue;
+    
+    if (line.includes('◎') || line.includes('※')) {
+      currentSection = line.replace('◎', '').replace('※', '').trim();
+      continue;
+    }
+    
+    const parts = line.split('=');
+    if (parts.length < 2) continue;
+    
+    const japanese = parts[0].trim();
+    const meaning = parts[1].trim();
+    
+    if (japanese && meaning) {
+      const readingMatch = japanese.match(/\((.*?)\)/);
+      const reading = readingMatch ? readingMatch[1] : '';
+      const kanji = japanese.replace(/\(.*?\)/g, '').trim();
+      
+      vocabularyData.push({
+        japanese: japanese,
+        kanji: kanji,
+        reading: reading,
+        meaning: meaning,
+        selected: true,
+        section: currentSection
+      });
+    }
+  }
+  
+  renderVocabularyTable();
+  
+  if (vocabularyData.length > 0) {
+    startBtn.disabled = false;
+    kanjiReadingBtn.disabled = false;
+    listenChooseBtn.disabled = false;
+  }
+}
+
+// ===== RENDER TABLE =====
+function renderVocabularyTable() {
+  if (vocabularyData.length === 0) {
+    vocabularyBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--mid);">単語リストを読み込んでください<br><small>Load vocabulary to get started</small></td></tr>';
+    return;
+  }
+  
+  vocabularyBody.innerHTML = '';
+  
+  vocabularyData.forEach((item, index) => {
+    const row = document.createElement('tr');
+    
+    const wordCell = document.createElement('td');
+    wordCell.innerHTML = `
+      <span class="japanese-word">${item.japanese}</span>
+      <span class="speaker-icon" data-word="${item.kanji}" title="Listen">🔊</span>
+    `;
+    
+    const meaningCell = document.createElement('td');
+    meaningCell.textContent = item.meaning;
+    
+    const checkboxCell = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = item.selected;
+    checkbox.dataset.index = index;
+    checkbox.addEventListener('change', (e) => {
+      vocabularyData[index].selected = e.target.checked;
+      updateSelectAllCheckbox();
+    });
+    checkboxCell.appendChild(checkbox);
+    
+    row.appendChild(wordCell);
+    row.appendChild(meaningCell);
+    row.appendChild(checkboxCell);
+    vocabularyBody.appendChild(row);
+  });
+  
+  document.querySelectorAll('.speaker-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      const word = e.target.dataset.word;
+      speak(word);
+    });
+  });
+  
+  updateSelectAllCheckbox();
+}
+
+function updateSelectAllCheckbox() {
+  if (vocabularyData.length === 0) {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+    return;
+  }
+  
+  const selectedCount = vocabularyData.filter(item => item.selected).length;
+  
+  if (selectedCount === 0) {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+  } else if (selectedCount === vocabularyData.length) {
+    selectAllCheckbox.checked = true;
+    selectAllCheckbox.indeterminate = false;
+  } else {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
+  }
+}
+
+selectAllCheckbox.addEventListener('change', (e) => {
+  const isChecked = e.target.checked;
+  vocabularyData.forEach(item => item.selected = isChecked);
+  document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(cb => {
+    cb.checked = isChecked;
+  });
+});
+
+// ===== SECTION MANAGEMENT (from original) =====
+function toggleSection(sectionName) {
+  const sectionRows = document.querySelectorAll(`.section-row[data-section="${sectionName}"]`);
+  const collapseBtn = document.querySelector(`[data-section-toggle="${sectionName}"]`);
+  
+  if (!collapseBtn) return;
+  
+  const isCollapsed = collapseBtn.textContent === '🔽';
+  
+  if (isCollapsed) {
+    sectionRows.forEach(row => row.style.display = 'table-row');
+    collapseBtn.textContent = '🔼';
+    collapseBtn.title = 'Collapse (収起)';
+  } else {
+    sectionRows.forEach(row => row.style.display = 'none');
+    collapseBtn.textContent = '🔽';
+    collapseBtn.title = 'Expand (展開)';
+  }
+}
+
+function updateSectionCheckbox(sectionName) {
+  const sectionItems = vocabularyData.filter(item => item.section === sectionName);
+  const allSelected = sectionItems.every(item => item.selected);
+  const noneSelected = sectionItems.every(item => !item.selected);
+  
+  const sectionCheckbox = document.querySelector(`input[data-section="${sectionName}"]`);
+  if (sectionCheckbox) {
+    sectionCheckbox.checked = allSelected;
+    sectionCheckbox.indeterminate = !allSelected && !noneSelected;
+  }
+}
+
+// ===== PROGRESS TRACKING (from original) =====
+let sectionProgress = {};
+let sectionOrder = [];
+
+function initializeSectionProgress() {
+  sectionProgress = {};
+  const sectionMap = {};
+  
+  vocabularyData.forEach(item => {
+    if (!sectionMap[item.section]) {
+      sectionMap[item.section] = [];
+    }
+    sectionMap[item.section].push(item);
+  });
+  
+  Object.keys(sectionMap).forEach(sectionName => {
+    const sectionItems = sectionMap[sectionName].filter(item => item.selected);
+    if (sectionItems.length > 0) {
+      sectionProgress[sectionName] = {
+        currentIndex: -1,
+        totalCount: sectionItems.length,
+        items: sectionItems
+      };
+    }
+  });
+}
+
+function getCurrentProgressInfo() {
+  if (quizMode !== 'sequential' || !currentWord) {
+    return null;
+  }
+  
+  const currentSection = currentWord.section;
+  if (!sectionProgress[currentSection]) {
+    return null;
+  }
+  
+  const progress = sectionProgress[currentSection];
+  const currentPosition = progress.currentIndex + 1;
+  const totalInSection = progress.totalCount;
+  
+  return {
+    current: currentPosition,
+    total: totalInSection,
+    section: currentSection
+  };
+}
+
+function updateProgressDisplay() {
+  const progressInfoEl = document.getElementById('progress-info');
+  if (!progressInfoEl) return;
+  
+  if (quizMode !== 'sequential') {
+    progressInfoEl.style.display = 'none';
+    return;
+  }
+  
+  const progressInfo = getCurrentProgressInfo();
+  if (!progressInfo) {
+    progressInfoEl.style.display = 'none';
+    return;
+  }
+  
+  const progressTextEl = document.getElementById('progress-text');
+  if (progressTextEl) {
+    progressTextEl.textContent = `${progressInfo.current} of ${progressInfo.total} (${progressInfo.section})`;
+    progressInfoEl.style.display = 'block';
+  }
+}
+
+// ===== SPEECH RECOGNITION (from original) =====
+let recognition = null;
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = 'ja-JP';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript.trim();
+    document.getElementById('answer-input').value = transcript;
+  };
+  
+  recognition.onerror = function(event) {
+    console.error('Speech recognition error', event.error);
+  };
+}
+
+// ===== KANJI TO READING QUIZ =====
+kanjiReadingBtn.addEventListener('click', () => {
+  currentQuizWords = vocabularyData.filter(item => item.selected && item.kanji);
+  if (currentQuizWords.length === 0) {
+    alert('単語を選択してください\nPlease select vocabulary');
+    return;
+  }
+  currentWordIndex = -1;
+  kanjiReadingModal.style.display = 'flex';
+  nextKanjiQuestion();
+});
+
+function nextKanjiQuestion() {
+  document.getElementById('reading-answer-display').style.display = 'none';
+  document.getElementById('show-reading-btn').style.display = 'block';
+  
+  if (quizMode === 'sequential') {
+    currentWordIndex = (currentWordIndex + 1) % currentQuizWords.length;
+  } else {
+    const prev = currentWordIndex;
+    do {
+      currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+    } while (currentWordIndex === prev && currentQuizWords.length > 1);
+  }
+  
+  currentWord = currentQuizWords[currentWordIndex];
+  document.getElementById('kanji-display').textContent = currentWord.kanji;
+  document.getElementById('meaning-display').textContent = `(${currentWord.meaning})`;
+}
+
+document.getElementById('show-reading-btn').addEventListener('click', () => {
+  const readingDisplay = document.getElementById('reading-answer-display');
+  readingDisplay.textContent = currentWord.reading || currentWord.kanji;
+  readingDisplay.style.display = 'block';
+  document.getElementById('show-reading-btn').style.display = 'none';
+  speak(currentWord.kanji);
+});
+
+document.getElementById('kanji-next-btn').addEventListener('click', nextKanjiQuestion);
+document.getElementById('kanji-close-btn').addEventListener('click', () => {
+  kanjiReadingModal.style.display = 'none';
+});
+
+// ===== LISTEN AND CHOOSE QUIZ =====
+listenChooseBtn.addEventListener('click', () => {
+  currentQuizWords = vocabularyData.filter(item => item.selected);
+  if (currentQuizWords.length < 4) {
+    alert('少なくとも4つの単語を選択してください\nPlease select at least 4 words');
+    return;
+  }
+  currentWordIndex = -1;
+  listenChooseModal.style.display = 'flex';
+  nextListenQuestion();
+});
+
+function nextListenQuestion() {
+  isAnswered = false;
+  questionStartTime = null;
+  document.getElementById('listen-answer-display').innerHTML = 'スピーカーをクリック<br><small>Click speaker</small>';
+  document.getElementById('timer-feedback').textContent = '';
+  
+  if (quizMode === 'sequential') {
+    currentWordIndex = (currentWordIndex + 1) % currentQuizWords.length;
+  } else {
+    const prev = currentWordIndex;
+    do {
+      currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+    } while (currentWordIndex === prev && currentQuizWords.length > 1);
+  }
+  
+  currentWord = currentQuizWords[currentWordIndex];
+  generateChoices();
+}
+
+function generateChoices() {
+  if (!currentWord) return;
+  
+  const otherMeanings = currentQuizWords
+    .filter(item => item.meaning !== currentWord.meaning)
+    .map(item => item.meaning);
+  
+  const shuffled = otherMeanings.sort(() => 0.5 - Math.random());
+  const selectedChoices = shuffled.slice(0, 3);
+  const allChoices = [...selectedChoices, currentWord.meaning];
+  const finalChoices = allChoices.sort(() => 0.5 - Math.random());
+  
+  const choicesGrid = document.getElementById('choices-grid');
+  choicesGrid.innerHTML = '';
+  
+  finalChoices.forEach(choice => {
+    const button = document.createElement('button');
+    button.className = 'choice-button';
+    button.textContent = choice;
+    button.addEventListener('click', () => handleChoiceClick(button, choice));
+    choicesGrid.appendChild(button);
+  });
+}
+
+function handleChoiceClick(button, selectedChoice) {
+  if (isAnswered) return;
+  
+  isAnswered = true;
+  const responseTime = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 0;
+  
+  document.querySelectorAll('.choice-button').forEach(btn => btn.disabled = true);
+  
+  const isCorrect = selectedChoice === currentWord.meaning;
+  
+  if (isCorrect) {
+    button.classList.add('correct');
+    document.getElementById('listen-answer-display').textContent = currentWord.japanese;
+    
+    let feedbackMessage = '';
+    if (responseTime < 2) {
+      feedbackMessage = '完璧! ⚡ Perfect!';
+    } else if (responseTime < 4) {
+      feedbackMessage = 'いいね! 👍 Good!';
+    } else {
+      feedbackMessage = 'もっと速く! ⏰ Faster!';
+    }
+    
+    document.getElementById('timer-feedback').textContent = `${feedbackMessage} (${responseTime.toFixed(1)}秒)`;
+    document.getElementById('timer-feedback').className = 'timer-feedback correct';
+  } else {
+    button.classList.add('incorrect');
+    document.querySelectorAll('.choice-button').forEach(btn => {
+      if (btn.textContent === currentWord.meaning) {
+        btn.classList.add('correct');
+      }
+    });
+    document.getElementById('timer-feedback').textContent = '残念! 😓 Incorrect';
+    document.getElementById('timer-feedback').className = 'timer-feedback incorrect';
+    document.getElementById('listen-answer-display').textContent = currentWord.japanese;
+  }
+}
+
+document.getElementById('listen-speaker').addEventListener('click', () => {
+  if (currentWord && !isAnswered) {
+    speak(currentWord.kanji);
+    if (!questionStartTime) {
+      questionStartTime = Date.now();
+    }
+  }
+});
+
+document.getElementById('listen-next-btn').addEventListener('click', nextListenQuestion);
+document.getElementById('listen-close-btn').addEventListener('click', () => {
+  listenChooseModal.style.display = 'none';
+});
+
+// ===== MAIN QUIZ - MEANING TO JAPANESE =====
+startBtn.addEventListener('click', () => {
+  currentQuizWords = vocabularyData.filter(item => item.selected);
+  if (currentQuizWords.length === 0) {
+    alert('単語を選択してください\nPlease select vocabulary');
+    return;
+  }
+  currentWordIndex = -1;
+  quizModal.style.display = 'flex';
+  nextQuestion();
+});
+
+function nextQuestion() {
+  document.getElementById('answer-input').value = '';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('hint-text').textContent = '';
+  document.getElementById('reveal-answer').textContent = '';
+  
+  if (quizMode === 'sequential') {
+    currentWordIndex = (currentWordIndex + 1) % currentQuizWords.length;
+  } else {
+    const prev = currentWordIndex;
+    do {
+      currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+    } while (currentWordIndex === prev && currentQuizWords.length > 1);
+  }
+  
+  currentWord = currentQuizWords[currentWordIndex];
+  document.getElementById('meaning-prompt').textContent = currentWord.meaning;
+}
+
+function submitAnswer() {
+  if (!currentWord) return;
+  
+  const userAnswer = document.getElementById('answer-input').value.trim().toLowerCase();
+  const correctAnswers = [
+    currentWord.kanji.toLowerCase(),
+    currentWord.reading.toLowerCase(),
+    currentWord.japanese.toLowerCase().replace(/\(.*?\)/g, '')
+  ].filter(a => a);
+  
+  const isCorrect = correctAnswers.some(answer => 
+    userAnswer === answer || userAnswer === answer.replace(/\s/g, '')
+  );
+  
+  const feedbackEl = document.getElementById('feedback');
+  if (isCorrect) {
+    feedbackEl.textContent = 'よくできました! 🎉 Excellent!';
+    feedbackEl.className = 'feedback correct';
+  } else {
+    feedbackEl.textContent = 'もう一度! 💪 Try again!';
+    feedbackEl.className = 'feedback incorrect';
+  }
+}
+
+function showHint() {
+  if (!currentWord) return;
+  const firstChar = currentWord.kanji.charAt(0);
+  document.getElementById('hint-text').textContent = `ヒント (Hint): ${firstChar}...`;
+}
+
+function showAnswer() {
+  if (!currentWord) return;
+  const answerText = currentWord.reading ? 
+    `${currentWord.kanji} (${currentWord.reading})` : 
+    currentWord.japanese;
+  document.getElementById('reveal-answer').textContent = answerText;
+  speak(currentWord.kanji);
+}
+
+document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+document.getElementById('answer-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') submitAnswer();
+});
+document.getElementById('hint-btn').addEventListener('click', showHint);
+document.getElementById('answer-btn').addEventListener('click', showAnswer);
+document.getElementById('next-btn').addEventListener('click', nextQuestion);
+document.getElementById('close-btn').addEventListener('click', () => {
+  quizModal.style.display = 'none';
+});
+
+// ===== CLOSE MODALS ON OUTSIDE CLICK =====
+[textImportModal, aiSupportModal, kanjiReadingModal, listenChooseModal, quizModal].forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});
+
+// ===== DATE INFORMATION =====
+function updateDateInfo() {
+  const dateInfoEl = document.getElementById('date-info');
+  const today = new Date();
+  
+  const options = {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long'
+  };
+  
+  const japanDate = today.toLocaleDateString('ja-JP', options);
+  
+  const julyExam = new Date('July 6, 2025');
+  const decExam = new Date('December 7, 2025');
+  
+  julyExam.setHours(0, 0, 0, 0);
+  decExam.setHours(0, 0, 0, 0);
+  const todayDate = new Date(today);
+  todayDate.setHours(0, 0, 0, 0);
+  
+  const daysToJuly = Math.ceil((julyExam - todayDate) / (1000 * 60 * 60 * 24));
+  const daysToDec = Math.ceil((decExam - todayDate) / (1000 * 60 * 60 * 24));
+  
+  dateInfoEl.innerHTML = `
+    📅 ${japanDate}<br>
+    ⏰ <span class="countdown">${daysToJuly}</span> days to JLPT N3<br>
+    📚 <span class="countdown">${daysToDec}</span> days to JLPT N3
+  `;
+}
+
+updateDateInfo();
+setInterval(updateDateInfo, 60000);
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Page loaded, initializing TTS...');
+  initializeTTS();
+});
+
+document.addEventListener('click', function initOnFirstClick() {
+  initializeTTS();
+  document.removeEventListener('click', initOnFirstClick);
+}, { once: true });
+
+console.log('Japanese Vocabulary Builder loaded successfully!');
+</script>
+</body>
+</html>
