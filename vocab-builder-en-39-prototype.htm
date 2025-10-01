@@ -352,8 +352,7 @@
             text-align: center;
             padding: 40px;
             color: var(--mid);
-            font-style: italic;
-        }
+                    }
 
         .tts-speed-control {
             display: flex;
@@ -1037,9 +1036,9 @@
             </div>
             <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
             <div class="button-group">
-                <button id="text-import-submit-btn" class="submit-btn">Load</button>
-                <button id="text-import-copy-btn" class="copy-btn">Copy</button>
-                <button id="text-import-clear-btn" class="hint-btn">Clear</button>
+                <button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
+                <button id="text-import-copy-btn" class="copy-btn">📋 Copy</button>
+                <button id="text-import-clear-btn" class="hint-btn">🈳 Clear</button>
                 <button id="text-import-close-btn" class="close-btn">Close</button>
             </div>
         </div>
@@ -1050,7 +1049,7 @@
         <div class="modal-content">
             <h2>💡 AI Support</h2>
             <div class="ai-support-links">
-                <a href="https://dictionary.cambridge.org/zht/%E8%A9%9E%E5%85%B8/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/" class="ai-support-link" target="_blank">🔍 劍橋中英雙解字典</a>
+                <a href="https://chatgpt.com/share/68db5397-e390-800a-88d2-e323314c7e5c" class="ai-support-link" target="_blank">🀄 生成中譯</a>
                 <a href="https://chatgpt.com/share/68d63d05-8f18-800a-a2b7-e1e8a6168bc6" class="ai-support-link" target="_blank">🌟 生成例句+中譯</a>
                 <a href="https://chatgpt.com/share/67da57c1-afa4-800a-956f-41b344ca587c" class="ai-support-link" target="_blank">💬 互動問答</a>
                 <a href="https://chatgpt.com/share/67f896d4-e3a4-800a-9169-b0f385820e3e" class="ai-support-link" target="_blank">[Quiz] 填空題 ✏️</a>
@@ -1069,7 +1068,7 @@
             <div id="english-progress-info" class="progress-info" style="display: none;">
                 <span id="english-progress-text"></span>
             </div>
-            <div class="prompt">Think about how to say this in Chinese and then check the answer.</div>
+            <div class="prompt">What does this mean in Chinese?</div>
             <div style="font-size: 28px; font-weight: bold; color: var(--primary); margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 15px;">
                 <span id="english-word-display"></span>
                 <span class="speaker-icon" id="english-word-speaker" title="Listen" style="cursor: pointer; color: var(--secondary); font-size: 24px;">🔊</span>
@@ -1432,7 +1431,7 @@
 
         // ===== PRESET VOCABULARY DATA =====
         const presetVocabulary = {
-            b3l1: ` `,
+            b3l1: `            `,
             b3l2: `
 ◎Vocabulary---First Half (#1-#11)
 innovate (v) =創新(v)
@@ -1447,7 +1446,7 @@ adjust (v) =調整(v)
 rely (v) =依靠
 feedback (n) =回饋、意見
 `,
-            b3l3: ` `,
+            b3l3: ``,
             maga1: ` `,
             maga2: ` `,
             maga3: ` `,
@@ -1536,7 +1535,7 @@ feedback (n) =回饋、意見
         textImportSubmitBtn.addEventListener('click', () => {
             const text = textImportContent.value.trim();
             if (!text) {
-                alert('Please enter vocabulary pairs before importing.');
+                alert('Please choose a lesson or enter vocabulary pairs. (請選擇單元或輸入"English vocabulary = 中文翻譯")');
                 return;
             }
             processTextImport(text);
@@ -1579,8 +1578,8 @@ feedback (n) =回饋、意見
                 const line = lines[i].trim();
                 if (!line) continue;
 
-                if (line.includes('◎') || line.includes('=...') || line.startsWith('#')) {
-                    currentSection = line.replace('◎', '').replace('=...', '').replace('#', '').trim();
+                if (line.includes('◎') || line.includes('@') || line.startsWith('※')) {
+                    currentSection = line.replace('◎', '').replace('@', '').replace('※', '').trim();
                     if (!sectionOrder.includes(currentSection)) {
                         sectionOrder.push(currentSection);
                     }
@@ -2201,10 +2200,10 @@ feedback (n) =回饋、意見
                 .split('/')
                 .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
 
-            const normalizedUserAnswer = userAnswer.replace(/[.,?'''.../#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedUserAnswer = userAnswer.replace(/[.,?'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
 
             const isCorrect = correctAnswers.some(answer => {
-                const normalizedAnswer = answer.replace(/[.,?'''.../#!$%\^&\*;:{}=\-_`~()]/g, "");
+                const normalizedAnswer = answer.replace(/[.,?'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
                 return normalizedUserAnswer === normalizedAnswer;
             });
 
