@@ -1999,8 +1999,8 @@ if (responseTime < 2) {
 feedbackMessage = '完璧！ ⚡';
 speak('完璧');
 } else if (responseTime < 3.5) {
-feedbackMessage = 'よくできました！ 👍';
-speak('よくできました!');
+feedbackMessage = 'いいね！ 👍';
+speak('いいね!');
 } else if (responseTime < 6) {
 feedbackMessage = 'もっと早く！ ⏰';
 speak('もっと早く!');
@@ -2020,9 +2020,9 @@ btn.classList.add('correct');
 }
 });
 
-timerFeedback.textContent = '残念！😓❌';
+timerFeedback.textContent = '間違います！😓❌';
 timerFeedback.className = 'timer-feedback incorrect';
-speak('You missed!');
+speak('間違います！');
 listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
 }
 }
