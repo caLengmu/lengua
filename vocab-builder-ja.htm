@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日本語 Vocab Builder</title>
+<title>日本語 Vocab Builder (1.1)</title>
 <style>
 :root {
 --primary: #D33E43;
@@ -929,7 +929,7 @@ top: -12px;
 <div id="date-info" class="date-info"></div>
 <h1>🎯 日本語 Vocabulary Builder</h1>
 <div class="tts-system-selector">
-<label for="tts-system">System: </label>
+<label for="tts-system">音声システム: </label>
 <select id="tts-system">
 <option value="android" selected>Android</option>
 <option value="ios">iOS</option>
@@ -939,7 +939,7 @@ top: -12px;
 
 <div class="controls">
 <div class="left-controls">
-<button class="text-import-btn" id="text-import-btn">📝 単語を読み込む</button>
+<button class="text-import-btn" id="text-import-btn">📝 語彙を読み込む</button>
 </div>
 <button class="japanese-to-english-btn" id="japanese-to-english-btn" disabled>👀 見る→意味</button>
 <button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聴く→選ぶ</button>
@@ -951,11 +951,11 @@ top: -12px;
 <div class="mode-options">
 <label class="mode-option">
 <input type="radio" name="quiz-mode" value="sequential" checked>
-<span class="option-text">➡️ Sequential (順番)</span>
+<span class="option-text">➡️ 順番に</span>
 </label>
 <label class="mode-option">
 <input type="radio" name="quiz-mode" value="random">
-<span class="option-text">🔀 Random (ランダム)</span>
+<span class="option-text">🔀 ランダム</span>
 </label>
 </div>
 </div>
@@ -965,7 +965,7 @@ top: -12px;
 <tr>
 <th>
 <div class="tts-speed-control">
-<label for="tts-speed">日本語</label>
+<label for="tts-speed">単語/フレーズ</label>
 <select id="tts-speed">
 <option value="0.6">0.6x</option>
 <option value="0.8" selected>0.8x</option>
@@ -973,17 +973,17 @@ top: -12px;
 </select>
 </div>
 </th>
-<th>English</th>
+<th>英語/意味</th>
 <th>
 <label>
-<input type="checkbox" id="select-all"> Select All
+<input type="checkbox" id="select-all"> すべて選択
 </label>
 </th>
 </tr>
 </thead>
 <tbody id="vocabulary-body">
 <tr>
-<td colspan="3" class="no-data">単語を読み込んでください</td>
+<td colspan="3" class="no-data">語彙を読み込んでください</td>
 </tr>
 </tbody>
 </table>
@@ -991,7 +991,7 @@ top: -12px;
 <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
-<h2>単語を読み込む</h2>
+<h2>語彙を読み込む</h2>
 <div class="preset-buttons">
 <div class="button-set textbook-buttons">
 <h3>JLPT N5</h3>
@@ -1017,7 +1017,7 @@ top: -12px;
 <button class="preset-btn other-btn" data-preset="custom2">Custom 2</button>
 </div>
 </div>
-<textarea id="text-import-content" placeholder="日本語 = English の形式で入力してください..."></textarea>
+<textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
 <button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
 <button id="text-import-copy-btn" class="copy-btn">📋 コピー</button>
@@ -1049,7 +1049,7 @@ top: -12px;
 <div id="japanese-progress-info" class="progress-info" style="display: none;">
 <span id="japanese-progress-text"></span>
 </div>
-<div class="prompt">この日本語は英語で何ですか？</div>
+<div class="prompt">この日本語はどういう意味ですか？</div>
 <div style="font-size: 28px; font-weight: bold; color: var(--primary); margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 15px;">
 <span id="japanese-word-display"></span>
 <span class="speaker-icon" id="japanese-word-speaker" title="Listen" style="cursor: pointer; color: var(--secondary); font-size: 24px;">🔊</span>
@@ -1059,8 +1059,8 @@ top: -12px;
 <div style="margin-top: 30px;">
 <button id="check-answer-btn" class="submit-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">答えを見る</button>
 <div class="button-group">
-<button id="japanese-next-btn" class="next-btn">Next</button>
-<button id="japanese-close-btn" class="close-btn">Close</button>
+<button id="japanese-next-btn" class="next-btn">次へ</button>
+<button id="japanese-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
 </div>
@@ -1079,8 +1079,8 @@ top: -12px;
 </div>
 <div id="choices-grid" class="choices-grid"></div>
 <div class="listen-controls">
-<button id="listen-next-btn" class="listen-next-btn">Next</button>
-<button id="listen-close-btn" class="listen-close-btn">Close</button>
+<button id="listen-next-btn" class="listen-next-btn">次へ</button>
+<button id="listen-close-btn" class="listen-close-btn">閉じる</button>
 </div>
 </div>
 </div>
@@ -1677,7 +1677,7 @@ collapseBtn.title = 'Expand (展開)';
 
 function renderVocabularyTable() {
 if (vocabularyData.length === 0) {
-vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">単語リストを読み込んでください</td></tr>';
+vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">語彙リストを読み込んでください</td></tr>';
 return;
 }
 
@@ -1909,12 +1909,12 @@ function startListenAndChooseQuiz() {
 currentListenQuizWords = vocabularyData.filter(item => item.selected);
 
 if (currentListenQuizWords.length === 0) {
-alert('最低1つの単語を選んでください。');
+alert('最低1つの単語/フレーズを選んでください。');
 return;
 }
 
 if (currentListenQuizWords.length < 8) {
-alert('このクイズには最低8つの単語が必要です。');
+alert('このクイズには最低8つの単語/フレーズが必要です。');
 return;
 }
 
@@ -2051,7 +2051,7 @@ japaneseToEnglishBtn.addEventListener('click', () => {
 currentJapaneseQuizWords = vocabularyData.filter(item => item.selected);
 
 if (currentJapaneseQuizWords.length === 0) {
-alert('最低1つの単語を選んでクイズを開始してください。');
+alert('最低1つの単語/フレーズを選んでクイズを開始してください。');
 return;
 }
 
@@ -2208,7 +2208,7 @@ startBtn.addEventListener('click', () => {
 currentQuizWords = vocabularyData.filter(item => item.selected);
 
 if (currentQuizWords.length === 0) {
-alert('最低1つの単語を選んでクイズを開始してください。');
+alert('最低1つの単語/フレーズを選んでクイズを開始してください。');
 return;
 }
 
