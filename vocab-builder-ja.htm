@@ -744,15 +744,15 @@ align-items: center;
 margin-bottom: 20px;
 }
 
-.pikachu-image {
-width: 150px;
-flex-shrink: 0;
-}
+ .mascot-image {
+            width: 150px;
+            flex-shrink: 0;
+        }
 
-.pikachu-image img {
-width: 100%;
-height: auto;
-}
+        .mascot-image img {
+            width: 100%;
+            height: auto;
+        }
 
 .speech-bubble {
 position: relative;
@@ -927,7 +927,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 日本語 Vocabulary Builder (1.2)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (1.3)</h1>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
 <select id="tts-system">
@@ -1108,13 +1108,13 @@ top: -12px;
 <div id="refresh-reminder-popup" class="popup-container">
 <div class="popup-content">
 <div class="popup-layout">
-<div class="pikachu-image">
-<img src="dinotaeng_walking.png" alt="Image Not Found" width="150">
-</div>
+<div class="mascot-image">
+                    <div style="width: 150px; height: 150px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">🎌</div>
+                </div>
 <div class="speech-bubble">
-<p class="japanese-text">毎回使用する前に「リフレッシュ(refresh)🔄」をクリックしてください！</p>
+<p class="japanese-text">毎回使用する前に「リフレッシュ(refresh)🔄」をクリックして更新を取得してください！</p>
 <p class="english-text">iPhoneとiPadユーザーは、システムをiOSに切り替えると🔊が正常に動作します。</p>
-<p class="english-text">端末の再起動で🔊の問題が解決することがあります。</p>
+<p class="english-text">携帯電話は時々「テキスト読み上げ」機能を更新することがあり、その結果🔊が動作しなくなることがあります。再起動すれば解決します。</p>
 </div>
 </div>
 <button id="close-reminder-btn" class="close-reminder-btn">わかりました</button>
@@ -2264,10 +2264,10 @@ const correctAnswers = currentWord.vocabulary
 .split('/')
 .map(ans => ans.replace(/\(.*?\)/g, '').trim());
 
-const normalizedUserAnswer = userAnswer.replace(/[.,?'''...#!$%^&*;:{}=\-_`~()]/g, "");
+const normalizedUserAnswer = userAnswer.replace(/[.,?'''...#!？！～、。「」（）…$%^&*;:{}=\-_`~()]/g, "");
 
 const isCorrect = correctAnswers.some(answer => {
-const normalizedAnswer = answer.replace(/[.,?'''...#!$%^&*;:{}=\-_`~()]/g, "");
+const normalizedAnswer = answer.replace(/[.,?'''...#!？！～、。「」（）…$%^&*;:{}=\-_`~()]/g, "");
 return normalizedUserAnswer === normalizedAnswer;
 });
 
