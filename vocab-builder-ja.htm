@@ -927,7 +927,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎯 日本語 Vocabulary Builder</h1>
+<h1>🎌 日本語 Vocabulary Builder (1.2)</h1>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
 <select id="tts-system">
@@ -955,7 +955,7 @@ top: -12px;
 </label>
 <label class="mode-option">
 <input type="radio" name="quiz-mode" value="random">
-<span class="option-text">🔀 ランダム</span>
+<span class="option-text">🔀 ランダムに</span>
 </label>
 </div>
 </div>
@@ -973,7 +973,7 @@ top: -12px;
 </select>
 </div>
 </th>
-<th>英語/意味</th>
+<th>英訳/意味</th>
 <th>
 <label>
 <input type="checkbox" id="select-all"> すべて選択
@@ -1348,18 +1348,18 @@ recognition.interimResults = false;
 recognition.onresult = function(event) {
 const transcript = event.results[0][0].transcript.trim();
 answerInput.value = transcript;
-speakBtn.textContent = '🎤 Speak';
+speakBtn.textContent = '🎤 音声入力';
 speakBtn.classList.remove('recording');
 };
 
 recognition.onend = function() {
-speakBtn.textContent = '🎤 Speak';
+speakBtn.textContent = '🎤 音声入力';
 speakBtn.classList.remove('recording');
 };
 
 recognition.onerror = function(event) {
 console.error('Speech recognition error', event.error);
-speakBtn.textContent = '🎤 Speak';
+speakBtn.textContent = '🎤 音声入力';
 speakBtn.classList.remove('recording');
 };
 }
@@ -2314,18 +2314,18 @@ return;
 }
 
 try {
-if (speakBtn.textContent === '🎤 Speak') {
+if (speakBtn.textContent === '🎤 音声入力') {
 recognition.start();
 speakBtn.textContent = '録音中';
 speakBtn.classList.add('recording');
 } else {
 recognition.stop();
-speakBtn.textContent = '🎤 Speak';
+speakBtn.textContent = '🎤 音声入力';
 speakBtn.classList.remove('recording');
 }
 } catch (error) {
 console.error('Speech recognition error:', error);
-speakBtn.textContent = '🎤 Speak';
+speakBtn.textContent = '🎤 音声入力';
 speakBtn.classList.remove('recording');
 }
 });
@@ -2356,7 +2356,7 @@ year: 'numeric'
 const today = new Date();
 const japanDate = today.toLocaleDateString('ja-JP', options);
 
-const examDate = new Date('July 6, 2025');
+const examDate = new Date('July 5, 2026');
 examDate.setHours(0, 0, 0, 0);
 
 const todayNoTime = new Date(today);
@@ -2364,15 +2364,15 @@ todayNoTime.setHours(0, 0, 0, 0);
 
 const daysUntilExam = Math.ceil((examDate - todayNoTime) / (1000 * 60 * 60 * 24));
 
-const decExamDate = new Date('December 7, 2025');
+const decExamDate = new Date('December 6, 2026');
 decExamDate.setHours(0, 0, 0, 0);
 
 const daysUntilDecExam = Math.ceil((decExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
 
 dateInfoEl.innerHTML = `
-<span><span class="emoji">📅</span>${japanDate}</span><br>
-<span><span class="emoji">⏰</span><span class="countdown">${daysUntilExam}</span> days until JLPT (July 6, 2025)</span>
-<span><span class="emoji">📚</span><span class="countdown">${daysUntilDecExam}</span> days until JLPT (Dec. 7, 2025)</span>
+<span><span class="emoji">📅</span>${japanDate}</span>
+<span><span class="emoji">⏰</span>JLPTまで あと<span class="countdown">${daysUntilExam}</span>日 (毎年7月の第一日曜日)</span>
+<span><span class="emoji">📚</span>JLPTまで あと<span class="countdown">${daysUntilDecExam}</span>日 (毎年12月の第一日曜日)</span>
 `;
 }
 
