@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本語 Vocab Builder (1.1)</title>
+<style>
+:root {
+--primary: #D33E43;
+--secondary: #F8B500;
+--accent1: #5D9CEC;
+--accent2: #77B28C;
+--accent3: #A06CD5;
+--dark: #2D2D2A;
+--light: #F8F3E6;
+--mid: #888888;
+}
+
+body {
+font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;
+background-color: var(--light);
+color: var(--dark);
+max-width: 900px;
+margin: 0 auto;
+padding: 20px;
+line-height: 1.5;
+}
+
+header {
+text-align: center;
+margin-bottom: 30px;
+}
+
+h1 {
+color: var(--primary);
+font-size: 2.5rem;
+margin-bottom: 10px;
+letter-spacing: 1px;
+}
+
+.subtitle {
+color: var(--mid);
+font-size: 1.1rem;
+margin-bottom: 15px;
+}
+
+.tts-system-selector {
+margin-top: 15px;
+font-size: 16px;
+color: var(--dark);
+}
+
+.tts-system-selector label {
+font-weight: bold;
+margin-right: 8px;
+}
+
+.tts-system-selector select {
+padding: 8px 12px;
+border: 2px solid var(--mid);
+border-radius: 6px;
+background-color: white;
+color: var(--dark);
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
+transition: border-color 0.2s ease;
+}
+
+.tts-system-selector select:hover {
+border-color: var(--accent1);
+}
+
+.tts-system-selector select:focus {
+outline: none;
+border-color: var(--primary);
+}
+
+.controls {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 30px;
+position: relative;
+z-index: 1;
+}
+
+.left-controls {
+display: flex;
+gap: 15px;
+align-items: center;
+}
+
+button {
+padding: 10px 16px;
+border: none;
+border-radius: 6px;
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
+transition: all 0.2s ease;
+box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+transform: translateY(-2px);
+box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+}
+
+.text-import-btn {
+background-color: var(--secondary);
+color: black;
+}
+
+.japanese-to-english-btn {
+background-color: var(--accent3);
+color: white;
+padding: 16px 25px;
+font-size: 20px;
+}
+
+.listen-choose-btn {
+background-color: var(--accent2);
+color: white;
+padding: 16px 25px;
+font-size: 20px;
+}
+
+.start-btn {
+background-color: var(--primary);
+color: white;
+padding: 16px 25px;
+font-size: 20px;
+}
+
+.ai-support-btn {
+background-color: var(--accent1);
+color: white;
+padding: 12px 24px;
+font-size: 18px;
+}
+
+.quiz-mode-selector {
+background-color: white;
+border: 2px solid var(--mid);
+border-radius: 10px;
+padding: 3px;
+margin: 3px 0;
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mode-options {
+display: flex;
+justify-content: space-around;
+gap: 20px;
+}
+
+.mode-option {
+display: flex;
+align-items: center;
+cursor: pointer;
+padding: 10px 15px;
+border: 2px solid transparent;
+border-radius: 8px;
+transition: all 0.3s ease;
+flex: 1;
+text-align: center;
+}
+
+.mode-option:hover {
+background-color: rgba(93, 156, 236, 0.1);
+border-color: var(--accent1);
+}
+
+.mode-option input[type="radio"] {
+margin: 0 8px 0 0;
+transform: scale(1.2);
+}
+
+.mode-option .option-text {
+font-weight: bold;
+font-size: 16px;
+color: var(--dark);
+}
+
+.mode-option input[type="radio"]:checked + .option-text {
+color: var(--primary);
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+background-color: white;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+clear: both;
+display: table;
+}
+
+th, td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid #ddd;
+}
+
+th {
+background-color: var(--dark);
+color: var(--light);
+font-weight: bold;
+}
+
+tr:nth-child(even) {
+background-color: rgba(0, 0, 0, 0.03);
+}
+
+tr:hover {
+background-color: rgba(0, 0, 0, 0.05);
+}
+
+.speaker-icon {
+cursor: pointer;
+color: var(--secondary);
+margin-left: 8px;
+font-size: 20px;
+}
+
+.modal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.6);
+z-index: 100;
+justify-content: center;
+align-items: center;
+}
+
+.modal-content {
+background-color: var(--light);
+width: 90%;
+max-width: 500px;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+text-align: center;
+}
+
+.modal h2 {
+margin-top: 0;
+color: var(--primary);
+font-size: 1.8rem;
+}
+
+.prompt {
+font-size: 24px;
+margin: 20px 0;
+color: var(--dark);
+font-weight: bold;
+}
+
+.answer-input {
+width: 100%;
+padding: 12px;
+font-size: 18px;
+margin-bottom: 15px;
+border: 2px solid var(--mid);
+border-radius: 6px;
+box-sizing: border-box;
+}
+
+.feedback {
+margin: 15px 0;
+font-size: 25px;
+font-weight: bold;
+min-height: 27px;
+}
+
+.correct {
+color: var(--accent2);
+}
+
+.incorrect {
+color: var(--primary);
+}
+
+.hint {
+color: var(--accent1);
+font-style: italic;
+font-size: 25px;
+margin: 10px 0;
+min-height: 24px;
+}
+
+.button-group {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-top: 20px;
+}
+
+.submit-btn {
+background-color: var(--primary);
+color: white;
+}
+
+.speak-btn {
+background-color: var(--accent1);
+color: white;
+}
+
+.hint-btn {
+background-color: var(--secondary);
+color: var(--dark);
+}
+
+.answer-btn {
+background-color: var(--accent3);
+color: white;
+}
+
+.next-btn {
+background-color: var(--accent2);
+color: white;
+}
+
+.close-btn {
+background-color: var(--mid);
+color: white;
+}
+
+.copy-btn {
+background-color: var(--accent3);
+color: white;
+}
+
+.recording {
+background-color: var(--primary);
+animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+0% { opacity: 1; }
+50% { opacity: 0.7; }
+100% { opacity: 1; }
+}
+
+.hidden {
+display: none;
+}
+
+#file-input {
+display: none;
+}
+
+.no-data {
+text-align: center;
+padding: 40px;
+color: var(--mid);
+}
+
+.tts-speed-control {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.tts-speed-control select {
+padding: 5px;
+border-radius: 4px;
+border: 1px solid var(--mid);
+background-color: white;
+font-size: 14px;
+}
+
+.tts-speed-control label {
+font-weight: bold;
+color: white;
+}
+
+.reveal-answer {
+color: var(--primary);
+font-weight: bold;
+font-size: 30px;
+margin: 10px 0;
+min-height: 27px;
+}
+
+.section-header {
+background-color: var(--dark);
+color: var(--light);
+font-weight: bold;
+position: relative;
+}
+
+.section-header td {
+background-color: var(--dark);
+color: var(--light);
+padding: 10px 15px;
+}
+
+.collapse-btn {
+background: none;
+border: none;
+color: var(--light);
+font-size: 18px;
+cursor: pointer;
+padding: 0 8px 0 0;
+margin: 0;
+transition: transform 0.2s ease;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-width: 30px;
+box-shadow: none;
+}
+
+.collapse-btn:hover {
+transform: scale(1.1);
+box-shadow: none;
+}
+
+.section-collapsed .collapse-btn {
+transform: rotate(-90deg);
+}
+
+.section-row {
+display: table-row;
+transition: all 0.3s ease;
+}
+
+.section-row.section-collapsed {
+display: none;
+}
+
+.section-header .section-title {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.progress-info {
+background-color: var(--accent1);
+color: white;
+padding: 8px 16px;
+border-radius: 20px;
+font-size: 16px;
+font-weight: bold;
+margin-bottom: 15px;
+display: inline-block;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-section {
+opacity: 0.8;
+font-size: 14px;
+}
+
+#text-import-content {
+width: 100%;
+height: 100px;
+padding: 12px;
+margin: 15px 0;
+font-size: 16px;
+border: 2px solid var(--mid);
+border-radius: 6px;
+box-sizing: border-box;
+resize: vertical;
+}
+
+#text-import-modal .modal-content {
+max-width: 800px;
+max-height: 90vh;
+overflow-y: auto;
+}
+
+.preset-buttons {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 15px;
+margin-bottom: 20px;
+}
+
+.button-set {
+border: 1px solid #ddd;
+border-radius: 8px;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.02);
+}
+
+.button-set h3 {
+margin-top: 0;
+margin-bottom: 10px;
+font-size: 16px;
+color: var(--dark);
+}
+
+.preset-btn {
+margin: 5px;
+padding: 8px 12px;
+border-radius: 4px;
+font-size: 14px;
+border: none;
+cursor: pointer;
+font-weight: normal;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.textbook-btn {
+background-color: var(--accent1);
+color: white;
+}
+
+.jlpt-btn {
+background-color: var(--accent2);
+color: white;
+}
+
+.core-btn {
+background-color: var(--accent3);
+color: white;
+}
+
+.other-btn {
+background-color: var(--secondary);
+color: var(--dark);
+}
+
+#ai-support-modal .modal-content {
+max-width: 600px;
+}
+
+.ai-support-links {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 15px;
+margin: 20px 0;
+}
+
+.ai-support-link {
+background-color: var(--accent1);
+color: white;
+text-decoration: none;
+padding: 15px;
+border-radius: 8px;
+font-weight: bold;
+transition: all 0.2s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.ai-support-link:hover {
+background-color: var(--primary);
+transform: translateY(-2px);
+box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+}
+
+#listen-choose-modal .modal-content {
+max-width: 100%;
+width: 95%;
+max-height: 95vh;
+padding: 15px;
+}
+
+.listen-answer-section {
+display: flex;
+align-items: center;
+justify-content: center;
+margin-bottom: 20px;
+gap: 15px;
+}
+
+.listen-answer-display {
+font-size: 24px;
+font-weight: bold;
+color: var(--primary);
+min-height: 30px;
+padding: 10px 15px;
+border: 2px solid var(--mid);
+border-radius: 8px;
+background-color: white;
+flex-grow: 1;
+text-align: center;
+}
+
+.listen-speaker {
+cursor: pointer;
+color: var(--secondary);
+font-size: 28px;
+padding: 8px;
+border-radius: 50%;
+background-color: rgba(248, 181, 0, 0.1);
+transition: all 0.2s ease;
+}
+
+.listen-speaker:hover {
+background-color: rgba(248, 181, 0, 0.2);
+transform: scale(1.1);
+}
+
+.timer-feedback-section {
+margin-bottom: 25px;
+min-height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.timer-feedback {
+font-size: 20px;
+font-weight: bold;
+text-align: center;
+}
+
+.choices-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 12px;
+margin-bottom: 25px;
+max-width: 100%;
+}
+
+.choice-button {
+padding: 15px 10px;
+border: 2px solid var(--mid);
+border-radius: 8px;
+background-color: white;
+color: var(--dark);
+font-size: 16px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s ease;
+min-height: 60px;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+line-height: 1.3;
+}
+
+.choice-button:hover {
+background-color: var(--accent1);
+color: white;
+border-color: var(--accent1);
+transform: translateY(-2px);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.choice-button.correct {
+background-color: var(--accent2);
+color: white;
+border-color: var(--accent2);
+}
+
+.choice-button.incorrect {
+background-color: var(--primary);
+color: white;
+border-color: var(--primary);
+}
+
+.choice-button:disabled {
+cursor: not-allowed;
+opacity: 0.7;
+}
+
+.listen-controls {
+display: flex;
+justify-content: center;
+gap: 15px;
+}
+
+.listen-next-btn {
+background-color: var(--accent2);
+color: white;
+padding: 12px 24px;
+font-size: 18px;
+}
+
+.listen-close-btn {
+background-color: var(--mid);
+color: white;
+padding: 12px 24px;
+font-size: 18px;
+}
+
+.date-info {
+position: absolute;
+top: 20px;
+right: 20px;
+text-align: right;
+font-size: 14px;
+line-height: 1.6;
+color: var(--dark);
+background-color: rgba(255, 255, 255, 0.9);
+padding: 10px 15px;
+border-radius: 8px;
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+display: flex;
+flex-direction: column;
+gap: 5px;
+font-weight: bold;
+max-width: 90%;
+z-index: 10;
+}
+
+.date-info span {
+display: flex;
+align-items: center;
+white-space: nowrap;
+}
+
+.date-info .emoji {
+margin-right: 8px;
+font-size: 16px;
+}
+
+.date-info .countdown {
+color: var(--primary);
+margin: 0 3px;
+}
+
+.popup-container {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.7);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+}
+
+.popup-content {
+background-color: white;
+padding: 25px;
+border-radius: 15px;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+width: 90%;
+max-width: 500px;
+text-align: center;
+}
+
+.popup-layout {
+display: flex;
+align-items: center;
+margin-bottom: 20px;
+}
+
+ .mascot-image {
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .mascot-image img {
+            width: 100%;
+            height: auto;
+        }
+
+.speech-bubble {
+position: relative;
+background-color: #FFFDE7;
+border: 2px solid var(--secondary);
+border-radius: 15px;
+padding: 15px;
+margin-left: 15px;
+}
+
+.speech-bubble:before {
+content: "";
+position: absolute;
+left: -15px;
+top: 50%;
+transform: translateY(-50%);
+border-width: 15px 15px 15px 0;
+border-style: solid;
+border-color: transparent var(--secondary) transparent transparent;
+}
+
+.speech-bubble:after {
+content: "";
+position: absolute;
+left: -12px;
+top: 50%;
+transform: translateY(-50%);
+border-width: 12px 12px 12px 0;
+border-style: solid;
+border-color: transparent #FFFDE7 transparent transparent;
+}
+
+.japanese-text {
+font-size: 18px;
+font-weight: bold;
+color: var(--primary);
+margin-bottom: 8px;
+}
+
+.english-text {
+font-size: 16px;
+color: var(--dark);
+}
+
+.close-reminder-btn {
+background-color: var(--accent1);
+color: white;
+padding: 12px 24px;
+font-size: 18px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.close-reminder-btn:hover {
+background-color: var(--primary);
+transform: translateY(-2px);
+box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+.date-info {
+position: static;
+margin: 0 auto 15px auto;
+width: 100%;
+max-width: 100%;
+text-align: center;
+right: auto;
+top: auto;
+}
+
+.date-info span {
+justify-content: center;
+}
+
+header {
+display: flex;
+flex-direction: column;
+}
+}
+
+@media (max-width: 600px) {
+.button-group {
+flex-direction: column;
+}
+
+button {
+width: 100%;
+}
+
+th, td {
+padding: 8px 10px;
+}
+
+.controls {
+flex-direction: column;
+gap: 15px;
+align-items: stretch;
+}
+
+.left-controls {
+justify-content: space-between;
+width: 100%;
+}
+
+.right-controls {
+justify-content: space-between;
+width: 100%;
+}
+
+.choices-grid {
+gap: 10px;
+}
+
+.choice-button {
+padding: 12px 8px;
+font-size: 14px;
+min-height: 50px;
+}
+
+.listen-answer-display {
+font-size: 20px;
+}
+
+.listen-speaker {
+font-size: 24px;
+}
+
+.timer-feedback {
+font-size: 18px;
+}
+
+.mode-option {
+padding: 10px;
+}
+
+.preset-buttons {
+grid-template-columns: 1fr;
+}
+
+.ai-support-links {
+grid-template-columns: 1fr;
+}
+
+#listen-choose-modal .modal-content {
+width: 98%;
+padding: 10px;
+}
+
+.popup-layout {
+flex-direction: column;
+}
+
+.speech-bubble {
+margin-left: 0;
+margin-top: 15px;
+}
+
+.speech-bubble:before, .speech-bubble:after {
+left: 50%;
+top: -15px;
+transform: translateX(-50%) rotate(90deg);
+}
+
+.speech-bubble:after {
+top: -12px;
+}
+}
+</style>
+</head>
+<body>
+<header>
+<div id="date-info" class="date-info"></div>
+<h1>🎌 言葉の達人／語彙力アップ (1.3)</h1>
+<p class="subtitle">N5-N4 → N3 準備中</p>
+<div class="tts-system-selector">
+<label for="tts-system">音声システム: </label>
+<select id="tts-system">
+<option value="android" selected>Android</option>
+<option value="ios">iOS</option>
+</select>
+</div>
+</header>
+
+<div class="controls">
+<div class="left-controls">
+<button class="text-import-btn" id="text-import-btn">📝 語彙を読み込む</button>
+</div>
+<button class="japanese-to-english-btn" id="japanese-to-english-btn" disabled>👀 見る→意味</button>
+<button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聴く→選ぶ</button>
+<button class="start-btn" id="start-btn" disabled>🎤 話す</button>
+<button class="ai-support-btn" id="ai-support-btn">💡 人工知能</button>
+</div>
+
+<div class="quiz-mode-selector">
+<div class="mode-options">
+<label class="mode-option">
+<input type="radio" name="quiz-mode" value="sequential" checked>
+<span class="option-text">➡️ 順番に</span>
+</label>
+<label class="mode-option">
+<input type="radio" name="quiz-mode" value="random">
+<span class="option-text">🔀 ランダムに</span>
+</label>
+</div>
+</div>
+
+<table id="vocabulary-table">
+<thead>
+<tr>
+<th>
+<div class="tts-speed-control">
+<label for="tts-speed">単語/フレーズ</label>
+<select id="tts-speed">
+<option value="0.6">0.6x</option>
+<option value="0.8" selected>0.8x</option>
+<option value="1">1x</option>
+</select>
+</div>
+</th>
+<th>英訳/意味</th>
+<th>
+<label>
+<input type="checkbox" id="select-all"> すべて選択
+</label>
+</th>
+</tr>
+</thead>
+<tbody id="vocabulary-body">
+<tr>
+<td colspan="3" class="no-data">語彙を読み込んでください</td>
+</tr>
+</tbody>
+</table>
+
+<!-- Text Import Modal -->
+<div id="text-import-modal" class="modal">
+<div class="modal-content">
+<h2>語彙を読み込む</h2>
+<div class="preset-buttons">
+<div class="button-set textbook-buttons">
+<h3>JLPT N5</h3>
+<button class="preset-btn textbook-btn" data-preset="n5_1">N5 Set 1</button>
+<button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
+<button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+</div>
+<div class="button-set jlpt-buttons">
+<h3>JLPT N4</h3>
+<button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
+<button class="preset-btn jlpt-btn" data-preset="n4_2">N4 Set 2</button>
+<button class="preset-btn jlpt-btn" data-preset="n4_3">N4 Set 3</button>
+</div>
+<div class="button-set core-buttons">
+<h3>JLPT N3</h3>
+<button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
+<button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
+<button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
+</div>
+<div class="button-set other-buttons">
+<h3>Custom</h3>
+<button class="preset-btn other-btn" data-preset="custom1">Custom 1</button>
+<button class="preset-btn other-btn" data-preset="custom2">Custom 2</button>
+</div>
+</div>
+<textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
+<div class="button-group">
+<button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
+<button id="text-import-copy-btn" class="copy-btn">📋 コピー</button>
+<button id="text-import-clear-btn" class="hint-btn">🈳 クリア</button>
+<button id="text-import-close-btn" class="close-btn">閉じる</button>
+</div>
+</div>
+</div>
+
+<!-- AI Support Modal -->
+<div id="ai-support-modal" class="modal">
+<div class="modal-content">
+<h2>💡 AI Support</h2>
+<div class="ai-support-links">
+<a href="https://chatgpt.com" class="ai-support-link" target="_blank">🌟 練習問題を作る</a>
+<a href="https://chatgpt.com" class="ai-support-link" target="_blank">💬 日本語で会話</a>
+<a href="https://chatgpt.com" class="ai-support-link" target="_blank">✏️ 文法を学ぶ</a>
+<a href="https://chatgpt.com" class="ai-support-link" target="_blank">📚 読解練習</a>
+</div>
+<div class="button-group">
+<button id="ai-support-close-btn" class="close-btn">Close</button>
+</div>
+</div>
+</div>
+
+<!-- Japanese to English Quiz Modal -->
+<div id="japanese-to-english-modal" class="modal">
+<div class="modal-content">
+<div id="japanese-progress-info" class="progress-info" style="display: none;">
+<span id="japanese-progress-text"></span>
+</div>
+<div class="prompt">この日本語はどういう意味ですか？</div>
+<div style="font-size: 28px; font-weight: bold; color: var(--primary); margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 15px;">
+<span id="japanese-word-display"></span>
+<span class="speaker-icon" id="japanese-word-speaker" title="Listen" style="cursor: pointer; color: var(--secondary); font-size: 24px;">🔊</span>
+</div>
+<div id="english-answer-display" class="reveal-answer" style="display: none;"></div>
+<div id="check-question" style="display: none; font-size: 23px; color: var(--accent1); margin-top: 10px;"><b>正解しましたか？</b></div>
+<div style="margin-top: 30px;">
+<button id="check-answer-btn" class="submit-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">答えを見る</button>
+<div class="button-group">
+<button id="japanese-next-btn" class="next-btn">次へ</button>
+<button id="japanese-close-btn" class="close-btn">閉じる</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Listen and Choose Modal -->
+<div id="listen-choose-modal" class="modal">
+<div class="modal-content">
+<h2>🎧 聴いて選ぶ</h2>
+<div class="listen-answer-section">
+<div id="listen-answer-display" class="listen-answer-display">スピーカーをクリック</div>
+<div class="listen-speaker" id="listen-speaker" title="Play Audio">🔊</div>
+</div>
+<div class="timer-feedback-section">
+<div id="timer-feedback" class="timer-feedback"></div>
+</div>
+<div id="choices-grid" class="choices-grid"></div>
+<div class="listen-controls">
+<button id="listen-next-btn" class="listen-next-btn">次へ</button>
+<button id="listen-close-btn" class="listen-close-btn">閉じる</button>
+</div>
+</div>
+</div>
+
+<!-- Quiz Modal -->
+<div id="quiz-modal" class="modal">
+<div class="modal-content">
+<div class="prompt">「<span id="translation-prompt"></span>」を日本語で言ってください。</div>
+<input type="text" id="answer-input" class="answer-input" placeholder="ここに答えを入力してください...">
+<div id="feedback" class="feedback"></div>
+<div id="hint-text" class="hint"></div>
+<div id="reveal-answer" class="reveal-answer"></div>
+<div class="button-group">
+<button id="submit-btn" class="submit-btn">✅ or ❎</button>
+<button id="speak-btn" class="speak-btn">🎤 音声入力</button>
+<button id="hint-btn" class="hint-btn">❓ ヒント</button>
+<button id="answer-btn" class="answer-btn">🔑 答え</button>
+<button id="next-btn" class="next-btn">次へ</button>
+<button id="close-btn" class="close-btn">閉じる</button>
+</div>
+</div>
+</div>
+
+<!-- Refresh Reminder Popup -->
+<div id="refresh-reminder-popup" class="popup-container">
+<div class="popup-content">
+<div class="popup-layout">
+<div class="mascot-image">
+                    <div style="width: 150px; height: 150px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">🎌</div>
+                </div>
+<div class="speech-bubble">
+<p class="japanese-text">1. 毎回使用する前に「リフレッシュ(refresh)🔄」をクリックして更新を取得してください！</p>
+<p class="english-text">2. iPhoneとiPadユーザーは、システムをiOSに切り替えると🔊が正常に動作します。</p>
+<p class="english-text">3. 携帯電話は時々「テキスト読み上げ」機能を更新することがあり、その結果🔊が動作しなくなることがあります。再起動すれば解決します。</p>
+</div>
+</div>
+<button id="close-reminder-btn" class="close-reminder-btn">わかりました</button>
+</div>
+</div>
+
+<script>
+// ===== DOM ELEMENTS =====
+const japaneseToEnglishBtn = document.getElementById('japanese-to-english-btn');
+const japaneseToEnglishModal = document.getElementById('japanese-to-english-modal');
+const japaneseWordDisplay = document.getElementById('japanese-word-display');
+const japaneseWordSpeaker = document.getElementById('japanese-word-speaker');
+const englishAnswerDisplay = document.getElementById('english-answer-display');
+const checkQuestion = document.getElementById('check-question');
+const checkAnswerBtn = document.getElementById('check-answer-btn');
+const japaneseNextBtn = document.getElementById('japanese-next-btn');
+const japaneseCloseBtn = document.getElementById('japanese-close-btn');
+const japaneseProgressInfo = document.getElementById('japanese-progress-info');
+const japaneseProgressText = document.getElementById('japanese-progress-text');
+const listenChooseBtn = document.getElementById('listen-choose-btn');
+const listenChooseModal = document.getElementById('listen-choose-modal');
+const listenAnswerDisplay = document.getElementById('listen-answer-display');
+const listenSpeaker = document.getElementById('listen-speaker');
+const timerFeedback = document.getElementById('timer-feedback');
+const choicesGrid = document.getElementById('choices-grid');
+const listenNextBtn = document.getElementById('listen-next-btn');
+const listenCloseBtn = document.getElementById('listen-close-btn');
+const textImportBtn = document.getElementById('text-import-btn');
+const startBtn = document.getElementById('start-btn');
+const aiSupportBtn = document.getElementById('ai-support-btn');
+const vocabularyTable = document.getElementById('vocabulary-table');
+const vocabularyBody = document.getElementById('vocabulary-body');
+const selectAllCheckbox = document.getElementById('select-all');
+const quizModal = document.getElementById('quiz-modal');
+const translationPrompt = document.getElementById('translation-prompt');
+const answerInput = document.getElementById('answer-input');
+const feedbackEl = document.getElementById('feedback');
+const hintTextEl = document.getElementById('hint-text');
+const revealAnswerEl = document.getElementById('reveal-answer');
+const submitBtn = document.getElementById('submit-btn');
+const speakBtn = document.getElementById('speak-btn');
+const hintBtn = document.getElementById('hint-btn');
+const answerBtn = document.getElementById('answer-btn');
+const nextBtn = document.getElementById('next-btn');
+const closeBtn = document.getElementById('close-btn');
+const ttsSpeedSelect = document.getElementById('tts-speed');
+const ttsSystemSelect = document.getElementById('tts-system');
+const textImportModal = document.getElementById('text-import-modal');
+const textImportContent = document.getElementById('text-import-content');
+const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
+const textImportCloseBtn = document.getElementById('text-import-close-btn');
+const textImportClearBtn = document.getElementById('text-import-clear-btn');
+const textImportCopyBtn = document.getElementById('text-import-copy-btn');
+const aiSupportModal = document.getElementById('ai-support-modal');
+const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+
+// ===== VARIABLES =====
+let isSpeaking = false;
+let vocabularyData = [];
+let currentQuizWords = [];
+let currentWordIndex = -1;
+let currentWord = null;
+let recognition = null;
+let speechRate = 0.8;
+let quizMode = 'sequential';
+let currentJapaneseQuizWords = [];
+let currentJapaneseWordIndex = -1;
+let currentJapaneseWord = null;
+let sectionProgress = {};
+let sectionOrder = [];
+let currentListenQuizWords = [];
+let currentListenWordIndex = -1;
+let currentListenWord = null;
+let questionStartTime = null;
+let isAnswered = false;
+let voices = [];
+let voicesLoaded = false;
+let currentTTSSystem = 'android';
+
+// ===== TTS FUNCTIONS =====
+function loadVoices() {
+return new Promise((resolve) => {
+voices = speechSynthesis.getVoices();
+if (voices.length > 0) {
+voicesLoaded = true;
+console.log('Voices loaded:', voices.length);
+resolve(voices);
+} else {
+const utterance = new SpeechSynthesisUtterance('');
+utterance.volume = 0;
+speechSynthesis.speak(utterance);
+setTimeout(() => {
+voices = speechSynthesis.getVoices();
+voicesLoaded = true;
+console.log('Voices loaded after trigger:', voices.length);
+resolve(voices);
+}, 100);
+}
+});
+}
+
+function getJapaneseVoice() {
+if (!voicesLoaded || voices.length === 0) return null;
+
+if (currentTTSSystem === 'ios') {
+const iosJapaneseVoices = ['Kyoko', 'Otoya'];
+for (const voiceName of iosJapaneseVoices) {
+const voice = voices.find(v => v.name.includes(voiceName));
+if (voice) {
+console.log('Using iOS Japanese voice:', voice.name);
+return voice;
+}
+}
+} else {
+const androidJapaneseVoices = [
+'Google 日本語',
+'Japanese (Japan)',
+'ja-JP-language',
+'Japanese Japan'
+];
+for (const voiceName of androidJapaneseVoices) {
+const voice = voices.find(v =>
+v.name.includes(voiceName) ||
+v.name.toLowerCase().includes(voiceName.toLowerCase())
+);
+if (voice) {
+console.log('Using Android Japanese voice:', voice.name);
+return voice;
+}
+}
+}
+
+const japaneseVoice = voices.find(v =>
+v.lang === 'ja-JP' ||
+v.lang.startsWith('ja-') ||
+v.name.toLowerCase().includes('japanese') ||
+v.name.toLowerCase().includes('japan')
+);
+
+if (japaneseVoice) {
+console.log(`Using fallback Japanese voice for ${currentTTSSystem}:`, japaneseVoice.name);
+return japaneseVoice;
+}
+
+console.log(`Using first available voice for ${currentTTSSystem}:`, voices[0]?.name);
+return voices[0] || null;
+}
+
+function speak(text) {
+console.log('Speak function called with:', text, 'System:', currentTTSSystem);
+if (!('speechSynthesis' in window)) {
+console.warn('Speech synthesis not supported');
+return;
+}
+
+const cleanText = text.replace(/[()[\]\\*]/g, '').trim();
+if (!cleanText) return;
+
+speechSynthesis.cancel();
+
+setTimeout(() => {
+const utterance = new SpeechSynthesisUtterance(cleanText);
+const preferredVoice = getJapaneseVoice();
+
+if (preferredVoice) {
+utterance.voice = preferredVoice;
+}
+
+utterance.lang = 'ja-JP';
+utterance.pitch = 1.0;
+utterance.volume = 1.0;
+
+if (currentTTSSystem === 'ios') {
+utterance.rate = Math.max(0.5, speechRate * 0.9);
+} else {
+utterance.rate = speechRate;
+}
+
+utterance.onstart = function() {
+console.log('Speech started successfully');
+};
+
+utterance.onend = function() {
+console.log('Speech ended normally');
+isSpeaking = false;
+};
+
+utterance.onerror = function(event) {
+console.error('Speech error:', event.error);
+isSpeaking = false;
+};
+
+try {
+speechSynthesis.speak(utterance);
+} catch (error) {
+console.error('Failed to start speech synthesis:', error);
+}
+}, 100);
+}
+
+async function initializeTTS() {
+console.log('Initializing TTS...');
+const testUtterance = new SpeechSynthesisUtterance('');
+testUtterance.volume = 0;
+speechSynthesis.speak(testUtterance);
+
+await new Promise(resolve => setTimeout(resolve, 200));
+await loadVoices();
+
+if (voices.length === 0) {
+console.log('No voices found, trying again...');
+await new Promise(resolve => setTimeout(resolve, 500));
+await loadVoices();
+}
+
+console.log('TTS initialization complete. Voices:', voices.length);
+
+speechSynthesis.addEventListener('voiceschanged', () => {
+console.log('Voices changed event fired');
+loadVoices();
+});
+}
+
+// ===== SPEECH RECOGNITION =====
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'ja-JP';
+recognition.continuous = false;
+recognition.interimResults = false;
+
+recognition.onresult = function(event) {
+const transcript = event.results[0][0].transcript.trim();
+answerInput.value = transcript;
+speakBtn.textContent = '🎤 音声入力';
+speakBtn.classList.remove('recording');
+};
+
+recognition.onend = function() {
+speakBtn.textContent = '🎤 音声入力';
+speakBtn.classList.remove('recording');
+};
+
+recognition.onerror = function(event) {
+console.error('Speech recognition error', event.error);
+speakBtn.textContent = '🎤 音声入力';
+speakBtn.classList.remove('recording');
+};
+}
+
+// ===== EVENT LISTENERS =====
+ttsSpeedSelect.addEventListener('change', (e) => {
+speechRate = parseFloat(e.target.value);
+});
+
+ttsSystemSelect.addEventListener('change', (e) => {
+currentTTSSystem = e.target.value;
+console.log(`Switched to ${currentTTSSystem} TTS system`);
+loadVoices().then(() => {
+console.log(`Voice loading complete for ${currentTTSSystem}`);
+});
+});
+
+document.addEventListener('change', (e) => {
+if (e.target.name === 'quiz-mode') {
+quizMode = e.target.value;
+console.log(`Quiz mode changed to: ${quizMode}`);
+}
+});
+
+aiSupportBtn.addEventListener('click', () => {
+aiSupportModal.style.display = 'flex';
+});
+
+aiSupportCloseBtn.addEventListener('click', () => {
+aiSupportModal.style.display = 'none';
+});
+
+textImportBtn.addEventListener('click', () => {
+textImportModal.style.display = 'flex';
+});
+
+textImportCloseBtn.addEventListener('click', () => {
+textImportModal.style.display = 'none';
+});
+
+// ===== PRESET VOCABULARY DATA =====
+const presetVocabulary = {
+n5_1: `
+◎JLPT N5 - 基本動詞
+食べる = to eat
+飲む = to drink
+見る = to see, to watch
+聞く = to hear, to listen
+話す = to speak
+読む = to read
+書く = to write
+行く = to go
+来る = to come
+する = to do
+`,
+n5_2: `
+◎JLPT N5 - 基本名詞
+水 = water
+お茶 = tea
+コーヒー = coffee
+本 = book
+学校 = school
+先生 = teacher
+学生 = student
+友達 = friend
+家 = house, home
+部屋 = room
+`,
+n5_3: `
+◎JLPT N5 - 基本形容詞
+大きい = big, large
+小さい = small
+新しい = new
+古い = old
+良い/いい = good
+悪い = bad
+高い = expensive, tall
+安い = cheap
+暑い = hot (weather)
+寒い = cold (weather)
+`,
+n4_1: `
+◎JLPT N4 - 動詞
+始める = to begin, to start
+終わる = to end, to finish
+続ける = to continue
+決める = to decide
+変える = to change
+増える = to increase
+減る = to decrease
+困る = to be troubled
+`,
+n4_2: `
+◎JLPT N4 - 名詞
+社会 = society
+経済 = economy
+政治 = politics
+文化 = culture
+歴史 = history
+科学 = science
+技術 = technology
+自然 = nature
+`,
+n4_3: `
+◎JLPT N4 - 形容詞・副詞
+便利 = convenient
+不便 = inconvenient
+簡単 = simple, easy
+複雑 = complicated
+安全 = safe
+危険 = dangerous
+特別 = special
+普通 = ordinary, usual
+`,
+n3_1: `
+◎JLPT N3 - 動詞
+調べる = to investigate, to check
+比べる = to compare
+選ぶ = to choose, to select
+伝える = to convey, to communicate
+説明する = to explain
+理解する = to understand
+`,
+n3_2: `
+◎JLPT N3 - 名詞
+意見 = opinion
+考え = thought, idea
+理由 = reason
+結果 = result
+影響 = influence
+関係 = relationship
+態度 = attitude
+`,
+n3_3: `
+◎JLPT N3 - 形容詞・副詞
+積極的 = positive, active
+消極的 = passive, negative
+具体的 = concrete, specific
+抽象的 = abstract
+効率的 = efficient
+`,
+custom1: ` `,
+custom2: ` `
+};
+
+function isContentEmpty(content) {
+const cleaned = content.replace(/\s+/g, '').replace(/[◎=]/g, '');
+return cleaned.length === 0;
+}
+
+function showNoContentMessage() {
+const messageOverlay = document.createElement('div');
+messageOverlay.style.cssText = `
+position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+background-color: rgba(0, 0, 0, 0.8); display: flex;
+justify-content: center; align-items: center; z-index: 1000;
+`;
+
+const messageBox = document.createElement('div');
+messageBox.style.cssText = `
+background-color: white; padding: 30px; border-radius: 15px;
+text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+max-width: 400px; margin: 0 20px;
+`;
+
+messageBox.innerHTML = `
+<h3 style="color: var(--primary); margin-bottom: 15px;">⚠️ コンテンツがありません</h3>
+<p style="font-size: 18px; margin-bottom: 10px;">更新をお待ちください</p>
+<p style="font-size: 16px; color: var(--mid); margin-bottom: 20px;">Please wait for updates</p>
+<button id="close-no-content-msg" style="
+background-color: var(--accent1); color: white; padding: 10px 20px;
+border: none; border-radius: 6px; cursor: pointer; font-size: 16px;">OK</button>
+`;
+
+messageOverlay.appendChild(messageBox);
+document.body.appendChild(messageOverlay);
+
+document.getElementById('close-no-content-msg').addEventListener('click', () => {
+document.body.removeChild(messageOverlay);
+});
+
+messageOverlay.addEventListener('click', (e) => {
+if (e.target === messageOverlay) {
+document.body.removeChild(messageOverlay);
+}
+});
+}
+
+document.querySelectorAll('.preset-btn').forEach(button => {
+button.addEventListener('click', () => {
+const presetKey = button.dataset.preset;
+if (presetVocabulary[presetKey]) {
+const content = presetVocabulary[presetKey];
+if (isContentEmpty(content)) {
+showNoContentMessage();
+return;
+}
+processTextImport(content);
+textImportModal.style.display = 'none';
+
+const successMessage = document.createElement('div');
+successMessage.style.cssText = `
+position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+successMessage.textContent = `✅ ${button.textContent} 読み込み完了！`;
+document.body.appendChild(successMessage);
+
+setTimeout(() => {
+if (document.body.contains(successMessage)) {
+document.body.removeChild(successMessage);
+}
+}, 3000);
+}
+});
+});
+
+textImportSubmitBtn.addEventListener('click', () => {
+const text = textImportContent.value.trim();
+if (!text) {
+alert('レッスンを選ぶか、「日本語 = English」の形式で入力してください。');
+return;
+}
+processTextImport(text);
+textImportModal.style.display = 'none';
+});
+
+textImportClearBtn.addEventListener('click', () => {
+textImportContent.value = '';
+});
+
+textImportCopyBtn.addEventListener('click', () => {
+const textToCopy = textImportContent.value;
+if (!textToCopy) {
+alert('コピーするテキストがありません。');
+return;
+}
+navigator.clipboard.writeText(textToCopy)
+.then(() => {
+const originalText = textImportCopyBtn.textContent;
+textImportCopyBtn.textContent = 'コピーしました！';
+setTimeout(() => {
+textImportCopyBtn.textContent = originalText;
+}, 1500);
+})
+.catch(err => {
+console.error('Failed to copy text: ', err);
+alert('コピーに失敗しました。');
+});
+});
+
+// ===== TEXT IMPORT AND TABLE RENDERING =====
+function processTextImport(text) {
+vocabularyData = [];
+sectionOrder = [];
+const lines = text.split('\n');
+let currentSection = "Default";
+
+for (let i = 0; i < lines.length; i++) {
+const line = lines[i].trim();
+if (!line) continue;
+
+if (line.includes('◎') || line.includes('@') || line.startsWith('※')) {
+currentSection = line.replace('◎', '').replace('@', '').replace('※', '').trim();
+if (!sectionOrder.includes(currentSection)) {
+sectionOrder.push(currentSection);
+}
+continue;
+}
+
+const parts = line.split('=');
+if (parts.length < 2) continue;
+
+const vocabulary = parts[0].trim();
+const translation = parts[1].trim();
+
+if (vocabulary && translation) {
+vocabularyData.push({
+vocabulary: vocabulary,
+translation: translation,
+selected: true,
+section: currentSection
+});
+}
+}
+
+renderVocabularyTable();
+
+if (vocabularyData.length > 0) {
+startBtn.disabled = false;
+japaneseToEnglishBtn.disabled = false;
+listenChooseBtn.disabled = false;
+}
+}
+
+function toggleSection(sectionName) {
+const sectionRows = document.querySelectorAll(`.section-row[data-section="${sectionName}"]`);
+const collapseBtn = document.querySelector(`[data-section-toggle="${sectionName}"]`);
+
+if (!collapseBtn) return;
+
+const isCollapsed = collapseBtn.textContent === '🔽';
+
+if (isCollapsed) {
+sectionRows.forEach(row => row.style.display = 'table-row');
+collapseBtn.textContent = '🔼';
+collapseBtn.title = 'Collapse (収起)';
+} else {
+sectionRows.forEach(row => row.style.display = 'none');
+collapseBtn.textContent = '🔽';
+collapseBtn.title = 'Expand (展開)';
+}
+}
+
+function renderVocabularyTable() {
+if (vocabularyData.length === 0) {
+vocabularyBody.innerHTML = '<tr><td colspan="3" class="no-data">語彙リストを読み込んでください</td></tr>';
+return;
+}
+
+vocabularyBody.innerHTML = '';
+
+const sectionMap = {};
+vocabularyData.forEach(item => {
+if (!sectionMap[item.section]) {
+sectionMap[item.section] = [];
+}
+sectionMap[item.section].push(item);
+});
+
+Object.keys(sectionMap).forEach(sectionName => {
+const sectionItems = sectionMap[sectionName];
+
+const sectionRow = document.createElement('tr');
+sectionRow.className = 'section-header';
+
+const sectionCell = document.createElement('td');
+sectionCell.colSpan = 2;
+
+const sectionTitle = document.createElement('div');
+sectionTitle.className = 'section-title';
+
+const collapseBtn = document.createElement('button');
+collapseBtn.className = 'collapse-btn';
+collapseBtn.textContent = '🔼';
+collapseBtn.title = 'Collapse (収起)';
+collapseBtn.setAttribute('data-section-toggle', sectionName);
+collapseBtn.addEventListener('click', () => toggleSection(sectionName));
+
+const titleText = document.createElement('span');
+titleText.textContent = sectionName;
+
+sectionTitle.appendChild(collapseBtn);
+sectionTitle.appendChild(titleText);
+sectionCell.appendChild(sectionTitle);
+
+const sectionCheckCell = document.createElement('td');
+const sectionCheckbox = document.createElement('input');
+sectionCheckbox.type = 'checkbox';
+sectionCheckbox.checked = sectionItems.every(item => item.selected);
+sectionCheckbox.dataset.section = sectionName;
+
+sectionCheckbox.addEventListener('change', (e) => {
+const isChecked = e.target.checked;
+const section = e.target.dataset.section;
+
+vocabularyData.forEach((item, index) => {
+if (item.section === section) {
+item.selected = isChecked;
+const checkbox = document.querySelector(`input[data-index="${index}"]`);
+if (checkbox) checkbox.checked = isChecked;
+}
+});
+
+updateSelectAllCheckbox();
+});
+
+sectionCheckCell.appendChild(sectionCheckbox);
+sectionRow.appendChild(sectionCell);
+sectionRow.appendChild(sectionCheckCell);
+vocabularyBody.appendChild(sectionRow);
+
+sectionItems.forEach((item, localIndex) => {
+const index = vocabularyData.findIndex(vItem =>
+vItem.vocabulary === item.vocabulary &&
+vItem.translation === item.translation);
+
+const row = document.createElement('tr');
+row.className = 'section-row';
+row.setAttribute('data-section', sectionName);
+
+const wordCell = document.createElement('td');
+const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+wordCell.innerHTML = `
+${item.vocabulary}
+<span class="speaker-icon" title="Listen" data-word="${cleanWord}">🔊</span>
+`;
+
+const translationCell = document.createElement('td');
+translationCell.textContent = item.translation;
+
+const checkboxCell = document.createElement('td');
+const checkbox = document.createElement('input');
+checkbox.type = 'checkbox';
+checkbox.checked = item.selected;
+checkbox.dataset.index = index;
+checkbox.dataset.section = item.section;
+
+checkbox.addEventListener('change', (e) => {
+vocabularyData[index].selected = e.target.checked;
+updateSectionCheckbox(item.section);
+updateSelectAllCheckbox();
+});
+
+checkboxCell.appendChild(checkbox);
+row.appendChild(wordCell);
+row.appendChild(translationCell);
+row.appendChild(checkboxCell);
+vocabularyBody.appendChild(row);
+});
+});
+
+document.querySelectorAll('.speaker-icon').forEach(icon => {
+icon.addEventListener('click', (e) => {
+const word = e.target.dataset.word;
+speak(word);
+});
+});
+
+updateSelectAllCheckbox();
+}
+
+function updateSectionCheckbox(sectionName) {
+const sectionItems = vocabularyData.filter(item => item.section === sectionName);
+const allSelected = sectionItems.every(item => item.selected);
+const noneSelected = sectionItems.every(item => !item.selected);
+
+const sectionCheckbox = document.querySelector(`input[data-section="${sectionName}"]`);
+if (sectionCheckbox) {
+sectionCheckbox.checked = allSelected;
+sectionCheckbox.indeterminate = !allSelected && !noneSelected;
+}
+}
+
+function updateSelectAllCheckbox() {
+if (vocabularyData.length === 0) {
+selectAllCheckbox.checked = false;
+selectAllCheckbox.indeterminate = false;
+return;
+}
+
+const selectedCount = vocabularyData.filter(item => item.selected).length;
+
+if (selectedCount === 0) {
+selectAllCheckbox.checked = false;
+selectAllCheckbox.indeterminate = false;
+} else if (selectedCount === vocabularyData.length) {
+selectAllCheckbox.checked = true;
+selectAllCheckbox.indeterminate = false;
+} else {
+selectAllCheckbox.checked = false;
+selectAllCheckbox.indeterminate = true;
+}
+}
+
+selectAllCheckbox.addEventListener('change', (e) => {
+const isChecked = e.target.checked;
+
+vocabularyData.forEach(item => {
+item.selected = isChecked;
+});
+
+document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
+checkbox.checked = isChecked;
+if (checkbox.dataset.section) {
+checkbox.indeterminate = false;
+}
+});
+});
+
+// ===== PROGRESS TRACKING =====
+function initializeSectionProgress() {
+sectionProgress = {};
+const sectionMap = {};
+
+vocabularyData.forEach(item => {
+if (!sectionMap[item.section]) {
+sectionMap[item.section] = [];
+}
+sectionMap[item.section].push(item);
+});
+
+Object.keys(sectionMap).forEach(sectionName => {
+const sectionItems = sectionMap[sectionName].filter(item => item.selected);
+if (sectionItems.length > 0) {
+sectionProgress[sectionName] = {
+currentIndex: -1,
+totalCount: sectionItems.length,
+items: sectionItems
+};
+}
+});
+}
+
+function getCurrentProgressInfo() {
+if (quizMode !== 'sequential' || !currentJapaneseWord) {
+return null;
+}
+
+const currentSection = currentJapaneseWord.section;
+
+if (!sectionProgress[currentSection]) {
+return null;
+}
+
+const progress = sectionProgress[currentSection];
+const currentPosition = progress.currentIndex + 1;
+const totalInSection = progress.totalCount;
+
+return {
+current: currentPosition,
+total: totalInSection,
+section: currentSection
+};
+}
+
+function updateProgressDisplay() {
+if (quizMode !== 'sequential') {
+japaneseProgressInfo.style.display = 'none';
+return;
+}
+
+const progressInfo = getCurrentProgressInfo();
+
+if (!progressInfo) {
+japaneseProgressInfo.style.display = 'none';
+return;
+}
+
+japaneseProgressText.textContent = `${progressInfo.current} / ${progressInfo.total} (${progressInfo.section})`;
+japaneseProgressInfo.style.display = 'block';
+}
+
+// ===== LISTEN AND CHOOSE QUIZ =====
+function startListenAndChooseQuiz() {
+currentListenQuizWords = vocabularyData.filter(item => item.selected);
+
+if (currentListenQuizWords.length === 0) {
+alert('最低1つの単語/フレーズを選んでください。');
+return;
+}
+
+if (currentListenQuizWords.length < 8) {
+alert('このクイズには最低8つの単語/フレーズが必要です。');
+return;
+}
+
+resetListenAndChooseQuiz();
+listenChooseModal.style.display = 'flex';
+nextListenQuestion();
+}
+
+function resetListenAndChooseQuiz() {
+currentListenWordIndex = -1;
+currentListenWord = null;
+questionStartTime = null;
+isAnswered = false;
+listenAnswerDisplay.textContent = 'スピーカーをクリック';
+timerFeedback.textContent = '';
+}
+
+function nextListenQuestion() {
+isAnswered = false;
+questionStartTime = null;
+listenAnswerDisplay.textContent = 'スピーカーをクリック';
+timerFeedback.textContent = '';
+
+if (quizMode === 'sequential') {
+currentListenWordIndex = (currentListenWordIndex + 1) % currentListenQuizWords.length;
+} else {
+const previousIndex = currentListenWordIndex;
+if (currentListenQuizWords.length === 1) {
+currentListenWordIndex = 0;
+} else {
+do {
+currentListenWordIndex = Math.floor(Math.random() * currentListenQuizWords.length);
+} while (currentListenWordIndex === previousIndex && currentListenQuizWords.length > 1);
+}
+}
+
+currentListenWord = currentListenQuizWords[currentListenWordIndex];
+generateChoices();
+}
+
+function generateChoices() {
+if (!currentListenWord) return;
+
+const otherTranslations = currentListenQuizWords
+.filter(item => item.translation !== currentListenWord.translation)
+.map(item => item.translation);
+
+const shuffled = otherTranslations.sort(() => 0.5 - Math.random());
+const selectedChoices = shuffled.slice(0, 7);
+const allChoices = [...selectedChoices, currentListenWord.translation];
+const finalChoices = allChoices.sort(() => 0.5 - Math.random());
+
+choicesGrid.innerHTML = '';
+
+finalChoices.forEach(choice => {
+const button = document.createElement('button');
+button.className = 'choice-button';
+button.textContent = choice;
+button.addEventListener('click', () => handleChoiceClick(button, choice));
+choicesGrid.appendChild(button);
+});
+}
+
+function handleChoiceClick(button, selectedChoice) {
+if (isAnswered) return;
+
+isAnswered = true;
+const responseTime = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 0;
+
+document.querySelectorAll('.choice-button').forEach(btn => {
+btn.disabled = true;
+});
+
+const isCorrect = selectedChoice === currentListenWord.translation;
+
+if (isCorrect) {
+button.classList.add('correct');
+listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+
+let feedbackMessage = '';
+if (responseTime < 2) {
+feedbackMessage = '完璧！ ⚡';
+speak('完璧');
+} else if (responseTime < 3.5) {
+feedbackMessage = 'いいね！ 👍';
+speak('いいね!');
+} else if (responseTime < 6) {
+feedbackMessage = 'もっと早く！ ⏰';
+speak('もっと早く!');
+} else {
+feedbackMessage = '遅すぎます... 😴';
+speak('遅すぎます...');
+}
+
+timerFeedback.textContent = `${feedbackMessage} (${responseTime.toFixed(1)}秒かかりました)`;
+timerFeedback.className = 'timer-feedback correct';
+} else {
+button.classList.add('incorrect');
+
+document.querySelectorAll('.choice-button').forEach(btn => {
+if (btn.textContent === currentListenWord.translation) {
+btn.classList.add('correct');
+}
+});
+
+timerFeedback.textContent = '間違います！😓❌';
+timerFeedback.className = 'timer-feedback incorrect';
+speak('間違います！');
+listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+}
+}
+
+listenChooseBtn.addEventListener('click', startListenAndChooseQuiz);
+
+listenSpeaker.addEventListener('click', () => {
+if (currentListenWord && !isAnswered) {
+const cleanWord = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+speak(cleanWord);
+
+if (!questionStartTime) {
+questionStartTime = Date.now();
+}
+}
+});
+
+listenNextBtn.addEventListener('click', nextListenQuestion);
+
+listenCloseBtn.addEventListener('click', () => {
+listenChooseModal.style.display = 'none';
+});
+
+// ===== JAPANESE TO ENGLISH QUIZ =====
+japaneseToEnglishBtn.addEventListener('click', () => {
+currentJapaneseQuizWords = vocabularyData.filter(item => item.selected);
+
+if (currentJapaneseQuizWords.length === 0) {
+alert('最低1つの単語/フレーズを選んでクイズを開始してください。');
+return;
+}
+
+startJapaneseToEnglishQuiz();
+});
+
+checkAnswerBtn.addEventListener('click', showEnglishAnswer);
+japaneseNextBtn.addEventListener('click', nextJapaneseQuestion);
+
+japaneseCloseBtn.addEventListener('click', () => {
+japaneseToEnglishModal.style.display = 'none';
+});
+
+japaneseWordSpeaker.addEventListener('click', (e) => {
+e.preventDefault();
+e.stopPropagation();
+
+if (isSpeaking) {
+console.log('Already speaking, ignoring click');
+return;
+}
+
+if (currentJapaneseWord) {
+isSpeaking = true;
+const cleanWord = currentJapaneseWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+console.log('About to speak:', cleanWord);
+speak(cleanWord);
+
+setTimeout(() => {
+isSpeaking = false;
+}, 3000);
+}
+});
+
+function startJapaneseToEnglishQuiz() {
+console.log('Starting Japanese to English quiz');
+console.log('Voices loaded:', voicesLoaded, 'Voice count:', voices.length);
+
+if (!voicesLoaded || voices.length === 0) {
+console.log('Loading voices before starting quiz...');
+loadVoices().then(() => {
+console.log('Voices loaded, starting quiz');
+resetJapaneseToEnglishQuiz();
+japaneseToEnglishModal.style.display = 'flex';
+nextJapaneseQuestion();
+});
+} else {
+resetJapaneseToEnglishQuiz();
+japaneseToEnglishModal.style.display = 'flex';
+nextJapaneseQuestion();
+}
+}
+
+function resetJapaneseToEnglishQuiz() {
+currentJapaneseWordIndex = -1;
+currentJapaneseWord = null;
+englishAnswerDisplay.style.display = 'none';
+checkQuestion.style.display = 'none';
+checkAnswerBtn.style.display = 'block';
+
+if (quizMode === 'sequential') {
+initializeSectionProgress();
+}
+}
+
+function nextJapaneseQuestion() {
+englishAnswerDisplay.style.display = 'none';
+checkQuestion.style.display = 'none';
+checkAnswerBtn.style.display = 'block';
+
+if (quizMode === 'sequential') {
+if (currentJapaneseWordIndex === -1) {
+const firstSection = sectionOrder.find(section =>
+sectionProgress[section] && sectionProgress[section].totalCount > 0
+);
+
+if (firstSection) {
+sectionProgress[firstSection].currentIndex = 0;
+currentJapaneseWord = sectionProgress[firstSection].items[0];
+currentJapaneseWordIndex = 0;
+} else {
+currentJapaneseWordIndex = 0;
+currentJapaneseWord = currentJapaneseQuizWords[0];
+}
+} else {
+const currentSection = currentJapaneseWord.section;
+const sectionData = sectionProgress[currentSection];
+
+if (sectionData && sectionData.currentIndex + 1 < sectionData.totalCount) {
+sectionData.currentIndex++;
+currentJapaneseWord = sectionData.items[sectionData.currentIndex];
+} else {
+const currentSectionIndex = sectionOrder.indexOf(currentSection);
+let nextSectionIndex = currentSectionIndex + 1;
+
+while (nextSectionIndex < sectionOrder.length) {
+const nextSection = sectionOrder[nextSectionIndex];
+if (sectionProgress[nextSection] && sectionProgress[nextSection].totalCount > 0) {
+sectionProgress[nextSection].currentIndex = 0;
+currentJapaneseWord = sectionProgress[nextSection].items[0];
+break;
+}
+nextSectionIndex++;
+}
+
+if (nextSectionIndex >= sectionOrder.length) {
+const firstSection = sectionOrder.find(section =>
+sectionProgress[section] && sectionProgress[section].totalCount > 0
+);
+
+if (firstSection) {
+sectionProgress[firstSection].currentIndex = 0;
+currentJapaneseWord = sectionProgress[firstSection].items[0];
+}
+}
+}
+
+currentJapaneseWordIndex = currentJapaneseQuizWords.findIndex(item =>
+item.vocabulary === currentJapaneseWord.vocabulary &&
+item.translation === currentJapaneseWord.translation
+);
+}
+} else {
+const previousIndex = currentJapaneseWordIndex;
+
+if (currentJapaneseQuizWords.length === 1) {
+currentJapaneseWordIndex = 0;
+} else {
+do {
+currentJapaneseWordIndex = Math.floor(Math.random() * currentJapaneseQuizWords.length);
+} while (currentJapaneseWordIndex === previousIndex && currentJapaneseQuizWords.length > 1);
+}
+
+currentJapaneseWord = currentJapaneseQuizWords[currentJapaneseWordIndex];
+}
+
+const cleanWord = currentJapaneseWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+japaneseWordDisplay.textContent = cleanWord;
+
+updateProgressDisplay();
+}
+
+function showEnglishAnswer() {
+if (!currentJapaneseWord) return;
+
+englishAnswerDisplay.textContent = currentJapaneseWord.translation;
+englishAnswerDisplay.style.display = 'block';
+checkQuestion.style.display = 'block';
+checkAnswerBtn.style.display = 'none';
+}
+
+// ===== MAIN QUIZ =====
+startBtn.addEventListener('click', () => {
+currentQuizWords = vocabularyData.filter(item => item.selected);
+
+if (currentQuizWords.length === 0) {
+alert('最低1つの単語/フレーズを選んでクイズを開始してください。');
+return;
+}
+
+startQuiz();
+});
+
+function startQuiz() {
+resetQuiz();
+quizModal.style.display = 'flex';
+nextQuestion();
+}
+
+function resetQuiz() {
+currentWordIndex = -1;
+currentWord = null;
+answerInput.value = '';
+feedbackEl.textContent = '';
+feedbackEl.className = 'feedback';
+hintTextEl.textContent = '';
+revealAnswerEl.textContent = '';
+}
+
+function nextQuestion() {
+answerInput.value = '';
+feedbackEl.textContent = '';
+feedbackEl.className = 'feedback';
+hintTextEl.textContent = '';
+revealAnswerEl.textContent = '';
+
+if (quizMode === 'sequential') {
+currentWordIndex = (currentWordIndex + 1) % currentQuizWords.length;
+} else {
+const previousIndex = currentWordIndex;
+
+if (currentQuizWords.length === 1) {
+currentWordIndex = 0;
+} else {
+do {
+currentWordIndex = Math.floor(Math.random() * currentQuizWords.length);
+} while (currentWordIndex === previousIndex && currentQuizWords.length > 1);
+}
+}
+
+currentWord = currentQuizWords[currentWordIndex];
+translationPrompt.textContent = currentWord.translation;
+}
+
+function submitAnswer() {
+if (!currentWord) return;
+
+const userAnswer = answerInput.value.trim();
+const correctAnswers = currentWord.vocabulary
+.split('/')
+.map(ans => ans.replace(/\(.*?\)/g, '').trim());
+
+const normalizedUserAnswer = userAnswer.replace(/[.,?'''...#!？！～、。「」（）…$%^&*;:{}=\-_`~()]/g, "");
+
+const isCorrect = correctAnswers.some(answer => {
+const normalizedAnswer = answer.replace(/[.,?'''...#!？！～、。「」（）…$%^&*;:{}=\-_`~()]/g, "");
+return normalizedUserAnswer === normalizedAnswer;
+});
+
+if (isCorrect) {
+feedbackEl.textContent = 'よくできました！🏆😊👍';
+feedbackEl.className = 'feedback correct';
+speak('よくできました！');
+} else {
+feedbackEl.textContent = 'もう一度！🔥🔥🔥';
+feedbackEl.className = 'feedback incorrect';
+speak('もう一度！');
+}
+}
+
+function showHint() {
+if (!currentWord) return;
+
+const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').trim();
+const firstChar = correctAnswer.charAt(0);
+
+hintTextEl.textContent = `ヒント：「${firstChar}」で始まります`;
+}
+
+function showAnswer() {
+if (!currentWord) return;
+
+const correctAnswer = currentWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
+revealAnswerEl.textContent = `${correctAnswer}`;
+speak(correctAnswer);
+}
+
+submitBtn.addEventListener('click', submitAnswer);
+
+answerInput.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+submitAnswer();
+}
+});
+
+speakBtn.addEventListener('click', () => {
+if (!recognition) {
+alert('音声認識はこのブラウザではサポートされていません。');
+return;
+}
+
+try {
+if (speakBtn.textContent === '🎤 音声入力') {
+recognition.start();
+speakBtn.textContent = '録音中';
+speakBtn.classList.add('recording');
+} else {
+recognition.stop();
+speakBtn.textContent = '🎤 音声入力';
+speakBtn.classList.remove('recording');
+}
+} catch (error) {
+console.error('Speech recognition error:', error);
+speakBtn.textContent = '🎤 音声入力';
+speakBtn.classList.remove('recording');
+}
+});
+
+hintBtn.addEventListener('click', showHint);
+answerBtn.addEventListener('click', showAnswer);
+nextBtn.addEventListener('click', nextQuestion);
+
+closeBtn.addEventListener('click', () => {
+quizModal.style.display = 'none';
+if (recognition) {
+recognition.stop();
+}
+});
+
+// ===== DATE INFORMATION =====
+function updateDateInfo() {
+const dateInfoEl = document.getElementById('date-info');
+
+const options = {
+timeZone: 'Asia/Tokyo',
+weekday: 'long',
+month: 'long',
+day: 'numeric',
+year: 'numeric'
+};
+
+const today = new Date();
+const japanDate = today.toLocaleDateString('ja-JP', options);
+
+const examDate = new Date('July 5, 2026');
+examDate.setHours(0, 0, 0, 0);
+
+const todayNoTime = new Date(today);
+todayNoTime.setHours(0, 0, 0, 0);
+
+const daysUntilExam = Math.ceil((examDate - todayNoTime) / (1000 * 60 * 60 * 24));
+
+const decExamDate = new Date('December 6, 2026');
+decExamDate.setHours(0, 0, 0, 0);
+
+const daysUntilDecExam = Math.ceil((decExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
+
+dateInfoEl.innerHTML = `
+<span><span class="emoji">📅</span>${japanDate}</span>
+<span><span class="emoji">⏰</span>JLPTまで あと<span class="countdown">${daysUntilExam}</span>日 (毎年7月の第一日曜日)</span>
+<span><span class="emoji">📚</span>JLPTまで あと<span class="countdown">${daysUntilDecExam}</span>日 (毎年12月の第一日曜日)</span>
+`;
+}
+
+updateDateInfo();
+setInterval(updateDateInfo, 60000);
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', () => {
+initializeTTS();
+
+const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
+
+setTimeout(() => {
+refreshReminderPopup.style.display = 'flex';
+}, 1000);
+
+const closeReminderBtn = document.getElementById('close-reminder-btn');
+
+closeReminderBtn.addEventListener('click', () => {
+refreshReminderPopup.style.display = 'none';
+});
+});
+
+document.addEventListener('click', function initOnFirstClick() {
+initializeTTS();
+document.removeEventListener('click', initOnFirstClick);
+}, { once: true });
+</script>
+</body>
+</html>
