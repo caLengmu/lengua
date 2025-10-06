@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日本語 Vocab Builder (1.1)</title>
+<title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #E53935;      /* Japanese Red */
+--primary: #FF69B4;      /* Hot Pink (a well-known CSS color) */
             --secondary: #FF9800;    /* Orange */
-            --accent1: #2196F3;      /* Blue */
+            --accent1: #1976D2;      /* Japanese Blue */
             --accent2: #4CAF50;      /* Green */
             --accent3: #9C27B0;      /* Purple */
             --dark: #2C2C2C;         /* Dark Gray */
@@ -933,7 +933,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.4)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (1.5)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -1095,7 +1095,7 @@ top: -12px;
 <!-- Quiz Modal -->
 <div id="quiz-modal" class="modal">
 <div class="modal-content">
-<div class="prompt">「<span id="translation-prompt"></span>」を日本語で言ってください。</div>
+<div class="prompt">「<span id="translation-prompt" style="color: var(--primary);"></span>」を日本語で言ってください。</div>
 <input type="text" id="answer-input" class="answer-input" placeholder="ここに答えを入力してください...">
 <div id="feedback" class="feedback"></div>
 <div id="hint-text" class="hint"></div>
@@ -1908,7 +1908,7 @@ if (vocabulary && translation) {
 vocabularyData.push({
 vocabulary: vocabulary,
 translation: translation,
-selected: true,
+selected: false,
 section: currentSection
 });
 }
@@ -2269,11 +2269,11 @@ speak('完璧');
 feedbackMessage = 'いいね！ 👍';
 speak('いいね!');
 } else if (responseTime < 6) {
-feedbackMessage = 'もっと早く！ ⏰';
-speak('もっと早く!');
+feedbackMessage = '早く！ ⏰';
+speak('早く!');
 } else {
-feedbackMessage = '遅すぎます... 😴';
-speak('遅すぎます...');
+feedbackMessage = '遅いよ！ 😴';
+speak('遅いよ！');
 }
 
 timerFeedback.textContent = `${feedbackMessage} (${responseTime.toFixed(1)}秒かかりました)`;
