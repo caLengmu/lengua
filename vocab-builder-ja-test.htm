@@ -6,14 +6,14 @@
 <title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #FF69B4;
---secondary: #FF9800;
---accent1: #1976D2;
---accent2: #4CAF50;
---accent3: #9C27B0;
---dark: #2C2C2C;
---light: #F8F8F8;
---mid: #757575;
+--primary: #FF69B4; /* Hot Pink (a well-known CSS color) */
+--secondary: #FF9800; /* Orange */
+--accent1: #1976D2; /* Japanese Blue */
+--accent2: #4CAF50; /* Green */
+--accent3: #9C27B0; /* Purple */
+--dark: #2C2C2C; /* Dark Gray */
+--light: #F8F8F8; /* Light Gray */
+--mid: #757575; /* Mid Gray */
 }
 
 body {
@@ -331,7 +331,7 @@ color: white;
 }
 
 .memory-btn {
-background-color: var(--accent3);
+background-color: var(--accent1);
 color: white;
 }
 
@@ -947,7 +947,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.6)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (1.5)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -1038,14 +1038,14 @@ top: -12px;
 <button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
 </div>
 <div class="button-set custom-buttons" id="custom-buttons-section">
-<h3>📝 Custom Lists</h3>
+<h3>📜 Custom Lists</h3>
 <div id="custom-buttons-container"></div>
 </div>
 </div>
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
 <button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
-<button id="text-import-memory-btn" class="memory-btn">🧠 記憶</button>
+<button id="text-import-memory-btn" class="memory-btn">📌 記憶</button>
 <button id="text-import-clear-btn" class="hint-btn">🈳 クリア</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
