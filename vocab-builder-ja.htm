@@ -1061,7 +1061,7 @@ top: -12px;
 <span id="japanese-word-display"></span>
 <span class="speaker-icon" id="japanese-word-speaker" title="Listen" style="cursor: pointer; color: var(--secondary); font-size: 24px;">🔊</span>
 </div>
-<div id="english-answer-display" class="reveal-answer" style="display: none;"></div>
+<div id="english-answer-display" class="reveal-answer" style="display: none; font-size: 23px;"></div>
 <div id="check-question" style="display: none; font-size: 23px; color: var(--accent1); margin-top: 10px;"><b>正解しましたか？</b></div>
 <div style="margin-top: 30px;">
 <button id="check-answer-btn" class="submit-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">答えを見る</button>
@@ -1099,7 +1099,7 @@ top: -12px;
 <input type="text" id="answer-input" class="answer-input" placeholder="ここに答えを入力してください...">
 <div id="feedback" class="feedback"></div>
 <div id="hint-text" class="hint"></div>
-<div id="reveal-answer" class="reveal-answer"></div>
+<div id="reveal-answer" class="reveal-answer" style="font-size: 23px;"></div>
 <div class="button-group">
 <button id="submit-btn" class="submit-btn">✅ or ❎</button>
 <button id="speak-btn" class="speak-btn">🎤 音声入力</button>
@@ -2287,9 +2287,9 @@ btn.classList.add('correct');
 }
 });
 
-timerFeedback.textContent = '間違います！😓❌';
+timerFeedback.textContent = 'あ、違うよ！😓❌';
 timerFeedback.className = 'timer-feedback incorrect';
-speak('間違います！');
+speak('あ、違うよ！');
 listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
 }
 }
