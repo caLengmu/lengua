@@ -6,14 +6,14 @@
 <title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #FF69B4;      /* Hot Pink (a well-known CSS color) */
-            --secondary: #FF9800;    /* Orange */
-            --accent1: #1976D2;      /* Japanese Blue */
-            --accent2: #4CAF50;      /* Green */
-            --accent3: #9C27B0;      /* Purple */
-            --dark: #2C2C2C;         /* Dark Gray */
-            --light: #F8F8F8;        /* Light Gray */
-            --mid: #757575;          /* Mid Gray */
+--primary: #FF69B4; /* Hot Pink (a well-known CSS color) */
+--secondary: #FF9800; /* Orange */
+--accent1: #1976D2; /* Japanese Blue */
+--accent2: #4CAF50; /* Green */
+--accent3: #9C27B0; /* Purple */
+--dark: #2C2C2C; /* Dark Gray */
+--light: #F8F8F8; /* Light Gray */
+--mid: #757575; /* Mid Gray */
 }
 
 body {
@@ -330,9 +330,23 @@ background-color: var(--mid);
 color: white;
 }
 
-.copy-btn {
-background-color: var(--accent3);
+.memory-btn {
+background-color: var(--accent1);
 color: white;
+}
+
+.delete-custom-btn {
+background-color: var(--light);
+color: white;
+font-size: 12px;
+padding: 4px 8px;
+margin-left: 5px;
+}
+
+.custom-list-container {
+position: relative;
+display: inline-block;
+width: 100%;
 }
 
 .recording {
@@ -750,15 +764,15 @@ align-items: center;
 margin-bottom: 20px;
 }
 
- .mascot-image {
-            width: 150px;
-            flex-shrink: 0;
-        }
+.mascot-image {
+width: 150px;
+flex-shrink: 0;
+}
 
-        .mascot-image img {
-            width: 100%;
-            height: auto;
-        }
+.mascot-image img {
+width: 100%;
+height: auto;
+}
 
 .speech-bubble {
 position: relative;
@@ -927,13 +941,85 @@ transform: translateX(-50%) rotate(90deg);
 .speech-bubble:after {
 top: -12px;
 }
+
+/* Add these new styles */
+.button-set-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
+
+.toggle-icon {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+    user-select: none;
+    transition: transform 0.3s ease;
+}
+
+.toggle-icon:hover {
+    transform: scale(1.1);
+}
+
+.button-set-content {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.button-set-content.visible {
+    display: grid;
+}
+
+.custom-list-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.custom-list-item .preset-btn {
+    flex: 1;
+    margin: 0;
+}
+
+.custom-list-item .delete-custom-btn {
+    flex: 0 0 50px;
+    background-color: var(--light);
+    border: 1px solid var(--mid);
+    color: var(--dark);
+    font-size: 16px;
+    padding: 8px;
+    margin: 0;
+}
+
+#custom-buttons-container .preset-btn {
+    background-color: var(--accent1);
+    color: white;
+}
+
+.no-custom-lists {
+    color: var(--mid);
+    font-size: 14px;
+    text-align: center;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .button-set-content {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 6px;
+    }
+}
+
 </style>
 </head>
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.5)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (1.8)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -999,36 +1085,71 @@ top: -12px;
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
 <h2>語彙を読み込む</h2>
+
 <div class="preset-buttons">
-<div class="button-set textbook-buttons">
-<h3>JLPT N5</h3>
-<button class="preset-btn textbook-btn" data-preset="n5_1">N5 Set 1</button>
-<button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
-<button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+    <div class="button-set textbook-buttons">
+        <div class="button-set-header">
+            <h3>JLPT N5</h3>
+            <span class="toggle-icon" data-toggle="n5-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="n5-buttons">
+            <button class="preset-btn textbook-btn" data-preset="n5_1">N5 Set 1</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+        </div>
+    </div>
+    
+    <div class="button-set jlpt-buttons">
+        <div class="button-set-header">
+            <h3>JLPT N4</h3>
+            <span class="toggle-icon" data-toggle="n4-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="n4-buttons">
+            <button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
+            <button class="preset-btn jlpt-btn" data-preset="n4_2">N4 Set 2</button>
+            <button class="preset-btn jlpt-btn" data-preset="n4_3">N4 Set 3</button>
+        </div>
+    </div>
+    
+    <div class="button-set core-buttons">
+        <div class="button-set-header">
+            <h3>JLPT N3</h3>
+            <span class="toggle-icon" data-toggle="n3-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="n3-buttons">
+            <button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
+            <button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
+            <button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
+        </div>
+    </div>
+    
+    <div class="button-set other-buttons">
+        <div class="button-set-header">
+            <h3>🌟 完璧な体験</h3>
+            <span class="toggle-icon" data-toggle="perfect-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="perfect-buttons">
+            <button class="preset-btn other-btn" data-preset="perfect1">運動</button>
+            <button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
+        </div>
+    </div>
+    
+    <div class="button-set custom-buttons" id="custom-buttons-section">
+        <div class="button-set-header">
+            <h3>📜 Custom Lists</h3>
+            <span class="toggle-icon" data-toggle="custom-buttons-content">▼</span>
+        </div>
+        <div class="button-set-content" id="custom-buttons-content">
+            <div id="custom-buttons-container"></div>
+        </div>
+    </div>
 </div>
-<div class="button-set jlpt-buttons">
-<h3>JLPT N4</h3>
-<button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
-<button class="preset-btn jlpt-btn" data-preset="n4_2">N4 Set 2</button>
-<button class="preset-btn jlpt-btn" data-preset="n4_3">N4 Set 3</button>
-</div>
-<div class="button-set core-buttons">
-<h3>JLPT N3</h3>
-<button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
-<button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
-<button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
-</div>
-<div class="button-set other-buttons">
-<h3>🌟 完璧な体験</h3>
-<button class="preset-btn other-btn" data-preset="perfect1">運動</button>
-<button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
-</div>
-</div>
+
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
-<button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
-<button id="text-import-copy-btn" class="copy-btn">📋 コピー</button>
-<button id="text-import-clear-btn" class="hint-btn">🈳 クリア</button>
+<button id="text-import-submit-btn" class="submit-btn">📂 読み込む</button>
+<button id="text-import-memory-btn" class="memory-btn">📌 記憶する</button>
+<button id="text-import-clear-btn" class="hint-btn">🈳 消す</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
@@ -1039,10 +1160,11 @@ top: -12px;
 <div class="modal-content">
 <h2>💡 AI Support</h2>
 <div class="ai-support-links">
-<a href="https://chatgpt.com/share/68e285e1-b0c8-800f-90b4-9a90408dd2b4" class="ai-support-link" target="_blank">🌟 英訳と例文と定義と穴埋めを作る</a>
-<a href="https://chatgpt.com" class="ai-support-link" target="_blank">💬 日本語で会話</a>
-<a href="https://chatgpt.com" class="ai-support-link" target="_blank">✏️ 文法を学ぶ</a>
-<a href="https://chatgpt.com" class="ai-support-link" target="_blank">📚 読解練習</a>
+<a href="https://www.japandict.com/" class="ai-support-link" target="_blank">🔍 辞書: JapanDict</a>
+<a href="https://chatgpt.com/share/68e91bb2-c7f0-800f-b3ed-61aac70c3c16" class="ai-support-link" target="_blank">✏️ 英訳と例文を作る</a>
+<a href="https://chatgpt.com/share/68e285e1-b0c8-800f-90b4-9a90408dd2b4" class="ai-support-link" target="_blank">🌟 英訳と例文と定義と穴埋めを作成する</a>
+<a href="https://chatgpt.com" class="ai-support-link" target="_blank">[未完成] 💬 日本語で会話する</a>
+<a href="https://chatgpt.com/share/68e91d2f-752c-800f-ad17-7eb2e8cfb89f" class="ai-support-link" target="_blank">📚 文法を学ぶ</a>
 </div>
 <div class="button-group">
 <button id="ai-support-close-btn" class="close-btn">Close</button>
@@ -1116,8 +1238,8 @@ top: -12px;
 <div class="popup-content">
 <div class="popup-layout">
 <div class="mascot-image">
-                    <div style="width: 150px; height: 150px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">🎌</div>
-                </div>
+<div style="width: 150px; height: 150px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">🎌</div>
+</div>
 <div class="speech-bubble">
 <p class="japanese-text">1. 毎回使用する前に「リフレッシュ(refresh)🔄」をクリックして更新を取得してください！</p>
 <p class="english-text">2. iPhoneとiPadユーザーは、システムをiOSに切り替えると🔊が正常に動作します。</p>
@@ -1174,7 +1296,8 @@ const textImportContent = document.getElementById('text-import-content');
 const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
 const textImportCloseBtn = document.getElementById('text-import-close-btn');
 const textImportClearBtn = document.getElementById('text-import-clear-btn');
-const textImportCopyBtn = document.getElementById('text-import-copy-btn');
+const textImportMemoryBtn = document.getElementById('text-import-memory-btn');
+const customButtonsContainer = document.getElementById('custom-buttons-container');
 const aiSupportModal = document.getElementById('ai-support-modal');
 const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
 
@@ -1200,6 +1323,187 @@ let isAnswered = false;
 let voices = [];
 let voicesLoaded = false;
 let currentTTSSystem = 'android';
+let db = null;
+
+// ===== INDEXEDDB FUNCTIONS =====
+function initIndexedDB() {
+return new Promise((resolve, reject) => {
+const request = indexedDB.open('VocabBuilderDB', 1);
+
+request.onerror = () => {
+console.error('IndexedDB error:', request.error);
+reject(request.error);
+};
+
+request.onsuccess = () => {
+db = request.result;
+console.log('IndexedDB initialized successfully');
+resolve(db);
+};
+
+request.onupgradeneeded = (event) => {
+db = event.target.result;
+if (!db.objectStoreNames.contains('customLists')) {
+const objectStore = db.createObjectStore('customLists', { keyPath: 'id', autoIncrement: true });
+objectStore.createIndex('name', 'name', { unique: true });
+objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+}
+console.log('IndexedDB object store created');
+};
+});
+}
+
+function saveCustomList(name, content) {
+return new Promise((resolve, reject) => {
+if (!db) {
+reject('Database not initialized');
+return;
+}
+
+const transaction = db.transaction(['customLists'], 'readwrite');
+const objectStore = transaction.objectStore('customLists');
+
+const data = {
+name: name,
+content: content,
+timestamp: Date.now()
+};
+
+const request = objectStore.add(data);
+
+request.onsuccess = () => {
+console.log('Custom list saved:', name);
+resolve(request.result);
+};
+
+request.onerror = () => {
+console.error('Error saving custom list:', request.error);
+reject(request.error);
+};
+});
+}
+
+function getAllCustomLists() {
+return new Promise((resolve, reject) => {
+if (!db) {
+reject('Database not initialized');
+return;
+}
+
+const transaction = db.transaction(['customLists'], 'readonly');
+const objectStore = transaction.objectStore('customLists');
+const request = objectStore.getAll();
+
+request.onsuccess = () => {
+resolve(request.result);
+};
+
+request.onerror = () => {
+reject(request.error);
+};
+});
+}
+
+function deleteCustomList(id) {
+return new Promise((resolve, reject) => {
+if (!db) {
+reject('Database not initialized');
+return;
+}
+
+const transaction = db.transaction(['customLists'], 'readwrite');
+const objectStore = transaction.objectStore('customLists');
+const request = objectStore.delete(id);
+
+request.onsuccess = () => {
+console.log('Custom list deleted:', id);
+resolve();
+};
+
+request.onerror = () => {
+reject(request.error);
+};
+});
+}
+
+async function renderCustomButtons() {
+    try {
+        const customLists = await getAllCustomLists();
+        customButtonsContainer.innerHTML = '';
+
+        if (customLists.length === 0) {
+            customButtonsContainer.innerHTML = '<p class="no-custom-lists">カスタムリストはまだありません</p>';
+            return;
+        }
+
+        customLists.forEach(list => {
+            const container = document.createElement('div');
+            container.className = 'custom-list-item';
+
+            const button = document.createElement('button');
+            button.className = 'preset-btn';
+            button.textContent = list.name;
+            button.addEventListener('click', () => {
+                processTextImport(list.content);
+                textImportModal.style.display = 'none';
+
+                const successMessage = document.createElement('div');
+                successMessage.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+                    color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                    z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                `;
+                successMessage.textContent = `✅ ${list.name} 読み込み完了！`;
+                document.body.appendChild(successMessage);
+
+                setTimeout(() => {
+                    if (document.body.contains(successMessage)) {
+                        document.body.removeChild(successMessage);
+                    }
+                }, 3000);
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-custom-btn';
+            deleteBtn.textContent = '🗑️';
+            deleteBtn.title = '削除';
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (confirm(`「${list.name}」を削除しますか？`)) {
+                    try {
+                        await deleteCustomList(list.id);
+                        await renderCustomButtons();
+
+                        const deleteMessage = document.createElement('div');
+                        deleteMessage.style.cssText = `
+                            position: fixed; top: 20px; right: 20px; background-color: var(--primary);
+                            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        `;
+                        deleteMessage.textContent = `🗑️ ${list.name} 削除完了`;
+                        document.body.appendChild(deleteMessage);
+
+                        setTimeout(() => {
+                            if (document.body.contains(deleteMessage)) {
+                                document.body.removeChild(deleteMessage);
+                            }
+                        }, 2000);
+                    } catch (error) {
+                        console.error('Error deleting custom list:', error);
+                        alert('削除に失敗しました。');
+                    }
+                }
+            });
+
+            container.appendChild(button);
+            container.appendChild(deleteBtn);
+            customButtonsContainer.appendChild(container);
+        });
+    } catch (error) {
+        console.error('Error rendering custom buttons:', error);
+        customButtonsContainer.innerHTML = '<p style="color: var(--primary);">エラーが発生しました</p>';
+    }
+}
 
 // ===== TTS FUNCTIONS =====
 function loadVoices() {
@@ -1533,24 +1837,52 @@ textImportClearBtn.addEventListener('click', () => {
 textImportContent.value = '';
 });
 
-textImportCopyBtn.addEventListener('click', () => {
-const textToCopy = textImportContent.value;
-if (!textToCopy) {
-alert('コピーするテキストがありません。');
+textImportMemoryBtn.addEventListener('click', async () => {
+const content = textImportContent.value.trim();
+if (!content) {
+alert('記憶する内容がありません。');
 return;
 }
-navigator.clipboard.writeText(textToCopy)
-.then(() => {
-const originalText = textImportCopyBtn.textContent;
-textImportCopyBtn.textContent = 'コピーしました！';
+
+const namePrompt = prompt('このカスタムリストの名前を入力してください：');
+if (!namePrompt) {
+return;
+}
+
+const name = namePrompt.trim();
+if (!name) {
+alert('名前を入力してください。');
+return;
+}
+
+try {
+await saveCustomList(name, content);
+await renderCustomButtons();
+
+const successMessage = document.createElement('div');
+successMessage.style.cssText = `
+position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+successMessage.textContent = `🧠 ${name} 記憶完了！`;
+document.body.appendChild(successMessage);
+
 setTimeout(() => {
-textImportCopyBtn.textContent = originalText;
-}, 1500);
-})
-.catch(err => {
-console.error('Failed to copy text: ', err);
-alert('コピーに失敗しました。');
-});
+if (document.body.contains(successMessage)) {
+document.body.removeChild(successMessage);
+}
+}, 3000);
+
+textImportContent.value = '';
+} catch (error) {
+console.error('Error saving custom list:', error);
+if (error.name === 'ConstraintError') {
+alert('この名前は既に使用されています。別の名前を選んでください。');
+} else {
+alert('保存に失敗しました。もう一度お試しください。');
+}
+}
 });
 
 // ===== TEXT IMPORT AND TABLE RENDERING =====
@@ -2321,20 +2653,46 @@ updateDateInfo();
 setInterval(updateDateInfo, 60000);
 
 // ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', () => {
-initializeTTS();
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initIndexedDB();
+        await renderCustomButtons();
+    } catch (error) {
+        console.error('Error initializing IndexedDB:', error);
+    }
 
-const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
+    initializeTTS();
 
-setTimeout(() => {
-refreshReminderPopup.style.display = 'flex';
-}, 1000);
+    // Add toggle functionality for button sets
+    document.querySelectorAll('.toggle-icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-toggle');
+            const targetContent = document.getElementById(targetId);
+            
+            if (targetContent) {
+                targetContent.classList.toggle('visible');
+                
+                // Change icon direction
+                if (targetContent.classList.contains('visible')) {
+                    this.textContent = '▲';
+                } else {
+                    this.textContent = '▼';
+                }
+            }
+        });
+    });
 
-const closeReminderBtn = document.getElementById('close-reminder-btn');
+    const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
 
-closeReminderBtn.addEventListener('click', () => {
-refreshReminderPopup.style.display = 'none';
-});
+    setTimeout(() => {
+        refreshReminderPopup.style.display = 'flex';
+    }, 1000);
+
+    const closeReminderBtn = document.getElementById('close-reminder-btn');
+
+    closeReminderBtn.addEventListener('click', () => {
+        refreshReminderPopup.style.display = 'none';
+    });
 });
 
 document.addEventListener('click', function initOnFirstClick() {
