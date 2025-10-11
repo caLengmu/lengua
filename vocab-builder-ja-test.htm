@@ -1019,7 +1019,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.8)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (2.0)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -1148,7 +1148,7 @@ top: -12px;
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
 <button id="text-import-submit-btn" class="submit-btn">📂 読み込む</button>
-<button id="text-import-memory-btn" class="memory-btn">📌 記憶する</button>
+<button id="text-import-memory-btn" class="memory-btn">📌 記憶 (きおく 0)</button>
 <button id="text-import-clear-btn" class="hint-btn">🈳 消す</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
@@ -1250,6 +1250,19 @@ top: -12px;
 </div>
 </div>
 
+<!-- Edit Custom List Modal -->
+<div id="edit-custom-modal" class="modal">
+<div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+<h2>📝 カスタムリストを編集</h2>
+<textarea id="edit-custom-content" style="width: 100%; height: 400px; padding: 12px; margin: 15px 0; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;"></textarea>
+<div class="button-group">
+<button id="edit-custom-save-btn" class="next-btn">🆗 保存 (ほぞん 0)</button>
+<button id="edit-custom-abort-btn" class="close-btn">🚫 中止 (ちゅうし 0)</button>
+<button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除 (さくじょ 1)</button>
+</div>
+</div>
+</div>
+
 <script>
 // ===== DOM ELEMENTS =====
 const japaneseToEnglishBtn = document.getElementById('japanese-to-english-btn');
@@ -1300,6 +1313,11 @@ const textImportMemoryBtn = document.getElementById('text-import-memory-btn');
 const customButtonsContainer = document.getElementById('custom-buttons-container');
 const aiSupportModal = document.getElementById('ai-support-modal');
 const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+const editCustomModal = document.getElementById('edit-custom-modal');
+const editCustomContent = document.getElementById('edit-custom-content');
+const editCustomSaveBtn = document.getElementById('edit-custom-save-btn');
+const editCustomAbortBtn = document.getElementById('edit-custom-abort-btn');
+const editCustomDeleteBtn = document.getElementById('edit-custom-delete-btn');
 
 // ===== VARIABLES =====
 let isSpeaking = false;
@@ -1324,6 +1342,7 @@ let voices = [];
 let voicesLoaded = false;
 let currentTTSSystem = 'android';
 let db = null;
+let currentEditingListId = null;
 
 // ===== INDEXEDDB FUNCTIONS =====
 function initIndexedDB() {
@@ -1426,6 +1445,43 @@ reject(request.error);
 });
 }
 
+function updateCustomList(id, content) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject('Database not initialized');
+            return;
+        }
+
+        const transaction = db.transaction(['customLists'], 'readwrite');
+        const objectStore = transaction.objectStore('customLists');
+        const getRequest = objectStore.get(id);
+
+        getRequest.onsuccess = () => {
+            const data = getRequest.result;
+            if (data) {
+                data.content = content;
+                data.timestamp = Date.now();
+                const updateRequest = objectStore.put(data);
+
+                updateRequest.onsuccess = () => {
+                    console.log('Custom list updated:', id);
+                    resolve();
+                };
+
+                updateRequest.onerror = () => {
+                    reject(updateRequest.error);
+                };
+            } else {
+                reject('List not found');
+            }
+        };
+
+        getRequest.onerror = () => {
+            reject(getRequest.error);
+        };
+    });
+}
+
 async function renderCustomButtons() {
     try {
         const customLists = await getAllCustomLists();
@@ -1463,40 +1519,17 @@ async function renderCustomButtons() {
                 }, 3000);
             });
 
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-custom-btn';
-            deleteBtn.textContent = '🗑️';
-            deleteBtn.title = '削除';
-            deleteBtn.addEventListener('click', async (e) => {
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-custom-btn';
+            editBtn.textContent = '✏️ 編集';
+            editBtn.title = '編集';
+            editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (confirm(`「${list.name}」を削除しますか？`)) {
-                    try {
-                        await deleteCustomList(list.id);
-                        await renderCustomButtons();
-
-                        const deleteMessage = document.createElement('div');
-                        deleteMessage.style.cssText = `
-                            position: fixed; top: 20px; right: 20px; background-color: var(--primary);
-                            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
-                            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                        `;
-                        deleteMessage.textContent = `🗑️ ${list.name} 削除完了`;
-                        document.body.appendChild(deleteMessage);
-
-                        setTimeout(() => {
-                            if (document.body.contains(deleteMessage)) {
-                                document.body.removeChild(deleteMessage);
-                            }
-                        }, 2000);
-                    } catch (error) {
-                        console.error('Error deleting custom list:', error);
-                        alert('削除に失敗しました。');
-                    }
-                }
+                openEditModal(list.id, list.name, list.content);
             });
 
             container.appendChild(button);
-            container.appendChild(deleteBtn);
+            container.appendChild(editBtn);
             customButtonsContainer.appendChild(container);
         });
     } catch (error) {
@@ -1504,6 +1537,92 @@ async function renderCustomButtons() {
         customButtonsContainer.innerHTML = '<p style="color: var(--primary);">エラーが発生しました</p>';
     }
 }
+
+function openEditModal(id, name, content) {
+    currentEditingListId = id;
+    editCustomContent.value = content;
+    textImportModal.style.display = 'none';
+    editCustomModal.style.display = 'flex';
+}
+
+editCustomSaveBtn.addEventListener('click', async () => {
+    if (!currentEditingListId) return;
+
+    const newContent = editCustomContent.value.trim();
+    if (!newContent) {
+        alert('内容が空です。');
+        return;
+    }
+
+    try {
+        await updateCustomList(currentEditingListId, newContent);
+        await renderCustomButtons();
+
+        editCustomModal.style.display = 'none';
+        textImportModal.style.display = 'flex';
+        currentEditingListId = null;
+        editCustomContent.value = '';
+
+        const successMessage = document.createElement('div');
+        successMessage.style.cssText = `
+            position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        `;
+        successMessage.textContent = '💾 保存完了！';
+        document.body.appendChild(successMessage);
+
+        setTimeout(() => {
+            if (document.body.contains(successMessage)) {
+                document.body.removeChild(successMessage);
+            }
+        }, 2000);
+    } catch (error) {
+        console.error('Error updating custom list:', error);
+        alert('保存に失敗しました。');
+    }
+});
+
+editCustomAbortBtn.addEventListener('click', () => {
+    editCustomModal.style.display = 'none';
+    textImportModal.style.display = 'flex';
+    currentEditingListId = null;
+    editCustomContent.value = '';
+});
+
+editCustomDeleteBtn.addEventListener('click', async () => {
+    if (!currentEditingListId) return;
+
+    if (confirm('このカスタムリストを削除しますか？')) {
+        try {
+            await deleteCustomList(currentEditingListId);
+            await renderCustomButtons();
+
+            editCustomModal.style.display = 'none';
+            textImportModal.style.display = 'flex';
+            currentEditingListId = null;
+            editCustomContent.value = '';
+
+            const deleteMessage = document.createElement('div');
+            deleteMessage.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background-color: var(--primary);
+                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            deleteMessage.textContent = '🗑️ 削除完了';
+            document.body.appendChild(deleteMessage);
+
+            setTimeout(() => {
+                if (document.body.contains(deleteMessage)) {
+                    document.body.removeChild(deleteMessage);
+                }
+            }, 2000);
+        } catch (error) {
+            console.error('Error deleting custom list:', error);
+            alert('削除に失敗しました。');
+        }
+    }
+});
 
 // ===== TTS FUNCTIONS =====
 function loadVoices() {
@@ -2237,7 +2356,7 @@ position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
 color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
 z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
-successMessage.textContent = `🧠 ${name} 記憶完了！`;
+successMessage.textContent = `📌 ${name} 記憶完了！`;
 document.body.appendChild(successMessage);
 
 setTimeout(() => {
