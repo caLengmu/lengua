@@ -1008,21 +1008,16 @@ top: -12px;
 }
 
 @media (max-width: 600px) {
-    .button-set-content {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 6px;
-    }
-
-.custom-list-item .preset-btn {
+   .custom-list-item .preset-btn {
         font-size: 12px;  /* Adjust text size */
         padding: 10px 8px;  /* Adjust button padding */
+ flex: 3;  /* Make it even wider relative to edit button */
     }
 
     .custom-list-item .edit-custom-btn {
         font-size: 12px;  /* Adjust text size */
         padding: 8px 10px;  /* Adjust button padding */
-        background-color: var(--accent1);  /* Change color if desired */
-        color: white;  /* Change text color if desired */
+       flex: 0 0 60px;  /* Give edit button a fixed width of 60px */
     }
 }
 
@@ -1031,7 +1026,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.8)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (2.0)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
