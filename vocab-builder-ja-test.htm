@@ -1025,14 +1025,16 @@ top: -12px;
 @media (max-width: 600px) {
    .custom-list-item .preset-btn {
         font-size: 12px;  /* Adjust text size */
-        padding: 8px 12px;  /* Adjust button padding */
+        padding: 10px 8px;  /* Adjust button padding */
 font-weight: bold;
+ flex: 3;  /* Make it even wider relative to edit button */
     }
 
     .custom-list-item .edit-custom-btn {
         font-size: 12px;  /* Adjust text size */
-        padding: 8px 6px;  /* Adjust button padding */
+        padding: 8px 10px;  /* Adjust button padding */
 background-color: var(--light);  /* Change color if desired */
+ flex: 0 0 60px;  /* Give edit button a fixed width of 60px */
     }
 }
 
@@ -1278,7 +1280,7 @@ background-color: var(--light);  /* Change color if desired */
 <h2>📝 カスタムリストを編集</h2>
 <textarea id="edit-custom-content" style="width: 100%; height: 400px; padding: 12px; margin: 15px 0; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;"></textarea>
 <div class="button-group">
-<button id="edit-custom-save-btn" class="next-btn">🆗 保存 (ほぞん 0)</button>
+<button id="edit-custom-save-btn" class="next-btn">🍙 保存 (ほぞん 0)</button>
 <button id="edit-custom-abort-btn" class="close-btn">🚫 中止 (ちゅうし 0)</button>
 <button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除 (さくじょ 1)</button>
 </div>
@@ -1286,7 +1288,7 @@ background-color: var(--light);  /* Change color if desired */
 </div>
 
  <footer class="footer">
-        <div id="footer">🎌 言葉の達人／語彙力アップ へようこそ！</div>
+        <div id="footer">🌸 新しい世界のカギ、日本語を学ぼう！</div>
     </footer>
 
 <script>
@@ -1547,7 +1549,7 @@ async function renderCustomButtons() {
 
             const editBtn = document.createElement('button');
             editBtn.className = 'edit-custom-btn';
-            editBtn.textContent = '✏️ 編集';
+            editBtn.textContent = '編集';
             editBtn.title = '編集';
             editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
