@@ -6,13 +6,14 @@
 <title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #FF69B4; /* Hot Pink (a well-known CSS color) */
---secondary: #FF9800; /* Orange */
+--primary: #DA536E; /* 椿(tsubaki) */
+--secondary: #E6B422; /* 金色(kin-iro) */
 --accent1: #1976D2; /* Japanese Blue */
---accent2: #4CAF50; /* Green */
---accent3: #9C27B0; /* Purple */
+--accent2: #86C166; /* 苗色(nae-iro) */
+--accent3: #8A6BBE; /* 藤紫(fuji-murasaki) */
+--accent4: #51A8DD; /* 群青(gun-jou) */
 --dark: #2C2C2C; /* Dark Gray */
---light: #F8F8F8; /* Light Gray */
+--light: #F8F5E3; /* Ivory */
 --mid: #757575; /* Mid Gray */
 }
 
@@ -331,7 +332,7 @@ color: white;
 }
 
 .memory-btn {
-background-color: var(--accent1);
+background-color: var(--accent4);
 color: white;
 }
 
@@ -735,6 +736,21 @@ color: var(--primary);
 margin: 0 3px;
 }
 
+.footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 15px;
+            color: var(--dark);
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+#footer {
+            font-weight: bold;
+        }
+
 .popup-container {
 position: fixed;
 top: 0;
@@ -995,7 +1011,7 @@ top: -12px;
 }
 
 #custom-buttons-container .preset-btn {
-    background-color: var(--accent1);
+    background-color: var(--accent4);
     color: white;
 }
 
@@ -1008,9 +1024,18 @@ top: -12px;
 }
 
 @media (max-width: 600px) {
-    .button-set-content {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 6px;
+   .custom-list-item .preset-btn {
+        font-size: 12px;  /* Adjust text size */
+        padding: 10px 8px;  /* Adjust button padding */
+font-weight: bold;
+ flex: 3;  /* Make it even wider relative to edit button */
+    }
+
+    .custom-list-item .edit-custom-btn {
+        font-size: 12px;  /* Adjust text size */
+        padding: 8px 10px;  /* Adjust button padding */
+background-color: var(--light);  /* Change color if desired */
+ flex: 0 0 60px;  /* Give edit button a fixed width of 60px */
     }
 }
 
@@ -1019,7 +1044,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.8)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (2.1)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -1084,36 +1109,36 @@ top: -12px;
 <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
-<h2>語彙を読み込む</h2>
+<h2>📝 語彙を読み込む</h2>
 
 <div class="preset-buttons">
     <div class="button-set textbook-buttons">
         <div class="button-set-header">
-            <h3>JLPT N5</h3>
+            <h3>📘 基本の単語</h3>
             <span class="toggle-icon" data-toggle="n5-buttons">▼</span>
         </div>
         <div class="button-set-content" id="n5-buttons">
-            <button class="preset-btn textbook-btn" data-preset="n5_1">N5 Set 1</button>
-            <button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
-            <button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_1">動詞(一)</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_2">動詞(二)</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_3">動詞(三)</button>
         </div>
     </div>
     
     <div class="button-set jlpt-buttons">
         <div class="button-set-header">
-            <h3>JLPT N4</h3>
+            <h3>📗 シーン別の単語</h3>
             <span class="toggle-icon" data-toggle="n4-buttons">▼</span>
         </div>
         <div class="button-set-content" id="n4-buttons">
             <button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
-            <button class="preset-btn jlpt-btn" data-preset="n4_2">N4 Set 2</button>
-            <button class="preset-btn jlpt-btn" data-preset="n4_3">N4 Set 3</button>
+            <button class="preset-btn jlpt-btn" data-preset="n4_2">朝</button>
+            <button class="preset-btn jlpt-btn" data-preset="n4_3">寝る前</button>
         </div>
     </div>
     
     <div class="button-set core-buttons">
         <div class="button-set-header">
-            <h3>JLPT N3</h3>
+            <h3>📙 テーマ別の単語</h3>
             <span class="toggle-icon" data-toggle="n3-buttons">▼</span>
         </div>
         <div class="button-set-content" id="n3-buttons">
@@ -1136,7 +1161,7 @@ top: -12px;
     
     <div class="button-set custom-buttons" id="custom-buttons-section">
         <div class="button-set-header">
-            <h3>📜 Custom Lists</h3>
+            <h3>📜 自分で作成した一覧</h3>
             <span class="toggle-icon" data-toggle="custom-buttons-content">▼</span>
         </div>
         <div class="button-set-content" id="custom-buttons-content">
@@ -1148,7 +1173,7 @@ top: -12px;
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
 <button id="text-import-submit-btn" class="submit-btn">📂 読み込む</button>
-<button id="text-import-memory-btn" class="memory-btn">📌 記憶する</button>
+<button id="text-import-memory-btn" class="memory-btn">📌 記憶</button>
 <button id="text-import-clear-btn" class="hint-btn">🈳 消す</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
@@ -1158,7 +1183,7 @@ top: -12px;
 <!-- AI Support Modal -->
 <div id="ai-support-modal" class="modal">
 <div class="modal-content">
-<h2>💡 AI Support</h2>
+<h2>💡 エーアイ支援</h2>
 <div class="ai-support-links">
 <a href="https://www.japandict.com/" class="ai-support-link" target="_blank">🔍 辞書: JapanDict</a>
 <a href="https://chatgpt.com/share/68e91bb2-c7f0-800f-b3ed-61aac70c3c16" class="ai-support-link" target="_blank">✏️ 英訳と例文を作る</a>
@@ -1167,7 +1192,7 @@ top: -12px;
 <a href="https://chatgpt.com/share/68e91d2f-752c-800f-ad17-7eb2e8cfb89f" class="ai-support-link" target="_blank">📚 文法を学ぶ</a>
 </div>
 <div class="button-group">
-<button id="ai-support-close-btn" class="close-btn">Close</button>
+<button id="ai-support-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
 </div>
@@ -1250,6 +1275,23 @@ top: -12px;
 </div>
 </div>
 
+<!-- Edit Custom List Modal -->
+<div id="edit-custom-modal" class="modal">
+<div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+<h2>✏️ 自分用の項目を編集</h2>
+<textarea id="edit-custom-content" style="width: 100%; height: 400px; padding: 12px; margin: 15px 0; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;"></textarea>
+<div class="button-group">
+<button id="edit-custom-save-btn" class="next-btn">🍙 保存</button>
+<button id="edit-custom-abort-btn" class="close-btn">🚫 中止</button>
+<button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除</button>
+</div>
+</div>
+</div>
+
+ <footer class="footer">
+        <div id="footer">🌸 新しい世界のカギ、<br>日本語を学ぼう！</div>
+    </footer>
+
 <script>
 // ===== DOM ELEMENTS =====
 const japaneseToEnglishBtn = document.getElementById('japanese-to-english-btn');
@@ -1300,6 +1342,11 @@ const textImportMemoryBtn = document.getElementById('text-import-memory-btn');
 const customButtonsContainer = document.getElementById('custom-buttons-container');
 const aiSupportModal = document.getElementById('ai-support-modal');
 const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+const editCustomModal = document.getElementById('edit-custom-modal');
+const editCustomContent = document.getElementById('edit-custom-content');
+const editCustomSaveBtn = document.getElementById('edit-custom-save-btn');
+const editCustomAbortBtn = document.getElementById('edit-custom-abort-btn');
+const editCustomDeleteBtn = document.getElementById('edit-custom-delete-btn');
 
 // ===== VARIABLES =====
 let isSpeaking = false;
@@ -1324,6 +1371,7 @@ let voices = [];
 let voicesLoaded = false;
 let currentTTSSystem = 'android';
 let db = null;
+let currentEditingListId = null;
 
 // ===== INDEXEDDB FUNCTIONS =====
 function initIndexedDB() {
@@ -1426,13 +1474,50 @@ reject(request.error);
 });
 }
 
+function updateCustomList(id, content) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject('Database not initialized');
+            return;
+        }
+
+        const transaction = db.transaction(['customLists'], 'readwrite');
+        const objectStore = transaction.objectStore('customLists');
+        const getRequest = objectStore.get(id);
+
+        getRequest.onsuccess = () => {
+            const data = getRequest.result;
+            if (data) {
+                data.content = content;
+                data.timestamp = Date.now();
+                const updateRequest = objectStore.put(data);
+
+                updateRequest.onsuccess = () => {
+                    console.log('Custom list updated:', id);
+                    resolve();
+                };
+
+                updateRequest.onerror = () => {
+                    reject(updateRequest.error);
+                };
+            } else {
+                reject('List not found');
+            }
+        };
+
+        getRequest.onerror = () => {
+            reject(getRequest.error);
+        };
+    });
+}
+
 async function renderCustomButtons() {
     try {
         const customLists = await getAllCustomLists();
         customButtonsContainer.innerHTML = '';
 
         if (customLists.length === 0) {
-            customButtonsContainer.innerHTML = '<p class="no-custom-lists">カスタムリストはまだありません</p>';
+            customButtonsContainer.innerHTML = '<p class="no-custom-lists">自分用の一覧はまだありません</p>';
             return;
         }
 
@@ -1463,40 +1548,17 @@ async function renderCustomButtons() {
                 }, 3000);
             });
 
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-custom-btn';
-            deleteBtn.textContent = '🗑️';
-            deleteBtn.title = '削除';
-            deleteBtn.addEventListener('click', async (e) => {
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-custom-btn';
+            editBtn.textContent = '編集';
+            editBtn.title = '編集';
+            editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (confirm(`「${list.name}」を削除しますか？`)) {
-                    try {
-                        await deleteCustomList(list.id);
-                        await renderCustomButtons();
-
-                        const deleteMessage = document.createElement('div');
-                        deleteMessage.style.cssText = `
-                            position: fixed; top: 20px; right: 20px; background-color: var(--primary);
-                            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
-                            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                        `;
-                        deleteMessage.textContent = `🗑️ ${list.name} 削除完了`;
-                        document.body.appendChild(deleteMessage);
-
-                        setTimeout(() => {
-                            if (document.body.contains(deleteMessage)) {
-                                document.body.removeChild(deleteMessage);
-                            }
-                        }, 2000);
-                    } catch (error) {
-                        console.error('Error deleting custom list:', error);
-                        alert('削除に失敗しました。');
-                    }
-                }
+                openEditModal(list.id, list.name, list.content);
             });
 
             container.appendChild(button);
-            container.appendChild(deleteBtn);
+            container.appendChild(editBtn);
             customButtonsContainer.appendChild(container);
         });
     } catch (error) {
@@ -1504,6 +1566,92 @@ async function renderCustomButtons() {
         customButtonsContainer.innerHTML = '<p style="color: var(--primary);">エラーが発生しました</p>';
     }
 }
+
+function openEditModal(id, name, content) {
+    currentEditingListId = id;
+    editCustomContent.value = content;
+    textImportModal.style.display = 'none';
+    editCustomModal.style.display = 'flex';
+}
+
+editCustomSaveBtn.addEventListener('click', async () => {
+    if (!currentEditingListId) return;
+
+    const newContent = editCustomContent.value.trim();
+    if (!newContent) {
+        alert('内容が空です。');
+        return;
+    }
+
+    try {
+        await updateCustomList(currentEditingListId, newContent);
+        await renderCustomButtons();
+
+        editCustomModal.style.display = 'none';
+        textImportModal.style.display = 'flex';
+        currentEditingListId = null;
+        editCustomContent.value = '';
+
+        const successMessage = document.createElement('div');
+        successMessage.style.cssText = `
+            position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        `;
+        successMessage.textContent = '💾 保存完了！';
+        document.body.appendChild(successMessage);
+
+        setTimeout(() => {
+            if (document.body.contains(successMessage)) {
+                document.body.removeChild(successMessage);
+            }
+        }, 2000);
+    } catch (error) {
+        console.error('Error updating custom list:', error);
+        alert('保存に失敗しました。');
+    }
+});
+
+editCustomAbortBtn.addEventListener('click', () => {
+    editCustomModal.style.display = 'none';
+    textImportModal.style.display = 'flex';
+    currentEditingListId = null;
+    editCustomContent.value = '';
+});
+
+editCustomDeleteBtn.addEventListener('click', async () => {
+    if (!currentEditingListId) return;
+
+    if (confirm('この自分で作成した項目を削除しますか？')) {
+        try {
+            await deleteCustomList(currentEditingListId);
+            await renderCustomButtons();
+
+            editCustomModal.style.display = 'none';
+            textImportModal.style.display = 'flex';
+            currentEditingListId = null;
+            editCustomContent.value = '';
+
+            const deleteMessage = document.createElement('div');
+            deleteMessage.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background-color: var(--primary);
+                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            deleteMessage.textContent = '🗑️ 削除完了';
+            document.body.appendChild(deleteMessage);
+
+            setTimeout(() => {
+                if (document.body.contains(deleteMessage)) {
+                    document.body.removeChild(deleteMessage);
+                }
+            }, 2000);
+        } catch (error) {
+            console.error('Error deleting custom list:', error);
+            alert('削除に失敗しました。');
+        }
+    }
+});
 
 // ===== TTS FUNCTIONS =====
 function loadVoices() {
@@ -1715,37 +1863,6 @@ textImportModal.style.display = 'none';
 const presetVocabulary = {
 n5_1: `
 
-`,
-n5_2: `
-
-`,
-n5_3: `
-
-`,
-n4_1: `
-
-`,
-n4_2: `
-
-`,
-n4_3: `
-
-`,
-n3_1: `
-
-`,
-n3_2: `
-
-`,
-n3_3: `
-
-`,
-perfect1: `
-
-
- `,
-perfect2: `
-
 
  `
 };
@@ -1844,7 +1961,7 @@ alert('記憶する内容がありません。');
 return;
 }
 
-const namePrompt = prompt('このカスタムリストの名前を入力してください：');
+const namePrompt = prompt('この自分で作成した項目の名前を入力してください：');
 if (!namePrompt) {
 return;
 }
@@ -1865,7 +1982,7 @@ position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
 color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
 z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
-successMessage.textContent = `🧠 ${name} 記憶完了！`;
+successMessage.textContent = `📌 ${name} 記憶完了！`;
 document.body.appendChild(successMessage);
 
 setTimeout(() => {
