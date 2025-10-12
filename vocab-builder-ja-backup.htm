@@ -6,13 +6,14 @@
 <title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #FF69B4; /* Hot Pink (a well-known CSS color) */
---secondary: #FF9800; /* Orange */
+--primary: #DA536E; /* 椿(tsubaki) */
+--secondary: #E6B422; /* 金色(kin-iro) */
 --accent1: #1976D2; /* Japanese Blue */
---accent2: #4CAF50; /* Green */
---accent3: #9C27B0; /* Purple */
+--accent2: #86C166; /* 苗色(nae-iro) */
+--accent3: #8A6BBE; /* 藤紫(fuji-murasaki) */
+--accent4: #51A8DD; /* 群青(gun-jou) */
 --dark: #2C2C2C; /* Dark Gray */
---light: #F8F3E6; /* Quarter Spanish White, aka a very light beige */
+--light: #F8F5E3; /* Ivory */
 --mid: #757575; /* Mid Gray */
 }
 
@@ -331,7 +332,7 @@ color: white;
 }
 
 .memory-btn {
-background-color: var(--accent1);
+background-color: var(--accent4);
 color: white;
 }
 
@@ -1010,7 +1011,7 @@ top: -12px;
 }
 
 #custom-buttons-container .preset-btn {
-    background-color: var(--accent1);
+    background-color: var(--accent4);
     color: white;
 }
 
@@ -1108,7 +1109,7 @@ background-color: var(--light);  /* Change color if desired */
 <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
-<h2>語彙を読み込む</h2>
+<h2>📝 語彙を読み込む</h2>
 
 <div class="preset-buttons">
     <div class="button-set textbook-buttons">
@@ -1160,7 +1161,7 @@ background-color: var(--light);  /* Change color if desired */
     
     <div class="button-set custom-buttons" id="custom-buttons-section">
         <div class="button-set-header">
-            <h3>📜 Custom Lists</h3>
+            <h3>📜 自分で作成した一覧</h3>
             <span class="toggle-icon" data-toggle="custom-buttons-content">▼</span>
         </div>
         <div class="button-set-content" id="custom-buttons-content">
@@ -1172,7 +1173,7 @@ background-color: var(--light);  /* Change color if desired */
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
 <button id="text-import-submit-btn" class="submit-btn">📂 読み込む</button>
-<button id="text-import-memory-btn" class="memory-btn">📌 記憶 (きおく 0)</button>
+<button id="text-import-memory-btn" class="memory-btn">📌 記憶</button>
 <button id="text-import-clear-btn" class="hint-btn">🈳 消す</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
@@ -1182,7 +1183,7 @@ background-color: var(--light);  /* Change color if desired */
 <!-- AI Support Modal -->
 <div id="ai-support-modal" class="modal">
 <div class="modal-content">
-<h2>💡 AI Support</h2>
+<h2>💡 エーアイ支援</h2>
 <div class="ai-support-links">
 <a href="https://www.japandict.com/" class="ai-support-link" target="_blank">🔍 辞書: JapanDict</a>
 <a href="https://chatgpt.com/share/68e91bb2-c7f0-800f-b3ed-61aac70c3c16" class="ai-support-link" target="_blank">✏️ 英訳と例文を作る</a>
@@ -1277,12 +1278,12 @@ background-color: var(--light);  /* Change color if desired */
 <!-- Edit Custom List Modal -->
 <div id="edit-custom-modal" class="modal">
 <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
-<h2>📝 自分用の一覧を編集</h2>
+<h2>✏️ 自分用の項目を編集</h2>
 <textarea id="edit-custom-content" style="width: 100%; height: 400px; padding: 12px; margin: 15px 0; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;"></textarea>
 <div class="button-group">
-<button id="edit-custom-save-btn" class="next-btn">🍙 保存 (ほぞん 0)</button>
-<button id="edit-custom-abort-btn" class="close-btn">🚫 中止 (ちゅうし 0)</button>
-<button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除 (さくじょ 1)</button>
+<button id="edit-custom-save-btn" class="next-btn">🍙 保存</button>
+<button id="edit-custom-abort-btn" class="close-btn">🚫 中止</button>
+<button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除</button>
 </div>
 </div>
 </div>
@@ -1621,7 +1622,7 @@ editCustomAbortBtn.addEventListener('click', () => {
 editCustomDeleteBtn.addEventListener('click', async () => {
     if (!currentEditingListId) return;
 
-    if (confirm('この自分で作成した項目(kōmoku)を削除しますか？')) {
+    if (confirm('この自分で作成した項目を削除しますか？')) {
         try {
             await deleteCustomList(currentEditingListId);
             await renderCustomButtons();
@@ -2363,7 +2364,7 @@ alert('記憶する内容がありません。');
 return;
 }
 
-const namePrompt = prompt('この自分で作成した項目(kōmoku)の名前を入力してください：');
+const namePrompt = prompt('この自分で作成した項目の名前を入力してください：');
 if (!namePrompt) {
 return;
 }
