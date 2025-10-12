@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日本語 Vocab Builder (1.1)</title>
+<title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #E53935;      /* Japanese Red */
-            --secondary: #FF9800;    /* Orange */
-            --accent1: #2196F3;      /* Blue */
-            --accent2: #4CAF50;      /* Green */
-            --accent3: #9C27B0;      /* Purple */
-            --dark: #2C2C2C;         /* Dark Gray */
-            --light: #F8F8F8;        /* Light Gray */
-            --mid: #757575;          /* Mid Gray */
+--primary: #FF69B4; /* Hot Pink (a well-known CSS color) */
+--secondary: #FF9800; /* Orange */
+--accent1: #1976D2; /* Japanese Blue */
+--accent2: #4CAF50; /* Green */
+--accent3: #9C27B0; /* Purple */
+--dark: #2C2C2C; /* Dark Gray */
+--light: #F8F3E6; /* Quarter Spanish White, aka a very light beige */
+--mid: #757575; /* Mid Gray */
 }
 
 body {
@@ -330,9 +330,23 @@ background-color: var(--mid);
 color: white;
 }
 
-.copy-btn {
-background-color: var(--accent3);
+.memory-btn {
+background-color: var(--accent1);
 color: white;
+}
+
+.delete-custom-btn {
+background-color: var(--light);
+color: white;
+font-size: 12px;
+padding: 4px 8px;
+margin-left: 5px;
+}
+
+.custom-list-container {
+position: relative;
+display: inline-block;
+width: 100%;
 }
 
 .recording {
@@ -721,6 +735,21 @@ color: var(--primary);
 margin: 0 3px;
 }
 
+.footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 15px;
+            color: var(--dark);
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+#footer {
+            font-weight: bold;
+        }
+
 .popup-container {
 position: fixed;
 top: 0;
@@ -750,15 +779,15 @@ align-items: center;
 margin-bottom: 20px;
 }
 
- .mascot-image {
-            width: 150px;
-            flex-shrink: 0;
-        }
+.mascot-image {
+width: 150px;
+flex-shrink: 0;
+}
 
-        .mascot-image img {
-            width: 100%;
-            height: auto;
-        }
+.mascot-image img {
+width: 100%;
+height: auto;
+}
 
 .speech-bubble {
 position: relative;
@@ -927,13 +956,94 @@ transform: translateX(-50%) rotate(90deg);
 .speech-bubble:after {
 top: -12px;
 }
+
+/* Add these new styles */
+.button-set-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
+
+.toggle-icon {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+    user-select: none;
+    transition: transform 0.3s ease;
+}
+
+.toggle-icon:hover {
+    transform: scale(1.1);
+}
+
+.button-set-content {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.button-set-content.visible {
+    display: grid;
+}
+
+.custom-list-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.custom-list-item .preset-btn {
+    flex: 1;
+    margin: 0;
+}
+
+.custom-list-item .delete-custom-btn {
+    flex: 0 0 50px;
+    background-color: var(--light);
+    border: 1px solid var(--mid);
+    color: var(--dark);
+    font-size: 16px;
+    padding: 8px;
+    margin: 0;
+}
+
+#custom-buttons-container .preset-btn {
+    background-color: var(--accent1);
+    color: white;
+}
+
+.no-custom-lists {
+    color: var(--mid);
+    font-size: 14px;
+    text-align: center;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+   .custom-list-item .preset-btn {
+        font-size: 12px;  /* Adjust text size */
+        padding: 10px 8px;  /* Adjust button padding */
+font-weight: bold;
+ flex: 3;  /* Make it even wider relative to edit button */
+    }
+
+    .custom-list-item .edit-custom-btn {
+        font-size: 12px;  /* Adjust text size */
+        padding: 8px 10px;  /* Adjust button padding */
+background-color: var(--light);  /* Change color if desired */
+ flex: 0 0 60px;  /* Give edit button a fixed width of 60px */
+    }
+}
+
 </style>
 </head>
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (1.4)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (2.1)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -999,36 +1109,71 @@ top: -12px;
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
 <h2>語彙を読み込む</h2>
+
 <div class="preset-buttons">
-<div class="button-set textbook-buttons">
-<h3>JLPT N5</h3>
-<button class="preset-btn textbook-btn" data-preset="n5_1">N5 Set 1</button>
-<button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
-<button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+    <div class="button-set textbook-buttons">
+        <div class="button-set-header">
+            <h3>📘 基本の単語</h3>
+            <span class="toggle-icon" data-toggle="n5-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="n5-buttons">
+            <button class="preset-btn textbook-btn" data-preset="n5_1">動詞(一)</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+        </div>
+    </div>
+    
+    <div class="button-set jlpt-buttons">
+        <div class="button-set-header">
+            <h3>📗 シーン別の単語</h3>
+            <span class="toggle-icon" data-toggle="n4-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="n4-buttons">
+            <button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
+            <button class="preset-btn jlpt-btn" data-preset="n4_2">朝</button>
+            <button class="preset-btn jlpt-btn" data-preset="n4_3">寝る前</button>
+        </div>
+    </div>
+    
+    <div class="button-set core-buttons">
+        <div class="button-set-header">
+            <h3>📙 テーマ別の単語</h3>
+            <span class="toggle-icon" data-toggle="n3-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="n3-buttons">
+            <button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
+            <button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
+            <button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
+        </div>
+    </div>
+    
+    <div class="button-set other-buttons">
+        <div class="button-set-header">
+            <h3>🌟 完璧な体験</h3>
+            <span class="toggle-icon" data-toggle="perfect-buttons">▼</span>
+        </div>
+        <div class="button-set-content" id="perfect-buttons">
+            <button class="preset-btn other-btn" data-preset="perfect1">運動</button>
+            <button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
+        </div>
+    </div>
+    
+    <div class="button-set custom-buttons" id="custom-buttons-section">
+        <div class="button-set-header">
+            <h3>📜 Custom Lists</h3>
+            <span class="toggle-icon" data-toggle="custom-buttons-content">▼</span>
+        </div>
+        <div class="button-set-content" id="custom-buttons-content">
+            <div id="custom-buttons-container"></div>
+        </div>
+    </div>
 </div>
-<div class="button-set jlpt-buttons">
-<h3>JLPT N4</h3>
-<button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
-<button class="preset-btn jlpt-btn" data-preset="n4_2">N4 Set 2</button>
-<button class="preset-btn jlpt-btn" data-preset="n4_3">N4 Set 3</button>
-</div>
-<div class="button-set core-buttons">
-<h3>JLPT N3</h3>
-<button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
-<button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
-<button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
-</div>
-<div class="button-set other-buttons">
-<h3>🌟 完璧な体験</h3>
-<button class="preset-btn other-btn" data-preset="perfect1">運動</button>
-<button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
-</div>
-</div>
+
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
-<button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
-<button id="text-import-copy-btn" class="copy-btn">📋 コピー</button>
-<button id="text-import-clear-btn" class="hint-btn">🈳 クリア</button>
+<button id="text-import-submit-btn" class="submit-btn">📂 読み込む</button>
+<button id="text-import-memory-btn" class="memory-btn">📌 記憶 (きおく 0)</button>
+<button id="text-import-clear-btn" class="hint-btn">🈳 消す</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
@@ -1039,13 +1184,14 @@ top: -12px;
 <div class="modal-content">
 <h2>💡 AI Support</h2>
 <div class="ai-support-links">
-<a href="https://chatgpt.com/share/68e285e1-b0c8-800f-90b4-9a90408dd2b4" class="ai-support-link" target="_blank">🌟 英訳と例文と定義と穴埋めを作る</a>
-<a href="https://chatgpt.com" class="ai-support-link" target="_blank">💬 日本語で会話</a>
-<a href="https://chatgpt.com" class="ai-support-link" target="_blank">✏️ 文法を学ぶ</a>
-<a href="https://chatgpt.com" class="ai-support-link" target="_blank">📚 読解練習</a>
+<a href="https://www.japandict.com/" class="ai-support-link" target="_blank">🔍 辞書: JapanDict</a>
+<a href="https://chatgpt.com/share/68e91bb2-c7f0-800f-b3ed-61aac70c3c16" class="ai-support-link" target="_blank">✏️ 英訳と例文を作る</a>
+<a href="https://chatgpt.com/share/68e285e1-b0c8-800f-90b4-9a90408dd2b4" class="ai-support-link" target="_blank">🌟 英訳と例文と定義と穴埋めを作成する</a>
+<a href="https://chatgpt.com" class="ai-support-link" target="_blank">[未完成] 💬 日本語で会話する</a>
+<a href="https://chatgpt.com/share/68e91d2f-752c-800f-ad17-7eb2e8cfb89f" class="ai-support-link" target="_blank">📚 文法を学ぶ</a>
 </div>
 <div class="button-group">
-<button id="ai-support-close-btn" class="close-btn">Close</button>
+<button id="ai-support-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
 </div>
@@ -1061,7 +1207,7 @@ top: -12px;
 <span id="japanese-word-display"></span>
 <span class="speaker-icon" id="japanese-word-speaker" title="Listen" style="cursor: pointer; color: var(--secondary); font-size: 24px;">🔊</span>
 </div>
-<div id="english-answer-display" class="reveal-answer" style="display: none;"></div>
+<div id="english-answer-display" class="reveal-answer" style="display: none; font-size: 23px;"></div>
 <div id="check-question" style="display: none; font-size: 23px; color: var(--accent1); margin-top: 10px;"><b>正解しましたか？</b></div>
 <div style="margin-top: 30px;">
 <button id="check-answer-btn" class="submit-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">答えを見る</button>
@@ -1095,11 +1241,11 @@ top: -12px;
 <!-- Quiz Modal -->
 <div id="quiz-modal" class="modal">
 <div class="modal-content">
-<div class="prompt">「<span id="translation-prompt"></span>」を日本語で言ってください。</div>
+<div class="prompt">「<span id="translation-prompt" style="color: var(--primary);"></span>」を日本語で言ってください。</div>
 <input type="text" id="answer-input" class="answer-input" placeholder="ここに答えを入力してください...">
 <div id="feedback" class="feedback"></div>
 <div id="hint-text" class="hint"></div>
-<div id="reveal-answer" class="reveal-answer"></div>
+<div id="reveal-answer" class="reveal-answer" style="font-size: 23px;"></div>
 <div class="button-group">
 <button id="submit-btn" class="submit-btn">✅ or ❎</button>
 <button id="speak-btn" class="speak-btn">🎤 音声入力</button>
@@ -1116,8 +1262,8 @@ top: -12px;
 <div class="popup-content">
 <div class="popup-layout">
 <div class="mascot-image">
-                    <div style="width: 150px; height: 150px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">🎌</div>
-                </div>
+<div style="width: 150px; height: 150px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">🎌</div>
+</div>
 <div class="speech-bubble">
 <p class="japanese-text">1. 毎回使用する前に「リフレッシュ(refresh)🔄」をクリックして更新を取得してください！</p>
 <p class="english-text">2. iPhoneとiPadユーザーは、システムをiOSに切り替えると🔊が正常に動作します。</p>
@@ -1127,6 +1273,23 @@ top: -12px;
 <button id="close-reminder-btn" class="close-reminder-btn">わかりました</button>
 </div>
 </div>
+
+<!-- Edit Custom List Modal -->
+<div id="edit-custom-modal" class="modal">
+<div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+<h2>📝 自分用の一覧を編集</h2>
+<textarea id="edit-custom-content" style="width: 100%; height: 400px; padding: 12px; margin: 15px 0; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;"></textarea>
+<div class="button-group">
+<button id="edit-custom-save-btn" class="next-btn">🍙 保存 (ほぞん 0)</button>
+<button id="edit-custom-abort-btn" class="close-btn">🚫 中止 (ちゅうし 0)</button>
+<button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除 (さくじょ 1)</button>
+</div>
+</div>
+</div>
+
+ <footer class="footer">
+        <div id="footer">🌸 新しい世界のカギ、<br>日本語を学ぼう！</div>
+    </footer>
 
 <script>
 // ===== DOM ELEMENTS =====
@@ -1174,9 +1337,15 @@ const textImportContent = document.getElementById('text-import-content');
 const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
 const textImportCloseBtn = document.getElementById('text-import-close-btn');
 const textImportClearBtn = document.getElementById('text-import-clear-btn');
-const textImportCopyBtn = document.getElementById('text-import-copy-btn');
+const textImportMemoryBtn = document.getElementById('text-import-memory-btn');
+const customButtonsContainer = document.getElementById('custom-buttons-container');
 const aiSupportModal = document.getElementById('ai-support-modal');
 const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+const editCustomModal = document.getElementById('edit-custom-modal');
+const editCustomContent = document.getElementById('edit-custom-content');
+const editCustomSaveBtn = document.getElementById('edit-custom-save-btn');
+const editCustomAbortBtn = document.getElementById('edit-custom-abort-btn');
+const editCustomDeleteBtn = document.getElementById('edit-custom-delete-btn');
 
 // ===== VARIABLES =====
 let isSpeaking = false;
@@ -1200,6 +1369,288 @@ let isAnswered = false;
 let voices = [];
 let voicesLoaded = false;
 let currentTTSSystem = 'android';
+let db = null;
+let currentEditingListId = null;
+
+// ===== INDEXEDDB FUNCTIONS =====
+function initIndexedDB() {
+return new Promise((resolve, reject) => {
+const request = indexedDB.open('VocabBuilderDB', 1);
+
+request.onerror = () => {
+console.error('IndexedDB error:', request.error);
+reject(request.error);
+};
+
+request.onsuccess = () => {
+db = request.result;
+console.log('IndexedDB initialized successfully');
+resolve(db);
+};
+
+request.onupgradeneeded = (event) => {
+db = event.target.result;
+if (!db.objectStoreNames.contains('customLists')) {
+const objectStore = db.createObjectStore('customLists', { keyPath: 'id', autoIncrement: true });
+objectStore.createIndex('name', 'name', { unique: true });
+objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+}
+console.log('IndexedDB object store created');
+};
+});
+}
+
+function saveCustomList(name, content) {
+return new Promise((resolve, reject) => {
+if (!db) {
+reject('Database not initialized');
+return;
+}
+
+const transaction = db.transaction(['customLists'], 'readwrite');
+const objectStore = transaction.objectStore('customLists');
+
+const data = {
+name: name,
+content: content,
+timestamp: Date.now()
+};
+
+const request = objectStore.add(data);
+
+request.onsuccess = () => {
+console.log('Custom list saved:', name);
+resolve(request.result);
+};
+
+request.onerror = () => {
+console.error('Error saving custom list:', request.error);
+reject(request.error);
+};
+});
+}
+
+function getAllCustomLists() {
+return new Promise((resolve, reject) => {
+if (!db) {
+reject('Database not initialized');
+return;
+}
+
+const transaction = db.transaction(['customLists'], 'readonly');
+const objectStore = transaction.objectStore('customLists');
+const request = objectStore.getAll();
+
+request.onsuccess = () => {
+resolve(request.result);
+};
+
+request.onerror = () => {
+reject(request.error);
+};
+});
+}
+
+function deleteCustomList(id) {
+return new Promise((resolve, reject) => {
+if (!db) {
+reject('Database not initialized');
+return;
+}
+
+const transaction = db.transaction(['customLists'], 'readwrite');
+const objectStore = transaction.objectStore('customLists');
+const request = objectStore.delete(id);
+
+request.onsuccess = () => {
+console.log('Custom list deleted:', id);
+resolve();
+};
+
+request.onerror = () => {
+reject(request.error);
+};
+});
+}
+
+function updateCustomList(id, content) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject('Database not initialized');
+            return;
+        }
+
+        const transaction = db.transaction(['customLists'], 'readwrite');
+        const objectStore = transaction.objectStore('customLists');
+        const getRequest = objectStore.get(id);
+
+        getRequest.onsuccess = () => {
+            const data = getRequest.result;
+            if (data) {
+                data.content = content;
+                data.timestamp = Date.now();
+                const updateRequest = objectStore.put(data);
+
+                updateRequest.onsuccess = () => {
+                    console.log('Custom list updated:', id);
+                    resolve();
+                };
+
+                updateRequest.onerror = () => {
+                    reject(updateRequest.error);
+                };
+            } else {
+                reject('List not found');
+            }
+        };
+
+        getRequest.onerror = () => {
+            reject(getRequest.error);
+        };
+    });
+}
+
+async function renderCustomButtons() {
+    try {
+        const customLists = await getAllCustomLists();
+        customButtonsContainer.innerHTML = '';
+
+        if (customLists.length === 0) {
+            customButtonsContainer.innerHTML = '<p class="no-custom-lists">自分用の一覧はまだありません</p>';
+            return;
+        }
+
+        customLists.forEach(list => {
+            const container = document.createElement('div');
+            container.className = 'custom-list-item';
+
+            const button = document.createElement('button');
+            button.className = 'preset-btn';
+            button.textContent = list.name;
+            button.addEventListener('click', () => {
+                processTextImport(list.content);
+                textImportModal.style.display = 'none';
+
+                const successMessage = document.createElement('div');
+                successMessage.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+                    color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                    z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                `;
+                successMessage.textContent = `✅ ${list.name} 読み込み完了！`;
+                document.body.appendChild(successMessage);
+
+                setTimeout(() => {
+                    if (document.body.contains(successMessage)) {
+                        document.body.removeChild(successMessage);
+                    }
+                }, 3000);
+            });
+
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-custom-btn';
+            editBtn.textContent = '編集';
+            editBtn.title = '編集';
+            editBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openEditModal(list.id, list.name, list.content);
+            });
+
+            container.appendChild(button);
+            container.appendChild(editBtn);
+            customButtonsContainer.appendChild(container);
+        });
+    } catch (error) {
+        console.error('Error rendering custom buttons:', error);
+        customButtonsContainer.innerHTML = '<p style="color: var(--primary);">エラーが発生しました</p>';
+    }
+}
+
+function openEditModal(id, name, content) {
+    currentEditingListId = id;
+    editCustomContent.value = content;
+    textImportModal.style.display = 'none';
+    editCustomModal.style.display = 'flex';
+}
+
+editCustomSaveBtn.addEventListener('click', async () => {
+    if (!currentEditingListId) return;
+
+    const newContent = editCustomContent.value.trim();
+    if (!newContent) {
+        alert('内容が空です。');
+        return;
+    }
+
+    try {
+        await updateCustomList(currentEditingListId, newContent);
+        await renderCustomButtons();
+
+        editCustomModal.style.display = 'none';
+        textImportModal.style.display = 'flex';
+        currentEditingListId = null;
+        editCustomContent.value = '';
+
+        const successMessage = document.createElement('div');
+        successMessage.style.cssText = `
+            position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        `;
+        successMessage.textContent = '💾 保存完了！';
+        document.body.appendChild(successMessage);
+
+        setTimeout(() => {
+            if (document.body.contains(successMessage)) {
+                document.body.removeChild(successMessage);
+            }
+        }, 2000);
+    } catch (error) {
+        console.error('Error updating custom list:', error);
+        alert('保存に失敗しました。');
+    }
+});
+
+editCustomAbortBtn.addEventListener('click', () => {
+    editCustomModal.style.display = 'none';
+    textImportModal.style.display = 'flex';
+    currentEditingListId = null;
+    editCustomContent.value = '';
+});
+
+editCustomDeleteBtn.addEventListener('click', async () => {
+    if (!currentEditingListId) return;
+
+    if (confirm('この自分で作成した項目(kōmoku)を削除しますか？')) {
+        try {
+            await deleteCustomList(currentEditingListId);
+            await renderCustomButtons();
+
+            editCustomModal.style.display = 'none';
+            textImportModal.style.display = 'flex';
+            currentEditingListId = null;
+            editCustomContent.value = '';
+
+            const deleteMessage = document.createElement('div');
+            deleteMessage.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background-color: var(--primary);
+                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            deleteMessage.textContent = '🗑️ 削除完了';
+            document.body.appendChild(deleteMessage);
+
+            setTimeout(() => {
+                if (document.body.contains(deleteMessage)) {
+                    document.body.removeChild(deleteMessage);
+                }
+            }, 2000);
+        } catch (error) {
+            console.error('Error deleting custom list:', error);
+            alert('削除に失敗しました。');
+        }
+    }
+});
 
 // ===== TTS FUNCTIONS =====
 function loadVoices() {
@@ -1410,108 +1861,155 @@ textImportModal.style.display = 'none';
 // ===== PRESET VOCABULARY DATA =====
 const presetVocabulary = {
 n5_1: `
-◎JLPT N5 - 基本動詞
-食べる = to eat
-飲む = to drink
-見る = to see, to watch
-聞く = to hear, to listen
-話す = to speak
-読む = to read
-書く = to write
-行く = to go
-来る = to come
-する = to do
+◎単語とフレーズ
+本を買う (hon o kau) = to buy a book
+バスが来る (basu ga kuru) = the bus comes
+友達に会う (tomodachi ni au) = to meet a friend
+私に会いに来る (watashi ni ai ni kuru) = to come to see me
+水を飲む (mizu o nomu) = to drink water
+朝ご飯を食べる (asagohan o taberu) = to eat breakfast
+食べすぎる (tabesugiru) = to eat too much
+旅行に行く (ryokō ni iku) = to go on a trip
+知る (shiru) = to know; to find out
+あなたの名前を知っている (anata no namae o shitte iru) = to know your name
+韓国料理が好き (kankoku ryōri ga suki) = like Korean food
+この靴が一番好き (kono kutsu ga ichiban suki) = like these shoes the best
+一人で住む (hitori de sumu) = to live alone
+東京に住んでいる (tōkyō ni sunde iru) = to live in Tokyo
+晩ご飯を作る (bangohan o tsukuru) = to make dinner
+そのチームと試合をする (sono chīmu to shiai o suru) = to have a match with that team
+新聞を読む (shinbun o yomu) = to read a newspaper
+富士山が見える (fujisan ga mieru) = can see Mt. Fuji
+日本語を話す (nihongo o hanasu) = to speak Japanese
+お金が欲しい (okane ga hoshii) = want money
+テレビを見る (terebi o miru) = to watch TV
+
+◎例文
+本を買いました。= I bought a book.
+バスが来ました。= The bus came.
+友達に会いました。= I met a friend.
+私に会いに来てくれました。= They came to see me.
+水を飲みました。= I drank some water.
+朝ご飯を食べました。= I ate breakfast.
+昨日食べすぎました。= I ate too much yesterday.
+来月旅行に行きます。= I’ll go on a trip next month.
+先生の名前を知りません。= I don’t know the teacher’s name.
+あなたの名前を知っています。= I know your name.
+韓国料理が好きです。= I like Korean food.
+この靴が一番好きです。= I like these shoes the best.
+一人で住んでいます。= I live alone.
+東京に住んでいます。= I live in Tokyo.
+晩ご飯を作ります。= I’ll make dinner.
+そのチームと試合をします。= We’ll have a match with that team.
+新聞を読みます。= I read the newspaper.
+窓から富士山が見えます。= You can see Mt. Fuji from the window.
+日本語を話します。= I speak Japanese.
+お金が欲しいです。= I want money.
+毎晩テレビを見ます。= I watch TV every night.
+
 `,
 n5_2: `
-◎JLPT N5 - 基本名詞
-水 = water
-お茶 = tea
-コーヒー = coffee
-本 = book
-学校 = school
-先生 = teacher
-学生 = student
-友達 = friend
-家 = house, home
-部屋 = room
+
 `,
 n5_3: `
-◎JLPT N5 - 基本形容詞
-大きい = big, large
-小さい = small
-新しい = new
-古い = old
-良い/いい = good
-悪い = bad
-高い = expensive, tall
-安い = cheap
-暑い = hot (weather)
-寒い = cold (weather)
+
 `,
 n4_1: `
-◎JLPT N4 - 動詞
-始める = to begin, to start
-終わる = to end, to finish
-続ける = to continue
-決める = to decide
-変える = to change
-増える = to increase
-減る = to decrease
-困る = to be troubled
+
 `,
 n4_2: `
-◎JLPT N4 - 名詞
-社会 = society
-経済 = economy
-政治 = politics
-文化 = culture
-歴史 = history
-科学 = science
-技術 = technology
-自然 = nature
+◎単語とフレーズ
+目覚まし時計が鳴る (mezamashi dokei ga naru) = the alarm clock rings
+ベッドから出る (beddo kara deru) = to get out of bed
+起きる (okiru) = to get up; to wake up
+カーテンを開ける (kāten o akeru) = to open the curtains
+トイレに行く (toire ni iku) = to go to the bathroom
+髪をとかす (kami o tokasu) = to comb one’s hair
+歯を磨く (ha o migaku) = to brush one’s teeth
+顔を洗う (kao o arau) = to wash one’s face
+化粧をする (keshō o suru) = to put on makeup
+眼鏡をかける (megane o kakeru) = to put on glasses
+服を着る (fuku o kiru) = to put on clothes
+傘を持って行く (kasa o motte iku) = to take an umbrella
+朝ご飯を食べる (asagohan o taberu) = to eat breakfast
+朝食を抜く (chōshoku o nuku) = to skip breakfast
+弁当を作る (bentō o tsukuru) = to make a bento (lunch box)
+新聞を読む (shinbun o yomu) = to read the newspaper
+散歩をする (sanpo o suru) = to take a walk
+公園で犬の散歩をする (kōen de inu no sanpo o suru) = to walk the dog in the park
+
+◎例文
+目覚まし時計が鳴りました。= The alarm clock rang.
+ベッドから出ました。= I got out of bed.
+毎朝7時に起きます。= I get up at 7 every morning.
+カーテンを開けて、外を見ました。= I opened the curtains and looked outside.
+トイレに行きました。= I went to the bathroom.
+髪をとかしました。= I combed my hair.
+歯を磨きました。= I brushed my teeth.
+顔を洗いました。= I washed my face.
+出かける前に化粧をします。= I put on makeup before going out.
+眼鏡をかけました。= I put on my glasses.
+服を着ました。= I got dressed.
+傘を持って行きました。= I took an umbrella.
+朝ご飯を食べました。= I ate breakfast.
+今日は朝食を抜きました。= I skipped breakfast today.
+弁当を作りました。= I made a bento.
+新聞を読みました。= I read the newspaper.
+朝、公園で散歩をします。= I take a walk in the park in the morning.
+公園で犬の散歩をしました。= I walked my dog in the park.
+
 `,
 n4_3: `
-◎JLPT N4 - 形容詞・副詞
-便利 = convenient
-不便 = inconvenient
-簡単 = simple, easy
-複雑 = complicated
-安全 = safe
-危険 = dangerous
-特別 = special
-普通 = ordinary, usual
+◎単語とフレーズ
+風呂に入る (furo ni hairu) = to take a bath
+シャワーを浴びる (shawā o abiru) = to take a shower
+服を着替える (fuku o kigaeru) = to change clothes
+少しの間休憩を取る (sukoshi no aida kyūkei o toru) = to take a short break
+ストレスを軽減する (sutoresu o keigen suru) = to reduce stress
+日記をつける (nikki o tsukeru) = to keep a diary
+自分の考えを書き留める (jibun no kangae o kakitomeru) = to write down one’s thoughts
+テレビ番組を見る (terebi bangumi o miru) = to watch a TV program
+明かりを消す (akari o kesu) = to turn off the light
+音をたてる (oto o tateru) = to make a sound / noise
+元気を回復する (genki o kaifuku suru) = to recover energy / feel refreshed
+ソファーでくつろぐ (sofā de kutsurogu) = to relax on the sofa
+友達とおしゃべりする (tomodachi to oshaberi suru) = to chat with friends
+目覚まし時計をセットする (mezamashi dokei o setto suru) = to set the alarm clock
+深呼吸する (shinkokyū suru) = to take a deep breath
+穏やかな夢を見る (odayaka na yume o miru) = to have a peaceful dream
+
+◎例文
+毎晩風呂に入ります。= I take a bath every night.
+朝シャワーを浴びます。= I take a shower in the morning.
+服を着替えました。= I changed my clothes.
+少しの間休憩を取りました。= I took a short break.
+運動してストレスを軽減します。= I reduce stress by exercising.
+毎日夜に日記をつけます。= I write in my diary every night.
+自分の考えを書き留めました。= I wrote down my thoughts.
+テレビ番組を見ています。= I’m watching a TV program.
+寝る前に明かりを消します。= I turn off the light before going to bed.
+静かにして、音をたてないでください。= Be quiet and don’t make noise.
+休んで元気を回復しました。= I rested and recovered my energy.
+ソファーでくつろぎました。= I relaxed on the sofa.
+友達とおしゃべりしました。= I chatted with my friends.
+目覚まし時計をセットしました。= I set the alarm clock.
+ゆっくり深呼吸してください。= Please take a deep breath.
+穏やかな夢を見ました。= I had a peaceful dream.
+
+
 `,
 n3_1: `
-◎JLPT N3 - 動詞
-調べる = to investigate, to check
-比べる = to compare
-選ぶ = to choose, to select
-伝える = to convey, to communicate
-説明する = to explain
-理解する = to understand
+
 `,
 n3_2: `
-◎JLPT N3 - 名詞
-意見 = opinion
-考え = thought, idea
-理由 = reason
-結果 = result
-影響 = influence
-関係 = relationship
-態度 = attitude
+
 `,
 n3_3: `
-◎JLPT N3 - 形容詞・副詞
-積極的 = positive, active
-消極的 = passive, negative
-具体的 = concrete, specific
-抽象的 = abstract
-効率的 = efficient
+
 `,
 perfect1: `
-
 ◎ステップ１：文脈から意味を推測しよう（👀 🎧 🎤用）
-週末に友だちと試合を見るのが楽しみです。= I look forward to watching a game with my friends on the weekend.
+週末に友達と試合を見るのが楽しみです。= I look forward to watching a game with my friends on the weekend.
 野菜を食べることは健康にいいです。= Eating vegetables is good for your health.
 音楽を聴くとストレス解消になります。= Listening to music helps relieve stress.
 サイクリングは自然の中で楽しめます。= You can enjoy cycling in nature.
@@ -1658,7 +2156,6 @@ perfect1: `
 
  `,
 perfect2: `
-
 ◎ステップ１：文脈から意味を推測しよう（👀 🎧 🎤用）
 将来のために資格を取ることにしました。= I decided to get a qualification for my future.
 大学では奨学金をもらって勉強しました。= I studied at university with a scholarship.
@@ -1859,24 +2356,52 @@ textImportClearBtn.addEventListener('click', () => {
 textImportContent.value = '';
 });
 
-textImportCopyBtn.addEventListener('click', () => {
-const textToCopy = textImportContent.value;
-if (!textToCopy) {
-alert('コピーするテキストがありません。');
+textImportMemoryBtn.addEventListener('click', async () => {
+const content = textImportContent.value.trim();
+if (!content) {
+alert('記憶する内容がありません。');
 return;
 }
-navigator.clipboard.writeText(textToCopy)
-.then(() => {
-const originalText = textImportCopyBtn.textContent;
-textImportCopyBtn.textContent = 'コピーしました！';
+
+const namePrompt = prompt('この自分で作成した項目(kōmoku)の名前を入力してください：');
+if (!namePrompt) {
+return;
+}
+
+const name = namePrompt.trim();
+if (!name) {
+alert('名前を入力してください。');
+return;
+}
+
+try {
+await saveCustomList(name, content);
+await renderCustomButtons();
+
+const successMessage = document.createElement('div');
+successMessage.style.cssText = `
+position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+successMessage.textContent = `📌 ${name} 記憶完了！`;
+document.body.appendChild(successMessage);
+
 setTimeout(() => {
-textImportCopyBtn.textContent = originalText;
-}, 1500);
-})
-.catch(err => {
-console.error('Failed to copy text: ', err);
-alert('コピーに失敗しました。');
-});
+if (document.body.contains(successMessage)) {
+document.body.removeChild(successMessage);
+}
+}, 3000);
+
+textImportContent.value = '';
+} catch (error) {
+console.error('Error saving custom list:', error);
+if (error.name === 'ConstraintError') {
+alert('この名前は既に使用されています。別の名前を選んでください。');
+} else {
+alert('保存に失敗しました。もう一度お試しください。');
+}
+}
 });
 
 // ===== TEXT IMPORT AND TABLE RENDERING =====
@@ -1908,7 +2433,7 @@ if (vocabulary && translation) {
 vocabularyData.push({
 vocabulary: vocabulary,
 translation: translation,
-selected: true,
+selected: false,
 section: currentSection
 });
 }
@@ -2269,11 +2794,11 @@ speak('完璧');
 feedbackMessage = 'いいね！ 👍';
 speak('いいね!');
 } else if (responseTime < 6) {
-feedbackMessage = 'もっと早く！ ⏰';
-speak('もっと早く!');
+feedbackMessage = '早く！ ⏰';
+speak('早く!');
 } else {
-feedbackMessage = '遅すぎます... 😴';
-speak('遅すぎます...');
+feedbackMessage = '遅いよ！ 😴';
+speak('遅いよ！');
 }
 
 timerFeedback.textContent = `${feedbackMessage} (${responseTime.toFixed(1)}秒かかりました)`;
@@ -2287,9 +2812,9 @@ btn.classList.add('correct');
 }
 });
 
-timerFeedback.textContent = '間違います！😓❌';
+timerFeedback.textContent = 'あ、違うよ！😓❌';
 timerFeedback.className = 'timer-feedback incorrect';
-speak('間違います！');
+speak('あ、違うよ！');
 listenAnswerDisplay.textContent = currentListenWord.vocabulary.replace(/\(.*?\)/g, '').replace(/\*/g, '').replace(/\[.*?\]/g, '').trim();
 }
 }
@@ -2539,13 +3064,13 @@ return normalizedUserAnswer === normalizedAnswer;
 });
 
 if (isCorrect) {
-feedbackEl.textContent = 'よくできました！🏆😊👍';
+feedbackEl.textContent = '正解！🏆😊👍';
 feedbackEl.className = 'feedback correct';
-speak('よくできました！');
+speak('正解！');
 } else {
-feedbackEl.textContent = 'もう一度！🔥🔥🔥';
+feedbackEl.textContent = 'まだまだだね！💥😏🎾';
 feedbackEl.className = 'feedback incorrect';
-speak('もう一度！');
+speak('まだまだだね！');
 }
 }
 
@@ -2647,20 +3172,46 @@ updateDateInfo();
 setInterval(updateDateInfo, 60000);
 
 // ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', () => {
-initializeTTS();
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initIndexedDB();
+        await renderCustomButtons();
+    } catch (error) {
+        console.error('Error initializing IndexedDB:', error);
+    }
 
-const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
+    initializeTTS();
 
-setTimeout(() => {
-refreshReminderPopup.style.display = 'flex';
-}, 1000);
+    // Add toggle functionality for button sets
+    document.querySelectorAll('.toggle-icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-toggle');
+            const targetContent = document.getElementById(targetId);
+            
+            if (targetContent) {
+                targetContent.classList.toggle('visible');
+                
+                // Change icon direction
+                if (targetContent.classList.contains('visible')) {
+                    this.textContent = '▲';
+                } else {
+                    this.textContent = '▼';
+                }
+            }
+        });
+    });
 
-const closeReminderBtn = document.getElementById('close-reminder-btn');
+    const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
 
-closeReminderBtn.addEventListener('click', () => {
-refreshReminderPopup.style.display = 'none';
-});
+    setTimeout(() => {
+        refreshReminderPopup.style.display = 'flex';
+    }, 1000);
+
+    const closeReminderBtn = document.getElementById('close-reminder-btn');
+
+    closeReminderBtn.addEventListener('click', () => {
+        refreshReminderPopup.style.display = 'none';
+    });
 });
 
 document.addEventListener('click', function initOnFirstClick() {
