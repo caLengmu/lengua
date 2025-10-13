@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Builder - Fixed</title>
+    <style>
+        :root {
+            --primary: #D33E43;
+            --secondary: #F8B500;
+            --accent1: #5D9CEC;
+            --accent2: #77B28C;
+            --accent3: #A06CD5;
+            --accent4: #51A8DD;
+            --dark: #2D2D2A;
+            --light: #F8F3E6;
+            --mid: #888888;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .tts-system-selector {
+            margin-top: 15px;
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .tts-system-selector label {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .tts-system-selector select {
+            padding: 8px 12px;
+            border: 2px solid var(--mid);
+            border-radius: 6px;
+            background-color: white;
+            color: var(--dark);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-import-btn {
+            background-color: var(--secondary);
+            color: black;
+        }
+
+        .english-to-chinese-btn {
+            background-color: var(--accent3);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .listen-choose-btn {
+            background-color: var(--accent2);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .start-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .ai-support-btn {
+            background-color: var(--accent1);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--light);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--dark);
+            color: var(--light);
+            font-weight: bold;
+        }
+
+        .speaker-icon {
+            cursor: pointer;
+            color: var(--secondary);
+            margin-left: 8px;
+            font-size: 20px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .next-btn {
+            background-color: var(--accent2);
+            color: white;
+        }
+
+        .close-btn {
+            background-color: var(--mid);
+            color: white;
+        }
+
+        .memory-btn {
+            background-color: var(--accent4);
+            color: white;
+        }
+
+        .hint-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 16px;
+            border: 2px solid var(--mid);
+            border-radius: 6px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        #edit-custom-content {
+            height: 400px;
+            font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;
+        }
+
+        .button-set {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .button-set-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .button-set h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .toggle-icon {
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            user-select: none;
+        }
+
+        .button-set-content {
+            display: none;
+            gap: 8px;
+        }
+
+        .button-set-content.visible {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+
+        .preset-btn {
+            margin: 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .textbook-btn {
+            background-color: var(--accent1);
+            color: white;
+        }
+
+        .live-btn {
+            background-color: var(--accent2);
+            color: white;
+        }
+
+        .custom-list-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .custom-list-item .preset-btn {
+            flex: 1;
+            background-color: var(--accent4);
+            color: white;
+        }
+
+        .edit-custom-btn {
+            flex: 0 0 50px;
+            background-color: var(--light);
+            border: 1px solid var(--mid);
+            color: var(--dark);
+            font-size: 14px;
+            padding: 8px;
+        }
+
+        .no-custom-lists {
+            color: var(--mid);
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .visitor-counter {
+            margin-top: 40px;
+            text-align: center;
+            padding: 15px;
+            color: var(--dark);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+
+        .popup-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .popup-layout {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .speech-bubble {
+            background-color: #FFFDE7;
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .english-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .chinese-text {
+            font-size: 14px;
+            color: var(--dark);
+            margin: 5px 0;
+        }
+
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 Vocabulary Builder (Fixed)</h1>
+        <div class="tts-system-selector">
+            <label for="tts-system">TTS System:</label>
+            <select id="tts-system">
+                <option value="android" selected>Android</option>
+                <option value="ios">iOS</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="controls">
+        <button class="text-import-btn" id="text-import-btn">📝 Load Vocab</button>
+        <button class="english-to-chinese-btn" id="english-to-chinese-btn" disabled>👀 看英想中</button>
+        <button class="listen-choose-btn" id="listen-choose-btn" disabled>🎧 聽英選中</button>
+        <button class="start-btn" id="start-btn" disabled>🎤 看中唸英</button>
+        <button class="ai-support-btn" id="ai-support-btn">💡 AI Support</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Vocabulary</th>
+                <th>Translation</th>
+                <th><input type="checkbox" id="select-all"> Select All</th>
+            </tr>
+        </thead>
+        <tbody id="vocabulary-body">
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 40px; color: var(--mid);">
+                    Load vocabulary to get started
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Text Import Modal -->
+    <div id="text-import-modal" class="modal">
+        <div class="modal-content">
+            <h2>Load Vocabulary</h2>
+            
+            <div class="button-set">
+                <div class="button-set-header">
+                    <h3>Textbook</h3>
+                    <span class="toggle-icon" data-toggle="textbook-content">▼</span>
+                </div>
+                <div class="button-set-content" id="textbook-content">
+                    <button class="preset-btn textbook-btn" data-preset="b3l2">B3 L2</button>
+                </div>
+            </div>
+
+            <div class="button-set">
+                <div class="button-set-header">
+                    <h3>📜 Custom Lists</h3>
+                    <span class="toggle-icon" data-toggle="custom-content">▼</span>
+                </div>
+                <div class="button-set-content" id="custom-content">
+                    <div id="custom-buttons-container">
+                        <p class="no-custom-lists">No custom lists yet</p>
+                    </div>
+                </div>
+            </div>
+
+            <textarea id="text-import-content" placeholder="Enter vocabulary pairs: word = translation"></textarea>
+            
+            <div class="button-group">
+                <button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
+                <button id="text-import-memory-btn" class="memory-btn">📌 Save Custom</button>
+                <button id="text-import-clear-btn" class="hint-btn">🈳 Clear</button>
+                <button id="text-import-close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Custom Modal -->
+    <div id="edit-custom-modal" class="modal">
+        <div class="modal-content">
+            <h2>✏️ Edit Custom List</h2>
+            <textarea id="edit-custom-content"></textarea>
+            <div class="button-group">
+                <button id="edit-custom-save-btn" class="next-btn">💾 Save</button>
+                <button id="edit-custom-abort-btn" class="close-btn">Cancel</button>
+                <button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Support Modal -->
+    <div id="ai-support-modal" class="modal">
+        <div class="modal-content">
+            <h2>💡 AI Support</h2>
+            <p>Access AI-powered learning tools</p>
+            <div class="button-group">
+                <button id="ai-support-close-btn" class="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="visitor-counter">
+        <div id="visitor-count">👥 Visitor count loading...</div>
+    </footer>
+
+    <!-- Refresh Reminder Popup -->
+    <div id="refresh-reminder-popup" class="popup-container">
+        <div class="popup-content">
+            <div class="popup-layout">
+                <div class="speech-bubble">
+                    <p class="english-text">Welcome! 歡迎使用</p>
+                    <p class="chinese-text">1. 每次使用請重新整理 (refresh) 🔄</p>
+                    <p class="chinese-text">2. iPhone/iPad 用戶請切換到 iOS 模式</p>
+                    <p class="chinese-text">3. 若 🔊 無法運作，請重新開機</p>
+                </div>
+            </div>
+            <button id="close-reminder-btn" style="
+                background-color: var(--accent1); color: white; padding: 12px 24px;
+                border: none; border-radius: 8px; cursor: pointer; width: 100%;
+                font-weight: bold; font-size: 16px;">
+                Got it! 知道了
+            </button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // ===== DOM ELEMENTS =====
+        const textImportBtn = document.getElementById('text-import-btn');
+        const textImportModal = document.getElementById('text-import-modal');
+        const textImportContent = document.getElementById('text-import-content');
+        const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
+        const textImportMemoryBtn = document.getElementById('text-import-memory-btn');
+        const textImportClearBtn = document.getElementById('text-import-clear-btn');
+        const textImportCloseBtn = document.getElementById('text-import-close-btn');
+        
+        const customButtonsContainer = document.getElementById('custom-buttons-container');
+        const editCustomModal = document.getElementById('edit-custom-modal');
+        const editCustomContent = document.getElementById('edit-custom-content');
+        const editCustomSaveBtn = document.getElementById('edit-custom-save-btn');
+        const editCustomAbortBtn = document.getElementById('edit-custom-abort-btn');
+        const editCustomDeleteBtn = document.getElementById('edit-custom-delete-btn');
+
+        const englishToChineseBtn = document.getElementById('english-to-chinese-btn');
+        const listenChooseBtn = document.getElementById('listen-choose-btn');
+        const startBtn = document.getElementById('start-btn');
+        const aiSupportBtn = document.getElementById('ai-support-btn');
+        const aiSupportModal = document.getElementById('ai-support-modal');
+        const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
+        
+        const vocabularyBody = document.getElementById('vocabulary-body');
+        const selectAllCheckbox = document.getElementById('select-all');
+        const ttsSystemSelect = document.getElementById('tts-system');
+
+        // ===== VARIABLES =====
+        let vocabularyData = [];
+        let voices = [];
+        let voicesLoaded = false;
+        let currentTTSSystem = 'android';
+        let db = null;
+        let currentEditingListId = null;
+
+        // ===== PRESET DATA =====
+        const presetVocabulary = {
+            b3l2: `innovate (v) =創新(v)
+promise (v) =承諾(v)
+material (n) =材料、原料
+mention (v) =提到、說到(v)
+structure (n) =結構
+rank (v) =排名(v)
+unique (adj) =獨特的
+adjust (v) =調整(v)
+rely (v) =依靠
+feedback (n) =回饋、意見`
+        };
+
+        // ===== INDEXEDDB FUNCTIONS =====
+        function initIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('VocabBuilderDB', 1);
+                
+                request.onerror = () => reject(request.error);
+                
+                request.onsuccess = () => {
+                    db = request.result;
+                    console.log('IndexedDB initialized');
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains('customLists')) {
+                        const objectStore = db.createObjectStore('customLists', { 
+                            keyPath: 'id', 
+                            autoIncrement: true 
+                        });
+                        objectStore.createIndex('name', 'name', { unique: true });
+                        objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+                    }
+                };
+            });
+        }
+
+        function saveCustomList(name, content) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                
+                const transaction = db.transaction(['customLists'], 'readwrite');
+                const objectStore = transaction.objectStore('customLists');
+                const data = {
+                    name: name,
+                    content: content,
+                    timestamp: Date.now()
+                };
+                
+                const request = objectStore.add(data);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function getAllCustomLists() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                
+                const transaction = db.transaction(['customLists'], 'readonly');
+                const objectStore = transaction.objectStore('customLists');
+                const request = objectStore.getAll();
+                
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function deleteCustomList(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                
+                const transaction = db.transaction(['customLists'], 'readwrite');
+                const objectStore = transaction.objectStore('customLists');
+                const request = objectStore.delete(id);
+                
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function updateCustomList(id, content) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                
+                const transaction = db.transaction(['customLists'], 'readwrite');
+                const objectStore = transaction.objectStore('customLists');
+                const getRequest = objectStore.get(id);
+                
+                getRequest.onsuccess = () => {
+                    const data = getRequest.result;
+                    if (data) {
+                        data.content = content;
+                        data.timestamp = Date.now();
+                        const updateRequest = objectStore.put(data);
+                        updateRequest.onsuccess = () => resolve();
+                        updateRequest.onerror = () => reject(updateRequest.error);
+                    } else {
+                        reject('List not found');
+                    }
+                };
+                
+                getRequest.onerror = () => reject(getRequest.error);
+            });
+        }
+
+        async function renderCustomButtons() {
+            try {
+                const customLists = await getAllCustomLists();
+                customButtonsContainer.innerHTML = '';
+                
+                if (customLists.length === 0) {
+                    customButtonsContainer.innerHTML = '<p class="no-custom-lists">No custom lists yet</p>';
+                    return;
+                }
+                
+                customLists.forEach(list => {
+                    const container = document.createElement('div');
+                    container.className = 'custom-list-item';
+                    
+                    const button = document.createElement('button');
+                    button.className = 'preset-btn';
+                    button.textContent = list.name;
+                    button.addEventListener('click', () => {
+                        processTextImport(list.content);
+                        textImportModal.style.display = 'none';
+                        showMessage(`✅ ${list.name} loaded!`, 'var(--accent2)');
+                    });
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'edit-custom-btn';
+                    editBtn.textContent = 'Edit';
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openEditModal(list.id, list.name, list.content);
+                    });
+                    
+                    container.appendChild(button);
+                    container.appendChild(editBtn);
+                    customButtonsContainer.appendChild(container);
+                });
+            } catch (error) {
+                console.error('Error rendering custom buttons:', error);
+                customButtonsContainer.innerHTML = '<p style="color: var(--primary);">Error loading lists</p>';
+            }
+        }
+
+        function openEditModal(id, name, content) {
+            currentEditingListId = id;
+            editCustomContent.value = content;
+            textImportModal.style.display = 'none';
+            editCustomModal.style.display = 'flex';
+        }
+
+        function showMessage(text, color) {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background-color: ${color};
+                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            `;
+            msg.textContent = text;
+            document.body.appendChild(msg);
+            setTimeout(() => document.body.removeChild(msg), 3000);
+        }
+
+        // ===== TTS FUNCTIONS =====
+        function loadVoices() {
+            return new Promise((resolve) => {
+                voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    voicesLoaded = true;
+                    resolve(voices);
+                } else {
+                    const utterance = new SpeechSynthesisUtterance('');
+                    utterance.volume = 0;
+                    speechSynthesis.speak(utterance);
+                    setTimeout(() => {
+                        voices = speechSynthesis.getVoices();
+                        voicesLoaded = true;
+                        resolve(voices);
+                    }, 100);
+                }
+            });
+        }
+
+        function getEnglishVoice() {
+            if (!voicesLoaded || voices.length === 0) return null;
+            
+            if (currentTTSSystem === 'ios') {
+                const iosVoices = ['Samantha', 'Tom', 'Alex'];
+                for (const name of iosVoices) {
+                    const voice = voices.find(v => v.name.includes(name));
+                    if (voice) return voice;
+                }
+            } else {
+                const androidVoices = ['Google US English', 'English (United States)'];
+                for (const name of androidVoices) {
+                    const voice = voices.find(v => v.name.includes(name));
+                    if (voice) return voice;
+                }
+            }
+            
+            return voices.find(v => v.lang === 'en-US' || v.lang.startsWith('en-')) || voices[0];
+        }
+
+        function speak(text) {
+            if (!('speechSynthesis' in window)) return;
+            
+            const cleanText = text.replace(/[()[\\]*]/g, '').trim();
+            if (!cleanText) return;
+            
+            speechSynthesis.cancel();
+            
+            setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                const voice = getEnglishVoice();
+                if (voice) utterance.voice = voice;
+                
+                utterance.lang = 'en-US';
+                utterance.rate = currentTTSSystem === 'ios' ? 0.72 : 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                speechSynthesis.speak(utterance);
+            }, 100);
+        }
+
+        async function initializeTTS() {
+            const testUtterance = new SpeechSynthesisUtterance('');
+            testUtterance.volume = 0;
+            speechSynthesis.speak(testUtterance);
+            await new Promise(resolve => setTimeout(resolve, 200));
+            await loadVoices();
+            
+            if (voices.length === 0) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                await loadVoices();
+            }
+            
+            speechSynthesis.addEventListener('voiceschanged', loadVoices);
+        }
+
+        // ===== TEXT PROCESSING =====
+        function processTextImport(text) {
+            vocabularyData = [];
+            const lines = text.split('\n');
+            
+            for (let line of lines) {
+                line = line.trim();
+                if (!line || line.includes('◎') || line.includes('@')) continue;
+                
+                const parts = line.split('=');
+                if (parts.length < 2) continue;
+                
+                const vocabulary = parts[0].trim();
+                const translation = parts[1].trim();
+                
+                if (vocabulary && translation) {
+                    vocabularyData.push({
+                        vocabulary: vocabulary,
+                        translation: translation,
+                        selected: true
+                    });
+                }
+            }
+            
+            renderVocabularyTable();
+            if (vocabularyData.length > 0) {
+                startBtn.disabled = false;
+                englishToChineseBtn.disabled = false;
+                listenChooseBtn.disabled = false;
+            }
+        }
+
+        function renderVocabularyTable() {
+            if (vocabularyData.length === 0) {
+                vocabularyBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--mid);">No vocabulary loaded</td></tr>';
+                return;
+            }
+            
+            vocabularyBody.innerHTML = '';
+            
+            vocabularyData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                const wordCell = document.createElement('td');
+                const cleanWord = item.vocabulary.replace(/\(.*\)/g, '').replace(/\*/g, '').trim();
+                wordCell.innerHTML = `
+                    ${item.vocabulary}
+                    <span class="speaker-icon" data-word="${cleanWord}">🔊</span>
+                `;
+                
+                const translationCell = document.createElement('td');
+                translationCell.textContent = item.translation;
+                
+                const checkboxCell = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = item.selected;
+                checkbox.dataset.index = index;
+                checkbox.addEventListener('change', (e) => {
+                    vocabularyData[index].selected = e.target.checked;
+                    updateSelectAllCheckbox();
+                });
+                
+                checkboxCell.appendChild(checkbox);
+                row.appendChild(wordCell);
+                row.appendChild(translationCell);
+                row.appendChild(checkboxCell);
+                vocabularyBody.appendChild(row);
+            });
+            
+            document.querySelectorAll('.speaker-icon').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    const word = e.target.dataset.word;
+                    speak(word);
+                });
+            });
+            
+            updateSelectAllCheckbox();
+        }
+
+        function updateSelectAllCheckbox() {
+            if (vocabularyData.length === 0) {
+                selectAllCheckbox.checked = false;
+                return;
+            }
+            
+            const selectedCount = vocabularyData.filter(item => item.selected).length;
+            selectAllCheckbox.checked = selectedCount === vocabularyData.length;
+            selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < vocabularyData.length;
+        }
+
+        // ===== EVENT LISTENERS =====
+        textImportBtn.addEventListener('click', () => {
+            textImportModal.style.display = 'flex';
+        });
+
+        textImportCloseBtn.addEventListener('click', () => {
+            textImportModal.style.display = 'none';
+        });
+
+        textImportSubmitBtn.addEventListener('click', () => {
+            const text = textImportContent.value.trim();
+            if (!text) {
+                alert('Please enter vocabulary pairs');
+                return;
+            }
+            processTextImport(text);
+            textImportModal.style.display = 'none';
+            showMessage('✅ Vocabulary loaded!', 'var(--accent2)');
+        });
+
+        textImportClearBtn.addEventListener('click', () => {
+            textImportContent.value = '';
+        });
+
+        textImportMemoryBtn.addEventListener('click', async () => {
+            const content = textImportContent.value.trim();
+            if (!content) {
+                alert('No content to save');
+                return;
+            }
+            
+            const name = prompt('Enter a name for this list:');
+            if (!name || !name.trim()) {
+                return;
+            }
+            
+            try {
+                await saveCustomList(name.trim(), content);
+                await renderCustomButtons();
+                showMessage(`📌 ${name} saved!`, 'var(--accent4)');
+                textImportContent.value = '';
+            } catch (error) {
+                console.error('Error saving custom list:', error);
+                if (error.name === 'ConstraintError') {
+                    alert('This name already exists. Please choose another name.');
+                } else {
+                    alert('Failed to save. Please try again.');
+                }
+            }
+        });
+
+        editCustomSaveBtn.addEventListener('click', async () => {
+            if (!currentEditingListId) return;
+            
+            const newContent = editCustomContent.value.trim();
+            if (!newContent) {
+                alert('Content cannot be empty');
+                return;
+            }
+            
+            try {
+                await updateCustomList(currentEditingListId, newContent);
+                await renderCustomButtons();
+                editCustomModal.style.display = 'none';
+                textImportModal.style.display = 'flex';
+                currentEditingListId = null;
+                editCustomContent.value = '';
+                showMessage('💾 Saved!', 'var(--accent2)');
+            } catch (error) {
+                console.error('Error updating custom list:', error);
+                alert('Failed to save!');
+            }
+        });
+
+        editCustomAbortBtn.addEventListener('click', () => {
+            editCustomModal.style.display = 'none';
+            textImportModal.style.display = 'flex';
+            currentEditingListId = null;
+            editCustomContent.value = '';
+        });
+
+        editCustomDeleteBtn.addEventListener('click', async () => {
+            if (!currentEditingListId) return;
+            
+            if (confirm('Are you sure you want to delete this list?')) {
+                try {
+                    await deleteCustomList(currentEditingListId);
+                    await renderCustomButtons();
+                    editCustomModal.style.display = 'none';
+                    textImportModal.style.display = 'flex';
+                    currentEditingListId = null;
+                    editCustomContent.value = '';
+                    showMessage('🗑️ Deleted', 'var(--primary)');
+                } catch (error) {
+                    console.error('Error deleting custom list:', error);
+                    alert('Failed to delete!');
+                }
+            }
+        });
+
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            vocabularyData.forEach(item => {
+                item.selected = isChecked;
+            });
+            
+            document.querySelectorAll('#vocabulary-body input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        ttsSystemSelect.addEventListener('change', (e) => {
+            currentTTSSystem = e.target.value;
+            console.log(`Switched to ${currentTTSSystem} TTS system`);
+            loadVoices();
+        });
+
+        aiSupportBtn.addEventListener('click', () => {
+            aiSupportModal.style.display = 'flex';
+        });
+
+        aiSupportCloseBtn.addEventListener('click', () => {
+            aiSupportModal.style.display = 'none';
+        });
+
+        englishToChineseBtn.addEventListener('click', () => {
+            const selected = vocabularyData.filter(item => item.selected);
+            if (selected.length === 0) {
+                alert('Please select at least one vocabulary word');
+                return;
+            }
+            showMessage('👀 English to Chinese quiz coming soon!', 'var(--accent3)');
+        });
+
+        listenChooseBtn.addEventListener('click', () => {
+            const selected = vocabularyData.filter(item => item.selected);
+            if (selected.length === 0) {
+                alert('Please select at least one vocabulary word');
+                return;
+            }
+            showMessage('🎧 Listen and Choose quiz coming soon!', 'var(--accent2)');
+        });
+
+        startBtn.addEventListener('click', () => {
+            const selected = vocabularyData.filter(item => item.selected);
+            if (selected.length === 0) {
+                alert('Please select at least one vocabulary word');
+                return;
+            }
+            showMessage('🎤 Speaking quiz coming soon!', 'var(--primary)');
+        });
+
+        // Toggle functionality for collapsible sections
+        document.querySelectorAll('.toggle-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-toggle');
+                const targetContent = document.getElementById(targetId);
+                
+                if (targetContent) {
+                    targetContent.classList.toggle('visible');
+                    this.textContent = targetContent.classList.contains('visible') ? '▲' : '▼';
+                }
+            });
+        });
+
+        // Preset button functionality
+        document.querySelectorAll('.preset-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const presetKey = button.dataset.preset;
+                if (presetVocabulary[presetKey]) {
+                    const content = presetVocabulary[presetKey];
+                    if (!content.trim()) {
+                        showMessage('⚠️ No content available', 'var(--mid)');
+                        return;
+                    }
+                    
+                    processTextImport(content);
+                    textImportModal.style.display = 'none';
+                    showMessage(`✅ ${button.textContent} loaded!`, 'var(--accent2)');
+                }
+            });
+        });
+
+        // ===== FIREBASE VISITOR COUNTER =====
+        function initVisitorCounter() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBFhmaAZmBtsM5DKoxgy1G-RouRKsrjYsA",
+                authDomain: "vocab-builder-visitor-counter.firebaseapp.co",
+                databaseURL: "https://vocab-builder-visitor-counter-default-rtdb.asia-southeast1.firebasedatabase.app/",
+                projectId: "vocab-builder-visitor-counter",
+                storageBucket: "vocab-builder-visitor-counter.firebasestorage.app",
+                messagingSenderId: "648587683861",
+                appId: "1:648587683861:web:dcb777160dabb4cbf8c61c"
+            };
+
+            try {
+                firebase.initializeApp(firebaseConfig);
+                const database = firebase.database();
+
+                const today = new Date();
+                const taiwanDate = new Date(today.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+                const dateStr = taiwanDate.getFullYear() + '-' +
+                    (taiwanDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                    taiwanDate.getDate().toString().padStart(2, '0');
+
+                const visitorCountRef = database.ref('visitorCount/' + dateStr);
+
+                function updateVisitorDisplay(count) {
+                    const visitorCountEl = document.getElementById('visitor-count');
+                    if (count === 1) {
+                        visitorCountEl.innerHTML = `👋 ${count} person visited today`;
+                    } else {
+                        visitorCountEl.innerHTML = `👋 ${count} people visited today`;
+                    }
+                }
+
+                const hasVisitedToday = localStorage.getItem('visited_' + dateStr);
+
+                if (!hasVisitedToday) {
+                    visitorCountRef.transaction((currentCount) => {
+                        return (currentCount || 0) + 1;
+                    }, (error, committed, snapshot) => {
+                        if (error) {
+                            console.error('Transaction failed:', error);
+                        } else if (committed) {
+                            localStorage.setItem('visited_' + dateStr, 'true');
+                            updateVisitorDisplay(snapshot.val());
+                        }
+                    });
+                } else {
+                    visitorCountRef.once('value', (snapshot) => {
+                        const count = snapshot.val() || 0;
+                        updateVisitorDisplay(count);
+                    });
+                }
+
+                visitorCountRef.on('value', (snapshot) => {
+                    const count = snapshot.val() || 0;
+                    updateVisitorDisplay(count);
+                });
+            } catch (e) {
+                console.error("Error initializing visitor counter:", e);
+                document.getElementById('visitor-count').innerHTML = "😅 Visitor count unavailable";
+            }
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Initializing Vocab Builder...');
+            
+            try {
+                // Initialize IndexedDB
+                await initIndexedDB();
+                await renderCustomButtons();
+                console.log('✅ IndexedDB initialized');
+            } catch (error) {
+                console.error('❌ Error initializing IndexedDB:', error);
+            }
+
+            // Initialize TTS
+            await initializeTTS();
+            console.log('✅ TTS initialized');
+
+            // Initialize visitor counter
+            initVisitorCounter();
+            console.log('✅ Visitor counter initialized');
+
+            // Show welcome popup
+            const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
+            setTimeout(() => {
+                refreshReminderPopup.style.display = 'flex';
+            }, 1000);
+
+            const closeReminderBtn = document.getElementById('close-reminder-btn');
+            closeReminderBtn.addEventListener('click', () => {
+                refreshReminderPopup.style.display = 'none';
+            });
+
+            console.log('✅ All systems ready!');
+        });
+
+        // Fallback TTS initialization on first user interaction
+        document.addEventListener('click', function initOnFirstClick() {
+            if (!voicesLoaded) {
+                initializeTTS();
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
