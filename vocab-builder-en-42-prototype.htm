@@ -1004,7 +1004,7 @@
 <body>
     <header>
         <div id="date-info" class="date-info"></div>
-        <h1>🎯 Vocabulary Builder (10.13 新功能測試)</h1>
+        <h1>🎯 Vocabulary Builder (4.2 Prototype)</h1>
         <div class="tts-system-selector">
             <label for="tts-system">System: </label>
             <select id="tts-system">
@@ -1069,11 +1069,11 @@
     <div id="text-import-modal" class="modal">
         <div class="modal-content">
 
-            <h2>Load Vocabulary</h2>
+            <h2>📝 Load Vocabulary</h2>
                        <div class="button-set">
                 <div class="button-set-header">
 
-                    <h3>Textbook</h3>
+                    <h3>📗 Textbook</h3>
 <span class="toggle-icon" data-toggle="textbook-content">▼</span>
                 </div>
                 <div class="button-set-content" id="textbook-content">
@@ -1086,7 +1086,7 @@
             <div class="button-set">
                 <div class="button-set-header">
 
-                    <h3>Magazine</h3>
+                    <h3>📰 Magazine</h3>
 <span class="toggle-icon" data-toggle="magazine-buttons">▼</span>
         </div>
         <div class="button-set-content" id="magazine-buttons">
@@ -1100,7 +1100,7 @@
             <div class="button-set">
                 <div class="button-set-header">
                
-                    <h3>核心字彙</h3>
+                    <h3>📙 核心字彙</h3>
 <span class="toggle-icon" data-toggle="core-buttons">▼</span>
         </div>
         <div class="button-set-content" id="core-buttons">
@@ -1126,20 +1126,20 @@
             <div class="button-set">
                 <div class="button-set-header">
 
-<h3>📜 Custom Lists</h3>
+<h3>📜 Custom List</h3>
                     <span class="toggle-icon" data-toggle="custom-content">▼</span>
                 </div>
                 <div class="button-set-content" id="custom-content">
                     <div id="custom-buttons-container">
-                        <p class="no-custom-lists">No custom lists yet</p>
+                        <p class="no-custom-lists">No custom list yet</p>
                     </div>
                 </div>
             </div>
 
-            <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
+            <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here and press Load, or make your own Custom List."></textarea>
             <div class="button-group">
                 <button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
-                <button id="text-import-memory-btn" class="memory-btn">📌 Create Custom</button>
+                <button id="text-import-memory-btn" class="memory-btn">📜 Custom</button>
                 <button id="text-import-clear-btn" class="hint-btn">🈳 Clear</button>
                 <button id="text-import-close-btn" class="close-btn">Close</button>
             </div>
@@ -1514,7 +1514,7 @@ async function renderCustomButtons() {
                     color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
                     z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 `;
-                successMessage.textContent = `✅ ${list.name} is loaded！`;
+                successMessage.textContent = `✅ ${list.name} loaded successfully！`;
                 document.body.appendChild(successMessage);
 
                 setTimeout(() => {
@@ -2007,7 +2007,7 @@ position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
 color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
 z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
-successMessage.textContent = `📌 ${name} entry created!`;
+successMessage.textContent = `📜 ${name} entry created!`;
 document.body.appendChild(successMessage);
 
 setTimeout(() => {
