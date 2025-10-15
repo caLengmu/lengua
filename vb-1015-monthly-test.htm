@@ -1143,23 +1143,23 @@
     <!-- Text Import Modal -->
     <div id="text-import-modal" class="modal">
         <div class="modal-content">
-            <h2>Load Vocabulary</h2>
+            <h2>📝 Load Vocabulary</h2>
             <div class="preset-buttons">
                 <div class="button-set textbook-buttons">
-                    <h3>Textbook</h3>
+                    <h3>📗 Textbook</h3>
                     <button class="preset-btn textbook-btn" data-preset="b3l1">B3 L1 (自読)</button>
                     <button class="preset-btn textbook-btn" data-preset="b3l2">B3 L2</button>
                     <button class="preset-btn textbook-btn" data-preset="b3l3">B3 L3</button>
                 </div>
                 <div class="button-set live-buttons">
-                    <h3>Magazine</h3>
+                    <h3>📰 Magazine</h3>
                     <button class="preset-btn live-btn" data-preset="maga1">U9</button>
                     <button class="preset-btn live-btn" data-preset="maga2">U11</button>
                     <button class="preset-btn live-btn" data-preset="maga3">U4 (自読)</button>
                     <button class="preset-btn live-btn" data-preset="maga4">U13 (自読)</button>
                 </div>
                 <div class="button-set core-buttons">
-                    <h3>核心字彙</h3>
+                    <h3>📙 核心字彙</h3>
                     <button class="preset-btn core-btn" data-preset="coreP2U1">P2 U1</button>
                     <button class="preset-btn core-btn" data-preset="coreP2U2">P2 U2</button>
                     <button class="preset-btn core-btn" data-preset="coreP2U3">P2 U3</button>
@@ -1279,7 +1279,7 @@
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
-<button id="monthly-clear-all-btn" class="hint-btn">Clear All</button>
+<button id="monthly-clear-all-btn" class="hint-btn">🈳 Clear All</button>
     <button id="monthly-close-btn" class="close-btn">Close</button>
     </div>
                 </div>
@@ -1288,13 +1288,13 @@
 <!-- Edit Entry Modal -->
 <div id="edit-entry-modal" class="modal">
     <div class="modal-content" style="max-width: 700px;">
-        <h2>Edit This Entry</h2>
+        <h2>✏️ Edit This Entry</h2>
         <p style="color: var(--mid); margin-bottom: 15px;">(Paste the words/phrases here and press Save)</p>
         <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="Enter vocabulary pairs..."></textarea>
         <div class="button-group" style="margin-top: 20px;">
-            <button id="edit-save-btn" class="submit-btn">Save</button>
-            <button id="edit-cancel-btn" class="close-btn">Cancel</button>
-            <button id="edit-clear-btn" class="hint-btn">Clear</button>
+            <button id="edit-save-btn" class="submit-btn">💾 Save</button>
+            <button id="edit-cancel-btn" class="close-btn">🚫 Cancel</button>
+            <button id="edit-clear-btn" class="hint-btn">🈳 Clear</button>
         </div>
     </div>
 </div>
@@ -2095,7 +2095,7 @@ engineer (n) = 工程師
                     vocabularyData.push({
                         vocabulary: vocabulary,
                         translation: translation,
-                        selected: true,
+                        selected: false,
                         section: currentSection
                     });
                 }
