@@ -1124,6 +1124,7 @@
                             <option value="0.6">0.6x</option>
                             <option value="0.8" selected>0.8x</option>
                             <option value="1">1x</option>
+                            <option value="1">1.2x</option>
                         </select>
                     </div>
                 </th>
@@ -1149,22 +1150,22 @@
             <div class="preset-buttons">
                 <div class="button-set textbook-buttons">
                     <h3>📗 Textbook</h3>
-                    <button class="preset-btn textbook-btn" data-preset="b3l1">B3 L1 (自読)</button>
-                    <button class="preset-btn textbook-btn" data-preset="b3l2">B3 L2</button>
-                    <button class="preset-btn textbook-btn" data-preset="b3l3">B3 L3</button>
+                    <button class="preset-btn textbook-btn" data-preset="textbook1">B3 L4</button>
+                    <button class="preset-btn textbook-btn" data-preset="textbook2">B3 L5</button>
+                    <button class="preset-btn textbook-btn" data-preset="textbook3">B3 L6 (自読)</button>
                 </div>
                 <div class="button-set live-buttons">
                     <h3>📰 Magazine</h3>
-                    <button class="preset-btn live-btn" data-preset="maga1">U9</button>
-                    <button class="preset-btn live-btn" data-preset="maga2">U11</button>
-                    <button class="preset-btn live-btn" data-preset="maga3">U4 (自読)</button>
+                    <button class="preset-btn live-btn" data-preset="maga1">U2</button>
+                    <button class="preset-btn live-btn" data-preset="maga2">U7 (自読)</button>
+                    <button class="preset-btn live-btn" data-preset="maga3">U12</button>
                     <button class="preset-btn live-btn" data-preset="maga4">U13 (自読)</button>
                 </div>
                 <div class="button-set core-buttons">
                     <h3>📙 核心字彙</h3>
-                    <button class="preset-btn core-btn" data-preset="coreP2U1">P2 U1</button>
-                    <button class="preset-btn core-btn" data-preset="coreP2U2">P2 U2</button>
-                    <button class="preset-btn core-btn" data-preset="coreP2U3">P2 U3</button>
+                    <button class="preset-btn core-btn" data-preset="core1">P2 U4</button>
+                    <button class="preset-btn core-btn" data-preset="core2">P2 U5</button>
+                    <button class="preset-btn core-btn" data-preset="core3">P2 U6</button>
                 </div>
                 <div class="button-set other-buttons">
                     <h3>🌟 完美體驗</h3>
@@ -1374,9 +1375,9 @@
                     <img src="dinotaeng_walking.png" alt="Image Not Found" width="150">
                 </div>
                 <div class="speech-bubble">
-                    <p class="english-text">1.每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</p>
-                    <p class="chinese-text">2.iPhone及iPad使用者需將system(系統)切換成iOS，🔊才能正常運作。</p>
-                    <p class="chinese-text">3.手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
+                    <p class="english-text">1. 每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</p>
+                    <p class="chinese-text">2. iPhone及iPad使用者需將system(系統)切換成iOS，🔊才能正常運作，且建議將語速調成 1x。</p>
+                    <p class="chinese-text">3. 手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
                 </div>
             </div>
             <button id="close-reminder-btn" class="close-reminder-btn">OK. I got it.</button>
@@ -1920,10 +1921,10 @@ document.querySelectorAll('.day-btn').forEach(btn => {
 
         // ===== PRESET VOCABULARY DATA =====
         const presetVocabulary = {
-            b3l1: `
+            textbook1: `
 
             `,
-            b3l2: `
+            textbook2: `
 ◎Paragraph 1
 stick (n) = 棍子
 yard (n) = 1.院子  2.碼(＝36 inches＝36 x 2.54 cm)
@@ -1942,7 +1943,7 @@ architect (n) = 建築師
 engineer (n) = 工程師
 
 `,
-            b3l3: `
+            textbook3: `
 
  `,
             maga1: `
@@ -1957,13 +1958,13 @@ engineer (n) = 工程師
             maga4: `
 
  `,
-            coreP2U1: `
+            core1: `1=1
 
  `,
-            coreP2U2: `
+            core2: `
 
  `,
-            coreP2U3: `
+            core3: `
 
  `,
 
@@ -2789,7 +2790,7 @@ engineer (n) = 工程師
             const today = new Date();
             const taiwanDate = today.toLocaleDateString('en-US', options);
 
-            const examDate = new Date('October 14, 2025');
+            const examDate = new Date('December 1, 2025');
             examDate.setHours(0, 0, 0, 0);
             const todayNoTime = new Date(today);
             todayNoTime.setHours(0, 0, 0, 0);
