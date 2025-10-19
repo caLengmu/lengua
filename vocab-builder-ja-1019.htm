@@ -6,13 +6,14 @@
 <title>日本語 Vocab Builder</title>
 <style>
 :root {
---primary: #FF69B4; /* Hot Pink (a well-known CSS color) */
---secondary: #FF9800; /* Orange */
+--primary: #DA536E; /* 椿(tsubaki) */
+--secondary: #E6B422; /* 金色(kin-iro) */
 --accent1: #1976D2; /* Japanese Blue */
---accent2: #4CAF50; /* Green */
---accent3: #9C27B0; /* Purple */
+--accent2: #86C166; /* 苗色(nae-iro) */
+--accent3: #8A6BBE; /* 藤紫(fuji-murasaki) */
+--accent4: #51A8DD; /* 群青(gun-jou) */
 --dark: #2C2C2C; /* Dark Gray */
---light: #F8F8F8; /* Light Gray */
+--light: #F8F5E3; /* Ivory */
 --mid: #757575; /* Mid Gray */
 }
 
@@ -331,22 +332,8 @@ color: white;
 }
 
 .memory-btn {
-background-color: var(--accent1);
+background-color: var(--accent4);
 color: white;
-}
-
-.delete-custom-btn {
-background-color: var(--light);
-color: white;
-font-size: 12px;
-padding: 4px 8px;
-margin-left: 5px;
-}
-
-.custom-list-container {
-position: relative;
-display: inline-block;
-width: 100%;
 }
 
 .recording {
@@ -497,17 +484,17 @@ margin-bottom: 20px;
 }
 
 .button-set {
-border: 1px solid #ddd;
-border-radius: 8px;
-padding: 10px;
-background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .button-set h3 {
-margin-top: 0;
-margin-bottom: 10px;
-font-size: 16px;
-color: var(--dark);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: var(--dark);
 }
 
 .preset-btn {
@@ -735,6 +722,156 @@ color: var(--primary);
 margin: 0 3px;
 }
 
+/* Monthly Learning Cycle Styles */
+.week-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.week-section h3 {
+    color: var(--primary);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-count {
+    font-size: 14px;
+    color: var(--accent1);
+    font-weight: normal;
+}
+
+.days-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.day-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.day-btn {
+    background-color: var(--accent4);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.day-btn:hover {
+    background-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.day-btn.has-content {
+    background-color: var(--accent2);
+}
+
+.edit-btn {
+    background-color: var(--secondary);
+    color: var(--dark);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn:hover {
+    background-color: var(--accent3);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.clear-week-btn {
+    background-color: var(--mid);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.clear-week-btn:hover {
+    background-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    #monthly-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px;
+    }
+    
+    .week-section {
+        padding: 10px;
+    }
+    
+    .week-section h3 {
+        font-size: 15px;
+    }
+    
+    .item-count {
+        font-size: 12px;
+    }
+    
+    .day-btn {
+        font-size: 13px;
+        padding: 8px 6px;
+    }
+    
+    .edit-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+    
+    .day-row {
+        gap: 6px;
+    }
+}
+
+.footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 15px;
+            color: var(--dark);
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+#footer {
+            font-weight: bold;
+        }
+
 .popup-container {
 position: fixed;
 top: 0;
@@ -941,84 +1078,6 @@ transform: translateX(-50%) rotate(90deg);
 .speech-bubble:after {
 top: -12px;
 }
-
-/* Add these new styles */
-.button-set-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.toggle-icon {
-    cursor: pointer;
-    font-size: 20px;
-    padding: 5px;
-    user-select: none;
-    transition: transform 0.3s ease;
-}
-
-.toggle-icon:hover {
-    transform: scale(1.1);
-}
-
-.button-set-content {
-    display: none;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 8px;
-    margin-bottom: 10px;
-}
-
-.button-set-content.visible {
-    display: grid;
-}
-
-.custom-list-item {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.custom-list-item .preset-btn {
-    flex: 1;
-    margin: 0;
-}
-
-.custom-list-item .delete-custom-btn {
-    flex: 0 0 50px;
-    background-color: var(--light);
-    border: 1px solid var(--mid);
-    color: var(--dark);
-    font-size: 16px;
-    padding: 8px;
-    margin: 0;
-}
-
-#custom-buttons-container .preset-btn {
-    background-color: var(--accent1);
-    color: white;
-}
-
-.no-custom-lists {
-    color: var(--mid);
-    font-size: 14px;
-    text-align: center;
-    margin: 10px 0;
-    font-style: italic;
-}
-
-@media (max-width: 600px) {
-   .custom-list-item .preset-btn {
-        font-size: 12px;  /* Adjust text size */
-        padding: 10px 8px;  /* Adjust button padding */
- flex: 3;  /* Make it even wider relative to edit button */
-    }
-
-    .custom-list-item .edit-custom-btn {
-        font-size: 12px;  /* Adjust text size */
-        padding: 8px 10px;  /* Adjust button padding */
-       flex: 0 0 60px;  /* Give edit button a fixed width of 60px */
-    }
 }
 
 </style>
@@ -1026,7 +1085,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (2.0)</h1>
+<h1>🎌 言葉の達人／語彙力アップ (10.19)</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -1091,81 +1150,160 @@ top: -12px;
 <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
-<h2>語彙を読み込む</h2>
+<h2>📝 語彙を読み込む</h2>
 
 <div class="preset-buttons">
-    <div class="button-set textbook-buttons">
-        <div class="button-set-header">
-            <h3>📘 基本の単語</h3>
-            <span class="toggle-icon" data-toggle="n5-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="n5-buttons">
+    <div class="button-set textbook-buttons">        
+            <h3>📘 基本の単語</h3>   
+        <div class="button-set-content" visible id="n5-buttons">
             <button class="preset-btn textbook-btn" data-preset="n5_1">動詞(一)</button>
-            <button class="preset-btn textbook-btn" data-preset="n5_2">N5 Set 2</button>
-            <button class="preset-btn textbook-btn" data-preset="n5_3">N5 Set 3</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_2">動詞(二)</button>
+            <button class="preset-btn textbook-btn" data-preset="n5_3">動詞(三)</button>
         </div>
     </div>
     
-    <div class="button-set jlpt-buttons">
-        <div class="button-set-header">
-            <h3>📘 シーン別の単語</h3>
-            <span class="toggle-icon" data-toggle="n4-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="n4-buttons">
+    <div class="button-set jlpt-buttons">        
+            <h3>📗 シーン別の単語</h3>        
+        <div class="button-set-content" visible id="n4-buttons">
             <button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
             <button class="preset-btn jlpt-btn" data-preset="n4_2">朝</button>
             <button class="preset-btn jlpt-btn" data-preset="n4_3">寝る前</button>
         </div>
     </div>
     
-    <div class="button-set core-buttons">
-        <div class="button-set-header">
-            <h3>📘 テーマ別の単語</h3>
-            <span class="toggle-icon" data-toggle="n3-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="n3-buttons">
+    <div class="button-set core-buttons">        
+            <h3>📙 テーマ別の単語</h3>
+        <div class="button-set-content" visible id="n3-buttons">
             <button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
             <button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
             <button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
         </div>
     </div>
     
-    <div class="button-set other-buttons">
-        <div class="button-set-header">
+    <div class="button-set other-buttons">        
             <h3>🌟 完璧な体験</h3>
-            <span class="toggle-icon" data-toggle="perfect-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="perfect-buttons">
+        <div class="button-set-content" visible id="perfect-buttons">
             <button class="preset-btn other-btn" data-preset="perfect1">運動</button>
             <button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
         </div>
     </div>
     
-    <div class="button-set custom-buttons" id="custom-buttons-section">
-        <div class="button-set-header">
-            <h3>📜 Custom Lists</h3>
-            <span class="toggle-icon" data-toggle="custom-buttons-content">▼</span>
-        </div>
-        <div class="button-set-content" id="custom-buttons-content">
-            <div id="custom-buttons-container"></div>
-        </div>
-    </div>
-</div>
+   </div>
 
 <textarea id="text-import-content" placeholder="日本語 = 英語/意味 の形式で入力してください..."></textarea>
 <div class="button-group">
 <button id="text-import-submit-btn" class="submit-btn">📂 読み込む</button>
-<button id="text-import-memory-btn" class="memory-btn">📌 記憶 (きおく 0)</button>
+<button id="text-import-monthly-btn" class="memory-btn">📅 月間学習</button>
 <button id="text-import-clear-btn" class="hint-btn">🈳 消す</button>
 <button id="text-import-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
 </div>
 
+<!-- Monthly Learning Cycle Modal -->
+<div id="monthly-modal" class="modal">
+    <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+        <h2>📅 月間学習サイクル</h2>
+        
+        <div id="monthly-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- Week 1 -->
+            <div class="week-section">
+                <h3>Week 1 <span id="week1-count" class="item-count">0個</span></h3>
+                <div class="days-grid">
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="1">Day 1</button><button class="edit-btn" data-week="1" data-day="1">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="2">Day 2</button><button class="edit-btn" data-week="1" data-day="2">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="3">Day 3</button><button class="edit-btn" data-week="1" data-day="3">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="4">Day 4</button><button class="edit-btn" data-week="1" data-day="4">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="5">Day 5</button><button class="edit-btn" data-week="1" data-day="5">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="6">Day 6</button><button class="edit-btn" data-week="1" data-day="6">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="1" data-day="7">Day 7</button><button class="edit-btn" data-week="1" data-day="7">編集</button></div>
+                </div>
+                <button class="clear-week-btn" data-week="1">W1をクリア</button>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="week-section">
+                <h3>Week 2 <span id="week2-count" class="item-count">0個</span></h3>
+                <div class="days-grid">
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="1">Day 1</button><button class="edit-btn" data-week="2" data-day="1">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="2">Day 2</button><button class="edit-btn" data-week="2" data-day="2">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="3">Day 3</button><button class="edit-btn" data-week="2" data-day="3">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="4">Day 4</button><button class="edit-btn" data-week="2" data-day="4">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="5">Day 5</button><button class="edit-btn" data-week="2" data-day="5">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="6">Day 6</button><button class="edit-btn" data-week="2" data-day="6">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="2" data-day="7">Day 7</button><button class="edit-btn" data-week="2" data-day="7">編集</button></div>
+                </div>
+                <button class="clear-week-btn" data-week="2">W2をクリア</button>
+            </div>
+
+            <!-- Week 3 -->
+            <div class="week-section">
+                <h3>Week 3 <span id="week3-count" class="item-count">0個</span></h3>
+                <div class="days-grid">
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="1">Day 1</button><button class="edit-btn" data-week="3" data-day="1">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="2">Day 2</button><button class="edit-btn" data-week="3" data-day="2">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="3">Day 3</button><button class="edit-btn" data-week="3" data-day="3">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="4">Day 4</button><button class="edit-btn" data-week="3" data-day="4">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="5">Day 5</button><button class="edit-btn" data-week="3" data-day="5">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="6">Day 6</button><button class="edit-btn" data-week="3" data-day="6">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="3" data-day="7">Day 7</button><button class="edit-btn" data-week="3" data-day="7">編集</button></div>
+                </div>
+                <button class="clear-week-btn" data-week="3">W3をクリア</button>
+            </div>
+
+            <!-- Week 4 -->
+            <div class="week-section">
+                <h3>Week 4 <span id="week4-count" class="item-count">0個</span></h3>
+                <div class="days-grid">
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="1">Day 1</button><button class="edit-btn" data-week="4" data-day="1">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="2">Day 2</button><button class="edit-btn" data-week="4" data-day="2">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="3">Day 3</button><button class="edit-btn" data-week="4" data-day="3">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="4">Day 4</button><button class="edit-btn" data-week="4" data-day="4">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="5">Day 5</button><button class="edit-btn" data-week="4" data-day="5">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="6">Day 6</button><button class="edit-btn" data-week="4" data-day="6">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="4" data-day="7">Day 7</button><button class="edit-btn" data-week="4" data-day="7">編集</button></div>
+                </div>
+                <button class="clear-week-btn" data-week="4">W4をクリア</button>
+            </div>
+
+            <!-- Backup Section (Full Width) -->
+            <div class="week-section" style="grid-column: span 2;">
+                <h3>予備 <span id="backup-count" class="item-count">0個</span></h3>
+                <div class="days-grid">
+                    <div class="day-row"><button class="day-btn" data-week="backup" data-day="1">予備 1</button><button class="edit-btn" data-week="backup" data-day="1">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="backup" data-day="2">予備 2</button><button class="edit-btn" data-week="backup" data-day="2">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="backup" data-day="3">予備 3</button><button class="edit-btn" data-week="backup" data-day="3">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="backup" data-day="4">予備 4</button><button class="edit-btn" data-week="backup" data-day="4">編集</button></div>
+                    <div class="day-row"><button class="day-btn" data-week="backup" data-day="5">予備 5</button><button class="edit-btn" data-week="backup" data-day="5">編集</button></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+            <button id="monthly-clear-all-btn" class="hint-btn">🈳 すべて消す</button>
+            <button id="monthly-close-btn" class="close-btn">閉じる</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Entry Modal -->
+<div id="edit-entry-modal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+        <h2>✏️ この項目を編集</h2>
+        <p style="color: var(--mid); margin-bottom: 15px;">（単語/フレーズをここに貼り付けて、保存を押してください）</p>
+        <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="日本語 = 英語の形式で入力してください..."></textarea>
+        <div class="button-group" style="margin-top: 20px;">
+            <button id="edit-save-btn" class="submit-btn">💾 保存</button>
+            <button id="edit-clear-btn" class="hint-btn">🈳 消す</button>
+            <button id="edit-cancel-btn" class="close-btn">🚫 キャンセル</button>
+        </div>
+    </div>
+</div>
+
 <!-- AI Support Modal -->
 <div id="ai-support-modal" class="modal">
 <div class="modal-content">
-<h2>💡 AI Support</h2>
+<h2>💡 エーアイ支援</h2>
 <div class="ai-support-links">
 <a href="https://www.japandict.com/" class="ai-support-link" target="_blank">🔍 辞書: JapanDict</a>
 <a href="https://chatgpt.com/share/68e91bb2-c7f0-800f-b3ed-61aac70c3c16" class="ai-support-link" target="_blank">✏️ 英訳と例文を作る</a>
@@ -1174,7 +1312,7 @@ top: -12px;
 <a href="https://chatgpt.com/share/68e91d2f-752c-800f-ad17-7eb2e8cfb89f" class="ai-support-link" target="_blank">📚 文法を学ぶ</a>
 </div>
 <div class="button-group">
-<button id="ai-support-close-btn" class="close-btn">Close</button>
+<button id="ai-support-close-btn" class="close-btn">閉じる</button>
 </div>
 </div>
 </div>
@@ -1257,18 +1395,11 @@ top: -12px;
 </div>
 </div>
 
-<!-- Edit Custom List Modal -->
-<div id="edit-custom-modal" class="modal">
-<div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
-<h2>📝 カスタムリストを編集</h2>
-<textarea id="edit-custom-content" style="width: 100%; height: 400px; padding: 12px; margin: 15px 0; font-size: 16px; border: 2px solid var(--mid); border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: 'Hiragino Sans', 'Meiryo', 'MS Gothic', sans-serif;"></textarea>
-<div class="button-group">
-<button id="edit-custom-save-btn" class="next-btn">🆗 保存 (ほぞん 0)</button>
-<button id="edit-custom-abort-btn" class="close-btn">🚫 中止 (ちゅうし 0)</button>
-<button id="edit-custom-delete-btn" class="hint-btn" style="background-color: var(--primary); color: white;">🗑️ 削除 (さくじょ 1)</button>
-</div>
-</div>
-</div>
+
+
+ <footer class="footer">
+        <div id="footer">🌸 新しい世界のカギ、<br>日本語を学ぼう！</div>
+    </footer>
 
 <script>
 // ===== DOM ELEMENTS =====
@@ -1317,14 +1448,18 @@ const textImportSubmitBtn = document.getElementById('text-import-submit-btn');
 const textImportCloseBtn = document.getElementById('text-import-close-btn');
 const textImportClearBtn = document.getElementById('text-import-clear-btn');
 const textImportMemoryBtn = document.getElementById('text-import-memory-btn');
-const customButtonsContainer = document.getElementById('custom-buttons-container');
 const aiSupportModal = document.getElementById('ai-support-modal');
 const aiSupportCloseBtn = document.getElementById('ai-support-close-btn');
-const editCustomModal = document.getElementById('edit-custom-modal');
-const editCustomContent = document.getElementById('edit-custom-content');
-const editCustomSaveBtn = document.getElementById('edit-custom-save-btn');
-const editCustomAbortBtn = document.getElementById('edit-custom-abort-btn');
-const editCustomDeleteBtn = document.getElementById('edit-custom-delete-btn');
+// Monthly button and modal
+const startMonthlyBtn = document.getElementById('text-import-monthly-btn');
+const monthlyModal = document.getElementById('monthly-modal');
+const monthlyCloseBtn = document.getElementById('monthly-close-btn');
+const monthlyClearAllBtn = document.getElementById('monthly-clear-all-btn');
+const editEntryModal = document.getElementById('edit-entry-modal');
+const editEntryContent = document.getElementById('edit-entry-content');
+const editSaveBtn = document.getElementById('edit-save-btn');
+const editCancelBtn = document.getElementById('edit-cancel-btn');
+const editClearBtn = document.getElementById('edit-clear-btn');
 
 // ===== VARIABLES =====
 let isSpeaking = false;
@@ -1348,288 +1483,133 @@ let isAnswered = false;
 let voices = [];
 let voicesLoaded = false;
 let currentTTSSystem = 'android';
-let db = null;
-let currentEditingListId = null;
+let currentEditWeek = null;
+let currentEditDay = null;
+let monthlyDB = null;
 
-// ===== INDEXEDDB FUNCTIONS =====
-function initIndexedDB() {
-return new Promise((resolve, reject) => {
-const request = indexedDB.open('VocabBuilderDB', 1);
-
-request.onerror = () => {
-console.error('IndexedDB error:', request.error);
-reject(request.error);
-};
-
-request.onsuccess = () => {
-db = request.result;
-console.log('IndexedDB initialized successfully');
-resolve(db);
-};
-
-request.onupgradeneeded = (event) => {
-db = event.target.result;
-if (!db.objectStoreNames.contains('customLists')) {
-const objectStore = db.createObjectStore('customLists', { keyPath: 'id', autoIncrement: true });
-objectStore.createIndex('name', 'name', { unique: true });
-objectStore.createIndex('timestamp', 'timestamp', { unique: false });
-}
-console.log('IndexedDB object store created');
-};
-});
-}
-
-function saveCustomList(name, content) {
-return new Promise((resolve, reject) => {
-if (!db) {
-reject('Database not initialized');
-return;
-}
-
-const transaction = db.transaction(['customLists'], 'readwrite');
-const objectStore = transaction.objectStore('customLists');
-
-const data = {
-name: name,
-content: content,
-timestamp: Date.now()
-};
-
-const request = objectStore.add(data);
-
-request.onsuccess = () => {
-console.log('Custom list saved:', name);
-resolve(request.result);
-};
-
-request.onerror = () => {
-console.error('Error saving custom list:', request.error);
-reject(request.error);
-};
-});
-}
-
-function getAllCustomLists() {
-return new Promise((resolve, reject) => {
-if (!db) {
-reject('Database not initialized');
-return;
-}
-
-const transaction = db.transaction(['customLists'], 'readonly');
-const objectStore = transaction.objectStore('customLists');
-const request = objectStore.getAll();
-
-request.onsuccess = () => {
-resolve(request.result);
-};
-
-request.onerror = () => {
-reject(request.error);
-};
-});
-}
-
-function deleteCustomList(id) {
-return new Promise((resolve, reject) => {
-if (!db) {
-reject('Database not initialized');
-return;
-}
-
-const transaction = db.transaction(['customLists'], 'readwrite');
-const objectStore = transaction.objectStore('customLists');
-const request = objectStore.delete(id);
-
-request.onsuccess = () => {
-console.log('Custom list deleted:', id);
-resolve();
-};
-
-request.onerror = () => {
-reject(request.error);
-};
-});
-}
-
-function updateCustomList(id, content) {
+// ===== INDEXEDDB FOR MONTHLY CYCLE =====
+function initMonthlyDB() {
     return new Promise((resolve, reject) => {
-        if (!db) {
-            reject('Database not initialized');
-            return;
-        }
-
-        const transaction = db.transaction(['customLists'], 'readwrite');
-        const objectStore = transaction.objectStore('customLists');
-        const getRequest = objectStore.get(id);
-
-        getRequest.onsuccess = () => {
-            const data = getRequest.result;
-            if (data) {
-                data.content = content;
-                data.timestamp = Date.now();
-                const updateRequest = objectStore.put(data);
-
-                updateRequest.onsuccess = () => {
-                    console.log('Custom list updated:', id);
-                    resolve();
-                };
-
-                updateRequest.onerror = () => {
-                    reject(updateRequest.error);
-                };
-            } else {
-                reject('List not found');
-            }
+        const request = indexedDB.open('MonthlyLearningDBJP', 1);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            monthlyDB = request.result;
+            resolve(monthlyDB);
         };
-
-        getRequest.onerror = () => {
-            reject(getRequest.error);
+        
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('entries')) {
+                db.createObjectStore('entries', { keyPath: 'id' });
+            }
         };
     });
 }
 
-async function renderCustomButtons() {
-    try {
-        const customLists = await getAllCustomLists();
-        customButtonsContainer.innerHTML = '';
+function saveEntry(week, day, content) {
+    return new Promise((resolve, reject) => {
+        const transaction = monthlyDB.transaction(['entries'], 'readwrite');
+        const store = transaction.objectStore('entries');
+        const id = `week${week}_day${day}`;
+        
+        const request = store.put({ id: id, week: week, day: day, content: content });
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
 
-        if (customLists.length === 0) {
-            customButtonsContainer.innerHTML = '<p class="no-custom-lists">カスタムリストはまだありません</p>';
-            return;
+function loadEntry(week, day) {
+    return new Promise((resolve, reject) => {
+        const transaction = monthlyDB.transaction(['entries'], 'readonly');
+        const store = transaction.objectStore('entries');
+        const id = `week${week}_day${day}`;
+        
+        const request = store.get(id);
+        
+        request.onsuccess = () => {
+            resolve(request.result ? request.result.content : '');
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function deleteEntry(week, day) {
+    return new Promise((resolve, reject) => {
+        const transaction = monthlyDB.transaction(['entries'], 'readwrite');
+        const store = transaction.objectStore('entries');
+        const id = `week${week}_day${day}`;
+        
+        const request = store.delete(id);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function countItems(content) {
+    if (!content || !content.trim()) return 0;
+    const lines = content.split('\n').filter(line => {
+        const trimmed = line.trim();
+        return trimmed && trimmed.includes('=') && !trimmed.startsWith('◎') && !trimmed.startsWith('@');
+    });
+    return lines.length;
+}
+
+async function updateWeekCounters() {
+    const weeks = ['1', '2', '3', '4', 'backup'];
+    
+    for (const week of weeks) {
+        let totalCount = 0;
+        const dayCount = week === 'backup' ? 5 : 7;
+        
+        for (let day = 1; day <= dayCount; day++) {
+            const content = await loadEntry(week, day);
+            totalCount += countItems(content);
         }
-
-        customLists.forEach(list => {
-            const container = document.createElement('div');
-            container.className = 'custom-list-item';
-
-            const button = document.createElement('button');
-            button.className = 'preset-btn';
-            button.textContent = list.name;
-            button.addEventListener('click', () => {
-                processTextImport(list.content);
-                textImportModal.style.display = 'none';
-
-                const successMessage = document.createElement('div');
-                successMessage.style.cssText = `
-                    position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
-                    color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
-                    z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                `;
-                successMessage.textContent = `✅ ${list.name} 読み込み完了！`;
-                document.body.appendChild(successMessage);
-
-                setTimeout(() => {
-                    if (document.body.contains(successMessage)) {
-                        document.body.removeChild(successMessage);
-                    }
-                }, 3000);
-            });
-
-            const editBtn = document.createElement('button');
-            editBtn.className = 'edit-custom-btn';
-            editBtn.textContent = '✏️ 編集';
-            editBtn.title = '編集';
-            editBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openEditModal(list.id, list.name, list.content);
-            });
-
-            container.appendChild(button);
-            container.appendChild(editBtn);
-            customButtonsContainer.appendChild(container);
-        });
-    } catch (error) {
-        console.error('Error rendering custom buttons:', error);
-        customButtonsContainer.innerHTML = '<p style="color: var(--primary);">エラーが発生しました</p>';
+        
+        const countEl = document.getElementById(`week${week}-count`);
+        if (countEl) {
+            countEl.textContent = `${totalCount}個`;
+        }
     }
 }
 
-function openEditModal(id, name, content) {
-    currentEditingListId = id;
-    editCustomContent.value = content;
-    textImportModal.style.display = 'none';
-    editCustomModal.style.display = 'flex';
-}
-
-editCustomSaveBtn.addEventListener('click', async () => {
-    if (!currentEditingListId) return;
-
-    const newContent = editCustomContent.value.trim();
-    if (!newContent) {
-        alert('内容が空です。');
-        return;
-    }
-
-    try {
-        await updateCustomList(currentEditingListId, newContent);
-        await renderCustomButtons();
-
-        editCustomModal.style.display = 'none';
-        textImportModal.style.display = 'flex';
-        currentEditingListId = null;
-        editCustomContent.value = '';
-
-        const successMessage = document.createElement('div');
-        successMessage.style.cssText = `
-            position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
-            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
-            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        `;
-        successMessage.textContent = '💾 保存完了！';
-        document.body.appendChild(successMessage);
-
-        setTimeout(() => {
-            if (document.body.contains(successMessage)) {
-                document.body.removeChild(successMessage);
-            }
-        }, 2000);
-    } catch (error) {
-        console.error('Error updating custom list:', error);
-        alert('保存に失敗しました。');
-    }
-});
-
-editCustomAbortBtn.addEventListener('click', () => {
-    editCustomModal.style.display = 'none';
-    textImportModal.style.display = 'flex';
-    currentEditingListId = null;
-    editCustomContent.value = '';
-});
-
-editCustomDeleteBtn.addEventListener('click', async () => {
-    if (!currentEditingListId) return;
-
-    if (confirm('このカスタムリストを削除しますか？')) {
-        try {
-            await deleteCustomList(currentEditingListId);
-            await renderCustomButtons();
-
-            editCustomModal.style.display = 'none';
-            textImportModal.style.display = 'flex';
-            currentEditingListId = null;
-            editCustomContent.value = '';
-
-            const deleteMessage = document.createElement('div');
-            deleteMessage.style.cssText = `
-                position: fixed; top: 20px; right: 20px; background-color: var(--primary);
-                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
-                z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            `;
-            deleteMessage.textContent = '🗑️ 削除完了';
-            document.body.appendChild(deleteMessage);
-
-            setTimeout(() => {
-                if (document.body.contains(deleteMessage)) {
-                    document.body.removeChild(deleteMessage);
-                }
-            }, 2000);
-        } catch (error) {
-            console.error('Error deleting custom list:', error);
-            alert('削除に失敗しました。');
+async function updateDayButtons() {
+    const allDayButtons = document.querySelectorAll('.day-btn');
+    
+    for (const btn of allDayButtons) {
+        const week = btn.dataset.week;
+        const day = btn.dataset.day;
+        const content = await loadEntry(week, day);
+        
+        if (content && content.trim()) {
+            btn.classList.add('has-content');
+        } else {
+            btn.classList.remove('has-content');
         }
     }
-});
+}
+
+async function clearWeek(week) {
+    const dayCount = week === 'backup' ? 5 : 7;
+    
+    for (let day = 1; day <= dayCount; day++) {
+        await deleteEntry(week, day);
+    }
+    
+    await updateWeekCounters();
+    await updateDayButtons();
+}
+
+async function clearAllData() {
+    const weeks = ['1', '2', '3', '4', 'backup'];
+    
+    for (const week of weeks) {
+        await clearWeek(week);
+    }
+}
 
 // ===== TTS FUNCTIONS =====
 function loadVoices() {
@@ -1829,6 +1809,113 @@ aiSupportCloseBtn.addEventListener('click', () => {
 aiSupportModal.style.display = 'none';
 });
 
+// Monthly Modal Event Listeners
+startMonthlyBtn.addEventListener('click', async () => {
+    await initMonthlyDB();
+    await updateWeekCounters();
+    await updateDayButtons();
+    textImportModal.style.display = 'none';  // Close text import modal
+    monthlyModal.style.display = 'flex';      // Open monthly modal
+});
+
+monthlyCloseBtn.addEventListener('click', () => {
+    monthlyModal.style.display = 'none';
+    textImportModal.style.display = 'flex';  // Reopen text import modal
+});
+
+monthlyClearAllBtn.addEventListener('click', async () => {
+    if (confirm('すべてのデータを削除してもよろしいですか？この操作は取り消せません。')) {
+        await clearAllData();
+    }
+});
+
+// Edit button event listeners
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        currentEditWeek = btn.dataset.week;
+        currentEditDay = btn.dataset.day;
+        
+        const content = await loadEntry(currentEditWeek, currentEditDay);
+        editEntryContent.value = content;
+        
+        monthlyModal.style.display = 'none';
+        editEntryModal.style.display = 'flex';
+    });
+});
+
+// Clear week button event listeners
+document.querySelectorAll('.clear-week-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const week = btn.dataset.week;
+        if (confirm(`Week ${week}のすべてのデータを削除してもよろしいですか？`)) {
+            await clearWeek(week);
+        }
+    });
+});
+
+// Save button
+editSaveBtn.addEventListener('click', async () => {
+    const content = editEntryContent.value;
+    await saveEntry(currentEditWeek, currentEditDay, content);
+    await updateWeekCounters();
+    await updateDayButtons();
+    
+    editEntryModal.style.display = 'none';
+    monthlyModal.style.display = 'flex';
+});
+
+// Cancel button
+editCancelBtn.addEventListener('click', () => {
+    editEntryModal.style.display = 'none';
+    monthlyModal.style.display = 'flex';
+});
+
+// Clear button
+editClearBtn.addEventListener('click', async () => {
+    if (confirm('この項目を削除してもよろしいですか？この操作は取り消せません。')) {
+        await deleteEntry(currentEditWeek, currentEditDay);
+        editEntryContent.value = '';
+        await updateWeekCounters();
+        await updateDayButtons();
+        
+        editEntryModal.style.display = 'none';
+        monthlyModal.style.display = 'flex';
+    }
+});
+
+// Day button click handlers (load content and return to main page)
+document.querySelectorAll('.day-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const week = btn.dataset.week;
+        const day = btn.dataset.day;
+        const content = await loadEntry(week, day);
+        
+        if (content && content.trim()) {
+            processTextImport(content);
+            monthlyModal.style.display = 'none';
+            textImportModal.style.display = 'none';
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            successMessage.textContent = `✅ コンテンツが読み込まれました！`;
+            document.body.appendChild(successMessage);
+            
+            setTimeout(() => {
+                if (document.body.contains(successMessage)) {
+                    document.body.removeChild(successMessage);
+                }
+            }, 2000);
+        } else {
+            alert('このエントリは空です。コンテンツを追加するためにまず編集してください。');
+        }
+    });
+});
+
 textImportBtn.addEventListener('click', () => {
 textImportModal.style.display = 'flex';
 });
@@ -1849,48 +1936,116 @@ n5_1: `
 朝ご飯を食べる (asagohan o taberu) = to eat breakfast
 食べすぎる (tabesugiru) = to eat too much
 旅行に行く (ryokō ni iku) = to go on a trip
-知る (shiru) = to know; to find out
+知る (shiru) = to know / to learn
 あなたの名前を知っている (anata no namae o shitte iru) = to know your name
-韓国料理が好き (kankoku ryōri ga suki) = like Korean food
-この靴が一番好き (kono kutsu ga ichiban suki) = like these shoes the best
+韓国料理が好き (kankoku ryōri ga suki) = to like Korean food
+この靴が一番好き (kono kutsu ga ichiban suki) = I like these shoes the most
 一人で住む (hitori de sumu) = to live alone
-東京に住んでいる (tōkyō ni sunde iru) = to live in Tokyo
+東京に住んでいる (Tōkyō ni sunde iru) = to live in Tokyo
 晩ご飯を作る (bangohan o tsukuru) = to make dinner
-そのチームと試合をする (sono chīmu to shiai o suru) = to have a match with that team
-新聞を読む (shinbun o yomu) = to read a newspaper
-富士山が見える (fujisan ga mieru) = can see Mt. Fuji
-日本語を話す (nihongo o hanasu) = to speak Japanese
-お金が欲しい (okane ga hoshii) = want money
+そのチームと試合をする (sono chīmu to shiai o suru) = to play a match with that team
+新聞を読む (shinbun o yomu) = to read the newspaper
+富士山が見える (Fujisan ga mieru) = to see Mt. Fuji
+日本語を話す (Nihongo o hanasu) = to speak Japanese
+お金が欲しい (okane ga hoshii) = to want money
 テレビを見る (terebi o miru) = to watch TV
 
 ◎例文
-本を買いました。= I bought a book.
-バスが来ました。= The bus came.
-友達に会いました。= I met a friend.
-私に会いに来てくれました。= They came to see me.
-水を飲みました。= I drank some water.
-朝ご飯を食べました。= I ate breakfast.
-昨日食べすぎました。= I ate too much yesterday.
-来月旅行に行きます。= I’ll go on a trip next month.
-先生の名前を知りません。= I don’t know the teacher’s name.
-あなたの名前を知っています。= I know your name.
-韓国料理が好きです。= I like Korean food.
-この靴が一番好きです。= I like these shoes the best.
-一人で住んでいます。= I live alone.
-東京に住んでいます。= I live in Tokyo.
-晩ご飯を作ります。= I’ll make dinner.
-そのチームと試合をします。= We’ll have a match with that team.
-新聞を読みます。= I read the newspaper.
-窓から富士山が見えます。= You can see Mt. Fuji from the window.
-日本語を話します。= I speak Japanese.
-お金が欲しいです。= I want money.
-毎晩テレビを見ます。= I watch TV every night.
+昨日、新しい本を買って電車で読みました。= Yesterday, I bought a new book and read it on the train.
+朝早くバスが来たので、学校に間に合いました。= The bus came early this morning, so I made it to school on time.
+週末に友達に会って、一緒に映画を見ました。= I met my friend on the weekend and watched a movie together.
+彼は私に会いに来て、話をたくさんしました。= He came to see me and we talked a lot.
+運動のあとで冷たい水を飲みました。= I drank cold water after exercising.
+家族と一緒に朝ご飯を食べました。= I ate breakfast with my family.
+お腹がすいていて、食べすぎてしまいました。= I was hungry and ended up eating too much.
+夏休みに友達と旅行に行く予定です。= I plan to go on a trip with my friends during summer vacation.
+このことを初めて知りました。= I just learned about this for the first time.
+あなたの名前を知っていると思います。= I think I know your name.
+私は韓国料理が好きで、よく作ります。= I like Korean food and often cook it.
+この靴が一番好きで、毎日履いています。= I like these shoes the most and wear them every day.
+大学を出てから、一人で住んでいます。= I’ve been living alone since graduating from college.
+今、東京に住んでいて、仕事をしています。= I live in Tokyo now and work there.
+晩ご飯を作って、家族と一緒に食べました。= I made dinner and ate it with my family.
+明日、そのチームと試合をする予定です。= Tomorrow, we’re going to play a match with that team.
+朝の新聞を読んで、ニュースを確認しました。= I read the morning newspaper and checked the news.
+ホテルの窓から富士山が見えました。= I could see Mt. Fuji from the hotel window.
+日本語を話すのは少し難しいですが、楽しいです。= Speaking Japanese is a bit difficult, but it’s fun.
+今月はお金が欲しいので、アルバイトをします。= I need money this month, so I’m going to work part-time.
+夜、家族と一緒にテレビを見ました。= I watched TV with my family at night.
 
 `,
 n5_2: `
+◎単語とフレーズ
+ドアを開ける (doa o akeru) = to open the door
+ドアを閉める (doa o shimeru) = to close the door
+プレゼントをもらう (purezento o morau) = to receive a present
+夫を手伝う (otto o tetsudau) = to help one’s husband
+写真を撮る (shashin o toru) = to take a photo
+同僚に会う (dōryō ni au) = to meet a coworker
+歩道を走る (hodō o hashiru) = to run on the sidewalk
+英語の歌を歌う (eigo no uta o utau) = to sing an English song
+椅子に座る (isu ni suwaru) = to sit on a chair
+ベッドで眠る (beddo de nemuru) = to sleep in bed
+日本語を勉強する (nihongo o benkyō suru) = to study Japanese
+プールで泳ぐ (pūru de oyogu) = to swim in the pool
+傘を持って行く (kasa o motte iku) = to take an umbrella
+エコバッグを使う (ekobaggu o tsukau) = to use an eco bag
+皿を洗う (sara o arau) = to wash the dishes
+手紙を書く (tegami o kaku) = to write a letter
+
+◎例文
+朝、部屋の空気を入れるためにドアを開けました。= I opened the door in the morning to let in some fresh air.
+寒かったので、すぐにドアを閉めました。= It was cold, so I quickly closed the door.
+友達から誕生日のプレゼントをもらってうれしかったです。= I was happy to receive a birthday present from my friend.
+夕食のあとで夫を手伝って皿を片づけました。= I helped my husband clean up the dishes after dinner.
+旅行のときにきれいな景色の写真を撮りました。= I took photos of the beautiful scenery during my trip.
+駅の近くで同僚に会って少し話しました。= I met a coworker near the station and chatted a bit.
+朝、歩道を走って学校へ行きます。= I run on the sidewalk in the morning to go to school.
+カラオケで英語の歌を楽しく歌いました。= I happily sang an English song at karaoke.
+疲れたので、椅子に座って少し休みました。= I was tired, so I sat on a chair and rested a bit.
+夜はベッドでぐっすり眠りました。= I slept soundly in my bed at night.
+毎日、日本語を勉強して新しい言葉を覚えています。= I study Japanese every day and learn new words.
+暑い日にプールで泳いで気持ちよかったです。= It felt great to swim in the pool on a hot day.
+雨が降りそうだったので傘を持って行きました。= I took an umbrella with me because it looked like rain.
+買い物に行くときはエコバッグを使います。= I use an eco bag when I go shopping.
+夕食のあとで家族の皿を全部洗いました。= I washed all the dishes for my family after dinner.
+友達に手紙を書いて、ポストに出しました。= I wrote a letter to my friend and sent it by mail.
 
 `,
 n5_3: `
+◎単語とフレーズ
+彼の名前を尋ねる (kare no namae o tazuneru) = to ask his name
+紙を切る (kami o kiru) = to cut paper
+姉と踊る (ane to odoru) = to dance with one’s older sister
+木から落ちる (ki kara ochiru) = to fall from a tree
+海の上を飛ぶ (umi no ue o tobu) = to fly over the sea
+贈り物を渡す (okurimono o watasu) = to give a present
+中国語を学ぶ (chūgokugo o manabu) = to learn Chinese
+音楽を聞く (ongaku o kiku) = to listen to music
+本を机に置く (hon o tsukue ni oku) = to put a book on the desk
+「はい」か「いいえ」と言う ("hai" ka "iie" to iu) = to say “yes” or “no”
+弟に微笑む (otōto ni hohoemu) = to smile at one’s younger brother
+料理を始める (ryōri o hajimeru) = to start cooking
+兄と話す (ani to hanasu) = to talk with one’s older brother
+フランス語を教える (furansugo o oshieru) = to teach French
+妹を持つ (imōto o motsu) = to have a younger sister
+
+◎例文
+初めて会ったとき、彼の名前を尋ねました。= When we first met, I asked for his name.
+はさみで紙を切って、かわいい形を作りました。= I cut the paper with scissors and made a cute shape.
+パーティーで姉と一緒に楽しく踊りました。= I danced happily with my older sister at the party.
+子供のころ、木から落ちてけがをしたことがあります。= When I was a child, I once fell from a tree and got hurt.
+鳥が海の上を飛んでいて、とてもきれいでした。= A bird was flying over the sea, and it was beautiful.
+友達に誕生日の贈り物を渡しました。= I gave my friend a birthday present.
+学校で中国語を学んで、新しい言葉を覚えました。= I learned Chinese at school and memorized new words.
+毎晩、静かな部屋で音楽を聞きます。= I listen to music in a quiet room every evening.
+本を机に置いて、勉強を始めました。= I put the book on the desk and started studying.
+先生の質問に「はい」か「いいえ」と言いました。= I answered the teacher’s question with “yes” or “no.”
+弟に優しく微笑みかけました。= I smiled gently at my younger brother.
+夕方から料理を始めて、カレーを作りました。= I started cooking in the evening and made curry.
+昨日、兄と映画の話をしました。= Yesterday, I talked with my older brother about movies.
+学校でフランス語を教えています。= I teach French at a school.
+私は妹を持っていて、彼女はとても明るいです。= I have a younger sister, and she’s very cheerful.
 
 `,
 n4_1: `
@@ -2246,7 +2401,7 @@ perfect2: `
 頑張ってきた = あなたは今まで本当に_____ね。
 
  `
-};
+}; //End of Preset Vocabulary Data
 
 function isContentEmpty(content) {
 const cleaned = content.replace(/\s+/g, '').replace(/[◎=]/g, '');
@@ -2333,54 +2488,6 @@ textImportModal.style.display = 'none';
 
 textImportClearBtn.addEventListener('click', () => {
 textImportContent.value = '';
-});
-
-textImportMemoryBtn.addEventListener('click', async () => {
-const content = textImportContent.value.trim();
-if (!content) {
-alert('記憶する内容がありません。');
-return;
-}
-
-const namePrompt = prompt('このカスタムリストの名前を入力してください：');
-if (!namePrompt) {
-return;
-}
-
-const name = namePrompt.trim();
-if (!name) {
-alert('名前を入力してください。');
-return;
-}
-
-try {
-await saveCustomList(name, content);
-await renderCustomButtons();
-
-const successMessage = document.createElement('div');
-successMessage.style.cssText = `
-position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
-color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
-z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-`;
-successMessage.textContent = `📌 ${name} 記憶完了！`;
-document.body.appendChild(successMessage);
-
-setTimeout(() => {
-if (document.body.contains(successMessage)) {
-document.body.removeChild(successMessage);
-}
-}, 3000);
-
-textImportContent.value = '';
-} catch (error) {
-console.error('Error saving custom list:', error);
-if (error.name === 'ConstraintError') {
-alert('この名前は既に使用されています。別の名前を選んでください。');
-} else {
-alert('保存に失敗しました。もう一度お試しください。');
-}
-}
 });
 
 // ===== TEXT IMPORT AND TABLE RENDERING =====
@@ -3152,33 +3259,9 @@ setInterval(updateDateInfo, 60000);
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await initIndexedDB();
-        await renderCustomButtons();
-    } catch (error) {
-        console.error('Error initializing IndexedDB:', error);
-    }
-
+   
     initializeTTS();
-
-    // Add toggle functionality for button sets
-    document.querySelectorAll('.toggle-icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-toggle');
-            const targetContent = document.getElementById(targetId);
-            
-            if (targetContent) {
-                targetContent.classList.toggle('visible');
-                
-                // Change icon direction
-                if (targetContent.classList.contains('visible')) {
-                    this.textContent = '▲';
-                } else {
-                    this.textContent = '▼';
-                }
-            }
-        });
-    });
+    await initMonthlyDB();
 
     const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
 
