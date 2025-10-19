@@ -484,17 +484,17 @@ margin-bottom: 20px;
 }
 
 .button-set {
-border: 1px solid #ddd;
-border-radius: 8px;
-padding: 10px;
-background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .button-set h3 {
-margin-top: 0;
-margin-bottom: 10px;
-font-size: 16px;
-color: var(--dark);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: var(--dark);
 }
 
 .preset-btn {
@@ -1018,48 +1018,36 @@ top: -12px;
 <h2>📝 語彙を読み込む</h2>
 
 <div class="preset-buttons">
-    <div class="button-set textbook-buttons">
-        <div class="button-set-header">
-            <h3>📘 基本の単語</h3>
-            <span class="toggle-icon" data-toggle="n5-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="n5-buttons">
+    <div class="button-set textbook-buttons">        
+            <h3>📘 基本の単語</h3>   
+        <div class="button-set-content" visible id="n5-buttons">
             <button class="preset-btn textbook-btn" data-preset="n5_1">動詞(一)</button>
             <button class="preset-btn textbook-btn" data-preset="n5_2">動詞(二)</button>
             <button class="preset-btn textbook-btn" data-preset="n5_3">動詞(三)</button>
         </div>
     </div>
     
-    <div class="button-set jlpt-buttons">
-        <div class="button-set-header">
-            <h3>📗 シーン別の単語</h3>
-            <span class="toggle-icon" data-toggle="n4-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="n4-buttons">
+    <div class="button-set jlpt-buttons">        
+            <h3>📗 シーン別の単語</h3>        
+        <div class="button-set-content" visible id="n4-buttons">
             <button class="preset-btn jlpt-btn" data-preset="n4_1">N4 Set 1</button>
             <button class="preset-btn jlpt-btn" data-preset="n4_2">朝</button>
             <button class="preset-btn jlpt-btn" data-preset="n4_3">寝る前</button>
         </div>
     </div>
     
-    <div class="button-set core-buttons">
-        <div class="button-set-header">
+    <div class="button-set core-buttons">        
             <h3>📙 テーマ別の単語</h3>
-            <span class="toggle-icon" data-toggle="n3-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="n3-buttons">
+        <div class="button-set-content" visible id="n3-buttons">
             <button class="preset-btn core-btn" data-preset="n3_1">N3 Set 1</button>
             <button class="preset-btn core-btn" data-preset="n3_2">N3 Set 2</button>
             <button class="preset-btn core-btn" data-preset="n3_3">N3 Set 3</button>
         </div>
     </div>
     
-    <div class="button-set other-buttons">
-        <div class="button-set-header">
+    <div class="button-set other-buttons">        
             <h3>🌟 完璧な体験</h3>
-            <span class="toggle-icon" data-toggle="perfect-buttons">▼</span>
-        </div>
-        <div class="button-set-content" id="perfect-buttons">
+        <div class="button-set-content" visible id="perfect-buttons">
             <button class="preset-btn other-btn" data-preset="perfect1">運動</button>
             <button class="preset-btn other-btn" data-preset="perfect2">資格を取る</button>
         </div>
