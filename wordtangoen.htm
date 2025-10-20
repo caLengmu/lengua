@@ -3291,10 +3291,10 @@ applaud = The audience will _____ the singer after her last song.
                 .split('/')
                 .map(ans => ans.replace(/\(.*?\)/g, '').trim().toLowerCase());
 
-            const normalizedUserAnswer = userAnswer.replace(/[.,?'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedUserAnswer = userAnswer.replace(/[.,?“”"’'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
 
             const isCorrect = correctAnswers.some(answer => {
-                const normalizedAnswer = answer.replace(/[.,?'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
+                const normalizedAnswer = answer.replace(/[.,?“”"’'''.../…#!$%\^&\*;:{}=\-_`~()]/g, "");
                 return normalizedUserAnswer === normalizedAnswer;
             });
 
