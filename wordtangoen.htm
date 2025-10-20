@@ -1082,7 +1082,7 @@
 <body>
     <header>
         <div id="date-info" class="date-info"></div>
-        <h1>🕺💃 Word Tango</h1>
+        <h1>🎯 Word Tango</h1>
         <div class="tts-system-selector">
             <label for="tts-system">System: </label>
             <select id="tts-system">
@@ -1178,7 +1178,7 @@
             <textarea id="text-import-content" placeholder="Enter your vocabulary pairs here..."></textarea>
             <div class="button-group">
                 <button id="text-import-submit-btn" class="submit-btn">📂 Load</button>
-               <button id="text-import-monthly-btn" class="monthly-btn">🎯 Monthly</button>
+               <button id="text-import-monthly-btn" class="monthly-btn">📅 Monthly</button>
                 <button id="text-import-clear-btn" class="hint-btn">🈳 Clear</button>
                 <button id="text-import-close-btn" class="close-btn">Close</button>
             </div>
@@ -1206,7 +1206,7 @@
 <!-- Monthly Learning Cycle Modal -->
 <div id="monthly-modal" class="modal">
     <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
-        <h2>🎯 Monthly Learning Cycle</h2>
+        <h2>📅 Monthly Learning Cycle</h2>
         
         <div id="monthly-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
             <!-- Week 1 -->
@@ -1835,7 +1835,7 @@ monthlyCloseBtn.addEventListener('click', () => {
 });
 
 monthlyClearAllBtn.addEventListener('click', async () => {
-    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+    if (confirm('Are you sure you want to clear all data? This action cannot be undone. (確定清除本月所有內容？)')) {
         await clearAllData();
     }
 });
@@ -1858,7 +1858,7 @@ document.querySelectorAll('.edit-btn').forEach(btn => {
 document.querySelectorAll('.clear-week-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
         const week = btn.dataset.week;
-        if (confirm(`Are you sure you want to clear all data for Week ${week}?`)) {
+        if (confirm(`Are you sure you want to clear all data for Week ${week}? (確定清除本週所有內容？)`)) {
             await clearWeek(week);
         }
     });
@@ -1883,7 +1883,7 @@ editCancelBtn.addEventListener('click', () => {
 
 // Clear button
 editClearBtn.addEventListener('click', async () => {
-    if (confirm('Are you sure you want to clear this entry? This action cannot be undone.')) {
+    if (confirm('Are you sure you want to clear this entry? This action cannot be undone. (確定清除內容？)')) {
         await deleteEntry(currentEditWeek, currentEditDay);
         editEntryContent.value = '';
         await updateWeekCounters();
@@ -1922,7 +1922,7 @@ document.querySelectorAll('.day-btn').forEach(btn => {
                 }
             }, 2000);
         } else {
-            alert('This entry is empty. Please edit it first to add content.');
+            alert('This entry is empty. Please edit it first to add content. (請先按 Edit 輸入內容)');
         }
     });
 });
@@ -3390,7 +3390,7 @@ applaud = The audience will _____ the singer after her last song.
             const daysUntilCollegeExam = Math.ceil((collegeExamDate - todayNoTime) / (1000 * 60 * 60 * 24));
 
             dateInfoEl.innerHTML = `
-                <span><span class="emoji">📅</span>${taiwanDate}</span>
+                <span><span class="emoji">🗓️</span>${taiwanDate}</span>
                 <span><span class="emoji">⏰</span><span class="countdown">${daysUntilExam}</span> days until 段考</span>
                 <span><span class="emoji">📚</span><span class="countdown">${daysUntilCollegeExam}</span> days until 115年學測</span>
             `;
