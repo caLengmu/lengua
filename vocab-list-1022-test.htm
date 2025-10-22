@@ -79,7 +79,7 @@
             background-color: #e74c3c;
         }
 
-        /* Listen and Choose Quiz Button */
+        /* Quiz Section */
         .quiz-section {
             margin: 30px 0;
             text-align: center;
@@ -184,6 +184,18 @@
             color: #2c3e50;
         }
 
+        .section-header-with-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
         .vocab-row {
             border-bottom: 1px solid #ddd;
         }
@@ -253,54 +265,73 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
         }
 
         .modal-content {
             background-color: white;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 5px;
-            width: 90%;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 95%;
             max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
             position: relative;
         }
 
         .close {
             color: #aaa;
-            float: right;
+            position: absolute;
+            right: 15px;
+            top: 10px;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            z-index: 10;
         }
 
         .close:hover {
             color: #000;
         }
 
-        /* Listen and Choose Quiz Styles */
+        /* Listen and Choose Quiz Styles - Mobile Optimized */
+        .quiz-modal-content {
+            margin: 5px auto;
+            padding: 15px;
+            max-height: 98vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quiz-header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            padding-right: 30px;
+        }
+
         .listen-answer-section {
             text-align: center;
-            margin: 30px 0;
-            padding: 20px;
+            padding: 12px;
             background-color: #f8f9fa;
             border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .listen-answer-display {
-            font-size: 24px;
+            font-size: 16px;
             font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 15px;
-            min-height: 60px;
+            min-height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
+            line-height: 1.3;
+            margin-bottom: 8px;
         }
 
         .listen-speaker {
-            font-size: 48px;
+            font-size: 40px;
             cursor: pointer;
             display: inline-block;
             transition: transform 0.2s;
@@ -316,12 +347,12 @@
 
         .timer-feedback-section {
             text-align: center;
-            margin: 20px 0;
-            min-height: 30px;
+            margin: 8px 0;
+            min-height: 25px;
         }
 
         .timer-feedback {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: bold;
         }
 
@@ -336,26 +367,27 @@
         .choices-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 20px 0;
+            gap: 8px;
+            margin: 10px 0;
+            flex-grow: 1;
         }
 
         .choice-btn {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 10px 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             transition: all 0.3s;
-            min-height: 70px;
+            min-height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .choice-btn:hover:not(:disabled) {
@@ -393,16 +425,18 @@
         .listen-controls {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e9ecef;
         }
 
         .listen-next-btn, .listen-close-btn {
-            padding: 12px 30px;
+            padding: 10px 25px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             transition: background-color 0.3s;
         }
@@ -432,29 +466,29 @@
 
         .quiz-complete {
             text-align: center;
-            padding: 30px;
+            padding: 20px;
         }
 
         .quiz-complete h3 {
             color: #28a745;
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 24px;
+            margin-bottom: 15px;
         }
 
         .quiz-score {
-            font-size: 24px;
+            font-size: 20px;
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .restart-quiz-btn {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
         }
 
@@ -639,43 +673,203 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
                 padding: 15px;
             }
 
             h1 {
-                font-size: 2em;
+                font-size: 1.8em;
+                margin-bottom: 20px;
             }
 
-            .modal-content {
-                margin: 10px auto;
+            .category-title {
+                font-size: 1.2em;
+            }
+
+            .vocab-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .quiz-section {
                 padding: 15px;
-                width: 90%;
-                max-height: 90vh;
+                margin: 20px 0;
             }
 
-            .choices-grid {
-                grid-template-columns: 1fr;
+            .quiz-btn {
+                padding: 12px 20px;
+                font-size: 16px;
             }
 
-            .choice-btn {
-                min-height: 60px;
-                font-size: 14px;
+            .speed-control-section {
+                padding: 10px;
+            }
+
+            .speed-label {
+                display: block;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .speed-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin: 2px;
+            }
+
+            .study-partner-section {
+                padding: 15px;
+            }
+
+            .study-partner-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            .section-header {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+
+            .section-checkbox {
+                width: 18px;
+                height: 18px;
+            }
+
+            .audio-controls {
+                width: 60px;
+                padding: 10px 5px;
+            }
+
+            .content-cell {
+                padding: 12px;
+            }
+
+            .vocab-word {
+                font-size: 1.2em;
+            }
+
+            .example-sentence {
+                font-size: 1.1em;
+            }
+
+            /* Quiz Modal Mobile Optimization */
+            .modal-content {
+                width: 98%;
+                margin: 5px auto;
+                padding: 12px;
+            }
+
+            .quiz-modal-content {
+                max-height: 97vh;
+                padding: 10px;
+            }
+
+            .quiz-header {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+
+            .listen-answer-section {
+                padding: 10px;
+                margin-bottom: 8px;
             }
 
             .listen-answer-display {
-                font-size: 20px;
+                font-size: 14px;
+                min-height: 40px;
             }
 
             .listen-speaker {
                 font-size: 36px;
+            }
+
+            .timer-feedback {
+                font-size: 13px;
+            }
+
+            .choices-grid {
+                gap: 6px;
+                margin: 8px 0;
+            }
+
+            .choice-btn {
+                font-size: 13px;
+                padding: 8px 6px;
+                min-height: 50px;
+            }
+
+            .listen-controls {
+                gap: 8px;
+                margin-top: 8px;
+                padding-top: 8px;
+            }
+
+            .listen-next-btn, .listen-close-btn {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+
+            .partners-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .partner-image {
+                width: 60px;
+                height: 60px;
+            }
+
+            .partner-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .speech-bubble {
+                padding: 15px;
+            }
+
+            .current-word {
+                font-size: 18px;
+            }
+
+            .current-example {
+                font-size: 18px;
+            }
+
+            .navigation-controls {
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .quiz-header {
+                font-size: 1em;
+            }
+
+            .listen-answer-display {
+                font-size: 13px;
+            }
+
+            .choice-btn {
+                font-size: 12px;
+                min-height: 45px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (10.22 test 1)</h1>
+        <h1>Vocabulary List (10.22 test2)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -695,8 +889,7 @@
                     <button class="vocab-btn" data-category="magazine" data-lesson="maga3">U12</button>
                     <button class="vocab-btn" data-category="magazine" data-lesson="maga4">U13 (自読)</button>
                 </div>
-            </div>
-           
+            </div>         
 
             <div class="category">
                 <div class="category-title">核心字彙</div>
@@ -705,14 +898,13 @@
                     <button class="vocab-btn" data-category="core" data-lesson="core2">P2 U5</button>
                     <button class="vocab-btn" data-category="core" data-lesson="core3">P2 U6</button>
                 </div>
-            </div>
 <!-- Listen and Choose Quiz Section -->
             <div class="quiz-section">
                 <button class="quiz-btn" id="listenChooseBtn">
                     🎧 Listen and Choose (聽力測驗)
                 </button>
             </div>
-
+            </div>
         </div>
 
         <!-- Speed Control -->
@@ -761,9 +953,9 @@
 
     <!-- Listen and Choose Modal -->
     <div id="listenChooseModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content quiz-modal-content">
             <span class="close" id="closeListenChoose">&times;</span>
-            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 20px;">🎧 Listen and Choose</h2>
+            <h2 class="quiz-header">🎧 Listen and Choose</h2>
             <div class="listen-answer-section">
                 <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker to hear</div>
                 <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
@@ -773,7 +965,7 @@
             </div>
             <div id="choicesGrid" class="choices-grid"></div>
             <div class="listen-controls">
-                <button id="listenNextBtn" class="listen-next-btn" disabled>Next</button>
+                <button id="listenNextBtn" class="listen-next-btn">Next</button>
                 <button id="listenCloseBtn" class="listen-close-btn">Close</button>
             </div>
         </div>
@@ -882,7 +1074,7 @@
     </div>
 
     <script>
-         // Built-in database - can be expanded
+        // Built-in database - can be expanded
         const vocabDatabase = {
             textbook1: [
   {
@@ -2252,6 +2444,7 @@
         let speechRate = 1.0;
         let voices = [];
         let isCompleted = false;
+        let checkedSections = new Set();
 
         // Quiz state
         let quizWords = [];
@@ -2317,7 +2510,7 @@
             currentSpeech = null;
         }
 
-        // Load vocabulary
+        // Load vocabulary with checkboxes
         function loadVocabulary(lessonKey) {
             const tableBody = document.getElementById('vocabTableBody');
             const data = vocabDatabase[lessonKey];
@@ -2327,9 +2520,21 @@
                 return;
             }
 
+            // Clear checked sections when loading new lesson
+            checkedSections.clear();
+
             let html = '';
-            data.forEach(section => {
-                html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
+            data.forEach((section, sectionIndex) => {
+                const sectionId = `section_${lessonKey}_${sectionIndex}`;
+                html += `<tr>
+                    <td colspan="2" class="section-header">
+                        <div class="section-header-with-checkbox">
+                            <input type="checkbox" class="section-checkbox" id="${sectionId}" data-section-index="${sectionIndex}" checked>
+                            <label for="${sectionId}" style="cursor: pointer; user-select: none;">${section.section}</label>
+                        </div>
+                    </td>
+                </tr>`;
+                
                 section.words.forEach(item => {
                     const fullText = `${item.word}. ${item.example}`;
                     html += `<tr class="vocab-row">
@@ -2346,6 +2551,20 @@
             });
 
             tableBody.innerHTML = html;
+
+            // Add checkbox event listeners
+            document.querySelectorAll('.section-checkbox').forEach(checkbox => {
+                const sectionIndex = parseInt(checkbox.getAttribute('data-section-index'));
+                checkedSections.add(sectionIndex); // Initially all checked
+                
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        checkedSections.add(sectionIndex);
+                    } else {
+                        checkedSections.delete(sectionIndex);
+                    }
+                });
+            });
         }
 
         // Flatten lesson data
@@ -2362,6 +2581,24 @@
                 });
             });
             return flattened;
+        }
+
+        // Get words from checked sections only
+        function getWordsFromCheckedSections(lessonData) {
+            const allWords = [];
+            lessonData.forEach((section, sectionIndex) => {
+                if (checkedSections.has(sectionIndex)) {
+                    section.words.forEach((word, wordIndex) => {
+                        allWords.push({
+                            ...word,
+                            sectionIndex,
+                            sectionTitle: section.section,
+                            wordIndex
+                        });
+                    });
+                }
+            });
+            return allWords;
         }
 
         // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
@@ -2392,12 +2629,12 @@
                 return;
             }
 
-            // Initialize quiz
+            // Get words from checked sections only
             const lessonData = vocabDatabase[selectedLesson];
-            const allWords = flattenLessonData(lessonData);
+            const allWords = getWordsFromCheckedSections(lessonData);
             
             if (allWords.length < 8) {
-                alert('This lesson needs at least 8 words for the quiz. (此單元需要至少8個單字才能進行測驗)');
+                alert('Please select sections with at least 8 words for the quiz. (請勾選至少包含8個單字的區段)');
                 return;
             }
 
@@ -2435,6 +2672,7 @@
             document.getElementById('timerFeedback').textContent = '';
             document.getElementById('timerFeedback').className = 'timer-feedback';
             document.getElementById('listenNextBtn').disabled = true;
+            document.getElementById('listenNextBtn').style.display = 'inline-block';
 
             // Generate all 8 choices (include all quiz words)
             displayChoices(shuffleArray([...quizWords]));
@@ -2471,7 +2709,7 @@
             } else {
                 // Wrong answer
                 btn.classList.add('incorrect');
-                document.getElementById('timerFeedback').textContent = '✗ Wrong! The correct answer is: ' + correctChinese;
+                document.getElementById('timerFeedback').textContent = '✗ Wrong! Correct: ' + correctChinese;
                 document.getElementById('timerFeedback').className = 'timer-feedback incorrect';
                 
                 // Highlight correct answer
@@ -2491,7 +2729,7 @@
             const englishWord = extractEnglishWord(correctAnswer.word);
             const exampleOnly = extractExampleOnly(correctAnswer.example);
             document.getElementById('listenAnswerDisplay').innerHTML = 
-                `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+                `<strong>${englishWord}</strong><br><span style="font-size: 14px;">${exampleOnly}</span>`;
 
             // Enable next button
             document.getElementById('listenNextBtn').disabled = false;
