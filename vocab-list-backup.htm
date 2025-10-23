@@ -560,7 +560,7 @@
         }
 
         .quiz-score {
-            font-size: 25px;
+            font-size: 20px;
             color: #2c3e50;
             margin-bottom: 15px;
         }
@@ -572,7 +572,7 @@
             padding: 12px 25px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 15px;
             font-weight: bold;
         }
 
@@ -2931,7 +2931,7 @@ tableBody.innerHTML = html;
             const englishWord = extractEnglishWord(correctAnswer.word);
             const exampleOnly = extractExampleOnly(correctAnswer.example);
             document.getElementById('listenAnswerDisplay').innerHTML = 
-                `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+                `<strong>${englishWord}</strong><br><span style="font-size: 14px;">${exampleOnly}</span>`;
 
             // Enable next button
             document.getElementById('listenNextBtn').disabled = false;
@@ -2962,7 +2962,7 @@ tableBody.innerHTML = html;
                 <div class="quiz-complete">
                     <h3>🎉 Quiz Complete!</h3>
                     <div class="quiz-score">
-                        Your Score: <strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
+                        Your Score: ${quizScore} / ${quizWords.length} (${percentage}%)
                     </div>
                     <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
                 </div>
