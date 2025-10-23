@@ -79,111 +79,6 @@
             background-color: #e74c3c;
         }
 
-        /* Quiz Section */
-        .quiz-section {
-            margin: 30px 0;
-            text-align: center;
-            padding: 20px;
-            background-color: #fff3cd;
-            border-radius: 8px;
-            border: 2px solid #ffc107;
-        }
-
-/* Section Selector */
-        .section-selector-area {
-            margin: 20px 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        .section-selector-title {
-            font-weight: bold;
-            font-size: 16px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .section-checkboxes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
-
-        .section-checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px;
-            background-color: white;
-            border-radius: 5px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .section-checkbox-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .section-checkbox-item label {
-            cursor: pointer;
-            font-size: 14px;
-            color: #333;
-            user-select: none;
-            flex: 1;
-        }
-
-        .section-checkbox-item:hover {
-            background-color: #f0f0f0;
-        }
-
-        @media (max-width: 768px) {
-            .section-selector-area {
-                padding: 15px;
-                margin: 15px 0;
-            }
-
-            .section-selector-title {
-                font-size: 14px;
-            }
-
-            .section-checkboxes-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .section-checkbox-item {
-                padding: 10px;
-            }
-
-            .section-checkbox-item input[type="checkbox"] {
-                width: 18px;
-                height: 18px;
-            }
-
-            .section-checkbox-item label {
-                font-size: 13px;
-            }
-        }
-
-        .quiz-btn {
-            background-color: #ffc107;
-            color: #333;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .quiz-btn:hover {
-            background-color: #ffb300;
-        }
-
         .speed-control-section {
             margin: 30px 0;
             text-align: center;
@@ -319,7 +214,7 @@
             text-align: center;
             padding: 40px;
             color: #7f8c8d;
-            font-size: 20px;
+           font-size: 20px
         }
 
         /* Modal Styles */
@@ -332,252 +227,30 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            overflow-y: auto;
         }
 
         .modal-content {
             background-color: white;
-            margin: 20px auto;
-            padding: 25px;
-            border-radius: 8px;
-            width: 95%;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 5px;
+            width: 90%;
             max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
             position: relative;
         }
 
         .close {
             color: #aaa;
-            position: absolute;
-            right: 15px;
-            top: 10px;
+            float: right;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 10;
         }
 
         .close:hover {
             color: #000;
-        }
-
-        /* Listen and Choose Quiz Styles - Mobile Optimized */
-        .quiz-modal-content {
-            margin: 5px auto;
-            padding: 15px;
-            max-height: 98vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .quiz-header {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            padding-right: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .section-selector {
-                max-height: 120px;
-                padding: 10px;
-            }
-
-            .section-selector-title {
-                font-size: 13px;
-            }
-
-            .section-item label {
-                font-size: 12px;
-            }
-        }
-
-        .listen-answer-section {
-            text-align: center;
-            padding: 12px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-.listen-answer-display {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2c3e50;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-
-        .listen-speaker {
-            font-size: 30px;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.2s;
-        }
-
-        .listen-speaker:hover {
-            transform: scale(1.1);
-        }
-
-        .listen-speaker:active {
-            transform: scale(0.95);
-        }
-
-        .timer-feedback-section {
-            text-align: center;
-            margin: 8px 0;
-            min-height: 25px;
-        }
-
-        .timer-feedback {
-            font-size: 25px;
-            font-weight: bold;
-        }
-
-        .timer-feedback.correct {
-            color: #28a745;
-        }
-
-        .timer-feedback.incorrect {
-            color: #dc3545;
-        }
-
-        .choices-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin: 10px 0;
-            flex-grow: 1;
-        }
-
-.choice-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: bold;
-            transition: all 0.3s;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        .choice-btn:hover:not(:disabled) {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .choice-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .choice-btn.correct {
-            background-color: #28a745;
-            animation: pulse-correct 0.5s;
-        }
-
-        .choice-btn.incorrect {
-            background-color: #dc3545;
-            animation: shake 0.5s;
-        }
-
-        @keyframes pulse-correct {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .listen-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .listen-next-btn, .listen-close-btn {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .listen-next-btn {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .listen-next-btn:hover:not(:disabled) {
-            background-color: #218838;
-        }
-
-        .listen-next-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .listen-close-btn {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .listen-close-btn:hover {
-            background-color: #5a6268;
-        }
-
-.quiz-complete {
-            text-align: center;
-            padding: 20px;
-            grid-column: 1 / -1;
-            width: 100%;
-        }
-
-        .quiz-complete h3 {
-            color: #28a745;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .quiz-score {
-            font-size: 20px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .restart-quiz-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .restart-quiz-btn:hover {
-            background-color: #2980b9;
         }
 
         .partner-selection {
@@ -633,6 +306,7 @@
             background-color: #0056b3;
         }
 
+        /* Study Session Styles */
         .study-session {
             text-align: center;
         }
@@ -757,71 +431,21 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
             .container {
                 padding: 15px;
             }
 
             h1 {
-                font-size: 1.8em;
-                margin-bottom: 20px;
+                font-size: 2em;
             }
 
-            .category-title {
-                font-size: 1.2em;
+            .category-buttons {
+                justify-content: center;
             }
 
             .vocab-btn {
                 padding: 10px 15px;
                 font-size: 13px;
-            }
-
-            .quiz-section {
-                padding: 15px;
-                margin: 20px 0;
-            }
-
-            .quiz-btn {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-
-            .speed-control-section {
-                padding: 10px;
-            }
-
-            .speed-label {
-                display: block;
-                margin-bottom: 10px;
-                margin-right: 0;
-            }
-
-            .speed-btn {
-                padding: 8px 12px;
-                font-size: 13px;
-                margin: 2px;
-            }
-
-            .study-partner-section {
-                padding: 15px;
-            }
-
-            .study-partner-btn {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-
-            .section-header {
-                font-size: 1.2em;
-                padding: 12px;
-            }
-
-            .section-checkbox {
-                width: 18px;
-                height: 18px;
             }
 
             .audio-controls {
@@ -833,77 +457,29 @@
                 padding: 12px;
             }
 
-.vocab-word {
-                font-size: 1.5em;
+            .vocab-word {
+                font-size: 1.3em;
             }
 
-            .example-sentence {
-                font-size: 1.5em;
-            }
-
-
-            /* Quiz Modal Mobile Optimization */
-            .modal-content {
-                width: 98%;
-                margin: 5px auto;
-                padding: 12px;
-            }
-
-            .quiz-modal-content {
-                max-height: 97vh;
+            .speed-control-section {
+                margin: 20px 0;
                 padding: 10px;
             }
 
-            .quiz-header {
-                font-size: 1.5em;
+            .speed-label {
+                display: block;
                 margin-bottom: 10px;
+                margin-right: 0;
             }
 
-            .listen-answer-section {
-                padding: 10px;
-                margin-bottom: 8px;
-            }
-
-.listen-answer-display {
-                font-size: 20px;
-                min-height: 50px;
-                line-height: 1.3;
-            }
-
-            .listen-speaker {
-                font-size: 30px;
-            }
-
-            .timer-feedback {
-                font-size: 25px;
-            }
-
-            .choices-grid {
-                gap: 6px;
-                margin: 8px 0;
-            }
-
-.choice-btn {
-                font-size: 20px;
-                padding: 10px 8px;
-                min-height: 55px;
-                line-height: 1.3;
-            }
-
-            .listen-controls {
-                gap: 8px;
-                margin-top: 8px;
-                padding-top: 8px;
-            }
-
-            .listen-next-btn, .listen-close-btn {
-                padding: 8px 20px;
-                font-size: 20px;
+            .speed-btn {
+                padding: 10px 14px;
+                margin: 2px;
+                font-size: 13px;
             }
 
             .partners-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
             }
 
             .partner-image {
@@ -912,20 +488,8 @@
             }
 
             .partner-avatar {
-                width: 100px;
-                height: 100px;
-            }
-
-            .speech-bubble {
-                padding: 15px;
-            }
-
-            .current-word {
-                font-size: 18px;
-            }
-
-            .current-example {
-                font-size: 18px;
+                width: 105px;
+                height: 105px;
             }
 
             .navigation-controls {
@@ -936,29 +500,31 @@
                 padding: 8px 12px;
                 font-size: 15px;
             }
-        }
 
-@media (max-width: 400px) {
-            .quiz-header {
-                font-size: 1.5em;
+           .modal-content {
+    margin: 10px auto;      /* Much smaller margin for mobile */
+    padding: 15px;         /* Slightly less padding to save space */
+    width: 90%;            /* Nearly full width on mobile */
+max-height: 90vh;      /* Don't exceed 90% */
+}
+
+            .speech-bubble {
+                padding: 15px;
             }
 
-            .listen-answer-display {
+            .current-word {
                 font-size: 20px;
-                min-height: 45px;
             }
 
-            .choice-btn {
+            .current-example {
                 font-size: 20px;
-                min-height: 50px;
-                padding: 8px 6px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (10.22 test 5)</h1>
+        <h1>Vocabulary List (2.5)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -978,9 +544,9 @@
                     <button class="vocab-btn" data-category="magazine" data-lesson="maga3">U12</button>
                     <button class="vocab-btn" data-category="magazine" data-lesson="maga4">U13 (自読)</button>
                 </div>
-            </div>         
+            </div>
 
-<div class="category">
+            <div class="category">
                 <div class="category-title">核心字彙</div>
                 <div class="category-buttons">
                     <button class="vocab-btn" data-category="core" data-lesson="core1">P2 U4</button>
@@ -990,26 +556,6 @@
             </div>
         </div>
 
-        <!-- Study Partner Section -->
-        <div class="study-partner-section">
-            <button class="study-partner-btn" id="choosePartnerBtn">
-                👬 Choose Your Study Partner (選學伴)
-            </button>
-        </div>
-
-<!-- Listen and Choose Quiz Section -->
-        <div class="quiz-section">
-            <button class="quiz-btn" id="listenChooseBtn">
-                🎧 Listen and Choose (聽力測驗)
-            </button>
-        </div>
-
-        <!-- Section Selector -->
-        <div class="section-selector-area" id="sectionSelectorArea" style="display: none;">
-            <div class="section-selector-title">📋 Select sections for quiz (選擇測驗範圍):</div>
-            <div class="section-checkboxes-grid" id="sectionCheckboxesGrid"></div>
-        </div>
-
         <!-- Speed Control -->
         <div class="speed-control-section">
             <span class="speed-label">Speed:</span>
@@ -1017,6 +563,13 @@
             <button class="speed-btn active-speed" data-speed="1.0">1x</button>
             <button class="speed-btn" data-speed="0.8">0.8x</button>
             <button class="speed-btn" data-speed="0.6">0.6x</button>
+        </div>
+
+        <!-- Study Partner Section -->
+        <div class="study-partner-section">
+            <button class="study-partner-btn" id="choosePartnerBtn">
+                👬 Choose Your Study Partner (選學伴)
+            </button>
         </div>
 
         <!-- Table -->
@@ -1031,7 +584,7 @@
         </div>
     </div>
 
-    <!-- Welcome Notice Modal -->
+<!-- Welcome Notice Modal -->
     <div id="welcomeModal" class="modal" style="display: block;">
         <div class="modal-content" style="max-width: 500px;">
             <div style="text-align: center; padding: 10px;">
@@ -1043,26 +596,6 @@
                 <button id="welcomeOkBtn" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
                     OK. I got it.
                 </button>
-            </div>
-        </div>
-    </div>
-
-<!-- Listen and Choose Modal -->
-    <div id="listenChooseModal" class="modal">
-        <div class="modal-content quiz-modal-content">
-            <span class="close" id="closeListenChoose">&times;</span>
-<h2 class="quiz-header">🎧 Listen and Choose</h2>
-            <div class="listen-answer-section">
-                <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
-                <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
-            </div>
-            <div class="timer-feedback-section">
-                <div id="timerFeedback" class="timer-feedback"></div>
-            </div>
-            <div id="choicesGrid" class="choices-grid"></div>
-            <div class="listen-controls">
-                <button id="listenNextBtn" class="listen-next-btn">Next</button>
-                <button id="listenCloseBtn" class="listen-close-btn">Close</button>
             </div>
         </div>
     </div>
@@ -1170,7 +703,7 @@
     </div>
 
     <script>
-// Built-in database - can be expanded
+        // Built-in database - can be expanded
         const vocabDatabase = {
             textbook1: [
   {
@@ -1338,7 +871,7 @@
         "example": "She has a fighting spirit. (她有戰鬥精神。)"
       },
       {
-        "word": "spirit (n) (2.心靈、靈魂 vs. 肉體 body):",
+        "word": "spirit (n) (2.心靈 vs. 肉體):",
         "example": "Try to nourish both your body and your spirit. (試著滋養你的身體和心靈。)"
       },
       {
@@ -2515,7 +2048,7 @@
 
 ]
 
-        }; // End of database
+        };
 
         // Partner configurations
         const partners = {
@@ -2528,10 +2061,10 @@
             7: { image: 'partner7.jpg', name: 'Asa' },
             8: { image: 'partner8.jpg', name: '金城武' },
             9: { image: 'partner9.jpg', name: '佐藤 健' },
-            10: { image: 'partner10.jpg', name: '初音ミク' }
+           10: { image: 'partner10.jpg', name: '初音ミク' }
         };
 
-        // Global state
+        // Study session state
         let currentLessonData = null;
         let currentPartner = null;
         let currentWordIndex = 0;
@@ -2540,14 +2073,6 @@
         let speechRate = 1.0;
         let voices = [];
         let isCompleted = false;
-        let checkedSections = new Set();
-
-        // Quiz state
-        let quizWords = [];
-        let currentQuizIndex = 0;
-        let quizScore = 0;
-        let hasAnswered = false;
-        let correctAnswer = null;
 
         // Load voices
         function loadVoices() {
@@ -2606,7 +2131,7 @@
             currentSpeech = null;
         }
 
-        // Load vocabulary with checkboxes
+        // Load vocabulary
         function loadVocabulary(lessonKey) {
             const tableBody = document.getElementById('vocabTableBody');
             const data = vocabDatabase[lessonKey];
@@ -2616,15 +2141,9 @@
                 return;
             }
 
-            // Clear checked sections when loading new lesson
-            checkedSections.clear();
-
             let html = '';
-data.forEach((section, sectionIndex) => {
-                html += `<tr>
-                    <td colspan="2" class="section-header">${section.section}</td>
-                </tr>`;
-                
+            data.forEach(section => {
+                html += `<tr><td colspan="2" class="section-header">${section.section}</td></tr>`;
                 section.words.forEach(item => {
                     const fullText = `${item.word}. ${item.example}`;
                     html += `<tr class="vocab-row">
@@ -2640,10 +2159,7 @@ data.forEach((section, sectionIndex) => {
                 });
             });
 
-tableBody.innerHTML = html;
-
-            // Show section selector and populate it
-            showSectionSelector(data, lessonKey);
+            tableBody.innerHTML = html;
         }
 
         // Flatten lesson data
@@ -2662,243 +2178,7 @@ tableBody.innerHTML = html;
             return flattened;
         }
 
-// Show and populate section selector
-        function showSectionSelector(lessonData, lessonKey) {
-            const selectorArea = document.getElementById('sectionSelectorArea');
-            const grid = document.getElementById('sectionCheckboxesGrid');
-            
-            grid.innerHTML = '';
-            
-            lessonData.forEach((section, sectionIndex) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'section-checkbox-item';
-                
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `section_${lessonKey}_${sectionIndex}`;
-                checkbox.checked = checkedSections.has(sectionIndex);
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        checkedSections.add(sectionIndex);
-                    } else {
-                        checkedSections.delete(sectionIndex);
-                    }
-                });
-                
-                const label = document.createElement('label');
-                label.htmlFor = checkbox.id;
-                label.textContent = section.section;
-                
-                itemDiv.appendChild(checkbox);
-                itemDiv.appendChild(label);
-                grid.appendChild(itemDiv);
-            });
-            
-            selectorArea.style.display = 'block';
-        }
-
-        // Get words from checked sections only
-        function getWordsFromCheckedSections(lessonData) {
-            const allWords = [];
-            lessonData.forEach((section, sectionIndex) => {
-                if (checkedSections.has(sectionIndex)) {
-                    section.words.forEach((word, wordIndex) => {
-                        allWords.push({
-                            ...word,
-                            sectionIndex,
-                            sectionTitle: section.section,
-                            wordIndex
-                        });
-                    });
-                }
-            });
-            return allWords;
-        }
-
-        // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
-
-        // Extract Chinese translation from word
-        function extractChineseTranslation(wordString) {
-            const match = wordString.match(/\(([^)]+)\):/);
-            return match ? match[1] : wordString;
-        }
-
-        // Extract English word/phrase only
-        function extractEnglishWord(wordString) {
-            const match = wordString.match(/^(.+?)\s*\([^)]+\):/);
-            return match ? match[1].trim() : wordString.split('(')[0].trim();
-        }
-
-        // Extract example sentence without Chinese translation
-        function extractExampleOnly(exampleString) {
-            return exampleString.split('(')[0].trim();
-        }
-
-// Start quiz
-        function startListenChooseQuiz() {
-            const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-            
-            if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-                alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
-                return;
-            }
-
-            // Get words from checked sections only
-            const lessonData = vocabDatabase[selectedLesson];
-            const allWords = getWordsFromCheckedSections(lessonData);
-            
-            if (allWords.length < 8) {
-                alert('Please select sections with at least 8 words for the quiz. (請勾選至少包含8個單字的區段)');
-                return;
-            }
-
-            // Select 8 random words
-            quizWords = shuffleArray([...allWords]).slice(0, 8);
-            currentQuizIndex = 0;
-            quizScore = 0;
-
-            // Open modal and load first question
-            document.getElementById('listenChooseModal').style.display = 'block';
-            loadQuizQuestion();
-        }
-
-        // Shuffle array
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // Load quiz question
-        function loadQuizQuestion() {
-            if (currentQuizIndex >= quizWords.length) {
-                showQuizComplete();
-                return;
-            }
-
-            hasAnswered = false;
-            correctAnswer = quizWords[currentQuizIndex];
-
-            // Reset UI
-            document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker to hear';
-            document.getElementById('timerFeedback').textContent = '';
-            document.getElementById('timerFeedback').className = 'timer-feedback';
-            document.getElementById('listenNextBtn').disabled = true;
-            document.getElementById('listenNextBtn').style.display = 'inline-block';
-
-            // Generate all 8 choices (include all quiz words)
-            displayChoices(shuffleArray([...quizWords]));
-        }
-
-        // Display choices - show only Chinese translation
-        function displayChoices(choices) {
-            const grid = document.getElementById('choicesGrid');
-            grid.innerHTML = '';
-
-            choices.forEach((choice) => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = extractChineseTranslation(choice.word);
-                btn.onclick = () => handleChoiceClick(choice, btn);
-                grid.appendChild(btn);
-            });
-        }
-
-        // Handle choice click
-        function handleChoiceClick(selectedChoice, btn) {
-            if (hasAnswered) return;
-
-            hasAnswered = true;
-            const allChoices = document.querySelectorAll('.choice-btn');
-            const correctChinese = extractChineseTranslation(correctAnswer.word);
-            
-            if (extractChineseTranslation(selectedChoice.word) === correctChinese) {
-                // Correct answer
-                btn.classList.add('correct');
-                document.getElementById('timerFeedback').textContent = '✓ Correct!';
-                document.getElementById('timerFeedback').className = 'timer-feedback correct';
-                quizScore++;
-            } else {
-                // Wrong answer
-                btn.classList.add('incorrect');
-                document.getElementById('timerFeedback').textContent = '✗ Wrong! Correct: ' + correctChinese;
-                document.getElementById('timerFeedback').className = 'timer-feedback incorrect';
-                
-                // Highlight correct answer
-                allChoices.forEach(choiceBtn => {
-                    if (choiceBtn.textContent === correctChinese) {
-                        choiceBtn.classList.add('correct');
-                    }
-                });
-            }
-
-            // Disable all buttons
-            allChoices.forEach(choiceBtn => {
-                choiceBtn.disabled = true;
-            });
-
-            // Show English word/phrase and example (without Chinese)
-            const englishWord = extractEnglishWord(correctAnswer.word);
-            const exampleOnly = extractExampleOnly(correctAnswer.example);
-            document.getElementById('listenAnswerDisplay').innerHTML = 
-                `<strong>${englishWord}</strong><br> <span style="font-size: 21px;">${exampleOnly}</span>`;
-
-            // Enable next button
-            document.getElementById('listenNextBtn').disabled = false;
-        }
-
-        // Play quiz audio - play English word and example only
-        function playQuizAudio() {
-            if (correctAnswer) {
-                const englishWord = extractEnglishWord(correctAnswer.word);
-                const exampleOnly = extractExampleOnly(correctAnswer.example);
-                const fullText = `${englishWord}. ${exampleOnly}`;
-                speakText(fullText);
-            }
-        }
-
-        // Next quiz question
-        function nextQuizQuestion() {
-            currentQuizIndex++;
-            loadQuizQuestion();
-        }
-
-        // Show quiz complete
-        function showQuizComplete() {
-            const grid = document.getElementById('choicesGrid');
-            const percentage = Math.round((quizScore / quizWords.length) * 100);
-            
-            grid.innerHTML = `
-                <div class="quiz-complete">
-                    <h3>🎉 Quiz Complete!</h3>
-                    <div class="quiz-score">
-                        Your Score: ${quizScore} / ${quizWords.length} (${percentage}%)
-                    </div>
-                    <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
-                </div>
-            `;
-
-            document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
-            document.getElementById('timerFeedback').textContent = '';
-            document.getElementById('listenNextBtn').style.display = 'none';
-        }
-
-        // Restart quiz
-        function restartQuiz() {
-            document.getElementById('listenNextBtn').style.display = 'inline-block';
-            startListenChooseQuiz();
-        }
-
-        // Close quiz modal
-        function closeQuizModal() {
-            document.getElementById('listenChooseModal').style.display = 'none';
-            stopSpeech();
-        }
-
-        // ============ STUDY SESSION FUNCTIONS ============
-
+        // Update study session display
         function updateStudySession() {
             if (!currentLessonData || !flatWordsList.length) {
                 document.getElementById('currentWord').textContent = 'Select a lesson first!';
@@ -2907,6 +2187,7 @@ tableBody.innerHTML = html;
                 return;
             }
 
+            // Restore normal interface if coming back from completion
             if (isCompleted) {
                 restoreNormalInterface();
             }
@@ -2921,9 +2202,11 @@ tableBody.innerHTML = html;
             const progressText = `Word ${currentWordIndex + 1} of ${totalWords} • ${currentItem.sectionTitle}`;
             document.getElementById('progressInfo').textContent = progressText;
 
+            // Update navigation buttons
             updateNavigationButtons();
         }
 
+        // Update navigation buttons based on current state
         function updateNavigationButtons() {
             const backBtn = document.getElementById('backBtn');
             const nextBtn = document.getElementById('nextBtn');
@@ -2934,13 +2217,18 @@ tableBody.innerHTML = html;
             const totalWords = flatWordsList.length;
             const currentItem = flatWordsList[currentWordIndex];
 
+            // Back button
             backBtn.disabled = currentWordIndex === 0;
+
+            // Next button
             nextBtn.disabled = currentWordIndex === totalWords - 1;
 
+            // Next section button
             const isLastSection = currentItem && currentItem.sectionIndex === Math.max(...flatWordsList.map(item => item.sectionIndex));
             nextSectionBtn.disabled = isLastSection;
         }
 
+        // Restore normal interface from completion screen
         function restoreNormalInterface() {
             const speechBubble = document.getElementById('speechBubble');
             const currentItem = flatWordsList[currentWordIndex];
@@ -2953,12 +2241,14 @@ tableBody.innerHTML = html;
                         <button class="bubble-btn stop-btn" id="stopCurrentBtn">⏹</button>
                     </div>`;
 
+                // Reattach event listeners
                 attachBubbleEventListeners();
             }
 
             isCompleted = false;
         }
 
+        // Attach event listeners to bubble controls
         function attachBubbleEventListeners() {
             const speakBtn = document.getElementById('speakCurrentBtn');
             const stopBtn = document.getElementById('stopCurrentBtn');
@@ -2971,6 +2261,7 @@ tableBody.innerHTML = html;
             }
         }
 
+        // Handle speak current word
         function handleSpeakCurrent() {
             const currentItem = flatWordsList[currentWordIndex];
             if (currentItem) {
@@ -2979,6 +2270,7 @@ tableBody.innerHTML = html;
             }
         }
 
+        // Show congratulations screen
         function showCongratulations() {
             const partnerName = partners[currentPartner].name;
             const message = `Fantastic work! You've completed the entire vocabulary list! ${partnerName} is so proud of you!`;
@@ -2994,6 +2286,7 @@ tableBody.innerHTML = html;
                     <button class="bubble-btn learn-again-btn" id="learnAgainBtn">🔄 Learn Again</button>
                 </div>`;
 
+            // Attach event listeners for congratulations screen
             document.getElementById('congratsPlayBtn').addEventListener('click', () => speakText(message));
             document.getElementById('congratsStopBtn').addEventListener('click', stopSpeech);
             document.getElementById('learnAgainBtn').addEventListener('click', restartLesson);
@@ -3005,18 +2298,23 @@ tableBody.innerHTML = html;
             updateNavigationButtons();
         }
 
+        // Check if lesson is completed - FIXED: Only trigger after going past the last word
         function checkCompletion() {
+            // Only show completion if we've moved beyond the last word
             if (currentWordIndex >= flatWordsList.length && !isCompleted) {
                 showCongratulations();
+                // Set index back to last word so we don't go out of bounds
                 currentWordIndex = flatWordsList.length - 1;
             }
         }
 
+        // Navigation functions
         function nextWord() {
             if (currentWordIndex < flatWordsList.length - 1) {
                 currentWordIndex++;
                 updateStudySession();
             } else if (currentWordIndex === flatWordsList.length - 1) {
+                // Moving past the last word - show completion
                 currentWordIndex++;
                 checkCompletion();
             }
@@ -3025,6 +2323,7 @@ tableBody.innerHTML = html;
         function previousWord() {
             if (currentWordIndex > 0) {
                 currentWordIndex--;
+                // If coming back from completion state, restore interface
                 if (isCompleted) {
                     isCompleted = false;
                 }
@@ -3043,12 +2342,14 @@ tableBody.innerHTML = html;
             }
         }
 
+        // Restart lesson from beginning - FIXED: Properly reset state
         function restartLesson() {
             currentWordIndex = 0;
             isCompleted = false;
             updateStudySession();
         }
 
+        // Start study session with selected partner - FIXED: Always reset completion state
         function startStudySession(partnerNumber) {
             const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
             
@@ -3057,25 +2358,28 @@ tableBody.innerHTML = html;
                 return;
             }
 
+            // Initialize session state - ALWAYS reset completion state
             currentPartner = partnerNumber;
             currentLessonData = vocabDatabase[selectedLesson];
             flatWordsList = flattenLessonData(currentLessonData);
-            currentWordIndex = 0;
-            isCompleted = false;
+            currentWordIndex = 0; // Always start from first word
+            isCompleted = false; // Always reset completion state
 
+            // Update partner display
             const partnerInfo = partners[partnerNumber];
             const avatarElement = document.getElementById('currentPartnerAvatar');
             avatarElement.innerHTML = `<img src="${partnerInfo.image}" alt="partner ${partnerNumber}">`;
 
+            // Close partner selection modal and open study session
             document.getElementById('partnerModal').style.display = 'none';
             document.getElementById('studyModal').style.display = 'block';
 
             updateStudySession();
         }
 
-        // ============ INITIALIZE EVENT LISTENERS ============
-
+        // Initialize event listeners
         function initializeEventListeners() {
+            // Load voices
             document.body.addEventListener('click', () => loadVoices(), { once: true });
 
             // Lesson buttons
@@ -3100,14 +2404,7 @@ tableBody.innerHTML = html;
                 });
             });
 
-            // Listen and Choose Quiz button
-            document.getElementById('listenChooseBtn').addEventListener('click', startListenChooseQuiz);
-            document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
-            document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
-            document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
-            document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
-
-            // Partner modal
+            // Modal controls
             const choosePartnerBtn = document.getElementById('choosePartnerBtn');
             const partnerModal = document.getElementById('partnerModal');
             const studyModal = document.getElementById('studyModal');
@@ -3116,6 +2413,7 @@ tableBody.innerHTML = html;
                 partnerModal.style.display = 'block';
             });
 
+            // Close buttons
             document.getElementById('closePartnerModal').addEventListener('click', () => {
                 partnerModal.style.display = 'none';
             });
@@ -3125,6 +2423,7 @@ tableBody.innerHTML = html;
                 stopSpeech();
             });
 
+            // Partner selection buttons
             const selectPartnerBtns = document.querySelectorAll('.select-partner-btn');
             selectPartnerBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -3138,9 +2437,10 @@ tableBody.innerHTML = html;
             document.getElementById('backBtn').addEventListener('click', previousWord);
             document.getElementById('nextSectionBtn').addEventListener('click', nextSection);
 
+            // Initial bubble event listeners
             attachBubbleEventListeners();
 
-            // Welcome modal
+            // Welcome modal OK button
             document.getElementById('welcomeOkBtn').addEventListener('click', () => {
                 document.getElementById('welcomeModal').style.display = 'none';
             });
@@ -3154,15 +2454,15 @@ tableBody.innerHTML = html;
                     studyModal.style.display = 'none';
                     stopSpeech();
                 }
-                if (e.target === document.getElementById('listenChooseModal')) {
-                    closeQuizModal();
-                }
             });
 
+            // Cleanup on page unload
             window.addEventListener('beforeunload', () => stopSpeech());
         }
 
+        // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', initializeEventListeners);
     </script>
 </body>
 </html>
+
