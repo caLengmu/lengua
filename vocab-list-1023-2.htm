@@ -109,7 +109,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
-font-size: 18px;
         }
 
         .section-checkbox-item {
@@ -147,13 +146,12 @@ font-size: 18px;
             }
 
             .section-selector-title {
-                font-size: 16px;
+                font-size: 15px;
             }
 
             .section-checkboxes-grid {
                 grid-template-columns: 1fr;
                 gap: 8px;
-font-size: 16px;
             }
 
             .section-checkbox-item {
@@ -998,7 +996,7 @@ font-size: 16px;
         <!-- Study Partner Section -->
         <div class="study-partner-section">
             <button class="study-partner-btn" id="choosePartnerBtn">
-                👬 Choose Your Study Partner (選學伴)
+                👬 Choose Your Study Partner <br>(選學伴)
             </button>
         </div>
 
@@ -2906,7 +2904,7 @@ tableBody.innerHTML = html;
                 quizScore++;
                 
                 // Speak "Correct!"
-                setTimeout(() => speakText('Correct!'), 100);
+                setTimeout(() => speakText('Correct!'), 0);
             } else {
                 // Wrong answer
                 btn.classList.add('incorrect');
@@ -2921,7 +2919,7 @@ tableBody.innerHTML = html;
                 });
                 
                 // Speak "Wrong!"
-                setTimeout(() => speakText('Wrong!'), 100);
+                setTimeout(() => speakText('Wrong!'), 0);
             }
 
             // Disable all buttons
