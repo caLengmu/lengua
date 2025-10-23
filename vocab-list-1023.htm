@@ -373,7 +373,7 @@
             text-align: center;
             color: #2c3e50;
             margin-bottom: 15px;
-            font-size: 1.3em;
+            font-size: 1.5em;
             padding-right: 30px;
         }
 
@@ -401,7 +401,7 @@
         }
 
 .listen-answer-display {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #2c3e50;
             min-height: 50px;
@@ -413,7 +413,7 @@
         }
 
         .listen-speaker {
-            font-size: 40px;
+            font-size: 30px;
             cursor: pointer;
             display: inline-block;
             transition: transform 0.2s;
@@ -434,7 +434,7 @@
         }
 
         .timer-feedback {
-            font-size: 15px;
+            font-size: 25px;
             font-weight: bold;
         }
 
@@ -461,7 +461,7 @@
             padding: 12px 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
             transition: all 0.3s;
             min-height: 60px;
@@ -518,7 +518,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 20px;
             font-weight: bold;
             transition: background-color 0.3s;
         }
@@ -855,7 +855,7 @@
             }
 
             .quiz-header {
-                font-size: 1.1em;
+                font-size: 1.5em;
                 margin-bottom: 10px;
             }
 
@@ -865,17 +865,17 @@
             }
 
 .listen-answer-display {
-                font-size: 16px;
+                font-size: 20px;
                 min-height: 50px;
                 line-height: 1.3;
             }
 
             .listen-speaker {
-                font-size: 36px;
+                font-size: 30px;
             }
 
             .timer-feedback {
-                font-size: 13px;
+                font-size: 25px;
             }
 
             .choices-grid {
@@ -884,7 +884,7 @@
             }
 
 .choice-btn {
-                font-size: 15px;
+                font-size: 20px;
                 padding: 10px 8px;
                 min-height: 55px;
                 line-height: 1.3;
@@ -898,7 +898,7 @@
 
             .listen-next-btn, .listen-close-btn {
                 padding: 8px 20px;
-                font-size: 14px;
+                font-size: 20px;
             }
 
             .partners-grid {
@@ -940,16 +940,16 @@
 
 @media (max-width: 400px) {
             .quiz-header {
-                font-size: 1em;
+                font-size: 1.5em;
             }
 
             .listen-answer-display {
-                font-size: 14px;
+                font-size: 20px;
                 min-height: 45px;
             }
 
             .choice-btn {
-                font-size: 13px;
+                font-size: 20px;
                 min-height: 50px;
                 padding: 8px 6px;
             }
@@ -958,15 +958,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (10.22 test 4)</h1>
+        <h1>Vocabulary List (10.23 test 1)</h1>
 
         <div class="button-categories">
             <div class="category">
                 <div class="category-title">Textbook</div>
                 <div class="category-buttons">
-                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook1">B3 L4</button>
-                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook2">B3 L5</button>
-                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook3">B3 L6 (自読)</button>
+ <button class="vocab-btn" data-category="textbook" data-lesson="textbook1">B3 L4</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook2">B3 L4 課文</button>
+<button class="vocab-btn" data-category="textbook" data-lesson="textbook3">B3 L5</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook4">B3 L5 課文</button>
+<button class="vocab-btn" data-category="textbook" data-lesson="textbook5">B3 L6 (自読)</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook6">B3 L6 課文 (自読)</button>
                 </div>
             </div>
 
@@ -1053,7 +1056,7 @@
             <span class="close" id="closeListenChoose">&times;</span>
 <h2 class="quiz-header">🎧 Listen and Choose</h2>
             <div class="listen-answer-section">
-                <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker to hear</div>
+                <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
                 <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
             </div>
             <div class="timer-feedback-section">
@@ -1172,7 +1175,79 @@
     <script>
 // Built-in database - can be expanded
         const vocabDatabase = {
-            textbook1: [
+            'textbook1': [
+  {
+    "section": "◎Vocabulary #1-#15",
+    "words": [
+      {"word": "joyous (adj) (快樂的、喜悅的):", "example": "It was a joyous day when she came home. (那是她回家時快樂的一天。)"},
+      {"word": "keep someone company (phr) (陪伴某人):", "example": "I will keep my grandma company tonight. (今晚我會陪伴我的奶奶。)"},
+      {"word": "enjoy someone’s company (phr) (享受某人的陪伴):", "example": "I enjoy her company when we walk. (我們散步時我享受她的陪伴。)"},
+      {"word": "essential (adj) (必要的、極重要的):", "example": "Water is essential for life. (水對生命是必要的。)"},
+      {"word": "concept (n) (概念):", "example": "The concept of time is hard for children. (時間的概念對孩子來說很難。)"},
+      {"word": "mourn (v) (哀悼):", "example": "People mourn the death of the great leader. (人們哀悼這位偉大領袖的逝世。)"},
+      {"word": "sorrow (n) (悲傷):", "example": "She felt deep sorrow when her pet died. (她的寵物死時，她感到深深的悲傷。)"},
+      {"word": "occasion (n) (場合):", "example": "A wedding is a happy occasion. (婚禮是一個快樂的場合。)"},
+      {"word": "reunion (n) (團聚):", "example": "We plan a family reunion for the holidays. (我們計劃在假期進行一次家庭團聚。)"},
+      {"word": "anticipate (v) (預料):", "example": "We anticipate that the train will be late. (我們預料火車會遲到。)"},
+      {"word": "anticipate (v) (期待):", "example": "I anticipate seeing you next week. (我期待下週見到你。)"},
+      {"word": "arrival (n) (到來):", "example": "We waited for the arrival of the bus. (我們等待著公車的到來。)"},
+      {"word": "decorate (v) (裝飾):", "example": "We like to decorate the tree for Christmas. (我們喜歡為聖誕節裝飾樹。)"},
+      {"word": "preference (n) (偏好):", "example": "Do you have a preference for tea or coffee? (你對茶或咖啡有偏好嗎？)"},
+      {"word": "reception (n) (接待、迎接):", "example": "The visitors got a warm reception at the school. (訪客在學校得到了熱情的接待。)"},
+      {"word": "feast (n) (盛宴):", "example": "The king prepared a large feast for his guests. (國王為他的客人準備了一場大型盛宴。)"},
+      {"word": "dawn (n) (黎明、破曉):", "example": "We woke up early at dawn to see the sun rise. (我們在黎明時分早早醒來去看日出。)"}
+    ]
+  },
+  {
+    "section": "◎Vocabulary #16-#25",
+    "words": [
+      {"word": "transform (v) (改變、轉變):", "example": "The rain will transform the dry land. (雨水將會改變這片乾燥的土地。)"},
+      {"word": "resemble (v) (與…相似):", "example": "The small dog resembles a fox. (這隻小狗與狐狸相似。)"},
+      {"word": "participate (v) (參加):", "example": "She wants to participate in the game. (她想參加這個遊戲。)"},
+      {"word": "mock (v) (嘲笑):", "example": "It is wrong to mock other people. (嘲笑其他人是錯的。)"},
+      {"word": "recognize (v) (認出):", "example": "I didn't recognize her with short hair. (她留短髮我沒有認出她。)"},
+      {"word": "recognize (v) (認可、承認):", "example": "The school will recognize her hard work. (學校將會認可她的努力工作。)"},
+      {"word": "inevitable (adj) (無可避免的):", "example": "The changing of seasons is inevitable. (季節的變化是無可避免的。)"},
+      {"word": "cycle (n) (循環、週期):", "example": "The cycle of life is birth, death, and rebirth. (生命的循環是出生、死亡和重生。)"},
+      {"word": "annual (adj) (每年的):", "example": "The annual summer fair is next month. (每年的夏季市集在下個月。)"},
+      {"word": "await (v) (等待):", "example": "The bus awaits our arrival at the station. (公車在車站等待我們的到來。)"},
+      {"word": "escape (v) (逃脫、逃離):", "example": "The small bird tried to escape from the cage. (這隻小鳥試圖從籠子裡逃脫。)"}
+    ]
+  },
+  {
+    "section": "◎Phrases & Idioms",
+    "words": [
+      {"word": "scare someone to death (phr) (嚇死某人):", "example": "The loud noise scared me to death. (巨大的噪音嚇死我了。)"},
+      {"word": "make someone’s hair stand on end (phr) (讓某人毛骨悚然):", "example": "The ghost story made my hair stand on end. (那個鬼故事讓我毛骨悚然。)"},
+      {"word": "in honor of... (phr) (為了紀念…):", "example": "We held a party in honor of the retiring teacher. (我們舉辦了一場派對，為了紀念這位退休的老師。)"},
+      {"word": "in advance (of...) (phr) (事先、在…之前):", "example": "Please buy your tickets in advance. (請事先購買你的票。)"},
+      {"word": "die out (phr) (絕跡；消失):", "example": "Some old customs are starting to die out. (一些舊習俗開始絕跡。)"}
+    ]
+  },
+  {
+    "section": "◎詞類變化補充",
+    "words": [
+      {"word": "accompany (v) (陪伴):", "example": "I will accompany you to the bus stop. (我會陪伴你到公車站。)"},
+      {"word": "mournful (adj) (哀傷的):", "example": "The music sounded very mournful. (音樂聽起來很哀傷。)"},
+      {"word": "sorrowful (adj) (悲痛的):", "example": "She gave a sorrowful sigh when she heard the news. (聽到這個消息時，她發出了一個悲痛的嘆息。)"},
+      {"word": "occasional (adj) (偶爾的):", "example": "We have occasional rain in the summer. (我們在夏天有偶爾的降雨。)"},
+      {"word": "reunite (v) (重聚):", "example": "The lost child will reunite with her parents soon. (這個失散的孩子將很快與她的父母重聚。)"},
+      {"word": "anticipation (n) (預料):", "example": "We waited for the results with anticipation. (我們帶著預料等待結果。)"},
+      {"word": "anticipation (n) (期待):", "example": "There was a great anticipation before the show. (演出前有很大的期待。)"},
+      {"word": "decoration (n) (裝飾(品)):", "example": "The room had beautiful paper decorations. (房間裡有美麗的紙裝飾品。)"},
+      {"word": "prefer (v) (偏好):", "example": "Do you prefer sweet or salty snacks? (你偏好甜的還是鹹的零食？)"},
+      {"word": "receptionist (n) (接待員):", "example": "The receptionist gave me a key to my room. (接待員給了我房間的鑰匙。)"},
+      {"word": "feast on... (phr) (盡情享用(美食)):", "example": "We will feast on turkey and potatoes tonight. (我們今晚將盡情享用火雞和馬鈴薯。)"},
+      {"word": "transformation (n) (轉變；變化):", "example": "The old factory made a huge transformation into a market. (這座舊工廠經歷了巨大的轉變，變成了一個市場。)"},
+      {"word": "resemblance (n) (相似；相像):", "example": "There is a strong resemblance between the two brothers. (這兩兄弟之間有很強的相似。)"},
+      {"word": "participation (n) (參加；參與):", "example": "Our participation in the meeting is important. (我們對會議的參與是很重要的。)"},
+      {"word": "mock (adj) (模擬的；假裝的):", "example": "The students took a mock test before the real exam. (學生們在真正的考試前進行了一次模擬測試。)"},
+      {"word": "recognition (n) (認可、承認):", "example": "She got recognition for her excellent work. (她因為她出色的工作而獲得了認可。)"}
+    ]
+  }
+],
+
+            textbook2: [
   {
     "section": "◎Paragraph 1",
     "words": [
@@ -1338,7 +1413,7 @@
         "example": "She has a fighting spirit. (她有戰鬥精神。)"
       },
       {
-        "word": "spirit (n) (2.心靈 vs. 肉體):",
+        "word": "spirit (n) (2.心靈、靈魂 vs. 肉體 body):",
         "example": "Try to nourish both your body and your spirit. (試著滋養你的身體和心靈。)"
       },
       {
@@ -1615,8 +1690,11 @@
     ]
   }
 ],
-            
-            'textbook2': [
+
+            'textbook3': [
+
+],            
+            'textbook4': [
 {
 "section": "◎Paragraph 1",
 "words": [
@@ -1720,7 +1798,11 @@
 }
 
 ],
-            'textbook3': [
+
+            'textbook6': [
+
+],
+            'textbook6': [
   {
     "section": "◎Paragraph 1",
     "words": [
@@ -2843,7 +2925,7 @@ tableBody.innerHTML = html;
             const englishWord = extractEnglishWord(correctAnswer.word);
             const exampleOnly = extractExampleOnly(correctAnswer.example);
             document.getElementById('listenAnswerDisplay').innerHTML = 
-                `<strong>${englishWord}</strong><br><span style="font-size: 14px;">${exampleOnly}</span>`;
+                `<strong>${englishWord}</strong><br> <span style="font-size: 21px;">${exampleOnly}</span>`;
 
             // Enable next button
             document.getElementById('listenNextBtn').disabled = false;
