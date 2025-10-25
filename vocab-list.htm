@@ -699,8 +699,40 @@
             color: #27ae60;
         }
 
-        .bubble-btn.stop-btn {
+.bubble-btn.stop-btn {
             color: #e74c3c;
+        }
+
+.bubble-btn.translate-btn {
+            color: #e74c3c;
+        }
+
+        .bubble-btn.translate-btn:disabled {
+            color: #95a5a6;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .translation-text {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+            border: 1px solid #ffc107;
+            font-size: 16px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .translation-text.show {
+            display: block;
+        }
+
+        .translation-label {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 5px;
         }
 
         .progress-info {
@@ -924,8 +956,14 @@
                 font-size: 18px;
             }
 
-            .current-example {
+.current-example {
+                font-size: 20px;
+            }
+
+            .translation-text {
                 font-size: 18px;
+                padding: 8px;
+                margin-top: 8px;
             }
 
             .navigation-controls {
@@ -958,7 +996,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (3.1)</h1>
+        <h1>Vocabulary List (3.2)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1015,7 +1053,7 @@
 
         <!-- Speed Control -->
         <div class="speed-control-section">
-            <span class="speed-label">Speed:</span>
+            <span class="speed-label">Speed (語速):</span>
             <button class="speed-btn" data-speed="1.2">1.2x</button>
             <button class="speed-btn active-speed" data-speed="1.0">1x</button>
             <button class="speed-btn" data-speed="0.8">0.8x</button>
@@ -1155,10 +1193,16 @@
                         <div class="current-word" id="currentWord">Select a lesson first!</div>
                         <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
                         <div class="bubble-controls">
-                            <button class="bubble-btn play-btn" id="speakCurrentBtn">🔊</button>
-                            <button class="bubble-btn stop-btn" id="stopCurrentBtn">⏹</button>
+                        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+                        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+                        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+                    </div>
+                        <div class="translation-text" id="translationText">
+                            <div class="translation-label">📖 中文翻譯：</div>
+                            <div>請先選擇單字</div>
                         </div>
                     </div>
+
                 </div>
                 <div class="progress-info" id="progressInfo">
                     Ready to start!
@@ -1207,7 +1251,7 @@
       {"word": "mock (v) (嘲笑):", "example": "It is wrong to mock other people. (嘲笑其他人是錯的。)"},
       {"word": "recognize (v) (認出):", "example": "I didn't recognize her with short hair. (她留短髮我沒有認出她。)"},
       {"word": "recognize (v) (認可、承認):", "example": "The school will recognize her hard work. (學校將會認可她的努力工作。)"},
-      {"word": "inevitable (adj) (無可避免的):", "example": "The changing of seasons is inevitable. (季節的變化是無可避免的。)"},
+      {"word": "inevitable (= unavoidable) (adj) (無可避免的):", "example": "The changing of seasons is inevitable. (季節的變化是無可避免的。)"},
       {"word": "cycle (n) (循環、週期):", "example": "The cycle of life is birth, death, and rebirth. (生命的循環是出生、死亡和重生。)"},
       {"word": "annual (adj) (每年的):", "example": "The annual summer fair is next month. (每年的夏季市集在下個月。)"},
       {"word": "await (v) (等待):", "example": "The bus awaits our arrival at the station. (公車在車站等待我們的到來。)"},
@@ -1234,10 +1278,10 @@
       {"word": "reunite (v) (重聚):", "example": "The lost child will reunite with her parents soon. (這個失散的孩子將很快與她的父母重聚。)"},
       {"word": "anticipation (n) (1.預料):", "example": "We waited for the results with anticipation. (我們帶著預料等待結果。)"},
       {"word": "anticipation (n) (2.期待):", "example": "There was a great anticipation before the show. (演出前有很大的期待。)"},
-      {"word": "decoration (n) (裝飾(品)):", "example": "The room had beautiful paper decorations. (房間裡有美麗的紙裝飾品。)"},
+      {"word": "decoration (n) (裝飾、裝飾品):", "example": "The room had beautiful paper decorations. (房間裡有美麗的紙裝飾品。)"},
       {"word": "prefer (v) (偏好):", "example": "Do you prefer sweet or salty snacks? (你偏好甜的還是鹹的零食？)"},
       {"word": "receptionist (n) (接待員):", "example": "The receptionist gave me a key to my room. (接待員給了我房間的鑰匙。)"},
-      {"word": "feast on... (phr) (盡情享用(美食)):", "example": "We will feast on turkey and potatoes tonight. (我們今晚將盡情享用火雞和馬鈴薯。)"},
+      {"word": "feast on... (phr) (盡情享用...):", "example": "We will feast on turkey and potatoes tonight. (我們今晚將盡情享用火雞和馬鈴薯。)"},
       {"word": "transformation (n) (轉變；變化):", "example": "The old factory made a huge transformation into a market. (這座舊工廠經歷了巨大的轉變，變成了一個市場。)"},
       {"word": "resemblance (n) (相似；相像):", "example": "There is a strong resemblance between the two brothers. (這兩兄弟之間有很強的相似。)"},
       {"word": "participation (n) (參加；參與):", "example": "Our participation in the meeting is important. (我們對會議的參與是很重要的。)"},
@@ -1333,8 +1377,8 @@
     "section": "◎Paragraph 2",
     "words": [
       {
-        "word": "be thought to be… (phr) (被認為是…):",
-        "example": "The painting is thought to be from the 17th century. (這幅畫被認為是來自17世紀的。)"
+        "word": "be thought to be.../ it is thought that... (一般認為.../ 人們認為...):",
+        "example": "The painting is thought to be from the 17th century./ It is thought that the painting is from the 17th century. (一般認為這幅畫是來自17世紀。)"
       },
       {
         "word": "originate (v) (起源):",
@@ -1389,8 +1433,8 @@
         "example": "Many religions believe that the soul is immortal. (許多宗教相信靈魂是不朽的。)"
       },
       {
-        "word": "be believed to… (phr) (被相信會…):",
-        "example": "He is believed to have written over a hundred books. (他被相信寫了超過一百本書。)"
+        "word": "be believed to... / it is believed that... (一般相信...; 人們相信...):",
+        "example": "He is believed to have written over a hundred books./ It is believed that he wrote over 100 books. (一般相信他寫了超過一百本書。)"
       },
       {
         "word": "return to earth (phr) (返回人間):",
@@ -1506,7 +1550,7 @@
         "example": "She has a preference for classical music. (她偏好古典音樂。)"
       },
       {
-        "word": "someone is alive (adj) (某人活著 vs. someone is dead):",
+        "word": "someone is alive (某人活著 vs. someone is dead):",
         "example": "I'm relieved to know that he is alive and safe. (得知他活著且安全，我鬆了一口氣。)"
       },
       {
@@ -1514,7 +1558,7 @@
         "example": "The travelers received a warm reception from the villagers. (旅行者們受到了村民熱情的接待。)"
       },
       {
-        "word": "head to (+ place) (v) (前往某處):",
+        "word": "head to a place (前往某處):",
         "example": "We should head to the airport soon. (我們應該很快就前往機場。)"
       },
       {
@@ -1554,7 +1598,7 @@
         "example": "The park was turned into a venue of joy and celebration for the festival. (為了這個節日，公園被變成了一個歡樂和慶祝的場所。)"
       },
       {
-        "word": "the entire night (n) (整個晚上 = the whole night):",
+        "word": "the entire night (= the whole night) (整個晚上):",
         "example": "We talked and laughed the entire night. (我們聊了笑了一整個晚上。)"
       }
     ]
@@ -1587,7 +1631,7 @@
         "example": "The cloud resembled a giant rabbit. (那朵雲類似於一隻巨大的兔子。)"
       },
       {
-        "word": "participate in (+ activity) (v) (參與…活動):",
+        "word": "*participate* in an activity (參與…活動):",
         "example": "Will you participate in the charity run next month? (你下個月會參與慈善跑步活動嗎？)"
       },
       {
@@ -1607,7 +1651,7 @@
         "example": "The government decided to recognize the group as an official organization. (政府決定認可這個團體為一個官方組織。)"
       },
       {
-        "word": "inevitable (adj) (不可避免的 = unavoidable):",
+        "word": "inevitable (= unavoidable) (adj) (不可避免的):",
         "example": "Change is inevitable in life. (變化在生活中是不可避免的。)"
       },
       {
@@ -1705,7 +1749,7 @@
 {"word": "romance is in the air (phr.) (浪漫氣息瀰漫):", "example": "During the cherry blossom season, romance is in the air. (櫻花季時，浪漫氣息瀰漫。)"},
 {"word": "be filled with… (phr.) (充滿…):", "example": "The garden is filled with blooming flowers. (花園裡開滿了花。)"},
 {"word": "a sea of pink cherry blossoms (phr.) (一片粉紅櫻花海):", "example": "We walked through a sea of pink cherry blossoms. (我們走在粉紅櫻花海中。)"},
-{"word": "(leaves) rustle in the wind (phr.) ((樹葉)在風中沙沙作響):", "example": "The leaves rustled in the wind softly. (樹葉在風中輕輕沙沙作響。)"},
+{"word": "(leaves) *rustle* in the wind (phr.) (樹葉在風中 *沙沙作響*):", "example": "The leaves rustled in the wind softly. (樹葉在風中輕輕沙沙作響。)"},
 {"word": "sparkle in the sunshine (phr.) (在陽光下閃耀):", "example": "The lake sparkled in the sunshine. (湖面在陽光下閃閃發光。)"},
 {"word": "maple leaves (n) (楓葉):", "example": "Maple leaves turn red in autumn. (楓葉在秋天變紅。)"},
 {"word": "set… on fire (phr.) (點燃…):", "example": "The sunset set the sky on fire. (夕陽把天空染成火紅。)"},
@@ -1725,10 +1769,10 @@
 {"word": "previously (adv) (先前、以前):", "example": "She had previously visited Kyoto. (她先前去過京都。)"},
 {"word": "capital (city) (n) (首都):", "example": "Tokyo is the capital of Japan. (東京是日本的首都。)"},
 {"word": "boast (v) (1.誇耀、吹噓):", "example": "He always boasts about his success. (他總是誇耀自己的成功。)"},
-{"word": "boast (v) (2.擁有(值得自豪的東西)):", "example": "The temple boasts beautiful gardens. (這座寺廟擁有美麗的庭園。)"},
+{"word": "boast (v) (2.擁有...而自豪):", "example": "The temple boasts beautiful gardens. (這座寺廟擁有美麗的庭園。)"},
 {"word": "a large/small number of… (phr.) (許多／少數的…):", "example": "A large number of tourists visit each year. (每年都有許多遊客造訪。)"},
 {"word": "historic (adj) (歷史性的):", "example": "Kyoto is full of historic landmarks. (京都充滿了歷史地標。)"},
-{"word": "shrine (n) (神社):", "example": "They prayed at the ancient shrine. (他們在古老的神社祈禱。)"},
+{"word": "shrine (n) (神殿、神龕、祭祀的場所):", "example": "They prayed at the ancient shrine. (他們在古老的神殿祈禱。)"},
 {"word": "temple (n) (寺廟):", "example": "This temple attracts many visitors. (這座寺廟吸引了許多遊客。)"},
 {"word": "landmark (n) (地標):", "example": "The Eiffel Tower is a famous landmark. (艾菲爾鐵塔是著名的地標。)"},
 {"word": "pavilion (n) (涼亭、亭閣):", "example": "The pavilion stands beside the pond. (涼亭坐落在池塘旁。)"},
@@ -1791,7 +1835,7 @@
 {"word": "seek (v) (尋找、追求):", "example": "They seek peace and happiness. (他們追求和平與幸福。)"},
 {"word": "authentic (adj) (道地的、真實的):", "example": "We tried authentic Japanese cuisine. (我們品嚐了道地的日本料理。)"},
 {"word": "those who… (phr.) (…的人):", "example": "Those who love history will enjoy Kyoto. (喜歡歷史的人會喜歡京都。)"},
-{"word": "be likely to… (phr.) (可能會…):", "example": "It’s likely to rain tomorrow. (明天可能會下雨。)"},
+{"word": "be likely to… (phr.) (很可能會…):", "example": "It’s likely to rain tomorrow. (明天很可能會下雨。)"},
 {"word": "end up (+ V-ing) (phr.) (最終…):", "example": "We ended up staying longer than planned. (我們最後待得比預期久。)"},
 {"word": "fall in love with… (phr.) (愛上…):", "example": "You’ll fall in love with the city’s beauty. (你會愛上這座城市的美。)"}
 ]
@@ -1834,7 +1878,7 @@
       {"word": "alongside (prep) (在...旁邊、與...一起):", "example": "She walked alongside her dog. (她走在她狗的旁邊。)"},
       {"word": "blind (adj) (失明的):", "example": "The blind man reads books with his hands. (這位失明男子用手閱讀書籍。)"},
       {"word": "be superior to… (phr) (優於…):", "example": "This new phone is superior to the old model. (這款新手機優於舊型號。)"},
-      {"word": "sightless (adj) (看不見的 = blind):", "example": "The sightless person uses a white cane. (這位看不見的人使用一支白手杖。)"},
+      {"word": "sightless (= blind) (adj) (看不見的):", "example": "The sightless person uses a white cane. (這位看不見的人使用一支白手杖。)"},
       {"word": "think to oneself (phr) (心想、暗自思忖):", "example": "He thought to himself, 'I can do this.' (他心想：「我能做到。」)"}
     ]
   },
@@ -1847,8 +1891,8 @@
       {"word": "know something intimately (phr) (非常熟悉某事):", "example": "She knows the city streets intimately. (她非常熟悉這座城市的街道。)"},
       {"word": "skillfully (adv) (熟練地):", "example": "The chef cooks dinner very skillfully. (這位廚師非常熟練地煮晚餐。)"},
       {"word": "farm (v) (耕作):", "example": "His family has farmed this land for years. (他的家人在這片土地上耕作多年了。)"},
-      {"word": "have a keen sense of sight/hearing/smell/taste/touch (phr) (有敏銳的視覺/聽覺/嗅覺/味覺/觸覺):", "example": "Dogs have a keen sense of smell. (狗有敏銳的嗅覺。)"},
-      {"word": "employ (v) (使用 = use):", "example": "The company employs new ideas to make cars. (這家公司使用新想法來製造汽車。)"},
+      {"word": "have a keen sense of sight/ hearing/ smell/ taste/ touch (phr) (有敏銳的視覺/ 聽覺/ 嗅覺/ 味覺/ 觸覺):", "example": "Dogs have a keen sense of smell. (狗有敏銳的嗅覺。)"},
+      {"word": "employ (v) (1.雇用=hire  2.使用=use):", "example": "The company employs new ideas to make cars. (這家公司使用新想法來製造汽車。)"},
       {"word": "effective (adj) (有效的):", "example": "This medicine is very effective for a cold. (這種藥對感冒非常有效。)"},
       {"word": "technique (n) (技術):", "example": "He has a great technique for painting. (他有很棒的繪畫技術。)"},
       {"word": "grow crops (phr) (種植農作物):", "example": "Farmers grow crops like rice and wheat. (農民種植稻米和小麥等農作物。)"},
@@ -1868,7 +1912,7 @@
       {"word": "adapt to… (phr) (適應…):", "example": "It takes time to adapt to a new country. (適應一個新的國家需要時間。)"},
       {"word": "one’s way of life (phr) (某人的生活方式):", "example": "She enjoys the quiet way of life in the countryside. (她享受在鄉村安靜的生活方式。)"},
       {"word": "cling to… (phr) (緊抓著…不放):", "example": "The baby will cling to its mother's hand. (嬰兒會緊抓著媽媽的手不放。)"},
-      {"word": "the sense of sight/vision (n) (視覺):", "example": "She lost her sense of sight after the accident. (她在事故後失去了視覺。)"},
+      {"word": "the sense of sight (= the sense of vision) (n) (視覺):", "example": "She lost her sense of sight after the accident. (她在事故後失去了視覺。)"},
       {"word": "explain (v) (解釋):", "example": "Can you explain this math problem to me? (你能向我解釋這道數學題嗎？)"},
       {"word": "fail to do something (phr) (未能做某事):", "example": "He failed to finish the race due to an injury. (他因為受傷而未能完成比賽。)"},
       {"word": "understand what it means to do something (phr) (理解做某事的意義):", "example": "I understand what it means to work hard. (我理解努力工作的意義。)"},
@@ -1888,7 +1932,7 @@
       {"word": "lay eyes on… (phr) (初次看到…):", "example": "When he laid eyes on the dog, he thought to himself, “What a cute dog!” (當他初次看到這隻狗，心想：「好可愛的狗啊！」)"},
       {"word": "admire (v) (欽佩):", "example": "I admire her courage to speak up. (我欽佩她挺身而出的勇氣。)"},
       {"word": "define (v) (界定、定義):", "example": "We need to define the meaning of this word. (我們需要界定這個詞的含義。)"},
-      {"word": "(someone) have well-defined features (phr) (（某人）有輪廓分明的五官):", "example": "The actress has well-defined features. (這位女演員有輪廓分明的五官。)"},
+      {"word": "(someone) have well-defined features (phr) (有輪廓分明的五官):", "example": "The actress has well-defined features. (這位女演員有輪廓分明的五官。)"},
       {"word": "lack (v) (缺乏):", "example": "The soup lacks salt, so it tastes bland. (湯缺乏鹽，所以嚐起來平淡無味。)"},
       {"word": "smoothness (n) (平滑):", "example": "The table has a beautiful smoothness. (這張桌子有美麗的平滑度。)"},
       {"word": "value (v) (重視):", "example": "I value your friendship very much. (我非常重視你的友誼。)"},
@@ -1897,7 +1941,7 @@
       {"word": "neither… nor… (phr) (既不…也不…):", "example": "The weather was neither hot nor cold. (天氣既不熱也不冷。)"},
       {"word": "pleasing (adj) (令人愉快的):", "example": "The pleasing smell of fresh bread filled the room. (新鮮麵包令人愉快的氣味充滿了房間。)"},
       {"word": "meet someone’s standard(s) (phr) (符合某人的標準):", "example": "The quality of the product meets my standards. (這個產品的品質符合我的標準。)"},
-      {"word": "recognize (v) (認可、承認):", "example": "The government must recognize the seriousness of this problem. (政府必須承認這個問題的嚴重性。)"}
+      {"word": "recognize (v) (1.認出  2.認可、承認):", "example": "The government must recognize the seriousness of this problem. (政府必須承認這個問題的嚴重性。)"}
     ]
   },
   {
@@ -1930,7 +1974,7 @@
       {"word": "either… or… (phr) (或者…或者…):", "example": "You can choose either tea or coffee. (你可以選擇喝茶或者喝咖啡。)"},
       {"word": "end a relationship (phr) (結束關係):", "example": "It was hard for him to end the relationship. (對他來說結束這段關係是很難的。)"},
       {"word": "eventually (adv) (最終):", "example": "After a long walk, we eventually reached the beach. (經過長時間的步行，我們最終到達了海灘。)"},
-      {"word": "for someone’s sake (phr) (為了某人):", "example": "I did it for your sake, so you would be happy. (我為了你而做了這件事，這樣你就會開心。)"},
+      {"word": "for someone’s sake (phr) (為了某人的緣故):", "example": "I did it for your sake, so you would be happy. (我為了你而做了這件事，這樣你就會開心。)"},
       {"word": "nevertheless (adv) (儘管如此):", "example": "It was very late; nevertheless, we kept working. (已經很晚了；儘管如此，我們繼續工作。)"},
       {"word": "surgery (n) (手術):", "example": "He needed surgery to fix his broken arm. (他需要動手術來修復他斷掉的手臂。)"},
       {"word": "behold (v) (看見):", "example": "The people ran out to behold the bright comet. (人們跑出來看見那顆明亮的彗星。)"},
@@ -1939,7 +1983,7 @@
       {"word": "the beautiful surrounding landscape (n) (周圍美麗的風景):", "example": "We enjoyed the beautiful surrounding landscape during our hike. (我們在徒步旅行中享受了周圍美麗的風景。)"},
       {"word": "envision (v) (想像):", "example": "She can envision a better future for her country. (她能想像她的國家有一個更好的未來。)"},
       {"word": "be driven by the desire (to do something) (phr) (被做某事的渴望所驅使):", "example": "He was driven by the desire to become a great singer. (他被成為一位偉大歌手的渴望所驅使。)"},
-      {"word": "flee (a place) (v) (逃離（某地）):", "example": "They had to flee the city because of the war. (他們因為戰爭而不得不逃離這座城市。)"}
+      {"word": "flee (a place) (v) (逃離某地):", "example": "They had to flee the city because of the war. (他們因為戰爭而不得不逃離這座城市。)"}
     ]
   }
 
@@ -2017,8 +2061,8 @@
     "words": [
       {"word": "protect (v) (保護):", "example": "We must protect the forest from fire. (我們必須保護森林免於火災。)"},
       {"word": "truce (n) (停戰協定):", "example": "The two armies agreed to a short truce. (這兩支軍隊同意了短暫的停戰協定。)"},
-      {"word": "observe (v) (觀察):", "example": "We should observe how the fish swim. (我們應該觀察魚是如何游的。)"},
-      {"word": "observe (a rule, custom, or law) (v) (遵守(規則、習俗、法律等)):", "example": "We must observe the traffic rules when driving. (開車時我們必須遵守交通規則。)"},
+      {"word": "observe (v) (1.觀察):", "example": "We should observe how the fish swim. (我們應該觀察魚是如何游的。)"},
+      {"word": "*observe* a rule, custom, or law (2.*遵守* 規則、習俗、法律等):", "example": "We must observe the traffic rules when driving. (開車時我們必須遵守交通規則。)"},
       {"word": "call for… (phr) (要求):", "example": "The workers will call for higher wages. (工人們將會要求更高的工資。)"},
       {"word": "temporary (adj) (暫時的):", "example": "The rain is only a temporary problem. (這場雨只是一個暫時的問題。)"},
       {"word": "competitor (n) (競爭者、參賽者):", "example": "Each competitor trained hard for the race. (每位參賽者都為這場比賽進行了艱苦的訓練。)"},
@@ -2108,7 +2152,7 @@
     "section": "◎統整：舉辦&參加活動",
     "words": [
       {"word": "hold an activity (phr) (舉辦活動):", "example": "We will hold a party next week. (我們下週將舉辦一個派對。)"},
-      {"word": "organize an activity (phr) (組織活動):", "example": "The students organize a concert every year. (學生們每年組織一場音樂會。)"},
+      {"word": "organize an activity (phr) (組織、籌辦活動):", "example": "The students organize a concert every year. (學生們每年籌辦一場音樂會。)"},
       {"word": "host an activity (phr) (主辦活動):", "example": "My family will host the dinner this year. (我的家人今年將主辦晚餐。)"},
       {"word": "(activity) take place (phr) (活動舉行):", "example": "The concert will take place in the park. (音樂會將在公園舉行。)"},
       {"word": "take part in an activity (phr) (參加活動):", "example": "I plan to take part in the school fair. (我計劃參加學校的市集。)"},
@@ -2202,7 +2246,7 @@
 {"word": "faith (n) (信仰):", "example": "Her faith gives her strength. (她的信仰給予她力量。)"},
 {"word": "self-control (n) (自制):", "example": "Fasting requires strong self-control. (禁食需要強大的自制力。)"},
 {"word": "offer (v) (提供):", "example": "They offer food to the poor. (他們提供食物給貧困者。)"},
-{"word": "a way to (do something) (phr.) (做某事的方法):", "example": "Helping others is a way to show kindness. (幫助他人是展現善意的方法。)"},
+{"word": "a way to do something (phr.) (做某事的方法):", "example": "Helping others is a way to show kindness. (幫助他人是展現善意的方法。)"},
 {"word": "show respect for… (phr.) (表達對…的尊重):", "example": "We should show respect for other beliefs. (我們應該表達對他人信仰的尊重。)"},
 {"word": "requirement (n) (要求、規定):", "example": "There are dietary requirements to follow. (有飲食規定需要遵守。)"},
 {"word": "part of… (phr.) (…的一部分):", "example": "Religion is part of their daily life. (宗教是他們日常生活的一部分。)"},
@@ -2252,7 +2296,7 @@
 {"word": "as (conj.) (隨著…):", "example": "As time passes, we change. (隨著時間流逝，我們改變了。)"},
 {"word": "cosmopolitan (adj) (國際化的):", "example": "Taipei is a cosmopolitan city. (台北是一個國際化的城市。)"},
 {"word": "increasingly (adv) (日益地):", "example": "People are increasingly concerned about health. (人們日益關心健康。)"},
-{"word": "be likely to… (phr.) (有可能…):", "example": "He’s likely to come late. (他可能會遲到。)"},
+{"word": "be likely to… (phr.) (很有可能…):", "example": "He’s likely to come late. (他可能會遲到。)"},
 {"word": "colleague (n) (同事):", "example": "She had lunch with her colleagues. (她和同事一起吃午餐。)"},
 {"word": "be aware of… (phr.) (意識到…):", "example": "Be aware of cultural differences. (要意識到文化差異。)"},
 {"word": "awkward (adj) (尷尬的):", "example": "There was an awkward silence. (出現了一陣尷尬的沉默。)"},
@@ -2470,9 +2514,9 @@
       {"word": "encourage (v) (鼓勵):", "example": "The teacher encouraged the students to ask questions. (老師鼓勵學生們提問。)"},
       {"word": "pursue (v) (追求):", "example": "She decided to pursue a career in medicine. (她決定追求醫學事業。)"},
       {"word": "career (n) (事業、職業):", "example": "He had a successful career as an engineer. (他作為一名工程師擁有成功的職業生涯。)"},
-      {"word": "based on… (phr) (基於…):", "example": "The movie is based on a true story. (這部電影是基於一個真實故事。)"},
-      {"word": "in addition (phr) (此外):", "example": "She speaks French and Spanish; in addition, she is learning Italian. (她會說法語和西班牙語；此外，她還在學習義大利語。)"},
-      {"word": "provide someone with something (phr) (為某人提供某物):", "example": "The company provides employees with health insurance. (公司為員工提供健康保險。)"},
+      {"word": "be based on… (phr) (基於...、以...為依據):", "example": "The movie is based on a true story. (這部電影是基於一個真實故事。)"},
+      {"word": "in addition (phr) (此外 = besides):", "example": "She speaks French and Spanish; in addition, she is learning Italian. (她會說法語和西班牙語；此外，她還在學習義大利語。)"},
+      {"word": "*provide* someone with something (phr) (為某人 *提供*某物):", "example": "The company provides employees with health insurance. (公司為員工提供健康保險。)"},
       {"word": "employee (n) (員工):", "example": "The company has over a hundred employees. (這家公司有一百多名員工。)"},
       {"word": "equal (adj) (平等的):", "example": "All citizens have equal rights under the law. (所有公民在法律下都擁有平等的權利。)"},
       {"word": "move up (phr) (晉升):", "example": "With hard work, you can quickly move up in the company. (透過努力工作，你可以在公司迅速晉升。)"},
@@ -2509,7 +2553,7 @@
 {"word": "sympathetic (adj) (有同情心的):", "example": "He was sympathetic toward the victims. (他對受害者充滿同情心。)"},
 {"word": "gear (n) (裝備):", "example": "He bought new camping gear. (他買了新的露營裝備。)"},
 {"word": "capable (adj) (有能力的):", "example": "She’s a very capable worker. (她是一位非常有能力的員工。)"},
-{"word": "be capable of (doing something) (phr.) (有能力做某事):", "example": "He’s capable of solving difficult problems. (他有能力解決困難的問題。)"},
+{"word": "be capable of doing something (phr.) (有能力做某事):", "example": "He’s capable of solving difficult problems. (他有能力解決困難的問題。)"},
 {"word": "accomplishment (n) (成就):", "example": "Graduating from college was a great accomplishment. (大學畢業是一項很大的成就。)"}
 ]
 }
@@ -2519,7 +2563,7 @@
 {
 "section": "◎Vocabulary List",
 "words": [
-{"word": "serve (food) (v) (供應(食物)):", "example": "This restaurant only serves vegetarian food. (這家餐廳只供應素食。)"},
+{"word": "serve (food) (v) (供應食物):", "example": "This restaurant only serves vegetarian food. (這家餐廳只供應素食。)"},
 {"word": "fare (n) (1.交通費):", "example": "Bus fares are cheaper for students. (學生的公車票價比較便宜。)"},
 {"word": "fare (n) (2.特定餐廳或場合吃的食物):", "example": "The restaurant offers traditional Italian fare. (這家餐廳提供傳統義大利料理。)"},
 {"word": "cultural (adj) (文化的):", "example": "They joined a cultural exchange program. (他們參加了一個文化交流計畫。)"},
@@ -2548,7 +2592,7 @@
 {"word": "frequently (adv) (經常地):", "example": "He travels abroad frequently. (他經常出國旅行。)"},
 {"word": "additional (adj) (額外的):", "example": "You may have to pay an additional fee. (你可能需要支付額外費用。)"},
 {"word": "consume (v) (1.吃、喝):", "example": "People consume a lot of sugar daily. (人們每天攝取大量糖分。)"},
-{"word": "consume (v) (2.消耗(能源、時間、商品等)):", "example": "The machine consumes too much energy. (這台機器消耗太多能源。)"},
+{"word": "consume (v) (2.*消耗* 能源、時間、商品等):", "example": "The machine consumes too much energy. (這台機器消耗太多能源。)"},
 {"word": "consist of… (phr.) (= be made up of…) (由…組成):", "example": "The team consists of ten players. (這支隊伍由十名選手組成。)"},
 {"word": "traditionally (adv) (傳統上):", "example": "This dish is traditionally eaten during festivals. (這道菜傳統上在節日時食用。)"}
 ]
@@ -2799,6 +2843,31 @@ tableBody.innerHTML = html;
 
         // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
 
+// Extract English word without Chinese translation (for study partner mode)
+        function extractEnglishWordOnly(wordString) {
+            // Remove everything from first ( to end
+            return wordString.split('(')[0].trim().replace(':', '');
+        }
+
+        // Extract English example without Chinese translation
+        function extractEnglishExampleOnly(exampleString) {
+            // Remove everything from first ( to end
+            return exampleString.split('(')[0].trim();
+        }
+
+        // Extract Chinese translation from word
+        function extractChineseWord(wordString) {
+            const match = wordString.match(/\(([^)]+)\):/);
+            return match ? match[1] : '';
+        }
+
+        // Extract Chinese translation from example
+        function extractChineseExample(exampleString) {
+            const match = exampleString.match(/\(([^)]+)\)/);
+            return match ? match[1] : '';
+        }
+
+
         // Extract Chinese translation from word
         function extractChineseTranslation(wordString) {
             const match = wordString.match(/\(([^)]+)\):/);
@@ -2987,7 +3056,7 @@ tableBody.innerHTML = html;
 
         // ============ STUDY SESSION FUNCTIONS ============
 
-        function updateStudySession() {
+function updateStudySession() {
             if (!currentLessonData || !flatWordsList.length) {
                 document.getElementById('currentWord').textContent = 'Select a lesson first!';
                 document.getElementById('currentExample').textContent = 'Please choose a lesson from the main page before starting your study session.';
@@ -3002,8 +3071,37 @@ tableBody.innerHTML = html;
             const currentItem = flatWordsList[currentWordIndex];
             if (!currentItem) return;
 
-            document.getElementById('currentWord').textContent = currentItem.word;
-            document.getElementById('currentExample').textContent = currentItem.example;
+            // Show English only
+            const englishWord = extractEnglishWordOnly(currentItem.word);
+            const englishExample = extractEnglishExampleOnly(currentItem.example);
+            
+            document.getElementById('currentWord').textContent = englishWord;
+            document.getElementById('currentExample').textContent = englishExample;
+
+            // Store Chinese translations
+            const chineseWord = extractChineseWord(currentItem.word);
+            const chineseExample = extractChineseExample(currentItem.example);
+            document.getElementById('currentWord').setAttribute('data-chinese', chineseWord);
+            document.getElementById('currentExample').setAttribute('data-chinese', chineseExample);
+
+            // Hide translation initially and re-enable button
+            const translationDiv = document.getElementById('translationText');
+            const translateBtn = document.getElementById('showTranslationBtn');
+            
+            if (translationDiv) {
+                translationDiv.classList.remove('show');
+                // Update translation content with current word's Chinese
+                translationDiv.innerHTML = `
+                    <div class="translation-label">📖 中文翻譯：</div>
+                    <div><strong>${chineseWord}</strong></div>
+                    <div>${chineseExample}</div>
+                `;
+            }
+            
+            if (translateBtn) {
+                translateBtn.disabled = false;
+                translateBtn.style.cursor = 'pointer';
+            }
 
             const totalWords = flatWordsList.length;
             const progressText = `Word ${currentWordIndex + 1} of ${totalWords} • ${currentItem.sectionTitle}`;
@@ -3029,16 +3127,28 @@ tableBody.innerHTML = html;
             nextSectionBtn.disabled = isLastSection;
         }
 
-        function restoreNormalInterface() {
+function restoreNormalInterface() {
             const speechBubble = document.getElementById('speechBubble');
             const currentItem = flatWordsList[currentWordIndex];
 
             if (currentItem) {
-                speechBubble.innerHTML = `<div class="current-word" id="currentWord">${currentItem.word}</div>
-                    <div class="current-example" id="currentExample">${currentItem.example}</div>
+                const englishWord = extractEnglishWordOnly(currentItem.word);
+                const englishExample = extractEnglishExampleOnly(currentItem.example);
+                const chineseWord = extractChineseWord(currentItem.word);
+                const chineseExample = extractChineseExample(currentItem.example);
+                
+                speechBubble.innerHTML = `
+                    <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
+                    <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
                     <div class="bubble-controls">
-                        <button class="bubble-btn play-btn" id="speakCurrentBtn">🔊</button>
-                        <button class="bubble-btn stop-btn" id="stopCurrentBtn">⏹</button>
+                        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+                        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+                        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+                    </div>
+                    <div class="translation-text" id="translationText">
+                        <div class="translation-label">📖 中文翻譯：</div>
+                        <div><strong>${chineseWord}</strong></div>
+                        <div>${chineseExample}</div>
                     </div>`;
 
                 attachBubbleEventListeners();
@@ -3047,15 +3157,19 @@ tableBody.innerHTML = html;
             isCompleted = false;
         }
 
-        function attachBubbleEventListeners() {
+function attachBubbleEventListeners() {
             const speakBtn = document.getElementById('speakCurrentBtn');
             const stopBtn = document.getElementById('stopCurrentBtn');
+            const translateBtn = document.getElementById('showTranslationBtn');
 
             if (speakBtn) {
                 speakBtn.addEventListener('click', handleSpeakCurrent);
             }
             if (stopBtn) {
                 stopBtn.addEventListener('click', stopSpeech);
+            }
+            if (translateBtn) {
+                translateBtn.addEventListener('click', toggleTranslation);
             }
         }
 
@@ -3064,6 +3178,22 @@ tableBody.innerHTML = html;
             if (currentItem) {
                 const fullText = `${currentItem.word}. ${currentItem.example}`;
                 speakText(fullText);
+            }
+        }
+
+// Show translation (one-time, no toggle)
+        function toggleTranslation() {
+            const translationDiv = document.getElementById('translationText');
+            const translateBtn = document.getElementById('showTranslationBtn');
+            
+            if (translationDiv && !translationDiv.classList.contains('show')) {
+                translationDiv.classList.add('show');
+                
+                // Disable button after showing translation
+                if (translateBtn) {
+                    translateBtn.disabled = true;
+                    translateBtn.style.cursor = 'not-allowed';
+                }
             }
         }
 
