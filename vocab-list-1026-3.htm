@@ -637,83 +637,9 @@
             text-align: center;
         }
 
-        .partner-display-flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-// delete margin bottom 1026
-}
-
-.partner-speech-bubble {
-    position: relative;
-    background-color: #fff;
-    border: 2px solid #3498db;
-    border-radius: 15px;
-    padding: 15px 20px;
-    max-width: 200px;
-left: 90px; // inserted 1026
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.partner-speech-bubble:after {
-    content: '';
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 20px solid #3498db;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-}
-
-.partner-speech-bubble:before {
-    content: '';
-    position: absolute;
-    right: -17px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 17px solid #fff;
-    border-top: 9px solid transparent;
-    border-bottom: 9px solid transparent;
-    z-index: 1;
-}
-
-.partner-speech-text {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2c3e50;
-    text-align: center;
-    line-height: 1.4;
-}
-
-@media (max-width: 768px) {
-    .partner-display-flex {
-        flex-direction: row;
-        gap: 15px;
-    }
-    
-    .partner-speech-bubble:after,
-    .partner-speech-bubble:before {
-        right: -20px;
-        transform: translateX(-50%);
-        top: 50%;
-        border-left: 20px solid #3498db;
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent;
-    }
-    
-    .partner-speech-bubble:before {
-        top: 50%;
-        border-top: 9px solid transparent;
-        
-    }
-}
-
+        .partner-display {
+            margin-bottom: 30px;
+        }
 
         .partner-avatar {
             width: 130px;
@@ -1069,7 +995,7 @@ left: 90px; // inserted 1026
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (3.7)</h1>
+        <h1>Vocabulary List (3.4)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1258,16 +1184,11 @@ left: 90px; // inserted 1026
         <div class="modal-content">
             <span class="close" id="closeStudyModal">&times;</span>
             <div class="study-session">
-    <div class="partner-display-flex">
-        <div class="partner-speech-bubble">
-            <div class="partner-speech-text" id="partnerSpeechText">What does it mean?</div>
-        </div>
-        <div class="partner-avatar" id="currentPartnerAvatar">
-            <img src="partner1.jpg" alt="partner 1">
-        </div>
-    </div>
-    <div class="partner-display">
-        <div class="speech-bubble" id="speechBubble">
+                <div class="partner-display">
+                    <div class="partner-avatar" id="currentPartnerAvatar">
+                        <img src="partner1.jpg" alt="partner 1">
+                    </div>
+                    <div class="speech-bubble" id="speechBubble">
                         <div class="current-word" id="currentWord">Select a lesson first!</div>
                         <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
                         <div class="bubble-controls">
@@ -3185,12 +3106,6 @@ function updateStudySession() {
             const progressText = `Word ${currentWordIndex + 1} of ${totalWords} • ${currentItem.sectionTitle}`;
             document.getElementById('progressInfo').textContent = progressText;
 
-// Reset partner speech bubble
-const partnerSpeechText = document.getElementById('partnerSpeechText');
-if (partnerSpeechText) {
-    partnerSpeechText.textContent = 'What does it mean?';
-}
-
             updateNavigationButtons();
         }
 
@@ -3265,26 +3180,21 @@ function attachBubbleEventListeners() {
             }
         }
 
-function toggleTranslation() {
-    const translationDiv = document.getElementById('translationText');
-    const translateBtn = document.getElementById('showTranslationBtn');
-    const partnerSpeechText = document.getElementById('partnerSpeechText');
-    
-    if (translationDiv && !translationDiv.classList.contains('show')) {
-        translationDiv.classList.add('show');
-        
-        // Change partner's speech bubble text
-        if (partnerSpeechText) {
-            partnerSpeechText.textContent = 'Did you get it right?';
+// Show translation (one-time, no toggle)
+        function toggleTranslation() {
+            const translationDiv = document.getElementById('translationText');
+            const translateBtn = document.getElementById('showTranslationBtn');
+            
+            if (translationDiv && !translationDiv.classList.contains('show')) {
+                translationDiv.classList.add('show');
+                
+                // Disable button after showing translation
+                if (translateBtn) {
+                    translateBtn.disabled = true;
+                    translateBtn.style.cursor = 'not-allowed';
+                }
+            }
         }
-        
-        // Disable button after showing translation
-        if (translateBtn) {
-            translateBtn.disabled = true;
-            translateBtn.style.cursor = 'not-allowed';
-        }
-    }
-}
 
         function showCongratulations() {
             const partnerName = partners[currentPartner].name;
