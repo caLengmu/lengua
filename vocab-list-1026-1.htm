@@ -1064,38 +1064,6 @@
                 min-height: 50px;
                 padding: 8px 6px;
             }
-
-.partner-avatar {
-                width: 60px;
-                height: 60px;
-            }
-
-            .partner-display {
-                gap: 8px;
-            }
-
-            .partner-speech {
-                max-width: 140px;
-                padding: 8px 10px;
-            }
-
-            .partner-speech-text {
-                font-size: 12px;
-            }
-
-            .partner-speech::before {
-                left: -12px;
-                border-right-width: 12px;
-                border-top-width: 7px;
-                border-bottom-width: 7px;
-            }
-
-            .partner-speech::after {
-                left: -9px;
-                border-right-width: 9px;
-                border-top-width: 5px;
-                border-bottom-width: 5px;
-            }
         }
     </style>
 </head>
@@ -3512,7 +3480,9 @@ function toggleTranslation() {
             // Study Partner Mode keyboard shortcuts
             if (studyModal.style.display === 'block') {
                 const nextBtn = document.getElementById('nextBtn');
-                const backBtn = document.getElementById('backBtn');
+            const backBtn = document.getElementById('backBtn');
+            const speakBtn = document.getElementById('speakCurrentBtn');
+            const translateBtn = document.getElementById('showTranslationBtn');
 
             // Right Arrow Key (→) - Next
             if (event.key === 'ArrowRight' && nextBtn && !nextBtn.disabled) {
