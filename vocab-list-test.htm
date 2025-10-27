@@ -641,6 +641,60 @@
             margin-bottom: 30px;
         }
 
+/* ADD THIS NEW CSS BELOW for partner speech bubble */
+        .partner-speech-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;            
+        }
+
+        .partner-left-bubble {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 20px;
+            position: relative;
+            max-width: 200px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+left: 90px;
+        }
+
+        .partner-left-bubble::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid #ffc107;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .partner-left-bubble::before {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid #fff3cd;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            z-index: 1;
+        }
+
+        .partner-left-bubble-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #856404;
+            text-align: center;
+            line-height: 1.4;
+        }
+        /* END OF NEW CSS */
+
         .partner-avatar {
             width: 130px;
             height: 130px;
@@ -947,6 +1001,43 @@
                 height: 100px;
             }
 
+/* ADD THIS MOBILE CSS BELOW for partner speech bubble on mobile device */
+            .partner-speech-container {
+                flex-direction: column: reverse;
+                gap: 15px;
+            }
+
+            .partner-left-bubble {
+                max-width: 80%;
+                order: 2;
+            }
+
+            .partner-left-bubble::after,
+            .partner-left-bubble::before {
+                right: auto;
+                left: 50%;
+                top: -15px;
+                transform: translateX(-50%);
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 15px solid #ffc107;
+                border-top: none;
+            }
+
+            .partner-left-bubble::before {
+                top: -12px;
+                border-bottom-color: #fff3cd;
+            }
+
+            .partner-avatar {
+                order: 1;
+            }
+
+            .partner-left-bubble-text {
+                font-size: 16px;
+            }
+            /* END OF MOBILE CSS */
+
             .speech-bubble {
                 padding: 15px;
             }
@@ -995,7 +1086,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (3.4)</h1>
+        <h1>Vocabulary List (3.5)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1185,8 +1276,13 @@
             <span class="close" id="closeStudyModal">&times;</span>
             <div class="study-session">
                 <div class="partner-display">
-                    <div class="partner-avatar" id="currentPartnerAvatar">
-                        <img src="partner1.jpg" alt="partner 1">
+                    <div class="partner-speech-container">
+                        <div class="partner-left-bubble">
+                            <div class="partner-left-bubble-text" id="partnerLeftBubbleText">What does it mean?</div>
+                        </div>
+                        <div class="partner-avatar" id="currentPartnerAvatar">
+                            <img src="partner1.jpg" alt="partner 1">
+                        </div>
                     </div>
                     <div class="speech-bubble" id="speechBubble">
                         <div class="current-word" id="currentWord">Select a lesson first!</div>
@@ -1851,7 +1947,7 @@
     "words": [
       {"word": "experienced (adj) (有經驗的):", "example": "She is an experienced swimmer. (她是一位有經驗的游泳選手。)"},
       {"word": "mountaineer (n) (登山家):", "example": "The mountaineer climbed the high mountain. (這位登山家爬上了那座高山。)"},
-      {"word": "lose one’s footing (phr) (失去立足點):", "example": "He lost his footing on the wet road. (他在潮濕的路上失去了立足點。)"},
+      {"word": "lose one’s footing (phr) (跌倒):", "example": "He lost his footing on the wet road. (他在潮濕的路上跌倒了。)"},
       {"word": "slide down (phr) (滑下):", "example": "The children like to slide down the big hill. (孩子們喜歡滑下那座大山丘。)"},
       {"word": "a snowy slope (n) (積雪的斜坡):", "example": "They skied down the snowy slope. (他們滑下了積雪的斜坡。)"},
       {"word": "fall over a cliff edge (phr) (從懸崖邊緣摔下去):", "example": "Be careful not to fall over a cliff edge. (要小心不要從懸崖邊緣摔下去。)"},
@@ -3083,13 +3179,18 @@ function updateStudySession() {
             document.getElementById('currentWord').setAttribute('data-chinese', chineseWord);
             document.getElementById('currentExample').setAttribute('data-chinese', chineseExample);
 
+            // Reset left bubble text and hide translation
+            const leftBubbleText = document.getElementById('partnerLeftBubbleText');
+            if (leftBubbleText) {
+                leftBubbleText.textContent = 'What does it mean?';
+            }
+
             // Hide translation initially and re-enable button
             const translationDiv = document.getElementById('translationText');
             const translateBtn = document.getElementById('showTranslationBtn');
             
             if (translationDiv) {
                 translationDiv.classList.remove('show');
-                // Update translation content with current word's Chinese
                 translationDiv.innerHTML = `
                     <div class="translation-label">📖 Translation:</div>
                     <div><strong>${chineseWord}</strong></div>
@@ -3145,10 +3246,16 @@ function restoreNormalInterface() {
                         <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
                     </div>
                     <div class="translation-text" id="translationText">
-                        <div class="translation-label">📖 中文翻譯：</div>
+                        <div class="translation-label">📖 Translation:</div>
                         <div><strong>${chineseWord}</strong></div>
                         <div>${chineseExample}</div>
                     </div>`;
+
+                // Reset left bubble
+                const leftBubbleText = document.getElementById('partnerLeftBubbleText');
+                if (leftBubbleText) {
+                    leftBubbleText.textContent = 'What does it mean?';
+                }
 
                 attachBubbleEventListeners();
             }
@@ -3184,9 +3291,15 @@ function attachBubbleEventListeners() {
         function toggleTranslation() {
             const translationDiv = document.getElementById('translationText');
             const translateBtn = document.getElementById('showTranslationBtn');
+            const leftBubbleText = document.getElementById('partnerLeftBubbleText');
             
             if (translationDiv && !translationDiv.classList.contains('show')) {
                 translationDiv.classList.add('show');
+                
+                // Change left bubble text
+                if (leftBubbleText) {
+                    leftBubbleText.textContent = 'Did you get it right?';
+                }
                 
                 // Disable button after showing translation
                 if (translateBtn) {
