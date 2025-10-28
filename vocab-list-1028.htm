@@ -184,6 +184,153 @@
             background-color: #ffb300;
         }
 
+/* Overall Vocabulary Button Section */
+.overall-vocab-section {
+    margin: 20px 0;
+    text-align: center;
+    padding: 15px;
+    background-color: #e8f8f5;
+    border-radius: 8px;
+}
+
+/* Overall Vocabulary Modal */
+.overall-vocab-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow-y: auto;
+}
+
+.overall-vocab-content {
+    background-color: white;
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1000px;
+    position: relative;
+}
+
+.overall-vocab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+}
+
+.overall-vocab-header h2 {
+    color: #2c3e50;
+    margin: 0;
+}
+
+.overall-vocab-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.overall-vocab-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.overall-vocab-btn:hover {
+    background-color: #218838;
+}
+
+.overall-vocab-btn.close-btn {
+    background-color: #6c757d;
+}
+
+.overall-vocab-btn.close-btn:hover {
+    background-color: #5a6268;
+}
+
+.vocab-section-block {
+    margin-bottom: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.section-title-row input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.section-title-row label {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2c3e50;
+    cursor: pointer;
+    flex: 1;
+}
+
+.vocab-items-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.vocab-item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+.vocab-item-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.vocab-item-row label {
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.4;
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .vocab-items-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .overall-vocab-content {
+        padding: 15px;
+    }
+}
+
         .speed-control-section {
             margin: 30px 0;
             text-align: center;
@@ -318,8 +465,8 @@
         .no-data {
             text-align: center;
             padding: 40px;
-            color: #7f8c8d;
-            font-size: 20px;
+            color: red;
+            font-size: 25px;
         }
 
         /* Modal Styles */
@@ -637,83 +784,9 @@
             text-align: center;
         }
 
-        .partner-display-flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.partner-speech-bubble {
-    position: relative;
-    background-color: #fff;
-    border: 2px solid #3498db;
-    border-radius: 15px;
-    padding: 15px 20px;
-    max-width: 200px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.partner-speech-bubble:after {
-    content: '';
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 20px solid #3498db;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-}
-
-.partner-speech-bubble:before {
-    content: '';
-    position: absolute;
-    right: -17px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 17px solid #fff;
-    border-top: 9px solid transparent;
-    border-bottom: 9px solid transparent;
-    z-index: 1;
-}
-
-.partner-speech-text {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2c3e50;
-    text-align: center;
-    line-height: 1.4;
-}
-
-@media (max-width: 768px) {
-    .partner-display-flex {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .partner-speech-bubble:after,
-    .partner-speech-bubble:before {
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 100%;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 15px solid #3498db;
-        border-bottom: none;
-    }
-    
-    .partner-speech-bubble:before {
-        top: 100%;
-        border-top: 13px solid #fff;
-        margin-top: -2px;
-    }
-}
+        .partner-display {
+            margin-bottom: 30px;
+        }
 
         .partner-avatar {
             width: 130px;
@@ -1026,15 +1099,15 @@
             }
 
             .current-word {
-                font-size: 25px;
+                font-size: 23px;
             }
 
 .current-example {
-                font-size: 22px;
+                font-size: 21px;
             }
 
             .translation-text {
-                font-size: 21px;
+                font-size: 19px;
                 padding: 8px;
                 margin-top: 8px;
             }
@@ -1069,7 +1142,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (3.6)</h1>
+        <h1>Vocabulary List (10/28 測試overall vocab)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1123,6 +1196,13 @@
             <div class="section-selector-title">📋 Select sections for quiz (選擇測驗範圍):</div>
             <div class="section-checkboxes-grid" id="sectionCheckboxesGrid"></div>
         </div>
+
+<!-- Overall Vocabulary Button -->
+<div class="overall-vocab-section" id="overallVocabSection" style="display: none;">
+    <button class="quiz-btn" id="overallVocabBtn" style="background-color: #17a2b8; margin: 20px 0;">
+        📚 Overall Vocabulary (整體字彙管理)
+    </button>
+</div>
 
         <!-- Speed Control -->
         <div class="speed-control-section">
@@ -1258,16 +1338,11 @@
         <div class="modal-content">
             <span class="close" id="closeStudyModal">&times;</span>
             <div class="study-session">
-    <div class="partner-display-flex">
-        <div class="partner-speech-bubble">
-            <div class="partner-speech-text" id="partnerSpeechText">What does it mean?</div>
-        </div>
-        <div class="partner-avatar" id="currentPartnerAvatar">
-            <img src="partner1.jpg" alt="partner 1">
-        </div>
-    </div>
-    <div class="partner-display">
-        <div class="speech-bubble" id="speechBubble">
+                <div class="partner-display">
+                    <div class="partner-avatar" id="currentPartnerAvatar">
+                        <img src="partner1.jpg" alt="partner 1">
+                    </div>
+                    <div class="speech-bubble" id="speechBubble">
                         <div class="current-word" id="currentWord">Select a lesson first!</div>
                         <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
                         <div class="bubble-controls">
@@ -1293,8 +1368,72 @@
             </div>
         </div>
     </div>
+<!-- Overall Vocabulary Modal -->
+<div id="overallVocabModal" class="overall-vocab-modal">
+    <div class="overall-vocab-content">
+        <div class="overall-vocab-header">
+            <h2>📚 Overall Vocabulary Management</h2>
+            <div class="overall-vocab-buttons">
+                <button class="overall-vocab-btn" id="saveVocabBtn">💾 Save</button>
+                <button class="overall-vocab-btn close-btn" id="closeOverallVocabBtn">✖ Close</button>
+            </div>
+        </div>
+        <p style="color: #666; margin-bottom: 20px;">Uncheck the words/phrases you've learned and save. (取消勾選已學會的單字片語並儲存)</p>
+        <div id="overallVocabList"></div>
+    </div>
+</div>
 
     <script>
+// ============ INDEXEDDB FUNCTIONS ============
+let db;
+
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('VocabDatabase', 1);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            if (!db.objectStoreNames.contains('checkedWords')) {
+                db.createObjectStore('checkedWords', { keyPath: 'id' });
+            }
+        };
+    });
+}
+
+function saveCheckedWords(lessonKey, checkedWords) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['checkedWords'], 'readwrite');
+        const store = transaction.objectStore('checkedWords');
+        const request = store.put({ id: lessonKey, words: checkedWords });
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function loadCheckedWords(lessonKey) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['checkedWords'], 'readonly');
+        const store = transaction.objectStore('checkedWords');
+        const request = store.get(lessonKey);
+        
+        request.onsuccess = () => {
+            if (request.result) {
+                resolve(request.result.words);
+            } else {
+                resolve(null);
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
 // Built-in database - can be expanded
         const vocabDatabase = {
             'textbook1': [
@@ -1612,7 +1751,7 @@
         "example": "A small altar was set up in the living room. (客廳裡設置了一個小祭壇。)"
       },
       {
-        "word": "place (v) (放置):",
+        "word": "place (v) (放置 = put):",
         "example": "Place the books neatly on the shelf. (將書整齊地放置在架子上。)"
       },
       {
@@ -1930,7 +2069,7 @@
     "words": [
       {"word": "experienced (adj) (有經驗的):", "example": "She is an experienced swimmer. (她是一位有經驗的游泳選手。)"},
       {"word": "mountaineer (n) (登山家):", "example": "The mountaineer climbed the high mountain. (這位登山家爬上了那座高山。)"},
-      {"word": "lose one’s footing (phr) (失去立足點):", "example": "He lost his footing on the wet road. (他在潮濕的路上失去了立足點。)"},
+      {"word": "lose one’s footing (phr) (跌倒):", "example": "He lost his footing on the wet road. (他在潮濕的路上跌倒了。)"},
       {"word": "slide down (phr) (滑下):", "example": "The children like to slide down the big hill. (孩子們喜歡滑下那座大山丘。)"},
       {"word": "a snowy slope (n) (積雪的斜坡):", "example": "They skied down the snowy slope. (他們滑下了積雪的斜坡。)"},
       {"word": "fall over a cliff edge (phr) (從懸崖邊緣摔下去):", "example": "Be careful not to fall over a cliff edge. (要小心不要從懸崖邊緣摔下去。)"},
@@ -1956,7 +2095,7 @@
       {"word": "alongside (prep) (在...旁邊、與...一起):", "example": "She walked alongside her dog. (她走在她狗的旁邊。)"},
       {"word": "blind (adj) (失明的):", "example": "The blind man reads books with his hands. (這位失明男子用手閱讀書籍。)"},
       {"word": "be superior to… (phr) (優於…):", "example": "This new phone is superior to the old model. (這款新手機優於舊型號。)"},
-      {"word": "sightless (= blind) (adj) (看不見的):", "example": "The sightless person uses a white cane. (這位看不見的人使用一支白手杖。)"},
+      {"word": "sightless (adj) (看不見的 = blind):", "example": "The sightless person uses a white cane. (這位看不見的人使用一支白手杖。)"},
       {"word": "think to oneself (phr) (心想、暗自思忖):", "example": "He thought to himself, 'I can do this.' (他心想：「我能做到。」)"}
     ]
   },
@@ -2811,113 +2950,150 @@
         }
 
         // Load vocabulary with checkboxes
-        function loadVocabulary(lessonKey) {
-            const tableBody = document.getElementById('vocabTableBody');
-            const data = vocabDatabase[lessonKey];
+        async function loadVocabulary(lessonKey) {
+    const tableBody = document.getElementById('vocabTableBody');
+    const data = vocabDatabase[lessonKey];
 
-            if (!data || data.length === 0) {
-                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. (暫無資料，請等待更新)</td></tr>';
-                return;
-            }
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. (暫無資料，請等待更新)</td></tr>';
+        document.getElementById('overallVocabSection').style.display = 'none';
+        return;
+    }
 
-            // Clear checked sections when loading new lesson
-            checkedSections.clear();
+    // Load saved checked state
+    const savedCheckedWords = await loadCheckedWords(lessonKey);
 
-            let html = '';
-data.forEach((section, sectionIndex) => {
-                html += `<tr>
-                    <td colspan="2" class="section-header">${section.section}</td>
+    // Clear checked sections when loading new lesson
+    checkedSections.clear();
+
+    let html = '';
+    data.forEach((section, sectionIndex) => {
+        html += `<tr>
+            <td colspan="2" class="section-header">${section.section}</td>
+        </tr>`;
+        
+        section.words.forEach((item, wordIndex) => {
+            // Check if this word is checked (default true if no saved state)
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            
+            // Only show checked words
+            if (isChecked) {
+                const fullText = `${item.word}. ${item.example}`;
+                html += `<tr class="vocab-row">
+                    <td class="audio-controls">
+                        <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                        <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                    </td>
+                    <td class="content-cell">
+                        <div class="vocab-word">${item.word}</div>
+                        <div class="example-sentence">${item.example}</div>
+                    </td>
                 </tr>`;
-                
-                section.words.forEach(item => {
-                    const fullText = `${item.word}. ${item.example}`;
-                    html += `<tr class="vocab-row">
-                        <td class="audio-controls">
-                            <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                            <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
-                        </td>
-                        <td class="content-cell">
-                            <div class="vocab-word">${item.word}</div>
-                            <div class="example-sentence">${item.example}</div>
-                        </td>
-                    </tr>`;
-                });
-            });
+            }
+        });
+    });
 
-tableBody.innerHTML = html;
+    tableBody.innerHTML = html;
 
-            // Show section selector and populate it
-            showSectionSelector(data, lessonKey);
-        }
+    // Show section selector and Overall Vocabulary button
+    showSectionSelector(data, lessonKey, savedCheckedWords);
+    document.getElementById('overallVocabSection').style.display = 'block';
+}
 
         // Flatten lesson data
-        function flattenLessonData(lessonData) {
-            const flattened = [];
-            lessonData.forEach((section, sectionIndex) => {
-                section.words.forEach((word, wordIndex) => {
-                    flattened.push({
+        async function flattenLessonData(lessonData) {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const savedCheckedWords = await loadCheckedWords(selectedLesson);
+    
+    const flattened = [];
+    lessonData.forEach((section, sectionIndex) => {
+        section.words.forEach((word, wordIndex) => {
+            // Only include checked words
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            if (isChecked) {
+                flattened.push({
+                    ...word,
+                    sectionIndex,
+                    sectionTitle: section.section,
+                    wordIndex
+                });
+            }
+        });
+    });
+    return flattened;
+}
+
+// Show and populate section selector
+        async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
+    const selectorArea = document.getElementById('sectionSelectorArea');
+    const grid = document.getElementById('sectionCheckboxesGrid');
+    
+    grid.innerHTML = '';
+    
+    for (let sectionIndex = 0; sectionIndex < lessonData.length; sectionIndex++) {
+        const section = lessonData[sectionIndex];
+        
+        // Count how many checked words are in this section
+        let checkedCount = 0;
+        section.words.forEach((word, wordIndex) => {
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            if (isChecked) checkedCount++;
+        });
+        
+        // Only show section if it has checked words
+        if (checkedCount > 0) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'section-checkbox-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `section_${lessonKey}_${sectionIndex}`;
+            checkbox.checked = checkedSections.has(sectionIndex);
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    checkedSections.add(sectionIndex);
+                } else {
+                    checkedSections.delete(sectionIndex);
+                }
+            });
+            
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = `${section.section} (${checkedCount} words)`;
+            
+            itemDiv.appendChild(checkbox);
+            itemDiv.appendChild(label);
+            grid.appendChild(itemDiv);
+        }
+    }
+    
+    selectorArea.style.display = 'block';
+}
+
+        // Get words from checked sections only
+        async function getWordsFromCheckedSections(lessonData) {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const savedCheckedWords = await loadCheckedWords(selectedLesson);
+    
+    const allWords = [];
+    lessonData.forEach((section, sectionIndex) => {
+        if (checkedSections.has(sectionIndex)) {
+            section.words.forEach((word, wordIndex) => {
+                // Only include if word is checked in Overall Vocabulary
+                const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+                if (isChecked) {
+                    allWords.push({
                         ...word,
                         sectionIndex,
                         sectionTitle: section.section,
                         wordIndex
                     });
-                });
-            });
-            return flattened;
-        }
-
-// Show and populate section selector
-        function showSectionSelector(lessonData, lessonKey) {
-            const selectorArea = document.getElementById('sectionSelectorArea');
-            const grid = document.getElementById('sectionCheckboxesGrid');
-            
-            grid.innerHTML = '';
-            
-            lessonData.forEach((section, sectionIndex) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'section-checkbox-item';
-                
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `section_${lessonKey}_${sectionIndex}`;
-                checkbox.checked = checkedSections.has(sectionIndex);
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        checkedSections.add(sectionIndex);
-                    } else {
-                        checkedSections.delete(sectionIndex);
-                    }
-                });
-                
-                const label = document.createElement('label');
-                label.htmlFor = checkbox.id;
-                label.textContent = section.section;
-                
-                itemDiv.appendChild(checkbox);
-                itemDiv.appendChild(label);
-                grid.appendChild(itemDiv);
-            });
-            
-            selectorArea.style.display = 'block';
-        }
-
-        // Get words from checked sections only
-        function getWordsFromCheckedSections(lessonData) {
-            const allWords = [];
-            lessonData.forEach((section, sectionIndex) => {
-                if (checkedSections.has(sectionIndex)) {
-                    section.words.forEach((word, wordIndex) => {
-                        allWords.push({
-                            ...word,
-                            sectionIndex,
-                            sectionTitle: section.section,
-                            wordIndex
-                        });
-                    });
                 }
             });
-            return allWords;
         }
+    });
+    return allWords;
+}
 
         // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
 
@@ -2964,32 +3140,32 @@ tableBody.innerHTML = html;
         }
 
 // Start quiz
-        function startListenChooseQuiz() {
-            const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-            
-            if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-                alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
-                return;
-            }
+        async function startListenChooseQuiz() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        return;
+    }
 
-            // Get words from checked sections only
-            const lessonData = vocabDatabase[selectedLesson];
-            const allWords = getWordsFromCheckedSections(lessonData);
-            
-            if (allWords.length < 8) {
-                alert('Please select sections with at least 8 words for the quiz. (請勾選至少包含8個單字的區段)');
-                return;
-            }
+    // Get words from checked sections only (and only checked words)
+    const lessonData = vocabDatabase[selectedLesson];
+    const allWords = await getWordsFromCheckedSections(lessonData);
+    
+    if (allWords.length < 8) {
+        alert('Please select sections with at least 8 words for the quiz. (請勾選至少包含8個單字的區段)');
+        return;
+    }
 
-            // Select 8 random words
-            quizWords = shuffleArray([...allWords]).slice(0, 8);
-            currentQuizIndex = 0;
-            quizScore = 0;
+    // Select 8 random words
+    quizWords = shuffleArray([...allWords]).slice(0, 8);
+    currentQuizIndex = 0;
+    quizScore = 0;
 
-            // Open modal and load first question
-            document.getElementById('listenChooseModal').style.display = 'block';
-            loadQuizQuestion();
-        }
+    // Open modal and load first question
+    document.getElementById('listenChooseModal').style.display = 'block';
+    loadQuizQuestion();
+}
 
         // Shuffle array
         function shuffleArray(array) {
@@ -3132,6 +3308,130 @@ tableBody.innerHTML = html;
             stopSpeech();
         }
 
+// ============ OVERALL VOCABULARY FUNCTIONS ============
+
+function openOverallVocabModal() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        return;
+    }
+    
+    populateOverallVocabList(selectedLesson);
+    document.getElementById('overallVocabModal').style.display = 'block';
+}
+
+async function populateOverallVocabList(lessonKey) {
+    const lessonData = vocabDatabase[lessonKey];
+    const listContainer = document.getElementById('overallVocabList');
+    
+    // Load saved checked state
+    const savedCheckedWords = await loadCheckedWords(lessonKey);
+    
+    let html = '';
+    
+    lessonData.forEach((section, sectionIndex) => {
+        const sectionId = `section_${lessonKey}_${sectionIndex}`;
+        
+        html += `<div class="vocab-section-block">
+            <div class="section-title-row">
+                <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
+                       data-section-index="${sectionIndex}" checked>
+                <label for="${sectionId}_all">${section.section}</label>
+            </div>
+            <div class="vocab-items-grid">`;
+        
+        section.words.forEach((word, wordIndex) => {
+            const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
+            const englishWord = extractEnglishWordOnly(word.word);
+            
+            // Check if this word was previously unchecked
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            
+            html += `<div class="vocab-item-row">
+                <input type="checkbox" id="${wordId}" class="word-checkbox" 
+                       data-section-index="${sectionIndex}" 
+                       data-word-index="${wordIndex}" 
+                       ${isChecked ? 'checked' : ''}>
+                <label for="${wordId}">${englishWord}</label>
+            </div>`;
+        });
+        
+        html += `</div></div>`;
+    });
+    
+    listContainer.innerHTML = html;
+    
+    // Attach event listeners
+    attachOverallVocabListeners(lessonKey);
+}
+
+function attachOverallVocabListeners(lessonKey) {
+    // Section "select all" checkboxes
+    document.querySelectorAll('.section-checkbox-all').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const sectionIndex = this.getAttribute('data-section-index');
+            const wordCheckboxes = document.querySelectorAll(
+                `.word-checkbox[data-section-index="${sectionIndex}"]`
+            );
+            wordCheckboxes.forEach(cb => cb.checked = this.checked);
+        });
+    });
+    
+    // Individual word checkboxes
+    document.querySelectorAll('.word-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSectionCheckbox(this.getAttribute('data-section-index'));
+        });
+    });
+    
+    // Update initial state of section checkboxes
+    document.querySelectorAll('.section-checkbox-all').forEach(checkbox => {
+        updateSectionCheckbox(checkbox.getAttribute('data-section-index'));
+    });
+}
+
+function updateSectionCheckbox(sectionIndex) {
+    const wordCheckboxes = document.querySelectorAll(
+        `.word-checkbox[data-section-index="${sectionIndex}"]`
+    );
+    const sectionCheckbox = document.querySelector(
+        `.section-checkbox-all[data-section-index="${sectionIndex}"]`
+    );
+    
+    const allChecked = Array.from(wordCheckboxes).every(cb => cb.checked);
+    const noneChecked = Array.from(wordCheckboxes).every(cb => !cb.checked);
+    
+    sectionCheckbox.checked = allChecked;
+    sectionCheckbox.indeterminate = !allChecked && !noneChecked;
+}
+
+async function saveOverallVocabState() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    if (!selectedLesson) return;
+    
+    const checkedWords = {};
+    document.querySelectorAll('.word-checkbox').forEach(checkbox => {
+        const sectionIndex = checkbox.getAttribute('data-section-index');
+        const wordIndex = checkbox.getAttribute('data-word-index');
+        const key = `${sectionIndex}_${wordIndex}`;
+        checkedWords[key] = checkbox.checked;
+    });
+    
+    try {
+        await saveCheckedWords(selectedLesson, checkedWords);
+        alert('Settings saved successfully! (設定已成功儲存！)');
+        document.getElementById('overallVocabModal').style.display = 'none';
+        
+        // Reload the vocabulary to reflect changes
+        loadVocabulary(selectedLesson);
+    } catch (error) {
+        console.error('Error saving:', error);
+        alert('Failed to save settings. (儲存設定失敗)');
+    }
+}
+
         // ============ STUDY SESSION FUNCTIONS ============
 
 function updateStudySession() {
@@ -3184,12 +3484,6 @@ function updateStudySession() {
             const totalWords = flatWordsList.length;
             const progressText = `Word ${currentWordIndex + 1} of ${totalWords} • ${currentItem.sectionTitle}`;
             document.getElementById('progressInfo').textContent = progressText;
-
-// Reset partner speech bubble
-const partnerSpeechText = document.getElementById('partnerSpeechText');
-if (partnerSpeechText) {
-    partnerSpeechText.textContent = 'What does it mean?';
-}
 
             updateNavigationButtons();
         }
@@ -3265,26 +3559,21 @@ function attachBubbleEventListeners() {
             }
         }
 
-function toggleTranslation() {
-    const translationDiv = document.getElementById('translationText');
-    const translateBtn = document.getElementById('showTranslationBtn');
-    const partnerSpeechText = document.getElementById('partnerSpeechText');
-    
-    if (translationDiv && !translationDiv.classList.contains('show')) {
-        translationDiv.classList.add('show');
-        
-        // Change partner's speech bubble text
-        if (partnerSpeechText) {
-            partnerSpeechText.textContent = 'Did you get it right?';
+// Show translation (one-time, no toggle)
+        function toggleTranslation() {
+            const translationDiv = document.getElementById('translationText');
+            const translateBtn = document.getElementById('showTranslationBtn');
+            
+            if (translationDiv && !translationDiv.classList.contains('show')) {
+                translationDiv.classList.add('show');
+                
+                // Disable button after showing translation
+                if (translateBtn) {
+                    translateBtn.disabled = true;
+                    translateBtn.style.cursor = 'not-allowed';
+                }
+            }
         }
-        
-        // Disable button after showing translation
-        if (translateBtn) {
-            translateBtn.disabled = true;
-            translateBtn.style.cursor = 'not-allowed';
-        }
-    }
-}
 
         function showCongratulations() {
             const partnerName = partners[currentPartner].name;
@@ -3356,29 +3645,29 @@ function toggleTranslation() {
             updateStudySession();
         }
 
-        function startStudySession(partnerNumber) {
-            const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-            
-            if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-                alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
-                return;
-            }
+        async function startStudySession(partnerNumber) {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        return;
+    }
 
-            currentPartner = partnerNumber;
-            currentLessonData = vocabDatabase[selectedLesson];
-            flatWordsList = flattenLessonData(currentLessonData);
-            currentWordIndex = 0;
-            isCompleted = false;
+    currentPartner = partnerNumber;
+    currentLessonData = vocabDatabase[selectedLesson];
+    flatWordsList = await flattenLessonData(currentLessonData);
+    currentWordIndex = 0;
+    isCompleted = false;
 
-            const partnerInfo = partners[partnerNumber];
-            const avatarElement = document.getElementById('currentPartnerAvatar');
-            avatarElement.innerHTML = `<img src="${partnerInfo.image}" alt="partner ${partnerNumber}">`;
+    const partnerInfo = partners[partnerNumber];
+    const avatarElement = document.getElementById('currentPartnerAvatar');
+    avatarElement.innerHTML = `<img src="${partnerInfo.image}" alt="partner ${partnerNumber}">`;
 
-            document.getElementById('partnerModal').style.display = 'none';
-            document.getElementById('studyModal').style.display = 'block';
+    document.getElementById('partnerModal').style.display = 'none';
+    document.getElementById('studyModal').style.display = 'block';
 
-            updateStudySession();
-        }
+    updateStudySession();
+}
 
         // ============ INITIALIZE EVENT LISTENERS ============
 
@@ -3452,6 +3741,13 @@ function toggleTranslation() {
                 document.getElementById('welcomeModal').style.display = 'none';
             });
 
+// Overall Vocabulary button
+document.getElementById('overallVocabBtn').addEventListener('click', openOverallVocabModal);
+document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
+document.getElementById('closeOverallVocabBtn').addEventListener('click', () => {
+    document.getElementById('overallVocabModal').style.display = 'none';
+});
+
             // Click outside modal to close
             window.addEventListener('click', (e) => {
                 if (e.target === partnerModal) {
@@ -3464,7 +3760,15 @@ function toggleTranslation() {
                 if (e.target === document.getElementById('listenChooseModal')) {
                     closeQuizModal();
                 }
+if (e.target === document.getElementById('overallVocabModal')) {
+        document.getElementById('overallVocabModal').style.display = 'none';
+    }
             });
+
+// Initialize IndexedDB
+initDB().catch(error => {
+    console.error('Failed to initialize database:', error);
+});
 
             window.addEventListener('beforeunload', () => stopSpeech());
 
@@ -3567,7 +3871,10 @@ function toggleTranslation() {
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initializeEventListeners);
+        document.addEventListener('DOMContentLoaded', async () => {
+    await initDB();
+    initializeEventListeners();
+});
     </script>
 </body>
 </html>
