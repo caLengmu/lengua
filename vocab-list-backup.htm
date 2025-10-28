@@ -318,8 +318,8 @@
         .no-data {
             text-align: center;
             padding: 40px;
-            color: #7f8c8d;
-            font-size: 20px;
+            color: red;
+            font-size: 25px;
         }
 
         /* Modal Styles */
@@ -952,15 +952,15 @@
             }
 
             .current-word {
-                font-size: 25px;
+                font-size: 23px;
             }
 
 .current-example {
-                font-size: 22px;
+                font-size: 21px;
             }
 
             .translation-text {
-                font-size: 21px;
+                font-size: 19px;
                 padding: 8px;
                 margin-top: 8px;
             }
@@ -995,7 +995,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (3.3)</h1>
+        <h1>Vocabulary List (3.4)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1533,7 +1533,7 @@
         "example": "A small altar was set up in the living room. (客廳裡設置了一個小祭壇。)"
       },
       {
-        "word": "place (v) (放置):",
+        "word": "place (v) (放置 = put):",
         "example": "Place the books neatly on the shelf. (將書整齊地放置在架子上。)"
       },
       {
@@ -1851,7 +1851,7 @@
     "words": [
       {"word": "experienced (adj) (有經驗的):", "example": "She is an experienced swimmer. (她是一位有經驗的游泳選手。)"},
       {"word": "mountaineer (n) (登山家):", "example": "The mountaineer climbed the high mountain. (這位登山家爬上了那座高山。)"},
-      {"word": "lose one’s footing (phr) (失去立足點):", "example": "He lost his footing on the wet road. (他在潮濕的路上失去了立足點。)"},
+      {"word": "lose one’s footing (phr) (跌倒):", "example": "He lost his footing on the wet road. (他在潮濕的路上跌倒了。)"},
       {"word": "slide down (phr) (滑下):", "example": "The children like to slide down the big hill. (孩子們喜歡滑下那座大山丘。)"},
       {"word": "a snowy slope (n) (積雪的斜坡):", "example": "They skied down the snowy slope. (他們滑下了積雪的斜坡。)"},
       {"word": "fall over a cliff edge (phr) (從懸崖邊緣摔下去):", "example": "Be careful not to fall over a cliff edge. (要小心不要從懸崖邊緣摔下去。)"},
@@ -1877,7 +1877,7 @@
       {"word": "alongside (prep) (在...旁邊、與...一起):", "example": "She walked alongside her dog. (她走在她狗的旁邊。)"},
       {"word": "blind (adj) (失明的):", "example": "The blind man reads books with his hands. (這位失明男子用手閱讀書籍。)"},
       {"word": "be superior to… (phr) (優於…):", "example": "This new phone is superior to the old model. (這款新手機優於舊型號。)"},
-      {"word": "sightless (= blind) (adj) (看不見的):", "example": "The sightless person uses a white cane. (這位看不見的人使用一支白手杖。)"},
+      {"word": "sightless (adj) (看不見的 = blind):", "example": "The sightless person uses a white cane. (這位看不見的人使用一支白手杖。)"},
       {"word": "think to oneself (phr) (心想、暗自思忖):", "example": "He thought to himself, 'I can do this.' (他心想：「我能做到。」)"}
     ]
   },
@@ -3377,6 +3377,104 @@ function attachBubbleEventListeners() {
             });
 
             window.addEventListener('beforeunload', () => stopSpeech());
+
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyboardNavigation);
+        }
+
+        // Handle keyboard navigation
+        function handleKeyboardNavigation(event) {
+            const studyModal = document.getElementById('studyModal');
+            const quizModal = document.getElementById('listenChooseModal');
+            
+            // Study Partner Mode keyboard shortcuts
+            if (studyModal.style.display === 'block') {
+                const nextBtn = document.getElementById('nextBtn');
+            const backBtn = document.getElementById('backBtn');
+            const speakBtn = document.getElementById('speakCurrentBtn');
+            const translateBtn = document.getElementById('showTranslationBtn');
+
+            // Right Arrow Key (→) - Next
+            if (event.key === 'ArrowRight' && nextBtn && !nextBtn.disabled) {
+                event.preventDefault();
+                nextWord();
+            }
+
+            // Left Arrow Key (←) - Back
+            if (event.key === 'ArrowLeft' && backBtn && !backBtn.disabled) {
+                event.preventDefault();
+                previousWord();
+            }
+
+            // Space Bar - Play Audio
+            if (event.key === ' ' && speakBtn) {
+                event.preventDefault();
+                handleSpeakCurrent();
+            }
+
+            // T key - Show Translation
+            if ((event.key === 't' || event.key === 'T') && translateBtn && !translateBtn.disabled) {
+                event.preventDefault();
+                toggleTranslation();
+            }
+
+            // S key - Stop Audio
+            if (event.key === 's' || event.key === 'S') {
+                event.preventDefault();
+                stopSpeech();
+            }
+
+            // Escape key - Close Modal
+            if (event.key === 'Escape') {
+                studyModal.style.display = 'none';
+                stopSpeech();
+            }
+        }
+
+// Listen and Choose Quiz Mode keyboard shortcuts
+            if (quizModal.style.display === 'block') {
+                const listenNextBtn = document.getElementById('listenNextBtn');
+                const listenSpeaker = document.getElementById('listenSpeaker');
+                const restartBtn = document.querySelector('.restart-quiz-btn');
+
+                // Right Arrow Key (→) - Next Question
+                if (event.key === 'ArrowRight' && listenNextBtn && !listenNextBtn.disabled) {
+                    event.preventDefault();
+                    listenNextBtn.classList.add('key-pressed');
+                    setTimeout(() => listenNextBtn.classList.remove('key-pressed'), 300);
+                    nextQuizQuestion();
+                }
+
+                // Space Bar - Play Audio
+                if (event.key === ' ' && listenSpeaker) {
+                    event.preventDefault();
+                    playQuizAudio();
+                }
+
+// T key - Try Again (on completion page)
+                if ((event.key === 't' || event.key === 'T') && restartBtn) {
+                    event.preventDefault();
+                    restartBtn.classList.add('key-pressed');
+                    setTimeout(() => restartBtn.classList.remove('key-pressed'), 300);
+                    restartQuiz();
+                }
+
+// Number keys 1-8 - Select answer
+                if (!hasAnswered && event.key >= '1' && event.key <= '8') {
+                    event.preventDefault();
+                    const choiceButtons = document.querySelectorAll('.choice-btn');
+                    const index = parseInt(event.key) - 1;
+                    if (choiceButtons[index]) {
+                        choiceButtons[index].click();
+                    }
+                }
+
+                // Escape key - Close Quiz Modal
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeQuizModal();
+                }
+            }
         }
 
         document.addEventListener('DOMContentLoaded', initializeEventListeners);
