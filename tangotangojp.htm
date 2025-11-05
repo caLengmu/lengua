@@ -1150,6 +1150,12 @@ top: -12px;
 </tbody>
 </table>
 
+<div style="text-align: center; margin: 20px 0;">
+    <button id="save-checked-btn" class="text-import-btn" style="display: none;">
+        🍙 選択した項目を保存
+    </button>
+</div>
+
 <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
 <div class="modal-content">
@@ -1491,6 +1497,104 @@ let currentTTSSystem = 'android';
 let currentEditWeek = null;
 let currentEditDay = null;
 let monthlyDB = null;
+
+// ===== INDEXEDDB FOR CHECKED ITEMS =====
+let checkedItemsDB = null;
+
+function initCheckedItemsDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('CheckedItemsDB', 1);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            checkedItemsDB = request.result;
+            resolve(checkedItemsDB);
+        };
+        
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('checkedStates')) {
+                db.createObjectStore('checkedStates', { keyPath: 'id' });
+            }
+        };
+    });
+}
+
+function generateVocabSetID(vocabularyData) {
+    // Create a unique ID based on the vocabulary content
+    const contentString = vocabularyData
+        .map(item => `${item.vocabulary}|${item.translation}`)
+        .sort()
+        .join('::');
+    
+    // Simple hash function
+    let hash = 0;
+    for (let i = 0; i < contentString.length; i++) {
+        const char = contentString.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return 'vocab_' + Math.abs(hash).toString(36);
+}
+
+function saveCheckedStates() {
+    if (!checkedItemsDB || vocabularyData.length === 0) return;
+    
+    const vocabSetID = generateVocabSetID(vocabularyData);
+    const checkedStates = {};
+    
+    vocabularyData.forEach((item, index) => {
+        if (item.selected) {
+            checkedStates[index] = true;
+        }
+    });
+    
+    const transaction = checkedItemsDB.transaction(['checkedStates'], 'readwrite');
+    const store = transaction.objectStore('checkedStates');
+    
+    store.put({
+        id: vocabSetID,
+        states: checkedStates,
+        timestamp: Date.now()
+    });
+    
+    transaction.oncomplete = () => {
+        // Show success message
+        const successMessage = document.createElement('div');
+        successMessage.style.cssText = `
+            position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+            color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+            z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        `;
+        successMessage.textContent = `✅ チェック状態を保存しました！`;
+        document.body.appendChild(successMessage);
+        
+        setTimeout(() => {
+            if (document.body.contains(successMessage)) {
+                document.body.removeChild(successMessage);
+            }
+        }, 2000);
+    };
+}
+
+function loadCheckedStates() {
+    return new Promise((resolve, reject) => {
+        if (!checkedItemsDB || vocabularyData.length === 0) {
+            resolve(null);
+            return;
+        }
+        
+        const vocabSetID = generateVocabSetID(vocabularyData);
+        const transaction = checkedItemsDB.transaction(['checkedStates'], 'readonly');
+        const store = transaction.objectStore('checkedStates');
+        const request = store.get(vocabSetID);
+        
+        request.onsuccess = () => {
+            resolve(request.result ? request.result.states : null);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
 
 // ===== INDEXEDDB FOR MONTHLY CYCLE =====
 function initMonthlyDB() {
@@ -2501,7 +2605,7 @@ textImportContent.value = '';
 });
 
 // ===== TEXT IMPORT AND TABLE RENDERING =====
-function processTextImport(text) {
+async function processTextImport(text) {
 vocabularyData = [];
 sectionOrder = [];
 const lines = text.split('\n');
@@ -2535,12 +2639,23 @@ section: currentSection
 }
 }
 
+// Load saved checked states
+const savedStates = await loadCheckedStates();
+if (savedStates) {
+vocabularyData.forEach((item, index) => {
+if (savedStates[index]) {
+item.selected = true;
+}
+});
+}
+
 renderVocabularyTable();
 
 if (vocabularyData.length > 0) {
 startBtn.disabled = false;
 japaneseToEnglishBtn.disabled = false;
 listenChooseBtn.disabled = false;
+document.getElementById('save-checked-btn').style.display = 'inline-block';
 }
 }
 
@@ -3267,11 +3382,22 @@ dateInfoEl.innerHTML = `
 updateDateInfo();
 setInterval(updateDateInfo, 60000);
 
+// ===== SAVE CHECKED BUTTON =====
+document.getElementById('save-checked-btn').addEventListener('click', () => {
+    const checkedCount = vocabularyData.filter(item => item.selected).length;
+    if (checkedCount === 0) {
+        alert('保存するチェック項目がありません。');
+        return;
+    }
+    saveCheckedStates();
+});
+
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', async () => {
    
     initializeTTS();
     await initMonthlyDB();
+    await initCheckedItemsDB();
 
     const refreshReminderPopup = document.getElementById('refresh-reminder-popup');
 
