@@ -1088,7 +1088,7 @@ top: -12px;
 <body>
 <header>
 <div id="date-info" class="date-info"></div>
-<h1>🎌 言葉の達人／語彙力アップ (10.19 proto)</h1>
+<h1>🕺💃単語タンゴ</h1>
 <p class="subtitle">N5-N4 → N3 準備中</p>
 <div class="tts-system-selector">
 <label for="tts-system">音声システム: </label>
@@ -1149,6 +1149,13 @@ top: -12px;
 </tr>
 </tbody>
 </table>
+
+<!-- Add this new button -->
+<div style="text-align: center; margin: 20px 0;">
+    <button id="save-checked-btn" class="text-import-btn" style="padding: 14px 28px; font-size: 18px;">
+        💾 チェックした項目を保存
+    </button>
+</div>
 
 <!-- Text Import Modal -->
 <div id="text-import-modal" class="modal">
@@ -1465,6 +1472,7 @@ const editSaveBtn = document.getElementById('edit-save-btn');
 const editCancelBtn = document.getElementById('edit-cancel-btn');
 const editAiLinkBtn = document.getElementById('edit-ai-link-btn');
 const editClearBtn = document.getElementById('edit-clear-btn');
+const saveCheckedBtn = document.getElementById('save-checked-btn');
 
 // ===== VARIABLES =====
 let isSpeaking = false;
@@ -1508,6 +1516,10 @@ function initMonthlyDB() {
             if (!db.objectStoreNames.contains('entries')) {
                 db.createObjectStore('entries', { keyPath: 'id' });
             }
+// Add this new object store
+    if (!db.objectStoreNames.contains('savedVocab')) {
+        db.createObjectStore('savedVocab', { keyPath: 'id' });
+    }
         };
     });
 }
@@ -1549,6 +1561,47 @@ function deleteEntry(week, day) {
         const request = store.delete(id);
         
         request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Save checked vocabulary items
+function saveCheckedVocab() {
+    return new Promise((resolve, reject) => {
+        const checkedItems = vocabularyData.filter(item => item.selected);
+        
+        if (checkedItems.length === 0) {
+            reject(new Error('チェックされた項目がありません'));
+            return;
+        }
+        
+        const transaction = monthlyDB.transaction(['savedVocab'], 'readwrite');
+        const store = transaction.objectStore('savedVocab');
+        
+        // Save with timestamp
+        const saveData = {
+            id: 'checkedVocab',
+            items: checkedItems,
+            timestamp: new Date().toISOString()
+        };
+        
+        const request = store.put(saveData);
+        
+        request.onsuccess = () => resolve(checkedItems.length);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load saved vocabulary items
+function loadSavedVocab() {
+    return new Promise((resolve, reject) => {
+        const transaction = monthlyDB.transaction(['savedVocab'], 'readonly');
+        const store = transaction.objectStore('savedVocab');
+        const request = store.get('checkedVocab');
+        
+        request.onsuccess = () => {
+            resolve(request.result ? request.result.items : null);
+        };
         request.onerror = () => reject(request.error);
     });
 }
@@ -1943,6 +1996,22 @@ n5_1: `
 友達に会う (tomodachi ni au) = to meet a friend
 私に会いに来る (watashi ni ai ni kuru) = to come to see me
 水を飲む (mizu o nomu) = to drink water
+朝ご飯を食べる (asagohan o taberu) = to eat breakfast
+食べすぎる (tabesugiru) = to eat too much
+旅行に行く (ryokō ni iku) = to go on a trip
+知る (shiru) = to know / to learn
+あなたの名前を知っている (anata no namae o shitte iru) = to know your name
+韓国料理が好き (kankoku ryōri ga suki) = to like Korean food
+この靴が一番好き (kono kutsu ga ichiban suki) = I like these shoes the most
+一人で住む (hitori de sumu) = to live alone
+東京に住んでいる (Tōkyō ni sunde iru) = to live in Tokyo
+晩ご飯を作る (bangohan o tsukuru) = to make dinner
+そのチームと試合をする (sono chīmu to shiai o suru) = to play a match with that team
+新聞を読む (shinbun o yomu) = to read the newspaper
+富士山が見える (Fujisan ga mieru) = to see Mt. Fuji
+日本語を話す (Nihongo o hanasu) = to speak Japanese
+お金が欲しい (okane ga hoshii) = to want money
+テレビを見る (terebi o miru) = to watch TV
 
 ◎例文
 昨日、新しい本を買って電車で読みました。= Yesterday, I bought a new book and read it on the train.
@@ -1950,21 +2019,180 @@ n5_1: `
 週末に友達に会って、一緒に映画を見ました。= I met my friend on the weekend and watched a movie together.
 彼は私に会いに来て、話をたくさんしました。= He came to see me and we talked a lot.
 運動のあとで冷たい水を飲みました。= I drank cold water after exercising.
+家族と一緒に朝ご飯を食べました。= I ate breakfast with my family.
+お腹がすいていて、食べすぎてしまいました。= I was hungry and ended up eating too much.
+夏休みに友達と旅行に行く予定です。= I plan to go on a trip with my friends during summer vacation.
+このことを初めて知りました。= I just learned about this for the first time.
+あなたの名前を知っていると思います。= I think I know your name.
+私は韓国料理が好きで、よく作ります。= I like Korean food and often cook it.
+この靴が一番好きで、毎日履いています。= I like these shoes the most and wear them every day.
+大学を出てから、一人で住んでいます。= I’ve been living alone since graduating from college.
+今、東京に住んでいて、仕事をしています。= I live in Tokyo now and work there.
+晩ご飯を作って、家族と一緒に食べました。= I made dinner and ate it with my family.
+明日、そのチームと試合をする予定です。= Tomorrow, we’re going to play a match with that team.
+朝の新聞を読んで、ニュースを確認しました。= I read the morning newspaper and checked the news.
+ホテルの窓から富士山が見えました。= I could see Mt. Fuji from the hotel window.
+日本語を話すのは少し難しいですが、楽しいです。= Speaking Japanese is a bit difficult, but it’s fun.
+今月はお金が欲しいので、アルバイトをします。= I need money this month, so I’m going to work part-time.
+夜、家族と一緒にテレビを見ました。= I watched TV with my family at night.
 
 `,
 n5_2: `
+◎単語とフレーズ
+ドアを開ける (doa o akeru) = to open the door
+ドアを閉める (doa o shimeru) = to close the door
+プレゼントをもらう (purezento o morau) = to receive a present
+夫を手伝う (otto o tetsudau) = to help one’s husband
+写真を撮る (shashin o toru) = to take a photo
+同僚に会う (dōryō ni au) = to meet a coworker
+歩道を走る (hodō o hashiru) = to run on the sidewalk
+英語の歌を歌う (eigo no uta o utau) = to sing an English song
+椅子に座る (isu ni suwaru) = to sit on a chair
+ベッドで眠る (beddo de nemuru) = to sleep in bed
+日本語を勉強する (nihongo o benkyō suru) = to study Japanese
+プールで泳ぐ (pūru de oyogu) = to swim in the pool
+傘を持って行く (kasa o motte iku) = to take an umbrella
+エコバッグを使う (ekobaggu o tsukau) = to use an eco bag
+皿を洗う (sara o arau) = to wash the dishes
+手紙を書く (tegami o kaku) = to write a letter
+
+◎例文
+朝、部屋の空気を入れるためにドアを開けました。= I opened the door in the morning to let in some fresh air.
+寒かったので、すぐにドアを閉めました。= It was cold, so I quickly closed the door.
+友達から誕生日のプレゼントをもらってうれしかったです。= I was happy to receive a birthday present from my friend.
+夕食のあとで夫を手伝って皿を片づけました。= I helped my husband clean up the dishes after dinner.
+旅行のときにきれいな景色の写真を撮りました。= I took photos of the beautiful scenery during my trip.
+駅の近くで同僚に会って少し話しました。= I met a coworker near the station and chatted a bit.
+朝、歩道を走って学校へ行きます。= I run on the sidewalk in the morning to go to school.
+カラオケで英語の歌を楽しく歌いました。= I happily sang an English song at karaoke.
+疲れたので、椅子に座って少し休みました。= I was tired, so I sat on a chair and rested a bit.
+夜はベッドでぐっすり眠りました。= I slept soundly in my bed at night.
+毎日、日本語を勉強して新しい言葉を覚えています。= I study Japanese every day and learn new words.
+暑い日にプールで泳いで気持ちよかったです。= It felt great to swim in the pool on a hot day.
+雨が降りそうだったので傘を持って行きました。= I took an umbrella with me because it looked like rain.
+買い物に行くときはエコバッグを使います。= I use an eco bag when I go shopping.
+夕食のあとで家族の皿を全部洗いました。= I washed all the dishes for my family after dinner.
+友達に手紙を書いて、ポストに出しました。= I wrote a letter to my friend and sent it by mail.
 
 `,
 n5_3: `
+◎単語とフレーズ
+彼の名前を尋ねる (kare no namae o tazuneru) = to ask his name
+紙を切る (kami o kiru) = to cut paper
+姉と踊る (ane to odoru) = to dance with one’s older sister
+木から落ちる (ki kara ochiru) = to fall from a tree
+海の上を飛ぶ (umi no ue o tobu) = to fly over the sea
+贈り物を渡す (okurimono o watasu) = to give a present
+中国語を学ぶ (chūgokugo o manabu) = to learn Chinese
+音楽を聞く (ongaku o kiku) = to listen to music
+本を机に置く (hon o tsukue ni oku) = to put a book on the desk
+「はい」か「いいえ」と言う ("hai" ka "iie" to iu) = to say “yes” or “no”
+弟に微笑む (otōto ni hohoemu) = to smile at one’s younger brother
+料理を始める (ryōri o hajimeru) = to start cooking
+兄と話す (ani to hanasu) = to talk with one’s older brother
+フランス語を教える (furansugo o oshieru) = to teach French
+妹を持つ (imōto o motsu) = to have a younger sister
+
+◎例文
+初めて会ったとき、彼の名前を尋ねました。= When we first met, I asked for his name.
+はさみで紙を切って、かわいい形を作りました。= I cut the paper with scissors and made a cute shape.
+パーティーで姉と一緒に楽しく踊りました。= I danced happily with my older sister at the party.
+子供のころ、木から落ちてけがをしたことがあります。= When I was a child, I once fell from a tree and got hurt.
+鳥が海の上を飛んでいて、とてもきれいでした。= A bird was flying over the sea, and it was beautiful.
+友達に誕生日の贈り物を渡しました。= I gave my friend a birthday present.
+学校で中国語を学んで、新しい言葉を覚えました。= I learned Chinese at school and memorized new words.
+毎晩、静かな部屋で音楽を聞きます。= I listen to music in a quiet room every evening.
+本を机に置いて、勉強を始めました。= I put the book on the desk and started studying.
+先生の質問に「はい」か「いいえ」と言いました。= I answered the teacher’s question with “yes” or “no.”
+弟に優しく微笑みかけました。= I smiled gently at my younger brother.
+夕方から料理を始めて、カレーを作りました。= I started cooking in the evening and made curry.
+昨日、兄と映画の話をしました。= Yesterday, I talked with my older brother about movies.
+学校でフランス語を教えています。= I teach French at a school.
+私は妹を持っていて、彼女はとても明るいです。= I have a younger sister, and she’s very cheerful.
 
 `,
 n4_1: `
 
 `,
 n4_2: `
+◎単語とフレーズ
+目覚まし時計が鳴る (mezamashi dokei ga naru) = the alarm clock rings
+ベッドから出る (beddo kara deru) = to get out of bed
+起きる (okiru) = to get up; to wake up
+カーテンを開ける (kāten o akeru) = to open the curtains
+トイレに行く (toire ni iku) = to go to the bathroom
+髪をとかす (kami o tokasu) = to comb one’s hair
+歯を磨く (ha o migaku) = to brush one’s teeth
+顔を洗う (kao o arau) = to wash one’s face
+化粧をする (keshō o suru) = to put on makeup
+眼鏡をかける (megane o kakeru) = to put on glasses
+服を着る (fuku o kiru) = to put on clothes
+傘を持って行く (kasa o motte iku) = to take an umbrella
+朝ご飯を食べる (asagohan o taberu) = to eat breakfast
+朝食を抜く (chōshoku o nuku) = to skip breakfast
+弁当を作る (bentō o tsukuru) = to make a bento (lunch box)
+新聞を読む (shinbun o yomu) = to read the newspaper
+散歩をする (sanpo o suru) = to take a walk
+公園で犬の散歩をする (kōen de inu no sanpo o suru) = to walk the dog in the park
+
+◎例文
+目覚まし時計が鳴りました。= The alarm clock rang.
+ベッドから出ました。= I got out of bed.
+毎朝7時に起きます。= I get up at 7 every morning.
+カーテンを開けて、外を見ました。= I opened the curtains and looked outside.
+トイレに行きました。= I went to the bathroom.
+髪をとかしました。= I combed my hair.
+歯を磨きました。= I brushed my teeth.
+顔を洗いました。= I washed my face.
+出かける前に化粧をします。= I put on makeup before going out.
+眼鏡をかけました。= I put on my glasses.
+服を着ました。= I got dressed.
+傘を持って行きました。= I took an umbrella.
+朝ご飯を食べました。= I ate breakfast.
+今日は朝食を抜きました。= I skipped breakfast today.
+弁当を作りました。= I made a bento.
+新聞を読みました。= I read the newspaper.
+朝、公園で散歩をします。= I take a walk in the park in the morning.
+公園で犬の散歩をしました。= I walked my dog in the park.
 
 `,
 n4_3: `
+◎単語とフレーズ
+風呂に入る (furo ni hairu) = to take a bath
+シャワーを浴びる (shawā o abiru) = to take a shower
+服を着替える (fuku o kigaeru) = to change clothes
+少しの間休憩を取る (sukoshi no aida kyūkei o toru) = to take a short break
+ストレスを軽減する (sutoresu o keigen suru) = to reduce stress
+日記をつける (nikki o tsukeru) = to keep a diary
+自分の考えを書き留める (jibun no kangae o kakitomeru) = to write down one’s thoughts
+テレビ番組を見る (terebi bangumi o miru) = to watch a TV program
+明かりを消す (akari o kesu) = to turn off the light
+音をたてる (oto o tateru) = to make a sound / noise
+元気を回復する (genki o kaifuku suru) = to recover energy / feel refreshed
+ソファーでくつろぐ (sofā de kutsurogu) = to relax on the sofa
+友達とおしゃべりする (tomodachi to oshaberi suru) = to chat with friends
+目覚まし時計をセットする (mezamashi dokei o setto suru) = to set the alarm clock
+深呼吸する (shinkokyū suru) = to take a deep breath
+穏やかな夢を見る (odayaka na yume o miru) = to have a peaceful dream
+
+◎例文
+毎晩風呂に入ります。= I take a bath every night.
+朝シャワーを浴びます。= I take a shower in the morning.
+服を着替えました。= I changed my clothes.
+少しの間休憩を取りました。= I took a short break.
+運動してストレスを軽減します。= I reduce stress by exercising.
+毎日夜に日記をつけます。= I write in my diary every night.
+自分の考えを書き留めました。= I wrote down my thoughts.
+テレビ番組を見ています。= I’m watching a TV program.
+寝る前に明かりを消します。= I turn off the light before going to bed.
+静かにして、音をたてないでください。= Be quiet and don’t make noise.
+休んで元気を回復しました。= I rested and recovered my energy.
+ソファーでくつろぎました。= I relaxed on the sofa.
+友達とおしゃべりしました。= I chatted with my friends.
+目覚まし時計をセットしました。= I set the alarm clock.
+ゆっくり深呼吸してください。= Please take a deep breath.
+穏やかな夢を見ました。= I had a peaceful dream.
+
 
 `,
 n3_1: `
@@ -1977,12 +2205,266 @@ n3_3: `
 
 `,
 perfect1: `
+◎ステップ１：文脈から意味を推測しよう（👀 🎧 🎤用）
+週末に友達と試合を見るのが楽しみです。= I look forward to watching a game with my friends on the weekend.
+野菜を食べることは健康にいいです。= Eating vegetables is good for your health.
+音楽を聴くとストレス解消になります。= Listening to music helps relieve stress.
+サイクリングは自然の中で楽しめます。= You can enjoy cycling in nature.
+休みに山登りをしました。= I went mountain climbing on my day off.
+暑い日に走ると汗をかきます。= When you run on a hot day, you sweat.
+練習すればするほど上手になります。= The more you practice, the better you get.
+思いっきり笑うと気分がよくなります。= Laughing with all your energy makes you feel better.
+彼はうれしくて大声で叫びました。= He was so happy that he shouted loudly.
+感動して号泣しました。= I was so moved that I cried hard.
+このアプリでどんなことができるか?= What can you do with this app?
+学校で卓球の大会があります。= There’s a ping-pong tournament at school.
+自転車で湖を巡る旅をしました。= I took a trip cycling around lakes.
+朝の風がとても気持ちいいです。= The morning breeze feels so nice.
+最近、写真を撮ることにはまっています。= Lately, I’m hooked on taking photos.
+自転車がパンクしてしまいました。= My bicycle got a flat tire.
+エアーポンプでタイヤに空気を入れました。= I pumped air into the tire with an air pump.
+夜の道ではライトをつけましょう。= Turn on your light when riding at night.
+自転車にはワイヤー錠を使っています。= I use a wire lock for my bike.
+彼はゲームに熱中しています。= He’s absorbed in video games.
+肥満の人は健康に注意が必要です。= Overweight people need to be careful about their health.
+彼は汗をかきやすいようです。= He seems to sweat easily.
+私は汗をかきにくい方です。= I’m the type who doesn’t sweat much.
+この質問は少し答えにくいです。= This question is a little hard to answer.
+この本はとても読みやすいです。= This book is very easy to read.
+この説明は理解しやすいです。= This explanation is easy to understand.
+毎日ジムに通っています。= I go to the gym every day.
+健康のために筋トレをしています。= I do strength training for my health.
+ヨガプログラムに参加しました。= I joined a yoga program.
+夏は水泳をするのが好きです。= I like swimming in summer.
+ダイエットのために運動しています。= I exercise to lose weight.
+彼は格闘技が得意です。= He’s good at martial arts.
+野球試合の生中継を見ました。= I watched a live broadcast of a baseball game.
+
+---
+
+◎ステップ２：語彙に注目しよう（👀 🎧 🎤用）
+試合を見る (shiai o miru) = to watch a game
+健康にいい (kenkō ni ii) = good for health
+ストレス解消 (sutoresu kaishō) = stress relief
+サイクリング (saikuringu) = cycling
+山登り (yama-nobori) = mountain climbing
+汗をかく (ase o kaku) = to sweat
+~ほど (~ hodo) = the more (you do something), the more...
+思いっきり (omoikkiri) = with all one’s might; fully
+叫ぶ (sakebu) = to shout
+号泣する (gōkyū suru) = to cry hard
+どんな~ができるか? (donna ~ ga dekiru ka?) = what kind of ~ can you do?
+卓球 (takkyū) = table tennis, ping-pong
+湖を巡る (mizuumi o meguru) = to go around lakes
+気持ちいい (kimochi ii) = feels good
+~にはまる (~ ni hamaru) = to be hooked on
+パンク (panku) = flat tire
+エアーポンプ (eā ponpu) = air pump
+ライト (raito) = light
+ワイヤー錠 (waiyā jō) = wire lock
+~に熱中する (~ ni necchū suru) = to be absorbed in
+肥満の人 (himan no hito) = overweight person
+汗をかきやすいようだ (ase o kaki yasui yō da) = seems to sweat easily
+汗をかきにくい方だ (ase o kaki nikui hō da) = tends not to sweat much
+答えにくい (kotae nikui) = hard to answer
+読みやすい (yomi yasui) = easy to read
+理解しやすい (rikai shi yasui) = easy to understand
+ジムに通う (jimu ni kayou) = to go to the gym
+筋トレする (kintore suru) = to do strength training
+ヨガプログラムに参加する (yoga puroguramu ni sanka suru) = to join a yoga program
+水泳 (suiei) = swimming
+ダイエット (daietto) = diet
+格闘技 (kakutōgi) = martial arts
+野球試合の生中継 (yakyū shiai no namachūkei) = live baseball broadcast
+
+---
+
+◎ステップ３：日本語の定義（👀 🎧用）
+スポーツの試合を観ること = 試合を見る
+体にいいこと = 健康にいい
+ストレスをなくすこと = ストレス解消
+自転車で出かける活動 = サイクリング
+山に登ること = 山登り
+体から汗が出ること = 汗をかく
+〜すればするだけ、〜になること = ~ほど
+力いっぱい、思いのままに = 思いっきり
+大きな声で言うこと = 叫ぶ
+大声でたくさん泣くこと = 号泣する
+どんなことができるのかたずねる表現 = どんな~ができるか?
+ピンポンのこと = 卓球
+湖のまわりを回ること = 湖を巡る
+気分がよく感じること = 気持ちいい
+何かに強く興味を持つこと = ~にはまる
+タイヤの空気が抜けること = パンク
+空気を入れる道具 = エアーポンプ
+明るくするための器具 = ライト
+自転車を守るための鍵 = ワイヤー錠
+何かに夢中になること = ~に熱中する
+太っている人 = 肥満の人
+汗をかきやすそうに見えること = 汗をかきやすいようだ
+汗をかきにくいタイプであること = 汗をかきにくい方だ
+答えるのがむずかしいこと = 答えにくい
+読みやすくわかりやすいこと = 読みやすい
+理解するのが簡単なこと = 理解しやすい
+運動施設に行くこと = ジムに通う
+筋肉を強くする運動をすること = 筋トレする
+ヨガの活動に参加すること = ヨガプログラムに参加する
+泳ぐこと = 水泳
+やせるための努力 = ダイエット
+戦うスポーツの総称 = 格闘技
+野球の試合を生で放送すること = 野球試合の生中継
+
+---
+
+◎ステップ４：穴埋めクイズ（🎤用）
+試合を見る = 日曜日に友だちとサッカーの_____予定です。
+健康にいい = 野菜を食べることはとても_____です。
+ストレス解消 = 音楽を聴くと_____になります。
+サイクリング = 休日に友だちと_____に行きました。
+山登り = 夏休みに家族で_____をしました。
+汗をかく = 暑い日は少し歩くだけで_____。
+~ほど = 練習する_____、上手になります。
+思いっきり = 子どもたちは公園で_____遊びました。
+叫ぶ = 彼はうれしくて大声で_____ました。
+号泣する = 映画を見て感動して_____人もいました。
+どんな~ができるか? = このアプリで_____知っていますか?
+卓球 = 学校のクラブで_____をしています。
+湖を巡る = 旅行で自転車に乗って_____コースを走りました。
+気持ちいい = 朝の空気がとても_____です。
+~にはまる = 最近、彼は写真撮影_____ようです。
+パンク = 自転車が_____して困りました。
+エアーポンプ = タイヤの空気を入れるために_____を使いました。
+ライト = 夜は自転車の_____をつけましょう。
+ワイヤー錠 = 自転車を守るために_____をかけました。
+~に熱中する = 彼はオンラインゲーム_____学生です。
+肥満の人 = 運動不足は_____に多い問題です。
+汗をかきやすいようだ = 彼は少し動くだけで_____ね。
+汗をかきにくい方だ = 私は人より_____と思います。
+答えにくい = その質問は少し_____です。
+読みやすい = この本はやさしくてとても_____です。
+理解しやすい = 先生の説明はとても_____です。
+ジムに通う = 健康のために毎日_____ことにしました。
+筋トレする = 彼は筋肉を強くするために_____ています。
+ヨガプログラムに参加する = 週末に_____予定です。
+水泳 = 夏になると_____を楽しむ人が増えます。
+ダイエット = 健康的な_____をしたいです。
+格闘技 = 兄は子どものころから_____を習っています。
+野球試合の生中継 = テレビで_____を見ました。
 
  `,
 perfect2: `
+◎ステップ１：文脈から意味を推測しよう（👀 🎧 🎤用）
+将来のために資格を取ることにしました。= I decided to get a qualification for my future.
+大学では奨学金をもらって勉強しました。= I studied at university with a scholarship.
+彼は毎日一生懸命勉強しています。= He studies very hard every day.
+検定試験に落ちて少し落ち込みました。= I failed the proficiency test and felt a bit down.
+彼は万年不合格で有名です。= He’s known for always failing the exam.
+この仕事には特別な資格が必要です。= This job requires a special qualification.
+彼女は英語の資格を持っています。= She has an English qualification.
+それで、次はどうしたいですか?= So, what do you want to do next?
+資格を取ると賃上げになることもあります。= Getting a qualification can sometimes lead to a pay raise.
+来週のイベントに申し込みました。= I applied for next week’s event.
+ネットで申し込めるのは便利ですね。= It’s convenient that you can apply online.
+彼は試験に受かったらしいです。= It seems he passed the exam.
+今日は疲れて勉強できない。= I’m too tired to study today.
+彼女は毎日塾に通っています。= She goes to cram school every day.
+時間がなくても何とかなると思う。= Even without much time, I think it’ll work out somehow.
+授業中綺麗なノートを取るのが好きです。= I like taking neat notes during class.
+先生の話を聞きながらメモを取りました。= I took notes while listening to the teacher.
+友だちに参考書を貸しました。= I lent a reference book to my friend.
+試験前に過去問を解きました。= I solved past exam questions before the test.
+彼はひたすら問題を解いています。= He’s solving problems tirelessly.
+今から行くのは無理です。= It’s impossible to go now.
+彼女は常に上を目指しています。= She’s always aiming higher.
+あと少しで合格できます。= I can pass if I just push a little more.
+これまでずっと頑張ってきたね。= You’ve really worked hard until now.
+
+---
+
+◎ステップ２：語彙に注目しよう（👀 🎧 🎤用）
+資格を取る (shikaku o toru) = to get a qualification
+奨学金 (shōgakukin) = scholarship
+一生懸命勉強する (isshōkenmei benkyō suru) = to study hard
+検定試験に落ちる (kentei shiken ni ochiru) = to fail a certification exam
+万年不合格 (mannen fugōkaku) = perpetual failure
+仕事に必要な資格 (shigoto ni hitsuyō na shikaku) = qualification needed for a job
+資格を持っている (shikaku o motte iru) = to have a qualification
+それで、 (sorede) = so; and then
+賃上げになる (chin’age ni naru) = to result in a pay raise
+申し込む (mōshikomu) = to apply
+ネットで申し込める (netto de mōshikomeru) = to apply online
+~らしい (~ rashii) = it seems; apparently
+勉強できない (benkyō dekinai) = can’t study
+塾に通う (juku ni kayou) = to go to cram school
+~何とかなる (~ nantoka naru) = it’ll work out somehow
+授業中綺麗なノートを取る (jugyō-chū kirei na nōto o toru) = to take neat notes during class
+メモを取る (memo o toru) = to take notes
+貸す (kasu) = to lend
+過去問を解く (kakomon o toku) = to solve past exam questions
+ひたすら (hitasura) = earnestly; single-mindedly
+無理 (muri) = impossible
+上を目指す (ue o mezasu) = to aim higher
+あと少し (ato sukoshi) = a little more
+頑張ってきた (ganbatte kita) = have worked hard
+
+---
+
+◎ステップ３：日本語の定義（👀 🎧用）
+特別な力を認められるための証をもらうこと = 資格を取る
+学校で使えるお金をもらうこと = 奨学金
+とても熱心に勉強すること = 一生懸命勉強する
+テストで合格しないこと = 検定試験に落ちる
+いつも試験に合格できない人 = 万年不合格
+仕事をするために必要な証明 = 仕事に必要な資格
+資格を持っていること = 資格を持っている
+話をつなげるときに使う言葉 = それで、
+給料が上がること = 賃上げになる
+イベントや試験に申し込むこと = 申し込む
+インターネットで申し込みできること = ネットで申し込める
+聞いた話ではそうだと思うときに使う = ~らしい
+何かの理由で勉強ができないこと = 勉強できない
+先生に教えてもらうために塾に行くこと = 塾に通う
+心配でもなんとかできると思う気持ち = ~何とかなる
+授業できれいにノートを書くこと = 授業中綺麗なノートを取る
+大事なことを短く書くこと = メモを取る
+自分の物を人に使わせること = 貸す
+昔の試験問題を解くこと = 過去問を解く
+一つのことをずっと続けるようす = ひたすら
+できないこと、無理なこと = 無理
+もっと上のレベルを目指すこと = 上を目指す
+あと少しで終わる、できること = あと少し
+今までずっと努力してきたこと = 頑張ってきた
+
+---
+
+◎ステップ４：穴埋めクイズ（🎤用）
+資格を取る = 彼は将来のために_____ことにしました。
+奨学金 = 大学で_____をもらって勉強しています。
+一生懸命勉強する = 毎日_____学生です。
+検定試験に落ちる = 今年もまた_____しまいました。
+万年不合格 = 彼は_____の記録を更新中です。
+仕事に必要な資格 = この会社では_____が求められます。
+資格を持っている = 彼女は英語の_____そうです。
+それで、 = 今日は忙しかったですね。____、どうしますか?
+賃上げになる = この資格を取ると_____こともあります。
+申し込む = 明日のセミナーに_____予定です。
+ネットで申し込める = このイベントは_____から便利です。
+~らしい = 彼は来年海外に行くらしいです。
+勉強できない = 疲れていて今日は_____。
+塾に通う = 子どもは毎日_____ています。
+~何とかなる = 難しいけど、努力すれば_____と思う。
+授業中綺麗なノートを取る = 彼女はいつも_____タイプです。
+メモを取る = 話を聞きながら大事なところを_____ました。
+貸す = 明日までノートを_____よ。
+過去問を解く = 試験前に_____のが大事です。
+ひたすら = 彼は_____勉強を続けています。
+無理 = 今からやるのは_____だと思う。
+上を目指す = 彼は常に_____姿勢を持っています。
+あと少し = 合格まで_____です。
+頑張ってきた = あなたは今まで本当に_____ね。
 
  `
-}; //End of Preset Vocab Data
+}; //End of Preset Vocabulary Data
 
 function isContentEmpty(content) {
 const cleaned = content.replace(/\s+/g, '').replace(/[◎=]/g, '');
@@ -2840,7 +3322,6 @@ setInterval(updateDateInfo, 60000);
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', async () => {
-   
     initializeTTS();
     await initMonthlyDB();
 
@@ -2854,6 +3335,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     closeReminderBtn.addEventListener('click', () => {
         refreshReminderPopup.style.display = 'none';
+    });
+
+    // Save Checked Items button - MOVED HERE
+    saveCheckedBtn.addEventListener('click', async () => {
+        try {
+            const count = await saveCheckedVocab();
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background-color: var(--accent2);
+                color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                z-index: 1000; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            `;
+            successMessage.textContent = `✅ ${count}個の項目を保存しました！`;
+            document.body.appendChild(successMessage);
+            
+            setTimeout(() => {
+                if (document.body.contains(successMessage)) {
+                    document.body.removeChild(successMessage);
+                }
+            }, 3000);
+        } catch (error) {
+            alert(error.message || '保存に失敗しました');
+        }
     });
 });
 
