@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Add these cache control meta tags -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Vocabulary List</title>
+    <title>Vocabulary List (4.1)</title>
     <style>
         * {
             margin: 0;
@@ -1171,7 +1169,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (4.12)</h1>
+        <h1>Vocabulary List (4.1)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -3591,6 +3589,25 @@ initDB().catch(error => {
     await initDB();
     initializeEventListeners();
 });
+
+// Auto-refresh checker - add before closing </script>
+const CURRENT_VERSION = '4.1'; // Update this each time you make changes
+const STORED_VERSION = localStorage.getItem('vocabAppVersion');
+
+if (STORED_VERSION && STORED_VERSION !== CURRENT_VERSION) {
+    console.log(`Version updated from ${STORED_VERSION} to ${CURRENT_VERSION}. Clearing cache...`);
+    // Clear cache and reload
+    if ('caches' in window) {
+        caches.keys().then(names => {
+            names.forEach(name => caches.delete(name));
+        });
+    }
+    localStorage.setItem('vocabAppVersion', CURRENT_VERSION);
+    alert('📢 New version detected! The page will refresh to load updates.\n(偵測到新版本！頁面將重新整理以載入更新。)');
+    location.reload(true); // Force reload from server
+} else if (!STORED_VERSION) {
+    localStorage.setItem('vocabAppVersion', CURRENT_VERSION);
+}
     </script>
 </body>
 </html>
