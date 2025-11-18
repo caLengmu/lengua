@@ -1415,7 +1415,7 @@
                 <button class="overall-vocab-btn close-btn" id="closeOverallVocabBtn">✖ Close</button>
             </div>
         </div>
-        <p style="color: #666; margin-bottom: 20px;">Uncheck the items you've learned and save. (取消勾選已學會的項目並儲存。)</p>
+        <p style="color: red; margin-bottom: 20px; font-size: 20px;">Uncheck the items you've learned and save. (取消勾選已學會的項目並儲存。)</p>
         <div id="overallVocabList"></div>
     </div>
 </div>
@@ -2787,7 +2787,7 @@ async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
             
             const label = document.createElement('label');
             label.htmlFor = checkbox.id;
-            label.textContent = `${section.section} (${checkedCount} words)`;
+            label.textContent = `${section.section} (${checkedCount} items)`;
             
             itemDiv.appendChild(checkbox);
             itemDiv.appendChild(label);
@@ -2932,10 +2932,10 @@ function displayChoices(choices) {
     const grid = document.getElementById('choicesGrid');
     grid.innerHTML = '';
 
-    choices.forEach((choice, index) => {
+    choices.forEach((choice) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.textContent = `[ ${index + 1} ] ${extractChineseTranslation(choice.word)}`;
+        btn.textContent = extractChineseTranslation(choice.word);
         btn.onclick = () => handleChoiceClick(choice, btn);
         grid.appendChild(btn);
     });
