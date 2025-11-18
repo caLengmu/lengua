@@ -2928,18 +2928,18 @@ async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
         }
 
         // Display choices - show only Chinese translation
-        function displayChoices(choices) {
-            const grid = document.getElementById('choicesGrid');
-            grid.innerHTML = '';
+function displayChoices(choices) {
+    const grid = document.getElementById('choicesGrid');
+    grid.innerHTML = '';
 
-            choices.forEach((choice) => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = extractChineseTranslation(choice.word);
-                btn.onclick = () => handleChoiceClick(choice, btn);
-                grid.appendChild(btn);
-            });
-        }
+    choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = `[ ${index + 1} ] ${extractChineseTranslation(choice.word)}`;
+        btn.onclick = () => handleChoiceClick(choice, btn);
+        grid.appendChild(btn);
+    });
+}
 
 // Handle choice click
         function handleChoiceClick(selectedChoice, btn) {
@@ -3114,6 +3114,9 @@ function attachOverallVocabListeners(lessonKey) {
                 `.word-checkbox[data-section-index="${sectionIndex}"]`
             );
             wordCheckboxes.forEach(cb => cb.checked = this.checked);
+            
+            // Update the counter after changing all checkboxes
+            updateSectionCheckbox(sectionIndex);
         });
     });
     
