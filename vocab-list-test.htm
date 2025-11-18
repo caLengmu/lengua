@@ -2530,38 +2530,7 @@ traditionally (adv) (傳統上) % This dish is traditionally eaten during festiv
 `,
 
 'core3': `
-◎Vocabulary List
-debate (n/v) (辯論) % They had a debate about climate change. / They debated the issue for hours. (他們就氣候變遷辯論了好幾個小時。)
-be superior to… (phr.) (比…優越) % This product is superior to the old one. (這個產品比舊的更優越。)
-be inferior to… (phr.) (比…差) % No one wants to feel inferior to others. (沒有人想覺得自己比別人差。)
-intelligent (adj) (聰明的) % She’s one of the most intelligent students in the class. (她是班上最聰明的學生之一。)
-feature (v) (以…為特色、由...主演) % The movie features several famous actors. (這部電影由幾位著名演員主演。)
-graduate (v) (畢業) % She graduated from high school last year. (她去年從高中畢業。)
-a college graduate (n) (大學畢業生) % He’s a college graduate looking for a job. (他是一位正在找工作的⼤學畢業生。)
-graduate school (= grad school) (n) (研究所) % She plans to go to graduate school next year. (她打算明年念研究所。)
-professor (n) (教授) % My professor is an expert in psychology. (我的教授是心理學專家。)
-sample (n) (樣本) % They collected 200 samples for the study. (他們為這項研究收集了兩百個樣本。)
-measure (v) (測量) % We measured the room before buying furniture. (我們在買家具前測量了房間。)
-indicate (v) (指出、顯示) % The results indicate a positive trend. (結果顯示出一個正向的趨勢。)
-emotional (adj) (情緒的) % He gave an emotional speech. (他發表了一場感性的演說。)
-admit (v) (承認) % She admitted that she was wrong. (她承認自己錯了。)
-limited (adj) (有限的) % We have limited time to finish the project. (我們完成這個計畫的時間有限。)
-laboratory (= lab) (n) (實驗室) % The experiment was conducted in a laboratory. (這項實驗在實驗室進行。)
-familiar (adj) (熟悉的) % Are you familiar with this software? (你熟悉這個軟體嗎？)
-match (v) (配對、與…相配) % These shoes match your dress perfectly. (這雙鞋子和你的洋裝非常相配。)
-match (n) (1.比賽) % They won the soccer match. (他們贏了那場足球比賽。)
-match (n) (2.實力相當的對手) % He finally met his match in the competition. (他在比賽中終於遇到實力相當的對手。)
-light a match (phr.) (點燃火柴) % He lit a match to start a fire. (他點燃一根火柴生火。)
-corresponding (adj) (相對應的) % Please fill in the corresponding blanks. (請填入相對應的空格。)
-facial (adj) (臉部的) % She had a serious facial expression. (她的臉部表情很嚴肅。)
-expression (n) (表達方式、用詞) % This expression is common in English. (這個用法在英語中很常見。)
-facial expression (n) (臉部表情) % His facial expression showed surprise. (他的臉部表情顯示出驚訝。)
-interact with someone (phr.) (與某人互動) % Teachers should interact with their students. (老師應該與學生互動。)
-avoid (v) (避免) % You should avoid eating too much sugar. (你應該避免吃太多糖。)
-upset (adj) (難過的、生氣的) % She was upset after hearing the news. (聽到這個消息後她很難過。)
-upset (v) (使心煩、使不安) % His rude words upset everyone. (他無禮的話讓大家都不高興。)
-complex (= complicated vs. simple) (adj) (複雜的) % The problem is more complex than it seems. (這個問題比看起來更複雜。)
-prefer (v) (更喜歡) % I prefer coffee to tea. (我比起茶更喜歡咖啡。)
+
 `,
 
 'backup': `  
@@ -2672,7 +2641,7 @@ prefer (v) (更喜歡) % I prefer coffee to tea. (我比起茶更喜歡咖啡。
     const data = vocabDatabase[lessonKey];
 
     if (!data || data.length === 0) {
-        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. (暫無資料，請等待更新)</td></tr>';
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. <br>(暫無資料，請等待更新)</td></tr>';
         document.getElementById('overallVocabSection').style.display = 'none';
         return;
     }
@@ -3410,15 +3379,26 @@ function attachBubbleEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
 
             // Lesson buttons
-            const lessonButtons = document.querySelectorAll('.vocab-btn');
-            lessonButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    lessonButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const lessonKey = this.getAttribute('data-lesson');
-                    loadVocabulary(lessonKey);
+const lessonButtons = document.querySelectorAll('.vocab-btn');
+lessonButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        lessonButtons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const lessonKey = this.getAttribute('data-lesson');
+        loadVocabulary(lessonKey);
+        
+        // Scroll to Vocabulary Management section after a short delay
+        setTimeout(() => {
+            const overallVocabSection = document.getElementById('overallVocabSection');
+            if (overallVocabSection && overallVocabSection.style.display !== 'none') {
+                overallVocabSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
                 });
-            });
+            }
+        }, 50);
+    });
+});
 
             // Speed buttons
             const speedButtons = document.querySelectorAll('.speed-btn');
