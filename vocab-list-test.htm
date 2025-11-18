@@ -139,6 +139,58 @@
             background-color: #f0f0f0;
         }
 
+/* Floating Back to Top Button */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 1000;
+    transition: all 0.3s;
+}
+
+.back-to-top-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.back-to-top-btn.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .back-to-top-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
         @media (max-width: 768px) {
             .section-selector-area {
                 padding: 15px;
@@ -1173,8 +1225,11 @@
     </style>
 </head>
 <body>
+    <!-- Back to Top Button -->
+    <button class="back-to-top-btn" id="backToTopBtn" title="Back to lesson buttons">⬆️</button>
+    
     <div class="container">
-        <h1>Vocabulary List (4.1)</h1>
+        <h1>Vocabulary List (4.2)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1787,7 +1842,9 @@ structure (n) (建築物、構造) % The ancient structure still stands today. (
 unforgettable (adj) (難忘的) % It was an unforgettable experience. (那是一段難忘的經歷。)
 involve (v) (涉及、包含) % The job involves working with people. (這份工作涉及與人合作。)
 come face to face with… (phr.) (面對…) % We came face to face with a wild deer. (我們正面遇上一頭野鹿。)
-delicate (adj) (精緻的、柔弱的) % The artist painted delicate flowers. (那位藝術家畫出了精緻的花朵。)
+delicate (adj) (1.精緻的) % This vase has delicate patterns of flowers. (這個花瓶有精緻的花紋。)
+delicate (adj) (2.易碎的、容易損壞的) % This china teacup is delicate and easily broken. (這個陶瓷茶杯很脆弱且容易打破。)
+delicate (adj) (3.需要小心處理的) % You need to carefully handle this delicate problem. (你需要小心處理這個棘手的問題。)
 silk (n) (絲綢) % The kimono is made of silk. (這件和服是用絲綢做的。)
 sleeve(s) (n) (袖子) % Her long sleeves moved gracefully. (她的長袖優雅地飄動。)
 distinctive (adj) (獨特的) % She has a distinctive voice. (她有一個獨特的聲音。)
@@ -1928,7 +1985,8 @@ effective (adj) (有效的) % This medicine is very effective for a cold. (這�
 technique (n) (技術) % He has a great technique for painting. (他有很棒的繪畫技術。)
 grow crops (phr) (種植農作物) % Farmers grow crops like rice and wheat. (農民種植稻米和小麥等農作物。)
 care for someone (phr) (照顧某人) % She needs to care for her sick mother. (她需要照顧她生病的母親。)
-path (n) (小徑) % We followed a small path through the woods. (我們沿著一條穿過樹林的小徑走。)
+path (n) (1.路徑) % We followed a narrow path to the river. (我們沿著一條狹窄的路徑走向河流。)
+path (n) (2.達到某結果的途徑) % Hard work is the path to success. (努力工作是通往成功的途徑。)
 be lined with… (phr) (沿著…排列) % The street is lined with beautiful trees. (這條街沿著美麗的樹木排列。)
 navigate (v) (導航、確定方位) % He used a map to navigate the ship. (他使用地圖來導航船隻。)
 
@@ -3417,6 +3475,39 @@ function attachBubbleEventListeners() {
     updateStudySession();
 }
 
+// Show/hide back to top button based on scroll position
+function handleBackToTopButton() {
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const buttonCategories = document.querySelector('.button-categories');
+    
+    if (!backToTopBtn || !buttonCategories) return;
+    
+    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+    
+    // Show button when scrolled past the lesson buttons
+    if (window.scrollY > buttonCategoriesBottom + 100) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+}
+
+// Scroll to top (lesson buttons area)
+function scrollToTop() {
+    const buttonCategories = document.querySelector('.button-categories');
+    if (buttonCategories) {
+        buttonCategories.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    } else {
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+    }
+}
+
         // ============ INITIALIZE EVENT LISTENERS ============
 
         function initializeEventListeners() {
@@ -3533,6 +3624,18 @@ initDB().catch(error => {
 
             // Keyboard navigation
             document.addEventListener('keydown', handleKeyboardNavigation);
+            
+            // Back to top button
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', scrollToTop);
+            }
+            
+            // Show/hide back to top button on scroll
+            window.addEventListener('scroll', handleBackToTopButton);
+            
+            // Initial check for back to top button
+            handleBackToTopButton();
         }
 
         // Handle keyboard navigation
