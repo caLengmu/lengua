@@ -142,7 +142,7 @@
 /* Floating Navigation Buttons */
 .floating-nav-buttons {
     position: fixed;
-    bottom: 30px;
+    bottom: 80px;
     right: 30px;
     display: flex;
     flex-direction: column;
@@ -197,7 +197,7 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
     .floating-nav-buttons {
-        bottom: 20px;
+        bottom: 70px;
         right: 20px;
         gap: 8px;
     }
@@ -206,6 +206,68 @@
         width: 50px;
         height: 50px;
         font-size: 20px;
+    }
+}
+
+/* Floating Progress Bar */
+.progress-bar-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: #ecf0f1;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 999;
+}
+
+.progress-bar-container.show {
+    display: block;
+    animation: slideUp 0.3s;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, #3498db, #2980b9);
+    width: 0%;
+    transition: width 0.1s ease-out;
+}
+
+.progress-bar-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .progress-bar-container {
+        height: 45px;
+    }
+    
+    .progress-bar-text {
+        font-size: 14px;
+        padding: 0 10px;
     }
 }
 
@@ -1249,8 +1311,14 @@
         <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
     </div>
     
+<!-- Progress Bar -->
+    <div class="progress-bar-container" id="progressBarContainer">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+        <div class="progress-bar-text" id="progressBarText">Section Title</div>
+    </div>
+
     <div class="container">
-        <h1>Vocabulary List (4.3)</h1>
+        <h1>Vocabulary List (4.4)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -3561,6 +3629,63 @@ function scrollToNextSection() {
     });
 }
 
+// Update progress bar based on scroll position
+function updateProgressBar() {
+    const progressContainer = document.getElementById('progressBarContainer');
+    const progressFill = document.getElementById('progressBarFill');
+    const progressText = document.getElementById('progressBarText');
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (!progressContainer || !progressFill || !progressText || sectionHeaders.length === 0) {
+        return;
+    }
+    
+    const buttonCategories = document.querySelector('.button-categories');
+    const buttonCategoriesBottom = buttonCategories ? buttonCategories.offsetTop + buttonCategories.offsetHeight : 0;
+    
+    // Show progress bar only when scrolled past lesson buttons
+    if (window.scrollY > buttonCategoriesBottom + 100) {
+        progressContainer.classList.add('show');
+    } else {
+        progressContainer.classList.remove('show');
+        return;
+    }
+    
+    const scrollPos = window.scrollY;
+    let currentSection = null;
+    let currentSectionIndex = -1;
+    
+    // Find which section we're currently in
+    for (let i = 0; i < sectionHeaders.length; i++) {
+        const sectionTop = sectionHeaders[i].offsetTop;
+        const nextSectionTop = i < sectionHeaders.length - 1 
+            ? sectionHeaders[i + 1].offsetTop 
+            : document.body.scrollHeight;
+        
+        if (scrollPos >= sectionTop - 100 && scrollPos < nextSectionTop - 100) {
+            currentSection = sectionHeaders[i];
+            currentSectionIndex = i;
+            break;
+        }
+    }
+    
+    // If we found a current section, calculate progress
+    if (currentSection && currentSectionIndex !== -1) {
+        const sectionTop = currentSection.offsetTop;
+        const nextSectionTop = currentSectionIndex < sectionHeaders.length - 1 
+            ? sectionHeaders[currentSectionIndex + 1].offsetTop 
+            : document.body.scrollHeight;
+        
+        const sectionHeight = nextSectionTop - sectionTop;
+        const scrollIntoSection = scrollPos - sectionTop;
+        const progress = Math.min(Math.max((scrollIntoSection / sectionHeight) * 100, 0), 100);
+        
+        // Update progress bar
+        progressFill.style.width = progress + '%';
+        progressText.textContent = currentSection.textContent.replace('▼', '').replace('▶', '').trim();
+    }
+}
+
         // ============ INITIALIZE EVENT LISTENERS ============
 
         function initializeEventListeners() {
@@ -3693,8 +3818,12 @@ initDB().catch(error => {
             // Show/hide floating buttons on scroll
             window.addEventListener('scroll', handleFloatingButtons);
             
-            // Initial check for floating buttons
+            // Update progress bar on scroll
+            window.addEventListener('scroll', updateProgressBar);
+            
+            // Initial check for floating buttons and progress bar
             handleFloatingButtons();
+            updateProgressBar();
         }
 
         // Handle keyboard navigation
