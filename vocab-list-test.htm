@@ -139,11 +139,18 @@
             background-color: #f0f0f0;
         }
 
-/* Floating Back to Top Button */
-.back-to-top-btn {
+/* Floating Navigation Buttons */
+.floating-nav-buttons {
     position: fixed;
     bottom: 30px;
     right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.floating-nav-btn {
     width: 60px;
     height: 60px;
     background-color: #3498db;
@@ -154,19 +161,26 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     display: none;
-    z-index: 1000;
     transition: all 0.3s;
 }
 
-.back-to-top-btn:hover {
+.floating-nav-btn:hover {
     background-color: #2980b9;
     transform: translateY(-3px);
     box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
-.back-to-top-btn.show {
+.floating-nav-btn.show {
     display: block;
     animation: fadeIn 0.3s;
+}
+
+.next-section-btn {
+    background-color: #27ae60;
+}
+
+.next-section-btn:hover {
+    background-color: #229954;
 }
 
 @keyframes fadeIn {
@@ -182,12 +196,16 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
-    .back-to-top-btn {
+    .floating-nav-buttons {
+        bottom: 20px;
+        right: 20px;
+        gap: 8px;
+    }
+    
+    .floating-nav-btn {
         width: 50px;
         height: 50px;
         font-size: 20px;
-        bottom: 20px;
-        right: 20px;
     }
 }
 
@@ -1225,11 +1243,14 @@
     </style>
 </head>
 <body>
-    <!-- Back to Top Button -->
-    <button class="back-to-top-btn" id="backToTopBtn" title="Back to lesson buttons">⬆️</button>
+    <!-- Floating Navigation Buttons -->
+    <div class="floating-nav-buttons">
+        <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">⬆️</button>
+        <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
+    </div>
     
     <div class="container">
-        <h1>Vocabulary List (4.2)</h1>
+        <h1>Vocabulary List (4.3)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -3475,20 +3496,23 @@ function attachBubbleEventListeners() {
     updateStudySession();
 }
 
-// Show/hide back to top button based on scroll position
-function handleBackToTopButton() {
+// Show/hide floating navigation buttons based on scroll position
+function handleFloatingButtons() {
     const backToTopBtn = document.getElementById('backToTopBtn');
+    const nextSectionBtn = document.getElementById('nextSectionBtn');
     const buttonCategories = document.querySelector('.button-categories');
     
-    if (!backToTopBtn || !buttonCategories) return;
+    if (!backToTopBtn || !nextSectionBtn || !buttonCategories) return;
     
     const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
     
-    // Show button when scrolled past the lesson buttons
+    // Show buttons when scrolled past the lesson buttons
     if (window.scrollY > buttonCategoriesBottom + 100) {
         backToTopBtn.classList.add('show');
+        nextSectionBtn.classList.add('show');
     } else {
         backToTopBtn.classList.remove('show');
+        nextSectionBtn.classList.remove('show');
     }
 }
 
@@ -3506,6 +3530,35 @@ function scrollToTop() {
             behavior: 'smooth' 
         });
     }
+}
+
+// Scroll to next section header
+function scrollToNextSection() {
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (sectionHeaders.length === 0) return;
+    
+    const currentScrollPos = window.scrollY;
+    
+    // Find the next section header below current scroll position
+    for (let i = 0; i < sectionHeaders.length; i++) {
+        const headerPos = sectionHeaders[i].offsetTop;
+        
+        // Add a small buffer (100px) to avoid selecting the current section
+        if (headerPos > currentScrollPos + 100) {
+            sectionHeaders[i].scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+            return;
+        }
+    }
+    
+    // If no next section found, scroll to bottom
+    window.scrollTo({ 
+        top: document.body.scrollHeight, 
+        behavior: 'smooth' 
+    });
 }
 
         // ============ INITIALIZE EVENT LISTENERS ============
@@ -3625,17 +3678,23 @@ initDB().catch(error => {
             // Keyboard navigation
             document.addEventListener('keydown', handleKeyboardNavigation);
             
-            // Back to top button
+            // Floating navigation buttons
             const backToTopBtn = document.getElementById('backToTopBtn');
+            const nextSectionBtn = document.getElementById('nextSectionBtn');
+            
             if (backToTopBtn) {
                 backToTopBtn.addEventListener('click', scrollToTop);
             }
             
-            // Show/hide back to top button on scroll
-            window.addEventListener('scroll', handleBackToTopButton);
+            if (nextSectionBtn) {
+                nextSectionBtn.addEventListener('click', scrollToNextSection);
+            }
             
-            // Initial check for back to top button
-            handleBackToTopButton();
+            // Show/hide floating buttons on scroll
+            window.addEventListener('scroll', handleFloatingButtons);
+            
+            // Initial check for floating buttons
+            handleFloatingButtons();
         }
 
         // Handle keyboard navigation
