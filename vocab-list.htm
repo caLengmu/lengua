@@ -139,6 +139,76 @@
             background-color: #f0f0f0;
         }
 
+/* Floating Navigation Buttons */
+.floating-nav-buttons {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.floating-nav-btn {
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: none;
+    transition: all 0.3s;
+}
+
+.floating-nav-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.floating-nav-btn.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+.next-section-btn {
+    background-color: #27ae60;
+}
+
+.next-section-btn:hover {
+    background-color: #229954;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .floating-nav-buttons {
+        bottom: 20px;
+        right: 20px;
+        gap: 8px;
+    }
+    
+    .floating-nav-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
         @media (max-width: 768px) {
             .section-selector-area {
                 padding: 15px;
@@ -1173,8 +1243,14 @@
     </style>
 </head>
 <body>
+    <!-- Floating Navigation Buttons -->
+    <div class="floating-nav-buttons">
+        <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
+        <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
+    </div>
+    
     <div class="container">
-        <h1>Vocabulary List (4.1)</h1>
+        <h1>Vocabulary List (4.3)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -3420,6 +3496,71 @@ function attachBubbleEventListeners() {
     updateStudySession();
 }
 
+// Show/hide floating navigation buttons based on scroll position
+function handleFloatingButtons() {
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const nextSectionBtn = document.getElementById('nextSectionBtn');
+    const buttonCategories = document.querySelector('.button-categories');
+    
+    if (!backToTopBtn || !nextSectionBtn || !buttonCategories) return;
+    
+    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+    
+    // Show buttons when scrolled past the lesson buttons
+    if (window.scrollY > buttonCategoriesBottom + 100) {
+        backToTopBtn.classList.add('show');
+        nextSectionBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+        nextSectionBtn.classList.remove('show');
+    }
+}
+
+// Scroll to top (lesson buttons area)
+function scrollToTop() {
+    const buttonCategories = document.querySelector('.button-categories');
+    if (buttonCategories) {
+        buttonCategories.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    } else {
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+    }
+}
+
+// Scroll to next section header
+function scrollToNextSection() {
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (sectionHeaders.length === 0) return;
+    
+    const currentScrollPos = window.scrollY;
+    
+    // Find the next section header below current scroll position
+    for (let i = 0; i < sectionHeaders.length; i++) {
+        const headerPos = sectionHeaders[i].offsetTop;
+        
+        // Add a small buffer (100px) to avoid selecting the current section
+        if (headerPos > currentScrollPos + 100) {
+            sectionHeaders[i].scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+            return;
+        }
+    }
+    
+    // If no next section found, scroll to bottom
+    window.scrollTo({ 
+        top: document.body.scrollHeight, 
+        behavior: 'smooth' 
+    });
+}
+
         // ============ INITIALIZE EVENT LISTENERS ============
 
         function initializeEventListeners() {
@@ -3536,6 +3677,24 @@ initDB().catch(error => {
 
             // Keyboard navigation
             document.addEventListener('keydown', handleKeyboardNavigation);
+            
+            // Floating navigation buttons
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const nextSectionBtn = document.getElementById('nextSectionBtn');
+            
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', scrollToTop);
+            }
+            
+            if (nextSectionBtn) {
+                nextSectionBtn.addEventListener('click', scrollToNextSection);
+            }
+            
+            // Show/hide floating buttons on scroll
+            window.addEventListener('scroll', handleFloatingButtons);
+            
+            // Initial check for floating buttons
+            handleFloatingButtons();
         }
 
         // Handle keyboard navigation
