@@ -289,6 +289,13 @@
     flex: 1;
 }
 
+.section-count {
+    font-size: 0.9em;
+    color: red;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
 .vocab-items-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1167,7 +1174,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vocabulary List (4.0)</h1>
+        <h1>Vocabulary List (4.1)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1408,7 +1415,7 @@
                 <button class="overall-vocab-btn close-btn" id="closeOverallVocabBtn">✖ Close</button>
             </div>
         </div>
-        <p style="color: #666; margin-bottom: 20px;">Uncheck the items you've learned and save. (取消勾選已學會的項目並儲存。)</p>
+        <p style="color: red; margin-bottom: 20px; font-size: 18px;">Uncheck the items you've learned and save. (取消勾選已學會的項目並儲存。)</p>
         <div id="overallVocabList"></div>
     </div>
 </div>
@@ -1780,7 +1787,9 @@ structure (n) (建築物、構造) % The ancient structure still stands today. (
 unforgettable (adj) (難忘的) % It was an unforgettable experience. (那是一段難忘的經歷。)
 involve (v) (涉及、包含) % The job involves working with people. (這份工作涉及與人合作。)
 come face to face with… (phr.) (面對…) % We came face to face with a wild deer. (我們正面遇上一頭野鹿。)
-delicate (adj) (精緻的、柔弱的) % The artist painted delicate flowers. (那位藝術家畫出了精緻的花朵。)
+delicate (adj) (1.精緻的) % This vase has delicate patterns of flowers. (這個花瓶有精緻的花紋。)
+delicate (adj) (2.易碎的、容易損壞的) % This china teacup is delicate and easily broken. (這個陶瓷茶杯很脆弱且容易打破。)
+delicate (adj) (3.需要小心處理的) % You need to carefully handle this delicate problem. (你需要小心處理這個棘手的問題。)
 silk (n) (絲綢) % The kimono is made of silk. (這件和服是用絲綢做的。)
 sleeve(s) (n) (袖子) % Her long sleeves moved gracefully. (她的長袖優雅地飄動。)
 distinctive (adj) (獨特的) % She has a distinctive voice. (她有一個獨特的聲音。)
@@ -1921,7 +1930,8 @@ effective (adj) (有效的) % This medicine is very effective for a cold. (這�
 technique (n) (技術) % He has a great technique for painting. (他有很棒的繪畫技術。)
 grow crops (phr) (種植農作物) % Farmers grow crops like rice and wheat. (農民種植稻米和小麥等農作物。)
 care for someone (phr) (照顧某人) % She needs to care for her sick mother. (她需要照顧她生病的母親。)
-path (n) (小徑) % We followed a small path through the woods. (我們沿著一條穿過樹林的小徑走。)
+path (n) (1.路徑) % We followed a narrow path to the river. (我們沿著一條狹窄的路徑走向河流。)
+path (n) (2.達到某結果的途徑) % Hard work is the path to success. (努力工作是通往成功的途徑。)
 be lined with… (phr) (沿著…排列) % The street is lined with beautiful trees. (這條街沿著美麗的樹木排列。)
 navigate (v) (導航、確定方位) % He used a map to navigate the ship. (他使用地圖來導航船隻。)
 
@@ -2663,8 +2673,20 @@ prefer (v) (更喜歡) % I prefer coffee to tea. (我比起茶更喜歡咖啡。
     const data = vocabDatabase[lessonKey];
 
     if (!data || data.length === 0) {
-        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. (暫無資料，請等待更新)</td></tr>';
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. <br>(暫無資料，請等待更新)</td></tr>';
         document.getElementById('overallVocabSection').style.display = 'none';
+        
+        // Scroll to show the "No data" message
+        setTimeout(() => {
+            const vocabTable = document.getElementById('vocabTable');
+            if (vocabTable) {
+                vocabTable.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }
+        }, 50);
+        
         return;
     }
 
@@ -2768,7 +2790,7 @@ async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
             
             const label = document.createElement('label');
             label.htmlFor = checkbox.id;
-            label.textContent = `${section.section} (${checkedCount} words)`;
+            label.textContent = `${section.section} (${checkedCount} items)`;
             
             itemDiv.appendChild(checkbox);
             itemDiv.appendChild(label);
@@ -2909,18 +2931,18 @@ async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
         }
 
         // Display choices - show only Chinese translation
-        function displayChoices(choices) {
-            const grid = document.getElementById('choicesGrid');
-            grid.innerHTML = '';
+function displayChoices(choices) {
+    const grid = document.getElementById('choicesGrid');
+    grid.innerHTML = '';
 
-            choices.forEach((choice) => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = extractChineseTranslation(choice.word);
-                btn.onclick = () => handleChoiceClick(choice, btn);
-                grid.appendChild(btn);
-            });
-        }
+    choices.forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = extractChineseTranslation(choice.word);
+        btn.onclick = () => handleChoiceClick(choice, btn);
+        grid.appendChild(btn);
+    });
+}
 
 // Handle choice click
         function handleChoiceClick(selectedChoice, btn) {
@@ -3043,15 +3065,22 @@ async function populateOverallVocabList(lessonKey) {
     let html = '';
     
     lessonData.forEach((section, sectionIndex) => {
-        const sectionId = `section_${lessonKey}_${sectionIndex}`;
-        
-        html += `<div class="vocab-section-block">
-            <div class="section-title-row">
-                <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
-                       data-section-index="${sectionIndex}" checked>
-                <label for="${sectionId}_all">${section.section}</label>
-            </div>
-            <div class="vocab-items-grid">`;
+    const sectionId = `section_${lessonKey}_${sectionIndex}`;
+    
+    // Count checked words in this section
+    let checkedCount = 0;
+    section.words.forEach((word, wordIndex) => {
+        const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+        if (isChecked) checkedCount++;
+    });
+    
+    html += `<div class="vocab-section-block">
+        <div class="section-title-row">
+            <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
+                   data-section-index="${sectionIndex}" checked>
+            <label for="${sectionId}_all">${section.section} <span class="section-count" id="count_${sectionIndex}">(${checkedCount} items checked)</span></label>
+        </div>
+        <div class="vocab-items-grid">`;
         
         section.words.forEach((word, wordIndex) => {
     const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
@@ -3088,6 +3117,9 @@ function attachOverallVocabListeners(lessonKey) {
                 `.word-checkbox[data-section-index="${sectionIndex}"]`
             );
             wordCheckboxes.forEach(cb => cb.checked = this.checked);
+            
+            // Update the counter after changing all checkboxes
+            updateSectionCheckbox(sectionIndex);
         });
     });
     
@@ -3117,6 +3149,13 @@ function updateSectionCheckbox(sectionIndex) {
     
     sectionCheckbox.checked = allChecked;
     sectionCheckbox.indeterminate = !allChecked && !noneChecked;
+    
+    // Update the count
+    const checkedCount = Array.from(wordCheckboxes).filter(cb => cb.checked).length;
+    const countSpan = document.getElementById(`count_${sectionIndex}`);
+    if (countSpan) {
+        countSpan.textContent = `(${checkedCount} items checked)`;
+    }
 }
 
 async function saveOverallVocabState() {
@@ -3387,15 +3426,26 @@ function attachBubbleEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
 
             // Lesson buttons
-            const lessonButtons = document.querySelectorAll('.vocab-btn');
-            lessonButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    lessonButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const lessonKey = this.getAttribute('data-lesson');
-                    loadVocabulary(lessonKey);
+const lessonButtons = document.querySelectorAll('.vocab-btn');
+lessonButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        lessonButtons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const lessonKey = this.getAttribute('data-lesson');
+        loadVocabulary(lessonKey);
+        
+        // Scroll to Vocabulary Management section after a short delay
+        setTimeout(() => {
+            const overallVocabSection = document.getElementById('overallVocabSection');
+            if (overallVocabSection && overallVocabSection.style.display !== 'none') {
+                overallVocabSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
                 });
-            });
+            }
+        }, 50);
+    });
+});
 
             // Speed buttons
             const speedButtons = document.querySelectorAll('.speed-btn');
