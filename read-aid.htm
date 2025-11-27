@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Aid</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 2.5em;
+        }
+
+        .button-categories {
+            margin-bottom: 30px;
+        }
+
+        .category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .lesson-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .lesson-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .lesson-btn.active {
+            background-color: #e74c3c;
+        }
+
+        .speed-control-section {
+            margin: 30px 0;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+
+        .speed-label {
+            font-weight: bold;
+            color: #495057;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .speed-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .speed-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .speed-btn.active-speed {
+            background-color: #28a745;
+        }
+
+        .text-table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .text-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .section-header {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.5em;
+            color: #2c3e50;
+        }
+
+        .text-row {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .audio-controls {
+            width: 80px;
+            text-align: center;
+            padding: 15px 10px;
+            vertical-align: top;
+        }
+
+        .content-cell {
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .english-text {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .chinese-translation {
+            font-size: 1.5em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 2px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+        }
+
+        .audio-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .play-btn {
+            color: #27ae60;
+        }
+
+        .stop-btn {
+            color: #e74c3c;
+        }
+
+        .easy-btn {
+            color: #f39c12;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: red;
+            font-size: 25px;
+        }
+
+        /* Easy Version Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .easy-version-content {
+            margin-top: 20px;
+        }
+
+        .easy-version-text {
+            font-size: 1.8em;
+            color: #2c3e50;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .easy-audio-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .easy-audio-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+
+        .easy-audio-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .easy-audio-btn.stop {
+            background-color: #e74c3c;
+        }
+
+        .easy-audio-btn.stop:hover {
+            background-color: #c0392b;
+        }
+
+        /* Welcome Notice Modal */
+        #welcomeModal .modal-content {
+            max-width: 500px;
+        }
+
+        /* Floating Navigation Buttons */
+        .floating-nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .floating-nav-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            transition: all 0.3s;
+        }
+
+        .floating-nav-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .floating-nav-btn.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .next-section-btn {
+            background-color: #27ae60;
+        }
+
+        .next-section-btn:hover {
+            background-color: #229954;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .category-title {
+                font-size: 1.2em;
+            }
+
+            .lesson-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .speed-control-section {
+                padding: 10px;
+            }
+
+            .speed-label {
+                display: block;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .speed-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin: 2px;
+            }
+
+            .section-header {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+
+            .audio-controls {
+                width: 60px;
+                padding: 10px 5px;
+            }
+
+            .content-cell {
+                padding: 12px;
+            }
+
+            .english-text {
+                font-size: 1.5em;
+            }
+
+            .chinese-translation {
+                font-size: 1.5em;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            .easy-version-text {
+                font-size: 1.5em;
+            }
+
+            .floating-nav-buttons {
+                bottom: 20px;
+                right: 20px;
+                gap: 8px;
+            }
+            
+            .floating-nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Navigation Buttons -->
+    <div class="floating-nav-buttons">
+        <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
+        <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
+    </div>
+    
+    <div class="container">
+        <h1>Read Aid</h1>
+
+        <div class="button-categories">
+            <div class="category">
+                <div class="category-title">Textbook: Book 3 (課本第三冊)</div>
+                <div class="category-buttons">
+                    <button class="lesson-btn" data-lesson="text1">B3 L7 課文</button>
+                    <button class="lesson-btn" data-lesson="text2">B3 L8 課文</button>
+                    <button class="lesson-btn" data-lesson="text3">B3 L9 課文</button>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">Magazine: All+ December 2026</div>
+                <div class="category-buttons">
+                    <button class="lesson-btn" data-lesson="maga1">U2 Baseball</button>
+                    <button class="lesson-btn" data-lesson="maga2">U4 Ban</button>
+                    <button class="lesson-btn" data-lesson="maga3">U5 Viruses</button>
+                    <button class="lesson-btn" data-lesson="maga4">U14 Study Approaches</button>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">核心字彙</div>
+                <div class="category-buttons">
+                    <button class="lesson-btn" data-lesson="core1">U7 Ballpoint Pen</button>
+                    <button class="lesson-btn" data-lesson="core2">U8 Pancakes</button>
+                    <button class="lesson-btn" data-lesson="core3">U9 Homeless</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speed Control -->
+        <div class="speed-control-section">
+            <span class="speed-label">Speed (語速):</span>
+            <button class="speed-btn" data-speed="1.2">1.2x</button>
+            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
+            <button class="speed-btn" data-speed="0.8">0.8x</button>
+            <button class="speed-btn" data-speed="0.6">0.6x</button>
+        </div>
+
+        <!-- Table -->
+        <div class="text-table-container">
+            <table class="text-table" id="textTable">
+                <tbody id="textTableBody">
+                    <tr class="no-data">
+                        <td colspan="2">Select a lesson to load content <br>(選擇單元以載入內容)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Welcome Notice Modal -->
+    <div id="welcomeModal" class="modal" style="display: block;">
+        <div class="modal-content">
+            <div style="text-align: center; padding: 10px;">
+                <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Welcome to Read Aid</h2>
+                <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
+                    <p style="margin-bottom: 15px;">This tool helps you improve reading and listening comprehension.</p>
+                    <p style="margin-bottom: 15px;">Features:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Listen to English text with natural speech</li>
+                        <li>See Chinese translations</li>
+                        <li>Access simplified versions (😊 icon)</li>
+                        <li>Adjust playback speed</li>
+                    </ul>
+                </div>
+                <button id="welcomeOkBtn" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Easy Version Modal -->
+    <div id="easyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeEasyModal">&times;</span>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">😊 Easy Version</h2>
+            <div class="easy-version-content">
+                <div class="easy-version-text" id="easyVersionText"></div>
+                <div class="easy-audio-controls">
+                    <button class="easy-audio-btn" id="playEasyBtn">🔊 Play</button>
+                    <button class="easy-audio-btn stop" id="stopEasyBtn" style="background-color: #e74c3c;">⏹ Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simplified text database - raw format
+        const textDatabaseRaw = {
+            'text1': `◎Paragraph 1
+The theory that spoken words account for only about seven percent of communication involving emotions may surprise many people. This was first proposed by Dr. Albert Mehrabian, a famous psychology professor. According to his studies, we achieve about 55% of our emotional communication with our bodies, for they typically demonstrate our true feelings and what we’re actually thinking. Therefore, understanding people’s body language is an important ability to help us better interpret others’ messages. % 口說語言只占情感溝通大約百分之七的理論可能會使許多人驚訝。這項理論最初是由一位知名心理學教授艾伯特．麥拉賓博士所提出。根據他的研究，我們用身體進行大約百分之五十五的情感溝通，因為它們通常表達我們真實的情感及我們真正的想法。因此，了解人們的身體語言是很重要的能力，可以幫助我們更加理解其他人傳達的訊息。% easy 1
+◎Paragraph 2
+Being able to read body language well is helpful in determining whether or not someone is telling the truth. When people are lying, there are usually three telltale signs: making stiff body movements, touching or scratching themselves, and making eye movements. Typically, liars exhibit fewer arm and hand gestures. When they do make such gestures, their movements are usually stiff, and their hands tend to stay close to the body rather than move in an outward direction. Moreover, liars often can’t help but touch or scratch their faces, their necks, or behind their ears. They sometimes rub their eyes without being conscious of it as well. Whether people are telling falsehoods or not can also be detected by observing how their eyes move as they speak. When right-handed people say true things, their eyes move to their left. In contrast, when they are lying or being “creative” with the truth, their eyes tend to drift toward their right. The reverse is true for left-handed people. % 能夠充分解讀身體語言有助於確認一個人是否正在說實話。當人們撒謊時，通常有三個無法掩飾的跡象：身體動作僵硬，觸摸或抓自己，以及眼球轉動。一般來說，說謊者展現較少的手臂和手部的動作。當他們真的做出這些手勢時，動作通常很僵硬，他們的手部也往往會靠近身體，而不會朝外面的方向移動。此外，說謊者常常忍不住觸摸或抓他們的臉、脖子或是耳後。他們有時也會不自覺地揉眼睛。人們是否說謊，也可以由觀察他們說話時眼睛如何移動而偵測出來。右撇子說真話時，他們的眼睛會移向左側。相反地，當他們說謊或在事實上作「創意」的發揮時，他們的眼睛容易飄向右側。對左撇子來說，則是相反的情況。% easy 2
+◎Paragraph 3
+Another significant type of telling body language is connected to love. In the case of romantic feelings, people’s bodies subconsciously provide an indication for someone to whom they are attracted. Under the circumstances, their eyes do most of the “talking.” Initially, they may glance at a person from a distance and for just slightly longer than normal. Afterward, they may look away and finally rest their eyes on him or her again for an even longer period. Furthermore, they automatically track or repeat his or her actions without even knowing it. If he or she sits back, they will follow suit. If that person takes a sip of water, they will probably do the same. Aside from copying behavior, they often can’t help pointing their feet and shoulders toward the one they adore or standing closer to the object of their affection than to others. % 顯露內心活動的身體語言另一個重要類型是與愛情有關。在浪漫情愫的情境中，人們的身體下意識會對他們仰慕的人提供暗示。在這種情況下，他們的眼睛「說出」了大部分的事。一開始他們可能從遠處匆匆看那個人一眼，並且只比正常的情況稍微久一點。之後，他們可能會把目光移開，最後再次把目光停留在那個人身上還要更久的時間。此外，他們會不自覺地自動地追蹤或重複那個人的動作。如果那個人往後靠著坐，他們也會跟著做。如果那個人小口喝水，他們也很可能做同樣的事。除了模仿行為之外，他們也常不由自主地將腳或肩膀朝向他們所愛慕的人，或是站得靠他們心儀的對象比靠其他人更近。% easy 3
+◎Paragraph 4
+All of the previously mentioned points reveal the idea that one of the best methods for interpreting people’s thoughts and emotions is to pay attention to their body language. By understanding the signals that people send out with their body language, we may interact in a more meaningful way with our fellow human beings. Best of all, we can do it without even saying a single word! % 所有以上提到的論點，都顯示這個看法：理解人們思想和情感最好的方法之一，乃是注意他們的身體語言。藉由了解人們用身體語言所發出的訊號，我們可以用更有意義的方式與我們的人類同胞互動。最棒的是，我們甚至不用說一個字，就可以做得到！% easy 4
+
+`,
+            'text2': ``,
+            'text3': ``,
+            'maga1': ``,
+            'maga2': ``,
+            'maga3': ``,
+            'maga4': ``,
+            'core1': ``,
+            'core2': ``,
+            'core3': ``
+        };
+
+        // Parse simplified database format
+        function parseSimplifiedDatabase(text) {
+            const sections = [];
+            const lines = text.trim().split('\n');
+            let currentSection = null;
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+
+                if (line.startsWith('◎')) {
+                    // New section
+                    if (currentSection) {
+                        sections.push(currentSection);
+                    }
+                    currentSection = {
+                        section: line,
+                        items: []
+                    };
+                } else if (line.includes('%') && currentSection) {
+                    // Text entry
+                    const parts = line.split('%').map(s => s.trim());
+                    if (parts.length === 3) {
+                        currentSection.items.push({
+                            english: parts[0],
+                            chinese: parts[1],
+                            easy: parts[2]
+                        });
+                    }
+                }
+            }
+
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+
+            return sections;
+        }
+
+        // Convert raw database to parsed format
+        const textDatabase = {};
+        for (const [key, value] of Object.entries(textDatabaseRaw)) {
+            textDatabase[key] = parseSimplifiedDatabase(value);
+        }
+
+        // Global state
+        let currentSpeech = null;
+        let speechRate = 1.0;
+        let voices = [];
+        let currentEasyText = '';
+
+        // Load voices
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            if (!voices.length) {
+                const dummy = new SpeechSynthesisUtterance('');
+                speechSynthesis.speak(dummy);
+                voices = speechSynthesis.getVoices();
+            }
+        }
+
+        // Get English voice
+        function getEnglishVoice() {
+            if (!voices.length) loadVoices();
+            let voice = voices.find(v => v.name.includes('Samantha')) || 
+                       voices.find(v => v.lang === 'en-US');
+            return voice || null;
+        }
+
+        // Clean text for TTS
+        function cleanTextForTTS(text) {
+            return text.replace(/\*/g, '')
+                      .replace(/\//g, '')
+                      .replace(/\([^)]*\)/g, '')
+                      .replace(/\[[^\]]*\]/g, '')
+                      .replace(/\s+/g, ' ')
+                      .trim();
+        }
+
+        // Speak text
+        function speakText(text) {
+            stopSpeech();
+            const cleaned = cleanTextForTTS(text);
+            if (!cleaned) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleaned);
+            utterance.lang = 'en-US';
+            utterance.rate = speechRate;
+
+            const voice = getEnglishVoice();
+            if (voice) utterance.voice = voice;
+
+            utterance.onend = () => {
+                currentSpeech = null;
+            };
+
+            currentSpeech = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Stop speech
+        function stopSpeech() {
+            if (speechSynthesis.speaking || speechSynthesis.pending) {
+                speechSynthesis.cancel();
+            }
+            currentSpeech = null;
+        }
+
+        // Load text content
+        function loadTextContent(lessonKey) {
+            const tableBody = document.getElementById('textTableBody');
+            const data = textDatabase[lessonKey];
+
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. <br>(暫無資料)</td></tr>';
+                setTimeout(() => {
+                    const textTable = document.getElementById('textTable');
+                    if (textTable) {
+                        textTable.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                }, 50);
+                return;
+            }
+
+            let html = '';
+            data.forEach((section) => {
+                html += `<tr>
+                    <td colspan="2" class="section-header">${section.section}</td>
+                </tr>`;
+                
+                section.items.forEach((item) => {
+                    html += `<tr class="text-row">
+                        <td class="audio-controls">
+                            <button class="audio-btn play-btn" onclick="speakText('${item.english.replace(/'/g, "\\'")}')">🔊</button>
+                            <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                            <button class="audio-btn easy-btn" onclick="showEasyVersion('${item.easy.replace(/'/g, "\\'")}')">😊</button>
+                        </td>
+                        <td class="content-cell">
+                            <div class="english-text">${item.english}</div>
+                            <div class="chinese-translation">${item.chinese}</div>
+                        </td>
+                    </tr>`;
+                });
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // Show easy version modal
+        function showEasyVersion(easyText) {
+            currentEasyText = easyText;
+            document.getElementById('easyVersionText').textContent = easyText;
+            document.getElementById('easyModal').style.display = 'block';
+        }
+
+        // Play easy version audio
+        function playEasyAudio() {
+            if (currentEasyText) {
+                speakText(currentEasyText);
+            }
+        }
+
+        // Close easy modal
+        function closeEasyModal() {
+            document.getElementById('easyModal').style.display = 'none';
+            stopSpeech();
+        }
+
+        // Floating navigation functions
+        function handleFloatingButtons() {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const nextSectionBtn = document.getElementById('nextSectionBtn');
+            const buttonCategories = document.querySelector('.button-categories');
+            
+            if (!backToTopBtn || !nextSectionBtn || !buttonCategories) return;
+            
+            const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+            
+            if (window.scrollY > buttonCategoriesBottom + 100) {
+                backToTopBtn.classList.add('show');
+                nextSectionBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+                nextSectionBtn.classList.remove('show');
+            }
+        }
+
+        function scrollToTop() {
+            const buttonCategories = document.querySelector('.button-categories');
+            if (buttonCategories) {
+                buttonCategories.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            } else {
+                window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+            }
+        }
+
+        function scrollToNextSection() {
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            
+            if (sectionHeaders.length === 0) return;
+            
+            const currentScrollPos = window.scrollY;
+            
+            for (let i = 0; i < sectionHeaders.length; i++) {
+                const headerPos = sectionHeaders[i].offsetTop;
+                
+                if (headerPos > currentScrollPos + 100) {
+                    sectionHeaders[i].scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                    return;
+                }
+            }
+            
+            window.scrollTo({ 
+                top: document.body.scrollHeight, 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            document.body.addEventListener('click', () => loadVoices(), { once: true });
+
+            // Lesson buttons
+            const lessonButtons = document.querySelectorAll('.lesson-btn');
+            lessonButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    lessonButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const lessonKey = this.getAttribute('data-lesson');
+                    loadTextContent(lessonKey);
+                });
+            });
+
+            // Speed buttons
+            const speedButtons = document.querySelectorAll('.speed-btn');
+            speedButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    speedButtons.forEach(b => b.classList.remove('active-speed'));
+                    this.classList.add('active-speed');
+                    speechRate = parseFloat(this.getAttribute('data-speed'));
+                    stopSpeech();
+                });
+            });
+
+            // Welcome modal
+            document.getElementById('welcomeOkBtn').addEventListener('click', () => {
+                document.getElementById('welcomeModal').style.display = 'none';
+            });
+
+            // Easy version modal
+            document.getElementById('closeEasyModal').addEventListener('click', closeEasyModal);
+            document.getElementById('playEasyBtn').addEventListener('click', playEasyAudio);
+            document.getElementById('stopEasyBtn').addEventListener('click', stopSpeech);
+
+            // Floating buttons
+            document.getElementById('backToTopBtn').addEventListener('click', scrollToTop);
+            document.getElementById('nextSectionBtn').addEventListener('click', scrollToNextSection);
+            window.addEventListener('scroll', handleFloatingButtons);
+            handleFloatingButtons();
+
+            // Click outside modal to close
+            window.addEventListener('click', (e) => {
+                const easyModal = document.getElementById('easyModal');
+                if (e.target === easyModal) {
+                    closeEasyModal();
+                }
+            });
+
+            window.addEventListener('beforeunload', () => stopSpeech());
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeEventListeners();
+        });
+    </script>
+</body>
+</html>
