@@ -115,6 +115,23 @@
             background-color: #28a745;
         }
 
+        .voice-select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        .voice-select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
         .text-table-container {
             margin-top: 30px;
             overflow-x: auto;
@@ -503,6 +520,12 @@
                 margin: 2px;
             }
 
+            .voice-select {
+                min-width: 150px;
+                max-width: 100%;
+                font-size: 13px;
+            }
+
             .section-header {
                 font-size: 1.2em;
                 padding: 12px;
@@ -620,6 +643,22 @@
             <button class="speed-btn active-speed" data-speed="1.0">1x</button>
             <button class="speed-btn" data-speed="0.8">0.8x</button>
             <button class="speed-btn" data-speed="0.6">0.6x</button>
+        </div>
+
+        <!-- Voice Selection for Dialogue -->
+        <div class="speed-control-section" style="margin-top: 15px;">
+            <div style="margin-bottom: 10px;">
+                <span class="speed-label">👩‍🦰 Addresser Voice:</span>
+                <select id="femaleVoiceSelect" class="voice-select">
+                    <option value="">Loading voices...</option>
+                </select>
+            </div>
+            <div>
+                <span class="speed-label">👦 Addressee Voice:</span>
+                <select id="maleVoiceSelect" class="voice-select">
+                    <option value="">Loading voices...</option>
+                </select>
+            </div>
         </div>
 
         <!-- Table -->
@@ -847,22 +886,157 @@ By understanding the signals that people send out with their body language, we m
                 voices = speechSynthesis.getVoices();
             }
             
-            // Find female voice (for addresser)
-            femaleVoice = voices.find(v => 
-                v.name.includes('Samantha') || 
-                v.name.includes('Victoria') ||
-                v.name.includes('Karen') ||
-                (v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
-            ) || voices.find(v => v.lang === 'en-US');
+            // Populate voice dropdowns
+            populateVoiceSelects();
             
-            // Find male voice (for addressee)
-            maleVoice = voices.find(v => 
-                v.name.includes('Daniel') || 
-                v.name.includes('Aaron') ||
-                v.name.includes('Fred') ||
-                (v.lang.startsWith('en') && v.name.toLowerCase().includes('male'))
-            ) || voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en'));
+            // Auto-select best voices for female and male
+            autoSelectVoices();
         }
+
+        // Populate voice selection dropdowns
+function populateVoiceSelects() {
+    const femaleSelect = document.getElementById('femaleVoiceSelect');
+    const maleSelect = document.getElementById('maleVoiceSelect');
+    
+    if (!voices.length) return;
+    
+    // Filter for ONLY en-US and en-GB voices
+    const usUkVoices = voices.filter(v => 
+        v.lang === 'en-US' || v.lang === 'en-GB'
+    );
+    
+    // Separate into female and male voices
+    const femaleVoices = usUkVoices.filter(v => 
+        v.name.toLowerCase().includes('female') ||
+        v.name.includes('Samantha') ||
+        v.name.includes('Victoria') ||
+        v.name.includes('Karen') ||
+        v.name.includes('Zira') ||
+        v.name.includes('Susan') ||
+        v.name.includes('Moira')
+    );
+    
+    const maleVoices = usUkVoices.filter(v => 
+        v.name.toLowerCase().includes('male') ||
+        v.name.includes('Daniel') ||
+        v.name.includes('Aaron') ||
+        v.name.includes('Fred') ||
+        v.name.includes('David') ||
+        v.name.includes('Alex') ||
+        v.name.includes('Tom')
+    );
+    
+    // If no voices detected by name, split the list in half
+    if (femaleVoices.length === 0 && maleVoices.length === 0) {
+        const halfPoint = Math.floor(usUkVoices.length / 2);
+        femaleVoices.push(...usUkVoices.slice(0, halfPoint));
+        maleVoices.push(...usUkVoices.slice(halfPoint));
+    }
+    
+    // Clear existing options
+    femaleSelect.innerHTML = '';
+    maleSelect.innerHTML = '';
+    
+    // Populate female dropdown
+    if (femaleVoices.length > 0) {
+        femaleVoices.forEach((voice) => {
+            const option = document.createElement('option');
+            option.value = voice.name;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            femaleSelect.appendChild(option);
+        });
+    } else {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No female voices found';
+        femaleSelect.appendChild(option);
+    }
+    
+    // Populate male dropdown
+    if (maleVoices.length > 0) {
+        maleVoices.forEach((voice) => {
+            const option = document.createElement('option');
+            option.value = voice.name;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            maleSelect.appendChild(option);
+        });
+    } else {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No male voices found';
+        maleSelect.appendChild(option);
+    }
+}
+
+        // Auto-select best female and male voices
+function autoSelectVoices() {
+    if (!voices.length) return;
+    
+    const usUkVoices = voices.filter(v => 
+        v.lang === 'en-US' || v.lang === 'en-GB'
+    );
+    
+    // Find female voice
+    femaleVoice = usUkVoices.find(v => 
+        v.name.includes('Samantha') || 
+        v.name.includes('Victoria') ||
+        v.name.includes('Karen') ||
+        v.name.toLowerCase().includes('female')
+    );
+    
+    // Fallback to first US/UK voice
+    if (!femaleVoice && usUkVoices.length > 0) {
+        femaleVoice = usUkVoices[0];
+    }
+    
+    // Find male voice (different from female)
+    maleVoice = usUkVoices.find(v => 
+        v !== femaleVoice && (
+            v.name.includes('Daniel') || 
+            v.name.includes('Aaron') ||
+            v.name.includes('Fred') ||
+            v.name.toLowerCase().includes('male')
+        )
+    );
+    
+    // Fallback to different voice than female
+    if (!maleVoice && usUkVoices.length > 1) {
+        maleVoice = usUkVoices.find(v => v !== femaleVoice) || usUkVoices[1];
+    }
+    
+    // Update dropdown selections
+    const femaleSelect = document.getElementById('femaleVoiceSelect');
+    const maleSelect = document.getElementById('maleVoiceSelect');
+    
+    if (femaleSelect && femaleVoice) {
+        femaleSelect.value = femaleVoice.name;
+    }
+    if (maleSelect && maleVoice) {
+        maleSelect.value = maleVoice.name;
+    }
+    
+    // Log selected voices for debugging
+    console.log('Auto-selected voices:');
+    console.log('Female (Addresser):', femaleVoice?.name, femaleVoice?.lang);
+    console.log('Male (Addressee):', maleVoice?.name, maleVoice?.lang);
+}
+
+        // Update selected voices from dropdowns
+function updateSelectedVoices() {
+    const femaleSelect = document.getElementById('femaleVoiceSelect');
+    const maleSelect = document.getElementById('maleVoiceSelect');
+    
+    const femaleName = femaleSelect.value;
+    const maleName = maleSelect.value;
+    
+    // Find voices by name
+    femaleVoice = voices.find(v => v.name === femaleName);
+    maleVoice = voices.find(v => v.name === maleName);
+    
+    console.log('Voice selection changed:');
+    console.log('Female voice:', femaleVoice?.name);
+    console.log('Male voice:', maleVoice?.name);
+}
 
         // Get English voice
         function getEnglishVoice() {
@@ -1361,6 +1535,9 @@ By understanding the signals that people send out with their body language, we m
         // Initialize event listeners
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
+            
+            // Load voices when they become available
+            speechSynthesis.addEventListener('voiceschanged', loadVoices);
 
             // Lesson buttons
             const lessonButtons = document.querySelectorAll('.lesson-btn');
@@ -1383,6 +1560,10 @@ By understanding the signals that people send out with their body language, we m
                     stopSpeech();
                 });
             });
+
+            // Voice selection dropdowns
+            document.getElementById('femaleVoiceSelect').addEventListener('change', updateSelectedVoices);
+            document.getElementById('maleVoiceSelect').addEventListener('change', updateSelectedVoices);
 
             // Welcome modal
             document.getElementById('welcomeOkBtn').addEventListener('click', () => {
