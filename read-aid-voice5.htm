@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Aid</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 2.5em;
+        }
+
+        .button-categories {
+            margin-bottom: 30px;
+        }
+
+        .category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .lesson-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .lesson-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .lesson-btn.active {
+            background-color: #e74c3c;
+        }
+
+        .speed-control-section {
+            margin: 30px 0;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+
+        .speed-label {
+            font-weight: bold;
+            color: #495057;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .speed-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .speed-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .speed-btn.active-speed {
+            background-color: #28a745;
+        }
+
+        .text-table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .text-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .section-header {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.5em;
+            color: #2c3e50;
+        }
+
+        .text-row {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .audio-controls {
+            width: 80px;
+            text-align: center;
+            padding: 15px 10px;
+            vertical-align: top;
+        }
+
+        .content-cell {
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .english-text {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .chinese-translation {
+            font-size: 1.5em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 2px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+        }
+
+        .audio-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .play-btn {
+            color: #27ae60;
+        }
+
+        .stop-btn {
+            color: #e74c3c;
+        }
+
+        .easy-btn {
+            color: #f39c12;
+        }
+
+        .dialogue-btn {
+            color: #9b59b6;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: red;
+            font-size: 25px;
+        }
+
+        /* Modal Base Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Easy Version Modal */
+        .easy-version-content {
+            margin-top: 20px;
+        }
+
+        .easy-version-text {
+            font-size: 1.8em;
+            color: #2c3e50;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .easy-audio-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .easy-audio-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+
+        .easy-audio-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .easy-audio-btn.stop {
+            background-color: #e74c3c;
+        }
+
+        .easy-audio-btn.stop:hover {
+            background-color: #c0392b;
+        }
+
+        /* Dialogue Modal */
+        .dialogue-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .dialogue-line {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .dialogue-line.active {
+            background-color: #fff3cd;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .dialogue-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .dialogue-row.addresser {
+            justify-content: flex-start;
+        }
+
+        .dialogue-row.addressee {
+            justify-content: flex-end;
+        }
+
+        .dialogue-icon {
+            font-size: 40px;
+            flex-shrink: 0;
+        }
+
+        .dialogue-bubble {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 1.3em;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .dialogue-row.addresser .dialogue-bubble {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .dialogue-row.addressee .dialogue-bubble {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+            border-bottom-right-radius: 5px;
+        }
+
+        .dialogue-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            gap: 15px;
+        }
+
+        .dialogue-control-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dialogue-control-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            min-width: 100px;
+        }
+
+        .dialogue-control-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .dialogue-control-btn.stop {
+            background-color: #e74c3c;
+        }
+
+        .dialogue-control-btn.stop:hover {
+            background-color: #c0392b;
+        }
+
+        .dialogue-control-btn.play-all {
+            background-color: #27ae60;
+        }
+
+        .dialogue-control-btn.play-all:hover {
+            background-color: #229954;
+        }
+
+        .dialogue-control-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Welcome Notice Modal */
+        #welcomeModal .modal-content {
+            max-width: 500px;
+        }
+
+        /* Floating Navigation Buttons */
+        .floating-nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .floating-nav-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            transition: all 0.3s;
+        }
+
+        .floating-nav-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .floating-nav-btn.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .next-section-btn {
+            background-color: #27ae60;
+        }
+
+        .next-section-btn:hover {
+            background-color: #229954;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .category-title {
+                font-size: 1.2em;
+            }
+
+            .lesson-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .speed-control-section {
+                padding: 10px;
+            }
+
+            .speed-label {
+                display: block;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .speed-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin: 2px;
+            }
+
+            .section-header {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+
+            .audio-controls {
+                width: 60px;
+                padding: 10px 5px;
+            }
+
+            .content-cell {
+                padding: 12px;
+            }
+
+            .english-text {
+                font-size: 1.5em;
+            }
+
+            .chinese-translation {
+                font-size: 1.5em;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            .easy-version-text {
+                font-size: 1.5em;
+            }
+
+            .dialogue-bubble {
+                font-size: 1.1em;
+                padding: 12px 16px;
+            }
+
+            .dialogue-icon {
+                font-size: 32px;
+            }
+
+            .dialogue-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .dialogue-control-group {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .dialogue-control-btn {
+                flex: 1;
+                min-width: auto;
+            }
+
+            .floating-nav-buttons {
+                bottom: 20px;
+                right: 20px;
+                gap: 8px;
+            }
+            
+            .floating-nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Navigation Buttons -->
+    <div class="floating-nav-buttons">
+        <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
+        <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
+    </div>
+    
+    <div class="container">
+        <h1>Read Aid (1129高低聲調製造雙人效果21:20)</h1>
+
+        <div class="button-categories">
+            <div class="category">
+                <div class="category-title">Textbook: Book 3 (課本第三冊)</div>
+                <div class="category-buttons">
+                    <button class="lesson-btn" data-lesson="text1">B3 L7 課文</button>
+                    <button class="lesson-btn" data-lesson="text2">B3 L8 課文</button>
+                    <button class="lesson-btn" data-lesson="text3">B3 L9 課文</button>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">Magazine: All+ December 2026</div>
+                <div class="category-buttons">
+                    <button class="lesson-btn" data-lesson="maga1">U2 Baseball</button>
+                    <button class="lesson-btn" data-lesson="maga2">U4 Ban</button>
+                    <button class="lesson-btn" data-lesson="maga3">U5 Viruses</button>
+                    <button class="lesson-btn" data-lesson="maga4">U14 Study Approaches</button>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">核心字彙</div>
+                <div class="category-buttons">
+                    <button class="lesson-btn" data-lesson="core1">U7 Ballpoint Pen</button>
+                    <button class="lesson-btn" data-lesson="core2">U8 Pancakes</button>
+                    <button class="lesson-btn" data-lesson="core3">U9 Homeless</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speed Control -->
+        <div class="speed-control-section">
+            <span class="speed-label">Speed (語速):</span>
+            <button class="speed-btn" data-speed="1.2">1.2x</button>
+            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
+            <button class="speed-btn" data-speed="0.8">0.8x</button>
+            <button class="speed-btn" data-speed="0.6">0.6x</button>
+        </div>
+
+        <!-- Table -->
+        <div class="text-table-container">
+            <table class="text-table" id="textTable">
+                <tbody id="textTableBody">
+                    <tr class="no-data">
+                        <td colspan="2">Select a lesson to load content <br>(選擇單元以載入內容)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Welcome Notice Modal -->
+    <div id="welcomeModal" class="modal" style="display: block;">
+        <div class="modal-content">
+            <div style="text-align: center; padding: 10px;">
+                <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Welcome to Read Aid</h2>
+                <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
+                    <p style="margin-bottom: 15px;">This tool helps you improve reading and listening comprehension.</p>
+                    <p style="margin-bottom: 15px;">Features:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Listen to English text with natural speech</li>
+                        <li>See Chinese translations</li>
+                        <li>Access simplified versions (😊 icon)</li>
+                        <li>Practice with dialogues (💬 icon)</li>
+                        <li>Adjust playback speed</li>
+                    </ul>
+                </div>
+                <button id="welcomeOkBtn" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Easy Version Modal -->
+    <div id="easyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeEasyModal">&times;</span>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">😊 Easy Version</h2>
+            <div class="easy-version-content">
+                <div class="easy-version-text" id="easyVersionText"></div>
+                <div class="easy-audio-controls">
+                    <button class="easy-audio-btn" id="playEasyBtn">🔊 Play</button>
+                    <button class="easy-audio-btn stop" id="stopEasyBtn">⏹ Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialogue Modal -->
+    <div id="dialogueModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeDialogueModal">&times;</span>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">💬 Dialogue</h2>
+            <div class="dialogue-container" id="dialogueContainer">
+                <!-- Dialogue lines will be inserted here -->
+            </div>
+            <div class="dialogue-controls">
+                <div class="dialogue-control-group">
+                    <button class="dialogue-control-btn" id="nextLineBtn">Next ➡️</button>
+                    <button class="dialogue-control-btn" id="playStopBtn">🔊 Play</button>
+                </div>
+                <div class="dialogue-control-group">
+                    <button class="dialogue-control-btn play-all" id="playAllBtn">▶️ Play All</button>
+                    <button class="dialogue-control-btn" id="pauseResumeBtn">⏸️ Pause</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURATION
+        // ========================================
+        
+        // Adjust this value to change pause duration between dialogue lines (in milliseconds)
+        // 1000 = 1 second, 1500 = 1.5 seconds, etc.
+        const DIALOGUE_PAUSE_DURATION = 200;
+
+        // ========================================
+        // DIALOGUE DATABASE
+        // ========================================
+        
+        const dialogueDatabase = {
+            'text1': `
+Hi! Today we’re going to read about the history of baseball in Taiwan. Are you ready?	^	Yes, I’m ready!
+Great! Let’s start with the first paragraph. Can you read it for me?	^	“With roots tracing back to the Japanese colonial period from 1895 to 1945, baseball has long held a special place in Taiwan’s heart. One of the early events that helped fuel Taiwan’s passion for the sport came in 1968, when the Red Leaves Little League team from Taitung beat a visiting Japanese powerhouse. The win captured lots of attention and sparked excitement all over the island.”
+Very good! Let’s talk about some vocabulary. Do you know what “trace back to” means?	^	Umm… maybe “started from long ago”?
+Exactly! It tells us where something began. And “hold a special place in Taiwan’s heart” means people in Taiwan love it very much.	^	Oh, I see.
+What happened in 1968 that made people excited?	^	The Red Leaves Little League team won against a strong Japanese team.
+Yes! That win sparked excitement—it made people feel happy and proud.	^	
+Let’s look at paragraph 2. Can you read it?	^	“Baseball grew even more popular in 1969, when Taichung’s Golden Dragon team won the Little League World Series. It was a feat which proved that Taiwan could compete on the global stage. Taiwanese teams dominated the LLWS for many years thereafter, earning Taiwan a reputation as a baseball heavyweight.”
+Nice reading! Do you know the word “feat”?	^	Is it something difficult and amazing?
+Exactly! The Golden Dragon team did something amazing. What does “compete on the global stage” mean?	^	It means Taiwan could play against teams from other countries.
+Yes! And “dominated” means Taiwan won again and again for many years.	^	Oh! That’s why Taiwan got the reputation as a baseball heavyweight!
+Very good! You understood it perfectly.	^	
+Let’s read paragraph 3 now.	^	“Baseball in Taiwan took another big step in 1990 with the start of the Chinese Professional Baseball League. This let local players shine and gave fans new heroes to cheer for. Soon after, Taiwan showed its strength again by winning a silver medal at the 1992 Barcelona Olympics. However, the CPBL struggled in the 1990s and 2000s due to multiple game-fixing scandals, which led to a sharp fall in attendance.”
+Great job. What does “took another big step” mean?	^	It means something important happened for baseball.
+Yes! The CPBL was a big change. Why did fans have “new heroes to cheer for”?	^	Because now there were local professional players.
+Exactly! Do you know what “struggled” means?	^	It means had a hard time.
+Yes. And why did the CPBL struggle?	^	Because there were many game-fixing scandals.
+Right. “Game-fixing” means cheating in games, and that made many fans stop going to games. That is a sharp fall in attendance.	^	That's too bad!
+
+`,
+            'text2': `
+
+`,
+            'text3': ``,
+            'maga1': ``,
+            'maga2': ``,
+            'maga3': ``,
+            'maga4': ``,
+            'core1': ``,
+            'core2': ``,
+            'core3': ``
+        };
+
+        // ========================================
+        // TEXT DATABASE
+        // ========================================
+        
+        const textDatabaseRaw = {
+            'text1': `
+◎Paragraph 1
+The theory that spoken words account for only about seven percent of communication involving emotions may surprise many people. This was first proposed by Dr. Albert Mehrabian, a famous psychology professor. ^口語在情緒溝通中只佔約百分之七的理論，可能會讓許多人感到驚訝。這是由著名的心理學教授艾伯特・梅哈比安博士首先提出的。^The idea that spoken words are only about seven percent of emotional communication may surprise people. A well-known psychology professor, Dr. Albert Mehrabian, first suggested this.
+
+According to his studies, we achieve about 55% of our emotional communication with our bodies, for they typically demonstrate our true feelings and what we're actually thinking. Therefore, understanding people's body language is an important ability to help us better interpret others' messages. ^ 根據他的研究，我們大約有百分之五十五的情緒溝通是透過身體進行的，因為身體通常會展現我們真正的感受與想法。因此，了解他人的肢體語言是幫助我們更準確解讀訊息的重要能力。^His research says about 55% of emotional communication comes from our body because it shows our real feelings. So understanding body language helps us know what others really mean.
+◎Paragraph 2
+Being able to read body language well is helpful in determining whether or not someone is telling the truth. When people are lying, there are usually three telltale signs: making stiff body movements, touching or scratching themselves, and making eye movements. ^ 能夠讀懂肢體語言有助於判斷一個人是否在說真話。當人說謊時，通常會有三個明顯特徵：動作僵硬、觸碰或搔抓自己，以及眼睛的異常動作。^ Reading body language helps us know if someone is telling the truth. When people lie, they often show three signs: stiff movements, touching themselves, and unusual eye movements.
+
+Typically, liars exhibit fewer arm and hand gestures. When they do make such gestures, their movements are usually stiff, and their hands tend to stay close to the body rather than move in an outward direction. Moreover, liars often can't help but touch or scratch their faces, their necks, or behind their ears. They sometimes rub their eyes without being conscious of it as well. ^ 通常，說謊者會減少手臂和手的動作。即使有動作，他們的動作通常很僵硬，手也會靠近身體，而不是向外擺動。此外，說謊者常會忍不住觸碰或搔抓臉部、脖子或耳後。他們有時也會不自覺地揉眼睛。^ Liars usually move their arms and hands less. If they do move, their movements are stiff and their hands stay close to their body. Liars also often touch or scratch their face, neck, or behind their ears. They sometimes rub their eyes without noticing.
+
+Whether people are telling falsehoods or not can also be detected by observing how their eyes move as they speak. When right-handed people say true things, their eyes move to their left. In contrast, when they are lying or being "creative" with the truth, their eyes tend to drift toward their right. The reverse is true for left-handed people. ^ 透過觀察人們說話時眼睛的移動，也能判斷他們是否說謊。右撇子說真話時，他們的眼睛會往左移。相反地，當他們說謊或「加工」事實時，眼睛則會往右偏。左撇子的情況則相反。^ You can also tell if someone lies by watching their eye movements. When right-handed people tell the truth, their eyes move left. When they lie, their eyes usually move to the right. For left-handed people, it is the opposite.
+◎Paragraph 3
+Another significant type of telling body language is connected to love. In the case of romantic feelings, people's bodies subconsciously provide an indication for someone to whom they are attracted. ^ 另一種重要且具有指標性的肢體語言與愛情有關。當人產生浪漫情愫時，他們的身體會下意識地向心儀的對象傳達訊號。^ Another important kind of body language is related to love. When someone likes another person, their body gives signals without them knowing.
+
+Under the circumstances, their eyes do most of the "talking." Initially, they may glance at a person from a distance and for just slightly longer than normal. Afterward, they may look away and finally rest their eyes on him or her again for an even longer period. ^ 在這種情況下，他們的眼睛負責大部分的「對話」。一開始，他們可能會從遠處看對方一眼，並且比平常多停留一點時間。接著，他們可能會轉開視線，之後又再度看向對方，且停留更久。^In this situation, their eyes send most of the signals. First, they may look at the person from far away for a little longer than usual. Then they look away and later look back again for even longer.
+
+Furthermore, they automatically track or repeat his or her actions without even knowing it. If he or she sits back, they will follow suit. If that person takes a sip of water, they will probably do the same. ^ 此外，他們會不自覺地跟隨或模仿對方的動作。如果對方往後靠，他們也會跟著做。若對方喝一口水，他們也很可能會這麼做。^ Besides, they may copy the other person's actions without knowing it. If the person sits back, they will too. If the person drinks water, they will likely do the same.
+
+Aside from copying behavior, they often can't help pointing their feet and shoulders toward the one they adore or standing closer to the object of their affection than to others. ^ 除了模仿行為外，他們也常會不自覺將腳和肩膀朝向心儀對象，或站得比起他人更靠近對方。^ Also, they point their feet and shoulders toward the person they like or stand closer to them.
+◎Paragraph 4
+All of the previously mentioned points reveal the idea that one of the best methods for interpreting people's thoughts and emotions is to pay attention to their body language. ^ 以上種種都顯示：想解讀他人的想法與情緒，最好的方法之一就是注意他們的肢體語言。^ All these points show that watching body language is one of the best ways to understand people.
+
+By understanding the signals that people send out with their body language, we may interact in a more meaningful way with our fellow human beings. Best of all, we can do it without even saying a single word! ^ 透過理解他們的肢體訊號，我們能與他人進行更有意義的互動。最棒的是，這一切甚至不需要一句話！^ By understanding these signals, we can interact with others in a better way. The best part is that we can do this without saying anything.
+
+`,
+            'text2': `
+
+`,
+            'text3': ``,
+            'maga1': ``,
+            'maga2': ``,
+            'maga3': ``,
+            'maga4': ``,
+            'core1': ``,
+            'core2': ``,
+            'core3': ``
+        };
+
+        // Parse simplified database format
+        function parseSimplifiedDatabase(text) {
+            const sections = [];
+            const lines = text.trim().split('\n');
+            let currentSection = null;
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+
+                if (line.startsWith('◎')) {
+                    if (currentSection) {
+                        sections.push(currentSection);
+                    }
+                    currentSection = {
+                        section: line,
+                        items: []
+                    };
+                } else if (line.includes('^') && currentSection) {
+                    const parts = line.split('^').map(s => s.trim());
+                    if (parts.length === 3) {
+                        currentSection.items.push({
+                            english: parts[0],
+                            chinese: parts[1],
+                            easy: parts[2]
+                        });
+                    }
+                }
+            }
+
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+
+            return sections;
+        }
+
+        // Convert raw database to parsed format
+        const textDatabase = {};
+        for (const [key, value] of Object.entries(textDatabaseRaw)) {
+            textDatabase[key] = parseSimplifiedDatabase(value);
+        }
+
+        // ========================================
+        // GLOBAL STATE
+        // ========================================
+        
+        let currentSpeech = null;
+        let speechRate = 1.0;
+        let voices = [];
+        let currentEasyText = '';
+        
+        // Dialogue state
+let currentDialogueData = [];
+let currentDialogueIndex = 0;
+let dialoguePlayTimeout = null;
+let isPlayingDialogue = false;
+let isPlayingAll = false;
+let isPaused = false;
+// Note: We no longer need femaleVoice and maleVoice variables
+// Dialogue uses the same voice as reading mode with pitch variation
+
+        // ========================================
+        // VOICE MANAGEMENT
+        // ========================================
+
+        // Load voices
+function loadVoices() {
+    voices = speechSynthesis.getVoices();
+    if (!voices.length) {
+        const dummy = new SpeechSynthesisUtterance('');
+        speechSynthesis.speak(dummy);
+        voices = speechSynthesis.getVoices();
+    }
+    
+// Debug log - show which voice is being used
+    const readingVoice = getEnglishVoice();
+    console.log('=== VOICE SELECTION DEBUG ===');
+    console.log('Total voices available:', voices.length);
+    console.log('Reading voice (used for all modes):', readingVoice?.name, '| Lang:', readingVoice?.lang);
+    console.log('Dialogue mode uses SAME voice with pitch variation (1.4 for addresser, 0.7 for addressee)');
+    console.log('All available English voices:');
+    voices.filter(v => v.lang.startsWith('en')).forEach(v => {
+        console.log('  -', v.name, '(', v.lang, ')');
+    });
+    console.log('=============================');
+
+}
+
+        // Get English voice
+        function getEnglishVoice() {
+            if (!voices.length) loadVoices();
+            let voice = voices.find(v => v.name.includes('Samantha')) || 
+                       voices.find(v => v.lang === 'en-US');
+            return voice || null;
+        }
+
+        // ========================================
+        // TEXT-TO-SPEECH FUNCTIONS
+        // ========================================
+
+        // Clean text for TTS
+        function cleanTextForTTS(text) {
+            return text.replace(/\*/g, '')
+                      .replace(/\//g, '')
+                      .replace(/\([^)]*\)/g, '')
+                      .replace(/\[[^\]]*\]/g, '')
+                      .replace(/\s+/g, ' ')
+                      .trim();
+        }
+
+        // Speak text
+        function speakText(text) {
+            stopSpeech();
+            const cleaned = cleanTextForTTS(text);
+            if (!cleaned) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleaned);
+            utterance.lang = 'en-US';
+            utterance.rate = speechRate;
+
+            const voice = getEnglishVoice();
+            if (voice) utterance.voice = voice;
+
+            utterance.onend = () => {
+                currentSpeech = null;
+            };
+
+            currentSpeech = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Stop speech
+function stopSpeech() {
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+    }
+    currentSpeech = null;
+    
+    // Clear dialogue timeouts
+    if (dialoguePlayTimeout) {
+        clearTimeout(dialoguePlayTimeout);
+        dialoguePlayTimeout = null;
+    }
+    isPlayingDialogue = false;
+    
+    // DON'T reset isPlayingAll and isPaused here if we're just pausing
+    // They will be reset by the specific functions that need to
+}
+
+        // ========================================
+        // TEXT CONTENT FUNCTIONS
+        // ========================================
+
+        // Load text content
+        function loadTextContent(lessonKey) {
+            const tableBody = document.getElementById('textTableBody');
+            const data = textDatabase[lessonKey];
+
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. <br>(暫無資料)</td></tr>';
+                setTimeout(() => {
+                    const textTable = document.getElementById('textTable');
+                    if (textTable) {
+                        textTable.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                }, 50);
+                return;
+            }
+
+            let html = '';
+            data.forEach((section) => {
+                html += `<tr>
+                    <td colspan="2" class="section-header">${section.section}</td>
+                </tr>`;
+                
+                section.items.forEach((item) => {
+                    html += `<tr class="text-row">
+                        <td class="audio-controls">
+                            <button class="audio-btn play-btn" onclick="speakText('${item.english.replace(/'/g, "\\'")}')">🔊</button>
+                            <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                            <button class="audio-btn easy-btn" onclick="showEasyVersion('${item.easy.replace(/'/g, "\\'")}')">😊</button>
+                            <button class="audio-btn dialogue-btn" onclick="showDialogue('${lessonKey}')">💬</button>
+                        </td>
+                        <td class="content-cell">
+                            <div class="english-text">${item.english}</div>
+                            <div class="chinese-translation">${item.chinese}</div>
+                        </td>
+                    </tr>`;
+                });
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // ========================================
+        // EASY VERSION FUNCTIONS
+        // ========================================
+
+        // Show easy version modal
+        function showEasyVersion(easyText) {
+            currentEasyText = easyText;
+            document.getElementById('easyVersionText').textContent = easyText;
+            document.getElementById('easyModal').style.display = 'block';
+        }
+
+        // Play easy version audio
+        function playEasyAudio() {
+            if (currentEasyText) {
+                speakText(currentEasyText);
+            }
+        }
+
+        // Close easy modal
+        function closeEasyModal() {
+            document.getElementById('easyModal').style.display = 'none';
+            stopSpeech();
+        }
+
+        // ========================================
+        // DIALOGUE FUNCTIONS
+        // ========================================
+
+        // Parse dialogue data
+        function parseDialogueData(text) {
+            const lines = text.trim().split('\n').filter(line => line.trim());
+            const dialogueLines = [];
+            
+            for (let line of lines) {
+                if (line.includes('^')) {
+                    const parts = line.split('^').map(s => s.trim());
+                    if (parts.length === 2) {
+                        dialogueLines.push({
+                            addresser: parts[0],
+                            addressee: parts[1]
+                        });
+                    }
+                }
+            }
+            
+            return dialogueLines;
+        }
+
+        // Show dialogue modal
+        function showDialogue(lessonKey) {
+            const dialogueText = dialogueDatabase[lessonKey];
+            if (!dialogueText || !dialogueText.trim()) {
+                alert('No dialogue available for this lesson.');
+                return;
+            }
+            
+            currentDialogueData = parseDialogueData(dialogueText);
+            if (currentDialogueData.length === 0) {
+                alert('No dialogue available for this lesson.');
+                return;
+            }
+            
+            currentDialogueIndex = 0;
+            isPlayingAll = false;
+            isPaused = false;
+            
+            renderDialogueLines();
+            updateDialogueButtons();
+            
+            document.getElementById('dialogueModal').style.display = 'block';
+        }
+
+        // Render all dialogue lines
+        function renderDialogueLines() {
+            const container = document.getElementById('dialogueContainer');
+            let html = '';
+            
+            currentDialogueData.forEach((line, index) => {
+                const isActive = index === currentDialogueIndex;
+                html += `
+                    <div class="dialogue-line ${isActive ? 'active' : ''}" data-index="${index}">
+                        <div class="dialogue-row addresser">
+                            <div class="dialogue-icon">👩‍🦰</div>
+                            <div class="dialogue-bubble">${line.addresser}</div>
+                        </div>
+                        <div class="dialogue-row addressee">
+                            <div class="dialogue-bubble">${line.addressee}</div>
+                            <div class="dialogue-icon">👦</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Scroll to active line
+            setTimeout(() => {
+                const activeLine = container.querySelector('.dialogue-line.active');
+                if (activeLine) {
+                    activeLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        }
+
+        // Update active dialogue line
+        function updateActiveDialogueLine() {
+            const lines = document.querySelectorAll('.dialogue-line');
+            lines.forEach((line, index) => {
+                if (index === currentDialogueIndex) {
+                    line.classList.add('active');
+                    line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    line.classList.remove('active');
+                }
+            });
+        }
+
+        // Next dialogue line
+        function nextDialogueLine() {
+            if (currentDialogueIndex < currentDialogueData.length - 1) {
+                currentDialogueIndex++;
+                updateActiveDialogueLine();
+                updateDialogueButtons();
+            }
+        }
+
+        // Speak dialogue line with pitch differentiation ONLY
+function speakDialogueLine(addresserText, addresseeText, callback) {
+    stopSpeech();
+    
+    if (!addresserText || !addresseeText) {
+        if (callback) callback();
+        return;
+    }
+    
+    const cleanAddresser = cleanTextForTTS(addresserText);
+    const cleanAddressee = cleanTextForTTS(addresseeText);
+    
+    // Get the SAME voice used in reading mode
+    const readingVoice = getEnglishVoice();
+    
+    // Speak addresser first (HIGHER pitch, same voice)
+    const utterance1 = new SpeechSynthesisUtterance(cleanAddresser);
+    utterance1.lang = 'en-US';
+    utterance1.rate = speechRate;
+    utterance1.pitch = 1.4;  // Higher pitch for addresser
+    if (readingVoice) utterance1.voice = readingVoice;  // Use SAME voice as reading
+    
+    utterance1.onend = () => {
+        // Reset addresser highlight
+        const currentLine = document.querySelector('.dialogue-line.active');
+        const addresserBubble = currentLine?.querySelector('.addresser .dialogue-bubble');
+        if (addresserBubble) {
+            addresserBubble.style.transition = 'background-color 0.3s';
+            addresserBubble.style.backgroundColor = '#e3f2fd';  // Back to original color
+        }
+        
+        // Small pause before addressee speaks
+        setTimeout(() => {
+            // Highlight addressee speaking
+            const addresseeBubble = currentLine?.querySelector('.addressee .dialogue-bubble');
+            if (addresseeBubble) {
+                addresseeBubble.style.transition = 'background-color 0.3s';
+                addresseeBubble.style.backgroundColor = '#a5d6a7';  // Brighter green
+            }
+            
+            // Speak addressee (LOWER pitch, same voice)
+            const utterance2 = new SpeechSynthesisUtterance(cleanAddressee);
+            utterance2.lang = 'en-US';
+            utterance2.rate = speechRate;
+            utterance2.pitch = 0.6;  // Lower pitch for addressee
+            if (readingVoice) utterance2.voice = readingVoice;  // Use SAME voice as reading
+            
+            utterance2.onend = () => {
+                // Reset addressee highlight
+                if (addresseeBubble) {
+                    addresseeBubble.style.backgroundColor = '#c8e6c9';  // Back to original color
+                }
+                
+                currentSpeech = null;
+                isPlayingDialogue = false;
+                if (callback) callback();
+            };
+            
+            currentSpeech = utterance2;
+            speechSynthesis.speak(utterance2);
+        }, 200);
+    };
+    
+    // Highlight addresser speaking
+    const currentLine = document.querySelector('.dialogue-line.active');
+    const addresserBubble = currentLine?.querySelector('.addresser .dialogue-bubble');
+    if (addresserBubble) {
+        addresserBubble.style.transition = 'background-color 0.3s';
+        addresserBubble.style.backgroundColor = '#90caf9';  // Brighter blue
+    }
+    
+    isPlayingDialogue = true;
+    currentSpeech = utterance1;
+    speechSynthesis.speak(utterance1);
+}
+
+        // Play/Stop current dialogue line
+        function togglePlayStopDialogue() {
+            const btn = document.getElementById('playStopBtn');
+            
+            if (isPlayingDialogue) {
+                stopSpeech();
+                btn.textContent = '🔊 Play';
+                btn.classList.remove('stop');
+            } else {
+                const currentLine = currentDialogueData[currentDialogueIndex];
+                if (currentLine) {
+                    btn.textContent = '⏹ Stop';
+                    btn.classList.add('stop');
+                    speakDialogueLine(currentLine.addresser, currentLine.addressee, () => {
+                        btn.textContent = '🔊 Play';
+                        btn.classList.remove('stop');
+                    });
+                }
+            }
+        }
+
+        // Play all dialogue lines sequentially
+function playAllDialogue() {
+    if (isPlayingAll) {
+        // Stop everything
+        stopSpeech();
+        isPlayingAll = false;
+        isPaused = false;
+        if (dialoguePlayTimeout) {
+            clearTimeout(dialoguePlayTimeout);
+            dialoguePlayTimeout = null;
+        }
+        updateDialogueButtons();
+        return;
+    }
+    
+    isPlayingAll = true;
+    isPaused = false;
+    currentDialogueIndex = 0;
+    updateDialogueButtons();
+    
+    playNextInSequence();
+}
+
+       function playNextInSequence() {
+    if (!isPlayingAll || isPaused) return;
+    
+    if (currentDialogueIndex >= currentDialogueData.length) {
+        isPlayingAll = false;
+        isPaused = false;
+        updateDialogueButtons();
+        return;
+    }
+    
+    updateActiveDialogueLine();
+    const currentLine = currentDialogueData[currentDialogueIndex];
+    
+    speakDialogueLine(currentLine.addresser, currentLine.addressee, () => {
+        if (!isPlayingAll) return;
+        if (isPaused) return;
+        
+        currentDialogueIndex++;
+        
+        if (currentDialogueIndex < currentDialogueData.length) {
+            // Pause between dialogue pairs
+            dialoguePlayTimeout = setTimeout(() => {
+                if (!isPlayingAll || isPaused) return;
+                playNextInSequence();
+            }, DIALOGUE_PAUSE_DURATION);
+        } else {
+            isPlayingAll = false;
+            isPaused = false;
+            updateDialogueButtons();
+        }
+    });
+}
+
+        // Pause/Resume play all
+function togglePauseResumeDialogue() {
+    if (!isPlayingAll) return;
+    
+    const btn = document.getElementById('pauseResumeBtn');
+    
+    if (isPaused) {
+        // Resume
+        isPaused = false;
+        btn.textContent = '⏸️ Pause';
+        playNextInSequence();
+    } else {
+        // Pause
+        isPaused = true;
+        btn.textContent = '▶️ Resume';
+        stopSpeech();
+        if (dialoguePlayTimeout) {
+            clearTimeout(dialoguePlayTimeout);
+            dialoguePlayTimeout = null;
+        }
+    }
+}
+
+        // Update dialogue button states
+        function updateDialogueButtons() {
+            const nextBtn = document.getElementById('nextLineBtn');
+            const playStopBtn = document.getElementById('playStopBtn');
+            const playAllBtn = document.getElementById('playAllBtn');
+            const pauseResumeBtn = document.getElementById('pauseResumeBtn');
+            
+            // Next button
+            if (currentDialogueIndex >= currentDialogueData.length - 1) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.disabled = false;
+            }
+            
+            // Play/Stop button
+            if (isPlayingDialogue && !isPlayingAll) {
+                playStopBtn.textContent = '⏹ Stop';
+                playStopBtn.classList.add('stop');
+            } else {
+                playStopBtn.textContent = '🔊 Play';
+                playStopBtn.classList.remove('stop');
+            }
+            
+            // Play All button
+            if (isPlayingAll) {
+                playAllBtn.textContent = '⏹ Stop All';
+                playAllBtn.classList.remove('play-all');
+                playAllBtn.classList.add('stop');
+            } else {
+                playAllBtn.textContent = '▶️ Play All';
+                playAllBtn.classList.add('play-all');
+                playAllBtn.classList.remove('stop');
+            }
+            
+            // Pause/Resume button
+            if (!isPlayingAll) {
+                pauseResumeBtn.disabled = true;
+                pauseResumeBtn.textContent = '⏸️ Pause';
+            } else {
+                pauseResumeBtn.disabled = false;
+                if (isPaused) {
+                    pauseResumeBtn.textContent = '▶️ Resume';
+                } else {
+                    pauseResumeBtn.textContent = '⏸️ Pause';
+                }
+            }
+            
+            // Disable Play/Stop during Play All
+            if (isPlayingAll) {
+                playStopBtn.disabled = true;
+                nextBtn.disabled = true;
+            } else {
+                playStopBtn.disabled = false;
+            }
+        }
+
+        // Close dialogue modal
+        function closeDialogueModal() {
+            document.getElementById('dialogueModal').style.display = 'none';
+            stopSpeech();
+            isPlayingAll = false;
+            isPaused = false;
+            updateDialogueButtons();
+        }
+
+        // ========================================
+        // FLOATING NAVIGATION
+        // ========================================
+        
+        function handleFloatingButtons() {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const nextSectionBtn = document.getElementById('nextSectionBtn');
+            const buttonCategories = document.querySelector('.button-categories');
+            
+            if (!backToTopBtn || !nextSectionBtn || !buttonCategories) return;
+            
+            const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+            
+            if (window.scrollY > buttonCategoriesBottom + 100) {
+                backToTopBtn.classList.add('show');
+                nextSectionBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+                nextSectionBtn.classList.remove('show');
+            }
+        }
+
+        function scrollToTop() {
+            const buttonCategories = document.querySelector('.button-categories');
+            if (buttonCategories) {
+                buttonCategories.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            } else {
+                window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+            }
+        }
+
+        function scrollToNextSection() {
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            
+            if (sectionHeaders.length === 0) return;
+            
+            const currentScrollPos = window.scrollY;
+            
+            for (let i = 0; i < sectionHeaders.length; i++) {
+                const headerPos = sectionHeaders[i].offsetTop;
+                
+                if (headerPos > currentScrollPos + 100) {
+                    sectionHeaders[i].scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                    return;
+                }
+            }
+            
+            window.scrollTo({ 
+                top: document.body.scrollHeight, 
+                behavior: 'smooth' 
+            });
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        
+        // Initialize event listeners
+        function initializeEventListeners() {
+            document.body.addEventListener('click', () => loadVoices(), { once: true });
+
+            // Lesson buttons
+            const lessonButtons = document.querySelectorAll('.lesson-btn');
+            lessonButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    lessonButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const lessonKey = this.getAttribute('data-lesson');
+                    loadTextContent(lessonKey);
+                });
+            });
+
+            // Speed buttons
+            const speedButtons = document.querySelectorAll('.speed-btn');
+            speedButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    speedButtons.forEach(b => b.classList.remove('active-speed'));
+                    this.classList.add('active-speed');
+                    speechRate = parseFloat(this.getAttribute('data-speed'));
+                    stopSpeech();
+                });
+            });
+
+            // Welcome modal
+            document.getElementById('welcomeOkBtn').addEventListener('click', () => {
+                document.getElementById('welcomeModal').style.display = 'none';
+            });
+
+            // Easy version modal
+            document.getElementById('closeEasyModal').addEventListener('click', closeEasyModal);
+            document.getElementById('playEasyBtn').addEventListener('click', playEasyAudio);
+            document.getElementById('stopEasyBtn').addEventListener('click', stopSpeech);
+
+            // Dialogue modal
+            document.getElementById('closeDialogueModal').addEventListener('click', closeDialogueModal);
+            document.getElementById('nextLineBtn').addEventListener('click', nextDialogueLine);
+            document.getElementById('playStopBtn').addEventListener('click', togglePlayStopDialogue);
+            document.getElementById('playAllBtn').addEventListener('click', playAllDialogue);
+            document.getElementById('pauseResumeBtn').addEventListener('click', togglePauseResumeDialogue);
+
+            // Floating buttons
+            document.getElementById('backToTopBtn').addEventListener('click', scrollToTop);
+            document.getElementById('nextSectionBtn').addEventListener('click', scrollToNextSection);
+            window.addEventListener('scroll', handleFloatingButtons);
+            handleFloatingButtons();
+
+            // Click outside modal to close
+            window.addEventListener('click', (e) => {
+                const easyModal = document.getElementById('easyModal');
+                const dialogueModal = document.getElementById('dialogueModal');
+                
+                if (e.target === easyModal) {
+                    closeEasyModal();
+                }
+                
+                if (e.target === dialogueModal) {
+                    closeDialogueModal();
+                }
+            });
+
+            window.addEventListener('beforeunload', () => stopSpeech());
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeEventListeners();
+        });
+    </script>
+</body>
+</html>
