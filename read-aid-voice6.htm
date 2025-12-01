@@ -581,7 +581,7 @@
     </div>
     
     <div class="container">
-        <h1>Read Aid (1201讓TTS更自然09:32)</h1>
+        <h1>Read Aid (1201改善問句語調wh vs yes-no 10:04)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -621,21 +621,6 @@
             <button class="speed-btn" data-speed="0.8">0.8x</button>
             <button class="speed-btn" data-speed="0.6">0.6x</button>
         </div>
-
-<!-- TTS Voice Controls -->
-<div class="speed-control-section" style="margin-top: 10px;">
-    <span class="speed-label">Voice:</span>
-    <select id="voiceSelect" style="padding: 8px; font-size: 14px; min-width: 200px;"></select>
-    
-    <label style="margin-left: 15px; font-weight: bold;">
-        <input type="checkbox" id="naturalToggle" checked style="margin-right: 5px;">
-        Natural Pauses
-    </label>
-    
-    <label style="margin-left: 15px; font-weight: bold;">
-        Speed: <span id="speedDisplay">1.0x</span>
-    </label>
-</div>
 
         <!-- Table -->
         <div class="text-table-container">
@@ -864,136 +849,137 @@ let isPaused = false;
         // VOICE MANAGEMENT
         // ========================================
 
-        // ========================================
-// IMPROVED VOICE MANAGEMENT
-// ========================================
-
-let selectedVoice = null;
-let useNaturalPauses = true;
-
-// Load and populate voice selector
+        // Load voices
 function loadVoices() {
     voices = speechSynthesis.getVoices();
-    
-    const voiceSelect = document.getElementById('voiceSelect');
-    const naturalToggle = document.getElementById('naturalToggle');
-    
-    if (voiceSelect && voices.length > 0) {
-        voiceSelect.innerHTML = '<option value="">Auto (Default)</option>';
-        
-        // Filter English voices
-        const englishVoices = voices.filter(v => v.lang.startsWith('en'));
-        const voiceList = englishVoices.length > 0 ? englishVoices : voices;
-        
-        voiceList.forEach(voice => {
-            const option = document.createElement('option');
-            option.value = voice.name;
-            option.textContent = `${voice.name} (${voice.lang})`;
-            voiceSelect.appendChild(option);
-        });
-        
-        // Event listener for voice selection
-        voiceSelect.addEventListener('change', (e) => {
-            const voiceName = e.target.value;
-            selectedVoice = voices.find(v => v.name === voiceName) || null;
-        });
+    if (!voices.length) {
+        const dummy = new SpeechSynthesisUtterance('');
+        speechSynthesis.speak(dummy);
+        voices = speechSynthesis.getVoices();
     }
     
-    if (naturalToggle) {
-        naturalToggle.addEventListener('change', (e) => {
-            useNaturalPauses = e.target.checked;
-        });
-    }
+// Debug log - show which voice is being used
+    const readingVoice = getEnglishVoice();
+    console.log('=== VOICE SELECTION DEBUG ===');
+    console.log('Total voices available:', voices.length);
+    console.log('Reading voice (used for all modes):', readingVoice?.name, '| Lang:', readingVoice?.lang);
+    console.log('Dialogue mode uses SAME voice with pitch variation (1.4 for addresser, 0.7 for addressee)');
+    console.log('All available English voices:');
+    voices.filter(v => v.lang.startsWith('en')).forEach(v => {
+        console.log('  -', v.name, '(', v.lang, ')');
+    });
+    console.log('=============================');
+
 }
 
-function getEnglishVoice() {
-    if (selectedVoice) return selectedVoice;
-    
-    if (!voices.length) loadVoices();
-    
-    // Try to find good default voices
-    return voices.find(v => v.name.includes('Samantha')) || 
-           voices.find(v => v.name.includes('Google')) ||
-           voices.find(v => v.lang === 'en-US') ||
-           voices[0];
-}
+        // Get English voice
+        function getEnglishVoice() {
+            if (!voices.length) loadVoices();
+            let voice = voices.find(v => v.name.includes('Samantha')) || 
+                       voices.find(v => v.lang === 'en-US');
+            return voice || null;
+        }
 
         // ========================================
         // TEXT-TO-SPEECH FUNCTIONS
         // ========================================
 
-        // Clean text while KEEPING punctuation for natural pauses
-function cleanTextForTTS(text) {
-    return text
-        .replace(/\[[^\]]*\]/g, '')  // Remove [brackets]
-        .replace(/\([^)]*\)/g, '')   // Remove (parentheses)
-        .replace(/\*+/g, '')         // Remove asterisks
-        .replace(/\s+/g, ' ')        // Collapse spaces
-        .trim();
-}
-
-// Split text into natural chunks (sentences and clauses)
-function splitIntoChunks(text) {
-    if (!useNaturalPauses) {
-        return [text]; // Speak as one piece if natural mode is off
-    }
-    
-    const chunks = [];
-    // Split by sentences first
-    const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
-    
-    for (const sentence of sentences) {
-        // Split long sentences by commas
-        if (sentence.length > 80 && sentence.includes(',')) {
-            const parts = sentence.split(',');
-            parts.forEach((part, i) => {
-                const chunk = part.trim() + (i < parts.length - 1 ? ',' : '');
-                if (chunk) chunks.push(chunk);
-            });
-        } else {
-            chunks.push(sentence.trim());
+        // Clean text for TTS
+        function cleanTextForTTS(text) {
+            return text.replace(/\*/g, '')
+                      .replace(/\//g, '')
+                      .replace(/\([^)]*\)/g, '')
+                      .replace(/\[[^\]]*\]/g, '')
+                      .replace(/\s+/g, ' ')
+                      .trim();
         }
-    }
-    
-    return chunks.filter(c => c.length > 0);
-}
 
-// Improved speak function with chunking
+        // Speak text with question detection
 function speakText(text) {
     stopSpeech();
-    
     const cleaned = cleanTextForTTS(text);
     if (!cleaned) return;
+
+    // Split into sentences to handle mixed statements and questions
+    const sentences = cleaned.match(/[^.!?]+[.!?]+/g) || [cleaned];
     
-    const chunks = splitIntoChunks(cleaned);
-    const voice = getEnglishVoice();
+    // If only one sentence, speak it directly
+    if (sentences.length === 1) {
+        speakSingleSentence(sentences[0].trim());
+        return;
+    }
     
-    let delay = 0;
+    // Multiple sentences - speak them sequentially with appropriate pitch
+    let index = 0;
     
-    chunks.forEach((chunk, index) => {
-        setTimeout(() => {
-            const utterance = new SpeechSynthesisUtterance(chunk);
-            utterance.lang = 'en-US';
-            utterance.rate = speechRate;
-            
-            // Slight pitch variation for natural feel
-            utterance.pitch = 1.0 + (index % 2 === 0 ? 0.05 : -0.05);
-            
-            if (voice) utterance.voice = voice;
-            
-            utterance.onend = () => {
-                currentSpeech = null;
-            };
-            
-            currentSpeech = utterance;
-            speechSynthesis.speak(utterance);
-            
-        }, delay);
+    function speakNext() {
+        if (index >= sentences.length) {
+            currentSpeech = null;
+            return;
+        }
         
-        // Add pause between chunks (longer for sentences)
-        const pause = chunk.match(/[.!?]$/) ? 300 : 150;
-        delay += (chunk.length * 8) + pause;
-    });
+        const sentence = sentences[index].trim();
+        const utterance = new SpeechSynthesisUtterance(sentence);
+        utterance.lang = 'en-US';
+        utterance.rate = speechRate;
+        
+        // Detect questions and apply appropriate pitch
+const isQuestion = sentence.endsWith('?');
+const startsWithYesNoQuestion = /^(is|are|do|does|did|can|could|would|will|should|have|has|had)\b/i.test(sentence);
+const startsWithWhQuestion = /^(why|what|when|where|who|how|which|whose)\b/i.test(sentence);
+
+if (isQuestion && (startsWithYesNoQuestion || !startsWithWhQuestion)) {
+    utterance.pitch = 1.4; // Higher pitch for yes/no questions (rising intonation)
+} else if (isQuestion && startsWithWhQuestion) {
+    utterance.pitch = 0.95; // Slightly lower pitch for wh-questions (falling intonation)
+} else {
+    utterance.pitch = 1.0; // Normal pitch for statements
+}
+        
+        const voice = getEnglishVoice();
+        if (voice) utterance.voice = voice;
+        
+        utterance.onend = () => {
+            index++;
+            // Small pause between sentences (150ms)
+            setTimeout(speakNext, 150);
+        };
+        
+        currentSpeech = utterance;
+        speechSynthesis.speak(utterance);
+    }
+    
+    speakNext();
+}
+
+// Helper function to speak a single sentence
+function speakSingleSentence(sentence) {
+    const utterance = new SpeechSynthesisUtterance(sentence);
+    utterance.lang = 'en-US';
+    utterance.rate = speechRate;
+    
+    // Detect questions and apply appropriate pitch
+const isQuestion = sentence.endsWith('?');
+const startsWithYesNoQuestion = /^(is|are|do|does|did|can|could|would|will|should|have|has|had)\b/i.test(sentence);
+const startsWithWhQuestion = /^(why|what|when|where|who|how|which|whose)\b/i.test(sentence);
+
+if (isQuestion && (startsWithYesNoQuestion || !startsWithWhQuestion)) {
+    utterance.pitch = 1.4; // Higher pitch for yes/no questions (rising intonation)
+} else if (isQuestion && startsWithWhQuestion) {
+    utterance.pitch = 0.95; // Slightly lower pitch for wh-questions (falling intonation)
+} else {
+    utterance.pitch = 1.0; // Normal pitch for statements
+}
+    
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+    
+    utterance.onend = () => {
+        currentSpeech = null;
+    };
+    
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
 }
 
         // Stop speech
@@ -1511,22 +1497,15 @@ function togglePauseResumeDialogue() {
             });
 
             // Speed buttons
-const speedButtons = document.querySelectorAll('.speed-btn');
-speedButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-        speedButtons.forEach(b => b.classList.remove('active-speed'));
-        this.classList.add('active-speed');
-        speechRate = parseFloat(this.getAttribute('data-speed'));
-        
-        // Update display
-        const speedDisplay = document.getElementById('speedDisplay');
-        if (speedDisplay) {
-            speedDisplay.textContent = speechRate.toFixed(1) + 'x';
-        }
-        
-        stopSpeech();
-    });
-});
+            const speedButtons = document.querySelectorAll('.speed-btn');
+            speedButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    speedButtons.forEach(b => b.classList.remove('active-speed'));
+                    this.classList.add('active-speed');
+                    speechRate = parseFloat(this.getAttribute('data-speed'));
+                    stopSpeech();
+                });
+            });
 
             // Welcome modal
             document.getElementById('welcomeOkBtn').addEventListener('click', () => {
