@@ -1500,7 +1500,7 @@ affection (n) (喜愛) ^ The dog showed great affection for its owner. (這隻�
 interact (v) (互動、交流) ^ It is important for children to interact with others often. (孩子們經常與他人互動是很重要的。)
 meaningful (adj) (有意義的) ^ We had a meaningful talk about our future life. (我們進行了一次有意義的關於我們未來生活的談話。)
 meaningless (adj) (無意義的) ^ It is meaningless to fight with people on the internet. (在網路上跟人吵架很沒意義。)
-fellow workers/students… (同事、同學等) ^ She went hiking with her fellow students from the school. (她和她同校的同學們一起去健行。)
+fellow workers, fellow students… (同事、同學等) ^ She went hiking with her fellow students from the school. (她和她同校的同學們一起去健行。)
 
 ◎Phrases & Idioms
 account for... (phr.) (（在數量上）佔…) ^ Students account for 60% of our customers. (學生佔了我們顧客人數的六成。)
@@ -1592,7 +1592,7 @@ fellow (n) (2.口語稱呼man，常簡化成fella) ^ He's a nice young fella. (�
         }
 
         // Emoji configurations for study mode
-const studyEmojis = ['🧑', '👱', '🧔', '👨‍🦰', '👩', '👧', '🧒', '👱‍♀️', '👵', '🎅', '👶', '👴', '🧓', '👨‍🦲', '🎅🏿', '🤴', '👸', '🤡', '🎃', '👻', '👺', '🧙', '🗿', '👽', '💩', '🐶', '🐱', '😂', '😜'];
+const studyEmojis = ['🧑', '👱', '🧔', '👨‍🦰', '👩', '👧', '🧒', '👱‍♀️', '👵', '🎅', '👶', '👴', '🧓', '🎅🏿', '🤴', '👸', '🙆', '🤷‍♂️', '🎃', '👻', '👺', '🧙', '🗿', '👽', '💩', '🐶', '🐱', '🐵', '🐷', '🐮', '🐯', '🦁', '🐻', '🦊', '🦝', '🐹', '🐰', '🐨', '🐼', '🤠', '😂', '😜'];
 let currentEmoji = '🧑';
 let translationShown = false;
 
@@ -2017,10 +2017,12 @@ function playQuizAudio() {
         const fullText = `${englishWord}. ${exampleOnly}`;
         speakText(fullText);
         
-        // Show English text if toggle is on
+        // Show English text if toggle is on - with 2 second delay
         if (showEnglishInQuiz) {
-            document.getElementById('listenAnswerDisplay').innerHTML = 
-                `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+            setTimeout(() => {
+                document.getElementById('listenAnswerDisplay').innerHTML = 
+                    `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+            }, 4000);  // 2000 milliseconds = 2 seconds
         }
     }
 }
@@ -2035,15 +2037,11 @@ function toggleEnglishDisplay() {
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
     
-    // If showing English and audio hasn't been played yet, update display
-    if (showEnglishInQuiz && !hasAnswered) {
-        const englishWord = extractEnglishWord(correctAnswer.word);
-        const exampleOnly = extractExampleOnly(correctAnswer.example);
-        document.getElementById('listenAnswerDisplay').innerHTML = 
-            `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
-    } else if (!showEnglishInQuiz && !hasAnswered) {
+    // When toggling off, hide English immediately
+    if (!showEnglishInQuiz && !hasAnswered) {
         document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker';
     }
+    // Note: When toggling on, English won't show until speaker is pressed and 2 seconds pass
 }
 
         // Next quiz question
