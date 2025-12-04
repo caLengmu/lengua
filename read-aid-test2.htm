@@ -399,6 +399,14 @@
             background-color: #229954;
         }
 
+.dialogue-control-btn.reset {
+    background-color: #f39c12;  /* Orange color */
+}
+
+.dialogue-control-btn.reset:hover {
+    background-color: #e67e22;  /* Darker orange on hover */
+}
+
         .dialogue-control-btn:disabled {
             background-color: #95a5a6;
             cursor: not-allowed;
@@ -452,6 +460,14 @@
         .next-section-btn:hover {
             background-color: #229954;
         }
+
+.prev-section-btn {
+    background-color: #27ae60;
+}
+
+.prev-section-btn:hover {
+    background-color: #229954;
+}
 
         @keyframes fadeIn {
             from {
@@ -571,21 +587,27 @@
                 font-size: 20px;
             }
         }
+
+.hidden-data {
+    display: none;
+}
+
     </style>
 </head>
 <body>
     <!-- Floating Navigation Buttons -->
-    <div class="floating-nav-buttons">
-        <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
-        <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
-    </div>
+<div class="floating-nav-buttons">
+    <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
+    <button class="floating-nav-btn prev-section-btn" id="prevSectionBtn" title="Previous section">⬆️</button>
+    <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
+</div>
     
     <div class="container">
-        <h1>Read Aid (1128男女聲音測試5:28)</h1>
+        <h1>📖 Read Aid <br>(v2.2 測試1204/22:23)</h1>
 
         <div class="button-categories">
             <div class="category">
-                <div class="category-title">Textbook: Book 3 (課本第三冊)</div>
+                <div class="category-title">📚 Textbook: Book 3 (課本第三冊)</div>
                 <div class="category-buttons">
                     <button class="lesson-btn" data-lesson="text1">B3 L7 課文</button>
                     <button class="lesson-btn" data-lesson="text2">B3 L8 課文</button>
@@ -594,7 +616,7 @@
             </div>
 
             <div class="category">
-                <div class="category-title">Magazine: All+ December 2026</div>
+                <div class="category-title">📰 Magazine: All+ December 2026</div>
                 <div class="category-buttons">
                     <button class="lesson-btn" data-lesson="maga1">U2 Baseball</button>
                     <button class="lesson-btn" data-lesson="maga2">U4 Ban</button>
@@ -604,7 +626,7 @@
             </div>
 
             <div class="category">
-                <div class="category-title">核心字彙</div>
+                <div class="category-title">📒 核心字彙</div>
                 <div class="category-buttons">
                     <button class="lesson-btn" data-lesson="core1">U7 Ballpoint Pen</button>
                     <button class="lesson-btn" data-lesson="core2">U8 Pancakes</button>
@@ -681,15 +703,15 @@
                 <!-- Dialogue lines will be inserted here -->
             </div>
             <div class="dialogue-controls">
-                <div class="dialogue-control-group">
-                    <button class="dialogue-control-btn" id="nextLineBtn">Next ➡️</button>
-                    <button class="dialogue-control-btn" id="playStopBtn">🔊 Play</button>
-                </div>
-                <div class="dialogue-control-group">
-                    <button class="dialogue-control-btn play-all" id="playAllBtn">▶️ Play All</button>
-                    <button class="dialogue-control-btn" id="pauseResumeBtn">⏸️ Pause</button>
-                </div>
-            </div>
+    <div class="dialogue-control-group">
+        <button class="dialogue-control-btn play-all" id="playPauseBtn">▶️ Play</button>
+        <button class="dialogue-control-btn reset" id="resetBtn">🔄 Reset</button>
+    </div>
+    <div class="dialogue-control-group">
+        <button class="dialogue-control-btn" id="backLineBtn">⬆️ Back</button>
+        <button class="dialogue-control-btn" id="nextLineBtn">Next ⬇️</button>
+    </div>
+</div>
         </div>
     </div>
 
@@ -700,7 +722,7 @@
         
         // Adjust this value to change pause duration between dialogue lines (in milliseconds)
         // 1000 = 1 second, 1500 = 1.5 seconds, etc.
-        const DIALOGUE_PAUSE_DURATION = 1500;
+        const DIALOGUE_PAUSE_DURATION = 100;
 
         // ========================================
         // DIALOGUE DATABASE
@@ -708,16 +730,27 @@
         
         const dialogueDatabase = {
             'text1': `
-How are you today? ^ I'm doing well, thank you!
-What did you do yesterday? ^ I went to the library to study.
-That sounds productive. ^ Yes, I had a lot of reading to do.
-Do you have any plans for tomorrow? ^ I'm thinking about going to the park.
-That sounds nice! ^ Would you like to join me?
+Hi! Today we’re going to read about the history of baseball in Taiwan. Are you ready?	^	Yes, I’m ready!
+Great! Let’s start with the first paragraph. Can you read it for me?	^	“With roots tracing back to the Japanese colonial period from 1895 to 1945, baseball has long held a special place in Taiwan’s heart. One of the early events that helped fuel Taiwan’s passion for the sport came in 1968, when the Red Leaves Little League team from Taitung beat a visiting Japanese powerhouse. The win captured lots of attention and sparked excitement all over the island.”
+Very good! Let’s talk about some vocabulary. Do you know what “trace back to” means?	^	Umm… maybe “started from long ago”?
+Exactly! It tells us where something began. And “hold a special place in Taiwan’s heart” means people in Taiwan love it very much.	^	Oh, I see.
+What happened in 1968 that made people excited?	^	The Red Leaves Little League team won against a strong Japanese team.
+Yes! That win sparked excitement—it made people feel happy and proud.	^	
+Let’s look at paragraph 2. Can you read it?	^	“Baseball grew even more popular in 1969, when Taichung’s Golden Dragon team won the Little League World Series. It was a feat which proved that Taiwan could compete on the global stage. Taiwanese teams dominated the LLWS for many years thereafter, earning Taiwan a reputation as a baseball heavyweight.”
+Nice reading! Do you know the word “feat”?	^	Is it something difficult and amazing?
+Exactly! The Golden Dragon team did something amazing. What does “compete on the global stage” mean?	^	It means Taiwan could play against teams from other countries.
+Yes! And “dominated” means Taiwan won again and again for many years.	^	Oh! That’s why Taiwan got the reputation as a baseball heavyweight!
+Very good! You understood it perfectly.	^	
+Let’s read paragraph 3 now.	^	“Baseball in Taiwan took another big step in 1990 with the start of the Chinese Professional Baseball League. This let local players shine and gave fans new heroes to cheer for. Soon after, Taiwan showed its strength again by winning a silver medal at the 1992 Barcelona Olympics. However, the CPBL struggled in the 1990s and 2000s due to multiple game-fixing scandals, which led to a sharp fall in attendance.”
+Great job. What does “took another big step” mean?	^	It means something important happened for baseball.
+Yes! The CPBL was a big change. Why did fans have “new heroes to cheer for”?	^	Because now there were local professional players.
+Exactly! Do you know what “struggled” means?	^	It means had a hard time.
+Yes. And why did the CPBL struggle?	^	Because there were many game-fixing scandals.
+Right. “Game-fixing” means cheating in games, and that made many fans stop going to games. That is a sharp fall in attendance.	^	That's too bad!
+
 `,
             'text2': `
-Good morning! ^ Good morning! How are you?
-I'm great, thanks. ^ That's wonderful to hear.
-What are your plans today? ^ I need to finish my homework.
+
 `,
             'text3': ``,
             'maga1': ``,
@@ -825,14 +858,14 @@ By understanding the signals that people send out with their body language, we m
         let currentEasyText = '';
         
         // Dialogue state
-        let currentDialogueData = [];
-        let currentDialogueIndex = 0;
-        let dialoguePlayTimeout = null;
-        let isPlayingDialogue = false;
-        let isPlayingAll = false;
-        let isPaused = false;
-        let femaleVoice = null;
-        let maleVoice = null;
+let currentDialogueData = [];
+let currentDialogueIndex = 0;
+let dialoguePlayTimeout = null;
+let isPlayingDialogue = false;
+let isPlayingAll = false;
+let isPaused = false;
+// Note: We no longer need femaleVoice and maleVoice variables
+// Dialogue uses the same voice as reading mode with pitch variation
 
         // ========================================
         // VOICE MANAGEMENT
@@ -847,78 +880,86 @@ function loadVoices() {
         voices = speechSynthesis.getVoices();
     }
     
-    // Priority lists for female voice
-    const femalePreferences = [
-        'Samantha', 'Victoria', 'Karen', 'Allison',        // iOS
-        'Google US English Female', 'en-US-Female',         // Android
-        'Microsoft Zira', 'female'                          // Windows
-    ];
-    
-    // Priority lists for male voice
-    const malePreferences = [
-        'Daniel', 'Aaron', 'Fred', 'Alex',                 // iOS
-        'Google US English Male', 'en-US-Male',            // Android
-        'Microsoft David', 'male'                           // Windows
-    ];
-    
-    // Find female voice
-    femaleVoice = null;
-    for (const pref of femalePreferences) {
-        femaleVoice = voices.find(v => 
-            v.name.includes(pref) || 
-            v.name.toLowerCase().includes(pref.toLowerCase())
-        );
-        if (femaleVoice) break;
-    }
-    
-    // Find male voice (must be DIFFERENT from female)
-    maleVoice = null;
-    for (const pref of malePreferences) {
-        maleVoice = voices.find(v => 
-            (v.name.includes(pref) || v.name.toLowerCase().includes(pref.toLowerCase())) &&
-            v.name !== femaleVoice?.name  // Ensure different voice
-        );
-        if (maleVoice) break;
-    }
-    
-    // Fallback: if same or no male voice found, try to get ANY different English voice
-    if (!maleVoice || maleVoice.name === femaleVoice?.name) {
-        maleVoice = voices.find(v => 
-            v.lang.startsWith('en') && 
-            v.name !== femaleVoice?.name
-        );
-    }
-    
-    // Ultimate fallback
-    if (!femaleVoice) femaleVoice = voices.find(v => v.lang.startsWith('en'));
-    if (!maleVoice) maleVoice = voices.find(v => v.lang.startsWith('en') && v !== femaleVoice);
-    
-    // Debug log (optional - you can remove this later)
-    console.log('Female voice:', femaleVoice?.name);
-    console.log('Male voice:', maleVoice?.name);
+// Debug log - show which voice is being used
+    const readingVoice = getEnglishVoice();
+    console.log('=== VOICE SELECTION DEBUG ===');
+    console.log('Total voices available:', voices.length);
+    console.log('Reading voice (used for all modes):', readingVoice?.name, '| Lang:', readingVoice?.lang);
+    console.log('Dialogue mode uses SAME voice with pitch variation (1.4 for addresser, 0.7 for addressee)');
+    console.log('All available English voices:');
+    voices.filter(v => v.lang.startsWith('en')).forEach(v => {
+        console.log('  -', v.name, '(', v.lang, ')');
+    });
+    console.log('=============================');
+
 }
 
-        // Get English voice
-        function getEnglishVoice() {
-            if (!voices.length) loadVoices();
-            let voice = voices.find(v => v.name.includes('Samantha')) || 
-                       voices.find(v => v.lang === 'en-US');
-            return voice || null;
+        // Get the BEST English voice available
+function getEnglishVoice() {
+    if (!voices.length) loadVoices();
+    
+    // Priority order: best to worst
+    const voicePriority = [
+        // iOS premium voices (best quality)
+        'Samantha (Enhanced)',
+        'Samantha',
+        
+        // Google voices (very good quality)
+        'Google US English',
+        'Chrome OS US English',
+        
+        // Other good iOS voices
+        'Karen',
+        'Victoria',
+        'Allison',
+        
+        // Windows premium voices
+        'Microsoft Zira Desktop',
+        'Microsoft David Desktop',
+        
+        // Android voices
+        'en-US-language'
+    ];
+    
+    // Try to find voices in priority order
+    for (const voiceName of voicePriority) {
+        const voice = voices.find(v => v.name.includes(voiceName));
+        if (voice) {
+            console.log('✓ Selected voice:', voice.name);
+            return voice;
         }
+    }
+    
+    // Fallback: any US English voice
+    let voice = voices.find(v => v.lang === 'en-US');
+    
+    // Last resort: any English voice
+    if (!voice) voice = voices.find(v => v.lang.startsWith('en'));
+    
+    console.log('Fallback voice:', voice?.name || 'None found');
+    return voice || null;
+}
 
         // ========================================
         // TEXT-TO-SPEECH FUNCTIONS
         // ========================================
 
-        // Clean text for TTS
-        function cleanTextForTTS(text) {
-            return text.replace(/\*/g, '')
-                      .replace(/\//g, '')
-                      .replace(/\([^)]*\)/g, '')
-                      .replace(/\[[^\]]*\]/g, '')
-                      .replace(/\s+/g, ' ')
-                      .trim();
-        }
+        // Clean text for TTS with improved phrasing
+function cleanTextForTTS(text) {
+    return text.replace(/\*/g, '')
+                  .replace(/\//g, '')
+                  .replace(/\([^)]*\)/g, '')
+                  .replace(/\[[^\]]*\]/g, '')
+                  // Add brief pauses after punctuation for better phrasing
+                  .replace(/\.\s+/g, '.  ')      // Double space after period
+                  .replace(/,\s+/g, ', ')        // Space after comma
+                  .replace(/\?\s+/g, '?  ')      // Double space after question
+                  .replace(/!\s+/g, '!  ')       // Double space after exclamation
+                  .replace(/:\s+/g, ':  ')       // Double space after colon
+                  .replace(/;\s+/g, '; ')        // Space after semicolon
+                  .replace(/\s+/g, ' ')          // Normalize spaces
+                  .trim();
+}
 
         // Speak text
         function speakText(text) {
@@ -941,70 +982,146 @@ function loadVoices() {
             speechSynthesis.speak(utterance);
         }
 
-        // Stop speech
-        function stopSpeech() {
-            if (speechSynthesis.speaking || speechSynthesis.pending) {
-                speechSynthesis.cancel();
-            }
-            currentSpeech = null;
-            
-            // Clear dialogue timeouts
-            if (dialoguePlayTimeout) {
-                clearTimeout(dialoguePlayTimeout);
-                dialoguePlayTimeout = null;
-            }
-            isPlayingDialogue = false;
-            isPlayingAll = false;
-            isPaused = false;
-        }
+// Speak text using Google Translate (high quality)
+function speakWithGoogleTranslate(text) {
+    stopSpeech();
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
+    
+    // Encode text for URL
+    const encodedText = encodeURIComponent(cleaned);
+    
+    // Google Translate TTS API URL
+    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodedText}`;
+    
+    // Create and play audio
+    const audio = new Audio(audioUrl);
+    audio.playbackRate = speechRate;
+    
+    audio.onended = () => {
+        currentSpeech = null;
+    };
+    
+    audio.onerror = () => {
+        console.error('Google Translate audio failed, falling back to Web Speech API');
+        speakText(text);  // Fallback to regular TTS
+    };
+    
+    currentSpeech = audio;
+    audio.play().catch(err => {
+        console.error('Playback failed:', err);
+        speakText(text);  // Fallback if playback fails
+    });
+}
+
+        // Stop speech (both Web Speech API and Audio elements)
+function stopSpeech() {
+    // Stop Web Speech API
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+    }
+    
+    // Stop Google Translate audio if playing
+    if (currentSpeech && currentSpeech instanceof Audio) {
+        currentSpeech.pause();
+        currentSpeech.currentTime = 0;
+    }
+    
+    currentSpeech = null;
+    
+    // Clear dialogue timeouts
+    if (dialoguePlayTimeout) {
+        clearTimeout(dialoguePlayTimeout);
+        dialoguePlayTimeout = null;
+    }
+    isPlayingDialogue = false;
+    
+    // DON'T reset isPlayingAll and isPaused here if we're just pausing
+    // They will be reset by the specific functions that need to
+}
 
         // ========================================
         // TEXT CONTENT FUNCTIONS
         // ========================================
 
         // Load text content
-        function loadTextContent(lessonKey) {
-            const tableBody = document.getElementById('textTableBody');
-            const data = textDatabase[lessonKey];
+function loadTextContent(lessonKey) {
+    const tableBody = document.getElementById('textTableBody');
+    const data = textDatabase[lessonKey];
 
-            if (!data || data.length === 0) {
-                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. <br>(暫無資料)</td></tr>';
-                setTimeout(() => {
-                    const textTable = document.getElementById('textTable');
-                    if (textTable) {
-                        textTable.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'center' 
-                        });
-                    }
-                }, 50);
-                return;
-            }
-
-            let html = '';
-            data.forEach((section) => {
-                html += `<tr>
-                    <td colspan="2" class="section-header">${section.section}</td>
-                </tr>`;
-                
-                section.items.forEach((item) => {
-                    html += `<tr class="text-row">
-                        <td class="audio-controls">
-                            <button class="audio-btn play-btn" onclick="speakText('${item.english.replace(/'/g, "\\'")}')">🔊</button>
-                            <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
-                            <button class="audio-btn easy-btn" onclick="showEasyVersion('${item.easy.replace(/'/g, "\\'")}')">😊</button>
-                            <button class="audio-btn dialogue-btn" onclick="showDialogue('${lessonKey}')">💬</button>
-                        </td>
-                        <td class="content-cell">
-                            <div class="english-text">${item.english}</div>
-                            <div class="chinese-translation">${item.chinese}</div>
-                        </td>
-                    </tr>`;
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. <br>(暫無資料)</td></tr>';
+        setTimeout(() => {
+            const textTable = document.getElementById('textTable');
+            if (textTable) {
+                textTable.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
                 });
-            });
+            }
+        }, 50);
+        return;
+    }
 
-            tableBody.innerHTML = html;
-        }
+    let html = '';
+    let itemIndex = 0; // Add counter for unique IDs
+    
+    data.forEach((section) => {
+        html += `<tr>
+            <td colspan="2" class="section-header">${section.section}</td>
+        </tr>`;
+        
+        section.items.forEach((item) => {
+            const uniqueId = `item-${itemIndex++}`;
+            
+            html += `<tr class="text-row">
+                <td class="audio-controls">
+                    <button class="audio-btn play-btn" data-text-id="${uniqueId}" onclick="speakTextById('${uniqueId}')">🔊</button>
+                    <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                    <button class="audio-btn easy-btn" data-easy-id="${uniqueId}" onclick="showEasyVersionById('${uniqueId}')">😊</button>
+                    <button class="audio-btn dialogue-btn" onclick="showDialogue('${lessonKey}')">💬</button>
+                </td>
+                <td class="content-cell">
+                    <div class="english-text">${item.english}</div>
+                    <div class="chinese-translation">${item.chinese}</div>
+                    <div class="hidden-data" data-id="${uniqueId}" data-english="${escapeForDataAttribute(item.english)}" data-easy="${escapeForDataAttribute(item.easy)}"></div>
+                </td>
+            </tr>`;
+        });
+    });
+
+    tableBody.innerHTML = html;
+}
+
+// Helper function to escape for data attributes (use JSON encoding)
+function escapeForDataAttribute(text) {
+    return text.replace(/"/g, '&quot;')
+               .replace(/'/g, '&#39;');
+}
+
+// New function to speak text by ID
+function speakTextById(id) {
+    const dataDiv = document.querySelector(`[data-id="${id}"]`);
+    if (dataDiv) {
+        const text = dataDiv.getAttribute('data-english');
+        // Decode HTML entities back to normal text
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = text;
+        speakText(textarea.value);
+    }
+}
+
+// New function to show easy version by ID
+function showEasyVersionById(id) {
+    const dataDiv = document.querySelector(`[data-id="${id}"]`);
+    if (dataDiv) {
+        const easyText = dataDiv.getAttribute('data-easy');
+        // Decode HTML entities back to normal text
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = easyText;
+        showEasyVersion(textarea.value);
+    }
+}
 
         // ========================================
         // EASY VERSION FUNCTIONS
@@ -1132,7 +1249,7 @@ function loadVoices() {
             }
         }
 
-        // Speak dialogue line with gendered voices
+        // Speak dialogue line with pitch differentiation ONLY
 function speakDialogueLine(addresserText, addresseeText, callback) {
     stopSpeech();
     
@@ -1144,12 +1261,15 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
     const cleanAddresser = cleanTextForTTS(addresserText);
     const cleanAddressee = cleanTextForTTS(addresseeText);
     
-    // Speak addresser first (female voice)
+    // Get the SAME voice used in reading mode
+    const readingVoice = getEnglishVoice();
+    
+    // Speak addresser first (HIGHER pitch, same voice)
     const utterance1 = new SpeechSynthesisUtterance(cleanAddresser);
     utterance1.lang = 'en-US';
     utterance1.rate = speechRate;
-    utterance1.pitch = 1.2;  // Higher pitch for female
-    if (femaleVoice) utterance1.voice = femaleVoice;
+    utterance1.pitch = 1.4;  // Higher pitch for addresser
+    if (readingVoice) utterance1.voice = readingVoice;  // Use SAME voice as reading
     
     utterance1.onend = () => {
         // Reset addresser highlight
@@ -1169,11 +1289,12 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
                 addresseeBubble.style.backgroundColor = '#a5d6a7';  // Brighter green
             }
             
+            // Speak addressee (LOWER pitch, same voice)
             const utterance2 = new SpeechSynthesisUtterance(cleanAddressee);
             utterance2.lang = 'en-US';
             utterance2.rate = speechRate;
-            utterance2.pitch = 0.8;  // Lower pitch for male
-            if (maleVoice) utterance2.voice = maleVoice;
+            utterance2.pitch = 0.6;  // Lower pitch for addressee
+            if (readingVoice) utterance2.voice = readingVoice;  // Use SAME voice as reading
             
             utterance2.onend = () => {
                 // Reset addressee highlight
@@ -1188,10 +1309,10 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
             
             currentSpeech = utterance2;
             speechSynthesis.speak(utterance2);
-        }, 500);
+        }, 100);
     };
     
-    // Highlight addresser speaking (THIS IS WHERE IT GOES!)
+    // Highlight addresser speaking
     const currentLine = document.querySelector('.dialogue-line.active');
     const addresserBubble = currentLine?.querySelector('.addresser .dialogue-bubble');
     if (addresserBubble) {
@@ -1225,127 +1346,157 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
             }
         }
 
-        // Play all dialogue lines sequentially
-        function playAllDialogue() {
-            if (isPlayingAll) {
-                stopSpeech();
-                isPlayingAll = false;
-                updateDialogueButtons();
-                return;
-            }
-            
+        
+       function playNextInSequence() {
+    if (!isPlayingAll || isPaused) return;
+    
+    if (currentDialogueIndex >= currentDialogueData.length) {
+        isPlayingAll = false;
+        isPaused = false;
+        updateDialogueButtons();
+        return;
+    }
+    
+    updateActiveDialogueLine();
+    const currentLine = currentDialogueData[currentDialogueIndex];
+    
+    speakDialogueLine(currentLine.addresser, currentLine.addressee, () => {
+        if (!isPlayingAll) return;
+        if (isPaused) return;
+        
+        currentDialogueIndex++;
+        
+        if (currentDialogueIndex < currentDialogueData.length) {
+            // Pause between dialogue pairs
+            dialoguePlayTimeout = setTimeout(() => {
+                if (!isPlayingAll || isPaused) return;
+                playNextInSequence();
+            }, DIALOGUE_PAUSE_DURATION);
+        } else {
+            isPlayingAll = false;
+            isPaused = false;
+            updateDialogueButtons();
+        }
+    });
+}
+
+// Toggle Play/Pause
+function togglePlayPause() {
+    if (isPlayingAll && !isPaused) {
+        // Currently playing - pause it
+        isPaused = true;
+        stopSpeech();
+        if (dialoguePlayTimeout) {
+            clearTimeout(dialoguePlayTimeout);
+            dialoguePlayTimeout = null;
+        }
+        updateDialogueButtons();
+    } else {
+        // Start or resume playing
+        if (isPaused) {
+            // Resuming from pause
+            isPaused = false;
+            updateDialogueButtons();
+            playNextInSequence();
+        } else {
+            // Starting fresh
             isPlayingAll = true;
             isPaused = false;
-            currentDialogueIndex = 0;
-            updateActiveDialogueLine();
             updateDialogueButtons();
-            
             playNextInSequence();
         }
+    }
+}
 
-        function playNextInSequence() {
-            if (!isPlayingAll || isPaused) return;
-            
-            if (currentDialogueIndex >= currentDialogueData.length) {
-                isPlayingAll = false;
-                updateDialogueButtons();
-                return;
-            }
-            
-            const currentLine = currentDialogueData[currentDialogueIndex];
-            
-            speakDialogueLine(currentLine.addresser, currentLine.addressee, () => {
-                if (!isPlayingAll || isPaused) return;
-                
-                // Pause between dialogue pairs
-                dialoguePlayTimeout = setTimeout(() => {
-                    if (!isPlayingAll || isPaused) return;
-                    
-                    currentDialogueIndex++;
-                    updateActiveDialogueLine();
-                    
-                    if (currentDialogueIndex < currentDialogueData.length) {
-                        playNextInSequence();
-                    } else {
-                        isPlayingAll = false;
-                        updateDialogueButtons();
-                    }
-                }, DIALOGUE_PAUSE_DURATION);
-            });
-        }
+// Reset to beginning
+function resetDialogue() {
+    stopSpeech();
+    isPlayingAll = false;
+    isPaused = false;
+    currentDialogueIndex = 0;
+    if (dialoguePlayTimeout) {
+        clearTimeout(dialoguePlayTimeout);
+        dialoguePlayTimeout = null;
+    }
+    updateActiveDialogueLine();
+    updateDialogueButtons();
+}
+
+// Go back to previous exchange
+function backDialogueLine() {
+    if (currentDialogueIndex > 0) {
+        currentDialogueIndex--;
+        updateActiveDialogueLine();
+        updateDialogueButtons();
+    }
+}
 
         // Pause/Resume play all
-        function togglePauseResumeDialogue() {
-            if (!isPlayingAll) return;
-            
-            const btn = document.getElementById('pauseResumeBtn');
-            
-            if (isPaused) {
-                isPaused = false;
-                btn.textContent = '⏸️ Pause';
-                playNextInSequence();
-            } else {
-                isPaused = true;
-                btn.textContent = '▶️ Resume';
-                stopSpeech();
-            }
+function togglePauseResumeDialogue() {
+    if (!isPlayingAll) return;
+    
+    const btn = document.getElementById('pauseResumeBtn');
+    
+    if (isPaused) {
+        // Resume
+        isPaused = false;
+        btn.textContent = '⏸️ Pause';
+        playNextInSequence();
+    } else {
+        // Pause
+        isPaused = true;
+        btn.textContent = '▶️ Resume';
+        stopSpeech();
+        if (dialoguePlayTimeout) {
+            clearTimeout(dialoguePlayTimeout);
+            dialoguePlayTimeout = null;
         }
+    }
+}
 
         // Update dialogue button states
-        function updateDialogueButtons() {
-            const nextBtn = document.getElementById('nextLineBtn');
-            const playStopBtn = document.getElementById('playStopBtn');
-            const playAllBtn = document.getElementById('playAllBtn');
-            const pauseResumeBtn = document.getElementById('pauseResumeBtn');
-            
-            // Next button
-            if (currentDialogueIndex >= currentDialogueData.length - 1) {
-                nextBtn.disabled = true;
-            } else {
-                nextBtn.disabled = false;
-            }
-            
-            // Play/Stop button
-            if (isPlayingDialogue && !isPlayingAll) {
-                playStopBtn.textContent = '⏹ Stop';
-                playStopBtn.classList.add('stop');
-            } else {
-                playStopBtn.textContent = '🔊 Play';
-                playStopBtn.classList.remove('stop');
-            }
-            
-            // Play All button
-            if (isPlayingAll) {
-                playAllBtn.textContent = '⏹ Stop All';
-                playAllBtn.classList.remove('play-all');
-                playAllBtn.classList.add('stop');
-            } else {
-                playAllBtn.textContent = '▶️ Play All';
-                playAllBtn.classList.add('play-all');
-                playAllBtn.classList.remove('stop');
-            }
-            
-            // Pause/Resume button
-            if (!isPlayingAll) {
-                pauseResumeBtn.disabled = true;
-                pauseResumeBtn.textContent = '⏸️ Pause';
-            } else {
-                pauseResumeBtn.disabled = false;
-                if (isPaused) {
-                    pauseResumeBtn.textContent = '▶️ Resume';
-                } else {
-                    pauseResumeBtn.textContent = '⏸️ Pause';
-                }
-            }
-            
-            // Disable Play/Stop during Play All
-            if (isPlayingAll) {
-                playStopBtn.disabled = true;
-                nextBtn.disabled = true;
-            } else {
-                playStopBtn.disabled = false;
-            }
-        }
+function updateDialogueButtons() {
+    const backBtn = document.getElementById('backLineBtn');
+    const nextBtn = document.getElementById('nextLineBtn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    
+    // Back button - disabled at first exchange OR during active playback (not paused)
+    if (currentDialogueIndex <= 0 || (isPlayingAll && !isPaused)) {
+        backBtn.disabled = true;
+    } else {
+        backBtn.disabled = false;
+    }
+    
+    // Next button - disabled at last exchange OR during active playback (not paused)
+    if (currentDialogueIndex >= currentDialogueData.length - 1 || (isPlayingAll && !isPaused)) {
+        nextBtn.disabled = true;
+    } else {
+        nextBtn.disabled = false;
+    }
+    
+    // Play/Pause button
+    if (isPlayingAll && !isPaused) {
+        playPauseBtn.textContent = '⏸️ Pause';
+        playPauseBtn.classList.remove('play-all');
+        playPauseBtn.classList.add('stop');
+    } else if (isPlayingAll && isPaused) {
+        playPauseBtn.textContent = '▶️ Resume';
+        playPauseBtn.classList.add('play-all');
+        playPauseBtn.classList.remove('stop');
+    } else {
+        playPauseBtn.textContent = '▶️ Play';
+        playPauseBtn.classList.add('play-all');
+        playPauseBtn.classList.remove('stop');
+    }
+    
+    // Reset button - disabled only when at first exchange AND not playing
+    if (currentDialogueIndex === 0 && !isPlayingAll) {
+        resetBtn.disabled = true;
+    } else {
+        resetBtn.disabled = false;
+    }
+}
 
         // Close dialogue modal
         function closeDialogueModal() {
@@ -1356,27 +1507,73 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
             updateDialogueButtons();
         }
 
+// Handle keyboard shortcuts in dialogue modal
+function handleDialogueKeyboard(event) {
+    const dialogueModal = document.getElementById('dialogueModal');
+    
+    // Only handle if dialogue modal is open
+    if (dialogueModal.style.display !== 'block') return;
+    
+    switch(event.key) {
+        case 'ArrowRight':
+            event.preventDefault();
+            if (!document.getElementById('nextLineBtn').disabled) {
+                nextDialogueLine();
+            }
+            break;
+            
+        case 'ArrowLeft':
+            event.preventDefault();
+            if (!document.getElementById('backLineBtn').disabled) {
+                backDialogueLine();
+            }
+            break;
+            
+        case ' ':
+        case 'Spacebar': // For older browsers
+            event.preventDefault();
+            togglePlayPause();
+            break;
+            
+        case 'r':
+        case 'R':
+            event.preventDefault();
+            if (!document.getElementById('resetBtn').disabled) {
+                resetDialogue();
+            }
+            break;
+            
+        case 'Escape':
+            event.preventDefault();
+            closeDialogueModal();
+            break;
+    }
+}
+
         // ========================================
         // FLOATING NAVIGATION
         // ========================================
         
         function handleFloatingButtons() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-            const nextSectionBtn = document.getElementById('nextSectionBtn');
-            const buttonCategories = document.querySelector('.button-categories');
-            
-            if (!backToTopBtn || !nextSectionBtn || !buttonCategories) return;
-            
-            const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
-            
-            if (window.scrollY > buttonCategoriesBottom + 100) {
-                backToTopBtn.classList.add('show');
-                nextSectionBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-                nextSectionBtn.classList.remove('show');
-            }
-        }
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const prevSectionBtn = document.getElementById('prevSectionBtn');
+    const nextSectionBtn = document.getElementById('nextSectionBtn');
+    const buttonCategories = document.querySelector('.button-categories');
+    
+    if (!backToTopBtn || !prevSectionBtn || !nextSectionBtn || !buttonCategories) return;
+    
+    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+    
+    if (window.scrollY > buttonCategoriesBottom + 100) {
+        backToTopBtn.classList.add('show');
+        prevSectionBtn.classList.add('show');
+        nextSectionBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+        prevSectionBtn.classList.remove('show');
+        nextSectionBtn.classList.remove('show');
+    }
+}
 
         function scrollToTop() {
             const buttonCategories = document.querySelector('.button-categories');
@@ -1417,6 +1614,50 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
                 behavior: 'smooth' 
             });
         }
+
+function scrollToPrevSection() {
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (sectionHeaders.length === 0) return;
+    
+    const currentScrollPos = window.scrollY;
+    let targetSection = null;
+    
+    // Find the current section we're viewing (or just passed)
+    let currentSectionIndex = -1;
+    for (let i = 0; i < sectionHeaders.length; i++) {
+        const headerPos = sectionHeaders[i].offsetTop;
+        // If we're past this section header (with small buffer)
+        if (currentScrollPos >= headerPos - 50) {
+            currentSectionIndex = i;
+        } else {
+            break;
+        }
+    }
+    
+    // Go to previous section
+    if (currentSectionIndex > 0) {
+        // Go to the section before current
+        targetSection = sectionHeaders[currentSectionIndex - 1];
+    } else if (currentSectionIndex === 0) {
+        // Already at first section, go to top
+        scrollToTop();
+        return;
+    } else {
+        // Somehow before all sections, go to first section
+        targetSection = sectionHeaders[0];
+    }
+    
+    // Scroll to target
+    if (targetSection) {
+        targetSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    } else {
+        scrollToTop();
+    }
+}
 
         // ========================================
         // INITIALIZATION
@@ -1459,15 +1700,16 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
             document.getElementById('stopEasyBtn').addEventListener('click', stopSpeech);
 
             // Dialogue modal
-            document.getElementById('closeDialogueModal').addEventListener('click', closeDialogueModal);
-            document.getElementById('nextLineBtn').addEventListener('click', nextDialogueLine);
-            document.getElementById('playStopBtn').addEventListener('click', togglePlayStopDialogue);
-            document.getElementById('playAllBtn').addEventListener('click', playAllDialogue);
-            document.getElementById('pauseResumeBtn').addEventListener('click', togglePauseResumeDialogue);
+document.getElementById('closeDialogueModal').addEventListener('click', closeDialogueModal);
+document.getElementById('backLineBtn').addEventListener('click', backDialogueLine);
+document.getElementById('nextLineBtn').addEventListener('click', nextDialogueLine);
+document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
+document.getElementById('resetBtn').addEventListener('click', resetDialogue);
 
             // Floating buttons
-            document.getElementById('backToTopBtn').addEventListener('click', scrollToTop);
-            document.getElementById('nextSectionBtn').addEventListener('click', scrollToNextSection);
+document.getElementById('backToTopBtn').addEventListener('click', scrollToTop);
+document.getElementById('prevSectionBtn').addEventListener('click', scrollToPrevSection);
+document.getElementById('nextSectionBtn').addEventListener('click', scrollToNextSection);
             window.addEventListener('scroll', handleFloatingButtons);
             handleFloatingButtons();
 
@@ -1484,6 +1726,11 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
                     closeDialogueModal();
                 }
             });
+
+// Keyboard shortcuts for dialogue modal
+document.addEventListener('keydown', handleDialogueKeyboard);
+
+window.addEventListener('beforeunload', () => stopSpeech());
 
             window.addEventListener('beforeunload', () => stopSpeech());
         }
