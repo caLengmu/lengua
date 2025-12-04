@@ -331,25 +331,51 @@
         }
 
         .dialogue-bubble {
-            max-width: 70%;
-            padding: 15px 20px;
-            border-radius: 20px;
-            font-size: 1.3em;
-            line-height: 1.6;
-            position: relative;
-        }
+    max-width: 70%;
+    padding: 15px 20px;
+    border-radius: 20px;
+    font-size: 1.3em;
+    line-height: 1.6;
+    position: relative;
+}
 
-        .dialogue-row.addresser .dialogue-bubble {
-            background-color: #e3f2fd;
-            color: #1565c0;
-            border-bottom-left-radius: 5px;
-        }
+.dialogue-row.addresser .dialogue-bubble {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border-bottom-left-radius: 5px;
+}
 
-        .dialogue-row.addressee .dialogue-bubble {
-            background-color: #c8e6c9;
-            color: #2e7d32;
-            border-bottom-right-radius: 5px;
-        }
+/* Add tail pointing to addresser (left side) */
+.dialogue-row.addresser .dialogue-bubble::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #e3f2fd;
+}
+
+.dialogue-row.addressee .dialogue-bubble {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+    border-bottom-right-radius: 5px;
+}
+
+/* Add tail pointing to addressee (right side) */
+.dialogue-row.addressee .dialogue-bubble::before {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #c8e6c9;
+}
 
         .dialogue-controls {
             display: flex;
@@ -740,7 +766,7 @@ Let’s look at paragraph 2. Can you read it?	^	“Baseball grew even more popul
 Nice reading! Do you know the word “feat”?	^	Is it something difficult and amazing?
 Exactly! The Golden Dragon team did something amazing. What does “compete on the global stage” mean?	^	It means Taiwan could play against teams from other countries.
 Yes! And “dominated” means Taiwan won again and again for many years.	^	Oh! That’s why Taiwan got the reputation as a baseball heavyweight!
-Very good! You understood it perfectly.	^	
+Very good! You understood it perfectly.	^	1
 Let’s read paragraph 3 now.	^	“Baseball in Taiwan took another big step in 1990 with the start of the Chinese Professional Baseball League. This let local players shine and gave fans new heroes to cheer for. Soon after, Taiwan showed its strength again by winning a silver medal at the 1992 Barcelona Olympics. However, the CPBL struggled in the 1990s and 2000s due to multiple game-fixing scandals, which led to a sharp fall in attendance.”
 Great job. What does “took another big step” mean?	^	It means something important happened for baseball.
 Yes! The CPBL was a big change. Why did fans have “new heroes to cheer for”?	^	Because now there were local professional players.
