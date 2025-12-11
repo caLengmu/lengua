@@ -1195,7 +1195,7 @@
     </div>
     
     <div class="container">
-        <h1>📃 Vocabulary List <br>(v4.5 二上三段1210)</h1>
+        <h1>📃 Vocabulary List <br>(v4.6 二上三段1211)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -2155,6 +2155,7 @@ let quizScore = 0;
 let hasAnswered = false;
 let correctAnswer = null;
 let showEnglishInQuiz = false;  // ADD THIS LINE - default is hide English
+let showEnglishTimeout = null;  // ADD THIS LINE - track the timeout
 
         // Load voices
         function loadVoices() {
@@ -2467,6 +2468,12 @@ async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
         return;
     }
 
+    // Clear any existing timeout from previous question
+    if (showEnglishTimeout) {
+        clearTimeout(showEnglishTimeout);
+        showEnglishTimeout = null;
+    }
+
     hasAnswered = false;
     correctAnswer = quizWords[currentQuizIndex];
 
@@ -2559,12 +2566,22 @@ function playQuizAudio() {
         const fullText = `${englishWord}. ${exampleOnly}`;
         speakText(fullText);
         
-        // Show English text if toggle is on - with 2 second delay
-        if (showEnglishInQuiz) {
-            setTimeout(() => {
-                document.getElementById('listenAnswerDisplay').innerHTML = 
-                    `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
-            }, 4000);  // 2000 milliseconds = 2 seconds
+        // Clear any existing timeout before setting a new one
+        if (showEnglishTimeout) {
+            clearTimeout(showEnglishTimeout);
+            showEnglishTimeout = null;
+        }
+        
+        // Show English text if toggle is on - with 4 second delay
+        if (showEnglishInQuiz && !hasAnswered) {
+            showEnglishTimeout = setTimeout(() => {
+                // Only show if still on same question and haven't answered
+                if (!hasAnswered && correctAnswer === quizWords[currentQuizIndex]) {
+                    document.getElementById('listenAnswerDisplay').innerHTML = 
+                        `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+                }
+                showEnglishTimeout = null;
+            }, 4000);
         }
     }
 }
@@ -2621,6 +2638,12 @@ function restartQuiz() {
 
         // Close quiz modal
 function closeQuizModal() {
+    // Clear timeout when closing modal
+    if (showEnglishTimeout) {
+        clearTimeout(showEnglishTimeout);
+        showEnglishTimeout = null;
+    }
+    
     document.getElementById('listenChooseModal').style.display = 'none';
     stopSpeech();
     showEnglishInQuiz = false;  // Reset toggle to default when closing
