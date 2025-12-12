@@ -369,40 +369,40 @@
 
 .dialogue-row.addresser .dialogue-bubble {
     background-color: #e3f2fd;
-    color: #1565c0;
-    border-bottom-left-radius: 5px;
+    color: #1565c0;   
+--tail-color: #e3f2fd;  /* ← ADD THIS */ 
 }
 
 /* Add tail pointing to addresser (left side) */
 .dialogue-row.addresser .dialogue-bubble::before {
     content: '';
     position: absolute;
-    left: -10px;
+    left: -14px;
     top: 20px;
     width: 0;
     height: 0;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    border-right: 10px solid #e3f2fd;
+    border-right: 15px solid var(--tail-color);  /* ← USE VARIABLE */
 }
 
 .dialogue-row.addressee .dialogue-bubble {
     background-color: #c8e6c9;
-    color: #2e7d32;
-    border-bottom-right-radius: 5px;
+    color: #2e7d32;    
+--tail-color: #c8e6c9;  /* ← ADD THIS */
 }
 
 /* Add tail pointing to addressee (right side) */
 .dialogue-row.addressee .dialogue-bubble::before {
     content: '';
     position: absolute;
-    right: -10px;
+    right: -14px;
     top: 20px;
     width: 0;
     height: 0;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    border-left: 10px solid #c8e6c9;
+    border-left: 15px solid var(--tail-color);  /* ← USE VARIABLE */
 }
 
         .dialogue-controls {
@@ -666,7 +666,7 @@
 </div>
     
     <div class="container">
-        <h1>📖 Read Aid <br>(v2.3 測試1208/17:53)</h1>
+        <h1>📖 Read Aid <br>(v2.4 測試1212/對話框形狀修正)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1446,6 +1446,7 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
         if (addresserBubble) {
             addresserBubble.style.transition = 'background-color 0.3s';
             addresserBubble.style.backgroundColor = '#e3f2fd';  // Back to original color
+addresserBubble.style.setProperty('--tail-color', '#e3f2fd');  // ← ADD THIS
         }
         
         // Small pause before addressee speaks
@@ -1455,6 +1456,7 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
             if (addresseeBubble) {
                 addresseeBubble.style.transition = 'background-color 0.3s';
                 addresseeBubble.style.backgroundColor = '#a5d6a7';  // Brighter green
+addresseeBubble.style.setProperty('--tail-color', '#a5d6a7');  // ← ADD THIS
             }
             
             // Speak addressee (LOWER pitch, same voice)
@@ -1468,6 +1470,7 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
                 // Reset addressee highlight
                 if (addresseeBubble) {
                     addresseeBubble.style.backgroundColor = '#c8e6c9';  // Back to original color
+addresseeBubble.style.setProperty('--tail-color', '#c8e6c9');  // ← ADD THIS
                 }
                 
                 currentSpeech = null;
@@ -1486,6 +1489,7 @@ function speakDialogueLine(addresserText, addresseeText, callback) {
     if (addresserBubble) {
         addresserBubble.style.transition = 'background-color 0.3s';
         addresserBubble.style.backgroundColor = '#90caf9';  // Brighter blue
+addresserBubble.style.setProperty('--tail-color', '#90caf9');  // ← ADD THIS
     }
     
     isPlayingDialogue = true;
