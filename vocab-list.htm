@@ -183,6 +183,14 @@
     background-color: #229954;
 }
 
+.prev-section-btn {
+    background-color: #27ae60;
+}
+
+.prev-section-btn:hover {
+    background-color: #229954;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1191,11 +1199,12 @@
     <!-- Floating Navigation Buttons -->
     <div class="floating-nav-buttons">
         <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
-        <button class="floating-nav-btn next-section-btn" id="nextSectionBtn" title="Next section">⬇️</button>
+        <button class="floating-nav-btn prev-section-btn" id="floatingPrevSectionBtn" title="Previous section">⬆️</button>
+        <button class="floating-nav-btn next-section-btn" id="floatingNextSectionBtn" title="Next section">⬇️</button>
     </div>
     
     <div class="container">
-        <h1>📃 Vocabulary List <br>(v4.6 二上三段1211)</h1>
+        <h1>📃 Vocabulary List <br>(v4.8)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1359,7 +1368,7 @@
                 <div class="navigation-controls" id="navigationControls">
                     <button class="nav-btn" id="backBtn">← Back</button>
                     <button class="nav-btn" id="nextBtn">Next →</button>
-                    <button class="nav-btn" id="nextSectionBtn">Next Section</button>
+                    <button class="nav-btn" id="studyModalNextSectionBtn">Next Section</button>
                 </div>
             </div>
         </div>
@@ -3137,20 +3146,23 @@ function attachBubbleEventListeners() {
 // Show/hide floating navigation buttons based on scroll position
 function handleFloatingButtons() {
     const backToTopBtn = document.getElementById('backToTopBtn');
-    const nextSectionBtn = document.getElementById('nextSectionBtn');
+    const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
+    const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
     const buttonCategories = document.querySelector('.button-categories');
     
-    if (!backToTopBtn || !nextSectionBtn || !buttonCategories) return;
+    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
     
     const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
     
     // Show buttons when scrolled past the lesson buttons
     if (window.scrollY > buttonCategoriesBottom + 100) {
         backToTopBtn.classList.add('show');
-        nextSectionBtn.classList.add('show');
+        floatingPrevSectionBtn.classList.add('show');
+        floatingNextSectionBtn.classList.add('show');
     } else {
         backToTopBtn.classList.remove('show');
-        nextSectionBtn.classList.remove('show');
+        floatingPrevSectionBtn.classList.remove('show');
+        floatingNextSectionBtn.classList.remove('show');
     }
 }
 
@@ -3197,6 +3209,58 @@ function scrollToNextSection() {
         top: document.body.scrollHeight, 
         behavior: 'smooth' 
     });
+}
+
+// Scroll to previous section header
+function scrollToPrevSection() {
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (sectionHeaders.length === 0) return;
+    
+    const currentScrollPos = window.scrollY;
+    let targetSection = null;
+    
+    // Find the section we're currently viewing
+    // A section is "current" if its header is above or near our scroll position
+    let currentSectionIndex = -1;
+    for (let i = 0; i < sectionHeaders.length; i++) {
+        const headerPos = sectionHeaders[i].offsetTop;
+        
+        // If this header is above or slightly below our current position (within 50px)
+        // then we're viewing this section or past it
+        if (headerPos <= currentScrollPos + 50) {
+            currentSectionIndex = i;
+        } else {
+            break; // Headers after this are below us
+        }
+    }
+    
+    // If we're at or past the first section, go to the previous one
+    if (currentSectionIndex > 0) {
+        targetSection = sectionHeaders[currentSectionIndex - 1];
+    } else if (currentSectionIndex === 0) {
+        // We're at the first section, scroll to top
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+        return;
+    } else {
+        // We're above all sections, scroll to top
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+        return;
+    }
+    
+    // Scroll to the target section
+    if (targetSection) {
+        targetSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
 }
 
         // ============ INITIALIZE EVENT LISTENERS ============
@@ -3261,12 +3325,7 @@ document.getElementById('closeStudyModal').addEventListener('click', () => {
             // Navigation buttons
 document.getElementById('nextBtn').addEventListener('click', nextWord);
 document.getElementById('backBtn').addEventListener('click', previousWord);
-
-// There are two nextSectionBtn elements - handle both
-const studyModalNextSection = document.querySelector('#studyModal #nextSectionBtn');
-if (studyModalNextSection) {
-    studyModalNextSection.addEventListener('click', goToNextSection);
-}
+document.getElementById('studyModalNextSectionBtn').addEventListener('click', goToNextSection);
 
             attachBubbleEventListeners();
 
@@ -3308,14 +3367,19 @@ initDB().catch(error => {
             
             // Floating navigation buttons
             const backToTopBtn = document.getElementById('backToTopBtn');
-            const nextSectionBtn = document.getElementById('nextSectionBtn');
+            const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
+            const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
             
             if (backToTopBtn) {
                 backToTopBtn.addEventListener('click', scrollToTop);
             }
             
-            if (nextSectionBtn) {
-                nextSectionBtn.addEventListener('click', scrollToNextSection);
+            if (floatingPrevSectionBtn) {
+                floatingPrevSectionBtn.addEventListener('click', scrollToPrevSection);
+            }
+            
+            if (floatingNextSectionBtn) {
+                floatingNextSectionBtn.addEventListener('click', scrollToNextSection);
             }
             
             // Show/hide floating buttons on scroll
