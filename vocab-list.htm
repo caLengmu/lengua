@@ -1208,33 +1208,33 @@
 
         <div class="button-categories">
             <div class="category">
-                <div class="category-title">📚 Textbook: Book 3 (課本第三冊)</div>
+                <div class="category-title">📚 Textbook: Book 4 (課本第四冊)</div>
                 <div class="category-buttons">
- <button class="vocab-btn" data-category="textbook" data-lesson="textbook1">B3 L7 單字片語</button>
-                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook2">B3 L7 課文段落</button>
-<button class="vocab-btn" data-category="textbook" data-lesson="textbook3">B3 L8 單字片語</button>
-                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook4">B3 L8 課文段落</button>
-<button class="vocab-btn" data-category="textbook" data-lesson="textbook5">B3 L9 單字片語 (自読)</button>
-                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook6">B3 L9 課文段落 (自読)</button>
+ <button class="vocab-btn" data-category="textbook" data-lesson="textbook1">B4 L1 單字片語 (自読)</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook2">B4 L1 課文段落 (自読)</button>
+<button class="vocab-btn" data-category="textbook" data-lesson="textbook3">B4 L2 單字片語</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook4">B4 L2 課文段落</button>
+<button class="vocab-btn" data-category="textbook" data-lesson="textbook5">B4 L3 單字片語</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook6">B4 L3 課文段落</button>
                 </div>
             </div>
 
             <div class="category">
-                <div class="category-title">📰 Magazine: All+ Dec. 2025</div>
+                <div class="category-title">📰 Magazine: All+ Mar. 2026</div>
                 <div class="category-buttons">
-                    <button class="vocab-btn" data-category="magazine" data-lesson="maga1">U2</button>
-                    <button class="vocab-btn" data-category="magazine" data-lesson="maga2">U4</button>
-                    <button class="vocab-btn" data-category="magazine" data-lesson="maga3">U5 (自読)</button>
-                    <button class="vocab-btn" data-category="magazine" data-lesson="maga4">U14 (自読)</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga1">U?</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga2">U?</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga3">U? (自読)</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga4">U? (自読)</button>
                 </div>
             </div>         
 
 <div class="category">
                 <div class="category-title">📒 核心字彙</div>
                 <div class="category-buttons">
-                    <button class="vocab-btn" data-category="core" data-lesson="core1">P2 U7</button>
-                    <button class="vocab-btn" data-category="core" data-lesson="core2">P2 U8</button>
-                    <button class="vocab-btn" data-category="core" data-lesson="core3">P2 U9</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="core1">P2 U10</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="core2">P2 U11</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="core3">P2 U12</button>
                 </div>
             </div>
         </div>
@@ -1478,990 +1478,109 @@ function parseSimplifiedDatabase(text) {
 // Built-in database - can be expanded
         const vocabDatabaseRaw = {
             'textbook1': `
-◎Vocab #1–#16
-theory (n) (理論) ^ His theory about the stars was interesting. (他關於星星的理論很有趣。)
-psychology (n) (心理學) ^ She studies psychology to learn about people's minds. (她學習心理學以了解人們的心靈。)
-demonstrate (v) (1. 表達、顯露 = show) ^ He demonstrated his joy with a wide smile. (他以一個大大的微笑表達了他的喜悅。)
-demonstrate (v) (2. 顯示、表明 = show) ^ The data demonstrates a change in the weather. (這些數據顯示天氣有所變化。)
-demonstrate (v) (3. 示範、展示) ^ The chef will demonstrate how to cook the dish. (廚師將示範如何烹飪這道菜。)
-interpret (v) (詮釋、解釋) ^ The way she interprets the poem is easy to understand. (她詮釋這首詩的方式簡單易懂。)
-stiff (adj) (僵硬的) ^ My neck is stiff after sleeping on the plane. (在飛機上睡覺後，我的脖子很僵硬。)
-scratch (v) (抓、搔) ^ If you scratch a mosquito bite too hard, it can bleed. (如果你太用力抓蚊子咬的地方，它可能會流血。)
-exhibit (v) (1.表露 = show) ^ He did not exhibit any fear when he saw the cockroach. (當他看到蟑螂時，他沒有表露任何恐懼。)
-exhibit (v) (2. 展覽、展示) ^ They will exhibit old cars from the 1930s at the museum. (他們將在博物館展覽1930年代的舊車。)
-gesture (n) (姿勢、手勢) ^ The driver made a quick gesture with his hand. (司機快速地用手做了一個手勢。)
-moreover (adv) (此外、而且) ^ It was cold; moreover, it started to rain. (天氣很冷；此外，也開始下雨了。)
-conscious (adj) (有意識的、察覺到的) ^ He is conscious of a mosquito on his arm. (他察覺到手臂上有一隻蚊子。)
-observe (v) (1.觀察) ^ The students will observe the birds in the park. (學生們將在公園裡觀察鳥類。)
-*observe* a rule, custom or law (2. *遵循* 規則、習俗、法律等) ^ Everyone in the library must observe the rules of the library. (圖書館裡的每個人都必須遵循圖書館的規則。)
-reverse (n) (相反、背面) ^ She said the exact reverse of what I thought. (她說的和我的想法完全相反。)
-
-◎Vocab #13–#24
-significant (adj) (重要的、顯著的) ^ This is a significant finding for our research. (這對我們的研究是一個重要的發現。)
-circumstance (n) (情況、情勢) ^ We had to change our plan due to the bad circumstance. (由於糟糕的情況，我們不得不改變計劃。)
-initially (adv) (最初、開始時 = in the beginning) ^ Initially, I thought the task was very easy. (最初，我認為這項任務很容易。)
-glance (v) (瞥見、掃視) ^ He glanced at the clock to see the time quickly. (他快速瞥了一眼時鐘看時間。)
-automatically (adv) (自動地) ^ The light turns on automatically when the door opens. (門打開時燈會自動打開。)
-track (v) (追蹤、循著...的蹤跡) ^ Hunters track animals by looking at their footprint. (獵人藉由查看動物的足跡來追蹤牠們。)
-adore (v) (1. 喜愛、崇敬某人 = love + admire) ^ He adores his grandfather because he is kind and wise. (他很敬愛他的祖父，因為他善良又有智慧。)
-adore (v) (2. 非常喜歡某事物) ^ She adores chocolate and can’t live without it. (她非常愛吃巧克力，沒有它就活不下去。)
-affection (n) (喜愛) ^ The dog showed great affection for its owner. (這隻狗對牠的主人表現出極大的喜愛。)
-interact (v) (互動、交流) ^ It is important for children to interact with others often. (孩子們經常與他人互動是很重要的。)
-meaningful (adj) (有意義的) ^ We had a meaningful talk about our future life. (我們進行了一次有意義的關於我們未來生活的談話。)
-meaningless (adj) (無意義的) ^ It is meaningless to fight with people on the internet. (在網路上跟人吵架很沒意義。)
-fellow workers, fellow students… (同事、同學等) ^ She went hiking with her fellow students from the school. (她和她同校的同學們一起去健行。)
-
-◎Phrases & Idioms
-account for... (phr.) (（在數量上）佔…) ^ Students account for 60% of our customers. (學生佔了我們顧客人數的六成。)
-as well (adv.) (也 = too) ^ You can have some cake and ice cream as well. (你可以吃些蛋糕，也可以吃些冰淇淋。)
-in the case of... (phr.) (在...的情況下) ^ In the case of heavy rain, the event will be canceled. (如果下大雨，活動將會被取消。)
-under the circumstances (phr.) (在這種情況下) ^ Under the circumstances, we decided it was best to wait. (在這種情況下，我們決定最好是等待。)
-follow suit (phr.) (仿效、跟著做) ^ When she ordered the soup, her brother followed suit. (當她點了湯之後，她的弟弟也跟著點。)
-aside from… (phr.) (1.除了...之外 = besides…) ^ Aside from Chinese, I also speak English and Japanese. (除了中文，我還會說英語和日語。)
-aside from… (phr.) (2.除了…之外 = except for…) ^ I like all vegetables aside from tomatoes. (我喜歡所有的蔬菜，除了番茄。)
-best of all (phr.) (最棒的是) ^ I like all the songs, but the last one is the best of all. (我喜歡所有的歌曲，但最後一首是最棒的。)
-worst of all (phr.) (最糟的是) ^ The movie was too long, and worst of all, the sound was bad. (這部電影太長了，而最糟的是，音效很差。)
-
-◎詞類變化補充
-theoretical (adj) (理論上的) ^ This is only a theoretical plan; we have not started yet. (這只是一個理論上的計劃；我們還沒有開始。)
-psychological (adj) (心理學的、心理上的) ^ The test measured the students' psychological state. (該測試測量了學生的心理狀態。)
-demonstration (n) (1.表示 2.示範) ^ The cooking demonstration was very helpful to the class. (烹飪示範對全班很有幫助。)
-interpretation (n) (解釋、詮釋) ^ His interpretation of the poem was very unique and special. (他對這首詩的解釋非常獨特。)
-scratch (n) (刮痕、擦傷) ^ The cat left a scratch on the wooden table. (貓在木桌上留下了一個刮痕。)
-exhibition (n) (1.顯示) ^ She gave an exhibition of her anger by shouting loudly. (她大聲喊叫，顯示出她的憤怒。)
-exhibition (n) (2.展覽會、陳列) ^ We saw many old paintings at the art exhibition. (我們在藝術展覽會上看到了許多古老的畫作。)
-gesture (v) (打手勢、作姿勢) ^ The police officer gestured for the cars to slow down and pull over. (警官打手勢示意汽車減速並開到路邊停車。)
-consciousness (n) (意識、知覺) ^ The doctor checked for signs of consciousness in the patient. (醫生檢查了病人是否有意識的跡象。)
-observation (n) (觀察、觀測) ^ Careful observation helps scientists learn new things. (細心的觀察幫助科學家學習新事物。)
-reverse (v) (改變方向、順序、結果等) ^ He asked the driver to reverse the car into the parking space. (他要求司機將車子倒轉進停車位。)
-reverse (adj) (相反的、顛倒的) ^ Don’t forget there are more questions on the reverse side of the test paper. (不要忘記考卷背面還有試題。)
-significance (n) (重要性、意義 = importance) ^ The teacher explained the historical significance of the event. (老師解釋了這個事件的歷史重要性。)
-initial (adj) (最初的、開始的) ^ My initial thought was that the answer to the question was easy. (我最初的想法是這個問題的答案很簡單。)
-glance (n) (一瞥、掃視) ^ He gave a quick glance at the menu before ordering his food. (他在點餐前快速地看了一眼菜單。)
-automatic (adj) (自動的) ^ The automatic doors open automatically when you approach. (當你靠近時，自動門會自動打開。)
-interaction (n) (互動、交流) ^ The interaction between kids are fun to watch. (觀看孩子之間的互動很有趣。)
-fellow (n) (1.同事、同輩) ^ She is very popular among her fellows. (她在同事間很受歡迎。)
-fellow (n) (2.口語稱呼man，常簡化成fella) ^ He's a nice young fella. (他是個善良的年輕小夥子。)
 
 `,
 
 'textbook2': `
-◎Paragraph 1
-theory (n) (理論) ^ The theory says people learn better when they feel calm. (這項理論認為人們在冷靜時學得更好。)
-account for... (phr.) (（在數量上）佔…) ^ Students account for 60% of our customers. (學生佔了我們顧客人數的六成。)
-spoken words (n) (口語) ^ Spoken words help us share ideas quickly with many people. (口說語句讓我們能快速與多人分享想法。)
-written words (n) (書面語) ^ Written words help us remember important information for a long time. (書面語句讓我們能長久記住重要資訊。)
-communication that involves emotions (n) (含有情感的溝通) ^ Communication that involves emotions can make friendships grow stronger. (含有情感的溝通能讓友誼變得更深。)
-*propose* an idea, a plan, etc. (v) (*提出* 想法、計畫等) ^ She proposed a simple plan that everyone understood right away. (她提出一個大家馬上聽懂的簡單計畫。)
-psychology (n) (心理學) ^ Psychology helps us understand why people feel certain emotions. (心理學幫助我們了解人們為何有特定情緒。)
-professor (n) (教授) ^ The professor explained the topic slowly so all students understood. (教授慢慢說明主題，好讓所有學生聽懂。)
-according to studies (phr) (根據研究) ^ According to studies, people smile more when they feel safe. (根據研究，人們在感到安全時會更常微笑。)
-achieve (v) (達成) ^ You can achieve great results by practicing a little each day. (每天練習一點就能達成好成果。)
-typically (adv) (通常) ^ People typically speak faster when they feel excited or happy. (人們在興奮或開心時通常說話更快。)
-demonstrate (= show) our true feelings (v phr) (展現真實情感) ^ We often demonstrate our true feelings through small body movements. (我們常透過小肢體動作展現真實情感。)
-body language (n) (肢體語言) ^ Body language can show how a person feels without any words. (肢體語言能不靠文字展現某人的感受。)
-ability (n) (能力) ^ She has the ability to calm people with her gentle voice. (她有用溫柔聲音安撫人的能力。)
-interpret others’ messages (v phr) (解讀他人的訊息) ^ We interpret others’ messages by watching their eyes and hands. (我們透過觀察眼睛和手來解讀他人的訊息。)
-◎Paragraph 2
-be able to do something (phr) (能夠做…) ^ He is able to learn fast when the room is quiet. (房間安靜時，他能很快學習。)
-read body language (v phr) (讀懂肢體語言) ^ She can read body language well and notice small signs. (她能讀懂肢體語言並注意到細微跡象。)
-be helpful in… (phr) (有助於…) ^ Good listening skills are helpful in solving simple daily problems. (良好傾聽技巧有助於解決日常小問題。)
-determine (v) (決定、影響) ^ Your tone can determine how people feel about your words. (你的語氣能影響別人對你話語的感受。)
-whether...or not (conj) (是否，or not可省略) ^ She asked whether he could join the group activity today. (她問他今天是否能參加小組活動。)
-sign (n) (1.標示、招牌) ^ The sign on the wall showed the way to the office. (牆上的標示指出前往辦公室的路。)
-sign (n) (2.示意動作、手勢) ^ He gave a small hand sign to tell us to stop. (他做了個小手勢要我們停下。)
-sign (n) (3.跡象、徵兆) ^ A smile is often a sign that someone feels comfortable. (微笑常是某人感到自在的徵兆。)
-sign (n) (4.記號、符號) ^ The math page had a new sign none of us recognized. (數學頁面上有個我們都不認識的新符號。)
-telltale (adj) (洩漏真相的) ^ His telltale smile showed he already knew the answer. (他那洩漏真相的微笑表示他已知道答案。)
-a telltale sign (n) (明顯跡象) ^ His shaking hands were a telltale sign he felt nervous. (他顫抖的手是他緊張的明顯跡象。)
-make stiff body movements (v phr) (做出僵硬動作) ^ People make stiff body movements when they feel uncomfortable. (人們在不自在時會做出僵硬動作。)
-scratch (v) (搔癢；抓) ^ He scratched his head slowly because he felt confused. (他慢慢抓頭，因為感到困惑。)
-make eye movements (v phr) (做出眼部動作) ^ She made quick eye movements when she tried to hide something. (她想藏事時會做出快速眼部動作。)
-liar (n) (說謊者) ^ A liar may look away often while speaking nervously. (說謊者可能常移開視線並緊張說話。)
-exhibit (v) (表露、顯示 = show) ^ He exhibited a small hand gesture to show he agreed. (他做了個小手勢表示同意。)
-make a gesture (v phr) (做手勢) ^ She made a gesture to ask us to come closer. (她做個手勢要我們靠近。)
-tend to do something (phr) (往往會…) ^ People tend to talk faster when they feel excited. (人們興奮時往往會講更快。)
-stay close to… (phr) (緊靠…) ^ The girl stayed close to her mom in the busy store. (女孩在忙碌商店裡緊靠媽媽。)
-rather than (conj) (而非) ^ He walked slowly rather than run because he felt tired. (他因為累了而選擇走路而非跑步。)
-move in an outward direction (v phr) (向外移動) ^ The crowd moved in an outward direction after the event ended. (活動結束後人群向外移動。)
-cannot help but do something (phr) (忍不住…) ^ She cannot help but laugh when the joke is funny. (笑話很好笑時，她忍不住笑。)
-rub your eyes (v phr) (揉眼睛) ^ He rubbed his eyes slowly because they felt dry. (他慢慢揉眼睛，因為覺得乾。)
-be conscious of… (phr) (意識到…) ^ He was conscious of his shaking hands during the talk. (他在講話時意識到自己手在抖。)
-as well (adv) (也) ^ She joined the group, and her friend joined as well. (她加入小組，她朋友也加入。)
-tell falsehoods (= tell lies) (v phr) (說謊) ^ People sometimes tell falsehoods when they feel scared. (人們害怕時有時會說謊。)
-detect (v) (察覺) ^ She detected a small change in his voice today. (她今天察覺到他聲音的一點改變。)
-observe (v) (觀察) ^ We observed his hands to understand his feelings better. (我們觀察他的手以更了解他的感受。)
-right-handed (adj) (慣用右手的) ^ A right-handed person often writes quickly with the right hand. (慣用右手的人通常用右手寫得很快。)
-in contrast (= by contrast) (phr) (相反地) ^ In contrast, his brother prefers quiet places to loud ones. (相反地，他哥哥更喜歡安靜地方。)
-drift toward… (v phr) (飄向…) ^ His eyes drifted toward the door when he felt bored. (他無聊時眼睛會飄向門口。)
-the reverse (n) (相反情況) ^ She likes mornings, but he feels the reverse. (她喜歡早晨，但他完全相反。)
-left-handed (adj) (慣用左手的) ^ A left-handed writer may hold the pen differently. (慣用左手的人拿筆方式可能不同。)
-________________________________________
-◎Paragraph 3
-significant (adj) (重要的) ^ This small change had a significant effect on the final result. (這個小改變對最後結果有重要影響。)
-tell (v) (分辨) ^ She can tell how he feels by watching his eyes. (她能靠看他的眼睛分辨他感受。)
-be connected to… (phr) (與…有關) ^ His actions were connected to his nervous feelings today. (他的行為與他今天的緊張有關。)
-in the case of… (phr) (在…的情況下) ^ In the case of fear, people often move backward. (在害怕的情況下，人常會往後退。)
-romantic feelings (n) (浪漫情感) ^ Romantic feelings can make people smile without noticing it. (浪漫情感能讓人不自覺微笑。)
-subconsciously (adv) (下意識地) ^ She subconsciously smiled when she saw her favorite person. (她看見最喜歡的人時下意識地微笑。)
-provide (v) (提供) ^ His actions provide clues about what he really thinks. (他的行為提供他真實想法的線索。)
-indication (n) (跡象) ^ A soft smile can be an indication of warm feelings. (溫柔的笑可能是暖心情的跡象。)
-be attracted to someone (v phr) (被某人吸引) ^ He was attracted to her because she was kind and calm. (他被她吸引，因為她親切又冷靜。)
-under the circumstances (phr) (在這種情況下) ^ Under the circumstances, leaving early was the safest choice. (在這種情況下，提早離開是最安全的選擇。)
-initially (adv) (一開始 = in the beginning) ^ Initially, he felt shy but slowly became more comfortable. (一開始他很害羞，但慢慢變得自在。)
-glance at… (v) (瞥一眼) ^ She glanced at him quickly and then looked away again. (她快速瞥他一眼後又把視線移開。)
-from a distance (= at a distance) (phr) (從遠處) ^ He watched her from a distance because he felt shy. (他因害羞而從遠處看著她。)
-slightly (adv) (稍微地) ^ She smiled slightly when she heard his soft greeting. (聽到他的輕聲問候時，她稍微微笑。)
-…than normal (phr) (比平常…) ^ His voice sounded softer than normal when he felt nervous. (他緊張時聲音比平常更輕。)
-afterward (adv) (之後) ^ They talked for a moment and left the room afterward. (他們聊了一會兒，之後走出房間。)
-look away (v) (移開視線) ^ He looked away quickly when she noticed him staring. (當她發現他盯著看時，他立刻移開視線。)
-rest your eyes on… (v) (停留目光在…) ^ Her eyes rested on him longer than usual today. (她今天的目光在他身上停得比平常久。)
-for a long period (phr) (長時間) ^ He watched the painting for a long period without moving. (他一動不動地看著那幅畫很久。)
-furthermore (adv) (此外 = besides = in addtion) ^ The plan is easy; furthermore, everyone understands it. (這計畫很簡單；此外大家都懂。)
-automatically (adv) (自動地) ^ She automatically smiled when she heard his warm voice. (她聽到他溫暖聲音時自動微笑。)
-track someone’s actions (v phr) (追蹤某人的動作) ^ We tracked his actions to understand his goal better. (我們追蹤他的動作以更了解他的目標。)
-do something without knowing it (phr) (不自覺地做某事) ^ He moved closer without knowing it because he felt interested. (他因為有興趣而不自覺走得更近。)
-sit back (v) (靠後坐，表示放鬆) ^ He sat back slowly when he finally felt relaxed again. (他終於覺得放鬆時慢慢靠回椅背。)
-follow suit (v) (跟著做) ^ She laughed, and her friends followed suit a moment later. (她笑了，她朋友們也跟著笑。)
-take a sip (of…) (v phr) (啜飲…) ^ He took a sip of water and continued listening quietly. (他啜飲一口水後安靜繼續聽。)
-do the same (phr) (做一樣的事) ^ She stood up, and the others did the same right away. (她站起來，其他人也立刻跟著做。)
-aside from… (phr) (除了…之外 = besides… = in addition to…) ^ Aside from homework, he also finished his reading today. (除了作業外，他今天也完成閱讀。)
-copy someone’s behavior (v phr) (模仿某人的行為) ^ Kids often copy someone’s behavior when they admire that person. (孩子們欣賞某人時常會模仿對方行為。)
-can’t help doing something (phr) (忍不住…) ^ He can’t help smiling when she waves at him. (她向他揮手時，他忍不住微笑。)
-point your feet toward… (v phr) (將腳指向…) ^ His feet pointed toward her when he felt interested. (他有興趣時腳會指向她。)
-adore (v) (1. 喜愛、崇敬某人 = love + admire) ^ He adores his grandfather because he is kind and wise. (他很敬愛他的祖父，因為他善良又有智慧。)
-adore (v) (2. 非常喜歡某事物) ^ She adores chocolate and can’t live without it. (她非常愛吃巧克力，沒有它就活不下去。)
-close to… (phr) (靠近…) ^ He stood close to her without thinking about it today. (他今天沒注意到自己站得離她很近。)
-the object of someone’s affection (n) (愛慕對象) ^ He smiled warmly when the object of his affection walked in. (當他的愛慕對象走進來時，他溫暖地微笑。)
-◎Paragraph 4
-previously (adv) (先前) ^ She previously thought he was shy, but now she knows better. (她先前以為他害羞，但現在更了解了。)
-mention (v) (提到) ^ She mentioned his name softly during their short conversation. (她在短暫談話中輕輕提到他的名字。)
-the previously mentioned points (n) (前面提到的要點) ^ The previously mentioned points helped us understand the idea clearly. (前面提到的要點幫助我們清楚理解概念。)
-reveal (v) (透露) ^ His small smile revealed how happy he felt inside. (他的小微笑透露出內心的開心。)
-method (n) (方法) ^ This simple method helps people understand each other better. (這個簡單方法幫助人們更了解彼此。)
-interpret someone’s thoughts (v phr) (解讀某人的想法) ^ We interpret someone’s thoughts by watching their small actions. (我們透過觀察小動作來解讀他人的想法。)
-pay attention to… (v phr) (注意…) ^ She paid attention to his eyes to see his true feelings. (她注意他的眼睛以看出他的真實感受。)
-send out a signal (v phr) (發出訊號) ^ His smile sent out a signal that he felt relaxed. (他的微笑發出他很放鬆的訊號。)
-interact with someone (v phr) (與某人互動) ^ She interacted with him kindly during their short conversation. (她在短暫對話中善意地與他互動。)
-in a… way (phr) (以某種方式) ^ He spoke in a calm way to help everyone feel safe. (他以冷靜方式說話讓大家感到安全。)
-interact in a meaningful way (phr) (以有意義方式互動) ^ They interacted in a meaningful way by sharing honest thoughts. (他們透過分享真心想法來有意義互動。)
-our fellow human beings (n) (我們的人類同伴) ^ We should care for our fellow human beings every single day. (我們每天都應關心我們的人類同伴。)
-best of all (adv) (最棒的是) ^ Best of all, the plan is simple and easy for everyone. (最棒的是，這計畫簡單又易懂。)
-every single day (phr) (每天，比every day語氣更強) ^ He practices kindness every single day in small ways. (他每天都以小方式練習善良。)
-do something without even saying a single word (phr) (一句話都不說就做到…) ^ She showed her support without saying a single word today. (她今天一句話不說就表現出支持。)
+
 
 `,
 
 'textbook3': `  
-◎Vocab #1–#10
-abuse (n) (1.虐待) ^ The report showed serious abuse of animals on the farm. (報告顯示農場上有嚴重的動物虐待。)
-abuse (n) (2.濫用) ^ Drug abuse can cause many problems for teenagers. (藥物濫用會對青少年造成許多問題。)
-highlight (n) (重點) ^ The highlight of the show was the final performance. (表演的重點是最後的演出。)
-economy (n) (經濟) ^ The economy affects how people find jobs and earn money. (經濟影響人們找工作和賺錢。)
-demand (n) (需求) ^ There is strong demand for fresh food in the city. (城市裡對新鮮食物有很高的需求。)
-illegally (adv) (非法地) ^ Some animals are sold illegally in secret markets. (有些動物在秘密市場被非法販賣。)
-lure (v) (引誘) ^ The hunter tried to lure animals with food. (獵人試圖用食物引誘動物。)
-herd (n) (獸群) ^ A herd of cows moved slowly across the field. (一群牛慢慢地穿過田野。)
-brutal (adj) (殘忍的) ^ The brutal treatment caused the animal great pain. (殘忍的對待讓動物承受巨大痛苦。)
-operator (n) (經營者) ^ The operator controls how the business is run. (經營者掌控企業如何運作。)
-mercilessly (adv) (無情地) ^ The student was beaten mercilessly by the bully. (這個學生被霸凌者無情地毆打。)
+◎Vocab #1–#13
+flood (v) (淹沒) ^ The heavy rain will flood the low streets near the river. (大雨會淹沒河流附近的低矮街道。)
+appropriate (adj) (合適的 = suitable) ^ This movie is not appropriate for small children. (這部電影不適合幼童觀看。)
+promising (adj) (有前途的) ^ He is a promising student who learns things very fast. (他是一個學習非常快、有前途的學生。)
+arched (adj) (拱形的) ^ We walked under the arched bridge in the park. (我們走過公園裡的拱橋下面。)
+solar (adj) (太陽能的) ^ Solar power uses the sun to make light for the house. (太陽能利用太陽為房子發電照明。)
+panel (n) (1.方形嵌板) ^ There is a wooden panel on the wall of the room. (房間的牆上有一個木製嵌板。)
+panel (n) (2.專家小組) ^ A panel of experts will be sent to fix this problem. (一個專家小組將被派去解決這個問題。)
+panel (n) (3.儀表板、操縱台) ^ The pilot looked at the control panel of the plane. (飛行員看著飛機的控制面板。)
+install (v) (安裝) ^ My dad will install the new air conditioner today. (我爸爸今天會安裝新的冷氣機。)
+muddy (adj) (泥濘的) ^ My shoes got muddy after I ran in the rain. (我在雨中跑步後，我的鞋子變得很泥濘。)
+session (n) (（從事某項活動的）一段時間) ^ We had a short study session after school yesterday. (昨天放學後我們進行了一次短暫的學習時間。)
+project (v) (投射、投影) ^ The machine will project the movie onto the big wall. (這台機器會將電影投影到大牆上。)
+project (n) (1.專案計畫) ^ The city has a new project to build more parks. (這座城市有一個建造更多公園的新計畫。)
+project (n) (2.學生的專題研究) ^ The student needs to finish her science project by this Friday. (這個學生需要在這週五前完成她的科學專題研究。)
+practical (adj) (1.實際的、有實際經驗的 vs. theoretical 理論的) ^ Sometimes, practical experience is more important than book knowledge. (有時，實務經驗比書本知識更重要。)
+practical (adj) (2.實用的、能解決問題的) ^ A practical person always comes up with effective ways to deal with real-world problems. (務實的人總是能想出實際可行的辦法來解決現實世界的問題。)
+issue (n) (1.議題) ^ Whether Taiwan should use nuclear energy has become a major issue. (台灣是否應該使用核能已成為一個重大議題。)
+issue (n) (2.問題 = problem) ^ There is a small issue with the computer screen. (電腦螢幕有一個小問題。)
+nutrition (n) (營養) ^ Good nutrition helps children grow up strong and healthy. (良好的營養幫助孩子長得強壯健康。)
 ________________________________________
-◎Vocab #11–#20
-strike (v) (打 = hit) ^ He may strike the door hard in anger. (他可能因為生氣而用力打門。)
-commit (v) (1.做違法的事) ^ He committed a crime and was caught by the police soon after. (他犯了罪，不久後就被警方逮捕。)
-commit (v) (2.承諾、保證會致力於某事) ^ She committed herself to protecting animals. (她承諾致力於保護動物。)
-obedient (adj) (順從的) ^ The dog is obedient to its owner. (這隻狗對主人很順從。)
-tame (v) (馴服) ^ Trainers try to tame wild animals carefully. (訓練員小心地試圖馴服野生動物。)
-vulnerable (adj) (脆弱的 = weak) ^ Young animals are vulnerable without protection. (年幼的動物在沒有保護時很脆弱。)
-permanent (adj) (永久的、長期的 vs. temporary 暫時的) ^ She is tired of moving around and is now looking for a permanent place to stay. (她厭倦了四處搬家，現在想找個固定的住處。)
-adequate (adj) (足夠的 = enough) ^ The animals did not get adequate food or water. (動物沒有得到足夠的食物或水。)
-exhaustion (n) (筋疲力盡 > tiredness) ^ He became sick from exhaustion. (他因過度疲勞而生病了。)
-complex (adj) (複雜的 = complicated vs. simple) ^ The case is complex and needs careful study. (這個案件很複雜，需要仔細研究。)
-intelligent (adj) (聰明的) ^ Dolphins are intelligent animals that learn quickly. (海豚是學習很快的聰明動物。)
+◎Vocab #14–#25
+hygiene (n) (衛生) ^ Washing hands before meals is part of good hygiene. (飯前洗手是良好衛生的一部分。)
+resistant (adj) (有抵抗力的) ^ This strong plant is resistant to many bugs. (這種強壯的植物對許多昆蟲都有抵抗力。)
+productivity (n) (生產力) ^ Listening to music helps improve my productivity at work. (聽音樂有助於提高我工作的生產力。)
+sufficient (adj) (充足的 = enough) ^ We have sufficient food and water for the long trip. (我們有充足的食物和水供長途旅行使用。)
+income (n) (收入) ^ He uses his monthly income to pay the rent for this apartment. (他用每月的收入來付這間公寓的房租。)
+financial (adj) (財務的) ^ They need financial help to buy a new car. (他們需要財務上的幫助來買新車。)
+risk (n) (風險) ^ When you talk to people with a cold, you are at a high risk of getting sick. (與感冒患者交談時，你有很高的風險會生病。)
+geographical (adj) (地理的) ^ The map shows the geographical features of this land. (這幅地圖顯示了這片土地的地理特徵。)
+barrier (n) (1.隔閡、阻礙) ^ A language barrier can make it hard to talk to people. (語言隔閡會讓與人交談變得很困難。)
+barrier (n) (2.障礙物、屏障) ^ The workers put a barrier across the broken road. (工人們在損壞的道路上放置了障礙物。)
+indeed (adv) (確實、的確) ^ It is indeed a very beautiful day to have a picnic. (今天的確是一個非常適合野餐的好日子。)
+opportunity (n) (機會) ^ This job is a great opportunity to learn new skills. (這份工作是學習新技能的好機會。)
+severe (adj) (1.非常嚴重的 = very serious) ^ The severe storm caused damage to many houses. (那場嚴重的暴風雨對許多房子造成了損害。)
+severe (adj) (2.嚴厲的 = harsh) ^ The teacher was severe with the students who were late. (老師對遲到的學生很嚴厲。)
 ________________________________________
 ◎Idioms & Phrases
-lead to… (導致… = cause) ^ Too much screen time can lead to serious eye problems. (螢幕使用時間過長會導致嚴重的眼睛問題。。)
-what’s more (而且；此外 = besides = in addition = moreover) ^ The work is dangerous; what’s more, it is illegal. (這份工作很危險，而且是非法的。)
-worse still (更糟的是) ^ These animals are hungry; worse still, they are injured. (這些動物們很飢餓，更糟的是還受了傷。)
-deal with… (處理…) ^ The police must deal with animal abuse cases. (警方必須處理動物虐待案件。)
-take pleasure in… (以…為樂) ^ He takes pleasure in helping sick animals. (他以幫助生病的動物為樂。)
-go about… (1.著手做…、開始做...) ^ They went about fixing the problem together. (他們一起著手解決問題。)
-go about... (2.像平常一樣做事、過日子等) ^ The villagers are going about their business as usual. (村民們像往常一樣忙著自己的事情。)
+make waves (1.挑起事端、製造問題) ^ He is quiet because he does not want to make waves. (他很安靜，因為他不想挑起事端。)
+make waves (2.引起轟動) ^ The new movie made waves all over the world. (這部新電影在全世界引起了轟動。)
+at a time (一次) ^ Please take only one piece of candy at a time. (請一次只拿一顆糖果。)
+base... on... (以...為根據，常使用被動語氣be based on…) ^ This book is based on a true story about a dog. (這本書是以一個關於狗的真實故事為根據。)
+at risk (of...) (處於...的風險中) ^ The old bridge is at risk of falling down. (這座舊橋處於倒塌的風險中。)
+rise above... (克服...、超越...) ^ She worked hard to rise above her difficult life. (她努力工作以克服她困難的生活。)
 ________________________________________
 ◎詞類變化補充
-abuse (v) (1.虐待 2.濫用) ^ It is wrong to abuse animals for money. (為了錢而虐待動物是錯的。)
-highlight (v) (強調) ^ The report highlights the need for new laws. (報告強調需要新的法律。)
-economic (adj) (經濟的、跟經濟有關的) ^ Economic problems affect many poor families. (經濟問題影響許多貧困家庭。)
-economical (adj) (省錢的、節約的) ^ This plan is economical and saves a lot of money. (這個計畫很節省，能省下很多錢。)
-demand (v) (要求) ^ People demand better protection for animals. (人們要求更好的動物保護。)
-legal (adj) (1.法律的) ^ They asked for legal advice from a lawyer. (他們向律師尋求法律建議。)
-legal (adj) (2.合法的) ^ This business is legal under new laws. (這項生意在新法律下是合法的。)
-illegal (adj) (非法的) ^ Illegal hunting harms wildlife badly. (非法狩獵嚴重傷害野生動物。)
-lure (n) (誘惑物) ^ Food was used as a lure for animals. (食物被當作引誘動物的誘餌。)
-operate (v) (經營、營運) ^ He operates a small animal rescue center. (他經營一家小型動物救援中心。)
-operation (n) (營運、業務) ^ The operation runs day and night. (這項業務夜以繼日地進行。)
-mercy (n) (仁慈) ^ The scam ring showed no mercy to the victims. (詐騙集團對受害者毫不留情。)
-merciless (adj) (無情的、不仁慈的) ^ The scam ring’s merciless actions shocked the public. (詐騙集團的無情的行為震驚了大眾。)
-strike (n) (罷工) ^ Workers went on strike for better conditions. (工人為了更好的條件而罷工。)
-commitment (n) (1.對某事的承諾、投入等) ^ Her commitment to animal care is strong. (她對動物照顧的投入很深。)
-commitment (n) (2.必須做的事) ^ Family commitments keep him very busy. (家庭責任讓他非常忙碌。)
-obedience (n) (服從) ^ The dog showed obedience to its trainer. (那隻狗對訓練員展現服從。)
-tame (adj) (馴服的) ^ The once wild animal is now tame. (曾經野生的動物現在已被馴服。)
-exhausted (adj) (筋疲力盡的 > tired) ^ These workers were exhausted after a long day’s work. (這些工人辛苦工作了一整天，已經筋疲力盡了。)
-exhaust (v) (使筋疲力盡) ^ Long work hours exhaust the workers. (長時間工作讓工人筋疲力盡。)
-intelligence (n) (智慧；智力) ^ The intelligence of dolphins surprises many scientists. (海豚的智慧讓許多科學家感到驚訝。)
+flood (n) (洪水) ^ The flood covered the whole field with water last night. (昨晚洪水將整片田地都淹沒在水裡。)
+flooding (n) (淹水) ^ Heavy rain caused flooding in many low parts of the city. (大雨在城市的許多低窪地區造成了淹水。)
+arch (n) (拱門、拱形結構) ^ They walked through a stone arch into the garden. (他們走過一個石拱門進入花園。)
+mud (n) (泥巴) ^ Don't bring mud into the house on your shoes. (別用鞋子把泥巴帶進屋子裡。)
+issue (v) (發布) ^ The school will issue the report cards tomorrow morning. (學校明天早上將發布成績單。)
+nutritious (adj) (有營養的) ^ Milk and eggs are very nutritious foods for kids. (牛奶和蛋對孩子來說是非常有營養的食物。)
+resist (v) (抵抗) ^ It is very hard to resist eating the sweet cake. (很難抵抗不吃那塊甜蛋糕。)
+resistance (n) (抵抗力、反對) ^ Exercise helps build resistance to common colds. (運動有助於建立對一般感冒的抵抗力。)
+productive (adj) (有生產力的) ^ I had a very productive morning and finished my homework. (我度過了一個非常有生產力的早晨，完成了我的作業。)
+finance (n) (金融) ^ He is studying finance to work in a big bank later. (他正在學習金融，以便日後在大銀行工作。)
+risk (v) (冒險) ^ Do not risk your health by working too hard every day. (不要因為每天工作太努力而拿健康冒險。)
+geography (n) (地理) ^ We learned about mountains and rivers in geography class. (我們在地理課上學習了關於山脈和河流的知識。)
 
 `, 
 
 'textbook4': `
-◎Paragraph 1
-Thailand (n) (泰國) ^ Thailand attracts many visitors from around the world each year. (泰國每年吸引來自世界各地的遊客。)
-Thai (adj/n) (泰國的／泰國人／泰文)  ^ Thai food is popular in Taiwan. (泰式料理在台灣很受歡迎。)
-see (v) (2.…是某事發生的地點或時間) ^ This year has seen a big increase in road accidents. (今年道路交通事故數量大幅增加。)
-tourist (n) (觀光客) ^ The tourist took photos near the famous temple. (那名遊客在著名寺廟附近拍照。)
-in fact (adv) (事實上) ^ In fact, many people do not know the truth. (事實上，許多人並不知道真相。)
-highlight (n) (最精彩的部分) ^ I watched the highlight of today’s baseball game on YouTube. (我在 YouTube 上看了今天棒球比賽的精彩片段。)
-economy (n) (經濟) ^ Tourism helps the local economy grow quickly. (觀光幫助當地經濟快速成長。)
-there is a dark side to… (phr) (…有黑暗的一面) ^ There's a dark side to the internet, such as online scams. (網路也有陰暗面，例如網路詐騙。)
-tourism (n) (觀光) ^ Tourism brings money but also causes problems. (觀光帶來金錢，也造成問題。)
-horrify (v) (使震驚；使害怕) ^ The story horrified people around the world. (這個故事震驚了全世界的人。)
-________________________________________
-◎Paragraph 2
-due to… (phr) (由於… = because of…) ^ Due to demand, animals are treated very badly. (由於需求，動物被非常惡劣地對待。)
-high demand (phr) (高度需求) ^ In recent years, there has been a high demand for chips around the world. (近年來，全球對晶片一直有高度需求。)
-the tourism industry (n) (觀光產業) ^ The tourism industry makes a lot of money for Greece. (觀光產業為希臘賺進大量金錢。)
-wild (adj) (野生的) ^ These elephants were once wild and free. (這些大象曾經是野生且自由的。)
-illegally (adv) (非法地) ^ Some elephants are taken illegally from forests. (有些大象被非法地從森林帶走。)
-capture (v) (捕捉) ^ Hunters capture young animals for money. (獵人為了錢捕捉年幼動物。)
-tourist attraction (n) (觀光景點 = tourist spot) ^ Elephant shows are popular tourist attractions. (大象表演是受歡迎的觀光景點。)
-lure someone away from… (phr) (把某人從…引走) ^ Food is used to lure elephants away from families. (食物被用來把大象從家人身邊引走。)
-trap (n) (陷阱) ^ The animal was caught in a hidden trap. (那隻動物被困在隱藏的陷阱中。)
-a herd of cows, deer, or elephants (n phr) (一群牛、鹿或大象) ^ A herd of elephants walked across the land. (一群大象走過那片土地。)
-live in herds (phr) (群居生活) ^ Elephants live in herds to stay safe. (大象群居生活以保護自己。)
-defend (v) (保護；防衛) ^ Mothers defend their babies from danger. (母親會保護孩子免於危險。)
-calf (n) (小牛、小象、小鯨魚等) ^ The calf stayed close to its mother. (小象緊緊待在母象身邊。)
-brutal trapper (n) (殘忍的捕獸者) ^ A brutal trapper took the young elephant. (殘忍的捕獸者帶走了幼象。)
-once (conj) (一旦…) ^ Once an animal is caught, it loses its freedom. (一旦被抓，動物就失去自由。)
-tour operator (n) (旅遊業者) ^ The tour operator sells elephant ride trips. (旅遊業者販售騎大象行程。)
-horror (n) (恐懼；可怕的事) ^ The truth behind the story is full of horror. (故事背後的真相充滿恐懼。)
-violently (adv) (暴力地) ^ The animals were treated violently by workers. (動物被工人暴力對待。)
-abuse (v) (虐待) ^ Some workers abuse animals every day. (有些工人每天虐待動物。)
-confine (v) (限制；關住) ^ Elephants are confined in small spaces. (大象被關在狹小空間中。)
-cage (n) (籠子) ^ The cage was too small for the animal. (籠子對動物來說太小了。)
-creature (n) (動物，或想像的生物。不包括植物！) ^ Her favorite sea creatures are whales. (她最愛的海洋生物是鯨魚。)
-beat someone mercilessly (phr) (無情地毆打某人) ^ They beat the animal mercilessly to control it. (他們為了控制動物而無情地毆打牠。)
-strike someone with sharp nails (phr) (用尖刺打某人) ^ Trainers strike elephants with sharp nails. (訓練員用尖刺打大象。)
-psychological torture (n) (心理折磨) ^ Being confined to the cage causes psychological torture to animals. (被關在籠子裡對動物造成心理折磨。)
-physical abuse (n) (身體虐待) ^ Physical abuse leaves deep scars. (身體虐待留下深刻傷痕。)
-extreme suffering (n) (極度痛苦) ^ The animals live in extreme suffering. (這些動物生活在極度痛苦中。)
-*commit* something wrong or illegal (v) (*做*違法的事、*犯*罪) ^ Some people commit crimes for money. (有些人為了錢而犯罪。)
-be obedient to… (phr) (順從…) ^ The animal is forced to be obedient to humans. (動物被迫順從人類。)
-________________________________________
-◎Paragraph 3
-tame (v) (馴服) ^ Trainers tame elephants through fear and pain. (訓練員透過恐懼與痛苦馴服大象。)
-force (v) (強迫) ^ They force animals to perform for tourists. (他們強迫動物為遊客表演。)
-slavery (n) (奴役、奴隸制度) ^ This life is a form of animal slavery. (這種生活是一種動物奴役。)
-be made to do something (phr) (被迫做… = be forced to do sth) ^ Elephants are made to carry people daily. (大象被迫每天載人。)
-carry someone on one’s back (phr) (背著某人) ^ Elephants carry tourists on their backs. (大象背著遊客。)
-elephant camp (n) (大象營地) ^ Many elephants live in tourist elephant camps. (許多大象住在觀光大象營地。)
-spine (n) (脊椎) ^ An elephant’s spine is not made for riding. (大象的脊椎不適合載人。)
-be vulnerable to… (phr) (脆弱的、容易受…影響的) ^ Elephants are vulnerable to heavy pressure. (大象容易受到巨大壓力傷害。)
-pressure (n) (壓力 = stress) ^ He is under a lot of pressure and really needs to relax. (他壓力很大，需要好好放鬆一下。)
-above (prep/adv) (在上方 vs. below在下方) ^ Heavy weight presses down from above. (沉重重量從上方壓下。)
-lead to… (phr) (導致… = cause) ^ Wrong sitting positions can lead to serious back pain. (錯誤的坐姿可能導致嚴重的背痛。)
-painful (adj) (痛苦的) ^ The injuries are very painful for animals. (這些傷害對動物非常疼痛。)
-permanent (adj) (永久的、長期的 vs. temporary暫時的) ^ She doesn’t want to change jobs any more. She wants a permanent job. (她不想再換工作了，她想要一份長期的工作。)
-back injury (n) (背部受傷) ^ The basketball player has to rest for a few weeks because of back injuries. (這個籃球員因為背部受傷必須休息幾週。)
-what’s more (phr) (而且、此外 = besides = in addition) ^ This app is very powerful. And what’s more, it’s free! (這個應用程式很強大，而且，它還免費！)
-deny (v) (1.否認) ^ The child denied taking money from a stranger. (這個小孩否認拿了陌生人的錢。)
-deny (v) (2.拒絕給某人某物) ^ In some countries, girls are denied the chance to go to school. (在某些國家，女孩被剝奪了上學的機會。)
-
-adequate (adj) (足夠的 = enough) ^ The animals lacked adequate food and water so they moved to another place. (這些動物缺乏足夠的食物和水，所以他們移動到另一個地方去。)
-contribute to… (phr) (造成；促成… = cause) ^ Overtourism can contribute to the suffering of local people. (過度觀光可能造成當地民眾的痛苦。)
-exhaustion (n) (筋疲力盡 > tiredness) ^ Long work hours cause exhaustion. (長時間工作造成筋疲力盡。)
-worse still (phr) (更糟的是) ^ Worse still, many animals die young. (更糟的是，許多動物英年早逝。)
-flesh (n) (人或動物的肉、果肉) ^ The flesh of the fruit is white. (這種水果的果肉是白色的。)
-bull (n) (公牛、公象、雄鯨) ^ The Chicago Bulls are one of the 30 NBA teams. (芝加哥公牛是30支NBA球隊中的一支。)
-hook (n) (鉤子) ^ Trainers use a hook to control elephants. (訓練員用鉤子控制大象。)
-on average (phr) (平均來說) ^ On average, people who don't smoke are healthier than people who do. (一般而言，不抽煙的人比抽煙的人身體健康。)
-take advantage of someone (phr) (利用某人) ^ Humans take advantage of animals for profit. (人類為了利益而利用動物。)
-cruel (adj) (殘酷的) ^ The bully is cruel to his classmates. (這個霸凌者對他的同學很殘忍。)
-trade (n) (交易；買賣) ^ The animal trade must be stopped. (動物交易必須被停止。)
-________________________________________
-◎Paragraph 4
-supply (n) (供給) ^ The supply of pork cannot meet demand. (豬肉的供給無法滿足需求。)
-it is high time that… (phr) (早該…) ^ It is high time that people changed their choices. (人們早該改變選擇了。)
-deal with… (phr) (處理…) ^ We must deal with this serious problem. (我們必須處理這個嚴重問題。)
-the roots of the problem (n phr) (問題的根源) ^ Money is the roots of the problem. (金錢是問題的根源。)
-profit from… (v phr) (從…獲利) ^ This tech company is profiting from its new AI model. (這家科技公司正從其新的人工智慧模型中獲利。)
-alternative (n) (替代方案) ^ We need an alternative in case something unexpected happens. (我們需要一個替代方案，以防預料之外的事發生。)
-national park (n) (國家公園) ^ Elephants should live freely in national parks. (大象應該在國家公園中自由生活。)
-roam (v) (漫遊) ^ Elephants need space to roam freely. (大象需要空間自由漫遊。)
-take pleasure in… (phr) (以…為樂) ^ They take pleasure in helping others. (他們以幫助他人為樂。)
-complex (adj) (複雜的 = complicated vs. simple) ^ This math problem is complex and hard to understand. (這個數學題很複雜，很難理解。)
-intelligent (adj) (聰明的) ^ Elephants are intelligent and emotional animals. (大象是聰明且有情感的動物。)
-go about... (phr) (2.像平常一樣做事、過日子等) ^ Most people seem to be going about their business as if nothing had happened. (大多數人似乎還是像平常一樣過生活，好像甚麼事情也沒有發生過。)
 
 `,
 
 'textbook5': `  
-◎Vocab #1–#12
-pilgrimage (n) (朝聖之旅) ^ Many people go on a pilgrimage to show strong faith. (許多人去朝聖以展現堅定的信仰。)
-unify (v) (使團結) ^ The event helps unify people from many countries. (這個活動幫助來自許多國家的人團結。)
-exaggeration (n) (誇大；誇張) ^ Calling it dangerous is an exaggeration. (說它很危險是一種誇大。)
-undoubtedly (adv) (無疑地) ^ This journey is undoubtedly meaningful to believers. (這趟旅程對信徒而言無疑很有意義。)
-exact (adj) (精確的) ^ Please give the exact time of the meeting. (請給出會議的確切時間。)
-the authorities (n) (當局；官方) ^ The authorities help keep visitors safe. (當局幫助確保訪客安全。)
-cast (v) (扔、投、拋、擲 = throw) ^ He cast more wood on the fire to keep it burning. (他往火裡添了更多木柴，讓火繼續燃燒。。)
-devotion (n) (忠誠、熱愛、奉獻、虔誠) ^ Her devotion to her faith is very strong. (她對信仰的虔誠非常深。)
-throng (n) (人群 = crowd) ^ A large throng filled the square quickly. (一大群人很快擠滿廣場。)
-explosive (adj) (爆發性的) ^ The crowd reacted with explosive joy. (人群以爆發性的喜悅回應。)
-pierce (v) (1.刺穿) ^ The sharp object can pierce thin plastic. (尖銳物品能刺穿薄塑膠。)
-pierce (v) (2. （光、聲音等）透入、穿過) ^ Bright light pierced the dark clouds. (明亮的光穿透了烏雲。)
-emerge (from...) (v) (出現、浮現) ^ The sun emerged from behind the clouds after the storm. (暴風雨後太陽從雲層後方浮現。)
-________________________________________
-◎Vocab #13–#24
-blessing (n) (祝福) ^ The priest gave a blessing to the crowd. (神父給人群祝福。)
-kneel (v) (跪下) ^ People kneel quietly to pray together. (人們安靜地跪下共同祈禱。)
-pavement (n) (1.鋪過的路面) ^ The parade moved slowly along the pavement. (遊行隊伍慢慢沿著鋪好的路面前進。)
-pavement (n) (2. [UK]人行道 = [US] sidewalk) ^ Many visitors stood on the pavement to watch. (許多遊客站在人行道上觀看。)
-hospitality (n) (好客) ^ The town is famous for its warm hospitality. (這個城鎮以熱情好客聞名。)
-enthusiastically (adv) (熱情地) ^ The crowd cheered enthusiastically for the group. (人群熱情地為隊伍歡呼。)
-facilities (n) (設施) ^ This company has excellent childcare facilities. (這間公司有完善的托兒設施。)
-accommodations (n) (住宿) ^ The city offers simple accommodations for pilgrims. (這座城市為朝聖者提供簡單住宿。)
-religious (adj) (宗教的) ^ This is a religious event for many people. (這對許多人來說是宗教活動。)
-humanity (n) (人性；人道) ^ The event shows kindness and humanity. (這個活動展現善良與人性。)
-ritual (n) (儀式) ^ The ritual is performed every year. (這個儀式每年舉行。)
-designate (v) (指定) ^ The area of the park is designated for children. 公園的這個區域被指定給兒童使用。)
-heritage (n) (（流傳下來具有歷史意義的）遺產) ^ The festival is part of the nation’s cultural heritage. (這個節慶是國家的文化遺產之一。)
-________________________________________
-◎Idioms & Phrases
-set out (出發) ^ The group set out early in the morning. (這個團體一大早就出發。)
-send someone off (送行) ^ We're all going to the airport to send her off tomorrow. (我們明天都要去機場為她送行。)
-in the meantime (同時) ^ In the meantime, volunteers prepared food. (同時，志工準備食物。)
-all manner of (各式各樣的 = all kinds of = all sorts of) ^ All manner of people joined the event. (各式各樣的人參加了活動。)
-be looking to (do something) (打算；想要) ^ Many visitors are looking to learn local culture. (許多遊客想了解當地文化。)
-________________________________________
-◎詞類變化補充
-pilgrim (n) (朝聖者) ^ Each pilgrim walked with hope and faith. (每位朝聖者帶著希望與信念行走。)
-exaggerate (v) (誇大) ^ Do not exaggerate the difficulty of the trip. (不要誇大這趟旅程的困難。)
-authority (n) (1.權威、權力、管轄權) ^ The government used its authority to control the spread of the disease. (政府用權力控制了疾病的蔓延。。)
-authority (n) (2.當局、當權者) ^ The health authority gave clear rules about when and where to wear a mask. (關於何時何地該戴口罩，衛生當局給了清楚的規定。)
-cast (n) (1.扔、投、拋、擲 = throw) ^ The fisherman's cast sent the net far into the water. (漁夫拋出的漁網遠遠落入水中。)
-cast (n) (2.卡司；一齣戲的全體演員) ^ The movie has a strong cast. (這部電影的演員陣容很強大。)
-devote oneself to something (phr) (奉獻於…) ^ She devoted herself to helping others. (她奉獻自己來幫助他人。)
-explode (v) (1.爆炸  2.（情緒等）爆發) ^ The bomb exploded, killing two passengers. (炸彈爆炸，炸死了兩名乘客。)
-explosion (n) (爆發；爆炸) ^ The explosion killed two passengers. (爆炸炸死了兩名乘客。)
-bless (v) (祝福) ^ May God bless you. (願上帝祝福你。)
-hospitable (adj) (好客的) ^ The villagers are kind and hospitable. (村民善良又好客。)
-enthusiastic (adj) (熱情的) ^ The crowd was enthusiastic and loud. (人群熱情又大聲。)
-enthusiasm (n) (熱情) ^ Her enthusiasm inspired many people. (她的熱情鼓舞了許多人。)
-facility (n) (（有特定用途的）場所) ^ The community is building a new indoor sports facility. (這個社區正在建造一個新的室內運動場所。)
-accommodate (v) (1.容納  2.為…提供住宿) ^ This classroom can accommodate 40 students. (這間教室能容納40名學生。)
-religion (n) (宗教) ^ Religion plays a big role in many people’s lives. (宗教在許多人的生活中扮演重要角色。)
 
 `,
 
 'textbook6': `
-◎Paragraph 1
-participate in the Mazu pilgrimage (phr) (參加媽祖遶境) ^ Many people participate in the Mazu pilgrimage every spring. (許多人每年春天參加媽祖遶境。)
-it is no exaggeration to say that… (phr) (毫不誇張地說…) ^ It is no exaggeration to say that this event is very important. (毫不誇張地說，這個活動非常重要。)
-festivity (n) (慶典；節慶活動) ^ The town is full of joy during the festivity. (節慶期間，整個城鎮充滿歡樂。)
-participant (n) (參與者) ^ Each participant wears special clothes for the event. (每位參與者都穿著特別的服裝。)
-journey (v) (旅行 = travel) ^ They journey across many towns together. (他們一起走過許多城鎮。)
-Undoubtedly, … (adv) (毫無疑問地) ^ Undoubtedly, this trip changes many lives. (毫無疑問地，這趟旅程改變了許多人的人生。)
-a can’t-miss event (n phr) (不容錯過的活動) ^ For locals, this is a can’t-miss event. (對當地人來說，這是不容錯過的活動。)
-________________________________________
-◎Paragraph 2
-honor (v) (尊敬；敬奉) ^ People honor Mazu with prayers and gifts. (人們用祈禱和供品敬奉媽祖。)
-sea goddess (n) (海上女神) ^ Mazu is known as a sea goddess. (媽祖被視為海上女神。)
-set out (phr) (出發) ^ The group set out early in the morning. (隊伍一大早就出發。)
-lunar calendar (n) (農曆) ^ The date follows the lunar calendar. (日期依照農曆。)
-exact (adj) (確切的) ^ No one knows the exact day yet. (還沒有人知道確切的日子。)
-vary from year to year (phr) (每年不同) ^ The schedule can vary from year to year. (行程每年可能不同。)
-determine (v) (決定、影響) ^ Weather can determine the final plan. (天氣可能決定最後的計畫。)
-the Lantern Festival (n) (元宵節) ^ The event is near the Lantern Festival. (活動接近元宵節。)
-temple authorities (n) (廟方人員) ^ Temple authorities guide the ritual. (廟方人員引導儀式。)
-cast (v) (擲；丟 = throw) ^ They cast the blocks onto the ground. (他們把擲筊丟到地上。)
-half-moon-shaped wooden blocks (n) (半月形木製擲筊) ^ The half-moon-shaped wooden blocks decide the date. (半月形木製擲筊決定日期。)
-decide the actual schedule (phr) (決定實際行程) ^ The ritual helps decide the actual schedule. (這個儀式有助於決定實際行程。)
-pilgrim (n) (朝聖者) ^ Each pilgrim shows great respect. (每位朝聖者都展現高度敬意。)
-on foot (phr) (徒步) ^ Many people travel on foot. (許多人徒步前進。)
-over the course of nine days (phr) (在九天的期間內) ^ The walk lasts over the course of nine days. (這段行程持續九天。)
-accompany (v) (陪伴) ^ Friends accompany each other along the way. (朋友一路互相陪伴。)
-statue (n) (雕像) ^ The statue of the goddess is carried carefully. (這位女神的神像被小心地抬著。)
-sedan chair (n) (轎子) ^ The statue sits in a sedan chair. (神像安置在神轎中。)
-strength (n) (體力；力量) ^ This journey needs great strength. (這趟旅程需要很大的體力。)
-wane (v) (減弱) ^ His energy began to wane at night. (他的體力在夜晚開始減弱。)
-passion (n) (熱情) ^ Their passion keeps them walking. (他們的熱情讓他們繼續前進。)
-dedication (n) (奉獻；投入) ^ The walk shows true dedication. (這趟行程展現真正的奉獻。)
-fade (v) (消退) ^ Tiredness may fade after rest. (疲勞在休息後可能消退。)
-________________________________________
-◎Paragraph 3
-apart from… (prep) (除了… = besides… = in addition to…) ^ Apart from faith, people enjoy the event. (除了信仰，人們也享受活動。)
-show one’s devotion to… (phr) (表達對…的虔誠) ^ They show devotion to Mazu together. (他們一起表達對媽祖的虔誠。)
-annual festival (n) (年度節慶) ^ This is a famous annual festival. (這是一個有名的年度節慶。)
-spectacular (adj) (壯觀的) ^ The parade is spectacular. (遊行非常壯觀。)
-heart-warming (adj) (感人溫馨的) ^ The scene is heart-warming. (這個場面令人感到溫馨。)
-gathering (n) (聚集；集會) ^ The gathering grows bigger each year. (這個聚集活動每年越來越大。)
-scene (n) (場景；情景) ^ This scene stays in my mind. (這個場景留在我心中。)
-a scene like no other (phr) (獨一無二的場面) ^ It is a scene like no other. (這是獨一無二的場面。)
-throngs of people (n phr) (大批人群 = crowds of people) ^ Throngs of people fill the streets. (大批人群擠滿街道。)
-the explosive sounds pierce the air (sent) (爆炸般的聲響劃破空氣) ^ Explosive sounds pierce the air loudly. (爆炸般的聲響大聲劃破空氣。)
-horns, fireworks, and firecrackers (n) (喇叭、煙火與鞭炮) ^ Horns, fireworks, and firecrackers make loud noise. (喇叭、煙火和鞭炮發出巨大聲響。)
-emerge from… (v phr) (從…出現) ^ Smoke emerges from the street corners. (煙霧從街角冒出。)
-surround (v) (包圍) ^ People surround the statue. (人們圍繞著神像。)
-send someone off on their long journey (phr) (為某人的長途旅程送行) ^ Families send pilgrims off on their long journey. (家人為朝聖者的長途旅程送行。)
-along the route (phr) (沿途) ^ Shops open along the route. (商店沿途開放。)
-millions of… (det) (數以百萬的…) ^ Millions of people watch the event. (數以百萬的人觀看這個活動。)
-join in the celebration (phr) (加入慶祝活動) ^ Visitors join in the celebration happily. (遊客開心地加入慶祝活動。)
-receive Mazu’s blessing (phr) (接受媽祖的祝福) ^ People hope to receive Mazu’s blessing. (人們希望得到媽祖的祝福。)
-kneel (v) (跪下) ^ Many people kneel to pray. (許多人跪下祈禱。)
-lie face down (phr) (俯臥；趴下) ^ Some lie face down in respect. (有些人俯身表示敬意。)
-symbolize (v) (象徵) ^ These acts symbolize deep faith. (這些行為象徵深厚的信仰。)
-in the meantime (phr) (同時) ^ In the meantime, helpers prepare food. (同時，志工準備食物。)
-locals (n) (當地人 = local people) ^ Locals welcome visitors kindly. (當地人親切地歡迎遊客。)
-show your hospitality (phr) (展現好客之道) ^ Families show their hospitality freely. (家庭熱情地展現好客之道。)
-enthusiastically (adv) (熱情地) ^ People help enthusiastically. (人們熱情地幫忙。)
-washing facilities (n) (盥洗設施) ^ Washing facilities are open to all. (盥洗設施對所有人開放。)
-accommodations (n) (住宿) ^ Free accommodations are offered. (提供免費住宿。)
-rarely (adv) (幾乎不 = seldom = almost never) ^ Such kindness is rarely seen. (這樣的善意很少見。)
-generosity (n) (慷慨) ^ Their generosity touches visitors. (他們的慷慨感動遊客。)
-a religious event (n) (宗教活動) ^ This is a religious event. (這是一項宗教活動。)
-reflect (v) (反映) ^ The event reflects strong belief. (這個活動反映了堅定的信仰。)
-the locals’ dedication to Mazu (n phr) (當地人對媽祖的奉獻) ^ This shows the locals’ dedication to Mazu. (這展現了當地人對媽祖的奉獻。)
-warmth and humanity (n) (溫暖與人性) ^ Visitors feel warmth and humanity here. (遊客在此感受到溫暖與人性。)
-be characteristic of… (phr) (為…的特色) ^ Kindness is characteristic of this town. (善良是這個城鎮的特色。)
-________________________________________
-◎Paragraph 4
-over the years (phr) (多年來) ^ Over the years, the event grew bigger. (多年來，活動規模越來越大。)
-transform into… (v phr) (轉變成…) ^ It transformed into a major festival. (它轉變成大型節慶。)
-a religious ritual (n) (宗教儀式) ^ This walk is a religious ritual. (這趟行程是一種宗教儀式。)
-all manner of… (phr) (各式各樣的… = all kinds of = all sorts of) ^ All manner of people attend. (各式各樣的人參加。)
-thus (adv) (因此 = therefore) ^ Thus, it gained worldwide fame. (因此，它獲得世界知名度。)
-be designated as… (phr) (被指定為…) ^ It was designated as a folk custom. (它被指定為民俗活動。)
-folk custom (n) (民間習俗) ^ This folk custom is very old. (這項民間習俗非常古老。)
-be looking to (do something) (phr) (打算做…) ^ Visitors are looking to learn more. (遊客打算了解更多。)
-cultural heritage (n) (文化遺產) ^ It is part of cultural heritage. (它是文化遺產的一部分。)
-essential (adj) (必要的；重要的) ^ Faith is essential to this event. (信仰對這個活動至關重要。)
 
 `,
 
 'maga1': `
-◎Dec. 2—Title & Paragraph 1
-inspiring (adj) (鼓舞人心的) ^ The inspiring story made many young players believe in themselves. (這個鼓舞人心的故事讓許多年輕球員相信自己。)
-root (n) (1.根) ^ The tree’s root grew deep into the soft ground. (這棵樹的根深深往下伸入柔軟土壤。)
-root (n) (2.根源、起源) ^ Their traditions have a root in very old local culture. (他們的傳統起源於非常古老的在地文化。)
-trace back to… (phr) (追溯到…) ^ This sport’s history can trace back to the early 1900s. (這項運動的歷史可追溯到 1900 年代初期。)
-Japanese colonial period (n) (日本殖民時期) ^ Many schools were built during the Japanese colonial period. (許多學校是在日治時期建造的。)
-hold a special place in someone’s heart (phr) (在某人心中占有特殊地位) ^ Baseball holds a special place in his heart today. (棒球今天在他心中占有特殊地位。)
-fuel (n) (燃料) ^ The fire needed more fuel to keep burning brightly. (這堆火需要更多燃料才能持續明亮燃燒。)
-passion (n) (熱情) ^ Her passion for the sport grew stronger every year. (她對這項運動的熱情每年都更強。)
-fuel someone’s passion for… (phr) (激發某人對…的熱情) ^ The win helped fuel their passion for playing baseball. (這場勝利激發他們對打棒球的熱情。)
-league (n) (聯盟) ^ The team joined a new league and played well. (這支球隊加入新聯盟並表現良好。)
-home team vs. visiting team (phr) (主場隊 vs. 客場隊) ^ The home team beat the visiting team last night. (主場隊昨晚擊敗客場隊。)
-powerhouse (n) (強隊；強大團隊) ^ That team is a powerhouse with many strong players. (那支球隊是擁有許多強手的強隊。)
-capture (v) (吸引；抓住) ^ Their great play captured the attention of many fans. (他們精彩的表現吸引許多球迷的注意。)
-spark (v) (引發；激起) ^ The win sparked new hope among the young players. (這場勝利激起年輕球員的新希望。)
-all over (+ place) (遍及…) ^ Fans cheered loudly all over the stadium today. (球迷今天在整座球場各處大聲歡呼。)
-________________________________________
-◎Dec. 2—Paragraph 2
-series (n) (系列) ^ The series continued for a full week of exciting games. (這個系列賽進行了一整週精彩比賽。)
-the World Series (n) (美國大聯盟的世界大賽，採七戰四勝制) ^ He dreams of playing in the World Series someday. (他夢想有天能參加世界大賽。)
-feat (n) (壯舉) ^ Striking out 10 players in a game is a great feat. (一場比賽三振十名球員是一項壯舉。)
-prove (v) (證明) ^ The team proved they were strong by winning again. (這支球隊再次獲勝證明了自己的強大。)
-compete (v) (競爭) ^ They will compete with top teams from other countries. (他們將和其他國家的強隊比賽。)
-on the global stage (phr) (在國際舞台上) ^ The players finally performed on the global stage. (球員們終於在國際舞台上亮相。)
-dominate (v) (稱霸；主宰) ^ The team dominated the game from start to finish. (這支球隊從頭到尾都主宰比賽。)
-thereafter (adv) (之後) ^ They kept winning many games thereafter. (之後他們持續贏得許多比賽。)
-earn (v) (贏得) ^ They earned respect from fans around the world. (他們贏得來自世界各地球迷的尊敬。)
-reputation (n) (名聲) ^ The team built a strong reputation after many wins. (這支球隊在多次獲勝後建立了好名聲。)
-heavyweight (n) (重量級強隊；重要人物) ^ They became a heavyweight in international baseball. (他們成為國際棒球界的重量級強隊。)
-________________________________________
-◎Dec. 2—Paragraph 3
-take a big step (phr) (邁出重要一步) ^ The Japanese baseball star took a big step by playing in Major League Baseball. (這個日本棒球明星加入美國職棒大聯盟，邁出了職業生涯的一大步。)
-professional (adj) (1.專業的 2.職業的) ^ He trained hard to become a professional player. (他努力訓練以成為職業選手。)
-shine (v) (1.發光 2.表現突出) ^ He shined during the game and impressed everyone. (他在比賽中表現突出並讓大家印象深刻。)
-cheer for someone (phr) (為某人加油) ^ Fans cheered for the team with loud happy voices. (球迷用大聲又開心的聲音為球隊加油。)
-soon after (phr) (不久之後) ^ Soon after, the tennis player won another championship. (不久之後，這個網球員又贏了另一個冠軍。)
-strength (n) (實力；力量) ^ Their strength grew with each game they played. (他們的實力隨每場比賽逐漸提升。)
-silver medal (n) (銀牌) ^ They proudly brought home a silver medal. (他們帶著銀牌驕傲回家。)
-struggle (v) (掙扎、艱難地做某事) ^ The team struggled with injuries this season. (這支球隊本季因傷勢而苦苦掙扎。)
-due to… (phr) (由於… = because of…) ^ The game was delayed due to heavy rain. (由於大雨，比賽延後了。)
-multiple (adj) (多個的 = many) ^ They faced multiple challenges during the tournament. (他們在比賽期間面對多個挑戰。)
-fix a game (phr) (打假球) ^ The players were punished for trying to fix a game. (球員因企圖打假球而受到處罰。)
-scandal (n) (醜聞) ^ The baseball player’s scandal shocked his fans. (這個棒球員的醜聞讓他的球迷震驚。)
-lead to… (v phr) (導致、引起 = cause) ^ The scandal led to changes in team rules. (這場醜聞導致球隊規定的改變。)
-attend (v) (出席) ^ Few people attended the game that night. (那晚很少人出席比賽。)
-attendance (n) (出席人數) ^ Attendance dropped after the bad news spread. (壞消息傳開後出席人數下降。)
-a sharp fall in attendance (phr) (出席人數大幅下降) ^ The scandal caused a sharp fall in attendance. (這起醜聞造成出席人數大幅下滑。)
-
-
-◎Dec. 3—Paragraph 1
-in the following years (phr) (在接下來的那些年) ^ The team improved a lot in the following years. (在接下來的那些年，球隊進步許多。)
-win back someone’s trust (phr) (重新贏回某人的信任) ^ They worked hard to win back the public’s trust. (他們努力重新贏回大眾的信任。)
-the public (n) (大眾) ^ The public showed great support for the team. (大眾對這支球隊展現高度支持。)
-strict (adj) (嚴格的) ^ The new rules are very strict to stop cheating. (新規定非常嚴格，以阻止作弊。)
-corruption (n) (腐敗；貪污) ^ The league set new laws to prevent corruption. (聯盟制定新規範以防止腐敗。)
-anti- (prefix) (反…的) ^ The team added more anti-corruption rules. (球隊加入更多反腐敗規定。)
-management (n) (管理；經營層) ^ The new management helped the team improve. (新的管理層協助球隊提升。)
-recover (v) (恢復；復原) ^ It took time for the team to recover its good name. (球隊花了一段時間才恢復好名聲。)
-performance (n) (表現) ^ Their performance this season was very strong. (他們本季的表現非常強。)
-classic (n) (經典之作) ^ That game became a classic for many fans. (那場比賽成為許多球迷心中的經典。)
-bring back (phr v) (帶回；喚回) ^ The big win brought back fans’ enthusiasm. (這場大勝喚回了球迷的熱情。)
-enthusiasm (n) (熱情；熱忱) ^ Their enthusiasm grew as the season went on. (隨著球季進行，他們的熱情越來越強。)
-in addition (phr) (此外 = besides) ^ In addition, the team added two new players. (此外，球隊還加入了兩名新球員。)
-showcase (v) (展示；呈現) ^ The game showcased their strong talent. (這場比賽展示了他們強大的天賦。)
-talent (n) (天賦；才能) ^ She has great talent for baseball. (她在棒球方面很有天賦。)
-on the world stage (phr) (在世界舞台上) ^ The team finally showed its skills on the world stage. (這支球隊終於在世界舞台上展現實力。)
-achievement (n) (成就) ^ Winning the title was a big achievement. (奪冠是一項很大的成就。)
-major (adj) (主要的；重大的) ^ This was a major step for the sport in the country. (這對國內的棒球來說是重要一步。)
-Major League Baseball (n) (美國職棒大聯盟) ^ He hopes to play in Major League Baseball someday. (他希望有一天能在美國職棒大聯盟打球。)
-________________________________________
-◎Dec. 3—Paragraph 2
-dome (n) (1.圓頂建築 2.有圓頂的體育場，俗稱巨蛋) ^ The new dome (= domed stadium) can host games even on rainy days. (新的巨蛋就算下雨也能舉行比賽。)
-officially (adv) (正式地) ^ The stadium officially opened last week. (球場上週正式啟用。)
-provide (v) (提供) ^ The dome provides 40,000 seats for fans. (這座巨蛋提供四萬個座位給球迷。)
-state-of-the-art (adj) (最先進的) ^ The stadium has state-of-the-art lighting and sound. (這座球場有最先進的燈光與音響設備。)
-stadium (n) (體育場) ^ The stadium was full during the game. (比賽時球場坐滿了。)
-appropriate (adj) (適合的；適當的) ^ The venue is appropriate for international games. (這個場地很適合舉辦國際賽。)
-international (adj) (國際的) ^ Many international fans came to watch the game. (許多國際球迷前來觀賽。)
-baseball fever (n) (棒球熱) ^ Baseball fever spread across the whole island. (棒球熱遍及全島。)
-peak (n) (山頂、山峰) ^ The mountain peak is covered with snow. (山頂被白雪覆蓋。)
-reach a new peak (phr) (達到新高峰) ^ Attendance reached a new peak this season. (本季的入場人數達到新高峰。)
-premier (adj) (首屈一指的；頂尖的) ^ They are one of the premier teams in Asia. (他們是亞洲首屈一指的球隊之一。)
-championship (n) (1.冠軍稱號) ^ They won the championship after a long season. (漫長球季後他們拿下冠軍。)
-championship (n) (2.錦標賽) ^ Many strong teams joined the championship this year. (今年有許多強隊參加這項錦標賽。)
-victory (n) (勝利) ^ Their victory made fans cheer loudly. (他們的勝利讓球迷大聲歡呼。)
-celebration (n) (慶祝活動) ^ The team held a big celebration after winning. (奪冠後球隊舉行盛大慶祝活動。)
-stand as… (v phr) (作為…；成為…) ^ The win stands as proof of their hard work. (這場勝利成為他們努力的證明。)
-testament (n) (證明；見證) ^ The stadium is a testament to the city’s love of baseball. (這座球場見證了這座城市對棒球的熱愛。)
-generation (n) (世代) ^ A new generation of fans is growing up. (新世代的球迷正在成長。)
-look ahead (phr) (展望未來) ^ The team looks ahead with great hope. (球隊滿懷希望地展望未來。)
-be set to do something (phr) (準備好要…) ^ They are set to start a new season soon. (他們準備好很快展開新球季。)
-renewed confidence (n) (重新建立的信心) ^ Their strong play brought renewed confidence. (他們的好表現帶來重新建立的信心。)
-foundation (n) (基礎) ^ These changes built a strong foundation for the future. (這些改變為未來打下良好基礎。)
-once again (phr) (再次) ^ The team proved its power once again. (球隊再次證明自己的實力。)
-________________________________________
-◎Dec. 3—Paragraph 3
-highs and lows (phr) (高低起伏；順境與逆境) ^ The team experienced many highs and lows. (球隊經歷了許多高低起伏。)
-perseverance (n) (毅力) ^ Their perseverance helped them succeed. (他們的毅力讓他們成功。)
-pride (n) (驕傲) ^ The city takes pride in its baseball team. (這座城市以其棒球隊為傲。)
-inspire (v) (激勵) ^ Their story inspired many young players. (他們的故事激勵了許多年輕球員。)
-carry something forward (phr) (延續；繼續推動) ^ The next generation will carry the sport forward. (下一代會把這項運動延續下去。)
-on the field vs. off the field (phr) (在場上 vs. 在場外) ^ On the field, they play with great passion. Off the field, they work hard to serve the community. (在場上，他們充滿熱情地比賽。在場外，他們努力服務社區。)
 
 `,
 
 'maga2': `
-◎Dec. 8—Title & Introduction
-digital device (n) (數位裝置) ^ A digital device can help students read simple online books. (數位裝置可以幫助學生閱讀簡單的線上書籍。)
-ban (v) (禁止) ^ The school may ban phones to help students focus better. (學校可能會禁止手機以讓學生更專心。)
-it is likely that… (phr) (很可能…) ^ It is likely that many kids use phones every day. (很可能許多孩子每天使用手機。)
-enforce (v) (執行) ^ Teachers try to enforce the new phone rules fairly. (老師試著公平地執行新的手機規定。)
-at least (phr) (至少) ^ Students should study for at least thirty minutes tonight. (學生今晚至少應該讀書三十分鐘。)
-restriction (n) (限制) ^ The new restriction stops students from using phones in class. (新限制禁止學生在課堂上用手機。)
-tablet computer (n) (平板電腦) ^ A tablet computer helps some kids learn with simple videos. (平板電腦幫助一些孩子用簡單影片學習。)
-justify (v) (證明…有道理) ^ He cannot justify playing games during class time. (他無法證明上課玩遊戲是合理的。)
-advocate (n) (提倡者) ^ The advocate says phones help students learn faster. (這位提倡者表示手機能讓學生更快學習。)
-argue (v) (1.爭論、爭辯) ^ They are arguing over which Korean girl group is the best. (他們在爭論哪個韓國女子團體最棒。)
-argue (v) (2.提出主張、想法等) ^ Some scientists argue that AI will learn to think like humans one day. (有人主張人工智慧有一天能學會像人類一樣思考。)
-distract (v) (使分心) ^ Smartphones can easily distract students from their studies. (智慧型手機很容易讓學生分心，無法專心學習。)
-harm (v) (傷害) ^ Too much screen time may harm a child’s eyes. (過多螢幕時間可能傷害孩子的眼睛。)
-critic (n) (批評者) ^ The critic believes phones cause many school problems. (這位批評者認為手機造成許多校內問題。)
-counter (v) (反駁) ^ Teachers counter this point by showing helpful examples. (老師用有幫助的例子來反駁這一點。)
-enhance (v) (提升) ^ Tablets can enhance learning when used carefully. (小心使用時，平板能提升學習效果。)
-education (n) (教育) ^ Phones can help education if rules are very clear. (若規則清楚，手機能幫助教育。)
-outright (adj) (完全的；徹底的) ^ Some schools want an outright phone ban now. (一些學校現在想要徹底的手機禁令。)
-ban (n) (禁令) ^ The ban stops students from using phones at school. (這項禁令禁止學生在校使用手機。)
-excessive (adj) (過度的) ^ Excessive phone use can hurt students’ grades. (過度使用手機會傷害學生的成績。)
-below (prep) (在…之下 vs. above) ^ Do not place your phone below the desk during class. (上課時不要把手機放在桌子下。)
-perspective (n) (觀點) ^ Each person has a different perspective on phone rules. (每個人對手機規定都有不同觀點。)
-debate (n) (辯論) ^ The debate about phone use continues in many schools. (關於手機使用的辯論在許多學校持續著。)
-________________________________________
-◎Dec. 8—Yvonne, Leo, Amy
-lose count of… (phr) (數不清…) ^ I lose count of how many students check phones. (我數不清有多少學生看手機。)
-be glued to… (phr) (黏著在…) ^ Many kids are glued to their phones during breaks. (許多孩子在下課時緊盯手機。)
-frequently (adv) (頻繁地) ^ Students frequently use phones even during class time. (學生甚至在上課時也常常使用手機。)
-group work (n) (小組合作) ^ Phones disturb group work when students stop talking. (學生不再交流時，手機干擾小組合作。)
-research (n) (研究) ^ Phones help students do simple research for class. (手機幫助學生做簡單的課堂研究。)
-partial (adj) (部分的) ^ She only has partial understanding of this issue. (她對這個議題只有部分的了解。)
-call the shots (phr) (做決定) ^ Teachers call the shots about rules in class. (老師在課堂上做出規定的決定。)
-________________________________________
-
-entirely (adv) (完全地) ^ I do not entirely agree with the school phone rules. (我不完全同意學校的手機規定。)
-during the day (phr) (在白天) ^ We use phones during the day for homework needs. (我們白天用手機來處理作業需求。)
-kind of (phr) (有點 = sort of) ^ I kind of feel phones can help students sometimes. (我有點覺得手機有時能幫助學生。)
-pointless (adj) (無意義的) ^ A full phone ban feels pointless to many teens. (對許多青少年来說，全面手機禁令很無意義。)
-stay off something (phr) (避免；不碰…) ^ I try to stay off games when doing homework. (我做作業時會避免玩遊戲。)
-mature (adj) (成熟的) ^ Older students are mature enough to handle phones. (年長學生成熟到可以處理手機。)
-handle (v) (應付；處理) ^ Teens can handle simple phone rules responsibly. (青少年能負責任地處理簡單手機規定。)
-________________________________________
-
-Honestly, … (adv) (老實說…) ^ Honestly, I think kids need some phone freedom. (老實說，我覺得孩子需要一些手機自由。)
-What if…? (phr) (如果…怎麼辦？) ^ What if my child needs help during an emergency? (如果孩子在緊急時需要幫忙怎麼辦？)
-emergency (n) (緊急狀況) ^ A phone helps kids call home in an emergency. (手機能讓孩子在緊急狀況時打電話回家。)
-as long as… (phr) (只要…) ^ It is fine as long as kids follow simple rules. (只要孩子遵守簡單規定就可以。)
-(phone) be set to silent (phr) (手機調成靜音) ^ Phones should be set to silent during class time. (上課時手機應該調成靜音。)
-keep…out of sight (phr) (把…收起來不讓人看見) ^ Keep your phone out of sight during lessons. (上課時把手機收起來不要讓人看到。)
-________________________________________
-◎Dec. 9—James, Jenny
-nearby (adv) (在附近) ^ A phone nearby can distract students very easily. (附近有手機會讓學生很容易分心。)
-impair (v) (損害) ^ Too much screen use may impair young people’s sleep. (過多螢幕時間可能損害年輕人的睡眠。)
-concentration (n) (專注力) ^ Loud messages hurt students’ concentration in class. (吵雜訊息會傷害學生的專注力。)
-solution (n) (解決方法) ^ A simple rule may be the best solution. (一條簡單規定可能是最好的解決方法。)
-establish (v) (建立) ^ Schools should establish clear rules about phones. (學校應該建立清楚的手機規定。)
-designate (v) (指定) ^ Teachers can designate a box for student phones. (老師可以指定一個箱子放學生手機。)
-area (n) (區域) ^ Phones must stay in a designated area during class. (上課時手機必須放在指定區域。)
-permit (v) (允許) ^ The school does not permit phone use during tests. (學校不允許學生在考試時使用手機。)
-________________________________________
-
-message (v) (傳訊息) ^ I only message friends after school ends. (我只在放學後傳訊息給朋友。)
-schedule (n) (時間表；行程) ^ My schedule is full, so I need my phone. (我的行程很滿，所以我需要手機。)
-…or something (phr) (…之類的) ^ I use my phone for homework or something like that. (我用手機做作業或那類事情。)
-be against something (phr) (反對某事) ^ Some students are against a full phone ban. (有些學生反對全面手機禁令。)
-…, though. (phr) (不過、但是) ^ I think rules help us, though. (不過，我覺得規定對我們有幫助。)
-stir up (phr v) (引起；挑起) ^ Phone fights can stir up problems at school. (手機引起的爭吵會在校園造成問題。)
-for sure (phr) (肯定；確定) ^ Phones can help us sometimes, for sure. (手機有時真的能幫上忙。)
-________________________________________
-◎Dec. 9—Vincent, Tom, Andy
-Principal (n) (校長) ^ The Principal explained the new phone policy today. (校長今天說明新的手機政策。)
-update (v) (更新) ^ The school will update the phone rules next week. (學校下週會更新手機規定。)
-policy (n) (政策) ^ The policy says no phones during class time. (這項政策規定上課時間不能用手機。)
-issue (n) (1.議題) ^ Phone use has become an important school issue. (手機使用已成為重要的校園議題。)
-issue (n) (2.問題 =problem) ^ Phone noise is an issue during lessons. (手機噪音在上課時是一個問題。)
-supervision (n) (監督) ^ Phone use needs strong supervision at school. (手機使用在學校需要嚴格監督。)
-text message (n) (簡訊) ^ Many parents send a text message to their kids. (許多家長會傳簡訊給孩子。)
-text (v) (傳簡訊) ^ Students should not text friends during class. (學生不該在上課時傳簡訊。)
-________________________________________
-
-be allowed to do something (phr) (被允許做…) ^ We are allowed to use phones after school. (我們放學後被允許用手機。)
-be addicted to… (phr) (沈迷於…) ^ Some kids are addicted to phone games now. (有些孩子現在沈迷於手機遊戲。)
-focus (v) (專注) ^ I focus better when my phone stays in my bag. (我的手機放在包包裡時我比較能專心。)
-________________________________________
-
-limit (v) (限制) ^ Parents should limit phone time for young kids. (家長應該限制年幼孩子的手機時間。)
-usage (n) (使用量；使用) ^ Phone usage should be low during school hours. (上課時間手機使用量應該很低。)
-ideally (adv) (理想上) ^ Ideally, kids should use phones only for homework. (理想上，孩子應只為作業使用手機。)
-take responsibility for… (phr) (為…負責) ^ Teens must take responsibility for their phone choices. (青少年必須為自己的手機選擇負責。)
-screen time (n) (螢幕時間) ^ Too much screen time makes kids very tired. (過多螢幕時間會讓孩子很累。)
-
 
 `,
 
 'maga3': `
 
-◎Dec. 10—Title & Paragraph 1
-virus (n) (病毒) ^ The tiny virus can spread quickly between people in crowded places. (這種微小病毒能在擁擠地方迅速在人群間傳播。)
-
-illness (n) (疾病 = sickness) ^ Her illness made her stay home and rest for several quiet days. (她的疾病讓她在家休息了好幾天。)
-
-offer (v) (提供) ^ The doctor will offer simple advice to help you feel better soon. (醫生會提供簡單建議來幫助你很快感覺好一些。)
-
-relief (n) (緩解；舒緩) ^ The warm tea brought great relief to his sore and tired throat. (溫茶為他疼痛疲倦的喉嚨帶來很大緩解。)
-
-the common cold (= the cold) (n) (感冒) ^ The common cold usually causes a runny nose and mild coughing. (感冒通常會造成流鼻水和輕微咳嗽。)
-
-common (常見的) ^ This plant is common in many parks where children often play. (這種植物在許多小孩常玩耍的公園裡很常見。)
-
-likely (adj) (可能的) ^ It is likely that he will catch a cold in such cold weather. (在這麼冷的天氣裡，他很可能會感冒。)
-
----
-
-◎Dec. 10—Paragraph 2
-including… (prep) (包括…) ^ The box holds many tools, including one small hammer for daily use. (這個盒子裝著許多工具，包括一把日常用的小槌子。)
-
-main cause (n) (主要原因) ^ The main cause of the noise was the broken fan in the corner. (噪音的主要原因是角落裡那台壞掉的風扇。)
-
-flu (n) (流感，influenza的簡化) ^ The flu can make people feel weak and tired for several days. (流感會讓人虛弱疲倦好幾天。)
-
-thrive (v) (繁盛；旺盛生長) ^ Plants thrive in warm sunlight when they receive enough clean water. (植物在有足夠乾淨水分的溫暖陽光下會旺盛生長。)
-
-as (因為 = because) ^ As it was raining hard, we stayed inside to keep ourselves safe. (因為雨下得很大，我們待在屋內確保安全。)
-
-temperature (n) (溫度) ^ The temperature dropped quickly after sunset and made the street very cold. (日落後溫度迅速下降，使街道變得很冷。)
-
-allow (v) (1.允許) ^ My parents allow me to watch one short movie every weekend night. (我父母允許我每個週末晚上看一部短電影。)
-
-allow (v) (2.使能夠 = enable) ^ The new tool allows workers to finish the job much faster now. (這個新工具使工人現在能更快完成工作。)
-
-remain (v) (保持) ^ The room remained quiet even when many people walked past outside. (即使外面許多人經過，房間仍保持安靜。)
-
-infectious (adj) (具傳染性的) ^ An infectious illness can move quickly from one sick person to another. (具傳染性的疾病能迅速在人與人之間傳播。)
-
-multiply (v) (迅速增加；繁殖) ^ The bacteria multiply quickly when the room is dark and warm. (細菌在房間又暗又暖時會迅速增加。)
-
-rapidly (adv) (快速地) ^ The weather changed rapidly and surprised everyone at the park today. (天氣快速改變，讓今天在公園的每個人都很驚訝。)
-
-moreover (adv) (此外) ^ The plan is simple; moreover, everyone can understand it very easily. (這計畫很簡單；此外，每個人都能非常容易理解。)
-
-tend to… (v phr) (往往會…；傾向…) ^ Older computers tend to run slowly when many programs are open. (舊電腦在開很多程式時往往會跑得很慢。)
-
-humid (adj) (潮濕的) ^ The air felt humid after the heavy rain fell across the village. (這場大雨過後，村子的空氣感覺很潮濕。)
-
-humidity (n) (濕度) ^ The humidity in the kitchen rose when the soup started boiling. (湯開始沸騰時，廚房的濕度上升了。)
-
-droplet (n) (小滴；飛沫) ^ Tiny droplets can spread when a person talks loudly in a small room. (人在小房間大聲說話時會散出微小飛沫。)
-
-release (v) (釋放) ^ Flowers release a sweet smell that many insects like to follow. (花朵會釋放出許多昆蟲喜愛的甜香味。)
-
-cough (v) (咳嗽) ^ He tried to cover his mouth when he began to cough loudly. (他開始大聲咳嗽時努力遮住自己的嘴。)
-
-sneeze (v) (打噴嚏) ^ She will sneeze many times when the air is full of dust. (空氣裡充滿灰塵時，她會連續打好幾個噴嚏。)
-
-float (v) (漂浮) ^ Leaves float slowly on the quiet water near the small wooden bridge. (葉子在小木橋附近的靜水面上慢慢漂浮。)
-
-in the air (phr) (在空氣中) ^ Many tiny seeds can stay in the air on a warm windy day. (在溫暖有風的日子裡，許多微小種子能停在空氣中。)
-
-consequently (adv) (因此 = therefore; as a result) ^ The road was blocked; consequently, all cars had to find another way. (道路被封閉；因此，所有車輛都得找另一條路。)
-
-breathe (v) (呼吸) ^ We breathe slowly when we want to relax after a long busy day. (在忙碌的一天後想放鬆時，我們會慢慢呼吸。)
-
-particle (n) (微粒) ^ A small particle can enter the room through tiny cracks in windows. (微粒能透過窗戶的小裂縫進入房間。)
-
----
-
-◎Dec. 10—Paragraph 3
-contain (v) (包含) ^ The small bottle can contain enough water for a short afternoon walk. (這個小瓶子能包含足夠的水供短暫午後散步使用。)
-
-mucus (n) (黏液) ^ The frog’s skin has mucus that helps protect it from dryness. (青蛙的皮膚有黏液，可幫助避免乾燥。)
-
-hairlike (adj) (像毛髮般的) ^ The hairlike fibers on the plant help it catch tiny insects easily. (植物上像毛髮般的纖維能輕易抓住小昆蟲。)
-
-structure (n) (構造；結構) ^ This simple structure helps the toy stand without falling over quickly. (這個簡單構造能讓玩具站著不會很快倒下。)
-
-cilium (n) (纖毛, 複數: cilia) ^ Tiny cilia move softly to push dust out of our breathing passages. (微小的纖毛會輕柔地移動，把灰塵推離呼吸道。)
-
-prevent someone from doing something (phr) (阻止某人做某事) ^ The fence prevents children from entering the dangerous area behind the building. (圍欄阻止小孩進入建築後方的危險區域。)
-
-take hold (phr) (開始發作；站穩腳步) ^ The new idea began to take hold after many people supported it. (在許多人支持後，這個新想法開始站穩腳步。)
-
-airway (n) (呼吸道) ^ Dust in the airway can make it hard for someone to breathe normally. (呼吸道裡的灰塵會讓人很難正常呼吸。)
-
-dry out (v) (變乾；乾掉) ^ The soil will dry out quickly when the sun shines strongly all day. (當太陽整天強烈照射時，土壤會很快乾掉。)
-
-effective (adj) (有效的) ^ This simple method is effective for keeping insects away from food. (這個簡單方法對防止昆蟲靠近食物很有效。)
-
-yet another… (phr) (又一個…) ^ We saw yet another bird land gently on the tall wooden fence. (我們又看到另一隻鳥輕輕停在高高的木欄杆上。)
-
-yet again (adv) (再一次) ^ The team won yet again after practicing hard for many weeks. (這個隊伍在努力練習好幾週後又再度獲勝。)
-
-strike (v) (（災害等）侵襲) ^ The earthquake struck suddenly and frightened everyone in the quiet town. (地震突然來襲，嚇壞了這座安靜小鎮的所有人。)
-
-◎Dec. 11—Paragraph 1
-totally (adv) (完全地 = completely) ^ She totally understood the rule after the teacher explained it clearly. (老師清楚說明後，她完全理解這條規則。)
-protect someone against… (phr) (保護某人不受…) ^ A strong jacket can protect you against cold wind during winter walks. (一件厚外套能在冬日散步時保護你不受寒風吹襲。)
-take precautions (phr) (採取預防措施) ^ We should take precautions when many people around us are coughing loudly. (當周圍很多人咳嗽時，我們應採取預防措施。)
-regularly (adv) (規律地；定期地) ^ He exercises regularly to keep his body strong through the entire year. (他定期運動以在整年保持身體強健。)
-thoroughly (adv) (徹底地) ^ She washed the dishes thoroughly before putting them back on the shelf. (她徹底洗淨那些碗盤後才放回架上。)
-particularly (adv) (特別地 = especially) ^ He felt particularly tired today after walking many long blocks downtown. (他今天在市中心走了許多街區後感到特別疲倦。)
-shake someone’s hand (phr) (和某人握手) ^ She shook her friend’s hand politely when they met at the doorway. (她在門口遇見朋友時禮貌地和他握手。)
-be about to… (phr) (正要…) ^ She was about to leave when the phone suddenly started ringing loudly. (她正要離開時，電話突然大聲響起。)
-break apart (v) (分裂；分開) ^ The old cookie will break apart easily when you pick it up. (這塊舊餅乾你拿起時就會輕易碎開。)
-scrub (v) (刷洗) ^ He scrubbed the dirty pan until the burnt marks slowly disappeared. (他刷洗那個髒平底鍋直到焦痕慢慢消失。)
-at least (phr) (至少) ^ You should sleep at least eight hours to feel strong the next morning. (你應至少睡八小時以便隔天感覺有精神。)
-
-◎Dec. 11—Paragraph 2
-respiratory (adj) (跟呼吸有關的) ^ A respiratory illness can make breathing difficult during simple daily activities. (呼吸道疾病會讓人在簡單日常活動中也難以呼吸。)
-generally (adv) (一般來說) ^ Generally, people sleep better when their room is quiet and dark. (一般來說，當房間安靜又黑時，人會睡得比較好。)
-spread (v) (散播；傳播) ^ The smell spread quickly through the house when the soup started boiling. (湯開始沸騰時味道迅速傳遍整間屋子。)
-radius (n) (半徑範圍) ^ The dog stayed within a small radius around its owner during walks. (散步時那隻狗都待在主人附近的小範圍內。)
-infected (adj) (受感染的) ^ The infected person should rest at home to avoid spreading germs. (受感染的人應在家休息以避免傳播病菌。)
-keep your distance (from someone) (phr) (與某人保持距離) ^ You should keep your distance from anyone who looks very sick today. (今天看到誰看起來很不舒服時，你應與他保持距離。)
-not feel well (phr) (身體不適) ^ She did not feel well this morning and stayed home to rest quietly. (她今天早上身體不舒服，便在家安靜休息。)
-workplace (n) (工作場所) ^ The workplace became quiet when everyone focused on their afternoon tasks. (每個人專注下午工作時，整個工作場所變得很安靜。)
-improve (v) (改善；提升) ^ Practice can improve your skill and make each task much easier. (練習能改善你的技巧並讓每項工作更簡單。)
-ventilation (n) (通風) ^ Good ventilation helps keep the room fresh and safe for many people. (良好通風能讓房間對很多人都保持清新安全。)
-wipe (v) (擦拭) ^ She wiped the table carefully until no cookie crumbs were left anywhere. (她小心擦拭桌子直到完全沒有餅乾屑。)
-surface (n) (表面) ^ The glass surface looked clean after she wiped it for several minutes. (她擦拭了幾分鐘後，那玻璃表面看起來很乾淨。)
-cleaning products (n) (清潔用品) ^ These cleaning products help remove dirt quickly from floors and kitchen counters. (這些清潔用品能快速清掉地板和流理台的髒汙。)
-
-◎Dec. 11—Paragraph 3
-maintain (v) (維持) ^ He tries to maintain good habits by sleeping early every single night. (他努力每天早睡以維持良好習慣。)
-a high level of… (phr) (高程度的…) ^ The team kept a high level of focus during the long afternoon meeting. (團隊在漫長下午會議中保持高度專注。)
-physical health (n) (身體健康) ^ Good sleep and exercise support physical health throughout the year. (良好睡眠和運動能在全年維持身體健康。)
-a great way to do something (phr) (做某事的好方法) ^ Reading quietly is a great way to relax after a stressful school day. (在壓力大的上課日後，安靜閱讀是個放鬆的好方法。)
-stay well (= stay healthy) (phr) (保持健康) ^ Drinking enough water every day helps you stay well during busy weeks. (每天喝足夠的水能在忙碌週裡讓你保持健康。)
-exercise regularly (phr) (規律運動) ^ They exercise regularly to keep their bodies strong for outdoor activities. (他們規律運動以保持體力從事戶外活動。)
-a balanced diet (n) (均衡飲食) ^ A balanced diet gives your body energy to work through each long day. (均衡飲食能讓身體有能量度過每個漫長日子。)
-plenty of… (phr) (大量的… = a lot of…) ^ The garden has plenty of sunlight that helps the flowers grow well. (花園有大量陽光，能讓花朵長得很好。)
-immune system (n) (免疫系統) ^ A strong immune system helps your body fight germs every single day. (強健免疫系統能每天幫助身體對抗病菌。)
-
-◎Dec. 11—Paragraph 4
-inevitable (= unavoidable) (adj) (不可避免的) ^ It is inevitable that mistakes happen when people learn something completely new. (當人學新東西時出錯是不可避免的。)
-…is an unavoidable part of life (phr) (…是生活中無法避免的一部分) ^ Some stress is an unavoidable part of life that everyone naturally experiences. (一些壓力是生活中無法避免的一部分，人人都會遇到。)
-there is nothing you can do (phr) (你無能為力；沒有能做的事) ^ Sometimes there is nothing you can do when something unexpected suddenly happens. (有時預料之外的事情突然發生時，你真的無能為力。)
-fight off (v) (擊退；抵抗) ^ Your body can fight off germs faster when you sleep well each night. (你的身體在每天睡好時能更快抵抗病菌。)
-annoying (adj) (惱人的) ^ The annoying noise kept everyone awake during the quiet night. (那惱人噪音在深夜讓所有人都睡不著。)
-take measures (phr) (採取措施) ^ We must take measures to solve this problem. (我們必須採取措施以解決這個問題。)
-lifestyle (n) (生活方式) ^ A healthy lifestyle includes good sleep, good food, and regular exercise. (健康生活方式包含良好睡眠、好食物與規律運動。)
-make a choice (phr) (做出選擇) ^ Nick has to make a choice between his mother and his girlfriend. (尼克必須在媽媽和女友間做出選擇。)
-ensure (v) (確保) ^ Checking your bag twice will ensure nothing important is forgotten. (把包包檢查兩次能確保沒有重要物品被忘記。)
-
-◎感冒相關用詞(cold-related terms)
-catch a cold (phr) (感冒) ^ You might catch a cold if you go outside without warm clothes. (如果沒有穿暖和就外出，你可能會感冒。)
-symptom (n) (症狀) ^ A runny nose is a common symptom when someone first becomes sick. (流鼻水是某人剛生病時的常見症狀。)
-sneeze (v) (打噴嚏) ^ She will sneeze loudly when dust fills the small quiet room. (當灰塵充滿小房間時，她會大聲打噴嚏。)
-cough (v) (咳嗽) ^ He began to cough softly after walking in the cold strong wind. (在寒冷強風中走路後，他開始輕輕咳嗽。)
-have a fever (phr) (發燒) ^ She seemed to have a fever because her face felt very warm. (她似乎發燒了，因為她的臉摸起來很燙。)
-have a sore throat (phr) (喉嚨痛) ^ He had a sore throat and drank warm tea to feel better. (他喉嚨痛，喝了溫茶讓自己舒服些。)
-have a nose congestion (= have a stuffy nose) (phr) (鼻塞) ^ She had a stuffy nose and breathed slowly through her mouth tonight. (她鼻塞，今晚只能慢慢用嘴巴呼吸。)
-have a runny nose (phr) (流鼻水) ^ He had a runny nose all day and used many soft tissues. (他整天流鼻水，用了很多柔軟紙巾。)
-have a headache (phr) (頭痛) ^ She had a headache and rested quietly in her room after school. (放學後她頭痛，便在房間裡安靜休息。)
-have sore muscles (phr) (肌肉痠痛) ^ He had sore muscles after walking long distances in cold weather. (他在寒冷天氣裡走了很遠後肌肉痠痛。)
-
-
 `,
 
 'maga4': `
-◎Paragraph 1
-approach (n) (1. 靠近) ^ The students are excited about the approach of Christmas. (學生們對於聖誕節的來臨感到很興奮。)
-approach (n) (2.（思考或處理事情的）方式、方法、態度等) ^ Having a conversation with AI is a new approach to learning foreign languages. (與人工智慧對話是學習外語的一種新方法。)
-take an exam (phr) (考試 = take a test) ^ Students take an exam to show what they learned today. (學生透過考試來展示今天學到的內容。)
-inevitable (adj) (無可避免的 = unavoidable) ^ Stress is inevitable when students face many tests. (當學生面對許多考試時壓力是無可避免的。)
-academic (adj) (學業的) ^ Academic success comes from daily practice and good study habits. (學業上的成功來自每日練習和好的讀書習慣。)
-journey (n) (旅程) ^ Learning is a long journey with many small steps. (學習是包含許多小步驟的漫長旅程。)
-when it comes to (+ N) (phr) (說到…) ^ When it comes to tests, students need clear plans. (說到考試，學生需要清楚的計畫。)
-distinct (adj) (明顯不同的 = clearly different) ^ Each student has distinct ways of learning new ideas. (每位學生在學新概念時都有明顯不同的方法。)
-study habit (n) (讀書習慣) ^ Good study habits help kids learn better every day. (良好的讀書習慣幫助孩子每天學得更好。)
-intensive (adj) (密集的) ^ She joined an intensive class to improve quickly. (她參加了密集課程以快速進步。)
-study intensively (phr) (密集用功) ^ Students study intensively before big tests begin. (學生在大考前會密集用功。)
-at the last minute (phr) (在最後一刻) ^ He finished his homework at the last minute again. (他又在最後一刻才完成作業。)
-stay up late (phr) (熬夜) ^ Many teens stay up late to finish school work. (許多青少年熬夜完成學校作業。)
-method (n) (方法) ^ This simple method helps kids remember hard words. (這個簡單方法幫孩子記住難單字。)
-memorize (v) (記住；背誦) ^ I try to memorize new words by reading them slowly. (我會慢慢讀來記住新單字。)
-a large amount of... (phr) (大量的…) ^ A large amount of homework makes students tired. (大量作業讓學生很累。)
-lead to... (phr) (導致… = cause) ^ Too much stress can lead to poor test scores. (過度壓力會導致考試成績不佳。)
-stress (n) (壓力 = pressure) ^ Heavy stress makes studying very difficult for teenagers. (沉重壓力讓青少年讀書變得很困難。)
-fatigue (n) (疲勞 = exhaustion > tiredness) ^ Long study hours cause fatigue and slow thinking. (長時間讀書會造成疲勞與思考變慢。)
-in contrast (= by contrast) (phr) (相較之下) ^ In contrast, planned study helps students feel calm. (相較之下，有計畫的讀書讓學生更平靜。)
-organized (adj) (有條理的) ^ Organized students finish school work more easily. (有條理的學生更容易完成作業。)
-schedule (n) (時間表) ^ A clear schedule helps students use time wisely. (清楚的時間表幫助學生善用時間。)
-in advance (phr) (事先) ^ Study in advance to avoid panic before exams. (要事先讀書以避免考前恐慌。)
-material (n) (教材；內容) ^ The teacher gave easy material for students to review. (老師提供簡單教材讓學生複習。)
-step by step (phr) (逐步地、按部就班地、循序漸進地) ^ Learn math step by step to understand it better. (循序漸進學數學會更容易理解。)
-allow someone to do something (phr) (2.使某人能… = enable…) ^ This plan allows students to study with less stress. (這項計畫讓學生能以較少壓力讀書。)
-thoroughly (adv) (徹底地 = completely) ^ Review the lesson thoroughly to remember it well. (徹底複習課程才能記得牢。)
-prevent someone from doing something (phr) (防止某人做…) ^ Good planning prevents students from feeling rushed. (良好規劃能防止學生感到匆忙。)
-overwhelmed (adj) (不堪負荷的) ^ Too much homework makes many kids feel overwhelmed. (太多作業讓許多孩子感到不堪負荷的。)
-________________________________________
-◎Paragraph 2
-as for... (phr) (至於…) ^ As for tests, planning early helps students stay calm. (至於考試，提早規劃能讓學生保持冷靜。)
-follow a plan (phr) (遵循計畫) ^ Students do better when they follow a plan daily. (學生每天遵循計畫會表現更好。)
-well-structured (adj) (有良好架構的) ^ A well-structured plan helps lessons feel simple. (良好架構的計畫能讓學習變簡單。)
-stay on track (phr) (按計畫進行。track = 火車軌道、跑道/賽道) ^ Clear goals help students stay on track each week. (清楚目標能讓學生每週按計畫進行。)
-achieve (v) (達成) ^ Students achieve more when they study a little daily. (學生每天讀一點時能達成更多。)
-daily (adj) (每天的) ^ Daily practice helps students remember things better. (每天練習能讓學生記得更好。)
-goal (n) (目標) ^ Set a small goal to finish homework on time. (設定一個小目標來準時完成作業。)
-plenty of... (phr) (大量的… = a lot of…) ^ Good plans give students plenty of time to rest. (好的計畫讓學生有大量時間休息。)
-subject (n) (科目) ^ Each subject needs a little review every day. (每個科目每天都需要一點複習。)
-be confident about... (phr) (對…有信心) ^ She is confident about science after weeks of practice. (練習幾週後她對自然科有信心。)
-work well for someone (phr) (對某人有效) ^ This study plan works well for many students. (這個讀書計畫對許多學生有效。)
-reflect (v) (1.反射) ^ The mirror reflects bright light into the room. (鏡子把亮光反射到房間裡。)
-reflect (v) (2.反映、表達) ^ Good grades reflect the student’s hard work. (好成績反映學生的努力。)
-effort (n) (努力) ^ Even small effort each day improves learning. (每天一點努力就能改善學習。)
-effective (adj) (有效的) ^ Taking notes are very effective for remembering key points. (做筆記對記住重點非常有效。)
-develop good habits (phr) (養成好習慣) ^ Students develop good habits by practicing daily. (學生透過每天練習養成好習慣。)
-gradual (adj) (逐漸的) ^ Over the past twenty years, there has been a gradual change in climate. (過去二十年來，氣候在逐漸變化。)
-Learning is a gradual process that takes time. (學習是一個需要時間的逐步過程。)
-process (n) (過程) ^ Developing good habits is a slow but meaningful process. (培養好習慣是一個緩慢但有意義的過程。)
-pay off (phr v) (有回報；值得) ^ Hard work paid off when the basketball team finally won the championship. (籃球隊的努力終於得到了回報，他們最終贏得了冠軍。)
-in the long run (phr) (長期下來、長遠來看) ^ Good exercise habits help us stay healthy in the long run. (從長遠來看，良好的運動習慣有助於我們保持健康。)
-
-
-`,
-
-'core1': `
-◎核心P2U7
-continuously (adv) (持續地) ^ The machine ran continuously and made a soft sound all night. (機器整晚持續運轉並發出輕聲。)
-barely (adv) (幾乎無法、僅僅剛好、勉強能夠) ^ They had barely enough money to pay for dinner. (他們差一點不夠錢付晚餐。)
-frustrated (adj) (感到挫折的) ^ She felt frustrated because the small toy broke again today. (她感到挫折，因為小玩具今天又壞了。)
-immigrant (n) (移民) ^ The immigrant worked hard to build a new life in town. (那位移民努力在小鎮建立新生活。)
-creative (adj) (有創意的) ^ Her creative idea helped the team finish the project easily. (她有創意的點子幫助團隊輕鬆完成專案。)
-attempt (n) (嘗試) ^ His first attempt to fix the bike failed after a few minutes. (他第一次嘗試修腳踏車在幾分鐘後失敗。)
-reform (v) (改革；改善) ^ The group wants to reform old rules that no longer help anyone. (這組人想改革那些已無助益的舊規則。)
-marble (n) (1.彈珠) ^ The child lost one small marble while playing in the yard. (孩子在院子玩時掉了一顆小彈珠。)
-marble (n) (2.大理石) ^ The floor was made of marble and looked smooth and bright. (地板是大理石做的，看起來平滑又明亮。)
-construct (v) (建造) ^ Workers will construct a small bridge to help people cross safely. (工人會建造一座小橋讓人安全通行。)
-stick (v) (黏貼、附著、固定) ^ Tape can stick the paper to the wall for the whole day. (膠帶能讓紙張整天黏在牆上。)
-circular (adj) (圓形的) ^ The circular table gave everyone enough space to sit comfortably. (圓形桌子讓大家都有足夠空間舒服坐著。)
-resistance (n) (反抗、抵抗、阻力) ^ The heavy box created strong resistance when he tried to push it. (當他想推時，那個重箱子產生很大阻力。)
-ease (n) (輕鬆；容易) ^ She finished the easy task with ease in a few minutes. (她在幾分鐘內輕鬆地完成那項簡單工作。)
-efficiency (n) (效率) ^ Good planning increased their efficiency and saved them much time. (良好規劃提升他們的效率並節省很多時間。)
-manufacture (v) (生產；製造) ^ The factory will manufacture toys that children can play with safely. (工廠會生產讓孩子能安全玩耍的玩具。)
-unfortunately (adv) (不幸地) ^ Unfortunately, the bus left early and he missed it again today. (不幸地，公車提早離開，他今天又錯過了。)
-original (adj) (1.原先的、最早的) ^ The original plan changed after the weather became very bad. (天氣變差後，原先的計畫被改變了。)
-original (adj) (2.原創的、新穎的) ^ The writer always comes up with original ideas that no other writers can think of. (這位作家總是能想出其他作家想不到的原創想法。)
-desire (v) (渴望) ^ He desired a quiet place where he could read every night. (他渴望一個能每天晚上閱讀的安靜地方。)
-expense (n) (花費) ^ The expense of the trip was high, so they saved money carefully. (旅行花費很高，所以他們小心地存錢。)
-
 
 `,
 
 'core2': `
-◎核心P2U8
-resist (v) (抵抗；忍住) ^ She could not resist the sweet smell of cake. (她無法抵抗蛋糕的甜香。)
-ingredient (n) (成分；材料) ^ This soup needs one more fresh ingredient today. (這碗湯今天還需要一種新鮮材料。)
-differ (v) (不同) ^ Their ideas differ (= their ideas are different) because they see things differently. (他們的想法不同，因為看法不一樣。)
-considerably (adv) (相當大地、相當多地) ^ The world *has changed considerably* (= has changed greatly; has changed a lot) in recent years. Learning a foreign language has become *considerably easier* (= much easier) because of AI. (近年來，世界發生了極大的變化。由於人工智慧的出現，學習外語變得容易得多。)
-
-smooth (adj) (平滑的、滑順的) ^ We enjoyed a comfortable ride on the smooth road. (我們在平坦的道路上享受了一段舒適的旅程。)
-
-smooth (v) (使平滑) ^ She smoothed the paper gently with her hand. (她用手輕輕把紙弄平。)
-liquid (n) (液體) ^ This bottle is full of a bright blue liquid. (這瓶子裝滿亮藍色液體。)
-fold (v) (摺疊) ^ He folded the paper slowly into a small square. (他把紙慢慢摺成一個小正方形。)
-gain (v) (獲得；增加) ^ She gained confidence after practicing every day. (她每天練習後獲得了自信。)
-attention (n) (注意力) ^ The bright sign quickly caught everyone’s attention. (亮眼的標示很快吸引大家注意。)
-throughout (+ place) (遍及…) ^ Flowers grew throughout the garden. What a beautiful sight! (花朵長滿了整個花園，真是個美麗的景象啊！)
-throughout (+ time) (整個期間) ^ She stayed focused throughout the class. (她整堂課都保持專注。)
-properly (adv) (恰當地、正確地) ^ He did not use the tool properly and broke it. (他沒有正確使用工具，結果弄壞了。)
-content (n) (內容) ^ The book’s content helped students learn science easily. (這本書的內容幫助學生輕鬆學科學。)
-desirable (adj) (渴望獲得的、令人嚮往的) ^ Air conditioning is desirable on a very hot day. (在炎熱天氣裡，大家都想吹冷氣。)
-preferably (adv) (最好；更合適地) ^ Come early tomorrow, preferably ten minutes before the movie starts. (明天早點來，最好在電影開始前十分鐘來。)
-numerous (adj) (許多的 = many) ^ Numerous students go to cram school after school. (許多學生在放學後去補習班。)
-preparation (n) (準備) ^ Good preparation helped them finish the job easily. (良好準備讓他們輕鬆完成工作。)
-originally (adv) (原本；最初) ^ She originally planned to go home early today. (她原本計畫今天早點回家。)
-arrange (v) (1.排列、整理) ^ He arranged the chairs neatly before the meeting. (會議前他把椅子排列得整整齊齊。)
-arrange (v) (2.安排、籌畫) ^ The meeting has been arranged for Wednesday. (會議已經安排在週三了。)
-
-occasionally (adv) (偶爾) ^ We occasionally meet at the café after work. (我們偶爾下班後在咖啡館碰面。)
-delight (n) (愉快；喜悅) ^ The gift brought great delight to the little boy. (這份禮物帶給男孩很大的喜悅。)
-digest (v) (消化) ^ Your body needs time to digest a heavy meal. (身體需要時間來消化一頓大餐。)
-description (n) (描述) ^ He gave a clear description of his high school life. (他清楚地描述了他的高中生活。)
-reluctant (adj) (不情願的) ^ She felt reluctant to leave the party because she wanted to stay longer. (她很不想離開離開這個派對，因為她想待久一點。)
 
 `,
 
 'core3': `
-◎核心P2U9
-saying (n) (諺語、格言 = proverb) ^ As the saying goes, “You can’t judge a book by its cover.”(俗話說：「人不可貌相。」)
-beggar (n) (乞丐) ^ The beggar asked kindly for food on the street today. (那位乞丐今天在街上和善地請求食物。)
-charity (n) (慈善機構；慈善行為) ^ The charity gives food and clothes to poor families. (這個慈善機構提供食物和衣物給貧困家庭。)
-needy (adj) (貧困的；需要幫助的) ^ The needy families received warm meals last night. (貧困家庭昨晚收到熱食。)
-the needy (n) (貧困者；需要幫助的人) ^ The group raised money to help the needy today. (這個團體今天募款幫助貧困者。)
-in terms of… (phr) (就…而言) ^ In terms of cost, this plan is cheaper for everyone. (就費用而言，這個計畫對大家更便宜。)
-found (v) (創立；建立) ^ They founded a study group to help children learn. (他們創立了一個團體幫助孩子學習。)
-advertising (n) (廣告；行銷) ^ Good advertising helps a new shop get more customers. (好的廣告能讓新店獲得更多顧客。)
-opportunity (n) (機會 = chance) ^ She took the opportunity to learn new skills today. (今天她把握機會學習新技能。)
-dignity (n) (尊嚴) ^ The program helps people live with dignity. (這項計畫幫助人們有尊嚴地生活。)
-volunteer (n) (志工) ^ The volunteer helped carry boxes during the event. (那位志工在活動中幫忙搬箱子。)
-leather (n) (皮革) ^ The bag is made of soft brown leather. (這個包包是用柔軟的棕色皮革做的。)
-exact (adj) (確切的；精準的) ^ He gave the exact time when the meeting starts. (他提供了會議開始的確切時間。)
-partner (n) (夥伴；合作對象) ^ His partner helped him finish the work quickly. (他的夥伴幫他快速完成工作。)
-partner with someone (phr) (與某人合作) ^ They partnered with a school to teach art classes. (他們與一所學校合作教授藝術課。)
-assemble (v) (1.集合、使…集合) ^ The students assembled outside the gym at 8 a.m. (學生們早上8點在體育館外集合。)
-assemble (v) (2.組裝) ^ We will assemble the small parts to make a toy. (我們會把小零件組起來做成玩具。)
-
-suitable (adj) (適合的) ^ This room is suitable for quiet study time. (這間房間適合安靜讀書。)
-permission (n) (許可) ^ She needed permission to use the large meeting room. (她需要許可才能使用大會議室。)
-authority (n) (1.威信、權力、管轄權) ^ The police used their authority to stop the robbers. (警方動用職權制止了搶匪。)
-authority (n) (2.當權者、當局) ^ The health authority needs to deal with the new type of virus as soon as possible. (衛生當局需要盡快處理這個新型病毒。)
-
-poster (n) (海報) ^ The student has put up a poster so that everyone knows there will be a Christmas party next week. (學生張貼了一張海報，讓大家知道下週將要舉辦聖誕派對。)
-
-host (n) (1.主人 2.主持人 3.主辦人) ^ The host welcomed everyone at the start of the show. (主持人在表演開始時歡迎大家。)
-host (v) (主辦) ^ The country will host the next Olympics. (該國將主辦下屆奧運。)
-poverty (n) (貧窮) ^ Poverty makes life very hard for many families. (貧窮讓許多家庭的生活非常辛苦。)
 
 `,
 
