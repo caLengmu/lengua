@@ -3259,7 +3259,7 @@ function scrollToNextSection() {
         const headerPos = sectionHeaders[i].offsetTop;
         
         // Add a small buffer (100px) to avoid selecting the current section
-        if (headerPos > currentScrollPos + 100) {
+        if (headerPos > currentScrollPos + 20) {
             sectionHeaders[i].scrollIntoView({ 
                 behavior: 'smooth', 
                 block: 'start' 
