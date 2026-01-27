@@ -1204,7 +1204,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocabulary List for Textbooks<br>(v4.8)</h1>
+        <h1>📚 Vocab List for Textbooks<br>(v4.9)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -2188,7 +2188,7 @@ regulation (n) (規定、規則) ^ The government has new regulations for clean 
 ________________________________________
 ◎Vocab—2nd Half
 exploit (v) (剝削) ^ Some companies exploit workers by paying them very little. (有些公司藉由支付極少的薪水來剝削工人。)
-minimal (adj) (極小的、最低限度的 vs. maximal) ^ The car had only minimal damage after the accident. (車子在意外後只有極小的損壞。)
+minimal (adj) (極小的、最低限度的 < > maximal) ^ The car had only minimal damage after the accident. (車子在意外後只有極小的損壞。)
 toxic (adj) (有毒的) ^ These toxic chemicals are bad for the fish in the river. (這些有毒化學物質對河裡的魚有害。)
 dye (v) (染色) ^ He dyed his hair pink. (他把頭髮恤染成粉紅色。)
 responsible (adj) (1.負責可靠的) ^ He is a responsible man and always finishes his work. (他是個負責的男人，總會完成他的工作。)
@@ -2216,7 +2216,7 @@ devastate (v) (摧毀、破壞) ^ The earthquake devastated the small town. (地
 devastation (n) (毀滅、破壞) ^ We were shocked by the devastation caused by the storm. (我們對風暴造成的破壞感到震驚。)
 regulate (v) (規定、管理) ^ New laws regulate how much smoke factories can release. (新法律規定了工廠可以排放多少煙霧。)
 exploitation (n) (剝削) ^ The law protects workers from exploitation. (法律保護工人免受剝削。)
-minimum (n) (最低限度、最小量 vs. maximum) ^ You need a minimum of eight hours of sleep. (你至少需要八小時的睡眠。)
+minimum (n) (最低限度、最小量 < > maximum) ^ You need a minimum of eight hours of sleep. (你至少需要八小時的睡眠。)
 dye (n) (染料) ^ She used a natural dye to color the cloth. (她使用天然染料幫布料上色。)
 responsibility (n) (責任) ^ Keeping the house clean is everyone’s responsibility. (保持房屋整潔是每個人的責任。)
 sustain (v) (維持、供養) ^ There is not enough food to sustain the large group. (沒有足夠的食物來供養這大群人。)
@@ -3246,23 +3246,35 @@ function scrollToTop() {
     }
 }
 
-// Scroll to next section header
+// Scroll to next section header - IMPROVED VERSION
 function scrollToNextSection() {
     const sectionHeaders = document.querySelectorAll('.section-header');
     
     if (sectionHeaders.length === 0) return;
     
-    const currentScrollPos = window.scrollY;
+    // Get current viewport position - multiple methods for compatibility
+    const viewportTop = window.pageYOffset || document.documentElement.scrollTop;
     
-    // Find the next section header below current scroll position
+    // Detect mobile for adaptive behavior
+    const isMobile = window.innerWidth <= 768;
+    const buffer = isMobile ? 100 : 150;
+    
+    // Use top third of viewport as reference point
+    const referencePoint = viewportTop + (window.innerHeight / 3);
+    
+    // Find the next section header below current viewport position
     for (let i = 0; i < sectionHeaders.length; i++) {
-        const headerPos = sectionHeaders[i].offsetTop;
+        // getBoundingClientRect() is more reliable than offsetTop
+        const rect = sectionHeaders[i].getBoundingClientRect();
+        const absoluteTop = rect.top + viewportTop;
         
-        // Add a small buffer (100px) to avoid selecting the current section
-        if (headerPos > currentScrollPos + 100) {
-            sectionHeaders[i].scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
+        // Find first header meaningfully below our current view
+        if (absoluteTop > referencePoint + buffer) {
+            // Add small offset for better visibility
+            const offset = isMobile ? 10 : 20;
+            window.scrollTo({
+                top: absoluteTop - offset,
+                behavior: 'smooth'
             });
             return;
         }
@@ -3270,59 +3282,59 @@ function scrollToNextSection() {
     
     // If no next section found, scroll to bottom
     window.scrollTo({ 
-        top: document.body.scrollHeight, 
+        top: document.documentElement.scrollHeight, 
         behavior: 'smooth' 
     });
 }
 
-// Scroll to previous section header
+// Scroll to previous section header - IMPROVED VERSION
 function scrollToPrevSection() {
     const sectionHeaders = document.querySelectorAll('.section-header');
     
     if (sectionHeaders.length === 0) return;
     
-    const currentScrollPos = window.scrollY;
-    let targetSection = null;
+    // Get current viewport position - multiple methods for compatibility
+    const viewportTop = window.pageYOffset || document.documentElement.scrollTop;
     
-    // Find the section we're currently viewing
-    // A section is "current" if its header is above or near our scroll position
+    // Detect mobile for adaptive behavior
+    const isMobile = window.innerWidth <= 768;
+    const buffer = isMobile ? 80 : 100;
+    
+    // Use top third of viewport as reference point
+    const referencePoint = viewportTop + (window.innerHeight / 3);
+    
+    // Build array of section positions using getBoundingClientRect for accuracy
+    const sectionsWithPositions = Array.from(sectionHeaders).map((header, index) => {
+        const rect = header.getBoundingClientRect();
+        const absoluteTop = rect.top + viewportTop;
+        return { header, absoluteTop, index };
+    });
+    
+    // Find which section we're currently viewing
+    // A section is "current" if its top is above the reference point
     let currentSectionIndex = -1;
-    for (let i = 0; i < sectionHeaders.length; i++) {
-        const headerPos = sectionHeaders[i].offsetTop;
-        
-        // If this header is above or slightly below our current position (within 50px)
-        // then we're viewing this section or past it
-        if (headerPos <= currentScrollPos + 50) {
+    for (let i = sectionsWithPositions.length - 1; i >= 0; i--) {
+        if (sectionsWithPositions[i].absoluteTop < referencePoint - buffer) {
             currentSectionIndex = i;
-        } else {
-            break; // Headers after this are below us
+            break;
         }
     }
     
-    // If we're at or past the first section, go to the previous one
+    // Navigate to previous section
     if (currentSectionIndex > 0) {
-        targetSection = sectionHeaders[currentSectionIndex - 1];
-    } else if (currentSectionIndex === 0) {
-        // We're at the first section, scroll to top
-        window.scrollTo({ 
-            top: 0, 
-            behavior: 'smooth' 
+        // Go to the section before the current one
+        const targetSection = sectionsWithPositions[currentSectionIndex - 1];
+        const offset = isMobile ? 10 : 20;
+        
+        window.scrollTo({
+            top: targetSection.absoluteTop - offset,
+            behavior: 'smooth'
         });
-        return;
     } else {
-        // We're above all sections, scroll to top
+        // We're at first section or above all sections - scroll to top
         window.scrollTo({ 
             top: 0, 
             behavior: 'smooth' 
-        });
-        return;
-    }
-    
-    // Scroll to the target section
-    if (targetSection) {
-        targetSection.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
         });
     }
 }
