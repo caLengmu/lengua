@@ -142,7 +142,7 @@
 /* Floating Navigation Buttons */
 .floating-nav-buttons {
     position: fixed;
-    bottom: 80px;
+    bottom: 30px;
     right: 30px;
     display: flex;
     flex-direction: column;
@@ -211,7 +211,7 @@
 }
 
     .floating-nav-buttons {
-        bottom: 150px;
+        bottom: 20px;
         right: 20px;
         gap: 8px;
     }
@@ -1204,7 +1204,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocab List for Textbooks<br>(v4.9)</h1>
+        <h1>📚 Vocab List for Textbooks<br>(v5.0)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -1453,7 +1453,7 @@ let db;
 
 function initDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('VocabDatabase', 1);
+        const request = indexedDB.open('VocabDatabase', 2);  // 改成版本 2
         
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
@@ -1465,6 +1465,10 @@ function initDB() {
             db = event.target.result;
             if (!db.objectStoreNames.contains('checkedWords')) {
                 db.createObjectStore('checkedWords', { keyPath: 'id' });
+            }
+            // 添加訪問歷史 store
+            if (!db.objectStoreNames.contains('visitHistory')) {
+                db.createObjectStore('visitHistory', { keyPath: 'id' });
             }
         };
     });
@@ -1496,6 +1500,146 @@ function loadCheckedWords(lessonKey) {
         };
         request.onerror = () => reject(request.error);
     });
+}
+
+// Save visit record
+function saveVisitRecord(visitData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['visitHistory'], 'readwrite');
+        const store = transaction.objectStore('visitHistory');
+        const request = store.put(visitData);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load visit record
+function loadVisitRecord() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['visitHistory'], 'readonly');
+        const store = transaction.objectStore('visitHistory');
+        const request = store.get('userVisits');
+        
+        request.onsuccess = () => {
+            resolve(request.result || null);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Get date in YYYY-MM-DD format
+function getDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Calculate visit statistics
+async function calculateVisitStats() {
+    try {
+        const visitRecord = await loadVisitRecord();
+        const today = getDateString(new Date());
+        
+        if (!visitRecord) {
+            // First visit ever
+            const newRecord = {
+                id: 'userVisits',
+                firstVisit: today,
+                lastVisit: today,
+                totalVisits: 1,
+                consecutiveDays: 1,
+                visitDates: [today]
+            };
+            await saveVisitRecord(newRecord);
+            return newRecord;
+        }
+        
+        // Check if already visited today
+        if (visitRecord.lastVisit === today) {
+            return visitRecord;
+        }
+        
+        // Calculate days since last visit
+        const lastVisitDate = new Date(visitRecord.lastVisit);
+        const todayDate = new Date(today);
+        const daysDifference = Math.floor((todayDate - lastVisitDate) / (1000 * 60 * 60 * 24));
+        
+        // Update visit record
+        const updatedRecord = {
+            ...visitRecord,
+            lastVisit: today,
+            totalVisits: visitRecord.totalVisits + 1,
+            visitDates: [...(visitRecord.visitDates || []), today]
+        };
+        
+        if (daysDifference === 1) {
+            // Consecutive day
+            updatedRecord.consecutiveDays = (visitRecord.consecutiveDays || 1) + 1;
+            updatedRecord.lastStreakBroken = undefined;
+        } else if (daysDifference > 1) {
+            // Streak broken
+            updatedRecord.consecutiveDays = 1;
+            updatedRecord.lastStreakBroken = daysDifference;
+        }
+        
+        await saveVisitRecord(updatedRecord);
+        return updatedRecord;
+    } catch (error) {
+        console.error('Error calculating visit stats:', error);
+        throw error;
+    }
+}
+
+// Format visit statistics message
+function formatVisitMessage(stats) {
+    try {
+        const firstVisitDate = new Date(stats.firstVisit);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = firstVisitDate.toLocaleDateString('en-US', options);
+        
+        // 使用 span 標籤添加顏色和粗體
+        let message = `Since your first visit on <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span>, this is your visit <span style="color: #e74c3c; font-weight: bold;">#${stats.totalVisits}</span>.`;
+        
+        if (stats.consecutiveDays >= 2) {
+            message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 18px;">${stats.consecutiveDays} days in a row</span>. Keep up your good work! 😊`;
+        } else if (stats.lastStreakBroken && stats.lastStreakBroken > 1) {
+            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. What stopped you? 😢`;
+        }
+        
+        return message;
+    } catch (error) {
+        console.error('Error formatting message:', error);
+        return 'Welcome back!';
+    }
+}
+
+// Display visit statistics
+async function displayVisitStats() {
+    const statsContainer = document.getElementById('visitStatsContainer');
+    
+    if (!statsContainer) {
+        console.error('Visit stats container not found');
+        return;
+    }
+    
+    try {
+        const stats = await calculateVisitStats();
+        const message = formatVisitMessage(stats);
+        statsContainer.innerHTML = message;
+    } catch (error) {
+        console.error('Error displaying visit stats:', error);
+        statsContainer.innerHTML = 'Unable to load visit statistics.';
+    }
 }
 
 // Parse simplified database format
@@ -1726,7 +1870,7 @@ layer (n) (層) ^ The cake has a thick layer of chocolate on top. (蛋糕頂部�
 electronic (adj) (電子的) ^ You can find many electronic tools in this shop. (你可以在這家店找到許多電子工具。)
 equip (v) (裝備、配備) ^ The school will equip every room with a computer. (學校將為每個房間配備一台電腦。)
 be equipped with… (phr.) (配備有…) ^ The new classroom is equipped with a large touch screen. (新教室配備有一個大型觸控螢幕。)
-flex (v) (活動四肢 or 繃緊肌肉）) ^ The runner flexed his legs before he started to run. (這位跑者在起跑前活動他的雙腿。)
+flex (v) (活動四肢 or 繃緊肌肉) ^ The runner flexed his legs before he started to run. (這位跑者在起跑前活動他的雙腿。)
 relatively (+ Adj) (相對…的) ^ The test was relatively easy, so everyone passed. (這項測試相對容易，所以每個人都通過了。)
 temperature (n) (溫度) ^ The temperature is very high in the desert. (沙漠裡的溫度很高。)
 ________________________________________
@@ -3561,9 +3705,23 @@ initDB().catch(error => {
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-    await initDB();
-    initializeEventListeners();
+    try {
+        await initDB();
+        initializeEventListeners();
+        // 等待一小段時間確保 DB 完全初始化
+        setTimeout(async () => {
+            await displayVisitStats();
+        }, 100);
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
 });
+
     </script>
+<!-- Visit Statistics Section -->
+    <div style="text-align: center; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 16px; color: #2c3e50;">
+        <div id="visitStatsContainer">Loading visit statistics...</div>
+    </div>
+</body>
 </body>
 </html>
