@@ -1607,12 +1607,13 @@ function formatVisitMessage(stats) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = firstVisitDate.toLocaleDateString('en-US', options);
         
-        let message = `Since your first visit on ${formattedDate}, this is your visit #${stats.totalVisits}.`;
+        // 使用 span 標籤添加顏色和粗體
+        let message = `Since your first visit on <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span>, this is your visit <span style="color: #e74c3c; font-weight: bold;">#${stats.totalVisits}</span>.`;
         
         if (stats.consecutiveDays >= 2) {
-            message += `<br>You made it ${stats.consecutiveDays} days in a row. Keep up your good work!😊`;
+            message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 18px;">${stats.consecutiveDays} days in a row</span>. Keep up your good work! 😊`;
         } else if (stats.lastStreakBroken && stats.lastStreakBroken > 1) {
-            message += `<br>Your last visit was ${stats.lastStreakBroken} days ago. What stopped you?😢`;
+            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. What stopped you? 😢`;
         }
         
         return message;
