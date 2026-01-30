@@ -1210,14 +1210,13 @@
 
 .quiz-history-date {
     font-size: 18px;  /* Changed from 14px to 21px (1.5x) */
-    color: #7f8c8d;
+    color: #7f8c8d;    
     margin-bottom: 10px;
 }
 
 .quiz-history-category {
     font-size: 18px;  /* New style for category */
     color: #3498db;
-    font-weight: bold;
     margin-bottom: 8px;
 }
 
@@ -3056,13 +3055,24 @@ async function showQuizComplete() {
     const percentage = Math.round((quizScore / quizWords.length) * 100);
     
     // Save quiz result to database
-const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
 
-// Get category title (the parent category section)
-const selectedButton = document.querySelector('.vocab-btn.active');
-const categoryElement = selectedButton?.closest('.category')?.querySelector('.category-title');
-const categoryName = categoryElement?.textContent || 'Unknown Category';
+    // Get category title (the parent category section)
+    const selectedButton = document.querySelector('.vocab-btn.active');
+    let categoryName = 'Unknown Category';
+    
+    if (selectedButton) {
+        const categoryDiv = selectedButton.closest('.category');
+        if (categoryDiv) {
+            const categoryTitle = categoryDiv.querySelector('.category-title');
+            if (categoryTitle && categoryTitle.textContent) {
+                categoryName = categoryTitle.textContent.trim();
+            }
+        }
+    }
+    
+    console.log('Debug - Category Name:', categoryName); // For debugging
     
     // Get section names
     const sectionNames = [...checkedSections].map(index => {
@@ -3071,14 +3081,15 @@ const categoryName = categoryElement?.textContent || 'Unknown Category';
     });
     
     const quizData = {
-    date: new Date().toISOString(),
-    lessonKey: selectedLesson,
-    lessonName: lessonName.trim(),
-    sections: sectionNames,
-    score: quizScore,
-    total: quizWords.length,
-    percentage: percentage
-};
+        date: new Date().toISOString(),
+        lessonKey: selectedLesson,
+        categoryName: categoryName,  // ✅ ADD THIS LINE
+        lessonName: lessonName.trim(),
+        sections: sectionNames,
+        score: quizScore,
+        total: quizWords.length,
+        percentage: percentage
+    };
     
     try {
         await saveQuizResult(quizData);
@@ -4030,7 +4041,7 @@ initDB().catch(error => {
 
     </script>
 <!-- Visit Statistics Section -->
-<div style="text-align: center; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 20px; color: #2c3e50;">
+<div style="text-align: left; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 20px; color: #2c3e50;">
     <div id="visitStatsContainer">Loading visit statistics...</div>
 </div>
 </body>
