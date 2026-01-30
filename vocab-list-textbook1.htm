@@ -1193,6 +1193,88 @@
     }
 }
 
+/* Quiz History Styles */
+.quiz-history-item {
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.quiz-history-item:hover {
+    border-color: #3498db;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.quiz-history-date {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+.quiz-history-lesson {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.quiz-history-sections {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.quiz-history-score {
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.quiz-history-score.excellent {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.quiz-history-score.good {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.quiz-history-score.needs-improvement {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.quiz-history-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 10px;
+    float: right;
+}
+
+.quiz-history-delete:hover {
+    background-color: #c0392b;
+}
+
+.no-quiz-history {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+    font-size: 18px;
+}
+
     </style>
 </head>
 <body>
@@ -1204,7 +1286,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocab List for Textbooks<br>(v5.0)</h1>
+        <h1>📚 Vocab List for Textbooks<br>(v5.1)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -1330,6 +1412,13 @@
     </button>
 </div>
 
+<!-- Quiz History Button -->
+<div class="overall-vocab-section" style="display: block; margin-top: 20px;">
+    <button class="study-partner-btn" id="quizHistoryBtn" style="background-color: #9b59b6;">
+        📊 Quiz History <br>(測驗紀錄)
+    </button>
+</div>
+
         <!-- Speed Control -->
         <div class="speed-control-section">
             <span class="speed-label">Speed (語速):</span>
@@ -1446,14 +1535,28 @@
         <div id="overallVocabList"></div>
     </div>
 </div>
-
+<!-- Quiz History Modal -->
+<div id="quizHistoryModal" class="overall-vocab-modal">
+    <div class="overall-vocab-content">
+        <div class="overall-vocab-header">
+            <h2>📊 Quiz History</h2>
+            <div class="overall-vocab-buttons">
+                <button class="overall-vocab-btn" id="clearHistoryBtn" style="background-color: #e74c3c;">
+                    🗑️ Clear All
+                </button>
+                <button class="overall-vocab-btn close-btn" id="closeQuizHistoryBtn">✖ Close</button>
+            </div>
+        </div>
+        <div id="quizHistoryList" style="max-height: 600px; overflow-y: auto;"></div>
+    </div>
+</div>
     <script>
 // ============ INDEXEDDB FUNCTIONS ============
 let db;
 
 function initDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('VocabDatabase', 2);  // 改成版本 2
+        const request = indexedDB.open('VocabDatabase', 3);  // 改成版本 3
         
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
@@ -1462,15 +1565,18 @@ function initDB() {
         };
         
         request.onupgradeneeded = (event) => {
-            db = event.target.result;
-            if (!db.objectStoreNames.contains('checkedWords')) {
-                db.createObjectStore('checkedWords', { keyPath: 'id' });
-            }
-            // 添加訪問歷史 store
-            if (!db.objectStoreNames.contains('visitHistory')) {
-                db.createObjectStore('visitHistory', { keyPath: 'id' });
-            }
-        };
+    db = event.target.result;
+    if (!db.objectStoreNames.contains('checkedWords')) {
+        db.createObjectStore('checkedWords', { keyPath: 'id' });
+    }
+    if (!db.objectStoreNames.contains('visitHistory')) {
+        db.createObjectStore('visitHistory', { keyPath: 'id' });
+    }
+    // ADD THIS NEW STORE
+    if (!db.objectStoreNames.contains('quizHistory')) {
+        db.createObjectStore('quizHistory', { keyPath: 'id' });
+    }
+};
     });
 }
 
@@ -1640,6 +1746,62 @@ async function displayVisitStats() {
         console.error('Error displaying visit stats:', error);
         statsContainer.innerHTML = 'Unable to load visit statistics.';
     }
+}
+
+// Save quiz result
+function saveQuizResult(quizData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readwrite');
+        const store = transaction.objectStore('quizHistory');
+        
+        // Add timestamp as ID
+        quizData.id = Date.now();
+        const request = store.put(quizData);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load all quiz results
+function loadQuizHistory() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readonly');
+        const store = transaction.objectStore('quizHistory');
+        const request = store.getAll();
+        
+        request.onsuccess = () => {
+            // Sort by date (newest first)
+            const results = request.result || [];
+            results.sort((a, b) => b.id - a.id);
+            resolve(results);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Delete a quiz result
+function deleteQuizResult(id) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readwrite');
+        const store = transaction.objectStore('quizHistory');
+        const request = store.delete(id);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
 }
 
 // Parse simplified database format
@@ -2882,24 +3044,51 @@ function toggleEnglishDisplay() {
         }
 
         // Show quiz complete
-        function showQuizComplete() {
-            const grid = document.getElementById('choicesGrid');
-            const percentage = Math.round((quizScore / quizWords.length) * 100);
-            
-            grid.innerHTML = `
-                <div class="quiz-complete">
-                    <h3>🎉 Quiz Complete!</h3>
-                    <div class="quiz-score">
-                        Your Score: <strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
-                    </div>
-                    <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
-                </div>
-            `;
+async function showQuizComplete() {
+    const grid = document.getElementById('choicesGrid');
+    const percentage = Math.round((quizScore / quizWords.length) * 100);
+    
+    // Save quiz result to database
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
+    
+    // Get section names
+    const sectionNames = [...checkedSections].map(index => {
+        const lessonData = vocabDatabase[selectedLesson];
+        return lessonData[index]?.section || `Section ${index + 1}`;
+    });
+    
+    const quizData = {
+        date: new Date().toISOString(),
+        lessonKey: selectedLesson,
+        lessonName: lessonName.trim(),
+        sections: sectionNames,
+        score: quizScore,
+        total: quizWords.length,
+        percentage: percentage
+    };
+    
+    try {
+        await saveQuizResult(quizData);
+        console.log('Quiz result saved successfully');
+    } catch (error) {
+        console.error('Failed to save quiz result:', error);
+    }
+    
+    grid.innerHTML = `
+        <div class="quiz-complete">
+            <h3>🎉 Quiz Complete!</h3>
+            <div class="quiz-score">
+                Your Score: <strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
+            </div>
+            <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
+        </div>
+    `;
 
-            document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
-            document.getElementById('timerFeedback').textContent = '';
-            document.getElementById('listenNextBtn').style.display = 'none';
-        }
+    document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
+    document.getElementById('timerFeedback').textContent = '';
+    document.getElementById('listenNextBtn').style.display = 'none';
+}
 
         // Restart quiz
 function restartQuiz() {
@@ -3485,6 +3674,100 @@ function scrollToPrevSection() {
 
         // ============ INITIALIZE EVENT LISTENERS ============
 
+// Open quiz history modal
+async function openQuizHistoryModal() {
+    try {
+        const history = await loadQuizHistory();
+        displayQuizHistory(history);
+        document.getElementById('quizHistoryModal').style.display = 'block';
+    } catch (error) {
+        console.error('Failed to load quiz history:', error);
+        alert('Failed to load quiz history.');
+    }
+}
+
+// Display quiz history
+function displayQuizHistory(history) {
+    const listContainer = document.getElementById('quizHistoryList');
+    
+    if (!history || history.length === 0) {
+        listContainer.innerHTML = '<div class="no-quiz-history">No quiz history yet. Complete a quiz to see your results here!</div>';
+        return;
+    }
+    
+    let html = '';
+    
+    history.forEach(item => {
+        const date = new Date(item.date);
+        const dateStr = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const percentage = item.percentage || Math.round((item.score / item.total) * 100);
+        let scoreClass = 'needs-improvement';
+        if (percentage >= 90) scoreClass = 'excellent';
+        else if (percentage >= 70) scoreClass = 'good';
+        
+        const sectionsText = item.sections && item.sections.length > 0 
+            ? item.sections.join(', ') 
+            : 'All sections';
+        
+        html += `
+            <div class="quiz-history-item">
+                <div class="quiz-history-date">📅 ${dateStr}</div>
+                <div class="quiz-history-lesson">📘 ${item.lessonName}</div>
+                <div class="quiz-history-sections"><strong>Sections:</strong> ${sectionsText}</div>
+                <div class="quiz-history-score ${scoreClass}">
+                    Score: ${item.score}/${item.total} (${percentage}%)
+                </div>
+                <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️ Delete</button>
+                <div style="clear: both;"></div>
+            </div>
+        `;
+    });
+    
+    listContainer.innerHTML = html;
+}
+
+// Delete individual quiz item
+async function deleteQuizItem(id) {
+    if (!confirm('Are you sure you want to delete this quiz result?')) {
+        return;
+    }
+    
+    try {
+        await deleteQuizResult(id);
+        const history = await loadQuizHistory();
+        displayQuizHistory(history);
+    } catch (error) {
+        console.error('Failed to delete quiz result:', error);
+        alert('Failed to delete quiz result.');
+    }
+}
+
+// Clear all quiz history
+async function clearAllQuizHistory() {
+    if (!confirm('Are you sure you want to delete ALL quiz history? This cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const history = await loadQuizHistory();
+        for (const item of history) {
+            await deleteQuizResult(item.id);
+        }
+        displayQuizHistory([]);
+        alert('All quiz history has been cleared.');
+    } catch (error) {
+        console.error('Failed to clear quiz history:', error);
+        alert('Failed to clear quiz history.');
+    }
+}
+
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
 
@@ -3559,6 +3842,21 @@ document.getElementById('overallVocabBtn').addEventListener('click', openOverall
 document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
 document.getElementById('closeOverallVocabBtn').addEventListener('click', () => {
     document.getElementById('overallVocabModal').style.display = 'none';
+});
+
+// Quiz History button
+document.getElementById('quizHistoryBtn').addEventListener('click', openQuizHistoryModal);
+document.getElementById('closeQuizHistoryBtn').addEventListener('click', () => {
+    document.getElementById('quizHistoryModal').style.display = 'none';
+});
+document.getElementById('clearHistoryBtn').addEventListener('click', clearAllQuizHistory);
+
+// Click outside modal to close quiz history modal
+window.addEventListener('click', (e) => {
+    // ... existing code ...
+    if (e.target === document.getElementById('quizHistoryModal')) {
+        document.getElementById('quizHistoryModal').style.display = 'none';
+    }
 });
 
             // Click outside modal to close
