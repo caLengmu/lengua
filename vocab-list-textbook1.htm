@@ -1209,9 +1209,16 @@
 }
 
 .quiz-history-date {
-    font-size: 14px;
+    font-size: 21px;  /* Changed from 14px to 21px (1.5x) */
     color: #7f8c8d;
     margin-bottom: 10px;
+}
+
+.quiz-history-category {
+    font-size: 16px;  /* New style for category */
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 .quiz-history-lesson {
@@ -1222,7 +1229,7 @@
 }
 
 .quiz-history-sections {
-    font-size: 14px;
+    font-size: 21px;  /* Changed from 14px to 21px (1.5x) */
     color: #555;
     margin-bottom: 10px;
     line-height: 1.6;
@@ -1256,10 +1263,10 @@
     background-color: #e74c3c;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 9px 18px;  /* Changed from 6px 12px (1.5x) */
     border-radius: 4px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 18px;  /* Changed from 12px to 18px (1.5x) */
     margin-top: 10px;
     float: right;
 }
@@ -1714,12 +1721,12 @@ function formatVisitMessage(stats) {
         const formattedDate = firstVisitDate.toLocaleDateString('en-US', options);
         
         // 使用 span 標籤添加顏色和粗體
-        let message = `Since your first visit on <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span>, this is your visit <span style="color: #e74c3c; font-weight: bold;">#${stats.totalVisits}</span>.`;
+        let message = `First visit: <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span> <br>Total visits: <span style="color: #e74c3c; font-weight: bold;">${stats.totalVisits}</span>`;
         
         if (stats.consecutiveDays >= 2) {
-            message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 18px;">${stats.consecutiveDays} days in a row</span>. Keep up your good work! 😊`;
+            message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 20px;">${stats.consecutiveDays} days in a row</span>. <br>Keep up your good work! 😊`;
         } else if (stats.lastStreakBroken && stats.lastStreakBroken > 1) {
-            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. What stopped you? 😢`;
+            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. <br>What stopped you? 😢`;
         }
         
         return message;
@@ -3049,8 +3056,13 @@ async function showQuizComplete() {
     const percentage = Math.round((quizScore / quizWords.length) * 100);
     
     // Save quiz result to database
-    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-    const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
+const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
+
+// Get category title (the parent category section)
+const selectedButton = document.querySelector('.vocab-btn.active');
+const categoryElement = selectedButton?.closest('.category')?.querySelector('.category-title');
+const categoryName = categoryElement?.textContent || 'Unknown Category';
     
     // Get section names
     const sectionNames = [...checkedSections].map(index => {
@@ -3059,14 +3071,14 @@ async function showQuizComplete() {
     });
     
     const quizData = {
-        date: new Date().toISOString(),
-        lessonKey: selectedLesson,
-        lessonName: lessonName.trim(),
-        sections: sectionNames,
-        score: quizScore,
-        total: quizWords.length,
-        percentage: percentage
-    };
+    date: new Date().toISOString(),
+    lessonKey: selectedLesson,
+    lessonName: lessonName.trim(),
+    sections: sectionNames,
+    score: quizScore,
+    total: quizWords.length,
+    percentage: percentage
+};
     
     try {
         await saveQuizResult(quizData);
@@ -3717,17 +3729,18 @@ function displayQuizHistory(history) {
             : 'All sections';
         
         html += `
-            <div class="quiz-history-item">
-                <div class="quiz-history-date">📅 ${dateStr}</div>
-                <div class="quiz-history-lesson">📘 ${item.lessonName}</div>
-                <div class="quiz-history-sections"><strong>Sections:</strong> ${sectionsText}</div>
-                <div class="quiz-history-score ${scoreClass}">
-                    Score: ${item.score}/${item.total} (${percentage}%)
-                </div>
-                <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️ Delete</button>
-                <div style="clear: both;"></div>
-            </div>
-        `;
+    <div class="quiz-history-item">
+        <div class="quiz-history-date">📅 ${dateStr}</div>
+        <div class="quiz-history-category">${item.categoryName || 'Unknown Category'}</div>
+        <div class="quiz-history-lesson">${item.lessonName}</div>
+        <div class="quiz-history-sections"><strong>Sections:</strong> ${sectionsText}</div>
+        <div class="quiz-history-score ${scoreClass}">
+            Score: ${item.score}/${item.total} (${percentage}%)
+        </div>
+        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️ Delete</button>
+        <div style="clear: both;"></div>
+    </div>
+`;
     });
     
     listContainer.innerHTML = html;
@@ -4017,9 +4030,9 @@ initDB().catch(error => {
 
     </script>
 <!-- Visit Statistics Section -->
-    <div style="text-align: center; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 16px; color: #2c3e50;">
-        <div id="visitStatsContainer">Loading visit statistics...</div>
-    </div>
+<div style="text-align: center; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 20px; color: #2c3e50;">
+    <div id="visitStatsContainer">Loading visit statistics...</div>
+</div>
 </body>
 </body>
 </html>
