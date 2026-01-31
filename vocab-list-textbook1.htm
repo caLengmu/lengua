@@ -3748,7 +3748,7 @@ function displayQuizHistory(history) {
         <div class="quiz-history-score ${scoreClass}">
             Score: ${item.score}/${item.total} (${percentage}%)
         </div>
-        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️ Delete</button>
+        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">Delete</button>
         <div style="clear: both;"></div>
     </div>
 `;
@@ -3759,7 +3759,7 @@ function displayQuizHistory(history) {
 
 // Delete individual quiz item
 async function deleteQuizItem(id) {
-    if (!confirm('Are you sure you want to delete this quiz result?')) {
+    if (!confirm('Are you sure you want to delete this quiz result? (確定要刪除這次的測驗結果？)')) {
         return;
     }
     
