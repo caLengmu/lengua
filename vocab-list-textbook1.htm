@@ -1265,7 +1265,7 @@
     padding: 8px 16px;  /* Changed from 6px 12px (1.5x) */
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;  /* Changed from 12px to 18px (1.5x) */
+    font-size: 20px;  /* Changed from 12px to 18px (1.5x) */
     margin-top: 10px;
     float: right;
 }
@@ -1292,7 +1292,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocab List for Textbooks<br>(v5.11)</h1>
+        <h1>📚 Vocab List for Textbooks<br>(v5.12)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -3732,13 +3732,13 @@ function displayQuizHistory(history) {
         
         const percentage = item.percentage || Math.round((item.score / item.total) * 100);
 let scoreClass = 'needs-improvement';
-let scoreEmoji = '😢';  // ADD THIS LINE
+let scoreEmoji = '😓';  // ADD THIS LINE
 if (percentage >= 90) {
     scoreClass = 'excellent';
-    scoreEmoji = '🏆';  // ADD THIS LINE
+    scoreEmoji = '😄';  // ADD THIS LINE
 } else if (percentage >= 70) {
     scoreClass = 'good';
-    scoreEmoji = '👍';  // ADD THIS LINE
+    scoreEmoji = '🙂';  // ADD THIS LINE
 }
         
         const sectionsText = item.sections && item.sections.length > 0 
@@ -3754,7 +3754,7 @@ if (percentage >= 90) {
         <div class="quiz-history-score ${scoreClass}">
             Score: ${item.score}/${item.total} (${percentage}%) ${scoreEmoji}
         </div>
-        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">Delete</button>
+        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️</button>
         <div style="clear: both;"></div>
     </div>
 `;
