@@ -1,0 +1,3389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 2.5em;
+        }
+
+        .button-categories {
+            margin-bottom: 30px;
+        }
+
+        .category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .vocab-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .vocab-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .vocab-btn.active {
+            background-color: #e74c3c;
+        }
+
+        /* Quiz Section */
+.quiz-section {
+    margin: 30px 0;
+    text-align: center;
+    padding: 20px;
+    background-color: #fff3cd;
+    border-radius: 8px;
+    border: 2px solid #ffc107;
+}
+
+/* Section Selector */
+.section-selector-area {
+    margin: 15px 0 0 0;  /* Changed from "20px 0" to "15px 0 0 0" */
+    padding: 20px;
+    background-color: #fffbf0;  /* Slightly lighter yellow to match quiz section */
+    border-radius: 8px;
+    border: 2px dashed #ffc107;  /* Dashed border to show it's connected */
+}
+
+        .section-selector-title {
+    font-weight: bold;
+    font-size: 16px;  /* Changed from 18px */
+    color: #856404;  /* Darker color to match quiz theme */
+    margin-bottom: 15px;
+}
+
+        .section-checkboxes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .section-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .section-checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .section-checkbox-item label {
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            user-select: none;
+            flex: 1;
+        }
+
+        .section-checkbox-item:hover {
+            background-color: #f0f0f0;
+        }
+
+/* Floating Navigation Buttons */
+.floating-nav-buttons {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.floating-nav-btn {
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: none;
+    transition: all 0.3s;
+}
+
+.floating-nav-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.floating-nav-btn.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+.next-section-btn {
+    background-color: #27ae60;
+}
+
+.next-section-btn:hover {
+    background-color: #229954;
+}
+
+.prev-section-btn {
+    background-color: #27ae60;
+}
+
+.prev-section-btn:hover {
+    background-color: #229954;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+#toggleEnglishBtn {
+        padding: 6px 12px !important;
+        font-size: 14px !important;
+    }
+}
+
+    .floating-nav-buttons {
+        bottom: 20px;
+        right: 20px;
+        gap: 8px;
+    }
+    
+    .floating-nav-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+        @media (max-width: 768px) {
+            .section-selector-area {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .section-selector-title {
+                font-size: 15px;
+            }
+
+            .section-checkboxes-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .section-checkbox-item {
+                padding: 10px;
+            }
+
+            .section-checkbox-item input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+            }
+
+            .section-checkbox-item label {
+                font-size: 13px;
+            }
+        }
+
+        .quiz-btn {
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .quiz-btn:hover {
+            background-color: #ffb300;
+        }
+
+/* Overall Vocabulary Button Section */
+.overall-vocab-section {
+    margin: 30px 0;
+    text-align: center;
+    padding: 20px;
+    background-color: #e8f8f5;
+    border-radius: 8px;
+}
+
+/* Overall Vocabulary Modal */
+.overall-vocab-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow-y: auto;
+}
+
+.overall-vocab-content {
+    background-color: white;
+    margin: 20px auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1000px;
+    position: relative;
+}
+
+.overall-vocab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+}
+
+.overall-vocab-header h2 {
+    color: #2c3e50;
+    margin: 0;
+}
+
+.overall-vocab-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.overall-vocab-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.overall-vocab-btn:hover {
+    background-color: #218838;
+}
+
+.overall-vocab-btn.close-btn {
+    background-color: #6c757d;
+}
+
+.overall-vocab-btn.close-btn:hover {
+    background-color: #5a6268;
+}
+
+.vocab-section-block {
+    margin-bottom: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.section-title-row input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.section-title-row label {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #2c3e50;
+    cursor: pointer;
+    flex: 1;
+}
+
+.section-count {
+    font-size: 0.9em;
+    color: red;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.vocab-items-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.vocab-item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+.vocab-item-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.vocab-item-row label {
+    cursor: pointer;
+    font-size: 18px;  
+    color: #333;
+    line-height: 1.5;  
+    flex: 1;
+    word-wrap: break-word;  
+}
+
+@media (max-width: 768px) {
+    .vocab-items-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .overall-vocab-content {
+        padding: 15px;
+    }
+}
+
+        .speed-control-section {
+            margin: 30px 0;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+
+        .speed-label {
+            font-weight: bold;
+            color: #495057;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .speed-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .speed-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .speed-btn.active-speed {
+            background-color: #28a745;
+        }
+
+        .study-partner-section {
+            margin: 30px 0;
+            text-align: center;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 8px;
+        }
+
+        .study-partner-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .study-partner-btn:hover {
+            background-color: #218838;
+        }
+
+        .vocab-table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .section-header {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.5em;
+            color: #2c3e50;
+        }
+
+        .vocab-row {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .audio-controls {
+            width: 80px;
+            text-align: center;
+            padding: 15px 10px;
+            vertical-align: top;
+        }
+
+        .content-cell {
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .vocab-word {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .example-sentence {
+            font-size: 1.5em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 2px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .audio-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .play-btn {
+            color: #27ae60;
+        }
+
+        .stop-btn {
+            color: #e74c3c;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: red;
+            font-size: 25px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 95%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Listen and Choose Quiz Styles - Mobile Optimized */
+        .quiz-modal-content {
+            margin: 5px auto;
+            padding: 15px;
+            max-height: 98vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quiz-header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            padding-right: 30px;
+        }
+
+        @media (max-width: 768px) {
+.quiz-connector {
+        margin: 3px 0;
+    }
+    
+    .section-selector-area {
+        margin: 10px 0 0 0;
+        padding: 15px;
+    }
+
+            .section-selector {
+                max-height: 120px;
+                padding: 10px;
+            }
+
+            .section-selector-title {
+                font-size: 16px;
+            }
+
+            .section-item label {
+                font-size: 12px;
+            }
+        }
+
+        .listen-answer-section {
+            text-align: center;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+.listen-answer-display {
+            font-size: 23px;
+            font-weight: bold;
+            color: #2c3e50;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .listen-speaker {
+            font-size: 30px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .listen-speaker:hover {
+            transform: scale(1.1);
+        }
+
+        .listen-speaker:active {
+            transform: scale(0.95);
+        }
+
+        .timer-feedback-section {
+            text-align: center;
+            margin: 8px 0;
+            min-height: 25px;
+        }
+
+        .timer-feedback {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .timer-feedback.correct {
+            color: #28a745;
+        }
+
+        .timer-feedback.incorrect {
+            color: #dc3545;
+        }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+            flex-grow: 1;
+        }
+
+.choice-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .choice-btn.correct {
+            background-color: #28a745;
+            animation: pulse-correct 0.5s;
+        }
+
+        .choice-btn.incorrect {
+            background-color: #dc3545;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .listen-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .listen-next-btn, .listen-close-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .listen-next-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .listen-next-btn:hover:not(:disabled) {
+            background-color: #218838;
+        }
+
+        .listen-next-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .listen-close-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .listen-close-btn:hover {
+            background-color: #5a6268;
+        }
+
+.quiz-complete {
+            text-align: center;
+            padding: 20px;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .quiz-complete h3 {
+            color: #28a745;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-score {
+            font-size: 25px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .restart-quiz-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .restart-quiz-btn:hover {
+            background-color: #2980b9;
+        }           
+        
+        .study-session {
+            text-align: center;
+        }
+
+        .partner-display {
+            margin-bottom: 30px;
+        }
+
+        .partner-avatar {
+    font-size: 100px;
+    line-height: 1;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+        .speech-bubble {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            max-width: 500px;
+        }
+
+        .current-word {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .current-example {
+            font-size: 23px;
+            margin-bottom: 15px;
+        }
+
+        .bubble-controls {
+            margin-bottom: 15px;
+        }
+
+        .bubble-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin: 0 5px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .bubble-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .bubble-btn.play-btn {
+            color: #27ae60;
+        }
+
+.bubble-btn.stop-btn {
+            color: #e74c3c;
+        }
+
+.bubble-btn.translate-btn {
+            color: #e74c3c;
+        }
+
+        .bubble-btn.translate-btn:disabled {
+            color: #95a5a6;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .translation-text {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+            border: 1px solid #ffc107;
+            font-size: 21px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .translation-text.show {
+            display: block;
+        }
+
+        .translation-label {         
+            color: #856404;
+            margin-bottom: 5px;
+        }
+
+        .progress-info {
+            margin-bottom: 20px;
+            font-size: 19px;
+            color: #666;
+        }
+
+        .navigation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .learn-again-btn {
+            background-color: #28a745 !important;
+        }
+
+        .learn-again-btn:hover {
+            background-color: #218838 !important;
+        }
+
+        .congratulations {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .congratulations h3 {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .category-title {
+                font-size: 1.2em;
+            }
+
+            .vocab-btn {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .quiz-section {
+                padding: 15px;
+                margin: 20px 0;
+            }
+
+            .quiz-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            .speed-control-section {
+                padding: 10px;
+            }
+
+            .speed-label {
+                display: block;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .speed-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                margin: 2px;
+            }
+
+            .study-partner-section {
+                padding: 15px;
+            }
+
+            .study-partner-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            .section-header {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+
+            .section-checkbox {
+                width: 18px;
+                height: 18px;
+            }
+
+            .audio-controls {
+                width: 60px;
+                padding: 10px 5px;
+            }
+
+            .content-cell {
+                padding: 12px;
+            }
+
+.vocab-word {
+                font-size: 1.5em;
+            }
+
+            .example-sentence {
+                font-size: 1.5em;
+            }
+
+
+            /* Quiz Modal Mobile Optimization */
+            .modal-content {
+                width: 98%;
+                margin: 5px auto;
+                padding: 12px;
+            }
+
+            .quiz-modal-content {
+                max-height: 97vh;
+                padding: 10px;
+            }
+
+            .quiz-header {
+                font-size: 1.5em;
+                margin-bottom: 10px;
+            }
+
+            .listen-answer-section {
+                padding: 10px;
+                margin-bottom: 8px;
+            }
+
+.listen-answer-display {
+                font-size: 23px;
+                min-height: 50px;
+                line-height: 1.3;
+            }
+
+            .listen-speaker {
+                font-size: 30px;
+            }
+
+            .timer-feedback {
+                font-size: 25px;
+            }
+
+            .choices-grid {
+                gap: 6px;
+                margin: 8px 0;
+            }
+
+.choice-btn {
+                font-size: 18px;
+                padding: 10px 8px;
+                min-height: 55px;
+                line-height: 1.3;
+            }
+
+            .listen-controls {
+                gap: 8px;
+                margin-top: 8px;
+                padding-top: 8px;
+            }
+
+            .listen-next-btn, .listen-close-btn {
+                padding: 8px 20px;
+                font-size: 20px;
+            }
+         
+            .partner-avatar {
+        font-size: 45px;
+    }
+
+    .question-prompt {
+        font-size: 20px !important;
+    }
+
+    .partner-display {
+        padding: 12px !important;
+        gap: 8px !important;
+    }
+
+    .speech-bubble {
+        padding: 15px !important;
+    }
+
+            .current-word {
+                font-size: 23px;
+            }
+
+.current-example {
+                font-size: 21px;
+            }
+
+            .translation-text {
+                font-size: 19px;
+                padding: 8px;
+                margin-top: 8px;
+            }
+
+            .navigation-controls {
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 15px;
+            }
+        }
+
+@media (max-width: 400px) {
+            .quiz-header {
+                font-size: 1.5em;
+            }
+
+            .listen-answer-display {
+                font-size: 23px;
+                min-height: 45px;
+            }
+
+            .choice-btn {
+                font-size: 18px;
+                min-height: 50px;
+                padding: 8px 6px;
+            }
+        }
+
+/* Quiz Connector Animation */
+.quiz-connector {
+    animation: bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(5px);
+    }
+}
+
+/* Quiz History Styles */
+.quiz-history-item {
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.quiz-history-item:hover {
+    border-color: #3498db;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.quiz-history-date {
+    font-size: 18px;  /* Changed from 14px to 21px (1.5x) */
+    color: #3498db;    
+    margin-bottom: 10px;
+}
+
+.quiz-history-category {
+    font-size: 18px;  /* New style for category */
+    color: #7f8c8d;
+    margin-bottom: 8px;
+}
+
+.quiz-history-lesson {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.quiz-history-sections {
+    font-size: 18px;  /* Changed from 14px to 21px (1.5x) */
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.quiz-history-score {
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.quiz-history-score.excellent {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.quiz-history-score.good {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.quiz-history-score.needs-improvement {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.quiz-history-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;  /* Changed from 6px 12px (1.5x) */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;  /* Changed from 12px to 18px (1.5x) */
+    margin-top: 10px;
+    float: right;
+}
+
+.quiz-history-delete:hover {
+    background-color: #c0392b;
+}
+
+.no-quiz-history {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+    font-size: 18px;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Floating Navigation Buttons -->
+    <div class="floating-nav-buttons">
+        <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
+        <button class="floating-nav-btn prev-section-btn" id="floatingPrevSectionBtn" title="Previous section">⬆️</button>
+        <button class="floating-nav-btn next-section-btn" id="floatingNextSectionBtn" title="Next section">⬇️</button>
+    </div>
+    
+    <div class="container">
+        <h1>📃 Vocabulary List <br>(v5.12)</h1>
+
+        <div class="button-categories">
+            <div class="category">
+                <div class="category-title">📚 Textbook: Book 4 (課本第四冊)</div>
+                <div class="category-buttons">
+ <button class="vocab-btn" data-category="textbook" data-lesson="textbook1">B4 L1 單字片語 (自読)</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook2">B4 L1 課文段落 (自読)</button>
+<button class="vocab-btn" data-category="textbook" data-lesson="textbook3">B4 L2 單字片語</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook4">B4 L2 課文段落</button>
+<button class="vocab-btn" data-category="textbook" data-lesson="textbook5">B4 L3 單字片語</button>
+                    <button class="vocab-btn" data-category="textbook" data-lesson="textbook6">B4 L3 課文段落</button>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">📰 Magazine: All+ Mar. 2026</div>
+                <div class="category-buttons">
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga1">U?</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga2">U?</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga3">U? (自読)</button>
+                    <button class="vocab-btn" data-category="magazine" data-lesson="maga4">U? (自読)</button>
+                </div>
+            </div>         
+
+<div class="category">
+                <div class="category-title">📒 核心字彙</div>
+                <div class="category-buttons">
+                    <button class="vocab-btn" data-category="core" data-lesson="core1">P2 U10</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="core2">P2 U11</button>
+                    <button class="vocab-btn" data-category="core" data-lesson="core3">P2 U12</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Partner Section -->
+<div class="study-partner-section">
+    <button class="study-partner-btn" id="walkMeThruBtn">
+        👀 Walk Me Through <br>(帶我複習：英翻中)
+    </button>
+</div>
+
+<!-- Listen and Choose Quiz Section with Section Selector -->
+<div class="quiz-section">
+    <button class="quiz-btn" id="listenChooseBtn">
+        🎧 Listening Quiz (聽力測驗 8題)
+    </button>
+    
+    <!-- Connecting Arrow -->
+    <div class="quiz-connector" id="quizConnector" style="display: none;">
+        <div style="text-align: center; font-size: 30px; color: #ffc107; margin: 5px 0;">☝️</div>
+    </div>
+    
+    <!-- Section Selector moved here -->
+    <div class="section-selector-area" id="sectionSelectorArea" style="display: none;">
+        <div class="section-selector-title">📋 Select sections for the quiz <br>(選擇測驗範圍)</div>
+        <div class="section-checkboxes-grid" id="sectionCheckboxesGrid"></div>
+    </div>
+</div>
+
+<!-- Overall Vocabulary Button -->
+<div class="overall-vocab-section" id="overallVocabSection" style="display: none;">
+    <button class="study-partner-btn" id="overallVocabBtn" style="background-color: #17a2b8;">
+        🗃️ Vocabulary Management <br>(字彙管理)
+    </button>
+</div>
+
+<!-- Quiz History Button -->
+<div class="overall-vocab-section" style="display: block; margin-top: 20px;">
+    <button class="study-partner-btn" id="quizHistoryBtn" style="background-color: #9b59b6;">
+        📊 Quiz History <br>(測驗紀錄)
+    </button>
+</div>
+
+        <!-- Speed Control -->
+        <div class="speed-control-section">
+            <span class="speed-label">Speed (語速):</span>
+            <button class="speed-btn" data-speed="1.2">1.2x</button>
+            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
+            <button class="speed-btn" data-speed="0.8">0.8x</button>
+            <button class="speed-btn" data-speed="0.6">0.6x</button>
+        </div>
+
+        <!-- Table -->
+        <div class="vocab-table-container">
+            <table class="vocab-table" id="vocabTable">
+                <tbody id="vocabTableBody">
+                    <tr class="no-data">
+                        <td colspan="2">Select a lesson to load vocabulary <br>(選擇單元以載入字彙)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Welcome Notice Modal -->
+    <div id="welcomeModal" class="modal" style="display: block;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="text-align: center; padding: 10px;">
+                <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Important Notice</h2>
+                <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
+                    <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</strong></p>
+                    <p style="margin-bottom: 0; text-align: center;">2. 手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
+                </div>
+                <button id="welcomeOkBtn" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
+                    OK. I got it.
+                </button>
+            </div>
+        </div>
+    </div>
+
+<!-- Listen and Choose Modal -->
+    <div id="listenChooseModal" class="modal">
+        <div class="modal-content quiz-modal-content">
+            <span class="close" id="closeListenChoose">&times;</span>
+<h2 class="quiz-header">🎧 Listen and Choose</h2>
+            <div class="listen-answer-section">
+    <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+        <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
+        <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
+            Show English
+        </button>
+    </div>
+</div>
+            <div class="timer-feedback-section">
+                <div id="timerFeedback" class="timer-feedback"></div>
+            </div>
+            <div id="choicesGrid" class="choices-grid"></div>
+            <div class="listen-controls">
+                <button id="listenNextBtn" class="listen-next-btn">Next</button>
+                <button id="listenCloseBtn" class="listen-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Study Session Modal -->
+<div id="studyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeStudyModal">&times;</span>
+        <div class="study-session">
+    <!-- Emoji and Question Section (Above) -->
+<div class="partner-display" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+    <div class="partner-avatar" id="currentPartnerAvatar" style="font-size: 38px; line-height: 1;">
+        🧑
+    </div>
+    <div class="question-prompt" id="questionPrompt" style="font-size: 24px; font-weight: bold; color: #3498db;">
+    What does it mean?
+</div>
+</div>
+
+    <!-- Vocab and Example Box (Below) -->
+    <div class="speech-bubble" id="speechBubble" style="background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #dee2e6; margin-bottom: 20px;">
+        <div class="current-word" id="currentWord">Select a lesson first!</div>
+        <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
+        <div class="bubble-controls">
+            <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+            <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+            <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+        </div>
+        <div class="translation-text" id="translationText">
+            <div class="translation-label">🌐 中文翻譯：</div>
+            <div>請先選擇單字</div>
+        </div>
+    </div>
+                <div class="progress-info" id="progressInfo">
+                    Ready to start!
+                </div>
+                <div class="navigation-controls" id="navigationControls">
+                    <button class="nav-btn" id="backBtn">← Back</button>
+                    <button class="nav-btn" id="nextBtn">Next →</button>
+                    <button class="nav-btn" id="studyModalNextSectionBtn">Next Section</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Overall Vocabulary Modal -->
+<div id="overallVocabModal" class="overall-vocab-modal">
+    <div class="overall-vocab-content">
+        <div class="overall-vocab-header">
+            <h2>🗃️ Vocab Management</h2>
+            <div class="overall-vocab-buttons">
+                <button class="overall-vocab-btn" id="saveVocabBtn">💾 Save</button>
+                <button class="overall-vocab-btn close-btn" id="closeOverallVocabBtn">✖ Close</button>
+            </div>
+        </div>
+        <p style="color: red; margin-bottom: 20px; font-size: 18px;">Uncheck the items you've learned and save. (取消勾選已學會的項目並儲存。)</p>
+        <div id="overallVocabList"></div>
+    </div>
+</div>
+<!-- Quiz History Modal -->
+<div id="quizHistoryModal" class="overall-vocab-modal">
+    <div class="overall-vocab-content">
+        <div class="overall-vocab-header">
+            <h2>📊 Quiz History</h2>
+            <div class="overall-vocab-buttons">
+                <button class="overall-vocab-btn" id="clearHistoryBtn" style="background-color: #e74c3c;">
+                    🗑️ Clear All
+                </button>
+                <button class="overall-vocab-btn close-btn" id="closeQuizHistoryBtn">✖ Close</button>
+            </div>
+        </div>
+        <div id="quizHistoryList" style="max-height: 600px; overflow-y: auto;"></div>
+    </div>
+</div>
+    <script>
+// ============ INDEXEDDB FUNCTIONS ============
+let db;
+
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('VocabDatabase', 3);  // 改成版本 3
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        
+        request.onupgradeneeded = (event) => {
+    db = event.target.result;
+    if (!db.objectStoreNames.contains('checkedWords')) {
+        db.createObjectStore('checkedWords', { keyPath: 'id' });
+    }
+    if (!db.objectStoreNames.contains('visitHistory')) {
+        db.createObjectStore('visitHistory', { keyPath: 'id' });
+    }
+    // ADD THIS NEW STORE
+    if (!db.objectStoreNames.contains('quizHistory')) {
+        db.createObjectStore('quizHistory', { keyPath: 'id' });
+    }
+};
+    });
+}
+
+function saveCheckedWords(lessonKey, checkedWords) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['checkedWords'], 'readwrite');
+        const store = transaction.objectStore('checkedWords');
+        const request = store.put({ id: lessonKey, words: checkedWords });
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function loadCheckedWords(lessonKey) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['checkedWords'], 'readonly');
+        const store = transaction.objectStore('checkedWords');
+        const request = store.get(lessonKey);
+        
+        request.onsuccess = () => {
+            if (request.result) {
+                resolve(request.result.words);
+            } else {
+                resolve(null);
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Save visit record
+function saveVisitRecord(visitData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['visitHistory'], 'readwrite');
+        const store = transaction.objectStore('visitHistory');
+        const request = store.put(visitData);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load visit record
+function loadVisitRecord() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['visitHistory'], 'readonly');
+        const store = transaction.objectStore('visitHistory');
+        const request = store.get('userVisits');
+        
+        request.onsuccess = () => {
+            resolve(request.result || null);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Get date in YYYY-MM-DD format
+function getDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Calculate visit statistics
+async function calculateVisitStats() {
+    try {
+        const visitRecord = await loadVisitRecord();
+        const today = getDateString(new Date());
+        
+        if (!visitRecord) {
+            // First visit ever
+            const newRecord = {
+                id: 'userVisits',
+                firstVisit: today,
+                lastVisit: today,
+                totalVisits: 1,
+                consecutiveDays: 1,
+                visitDates: [today]
+            };
+            await saveVisitRecord(newRecord);
+            return newRecord;
+        }
+        
+        // Check if already visited today
+        if (visitRecord.lastVisit === today) {
+            return visitRecord;
+        }
+        
+        // Calculate days since last visit
+        const lastVisitDate = new Date(visitRecord.lastVisit);
+        const todayDate = new Date(today);
+        const daysDifference = Math.floor((todayDate - lastVisitDate) / (1000 * 60 * 60 * 24));
+        
+        // Update visit record
+        const updatedRecord = {
+            ...visitRecord,
+            lastVisit: today,
+            totalVisits: visitRecord.totalVisits + 1,
+            visitDates: [...(visitRecord.visitDates || []), today]
+        };
+        
+        if (daysDifference === 1) {
+            // Consecutive day
+            updatedRecord.consecutiveDays = (visitRecord.consecutiveDays || 1) + 1;
+            updatedRecord.lastStreakBroken = undefined;
+        } else if (daysDifference > 1) {
+            // Streak broken
+            updatedRecord.consecutiveDays = 1;
+            updatedRecord.lastStreakBroken = daysDifference;
+        }
+        
+        await saveVisitRecord(updatedRecord);
+        return updatedRecord;
+    } catch (error) {
+        console.error('Error calculating visit stats:', error);
+        throw error;
+    }
+}
+
+// Format visit statistics message
+function formatVisitMessage(stats) {
+    try {
+        const firstVisitDate = new Date(stats.firstVisit);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = firstVisitDate.toLocaleDateString('en-US', options);
+        
+        // 使用 span 標籤添加顏色和粗體
+        let message = `First visit: <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span> <br>Total visits: <span style="color: #e74c3c; font-weight: bold;">${stats.totalVisits}</span>`;
+        
+        if (stats.consecutiveDays >= 2) {
+            message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 20px;">${stats.consecutiveDays} days in a row</span>. <br>Keep up your good work! 😊`;
+        } else if (stats.lastStreakBroken && stats.lastStreakBroken > 1) {
+            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. <br>What stopped you? 😢`;
+        }
+        
+        return message;
+    } catch (error) {
+        console.error('Error formatting message:', error);
+        return 'Welcome back!';
+    }
+}
+
+// Display visit statistics
+async function displayVisitStats() {
+    const statsContainer = document.getElementById('visitStatsContainer');
+    
+    if (!statsContainer) {
+        console.error('Visit stats container not found');
+        return;
+    }
+    
+    try {
+        const stats = await calculateVisitStats();
+        const message = formatVisitMessage(stats);
+        statsContainer.innerHTML = message;
+    } catch (error) {
+        console.error('Error displaying visit stats:', error);
+        statsContainer.innerHTML = 'Unable to load visit statistics.';
+    }
+}
+
+// Save quiz result
+function saveQuizResult(quizData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readwrite');
+        const store = transaction.objectStore('quizHistory');
+        
+        // Add timestamp as ID
+        quizData.id = Date.now();
+        const request = store.put(quizData);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load all quiz results
+function loadQuizHistory() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readonly');
+        const store = transaction.objectStore('quizHistory');
+        const request = store.getAll();
+        
+        request.onsuccess = () => {
+            // Sort by date (newest first)
+            const results = request.result || [];
+            results.sort((a, b) => b.id - a.id);
+            resolve(results);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Delete a quiz result
+function deleteQuizResult(id) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readwrite');
+        const store = transaction.objectStore('quizHistory');
+        const request = store.delete(id);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Parse simplified database format
+function parseSimplifiedDatabase(text) {
+    const sections = [];
+    const lines = text.trim().split('\n');
+    let currentSection = null;
+
+    for (let line of lines) {
+        line = line.trim();
+        if (!line) continue;
+
+        if (line.startsWith('◎')) {
+            // New section
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+            currentSection = {
+                section: line,
+                words: []
+            };
+        } else if (line.includes('^') && currentSection) {
+            // Word entry
+            const [wordPart, examplePart] = line.split('^').map(s => s.trim());
+            currentSection.words.push({
+                word: wordPart + ':',
+                example: examplePart
+            });
+        }
+    }
+
+    if (currentSection) {
+        sections.push(currentSection);
+    }
+
+    return sections;
+}
+
+// Built-in database - can be expanded
+        const vocabDatabaseRaw = {
+            'textbook1': `
+
+`,
+
+'textbook2': `
+
+
+`,
+
+'textbook3': `  
+◎Vocab #1–#13
+flood (v) (淹沒) ^ The heavy rain will flood the low streets near the river. (大雨會淹沒河流附近的低矮街道。)
+appropriate (adj) (合適的 = suitable) ^ This movie is not appropriate for small children. (這部電影不適合幼童觀看。)
+promising (adj) (有前途的) ^ He is a promising student who learns things very fast. (他是一個學習非常快、有前途的學生。)
+arched (adj) (拱形的) ^ We walked under the arched bridge in the park. (我們走過公園裡的拱橋下面。)
+solar (adj) (太陽能的) ^ Solar power uses the sun to make light for the house. (太陽能利用太陽為房子發電照明。)
+panel (n) (1.方形嵌板) ^ There is a wooden panel on the wall of the room. (房間的牆上有一個木製嵌板。)
+panel (n) (2.專家小組) ^ A panel of experts will be sent to fix this problem. (一個專家小組將被派去解決這個問題。)
+panel (n) (3.儀表板、操縱台) ^ The pilot looked at the control panel of the plane. (飛行員看著飛機的控制面板。)
+install (v) (安裝) ^ My dad will install the new air conditioner today. (我爸爸今天會安裝新的冷氣機。)
+muddy (adj) (泥濘的) ^ My shoes got muddy after I ran in the rain. (我在雨中跑步後，我的鞋子變得很泥濘。)
+session (n) (（從事某項活動的）一段時間) ^ We had a short study session after school yesterday. (昨天放學後我們進行了一次短暫的學習時間。)
+to project (v) (投射、投影) ^ The machine will project the movie onto the big wall. (這台機器會將電影投影到大牆上。)
+project (n) (1.專案計畫) ^ The city has a new project to build more parks. (這座城市有一個建造更多公園的新計畫。)
+project (n) (2.學生的專題研究) ^ The student needs to finish her science project by this Friday. (這個學生需要在這週五前完成她的科學專題研究。)
+practical (adj) (1.實際的、有實際經驗的 vs. theoretical 理論的) ^ Sometimes, practical experience is more important than book knowledge. (有時，實務經驗比書本知識更重要。)
+practical (adj) (2.實用的、能解決問題的) ^ A practical person always comes up with practical ways to deal with real-world problems. (務實的人總是能想出實際可行的辦法來解決現實世界的問題。)
+issue (n) (1.議題) ^ Whether Taiwan should use nuclear energy has become a major issue. (台灣是否應該使用核能已成為一個重大議題。)
+issue (n) (2.問題 = problem) ^ There is a small issue with the computer screen. (電腦螢幕有一個小問題。)
+nutrition (n) (營養) ^ Good nutrition helps children grow up strong and healthy. (良好的營養幫助孩子長得強壯健康。)
+________________________________________
+◎Vocab #14–#25
+hygiene (n) (衛生) ^ Washing hands before meals is part of good hygiene. (飯前洗手是良好衛生的一部分。)
+resistant (adj) (有抵抗力的) ^ This strong plant is resistant to many bugs. (這種強壯的植物對許多昆蟲都有抵抗力。)
+productivity (n) (生產力) ^ Listening to music helps improve my productivity at work. (聽音樂有助於提高我工作的生產力。)
+sufficient (adj) (充足的 = enough) ^ We have sufficient food and water for the long trip. (我們有充足的食物和水供長途旅行使用。)
+income (n) (收入) ^ He uses his monthly income to pay the rent for this apartment. (他用每月的收入來付這間公寓的房租。)
+financial (adj) (財務的) ^ They need financial help to buy a new car. (他們需要財務上的幫助來買新車。)
+risk (n) (風險) ^ When you talk to people with a cold, you are at a high risk of getting sick. (與感冒患者交談時，你有很高的風險會生病。)
+geographical (adj) (地理的) ^ The map shows the geographical features of this land. (這幅地圖顯示了這片土地的地理特徵。)
+barrier (n) (1.隔閡、阻礙) ^ A language barrier can make it hard to talk to people. (語言隔閡會讓與人交談變得很困難。)
+barrier (n) (2.障礙物、屏障) ^ The workers put a barrier across the broken road. (工人們在損壞的道路上放置了障礙物。)
+indeed (adv) (確實、的確) ^ It is indeed a very beautiful day to have a picnic. (今天的確是一個非常適合野餐的好日子。)
+opportunity (n) (機會) ^ This job is a great opportunity to learn new skills. (這份工作是學習新技能的好機會。)
+severe (adj) (1.非常嚴重的 = very serious) ^ The severe storm caused damage to many houses. (那場嚴重的暴風雨對許多房子造成了損害。)
+severe (adj) (2.嚴厲的 = harsh) ^ The teacher was severe with the students who were late. (老師對遲到的學生很嚴厲。)
+________________________________________
+◎Idioms & Phrases
+make waves (1.挑起事端、製造問題) ^ He is quiet because he does not want to make waves. (他很安靜，因為他不想挑起事端。)
+make waves (2.引起轟動) ^ The new movie made waves all over the world. (這部新電影在全世界引起了轟動。)
+at a time (一次) ^ Please take only one piece of candy at a time. (請一次只拿一顆糖果。)
+base... on... (以...為根據，常使用被動語氣be based on…) ^ This book is based on a true story about a dog. (這本書是以一個關於狗的真實故事為根據。)
+at risk (of...) (處於...的風險中) ^ The old bridge is at risk of falling down. (這座舊橋處於倒塌的風險中。)
+rise above... (克服...、超越...) ^ She worked hard to rise above her difficult life. (她努力工作以克服她困難的生活。)
+________________________________________
+◎詞類變化補充
+flood (n) (洪水) ^ The flood covered the whole field with water last night. (昨晚洪水將整片田地都淹沒在水裡。)
+flooding (n) (淹水) ^ Heavy rain caused flooding in many low parts of the city. (大雨在城市的許多低窪地區造成了淹水。)
+arch (n) (拱門、拱形結構) ^ They walked through a stone arch into the garden. (他們走過一個石拱門進入花園。)
+mud (n) (泥巴) ^ Don't bring mud into the house on your shoes. (別用鞋子把泥巴帶進屋子裡。)
+issue (v) (發布) ^ The school will issue the report cards tomorrow morning. (學校明天早上將發布成績單。)
+nutritious (adj) (有營養的) ^ Milk and eggs are very nutritious foods for kids. (牛奶和蛋對孩子來說是非常有營養的食物。)
+resist (v) (抵抗) ^ It is very hard to resist eating the sweet cake. (很難抵抗不吃那塊甜蛋糕。)
+resistance (n) (抵抗力、反對) ^ Exercise helps build resistance to common colds. (運動有助於建立對一般感冒的抵抗力。)
+productive (adj) (有生產力的) ^ I had a very productive morning and finished my homework. (我度過了一個非常有生產力的早晨，完成了我的作業。)
+finance (n) (金融) ^ He is studying finance to work in a big bank later. (他正在學習金融，以便日後在大銀行工作。)
+risk (v) (冒險) ^ Do not risk your health by working too hard every day. (不要因為每天工作太努力而拿健康冒險。)
+geography (n) (地理) ^ We learned about mountains and rivers in geography class. (我們在地理課上學習了關於山脈和河流的知識。)
+
+`, 
+
+'textbook4': `
+
+`,
+
+'textbook5': `  
+
+`,
+
+'textbook6': `
+
+`,
+
+'maga1': `
+
+`,
+
+'maga2': `
+
+`,
+
+'maga3': `
+
+`,
+
+'maga4': `
+
+`,
+
+'core2': `
+
+`,
+
+'core3': `
+
+`,
+
+'backup': `  
+`
+
+        }; // End of raw database
+
+        // Convert raw database to parsed format
+        const vocabDatabase = {};
+        for (const [key, value] of Object.entries(vocabDatabaseRaw)) {
+            vocabDatabase[key] = parseSimplifiedDatabase(value);
+        }
+
+        // Emoji configurations for study mode
+const studyEmojis = ['🧑', '👱', '🧔', '👨‍🦰', '👩', '👧', '🧒', '👱‍♀️', '👵', '🎅', '👶', '👴', '🧓', '🎅🏿', '🤴', '👸', '🙆', '🤷‍♂️', '🎃', '👻', '👺', '🧙', '🗿', '👽', '💩', '🐶', '🐱', '🐵', '🐷', '🐮', '🐯', '🦁', '🐻', '🦊', '🦝', '🐹', '🐰', '🐨', '🐼', '🤠', '😂', '😜'];
+let currentEmoji = '🧑';
+let translationShown = false;
+
+        // Global state
+        let currentLessonData = null;
+let currentWordIndex = 0;
+        let flatWordsList = [];
+        let currentSpeech = null;
+        let speechRate = 1.0;
+        let voices = [];
+        let isCompleted = false;
+        let checkedSections = new Set();
+
+        // Quiz state
+let quizWords = [];
+let currentQuizIndex = 0;
+let quizScore = 0;
+let hasAnswered = false;
+let correctAnswer = null;
+let showEnglishInQuiz = false;  // ADD THIS LINE - default is hide English
+let showEnglishTimeout = null;  // ADD THIS LINE - track the timeout
+
+        // Load voices
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            if (!voices.length) {
+                const dummy = new SpeechSynthesisUtterance('');
+                speechSynthesis.speak(dummy);
+                voices = speechSynthesis.getVoices();
+            }
+        }
+
+        // Get English voice
+        function getEnglishVoice() {
+            if (!voices.length) loadVoices();
+            let voice = voices.find(v => v.name.includes('Samantha')) || 
+                       voices.find(v => v.lang === 'en-US');
+            return voice || null;
+        }
+
+        // Clean text for TTS
+        function cleanTextForTTS(text) {
+            return text.replace(/\*/g, '')
+                      .replace(/\//g, '')
+                      .replace(/\([^)]*\)/g, '')
+                      .replace(/\[[^\]]*\]/g, '')
+                      .replace(/\s+/g, ' ')
+                      .trim();
+        }
+
+// Get random emoji
+function getRandomEmoji() {
+    return studyEmojis[Math.floor(Math.random() * studyEmojis.length)];
+}
+
+        // Speak text
+        function speakText(text) {
+            stopSpeech();
+            const cleaned = cleanTextForTTS(text);
+            if (!cleaned) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleaned);
+            utterance.lang = 'en-US';
+            utterance.rate = speechRate;
+
+            const voice = getEnglishVoice();
+            if (voice) utterance.voice = voice;
+
+            utterance.onend = () => {
+                currentSpeech = null;
+            };
+
+            currentSpeech = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Stop speech
+        function stopSpeech() {
+            if (speechSynthesis.speaking || speechSynthesis.pending) {
+                speechSynthesis.cancel();
+            }
+            currentSpeech = null;
+        }
+
+        // Load vocabulary with checkboxes
+        async function loadVocabulary(lessonKey) {
+    const tableBody = document.getElementById('vocabTableBody');
+    const data = vocabDatabase[lessonKey];
+
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. <br>(暫無資料，請等待更新)</td></tr>';
+        document.getElementById('overallVocabSection').style.display = 'none';
+        
+        // Scroll to show the "No data" message
+        setTimeout(() => {
+            const vocabTable = document.getElementById('vocabTable');
+            if (vocabTable) {
+                vocabTable.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }
+        }, 50);
+        
+        return;
+    }
+
+    // Load saved checked state
+    const savedCheckedWords = await loadCheckedWords(lessonKey);
+
+    // Clear checked sections when loading new lesson
+    checkedSections.clear();
+
+    let html = '';
+    data.forEach((section, sectionIndex) => {
+        html += `<tr>
+            <td colspan="2" class="section-header">${section.section}</td>
+        </tr>`;
+        
+        section.words.forEach((item, wordIndex) => {
+            // Check if this word is checked (default true if no saved state)
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            
+            // Only show checked words
+            if (isChecked) {
+                const fullText = `${item.word}. ${item.example}`;
+                html += `<tr class="vocab-row">
+                    <td class="audio-controls">
+                        <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                        <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                    </td>
+                    <td class="content-cell">
+                        <div class="vocab-word">${item.word}</div>
+                        <div class="example-sentence">${item.example}</div>
+                    </td>
+                </tr>`;
+            }
+        });
+    });
+
+    tableBody.innerHTML = html;
+
+    // Show section selector and Overall Vocabulary button
+    showSectionSelector(data, lessonKey, savedCheckedWords);
+    document.getElementById('overallVocabSection').style.display = 'block';
+}
+
+        // Flatten lesson data
+        async function flattenLessonData(lessonData) {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const savedCheckedWords = await loadCheckedWords(selectedLesson);
+    
+    const flattened = [];
+    lessonData.forEach((section, sectionIndex) => {
+        section.words.forEach((word, wordIndex) => {
+            // Only include checked words
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            if (isChecked) {
+                flattened.push({
+                    ...word,
+                    sectionIndex,
+                    sectionTitle: section.section,
+                    wordIndex
+                });
+            }
+        });
+    });
+    return flattened;
+}
+
+// Show and populate section selector
+async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
+    const selectorArea = document.getElementById('sectionSelectorArea');
+    const connector = document.getElementById('quizConnector');
+    const grid = document.getElementById('sectionCheckboxesGrid');
+    
+    grid.innerHTML = '';
+    
+    for (let sectionIndex = 0; sectionIndex < lessonData.length; sectionIndex++) {
+        const section = lessonData[sectionIndex];
+        
+        // Count how many checked words are in this section
+        let checkedCount = 0;
+        section.words.forEach((word, wordIndex) => {
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            if (isChecked) checkedCount++;
+        });
+        
+        // Only show section if it has checked words
+        if (checkedCount > 0) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'section-checkbox-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `section_${lessonKey}_${sectionIndex}`;
+            checkbox.checked = checkedSections.has(sectionIndex);
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    checkedSections.add(sectionIndex);
+                } else {
+                    checkedSections.delete(sectionIndex);
+                }
+            });
+            
+            const label = document.createElement('label');
+            label.htmlFor = checkbox.id;
+            label.textContent = `${section.section} (${checkedCount} items)`;
+            
+            itemDiv.appendChild(checkbox);
+            itemDiv.appendChild(label);
+            grid.appendChild(itemDiv);
+        }
+    }
+    
+    // Show both selector and connector
+    selectorArea.style.display = 'block';
+    if (connector) connector.style.display = 'block';
+}
+
+        // Get words from checked sections only
+        async function getWordsFromCheckedSections(lessonData) {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const savedCheckedWords = await loadCheckedWords(selectedLesson);
+    
+    const allWords = [];
+    lessonData.forEach((section, sectionIndex) => {
+        if (checkedSections.has(sectionIndex)) {
+            section.words.forEach((word, wordIndex) => {
+                // Only include if word is checked in Overall Vocabulary
+                const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+                if (isChecked) {
+                    allWords.push({
+                        ...word,
+                        sectionIndex,
+                        sectionTitle: section.section,
+                        wordIndex
+                    });
+                }
+            });
+        }
+    });
+    return allWords;
+}
+
+        // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
+
+// Extract English word without Chinese translation (for study partner mode)
+        function extractEnglishWordOnly(wordString) {
+            // Remove everything from first ( to end
+            return wordString.split('(')[0].trim().replace(':', '');
+        }
+
+        // Extract English example without Chinese translation
+        function extractEnglishExampleOnly(exampleString) {
+            // Remove everything from first ( to end
+            return exampleString.split('(')[0].trim();
+        }
+
+        // Extract Chinese translation from word
+        function extractChineseWord(wordString) {
+            const match = wordString.match(/\(([^)]+)\):/);
+            return match ? match[1] : '';
+        }
+
+        // Extract Chinese translation from example
+        function extractChineseExample(exampleString) {
+            const match = exampleString.match(/\(([^)]+)\)/);
+            return match ? match[1] : '';
+        }
+
+
+        // Extract Chinese translation from word
+        function extractChineseTranslation(wordString) {
+            const match = wordString.match(/\(([^)]+)\):/);
+            return match ? match[1] : wordString;
+        }
+
+        // Extract English word/phrase only
+        function extractEnglishWord(wordString) {
+            const match = wordString.match(/^(.+?)\s*\([^)]+\):/);
+            return match ? match[1].trim() : wordString.split('(')[0].trim();
+        }
+
+        // Extract example sentence without Chinese translation
+        function extractExampleOnly(exampleString) {
+            return exampleString.split('(')[0].trim();
+        }
+
+// Start quiz
+        async function startListenChooseQuiz() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        return;
+    }
+
+    // Get words from checked sections only (and only checked words)
+    const lessonData = vocabDatabase[selectedLesson];
+    const allWords = await getWordsFromCheckedSections(lessonData);
+    
+    if (allWords.length < 8) {
+        alert('Please select sections with at least 8 words for the quiz. (請勾選至少包含8個單字的區段)');
+        return;
+    }
+
+    // Select 8 random words
+    quizWords = shuffleArray([...allWords]).slice(0, 8);
+    currentQuizIndex = 0;
+    quizScore = 0;
+
+    // Open modal and load first question
+    document.getElementById('listenChooseModal').style.display = 'block';
+    loadQuizQuestion();
+}
+
+        // Shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Load quiz question
+        function loadQuizQuestion() {
+    if (currentQuizIndex >= quizWords.length) {
+        showQuizComplete();
+        return;
+    }
+
+    // Clear any existing timeout from previous question
+    if (showEnglishTimeout) {
+        clearTimeout(showEnglishTimeout);
+        showEnglishTimeout = null;
+    }
+
+    hasAnswered = false;
+    correctAnswer = quizWords[currentQuizIndex];
+
+    // Reset UI
+    document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker';
+    document.getElementById('timerFeedback').textContent = '';
+    document.getElementById('timerFeedback').className = 'timer-feedback';
+    document.getElementById('listenNextBtn').disabled = true;
+    document.getElementById('listenNextBtn').style.display = 'inline-block';
+
+    // Update toggle button text based on current state (don't reset)
+    const toggleBtn = document.getElementById('toggleEnglishBtn');
+    if (toggleBtn) {
+        toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
+        toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
+    }
+
+    // Generate all 8 choices (include all quiz words)
+    displayChoices(shuffleArray([...quizWords]));
+}
+
+        // Display choices - show only Chinese translation
+function displayChoices(choices) {
+    const grid = document.getElementById('choicesGrid');
+    grid.innerHTML = '';
+
+    choices.forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = extractChineseTranslation(choice.word);
+        btn.onclick = () => handleChoiceClick(choice, btn);
+        grid.appendChild(btn);
+    });
+}
+
+// Handle choice click
+        function handleChoiceClick(selectedChoice, btn) {
+            if (hasAnswered) return;
+
+            hasAnswered = true;
+            const allChoices = document.querySelectorAll('.choice-btn');
+            const correctChinese = extractChineseTranslation(correctAnswer.word);
+            
+            if (extractChineseTranslation(selectedChoice.word) === correctChinese) {
+                // Correct answer
+                btn.classList.add('correct');
+                document.getElementById('timerFeedback').textContent = '✓ Correct!';
+                document.getElementById('timerFeedback').className = 'timer-feedback correct';
+                quizScore++;
+                
+                // Speak "Correct!"
+                setTimeout(() => speakText('Correct!'), 0);
+            } else {
+                // Wrong answer
+                btn.classList.add('incorrect');
+                document.getElementById('timerFeedback').textContent = '✗ Wrong! The answer is ' + correctChinese;
+                document.getElementById('timerFeedback').className = 'timer-feedback incorrect';
+                
+                // Highlight correct answer
+                allChoices.forEach(choiceBtn => {
+                    if (choiceBtn.textContent === correctChinese) {
+                        choiceBtn.classList.add('correct');
+                    }
+                });
+                
+                // Speak "Wrong!"
+                setTimeout(() => speakText('Wrong!'), 0);
+            }
+
+            // Disable all buttons
+            allChoices.forEach(choiceBtn => {
+                choiceBtn.disabled = true;
+            });
+
+            // Show English word/phrase and example (without Chinese)
+            const englishWord = extractEnglishWord(correctAnswer.word);
+            const exampleOnly = extractExampleOnly(correctAnswer.example);
+            document.getElementById('listenAnswerDisplay').innerHTML = 
+                `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+
+            // Enable next button
+            document.getElementById('listenNextBtn').disabled = false;
+        }
+
+        // Play quiz audio - play English word and example only
+function playQuizAudio() {
+    if (correctAnswer) {
+        const englishWord = extractEnglishWord(correctAnswer.word);
+        const exampleOnly = extractExampleOnly(correctAnswer.example);
+        const fullText = `${englishWord}. ${exampleOnly}`;
+        speakText(fullText);
+        
+        // Clear any existing timeout before setting a new one
+        if (showEnglishTimeout) {
+            clearTimeout(showEnglishTimeout);
+            showEnglishTimeout = null;
+        }
+        
+        // Show English text if toggle is on - with 4 second delay
+        if (showEnglishInQuiz && !hasAnswered) {
+            showEnglishTimeout = setTimeout(() => {
+                // Only show if still on same question and haven't answered
+                if (!hasAnswered && correctAnswer === quizWords[currentQuizIndex]) {
+                    document.getElementById('listenAnswerDisplay').innerHTML = 
+                        `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+                }
+                showEnglishTimeout = null;
+            }, 4000);
+        }
+    }
+}
+
+// Toggle English display in quiz
+function toggleEnglishDisplay() {
+    showEnglishInQuiz = !showEnglishInQuiz;
+    const toggleBtn = document.getElementById('toggleEnglishBtn');
+    
+    if (toggleBtn) {
+        toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
+        toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
+    }
+    
+    // When toggling off, hide English immediately
+    if (!showEnglishInQuiz && !hasAnswered) {
+        document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker';
+    }
+    // Note: When toggling on, English won't show until speaker is pressed and 2 seconds pass
+}
+
+        // Next quiz question
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            loadQuizQuestion();
+        }
+
+        // Show quiz complete
+async function showQuizComplete() {
+    const grid = document.getElementById('choicesGrid');
+    const percentage = Math.round((quizScore / quizWords.length) * 100);
+    
+    // Save quiz result to database
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
+
+    // Get category title (the parent category section)
+    const selectedButton = document.querySelector('.vocab-btn.active');
+    let categoryName = 'Unknown Category';
+    
+    if (selectedButton) {
+        const categoryDiv = selectedButton.closest('.category');
+        if (categoryDiv) {
+            const categoryTitle = categoryDiv.querySelector('.category-title');
+            if (categoryTitle && categoryTitle.textContent) {
+                categoryName = categoryTitle.textContent.trim();
+            }
+        }
+    }
+    
+    console.log('Debug - Category Name:', categoryName); // For debugging
+    
+    // Get section names
+    const sectionNames = [...checkedSections].map(index => {
+        const lessonData = vocabDatabase[selectedLesson];
+        return lessonData[index]?.section || `Section ${index + 1}`;
+    });
+    
+    const quizData = {
+        date: new Date().toISOString(),
+        lessonKey: selectedLesson,
+        categoryName: categoryName,  // ✅ ADD THIS LINE
+        lessonName: lessonName.trim(),
+        sections: sectionNames,
+        score: quizScore,
+        total: quizWords.length,
+        percentage: percentage
+    };
+    
+    try {
+        await saveQuizResult(quizData);
+        console.log('Quiz result saved successfully');
+    } catch (error) {
+        console.error('Failed to save quiz result:', error);
+    }
+    
+    grid.innerHTML = `
+        <div class="quiz-complete">
+            <h3>🎉 Quiz Complete!</h3>
+            <div class="quiz-score">
+                Your Score: <strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
+            </div>
+            <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
+        </div>
+    `;
+
+    document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
+    document.getElementById('timerFeedback').textContent = '';
+    document.getElementById('listenNextBtn').style.display = 'none';
+}
+
+        // Restart quiz
+function restartQuiz() {
+    document.getElementById('listenNextBtn').style.display = 'inline-block';
+    showEnglishInQuiz = false;  // Reset toggle to default when restarting
+    startListenChooseQuiz();
+}
+
+        // Close quiz modal
+function closeQuizModal() {
+    // Clear timeout when closing modal
+    if (showEnglishTimeout) {
+        clearTimeout(showEnglishTimeout);
+        showEnglishTimeout = null;
+    }
+    
+    document.getElementById('listenChooseModal').style.display = 'none';
+    stopSpeech();
+    showEnglishInQuiz = false;  // Reset toggle to default when closing
+    
+    // Reset toggle button appearance
+    const toggleBtn = document.getElementById('toggleEnglishBtn');
+    if (toggleBtn) {
+        toggleBtn.textContent = 'Show English';
+        toggleBtn.style.backgroundColor = '#6c757d';
+    }
+}
+
+// ============ OVERALL VOCABULARY FUNCTIONS ============
+
+function openOverallVocabModal() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        return;
+    }
+    
+    populateOverallVocabList(selectedLesson);
+    document.getElementById('overallVocabModal').style.display = 'block';
+}
+
+async function populateOverallVocabList(lessonKey) {
+    const lessonData = vocabDatabase[lessonKey];
+    const listContainer = document.getElementById('overallVocabList');
+    
+    // Load saved checked state
+    const savedCheckedWords = await loadCheckedWords(lessonKey);
+    
+    let html = '';
+    
+    lessonData.forEach((section, sectionIndex) => {
+    const sectionId = `section_${lessonKey}_${sectionIndex}`;
+    
+    // Count checked words in this section
+    let checkedCount = 0;
+    section.words.forEach((word, wordIndex) => {
+        const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+        if (isChecked) checkedCount++;
+    });
+    
+    html += `<div class="vocab-section-block">
+        <div class="section-title-row">
+            <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
+                   data-section-index="${sectionIndex}" checked>
+            <label for="${sectionId}_all">${section.section} <span class="section-count" id="count_${sectionIndex}">(${checkedCount} items checked)</span></label>
+        </div>
+        <div class="vocab-items-grid">`;
+        
+        section.words.forEach((word, wordIndex) => {
+    const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
+    // Show full word format but remove trailing colon
+    const displayText = word.word.replace(/:$/, '');  
+    
+    // Check if this word was previously unchecked
+    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+    
+    html += `<div class="vocab-item-row">
+        <input type="checkbox" id="${wordId}" class="word-checkbox" 
+               data-section-index="${sectionIndex}" 
+               data-word-index="${wordIndex}" 
+               ${isChecked ? 'checked' : ''}>
+        <label for="${wordId}">${displayText}</label>  
+    </div>`;
+});
+        
+        html += `</div></div>`;
+    });
+    
+    listContainer.innerHTML = html;
+    
+    // Attach event listeners
+    attachOverallVocabListeners(lessonKey);
+}
+
+function attachOverallVocabListeners(lessonKey) {
+    // Section "select all" checkboxes
+    document.querySelectorAll('.section-checkbox-all').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const sectionIndex = this.getAttribute('data-section-index');
+            const wordCheckboxes = document.querySelectorAll(
+                `.word-checkbox[data-section-index="${sectionIndex}"]`
+            );
+            wordCheckboxes.forEach(cb => cb.checked = this.checked);
+            
+            // Update the counter after changing all checkboxes
+            updateSectionCheckbox(sectionIndex);
+        });
+    });
+    
+    // Individual word checkboxes
+    document.querySelectorAll('.word-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSectionCheckbox(this.getAttribute('data-section-index'));
+        });
+    });
+    
+    // Update initial state of section checkboxes
+    document.querySelectorAll('.section-checkbox-all').forEach(checkbox => {
+        updateSectionCheckbox(checkbox.getAttribute('data-section-index'));
+    });
+}
+
+function updateSectionCheckbox(sectionIndex) {
+    const wordCheckboxes = document.querySelectorAll(
+        `.word-checkbox[data-section-index="${sectionIndex}"]`
+    );
+    const sectionCheckbox = document.querySelector(
+        `.section-checkbox-all[data-section-index="${sectionIndex}"]`
+    );
+    
+    const allChecked = Array.from(wordCheckboxes).every(cb => cb.checked);
+    const noneChecked = Array.from(wordCheckboxes).every(cb => !cb.checked);
+    
+    sectionCheckbox.checked = allChecked;
+    sectionCheckbox.indeterminate = !allChecked && !noneChecked;
+    
+    // Update the count
+    const checkedCount = Array.from(wordCheckboxes).filter(cb => cb.checked).length;
+    const countSpan = document.getElementById(`count_${sectionIndex}`);
+    if (countSpan) {
+        countSpan.textContent = `(${checkedCount} items checked)`;
+    }
+}
+
+async function saveOverallVocabState() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    if (!selectedLesson) return;
+    
+    const checkedWords = {};
+    document.querySelectorAll('.word-checkbox').forEach(checkbox => {
+        const sectionIndex = checkbox.getAttribute('data-section-index');
+        const wordIndex = checkbox.getAttribute('data-word-index');
+        const key = `${sectionIndex}_${wordIndex}`;
+        checkedWords[key] = checkbox.checked;
+    });
+    
+    try {
+        await saveCheckedWords(selectedLesson, checkedWords);
+        alert('Settings saved successfully! (設定已成功儲存！)');
+        document.getElementById('overallVocabModal').style.display = 'none';
+        
+        // Reload the vocabulary to reflect changes
+        loadVocabulary(selectedLesson);
+    } catch (error) {
+        console.error('Error saving:', error);
+        alert('Failed to save settings. (儲存設定失敗)');
+    }
+}
+
+        // ============ STUDY SESSION FUNCTIONS ============
+
+function updateStudySession() {
+    if (!currentLessonData || !flatWordsList.length) {
+        document.getElementById('currentWord').textContent = 'Select a lesson first!';
+        document.getElementById('currentExample').textContent = 'Please choose a lesson from the main page before starting your study session.';
+        document.getElementById('progressInfo').textContent = 'Ready to start!';
+        return;
+    }
+
+    if (isCompleted) {
+        restoreNormalInterface();
+    }
+
+    const currentItem = flatWordsList[currentWordIndex];
+    if (!currentItem) return;
+
+    // Get new random emoji when moving to next word
+    if (!translationShown) {
+        currentEmoji = getRandomEmoji();
+    }
+
+    // Update emoji display
+    const avatarElement = document.getElementById('currentPartnerAvatar');
+    if (avatarElement) {
+        avatarElement.textContent = currentEmoji;
+    }
+
+    // Show English only initially
+const englishWord = extractEnglishWordOnly(currentItem.word);
+const englishExample = extractEnglishExampleOnly(currentItem.example);
+
+// Update the question prompt
+const questionPrompt = document.getElementById('questionPrompt');
+if (questionPrompt) {
+    questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
+}
+
+// Always show vocab and example in their designated area
+document.getElementById('currentWord').textContent = englishWord;
+document.getElementById('currentExample').textContent = englishExample;
+
+    // Store Chinese translations
+    const chineseWord = extractChineseWord(currentItem.word);
+    const chineseExample = extractChineseExample(currentItem.example);
+    document.getElementById('currentWord').setAttribute('data-chinese', chineseWord);
+    document.getElementById('currentExample').setAttribute('data-chinese', chineseExample);
+
+    // Hide/show translation based on state
+    const translationDiv = document.getElementById('translationText');
+    const translateBtn = document.getElementById('showTranslationBtn');
+    
+    if (translationDiv) {
+        if (translationShown) {
+            translationDiv.classList.add('show');
+        } else {
+            translationDiv.classList.remove('show');
+        }
+        translationDiv.innerHTML = `
+            <div class="translation-label">🌐 Translation:</div>
+            <div><strong>${chineseWord}</strong></div>
+            <div>${chineseExample}</div>
+        `;
+    }
+    
+    if (translateBtn) {
+        translateBtn.disabled = translationShown;
+        translateBtn.style.cursor = translationShown ? 'not-allowed' : 'pointer';
+    }
+
+    const totalWords = flatWordsList.length;
+    const progressText = `Word ${currentWordIndex + 1} of ${totalWords} • ${currentItem.sectionTitle}`;
+    document.getElementById('progressInfo').textContent = progressText;
+
+    updateNavigationButtons();
+}
+
+        function updateNavigationButtons() {
+            const backBtn = document.getElementById('backBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const nextSectionBtn = document.getElementById('nextSectionBtn');
+
+            if (!flatWordsList.length) return;
+
+            const totalWords = flatWordsList.length;
+            const currentItem = flatWordsList[currentWordIndex];
+
+            backBtn.disabled = currentWordIndex === 0;
+            nextBtn.disabled = currentWordIndex === totalWords - 1;
+
+            const isLastSection = currentItem && currentItem.sectionIndex === Math.max(...flatWordsList.map(item => item.sectionIndex));
+            nextSectionBtn.disabled = isLastSection;
+        }
+
+function restoreNormalInterface() {
+    const speechBubble = document.getElementById('speechBubble');
+    const questionPrompt = document.getElementById('questionPrompt');
+    const currentItem = flatWordsList[currentWordIndex];
+
+    if (currentItem) {
+        const englishWord = extractEnglishWordOnly(currentItem.word);
+        const englishExample = extractEnglishExampleOnly(currentItem.example);
+        const chineseWord = extractChineseWord(currentItem.word);
+        const chineseExample = extractChineseExample(currentItem.example);
+        
+        // Update question prompt
+        if (questionPrompt) {
+            questionPrompt.textContent = 'What does it mean?';
+        }
+        
+        // Update speech bubble content
+        speechBubble.innerHTML = `
+            <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
+            <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
+            <div class="bubble-controls">
+                <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+                <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+                <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+            </div>
+            <div class="translation-text" id="translationText">
+                <div class="translation-label">🌐 中文翻譯：</div>
+                <div><strong>${chineseWord}</strong></div>
+                <div>${chineseExample}</div>
+            </div>`;
+
+        attachBubbleEventListeners();
+    }
+
+    isCompleted = false;
+}
+
+function attachBubbleEventListeners() {
+            const speakBtn = document.getElementById('speakCurrentBtn');
+            const stopBtn = document.getElementById('stopCurrentBtn');
+            const translateBtn = document.getElementById('showTranslationBtn');
+
+            if (speakBtn) {
+                speakBtn.addEventListener('click', handleSpeakCurrent);
+            }
+            if (stopBtn) {
+                stopBtn.addEventListener('click', stopSpeech);
+            }
+            if (translateBtn) {
+                translateBtn.addEventListener('click', toggleTranslation);
+            }
+        }
+
+        function handleSpeakCurrent() {
+            const currentItem = flatWordsList[currentWordIndex];
+            if (currentItem) {
+                const fullText = `${currentItem.word}. ${currentItem.example}`;
+                speakText(fullText);
+            }
+        }
+
+// Show translation (one-time, no toggle)
+        function toggleTranslation() {
+    const translationDiv = document.getElementById('translationText');
+    const translateBtn = document.getElementById('showTranslationBtn');
+    const questionPrompt = document.getElementById('questionPrompt');
+    
+    if (translationDiv && !translationDiv.classList.contains('show')) {
+        translationDiv.classList.add('show');
+        translationShown = true;
+        
+        // Change question prompt to "Did you get it right?"
+        if (questionPrompt) {
+            questionPrompt.textContent = 'Did you get it right?';
+        }
+        
+        if (translateBtn) {
+            translateBtn.disabled = true;
+            translateBtn.style.cursor = 'not-allowed';
+        }
+    }
+}
+
+        function showCongratulations() {
+            const partnerName = partners[currentPartner].name;
+            const message = `Fantastic work! You've completed the entire vocabulary list! ${partnerName} is so proud of you!`;
+
+            const speechBubble = document.getElementById('speechBubble');
+            speechBubble.innerHTML = `<div class="congratulations">
+                    <h3>Congratulations!</h3>
+                    <p>${message}</p>
+                </div>
+                <div class="bubble-controls">
+                    <button class="bubble-btn play-btn" id="congratsPlayBtn">🔊</button>
+                    <button class="bubble-btn stop-btn" id="congratsStopBtn">⏹</button>
+                    <button class="bubble-btn learn-again-btn" id="learnAgainBtn">🔄 Learn Again</button>
+                </div>`;
+
+            document.getElementById('congratsPlayBtn').addEventListener('click', () => speakText(message));
+            document.getElementById('congratsStopBtn').addEventListener('click', stopSpeech);
+            document.getElementById('learnAgainBtn').addEventListener('click', restartLesson);
+
+            setTimeout(() => speakText(message), 500);
+
+            document.getElementById('progressInfo').textContent = 'Lesson Complete!';
+            isCompleted = true;
+            updateNavigationButtons();
+        }
+
+        function checkCompletion() {
+            if (currentWordIndex >= flatWordsList.length && !isCompleted) {
+                showCongratulations();
+                currentWordIndex = flatWordsList.length - 1;
+            }
+        }
+
+        function nextWord() {
+    // Reset translation state for next word
+    translationShown = false;
+    
+    if (currentWordIndex < flatWordsList.length - 1) {
+        currentWordIndex++;
+        updateStudySession();
+    } else if (currentWordIndex === flatWordsList.length - 1) {
+        currentWordIndex++;
+        checkCompletion();
+    }
+}
+
+        function previousWord() {
+    // Reset translation state when going back
+    translationShown = false;
+    
+    if (currentWordIndex > 0) {
+        currentWordIndex--;
+        if (isCompleted) {
+            isCompleted = false;
+        }
+        updateStudySession();
+    }
+}
+
+        function goToNextSection() {
+    translationShown = false;
+    
+    const currentItem = flatWordsList[currentWordIndex];
+    if (!currentItem) return;
+    
+    const currentSectionIndex = currentItem.sectionIndex;
+    const nextSectionFirstWord = flatWordsList.find(item => item.sectionIndex > currentSectionIndex);
+    
+    if (nextSectionFirstWord) {
+        currentWordIndex = flatWordsList.indexOf(nextSectionFirstWord);
+        updateStudySession();
+        checkCompletion();
+    }
+}
+
+        function restartLesson() {
+    currentWordIndex = 0;
+    isCompleted = false;
+    translationShown = false;  // ADD THIS LINE
+    updateStudySession();
+}
+
+        async function startStudySession() {
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        return;
+    }
+
+    currentLessonData = vocabDatabase[selectedLesson];
+    flatWordsList = await flattenLessonData(currentLessonData);
+    currentWordIndex = 0;
+    isCompleted = false;
+    translationShown = false;
+    
+    // Set initial random emoji
+    currentEmoji = getRandomEmoji();
+
+    document.getElementById('studyModal').style.display = 'block';
+
+    updateStudySession();
+}
+
+// Show/hide floating navigation buttons based on scroll position
+function handleFloatingButtons() {
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
+    const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
+    const buttonCategories = document.querySelector('.button-categories');
+    
+    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
+    
+    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+    
+    // Show buttons when scrolled past the lesson buttons
+    if (window.scrollY > buttonCategoriesBottom + 100) {
+        backToTopBtn.classList.add('show');
+        floatingPrevSectionBtn.classList.add('show');
+        floatingNextSectionBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+        floatingPrevSectionBtn.classList.remove('show');
+        floatingNextSectionBtn.classList.remove('show');
+    }
+}
+
+// Scroll to top (lesson buttons area)
+function scrollToTop() {
+    const buttonCategories = document.querySelector('.button-categories');
+    if (buttonCategories) {
+        buttonCategories.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    } else {
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+    }
+}
+
+// Scroll to next section header - IMPROVED VERSION
+function scrollToNextSection() {
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (sectionHeaders.length === 0) return;
+    
+    // Get current viewport position - multiple methods for compatibility
+    const viewportTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Detect mobile for adaptive behavior
+    const isMobile = window.innerWidth <= 768;
+    const buffer = isMobile ? 100 : 150;
+    
+    // Use top third of viewport as reference point
+    const referencePoint = viewportTop + (window.innerHeight / 3);
+    
+    // Find the next section header below current viewport position
+    for (let i = 0; i < sectionHeaders.length; i++) {
+        // getBoundingClientRect() is more reliable than offsetTop
+        const rect = sectionHeaders[i].getBoundingClientRect();
+        const absoluteTop = rect.top + viewportTop;
+        
+        // Find first header meaningfully below our current view
+        if (absoluteTop > referencePoint + buffer) {
+            // Add small offset for better visibility
+            const offset = isMobile ? 10 : 20;
+            window.scrollTo({
+                top: absoluteTop - offset,
+                behavior: 'smooth'
+            });
+            return;
+        }
+    }
+    
+    // If no next section found, scroll to bottom
+    window.scrollTo({ 
+        top: document.documentElement.scrollHeight, 
+        behavior: 'smooth' 
+    });
+}
+
+// Scroll to previous section header - IMPROVED VERSION
+function scrollToPrevSection() {
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    if (sectionHeaders.length === 0) return;
+    
+    // Get current viewport position - multiple methods for compatibility
+    const viewportTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Detect mobile for adaptive behavior
+    const isMobile = window.innerWidth <= 768;
+    const buffer = isMobile ? 80 : 100;
+    
+    // Use top third of viewport as reference point
+    const referencePoint = viewportTop + (window.innerHeight / 3);
+    
+    // Build array of section positions using getBoundingClientRect for accuracy
+    const sectionsWithPositions = Array.from(sectionHeaders).map((header, index) => {
+        const rect = header.getBoundingClientRect();
+        const absoluteTop = rect.top + viewportTop;
+        return { header, absoluteTop, index };
+    });
+    
+    // Find which section we're currently viewing
+    // A section is "current" if its top is above the reference point
+    let currentSectionIndex = -1;
+    for (let i = sectionsWithPositions.length - 1; i >= 0; i--) {
+        if (sectionsWithPositions[i].absoluteTop < referencePoint - buffer) {
+            currentSectionIndex = i;
+            break;
+        }
+    }
+    
+    // Navigate to previous section
+    if (currentSectionIndex > 0) {
+        // Go to the section before the current one
+        const targetSection = sectionsWithPositions[currentSectionIndex - 1];
+        const offset = isMobile ? 10 : 20;
+        
+        window.scrollTo({
+            top: targetSection.absoluteTop - offset,
+            behavior: 'smooth'
+        });
+    } else {
+        // We're at first section or above all sections - scroll to top
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+    }
+}
+
+        // ============ INITIALIZE EVENT LISTENERS ============
+
+// Open quiz history modal
+async function openQuizHistoryModal() {
+    try {
+        const history = await loadQuizHistory();
+        displayQuizHistory(history);
+        document.getElementById('quizHistoryModal').style.display = 'block';
+    } catch (error) {
+        console.error('Failed to load quiz history:', error);
+        alert('Failed to load quiz history.');
+    }
+}
+
+// Display quiz history
+function displayQuizHistory(history) {
+    const listContainer = document.getElementById('quizHistoryList');
+    
+    if (!history || history.length === 0) {
+        listContainer.innerHTML = '<div class="no-quiz-history">No quiz history yet. Complete a quiz to see your results here!</div>';
+        return;
+    }
+    
+    let html = '';
+    
+    history.forEach(item => {
+        const date = new Date(item.date);
+        const dateStr = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const percentage = item.percentage || Math.round((item.score / item.total) * 100);
+let scoreClass = 'needs-improvement';
+let scoreEmoji = '😓';  // ADD THIS LINE
+if (percentage >= 90) {
+    scoreClass = 'excellent';
+    scoreEmoji = '😄';  // ADD THIS LINE
+} else if (percentage >= 70) {
+    scoreClass = 'good';
+    scoreEmoji = '🙂';  // ADD THIS LINE
+}
+        
+        const sectionsText = item.sections && item.sections.length > 0 
+            ? item.sections.join(', ') 
+            : 'All sections';
+        
+        html += `
+    <div class="quiz-history-item">
+        <div class="quiz-history-date">📅 ${dateStr}</div>
+        <div class="quiz-history-category">${item.categoryName || 'Unknown Category'}</div>
+        <div class="quiz-history-lesson">${item.lessonName}</div>
+        <div class="quiz-history-sections"><strong>Sections:</strong> ${sectionsText}</div>
+        <div class="quiz-history-score ${scoreClass}">
+            Score: ${item.score}/${item.total} (${percentage}%) ${scoreEmoji}
+        </div>
+        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️</button>
+        <div style="clear: both;"></div>
+    </div>
+`;
+    });
+    
+    listContainer.innerHTML = html;
+}
+
+// Delete individual quiz item
+async function deleteQuizItem(id) {
+    if (!confirm('Are you sure you want to delete this quiz result? (確定要刪除這次的測驗結果？)')) {
+        return;
+    }
+    
+    try {
+        await deleteQuizResult(id);
+        const history = await loadQuizHistory();
+        displayQuizHistory(history);
+    } catch (error) {
+        console.error('Failed to delete quiz result:', error);
+        alert('Failed to delete quiz result.');
+    }
+}
+
+// Clear all quiz history
+async function clearAllQuizHistory() {
+    if (!confirm('Are you sure you want to delete ALL quiz history? This cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const history = await loadQuizHistory();
+        for (const item of history) {
+            await deleteQuizResult(item.id);
+        }
+        displayQuizHistory([]);
+        alert('All quiz history has been cleared.');
+    } catch (error) {
+        console.error('Failed to clear quiz history:', error);
+        alert('Failed to clear quiz history.');
+    }
+}
+
+        function initializeEventListeners() {
+            document.body.addEventListener('click', () => loadVoices(), { once: true });
+
+            // Lesson buttons
+const lessonButtons = document.querySelectorAll('.vocab-btn');
+lessonButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        lessonButtons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const lessonKey = this.getAttribute('data-lesson');
+        loadVocabulary(lessonKey);
+        
+        // Scroll to Vocabulary Management section after a short delay
+        setTimeout(() => {
+            const overallVocabSection = document.getElementById('overallVocabSection');
+            if (overallVocabSection && overallVocabSection.style.display !== 'none') {
+                overallVocabSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 50);
+    });
+});
+
+            // Speed buttons
+            const speedButtons = document.querySelectorAll('.speed-btn');
+            speedButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    speedButtons.forEach(b => b.classList.remove('active-speed'));
+                    this.classList.add('active-speed');
+                    speechRate = parseFloat(this.getAttribute('data-speed'));
+                    stopSpeech();
+                });
+            });
+
+            // Listen and Choose Quiz button
+document.getElementById('listenChooseBtn').addEventListener('click', startListenChooseQuiz);
+document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
+document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
+document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
+document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
+document.getElementById('toggleEnglishBtn').addEventListener('click', toggleEnglishDisplay);  // ADD THIS LINE
+
+            // Walk Me Thru button
+const walkMeThruBtn = document.getElementById('walkMeThruBtn');
+const studyModal = document.getElementById('studyModal');
+
+walkMeThruBtn.addEventListener('click', () => {
+    startStudySession();
+});
+
+document.getElementById('closeStudyModal').addEventListener('click', () => {
+    studyModal.style.display = 'none';
+    stopSpeech();
+});
+
+            // Navigation buttons
+document.getElementById('nextBtn').addEventListener('click', nextWord);
+document.getElementById('backBtn').addEventListener('click', previousWord);
+document.getElementById('studyModalNextSectionBtn').addEventListener('click', goToNextSection);
+
+            attachBubbleEventListeners();
+
+            // Welcome modal
+            document.getElementById('welcomeOkBtn').addEventListener('click', () => {
+                document.getElementById('welcomeModal').style.display = 'none';
+            });
+
+// Overall Vocabulary button
+document.getElementById('overallVocabBtn').addEventListener('click', openOverallVocabModal);
+document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
+document.getElementById('closeOverallVocabBtn').addEventListener('click', () => {
+    document.getElementById('overallVocabModal').style.display = 'none';
+});
+
+// Quiz History button
+document.getElementById('quizHistoryBtn').addEventListener('click', openQuizHistoryModal);
+document.getElementById('closeQuizHistoryBtn').addEventListener('click', () => {
+    document.getElementById('quizHistoryModal').style.display = 'none';
+});
+document.getElementById('clearHistoryBtn').addEventListener('click', clearAllQuizHistory);
+
+// Click outside modal to close quiz history modal
+window.addEventListener('click', (e) => {
+    // ... existing code ...
+    if (e.target === document.getElementById('quizHistoryModal')) {
+        document.getElementById('quizHistoryModal').style.display = 'none';
+    }
+});
+
+            // Click outside modal to close
+            window.addEventListener('click', (e) => {
+    if (e.target === studyModal) {
+        studyModal.style.display = 'none';
+        stopSpeech();
+    }
+    if (e.target === document.getElementById('listenChooseModal')) {
+        closeQuizModal();
+    }
+    if (e.target === document.getElementById('overallVocabModal')) {
+        document.getElementById('overallVocabModal').style.display = 'none';
+    }
+});
+
+// Initialize IndexedDB
+initDB().catch(error => {
+    console.error('Failed to initialize database:', error);
+});
+
+            window.addEventListener('beforeunload', () => stopSpeech());
+
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyboardNavigation);
+            
+            // Floating navigation buttons
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
+            const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
+            
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', scrollToTop);
+            }
+            
+            if (floatingPrevSectionBtn) {
+                floatingPrevSectionBtn.addEventListener('click', scrollToPrevSection);
+            }
+            
+            if (floatingNextSectionBtn) {
+                floatingNextSectionBtn.addEventListener('click', scrollToNextSection);
+            }
+            
+            // Show/hide floating buttons on scroll
+            window.addEventListener('scroll', handleFloatingButtons);
+            
+            // Initial check for floating buttons
+            handleFloatingButtons();
+        }
+
+        // Handle keyboard navigation
+        function handleKeyboardNavigation(event) {
+            const studyModal = document.getElementById('studyModal');
+            const quizModal = document.getElementById('listenChooseModal');
+            
+            // Study Partner Mode keyboard shortcuts
+            if (studyModal.style.display === 'block') {
+                const nextBtn = document.getElementById('nextBtn');
+            const backBtn = document.getElementById('backBtn');
+            const speakBtn = document.getElementById('speakCurrentBtn');
+            const translateBtn = document.getElementById('showTranslationBtn');
+
+            // Right Arrow Key (→) - Next
+            if (event.key === 'ArrowRight' && nextBtn && !nextBtn.disabled) {
+                event.preventDefault();
+                nextWord();
+            }
+
+            // Left Arrow Key (←) - Back
+            if (event.key === 'ArrowLeft' && backBtn && !backBtn.disabled) {
+                event.preventDefault();
+                previousWord();
+            }
+
+            // Space Bar - Play Audio
+            if (event.key === ' ' && speakBtn) {
+                event.preventDefault();
+                handleSpeakCurrent();
+            }
+
+            // T key - Show Translation
+            if ((event.key === 't' || event.key === 'T') && translateBtn && !translateBtn.disabled) {
+                event.preventDefault();
+                toggleTranslation();
+            }
+
+            // S key - Stop Audio
+            if (event.key === 's' || event.key === 'S') {
+                event.preventDefault();
+                stopSpeech();
+            }
+
+            // Escape key - Close Modal
+            if (event.key === 'Escape') {
+                studyModal.style.display = 'none';
+                stopSpeech();
+            }
+        }
+
+// Listen and Choose Quiz Mode keyboard shortcuts
+            if (quizModal.style.display === 'block') {
+                const listenNextBtn = document.getElementById('listenNextBtn');
+                const listenSpeaker = document.getElementById('listenSpeaker');
+                const restartBtn = document.querySelector('.restart-quiz-btn');
+
+                // Right Arrow Key (→) - Next Question
+                if (event.key === 'ArrowRight' && listenNextBtn && !listenNextBtn.disabled) {
+                    event.preventDefault();
+                    listenNextBtn.classList.add('key-pressed');
+                    setTimeout(() => listenNextBtn.classList.remove('key-pressed'), 300);
+                    nextQuizQuestion();
+                }
+
+                // Space Bar - Play Audio
+                if (event.key === ' ' && listenSpeaker) {
+                    event.preventDefault();
+                    playQuizAudio();
+                }
+
+// T key - Try Again (on completion page)
+                if ((event.key === 't' || event.key === 'T') && restartBtn) {
+                    event.preventDefault();
+                    restartBtn.classList.add('key-pressed');
+                    setTimeout(() => restartBtn.classList.remove('key-pressed'), 300);
+                    restartQuiz();
+                }
+
+// Number keys 1-8 - Select answer
+                if (!hasAnswered && event.key >= '1' && event.key <= '8') {
+                    event.preventDefault();
+                    const choiceButtons = document.querySelectorAll('.choice-btn');
+                    const index = parseInt(event.key) - 1;
+                    if (choiceButtons[index]) {
+                        choiceButtons[index].click();
+                    }
+                }
+
+                // Escape key - Close Quiz Modal
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeQuizModal();
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initDB();
+        initializeEventListeners();
+        // 等待一小段時間確保 DB 完全初始化
+        setTimeout(async () => {
+            await displayVisitStats();
+        }, 100);
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
+});
+
+    </script>
+<!-- Visit Statistics Section -->
+<div style="text-align: left; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 20px; color: #2c3e50;">
+    <div id="visitStatsContainer">Loading visit statistics...</div>
+</div>
+</body>
+</body>
+</html>
