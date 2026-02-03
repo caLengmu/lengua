@@ -1193,6 +1193,94 @@
     }
 }
 
+/* Quiz History Styles */
+.quiz-history-item {
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.quiz-history-item:hover {
+    border-color: #3498db;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.quiz-history-date {
+    font-size: 18px;  /* Changed from 14px to 21px (1.5x) */
+    color: #3498db;    
+    margin-bottom: 10px;
+}
+
+.quiz-history-category {
+    font-size: 18px;  /* New style for category */
+    color: #7f8c8d;
+    margin-bottom: 8px;
+}
+
+.quiz-history-lesson {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.quiz-history-sections {
+    font-size: 18px;  /* Changed from 14px to 21px (1.5x) */
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.quiz-history-score {
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.quiz-history-score.excellent {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.quiz-history-score.good {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.quiz-history-score.needs-improvement {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.quiz-history-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;  /* Changed from 6px 12px (1.5x) */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;  /* Changed from 12px to 18px (1.5x) */
+    margin-top: 10px;
+    float: right;
+}
+
+.quiz-history-delete:hover {
+    background-color: #c0392b;
+}
+
+.no-quiz-history {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+    font-size: 18px;
+}
+
     </style>
 </head>
 <body>
@@ -1204,7 +1292,7 @@
     </div>
     
     <div class="container">
-        <h1>📃 Vocabulary List <br>(v4.9)</h1>
+        <h1>📃 Vocabulary List <br>(v5.12)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1268,6 +1356,13 @@
 <div class="overall-vocab-section" id="overallVocabSection" style="display: none;">
     <button class="study-partner-btn" id="overallVocabBtn" style="background-color: #17a2b8;">
         🗃️ Vocabulary Management <br>(字彙管理)
+    </button>
+</div>
+
+<!-- Quiz History Button -->
+<div class="overall-vocab-section" style="display: block; margin-top: 20px;">
+    <button class="study-partner-btn" id="quizHistoryBtn" style="background-color: #9b59b6;">
+        📊 Quiz History <br>(測驗紀錄)
     </button>
 </div>
 
@@ -1387,14 +1482,28 @@
         <div id="overallVocabList"></div>
     </div>
 </div>
-
+<!-- Quiz History Modal -->
+<div id="quizHistoryModal" class="overall-vocab-modal">
+    <div class="overall-vocab-content">
+        <div class="overall-vocab-header">
+            <h2>📊 Quiz History</h2>
+            <div class="overall-vocab-buttons">
+                <button class="overall-vocab-btn" id="clearHistoryBtn" style="background-color: #e74c3c;">
+                    🗑️ Clear All
+                </button>
+                <button class="overall-vocab-btn close-btn" id="closeQuizHistoryBtn">✖ Close</button>
+            </div>
+        </div>
+        <div id="quizHistoryList" style="max-height: 600px; overflow-y: auto;"></div>
+    </div>
+</div>
     <script>
 // ============ INDEXEDDB FUNCTIONS ============
 let db;
 
 function initDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('VocabDatabase', 1);
+        const request = indexedDB.open('VocabDatabase', 3);  // 改成版本 3
         
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
@@ -1403,11 +1512,18 @@ function initDB() {
         };
         
         request.onupgradeneeded = (event) => {
-            db = event.target.result;
-            if (!db.objectStoreNames.contains('checkedWords')) {
-                db.createObjectStore('checkedWords', { keyPath: 'id' });
-            }
-        };
+    db = event.target.result;
+    if (!db.objectStoreNames.contains('checkedWords')) {
+        db.createObjectStore('checkedWords', { keyPath: 'id' });
+    }
+    if (!db.objectStoreNames.contains('visitHistory')) {
+        db.createObjectStore('visitHistory', { keyPath: 'id' });
+    }
+    // ADD THIS NEW STORE
+    if (!db.objectStoreNames.contains('quizHistory')) {
+        db.createObjectStore('quizHistory', { keyPath: 'id' });
+    }
+};
     });
 }
 
@@ -1435,6 +1551,202 @@ function loadCheckedWords(lessonKey) {
                 resolve(null);
             }
         };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Save visit record
+function saveVisitRecord(visitData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['visitHistory'], 'readwrite');
+        const store = transaction.objectStore('visitHistory');
+        const request = store.put(visitData);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load visit record
+function loadVisitRecord() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['visitHistory'], 'readonly');
+        const store = transaction.objectStore('visitHistory');
+        const request = store.get('userVisits');
+        
+        request.onsuccess = () => {
+            resolve(request.result || null);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Get date in YYYY-MM-DD format
+function getDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Calculate visit statistics
+async function calculateVisitStats() {
+    try {
+        const visitRecord = await loadVisitRecord();
+        const today = getDateString(new Date());
+        
+        if (!visitRecord) {
+            // First visit ever
+            const newRecord = {
+                id: 'userVisits',
+                firstVisit: today,
+                lastVisit: today,
+                totalVisits: 1,
+                consecutiveDays: 1,
+                visitDates: [today]
+            };
+            await saveVisitRecord(newRecord);
+            return newRecord;
+        }
+        
+        // Check if already visited today
+        if (visitRecord.lastVisit === today) {
+            return visitRecord;
+        }
+        
+        // Calculate days since last visit
+        const lastVisitDate = new Date(visitRecord.lastVisit);
+        const todayDate = new Date(today);
+        const daysDifference = Math.floor((todayDate - lastVisitDate) / (1000 * 60 * 60 * 24));
+        
+        // Update visit record
+        const updatedRecord = {
+            ...visitRecord,
+            lastVisit: today,
+            totalVisits: visitRecord.totalVisits + 1,
+            visitDates: [...(visitRecord.visitDates || []), today]
+        };
+        
+        if (daysDifference === 1) {
+            // Consecutive day
+            updatedRecord.consecutiveDays = (visitRecord.consecutiveDays || 1) + 1;
+            updatedRecord.lastStreakBroken = undefined;
+        } else if (daysDifference > 1) {
+            // Streak broken
+            updatedRecord.consecutiveDays = 1;
+            updatedRecord.lastStreakBroken = daysDifference;
+        }
+        
+        await saveVisitRecord(updatedRecord);
+        return updatedRecord;
+    } catch (error) {
+        console.error('Error calculating visit stats:', error);
+        throw error;
+    }
+}
+
+// Format visit statistics message
+function formatVisitMessage(stats) {
+    try {
+        const firstVisitDate = new Date(stats.firstVisit);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = firstVisitDate.toLocaleDateString('en-US', options);
+        
+        // 使用 span 標籤添加顏色和粗體
+        let message = `First visit: <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span> <br>Total visits: <span style="color: #e74c3c; font-weight: bold;">${stats.totalVisits}</span>`;
+        
+        if (stats.consecutiveDays >= 2) {
+            message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 20px;">${stats.consecutiveDays} days in a row</span>. <br>Keep up your good work! 😊`;
+        } else if (stats.lastStreakBroken && stats.lastStreakBroken > 1) {
+            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. <br>What stopped you? 😢`;
+        }
+        
+        return message;
+    } catch (error) {
+        console.error('Error formatting message:', error);
+        return 'Welcome back!';
+    }
+}
+
+// Display visit statistics
+async function displayVisitStats() {
+    const statsContainer = document.getElementById('visitStatsContainer');
+    
+    if (!statsContainer) {
+        console.error('Visit stats container not found');
+        return;
+    }
+    
+    try {
+        const stats = await calculateVisitStats();
+        const message = formatVisitMessage(stats);
+        statsContainer.innerHTML = message;
+    } catch (error) {
+        console.error('Error displaying visit stats:', error);
+        statsContainer.innerHTML = 'Unable to load visit statistics.';
+    }
+}
+
+// Save quiz result
+function saveQuizResult(quizData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readwrite');
+        const store = transaction.objectStore('quizHistory');
+        
+        // Add timestamp as ID
+        quizData.id = Date.now();
+        const request = store.put(quizData);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load all quiz results
+function loadQuizHistory() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readonly');
+        const store = transaction.objectStore('quizHistory');
+        const request = store.getAll();
+        
+        request.onsuccess = () => {
+            // Sort by date (newest first)
+            const results = request.result || [];
+            results.sort((a, b) => b.id - a.id);
+            resolve(results);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Delete a quiz result
+function deleteQuizResult(id) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        const transaction = db.transaction(['quizHistory'], 'readwrite');
+        const store = transaction.objectStore('quizHistory');
+        const request = store.delete(id);
+        
+        request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
     });
 }
@@ -2072,24 +2384,68 @@ function toggleEnglishDisplay() {
         }
 
         // Show quiz complete
-        function showQuizComplete() {
-            const grid = document.getElementById('choicesGrid');
-            const percentage = Math.round((quizScore / quizWords.length) * 100);
-            
-            grid.innerHTML = `
-                <div class="quiz-complete">
-                    <h3>🎉 Quiz Complete!</h3>
-                    <div class="quiz-score">
-                        Your Score: <strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
-                    </div>
-                    <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
-                </div>
-            `;
+async function showQuizComplete() {
+    const grid = document.getElementById('choicesGrid');
+    const percentage = Math.round((quizScore / quizWords.length) * 100);
+    
+    // Save quiz result to database
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
 
-            document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
-            document.getElementById('timerFeedback').textContent = '';
-            document.getElementById('listenNextBtn').style.display = 'none';
+    // Get category title (the parent category section)
+    const selectedButton = document.querySelector('.vocab-btn.active');
+    let categoryName = 'Unknown Category';
+    
+    if (selectedButton) {
+        const categoryDiv = selectedButton.closest('.category');
+        if (categoryDiv) {
+            const categoryTitle = categoryDiv.querySelector('.category-title');
+            if (categoryTitle && categoryTitle.textContent) {
+                categoryName = categoryTitle.textContent.trim();
+            }
         }
+    }
+    
+    console.log('Debug - Category Name:', categoryName); // For debugging
+    
+    // Get section names
+    const sectionNames = [...checkedSections].map(index => {
+        const lessonData = vocabDatabase[selectedLesson];
+        return lessonData[index]?.section || `Section ${index + 1}`;
+    });
+    
+    const quizData = {
+        date: new Date().toISOString(),
+        lessonKey: selectedLesson,
+        categoryName: categoryName,  // ✅ ADD THIS LINE
+        lessonName: lessonName.trim(),
+        sections: sectionNames,
+        score: quizScore,
+        total: quizWords.length,
+        percentage: percentage
+    };
+    
+    try {
+        await saveQuizResult(quizData);
+        console.log('Quiz result saved successfully');
+    } catch (error) {
+        console.error('Failed to save quiz result:', error);
+    }
+    
+    grid.innerHTML = `
+        <div class="quiz-complete">
+            <h3>🎉 Quiz Complete!</h3>
+            <div class="quiz-score">
+                Your Score: <strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
+            </div>
+            <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
+        </div>
+    `;
+
+    document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
+    document.getElementById('timerFeedback').textContent = '';
+    document.getElementById('listenNextBtn').style.display = 'none';
+}
 
         // Restart quiz
 function restartQuiz() {
@@ -2675,6 +3031,107 @@ function scrollToPrevSection() {
 
         // ============ INITIALIZE EVENT LISTENERS ============
 
+// Open quiz history modal
+async function openQuizHistoryModal() {
+    try {
+        const history = await loadQuizHistory();
+        displayQuizHistory(history);
+        document.getElementById('quizHistoryModal').style.display = 'block';
+    } catch (error) {
+        console.error('Failed to load quiz history:', error);
+        alert('Failed to load quiz history.');
+    }
+}
+
+// Display quiz history
+function displayQuizHistory(history) {
+    const listContainer = document.getElementById('quizHistoryList');
+    
+    if (!history || history.length === 0) {
+        listContainer.innerHTML = '<div class="no-quiz-history">No quiz history yet. Complete a quiz to see your results here!</div>';
+        return;
+    }
+    
+    let html = '';
+    
+    history.forEach(item => {
+        const date = new Date(item.date);
+        const dateStr = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const percentage = item.percentage || Math.round((item.score / item.total) * 100);
+let scoreClass = 'needs-improvement';
+let scoreEmoji = '😓';  // ADD THIS LINE
+if (percentage >= 90) {
+    scoreClass = 'excellent';
+    scoreEmoji = '😄';  // ADD THIS LINE
+} else if (percentage >= 70) {
+    scoreClass = 'good';
+    scoreEmoji = '🙂';  // ADD THIS LINE
+}
+        
+        const sectionsText = item.sections && item.sections.length > 0 
+            ? item.sections.join(', ') 
+            : 'All sections';
+        
+        html += `
+    <div class="quiz-history-item">
+        <div class="quiz-history-date">📅 ${dateStr}</div>
+        <div class="quiz-history-category">${item.categoryName || 'Unknown Category'}</div>
+        <div class="quiz-history-lesson">${item.lessonName}</div>
+        <div class="quiz-history-sections"><strong>Sections:</strong> ${sectionsText}</div>
+        <div class="quiz-history-score ${scoreClass}">
+            Score: ${item.score}/${item.total} (${percentage}%) ${scoreEmoji}
+        </div>
+        <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️</button>
+        <div style="clear: both;"></div>
+    </div>
+`;
+    });
+    
+    listContainer.innerHTML = html;
+}
+
+// Delete individual quiz item
+async function deleteQuizItem(id) {
+    if (!confirm('Are you sure you want to delete this quiz result? (確定要刪除這次的測驗結果？)')) {
+        return;
+    }
+    
+    try {
+        await deleteQuizResult(id);
+        const history = await loadQuizHistory();
+        displayQuizHistory(history);
+    } catch (error) {
+        console.error('Failed to delete quiz result:', error);
+        alert('Failed to delete quiz result.');
+    }
+}
+
+// Clear all quiz history
+async function clearAllQuizHistory() {
+    if (!confirm('Are you sure you want to delete ALL quiz history? This cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const history = await loadQuizHistory();
+        for (const item of history) {
+            await deleteQuizResult(item.id);
+        }
+        displayQuizHistory([]);
+        alert('All quiz history has been cleared.');
+    } catch (error) {
+        console.error('Failed to clear quiz history:', error);
+        alert('Failed to clear quiz history.');
+    }
+}
+
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
 
@@ -2749,6 +3206,21 @@ document.getElementById('overallVocabBtn').addEventListener('click', openOverall
 document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
 document.getElementById('closeOverallVocabBtn').addEventListener('click', () => {
     document.getElementById('overallVocabModal').style.display = 'none';
+});
+
+// Quiz History button
+document.getElementById('quizHistoryBtn').addEventListener('click', openQuizHistoryModal);
+document.getElementById('closeQuizHistoryBtn').addEventListener('click', () => {
+    document.getElementById('quizHistoryModal').style.display = 'none';
+});
+document.getElementById('clearHistoryBtn').addEventListener('click', clearAllQuizHistory);
+
+// Click outside modal to close quiz history modal
+window.addEventListener('click', (e) => {
+    // ... existing code ...
+    if (e.target === document.getElementById('quizHistoryModal')) {
+        document.getElementById('quizHistoryModal').style.display = 'none';
+    }
 });
 
             // Click outside modal to close
@@ -2895,9 +3367,22 @@ initDB().catch(error => {
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-    await initDB();
-    initializeEventListeners();
+    try {
+        await initDB();
+        initializeEventListeners();
+        // 等待一小段時間確保 DB 完全初始化
+        setTimeout(async () => {
+            await displayVisitStats();
+        }, 100);
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
 });
+
     </script>
+<!-- Visit Statistics Section -->
+<div style="text-align: left; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 20px; color: #2c3e50;">
+    <div id="visitStatsContainer">Loading visit statistics...</div>
+</div>
 </body>
 </html>
