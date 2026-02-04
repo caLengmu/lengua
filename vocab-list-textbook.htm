@@ -1292,7 +1292,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocab List for Textbooks<br>(v5.12)</h1>
+        <h1>📚 Vocabulary List for Textbooks<br>(v5.12)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -1720,12 +1720,12 @@ function formatVisitMessage(stats) {
         const formattedDate = firstVisitDate.toLocaleDateString('en-US', options);
         
         // 使用 span 標籤添加顏色和粗體
-        let message = `First visit: <span style="color: #e74c3c; font-weight: bold;">${formattedDate}</span> <br>Total visits: <span style="color: #e74c3c; font-weight: bold;">${stats.totalVisits}</span>`;
+        let message = `First visit: <span style="color: #e67e22; font-weight: bold;">${formattedDate}</span> <br>Total visits: <span style="color: #e67e22; font-weight: bold;">${stats.totalVisits}</span>`;
         
         if (stats.consecutiveDays >= 2) {
             message += `<br>You made it <span style="color: #27ae60; font-weight: bold; font-size: 20px;">${stats.consecutiveDays} days in a row</span>. <br>Keep up your good work! 😊`;
         } else if (stats.lastStreakBroken && stats.lastStreakBroken > 1) {
-            message += `<br>Your last visit was <span style="color: #e67e22; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. <br>What stopped you? 😢`;
+            message += `<br>Your last visit was <span style="color: #e74c3c; font-weight: bold;">${stats.lastStreakBroken} days ago</span>. <br>What stopped you? 😢`;
         }
         
         return message;
@@ -2137,7 +2137,7 @@ escape (n) (逃跑、逃脫) ^ The cat made a quick escape through the window. (
 'b3l5': `
 ◎Vocab #1-#10
 blossom (n) (花、開花) ^ The tree is covered in pink blossom this spring. (這棵樹在今年春天開滿了粉紅色的花。)
-(leaves) rustle (v) (（樹葉）沙沙作響) ^The dry leaves rustle when the wind blows. (風吹過時，乾燥的樹葉會沙沙作響。)
+leaves *rustle* (v) (樹葉 *沙沙作響*) ^The dry leaves rustle when the wind blows. (風吹過時，乾燥的樹葉會沙沙作響。)
 landscape (n) (風景、景觀) ^The landscape of the mountains is very beautiful. (山脈的風景非常美麗。)
 splendor (n) (壯麗、輝煌) ^ The old palace was full of golden splendor. (這座古老的宮殿充滿了金色的壯麗。)
 previously (adv) (以前) ^I previously worked at a different school. (我以前在另一所學校工作。)
@@ -4050,6 +4050,5 @@ initDB().catch(error => {
 <div style="text-align: left; padding: 20px; background-color: #f0f8ff; border-top: 2px solid #3498db; margin-top: 30px; font-size: 20px; color: #2c3e50;">
     <div id="visitStatsContainer">Loading visit statistics...</div>
 </div>
-</body>
 </body>
 </html>
