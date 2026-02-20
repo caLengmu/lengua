@@ -1410,7 +1410,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocabulary List for Textbooks<br>(v6.0)</h1>
+        <h1>📚 Vocabulary List for Textbooks<br>(v6.01)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -1757,6 +1757,11 @@ function initDB() {
             resolve(db);
         };
         
+// ADD THIS: Warn mobile users to close old tabs!
+        request.onblocked = () => {
+            alert('Please close other tabs of this page and refresh to update the database!');
+        };
+
         request.onupgradeneeded = (event) => {
             db = event.target.result;
             if (!db.objectStoreNames.contains('checkedWords')) {
@@ -4432,15 +4437,20 @@ initDB().catch(error => {
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Move this to the top so buttons ALWAYS work immediately!
+    initializeEventListeners(); 
+    
     try {
+        // 2. Load the database afterwards
         await initDB();
-        initializeEventListeners();
-        // 等待一小段時間確保 DB 完全初始化
+        
         setTimeout(async () => {
             await displayVisitStats();
         }, 100);
     } catch (error) {
         console.error('Initialization error:', error);
+        // Optional: Alert the user if the DB fails on mobile
+        alert('Notice: Database features are restricted in Private Mode or In-App browsers. Please open in a standard browser like Chrome or Safari.');
     }
 });
 
