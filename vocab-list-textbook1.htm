@@ -208,7 +208,6 @@
         padding: 6px 12px !important;
         font-size: 14px !important;
     }
-}
 
     .floating-nav-buttons {
         bottom: 20px;
@@ -1410,7 +1409,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocabulary List for Textbooks<br>(v6.01)</h1>
+        <h1>📚 Vocabulary List for Textbooks<br>(v6.1)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -1582,9 +1581,9 @@
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</strong></p>
                     <p style="margin-bottom: 0; text-align: center;">2. 手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
                 </div>
-                <button id="welcomeOkBtn" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
-                    OK. I got it.
-                </button>
+                <button id="welcomeOkBtn" onclick="document.getElementById('welcomeModal').style.display='none';" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; min-height: 48px; touch-action: manipulation;">
+    OK. I got it.
+</button>
             </div>
         </div>
     </div>
@@ -1757,11 +1756,6 @@ function initDB() {
             resolve(db);
         };
         
-// ADD THIS: Warn mobile users to close old tabs!
-        request.onblocked = () => {
-            alert('Please close other tabs of this page and refresh to update the database!');
-        };
-
         request.onupgradeneeded = (event) => {
             db = event.target.result;
             if (!db.objectStoreNames.contains('checkedWords')) {
@@ -4266,11 +4260,8 @@ document.getElementById('studyModalNextSectionBtn').addEventListener('click', go
 
             attachBubbleEventListeners();
 
-            // Welcome modal
-            document.getElementById('welcomeOkBtn').addEventListener('click', () => {
-                document.getElementById('welcomeModal').style.display = 'none';
-            });
-
+            // Welcome modal removed
+            
 // Overall Vocabulary button
 document.getElementById('overallVocabBtn').addEventListener('click', openOverallVocabModal);
 document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
@@ -4437,20 +4428,15 @@ initDB().catch(error => {
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Move this to the top so buttons ALWAYS work immediately!
-    initializeEventListeners(); 
-    
     try {
-        // 2. Load the database afterwards
         await initDB();
-        
+        initializeEventListeners();
+        // 等待一小段時間確保 DB 完全初始化
         setTimeout(async () => {
             await displayVisitStats();
         }, 100);
     } catch (error) {
         console.error('Initialization error:', error);
-        // Optional: Alert the user if the DB fails on mobile
-        alert('Notice: Database features are restricted in Private Mode or In-App browsers. Please open in a standard browser like Chrome or Safari.');
     }
 });
 
