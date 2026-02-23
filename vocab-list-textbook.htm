@@ -208,7 +208,6 @@
         padding: 6px 12px !important;
         font-size: 14px !important;
     }
-}
 
     .floating-nav-buttons {
         bottom: 20px;
@@ -1280,6 +1279,124 @@
     color: #7f8c8d;
     font-size: 18px;
 }
+/* Custom Monthly Learning Cycle Styles */
+.monthly-custom-btn {
+    background-color: #FFB11B;
+    color: black;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.monthly-custom-btn:hover {
+    background-color: #FC9F4D;
+}
+
+.week-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.week-section h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.item-count {
+    font-size: 14px;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.days-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.day-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.day-btn {
+    background-color: #17a2b8;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.day-btn:hover {
+    background-color: #138496;
+    transform: translateY(-1px);
+}
+
+.day-btn.has-content {
+    background-color: #27ae60;
+}
+
+.edit-btn {
+    background-color: #ffc107;
+    color: #333;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+.clear-week-btn {
+    background-color: #95a5a6;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.clear-week-btn:hover {
+    background-color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+    #monthly-grid { grid-template-columns: 1fr !important; }
+}
 
     </style>
 </head>
@@ -1292,7 +1409,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 Vocabulary List for Textbooks<br>(v5.12)</h1>
+        <h1>📚 Vocabulary List for Textbooks<br>(v6.11)</h1>
 
         <div class="button-categories">
     <div class="category">
@@ -1350,7 +1467,7 @@
     </div>
 
     <div class="category">
-        <div class="category-title">📕 Textbook: Book 4 (課本第四冊)</div>
+        <div class="category-title">📙 Textbook: Book 4 (課本第四冊)</div>
         <div class="category-buttons">
             <button class="vocab-btn" data-category="textbook" data-lesson="b4l1">L1</button>
             <button class="vocab-btn" data-category="textbook" data-lesson="b4l2">L2</button>
@@ -1384,6 +1501,15 @@
             <button class="vocab-btn" data-category="textbook" data-lesson="b5r3">R3</button>
         </div>
     </div>
+<div class="category">
+    <div class="category-title">📝 My Own List: Monthly Schedule</div>
+    <div class="category-buttons" id="custom-category-buttons">
+        <button class="monthly-custom-btn" data-month="1">Month 1</button>
+        <button class="monthly-custom-btn" data-month="2">Month 2</button>
+        <button class="monthly-custom-btn" data-month="3">Month 3</button>
+        <button id="hidden-custom-btn" class="vocab-btn" style="display: none;"></button>
+    </div>
+</div>
 </div>
 
         <!-- Study Partner Section -->
@@ -1455,9 +1581,9 @@
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理(refresh)🔄」以獲取更新！</strong></p>
                     <p style="margin-bottom: 0; text-align: center;">2. 手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p>
                 </div>
-                <button id="welcomeOkBtn" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
-                    OK. I got it.
-                </button>
+                <button id="welcomeOkBtn" onclick="document.getElementById('welcomeModal').style.display='none';" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; min-height: 48px; touch-action: manipulation;">
+    OK. I got it.
+</button>
             </div>
         </div>
     </div>
@@ -1556,13 +1682,73 @@
         <div id="quizHistoryList" style="max-height: 600px; overflow-y: auto;"></div>
     </div>
 </div>
+
+<div id="monthly-modal" class="modal">
+    <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+        <h2 id="monthly-modal-title" style="text-align: center; color: #2c3e50; margin-bottom: 20px;">🗓️ Month X</h2>
+        <div id="monthly-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <script>
+                // We generate the 4 weeks dynamically in HTML to keep it clean
+                for(let w=1; w<=4; w++) {
+                    document.write(`
+                    <div class="week-section">
+                        <h3>Week ${w} <span id="week${w}-count" class="item-count">0 items</span></h3>
+                        <div class="days-grid">
+                            ${[1,2,3,4,5,6,7].map(d => `
+                            <div class="day-row">
+                                <button class="day-btn" data-week="${w}" data-day="${d}">${d === 7 ? 'Review Day' : 'Day ' + d}</button>
+                                <button class="edit-btn" data-week="${w}" data-day="${d}">Edit</button>
+                            </div>`).join('')}
+                        </div>
+                        <button class="clear-week-btn" data-week="${w}">Clear W${w}</button>
+                    </div>`);
+                }
+            </script>
+            <div class="week-section" style="grid-column: 1 / -1;">
+                <h3>Backup <span id="weekbackup-count" class="item-count">0 items</span></h3>
+                <div class="days-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <script>
+                        for(let d=1; d<=5; d++) {
+                            document.write(`
+                            <div class="day-row">
+                                <button class="day-btn" data-week="backup" data-day="${d}">Backup ${d}</button>
+                                <button class="edit-btn" data-week="backup" data-day="${d}">Edit</button>
+                            </div>`);
+                        }
+                    </script>
+                </div>
+                <button class="clear-week-btn" data-week="backup" style="margin-top: 10px;">Clear Backup</button>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+            <button id="monthly-clear-all-btn" class="quiz-btn" style="background-color: #e74c3c; color: white;">🈳 Clear Entire Month</button>
+            <button id="monthly-close-btn" class="quiz-btn" style="background-color: #6c757d; color: white;">✖ Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="edit-entry-modal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+        <h2 style="text-align: center; color: #2c3e50; margin-bottom: 10px;">✏️ Edit This Entry</h2>
+        <p style="color: #e74c3c; margin-bottom: 15px; text-align: center; font-weight: bold;">(Paste using format: word (n) (中文) ^ example (中文))</p>
+        <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="◎Section Title&#10;word (n) (翻譯) ^ Example sentence (翻譯)"></textarea>
+        
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+            <button id="edit-save-btn" class="quiz-btn" style="background-color: #28a745; color: white;">💾 Save</button>
+            <button id="edit-ai-link-btn" class="quiz-btn" style="background-color: #17a2b8; color: white;">💡 AI (中+句)</button>
+            <button id="edit-clear-btn" class="quiz-btn" style="background-color: #f39c12; color: white;">🈳 Clear</button>
+            <button id="edit-cancel-btn" class="quiz-btn" style="background-color: #6c757d; color: white;">🚫 Cancel</button>
+        </div>
+    </div>
+</div>
+
     <script>
 // ============ INDEXEDDB FUNCTIONS ============
 let db;
 
 function initDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('VocabDatabase', 3);  // 改成版本 3
+        const request = indexedDB.open('VocabDatabase', 4);  // CHANGED TO VERSION 4
         
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
@@ -1571,18 +1757,21 @@ function initDB() {
         };
         
         request.onupgradeneeded = (event) => {
-    db = event.target.result;
-    if (!db.objectStoreNames.contains('checkedWords')) {
-        db.createObjectStore('checkedWords', { keyPath: 'id' });
-    }
-    if (!db.objectStoreNames.contains('visitHistory')) {
-        db.createObjectStore('visitHistory', { keyPath: 'id' });
-    }
-    // ADD THIS NEW STORE
-    if (!db.objectStoreNames.contains('quizHistory')) {
-        db.createObjectStore('quizHistory', { keyPath: 'id' });
-    }
-};
+            db = event.target.result;
+            if (!db.objectStoreNames.contains('checkedWords')) {
+                db.createObjectStore('checkedWords', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('visitHistory')) {
+                db.createObjectStore('visitHistory', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('quizHistory')) {
+                db.createObjectStore('quizHistory', { keyPath: 'id' });
+            }
+            // === NEW ADDITION: customLists ===
+            if (!db.objectStoreNames.contains('customLists')) {
+                db.createObjectStore('customLists', { keyPath: 'id' });
+            }
+        };
     });
 }
 
@@ -1844,6 +2033,98 @@ function parseSimplifiedDatabase(text) {
     }
 
     return sections;
+}
+
+// ============ CUSTOM LIST FUNCTIONS ============
+let currentCustomMonth = null;
+let currentEditWeek = null;
+let currentEditDay = null;
+
+// Save custom entry to IndexedDB
+function saveCustomEntry(id, content) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['customLists'], 'readwrite');
+        const store = transaction.objectStore('customLists');
+        const request = store.put({ id: id, content: content });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Load custom entry from IndexedDB
+function loadCustomEntry(id) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['customLists'], 'readonly');
+        const store = transaction.objectStore('customLists');
+        const request = store.get(id);
+        request.onsuccess = () => resolve(request.result ? request.result.content : '');
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Delete custom entry from IndexedDB
+function deleteCustomEntry(id) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['customLists'], 'readwrite');
+        const store = transaction.objectStore('customLists');
+        const request = store.delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Count items by parsing (specific to Vocab List logic)
+function countCustomItems(content) {
+    if (!content || !content.trim()) return 0;
+    const parsed = parseSimplifiedDatabase(content);
+    let count = 0;
+    parsed.forEach(section => { count += section.words.length; });
+    return count;
+}
+
+// Update the counters and button colors in the modal
+async function updateCustomUI(month) {
+    const weeks = ['1', '2', '3', '4', 'backup'];
+    for (const week of weeks) {
+        let totalCount = 0;
+        const dayCount = week === 'backup' ? 5 : 7;
+        for (let day = 1; day <= dayCount; day++) {
+            const id = `m${month}_w${week}_d${day}`;
+            const content = await loadCustomEntry(id);
+            totalCount += countCustomItems(content);
+            
+            // Update day button visual
+            const btn = document.querySelector(`.day-btn[data-week="${week}"][data-day="${day}"]`);
+            if (btn) {
+                if (content && content.trim()) {
+                    btn.classList.add('has-content');
+                } else {
+                    btn.classList.remove('has-content');
+                }
+            }
+        }
+        
+        // Update week total text
+        const countEl = document.getElementById(`week${week}-count`);
+        if (countEl) countEl.textContent = `${totalCount} items`;
+    }
+}
+
+// Clear a specific week
+async function clearCustomWeek(month, week) {
+    const dayCount = week === 'backup' ? 5 : 7;
+    for (let day = 1; day <= dayCount; day++) {
+        await deleteCustomEntry(`m${month}_w${week}_d${day}`);
+    }
+    await updateCustomUI(month);
+}
+
+// Clear entire month
+async function clearEntireMonth(month) {
+    const weeks = ['1', '2', '3', '4', 'backup'];
+    for (const week of weeks) {
+        await clearCustomWeek(month, week);
+    }
 }
 
 // Built-in database - can be expanded
@@ -3801,6 +4082,123 @@ async function clearAllQuizHistory() {
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
 
+// === Custom Monthly List Event Listeners ===
+
+// 1. Open Month Modal
+document.querySelectorAll('.monthly-custom-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        currentCustomMonth = btn.getAttribute('data-month');
+        document.getElementById('monthly-modal-title').textContent = `🗓️ Month ${currentCustomMonth}`;
+        await updateCustomUI(currentCustomMonth);
+        document.getElementById('monthly-modal').style.display = 'block';
+    });
+});
+
+// 2. Close Month Modal
+document.getElementById('monthly-close-btn').addEventListener('click', () => {
+    document.getElementById('monthly-modal').style.display = 'none';
+});
+
+// 3. Clear Month Button
+document.getElementById('monthly-clear-all-btn').addEventListener('click', async () => {
+    if (confirm(`Are you sure you want to clear ALL data for Month ${currentCustomMonth}?`)) {
+        await clearEntireMonth(currentCustomMonth);
+    }
+});
+
+// 4. Clear Week Buttons
+document.querySelectorAll('.clear-week-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const week = btn.dataset.week;
+        if (confirm(`Clear all data for Week ${week}?`)) {
+            await clearCustomWeek(currentCustomMonth, week);
+        }
+    });
+});
+
+// 5. Edit Buttons (Open Edit Modal)
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        currentEditWeek = btn.dataset.week;
+        currentEditDay = btn.dataset.day;
+        const id = `m${currentCustomMonth}_w${currentEditWeek}_d${currentEditDay}`;
+        const content = await loadCustomEntry(id);
+        
+        document.getElementById('edit-entry-content').value = content;
+        document.getElementById('monthly-modal').style.display = 'none';
+        document.getElementById('edit-entry-modal').style.display = 'block';
+    });
+});
+
+// 6. Edit Modal Controls
+document.getElementById('edit-cancel-btn').addEventListener('click', () => {
+    document.getElementById('edit-entry-modal').style.display = 'none';
+    document.getElementById('monthly-modal').style.display = 'block';
+});
+
+document.getElementById('edit-clear-btn').addEventListener('click', () => {
+    if (confirm('Clear this text box?')) {
+        document.getElementById('edit-entry-content').value = '';
+    }
+});
+
+document.getElementById('edit-save-btn').addEventListener('click', async () => {
+    const content = document.getElementById('edit-entry-content').value;
+    const id = `m${currentCustomMonth}_w${currentEditWeek}_d${currentEditDay}`;
+    await saveCustomEntry(id, content);
+    await updateCustomUI(currentCustomMonth);
+    
+    document.getElementById('edit-entry-modal').style.display = 'none';
+    document.getElementById('monthly-modal').style.display = 'block';
+});
+
+// 7. Day Buttons (Load the data into the main system)
+document.querySelectorAll('.day-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const week = btn.dataset.week;
+        const day = btn.dataset.day;
+        const id = `m${currentCustomMonth}_w${week}_d${day}`;
+        const content = await loadCustomEntry(id);
+        
+        if (content && content.trim()) {
+            // Remove active state from standard buttons
+            document.querySelectorAll('.vocab-btn').forEach(b => b.classList.remove('active'));
+            
+            // Enable the hidden custom button so Quiz History/Selection logic works normally
+            const hiddenBtn = document.getElementById('hidden-custom-btn');
+            hiddenBtn.classList.add('active');
+            hiddenBtn.setAttribute('data-lesson', id);
+            hiddenBtn.textContent = `Month ${currentCustomMonth} - W${week} D${day}`;
+            
+            // Parse content into the global vocabulary database dynamically
+            vocabDatabase[id] = parseSimplifiedDatabase(content);
+            
+            // Load vocabulary directly to screen
+            loadVocabulary(id);
+            document.getElementById('monthly-modal').style.display = 'none';
+            
+            // Auto scroll to Management Section
+            setTimeout(() => {
+                const overallVocabSection = document.getElementById('overallVocabSection');
+                if (overallVocabSection && overallVocabSection.style.display !== 'none') {
+                    overallVocabSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 50);
+            
+        } else {
+            alert('This entry is empty. Please click "Edit" first to add content. (請先點選 Edit 貼上單字內容)');
+        }
+    });
+});
+
+// 8. AI Support Link Button
+const editAiLinkBtn = document.getElementById('edit-ai-link-btn');
+if (editAiLinkBtn) {
+    editAiLinkBtn.addEventListener('click', () => {
+        window.open('https://chatgpt.com/share/69981cae-c300-800a-a546-58ca98d39f99', '_blank');
+    });
+}
+
             // Lesson buttons
 const lessonButtons = document.querySelectorAll('.vocab-btn');
 lessonButtons.forEach(btn => {
@@ -3862,11 +4260,8 @@ document.getElementById('studyModalNextSectionBtn').addEventListener('click', go
 
             attachBubbleEventListeners();
 
-            // Welcome modal
-            document.getElementById('welcomeOkBtn').addEventListener('click', () => {
-                document.getElementById('welcomeModal').style.display = 'none';
-            });
-
+            // Welcome modal removed
+            
 // Overall Vocabulary button
 document.getElementById('overallVocabBtn').addEventListener('click', openOverallVocabModal);
 document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
