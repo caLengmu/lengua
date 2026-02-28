@@ -1639,7 +1639,7 @@
     <div id="quizHistoryModal" class="overall-vocab-modal">
         <div class="overall-vocab-content">
             <div class="overall-vocab-header">
-                <h2>📊 クイズ履歴</h2>
+                <h2>📊 クイズ履歴(りれき)</h2>
                 <div class="overall-vocab-buttons">
                     <button class="overall-vocab-btn" id="clearHistoryBtn" style="background-color: #e74c3c;">
                         🗑️ すべて削除
@@ -2643,7 +2643,7 @@
                 <div class="quiz-complete">
                     <h3>🎉 クイズ完了！</h3>
                     <div class="quiz-score">
-                        あなたのスコア：<strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
+                        あなたの点数：<strong>${quizScore} / ${quizWords.length} (${percentage}%)</strong>
                     </div>
                     <button class="restart-quiz-btn" onclick="restartQuiz()">もう一度挑戦する</button>
                 </div>
@@ -3180,7 +3180,7 @@
                         <div class="quiz-history-lesson">${item.lessonName}</div>
                         <div class="quiz-history-sections"><strong>セクション:</strong> ${sectionsText}</div>
                         <div class="quiz-history-score ${scoreClass}">
-                            スコア：${item.score}/${item.total} (${percentage}%) ${scoreEmoji}
+                            点数：${item.score}/${item.total} (${percentage}%) ${scoreEmoji}
                         </div>
                         <button class="quiz-history-delete" onclick="deleteQuizItem(${item.id})">🗑️</button>
                         <div style="clear: both;"></div>
