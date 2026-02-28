@@ -1490,7 +1490,7 @@
         <!-- Study Partner Section -->
 <div class="study-partner-section">
     <button class="study-partner-btn" id="walkMeThruBtn">
-        👀 Walk Me Through <br>(帶我複習：英翻中)
+        👀 Walk Me Through <br>(復習)
     </button>
 </div>
 
@@ -1581,7 +1581,7 @@
     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
         <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
         <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
-            Show English
+            Show Japanese
         </button>
     </div>
 </div>
@@ -2627,7 +2627,7 @@ async function showSectionSelector(lessonData, lessonKey, savedCheckedWords) {
     // Update toggle button text based on current state (don't reset)
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
-        toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
+        toggleBtn.textContent = showEnglishInQuiz ? 'Hide Japanese' : 'Show Japanese';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
 
@@ -2732,7 +2732,7 @@ function toggleEnglishDisplay() {
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     
     if (toggleBtn) {
-        toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
+        toggleBtn.textContent = showEnglishInQuiz ? 'Hide Japanese' : 'Show Japanese';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
     
@@ -2835,7 +2835,7 @@ function closeQuizModal() {
     // Reset toggle button appearance
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
-        toggleBtn.textContent = 'Show English';
+        toggleBtn.textContent = 'Show Japanese';
         toggleBtn.style.backgroundColor = '#6c757d';
     }
 }
@@ -3629,7 +3629,7 @@ document.querySelectorAll('.day-btn').forEach(btn => {
 const editAiLinkBtn = document.getElementById('edit-ai-link-btn');
 if (editAiLinkBtn) {
     editAiLinkBtn.addEventListener('click', () => {
-        window.open('https://chatgpt.com/share/69981cae-c300-800a-a546-58ca98d39f99', '_blank');
+        window.open('https://chatgpt.com/share/69a2bca7-298c-800f-9efc-0845cf8ab970', '_blank');
     });
 }
 
