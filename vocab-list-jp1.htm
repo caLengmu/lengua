@@ -143,7 +143,7 @@
         .floating-nav-buttons {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -211,7 +211,7 @@
 
             .floating-nav-buttons {
                 bottom: 20px;
-                right: 20px;
+                left: 20px;
                 gap: 8px;
             }
             
@@ -534,7 +534,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 24px;
             margin: 2px;
             padding: 5px;
             border-radius: 3px;
@@ -872,7 +872,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 24px;
             margin: 0 5px;
             padding: 5px;
             border-radius: 3px;
@@ -1956,14 +1956,14 @@
                 line = line.trim();
                 if (!line) continue;
 
-                if (line.startsWith('◎')) {
-                    if (currentSection) {
-                        sections.push(currentSection);
-                    }
-                    currentSection = {
-                        section: line,
-                        words: []
-                    };
+                if (line.startsWith('◎') || line.startsWith('@')) {  // ← Added @ here
+    if (currentSection) {
+        sections.push(currentSection);
+    }
+    currentSection = {
+        section: line,
+        words: []
+    };
                 } else if (line.includes('^') && currentSection) {
                     const [wordPart, examplePart] = line.split('^').map(s => s.trim());
                     currentSection.words.push({
@@ -2898,6 +2898,7 @@ Would you like me to create an image of one of these famous Japanese festivals f
         let correctAnswer = null;
         let showEnglishInQuiz = false;
         let showEnglishTimeout = null;
+let isTextHidden = false;
 
         // ============ TTS FUNCTIONS ============
         function loadVoices() {
@@ -3045,6 +3046,34 @@ Would you like me to create an image of one of these famous Japanese festivals f
             currentSpeech = null;
         }
 
+function pauseSpeech() {
+    if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+    } else if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+    }
+}
+
+function toggleHideText() {
+    isTextHidden = !isTextHidden;
+    
+    const hideBtn = document.getElementById('hideTextBtn');
+    const currentWord = document.getElementById('currentWord');
+    const currentExample = document.getElementById('currentExample');
+    
+    if (isTextHidden) {
+        hideBtn.textContent = '🙉';
+        hideBtn.title = 'Show Text';
+        if (currentWord) currentWord.style.visibility = 'hidden';
+        if (currentExample) currentExample.style.visibility = 'hidden';
+    } else {
+        hideBtn.textContent = '🙈';
+        hideBtn.title = 'Hide Text';
+        if (currentWord) currentWord.style.visibility = 'visible';
+        if (currentExample) currentExample.style.visibility = 'visible';
+    }
+}
+
         async function initializeTTS() {
             console.log('Initializing TTS...');
             const testUtterance = new SpeechSynthesisUtterance('');
@@ -3106,6 +3135,7 @@ Would you like me to create an image of one of these famous Japanese festivals f
         html += `<tr class="vocab-row">
             <td class="audio-controls">
                 <button class="audio-btn play-btn" onclick="speakText('${escapedText}')">🔊</button>
+                <button class="audio-btn pause-btn" onclick="pauseSpeech()">⏸️</button>
                 <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
             </td>
             <td class="content-cell">
@@ -3701,13 +3731,15 @@ Would you like me to create an image of one of these famous Japanese festivals f
                 }
                 
                 speechBubble.innerHTML = `
-                    <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
-                    <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
-                    <div class="bubble-controls">
-                        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-                        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
-                        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
-                    </div>
+    <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
+    <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
+    <div class="bubble-controls">
+        <button class="bubble-btn hide-btn" id="hideTextBtn" title="Hide Text">🙈</button>
+        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+        <button class="bubble-btn pause-btn" id="pauseCurrentBtn" title="Pause">⏸️</button>
+        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+    </div>
                     <div class="translation-text" id="translationText">
                         <div class="translation-label">🌐 翻訳：</div>
                         <div><strong>${chineseWord}</strong></div>
@@ -3721,14 +3753,18 @@ Would you like me to create an image of one of these famous Japanese festivals f
         }
 
         function attachBubbleEventListeners() {
-            const speakBtn = document.getElementById('speakCurrentBtn');
-            const stopBtn = document.getElementById('stopCurrentBtn');
-            const translateBtn = document.getElementById('showTranslationBtn');
+    const hideBtn = document.getElementById('hideTextBtn');
+    const speakBtn = document.getElementById('speakCurrentBtn');
+    const pauseBtn = document.getElementById('pauseCurrentBtn');
+    const stopBtn = document.getElementById('stopCurrentBtn');
+    const translateBtn = document.getElementById('showTranslationBtn');
 
-            if (speakBtn) speakBtn.addEventListener('click', handleSpeakCurrent);
-            if (stopBtn) stopBtn.addEventListener('click', stopSpeech);
-            if (translateBtn) translateBtn.addEventListener('click', toggleTranslation);
-        }
+    if (hideBtn) hideBtn.addEventListener('click', toggleHideText);
+    if (speakBtn) speakBtn.addEventListener('click', handleSpeakCurrent);
+    if (pauseBtn) pauseBtn.addEventListener('click', pauseSpeech);
+    if (stopBtn) stopBtn.addEventListener('click', stopSpeech);
+    if (translateBtn) translateBtn.addEventListener('click', toggleTranslation);
+}
 
         function handleSpeakCurrent() {
             const currentItem = flatWordsList[currentWordIndex];
@@ -3835,44 +3871,51 @@ Would you like me to create an image of one of these famous Japanese festivals f
         }
 
         async function startStudySession() {
-            const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-            
-            if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-                alert('まず単語データのあるレッスンを選択してください！');
-                return;
-            }
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('まず単語データのあるレッスンを選択してください！');
+        return;
+    }
 
-            currentLessonData = vocabDatabase[selectedLesson];
-            flatWordsList = await flattenLessonData(currentLessonData);
-            currentWordIndex = 0;
-            isCompleted = false;
-            translationShown = false;
-            currentEmoji = getRandomEmoji();
+    currentLessonData = vocabDatabase[selectedLesson];
+    flatWordsList = await flattenLessonData(currentLessonData);
+    currentWordIndex = 0;
+    isCompleted = false;
+    translationShown = false;
+    isTextHidden = false;  // ← Reset hide state when starting
+    currentEmoji = getRandomEmoji();
 
-            document.getElementById('studyModal').style.display = 'block';
-            updateStudySession();
-        }
+    document.getElementById('studyModal').style.display = 'block';
+    updateStudySession();
+}
 
         function handleFloatingButtons() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-            const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
-            const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
-            const buttonCategories = document.querySelector('.button-categories');
-            
-            if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
-            
-            const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
-            
-            if (window.scrollY > buttonCategoriesBottom + 100) {
-                backToTopBtn.classList.add('show');
-                floatingPrevSectionBtn.classList.add('show');
-                floatingNextSectionBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-                floatingPrevSectionBtn.classList.remove('show');
-                floatingNextSectionBtn.classList.remove('show');
-            }
-        }
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
+    const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
+    const buttonCategories = document.querySelector('.button-categories');
+    
+    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
+    
+    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollY = window.scrollY;
+    
+    // Check if we're near the bottom of the page
+    const nearBottom = (scrollY + windowHeight) >= (documentHeight - 200);
+    
+    if (window.scrollY > buttonCategoriesBottom + 100 && !nearBottom) {
+        backToTopBtn.classList.add('show');
+        floatingPrevSectionBtn.classList.add('show');
+        floatingNextSectionBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+        floatingPrevSectionBtn.classList.remove('show');
+        floatingNextSectionBtn.classList.remove('show');
+    }
+}
 
         function scrollToTop() {
             const buttonCategories = document.querySelector('.button-categories');
@@ -4181,9 +4224,10 @@ Would you like me to create an image of one of these famous Japanese festivals f
             });
 
             document.getElementById('closeStudyModal').addEventListener('click', () => {
-                studyModal.style.display = 'none';
-                stopSpeech();
-            });
+    studyModal.style.display = 'none';
+    stopSpeech();
+    isTextHidden = false;  // ← Reset hide state when closing
+});
 
             document.getElementById('nextBtn').addEventListener('click', nextWord);
             document.getElementById('backBtn').addEventListener('click', previousWord);
