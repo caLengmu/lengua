@@ -1568,6 +1568,7 @@
                 <div id="listenAnswerDisplay" class="listen-answer-display">スピーカーをクリック</div>
                 <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
                     <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
+<div class="listen-speaker" id="listenStopBtn" title="Stop Audio" style="color: #e74c3c;">🔇</div>
                     <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
                         日本語を表示
                     </button>
@@ -1601,10 +1602,11 @@
                     <div class="current-word" id="currentWord">まずレッスンを選択してください！</div>
                     <div class="current-example" id="currentExample">学習を始める前に、メインページからレッスンを選んでください。</div>
                     <div class="bubble-controls">
-                        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-                        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
-                        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
-                    </div>
+    <button class="bubble-btn hide-btn" id="hideTextBtn" title="Hide Text">🙈</button>
+    <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+    <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
+    <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+</div>
                     <div class="translation-text" id="translationText">
                         <div class="translation-label">🌐 日本語訳：</div>
                         <div>翻訳待ち...</div>
@@ -3347,14 +3349,6 @@ let isTextHidden = false;
             currentSpeech = null;
         }
 
-function pauseSpeech() {
-    if (speechSynthesis.speaking && !speechSynthesis.paused) {
-        speechSynthesis.pause();
-    } else if (speechSynthesis.paused) {
-        speechSynthesis.resume();
-    }
-}
-
 function toggleHideText() {
     isTextHidden = !isTextHidden;
     
@@ -3436,8 +3430,7 @@ function toggleHideText() {
         html += `<tr class="vocab-row">
             <td class="audio-controls">
                 <button class="audio-btn play-btn" onclick="speakText('${escapedText}')">🔊</button>
-                <button class="audio-btn pause-btn" onclick="pauseSpeech()">⏸️</button>
-                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                                <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
             </td>
             <td class="content-cell">
                 <div class="vocab-word">${item.word}</div>
@@ -4037,8 +4030,7 @@ function toggleHideText() {
     <div class="bubble-controls">
         <button class="bubble-btn hide-btn" id="hideTextBtn" title="Hide Text">🙈</button>
         <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-        <button class="bubble-btn pause-btn" id="pauseCurrentBtn" title="Pause">⏸️</button>
-        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+                <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
         <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
     </div>
                     <div class="translation-text" id="translationText">
@@ -4056,13 +4048,11 @@ function toggleHideText() {
         function attachBubbleEventListeners() {
     const hideBtn = document.getElementById('hideTextBtn');
     const speakBtn = document.getElementById('speakCurrentBtn');
-    const pauseBtn = document.getElementById('pauseCurrentBtn');
     const stopBtn = document.getElementById('stopCurrentBtn');
     const translateBtn = document.getElementById('showTranslationBtn');
 
     if (hideBtn) hideBtn.addEventListener('click', toggleHideText);
     if (speakBtn) speakBtn.addEventListener('click', handleSpeakCurrent);
-    if (pauseBtn) pauseBtn.addEventListener('click', pauseSpeech);
     if (stopBtn) stopBtn.addEventListener('click', stopSpeech);
     if (translateBtn) translateBtn.addEventListener('click', toggleTranslation);
 }
@@ -4105,7 +4095,7 @@ function toggleHideText() {
                 </div>
                 <div class="bubble-controls">
                     <button class="bubble-btn play-btn" id="congratsPlayBtn">🔊</button>
-                    <button class="bubble-btn stop-btn" id="congratsStopBtn">⏹</button>
+                    <button class="bubble-btn stop-btn" id="congratsStopBtn">🔇</button>
                     <button class="bubble-btn learn-again-btn" id="learnAgainBtn">🔄 もう一度挑戦する</button>
                 </div>`;
 
@@ -4512,6 +4502,7 @@ function toggleHideText() {
 
             document.getElementById('listenChooseBtn').addEventListener('click', startListenChooseQuiz);
             document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
+document.getElementById('listenStopBtn').addEventListener('click', stopSpeech);
             document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
             document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
             document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
