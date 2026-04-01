@@ -143,7 +143,7 @@
         .floating-nav-buttons {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -211,7 +211,7 @@
 
             .floating-nav-buttons {
                 bottom: 20px;
-                right: 20px;
+                left: 20px;
                 gap: 8px;
             }
             
@@ -534,7 +534,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 32px;
             margin: 2px;
             padding: 5px;
             border-radius: 3px;
@@ -872,7 +872,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 24px;
             margin: 0 5px;
             padding: 5px;
             border-radius: 3px;
@@ -1408,7 +1408,7 @@
     </div>
     
     <div class="container">
-        <h1>📚 単語表<br>(v6.2)</h1>
+        <h1>📚 単語表<br>(v6.25)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1529,8 +1529,8 @@
             </div>
             <span class="speed-label">速度(そくど 1)／スピード:</span>
             <button class="speed-btn" data-speed="1.2">1.2x</button>
-            <button class="speed-btn active-speed" data-speed="1.0">1x</button>
-            <button class="speed-btn" data-speed="0.8">0.8x</button>
+            <button class="speed-btn" data-speed="1.0">1x</button>
+            <button class="speed-btn active-speed" data-speed="0.8">0.8x</button>
             <button class="speed-btn" data-speed="0.6">0.6x</button>
         </div>
 
@@ -1565,14 +1565,14 @@
             <span class="close" id="closeListenChoose">&times;</span>
             <h2 class="quiz-header">🎧 聴いて選ぶ</h2>
             <div class="listen-answer-section">
-                <div id="listenAnswerDisplay" class="listen-answer-display">スピーカーをクリック</div>
-                <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-                    <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
-                    <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
-                        日本語を表示
-                    </button>
-                </div>
-            </div>
+    <div id="listenAnswerDisplay" class="listen-answer-display">スピーカーをクリック</div>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+        <div class="listen-speaker" id="listenSpeakerToggle" title="Play Audio">🔊</div>
+        <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
+            日本語を表示
+        </button>
+    </div>
+</div>
             <div class="timer-feedback-section">
                 <div id="timerFeedback" class="timer-feedback"></div>
             </div>
@@ -1601,10 +1601,11 @@
                     <div class="current-word" id="currentWord">まずレッスンを選択してください！</div>
                     <div class="current-example" id="currentExample">学習を始める前に、メインページからレッスンを選んでください。</div>
                     <div class="bubble-controls">
-                        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-                        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
-                        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
-                    </div>
+    <button class="bubble-btn hide-btn" id="hideTextBtn" title="Hide Text">🙈</button>
+    <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+    
+    <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+</div>
                     <div class="translation-text" id="translationText">
                         <div class="translation-label">🌐 日本語訳：</div>
                         <div>翻訳待ち...</div>
@@ -1956,14 +1957,14 @@
                 line = line.trim();
                 if (!line) continue;
 
-                if (line.startsWith('◎')) {
-                    if (currentSection) {
-                        sections.push(currentSection);
-                    }
-                    currentSection = {
-                        section: line,
-                        words: []
-                    };
+                if (line.startsWith('◎') || line.startsWith('@')) {  // ← Added @ here
+    if (currentSection) {
+        sections.push(currentSection);
+    }
+    currentSection = {
+        section: line,
+        words: []
+    };
                 } else if (line.includes('^') && currentSection) {
                     const [wordPart, examplePart] = line.split('^').map(s => s.trim());
                     currentSection.words.push({
@@ -2853,8 +2854,309 @@ Would you like me to create an image of one of these famous Japanese festivals f
 'b2l10': ``,
 
 
-            'b3l1': ``, 
-'b3l2': ``, 
+            'b3l1': `
+◎第２１課
+空気が悪い (kūki ga warui) (空氣不好) ^ 煙やゴミなどで、呼吸をするための空気が汚れている様子です。(The state where the air for breathing is dirty due to smoke or trash.) 工場が多い町は、どうしても空気が悪いと感じてしまいます。(Towns with many factories inevitably feel like the air is bad.)
+物価が高い (bukka ga takai) (物價高) ^ 野菜や服など、生活に必要な物の値段が上がっていることです。(It means the prices of daily necessities like vegetables and clothes are high.) 東京は便利ですが、他の町に比べると物価が高いです。(Tokyo is convenient, but compared to other towns, prices are high.)
+交通が不便 (kōtsū ga fuben) (交通不便) ^ 電車やバスが少なくて、移動するのが大変な状態のことです。(The state where moving around is difficult because there are few trains or buses.) 私の田舎は交通が不便なので、車を持っていないと生活できません。(My hometown has inconvenient transportation, so you can't live there without a car.)
+田舎は空気がきれい (inaka wa kūki ga kirei) (鄉下空氣清新) ^ 山や木がたくさんあって、空気が澄んでいて気持ちが良いことです。(It means the air is clear and pleasant because there are many mountains and trees.) 田舎は空気がきれいなので、朝起きて散歩をするのが楽しみです。(Since the air is clean in the countryside, I look forward to waking up and taking a walk.)
+雰囲気がいい (fun'iki ga ii) (氣氛好) ^ その場所やお店の感じが、とても素敵で落ち着く様子です。(The feeling of a place or shop is very wonderful and relaxing.) この喫茶店は音楽も静かで、とても雰囲気がいいですね。(This cafe has quiet music and a very nice atmosphere, doesn't it?)
+サービスが悪い (sābisu ga warui) (服務差) ^ 店員の態度が良くなかったり、手伝いが足りなかったりすることです。(It means the staff's attitude is not good or there is a lack of helpfulness.) あのレストランは料理は美味しいですが、サービスが悪いので残念です。(That restaurant has delicious food, but it's a shame because the service is poor.)
+メロディーがきれい (merodī ga kirei) (旋律優美) ^ 歌の音の並びが、耳に優しくて美しいと感じることです。(It means the sequence of musical notes in a song feels gentle and beautiful to the ear.) この新しい曲はメロディーがきれいで、何度も聴きたくなります。(This new song has a beautiful melody, and I want to listen to it many times.)
+歌詞が覚えやすい (kashi ga oboeyasui) (歌詞容易記住) ^ 言葉が簡単で、一度聴いたらすぐに暗記できる歌のことです。(A song whose words are simple and can be memorized immediately after hearing it once.) この童謡は歌詞が覚えやすいので、子供たちもすぐに歌えます。(The lyrics of this nursery rhyme are easy to remember, so even children can sing it right away.)
+この歌はキーがちょうどいい (kono uta wa kī ga chōdo ii) (這首歌的音調剛好) ^ 歌うときの音の高さが、自分にぴったりで歌いやすいことです。(It means the pitch of the song is perfect for oneself and easy to sing.) 私にとって、この歌はキーがちょうどいいのでカラオケでよく歌います。(For me, the key of this song is just right, so I often sing it at karaoke.)
+残業が多い (zangyō ga ooi) (加班很多) ^ 決まった仕事の時間を過ぎてからも、働くことがたくさんあることです。(It means there is a lot of working even after the fixed working hours have passed.) 今の会社は残業が多いので、平日は自分の時間が全くありません。(My current company has a lot of overtime, so I have no time for myself on weekdays.)
+ボーナスがいい (bōnasu ga ii) (獎金很棒) ^ 夏や冬にもらえる、特別な給料の額が多くて嬉しいことです。(It means being happy because the amount of special salary received in summer or winter is large.) 今年の冬はボーナスがいいので、新しいパソコンを買うつもりです。(The bonus is good this winter, so I plan to buy a new computer.)
+あの会社は給料が高い (ano kaisha wa kyūryō ga takai) (那家公司薪水很高) ^ 毎月もらえるお金が、他の会社よりもたくさんあることです。(It means the money received every month is more than at other companies.) あの会社は給料が高いですが、その分仕事もとても厳しいそうです。(That company has high salaries, but they say the work is very strict as well.)
+色がきれい (iro ga kirei) (顏色漂亮) ^ 洋服や絵の色彩が、明るくて美しい様子を表す言葉です。(A word describing the colors of clothes or pictures as bright and beautiful.) このスカートは色がきれいなので、春に着るのにぴったりです。(This skirt has beautiful colors, so it's perfect for wearing in spring.)
+デザインが素敵 (dezain ga suteki) (設計很棒) ^ 形や見た目の作り方が、とてもお洒落で気に入ることです。(It is liking the shape or appearance because it is very stylish.) この鞄はデザインが素敵なので、どこへ行くときも持っていきます。(The design of this bag is wonderful, so I take it wherever I go.)
+品質がいい (hinshitsu ga ii) (品質好) ^ 物が丈夫に作られていて、壊れにくいなど質が高いことです。(It means the object is made sturdily and has high quality, such as being hard to break.) 日本の電化製品は品質がいいので、世界中の人に人気があります。(Japanese electrical appliances are popular with people worldwide because of their high quality.)
+一度行ったことがある (ichido itta koto ga aru) (曾經去過一次) ^ 過去の経験の中で、一回だけその場所を訪れたという意味です。(It means having visited that place only once in one's past experience.) 京都には、中学生のときに修学旅行で一度行ったことがある。(I have been to Kyoto once on a school trip when I was a junior high student.)
+いい人にたくさん出会う (ii hito ni takusan deau) (遇見很多好人) ^ 親切な人や素敵な人たちに、新しく巡り合うことです。(It is coming across many kind or wonderful people anew.) 旅行中は、いい人にたくさん出会うことができて幸せでした。(During the trip, I was happy to be able to meet many good people.)
+松田さんの出身はどちらですか？ (matsuda-san no shusshin wa dochira desu ka?) (松田先生/小姐的家鄉在哪裡？) ^ 相手がどこの町で生まれたかを尋ねる、丁寧な質問です。(A polite question asking where the person was born.) 松田さんの出身はどちらですか？九州のほうでしょうか。(Where are you from, Matsuda-san? Is it somewhere in Kyushu?)
+木原さん (kihara-san) (木原先生/小姐) ^ 日本で使われる、一般的な苗字（名字）の一つです。(One of the common surnames used in Japan.) 木原さんは、いつも笑顔で挨拶をしてくれる優しい人です。(Kihara-san is a kind person who always greets me with a smile.)
+東京は人が多すぎる (tōkyō wa hito ga oosugiru) (東京人太多了) ^ 東京という町に、集まっている人の数が多すぎて大変だと言う意味です。(It means the number of people gathered in the city of Tokyo is too many and it's tough.) 東京は人が多すぎるので、朝の電車に乗るのがとても疲れます。(There are too many people in Tokyo, so riding the train in the morning is very tiring.)
+僕はやっぱり東京が好きだなあ (boku wa yappari tōkyō ga suki da nā) (我果然還是喜歡東京啊) ^ 色々な意見はあるけれど、自分は東京を気に入っていると言う文です。(A sentence saying that despite various opinions, one likes Tokyo after all.) 東京は賑やかだし、僕はやっぱり東京が好きだなあ。(Tokyo is lively, and I really do like Tokyo after all.)
+髪が短い (kami ga mijikai) (頭髮短) ^ 頭の毛の長さが、あまり長くない様子を表す言葉です。(A word describing the length of the hair on one's head as not being very long.) 彼女は最近、長い髪をバッサリ切って髪が短くなりました。(She recently cut her long hair short, and now her hair is short.)
+顔が丸い (kao ga marui) (臉很圓) ^ 顔の形が、卵のような曲線で柔らかい様子を言います。(It refers to the shape of the face being soft and curved like an egg.) 浩二君は顔が丸いので、みんなから「可愛い」と言われています。(Koji-kun has a round face, so everyone tells him he is "cute.")
+顔が四角い (kao ga shikakui) (臉很方) ^ 顔の輪郭がはっきりしていて、角があるような形のことです。(A face shape that has a clear outline and seems to have corners.) あの俳優さんは顔が四角いので、とても力強い印象があります。(That actor has a square face, so he gives a very powerful impression.)
+目が小さい (me ga chiisai) (眼睛小) ^ 顔の中で、物を見るための部分があまり大きくない様子です。(The state where the part for seeing things on the face is not very large.) 彼は笑うと目が小さいですが、そこがとても魅力的です。(His eyes are small when he laughs, but that's what makes him very charming.)
+眉が太い (mayu ga futoi) (眉毛粗) ^ 目の上の毛が、しっかりとしていて幅が広い様子を言います。(It refers to the hair above the eyes being thick and wide.) 彼は眉が太いので、とても意志が強そうな顔をしています。(He has thick eyebrows, so his face looks very strong-willed.)
+眉が細い (mayu ga hosoi) (眉毛細) ^ 目の上の毛が、線のように薄くて幅が狭い様子です。(The state where the hair above the eyes is thin and narrow like a line.) 最近は、眉が細いデザインにするのが流行っていますね。(Lately, it is fashionable to have thin eyebrow designs, isn't it?)
+鼻が高い (hana ga takai) (鼻子高/挺) ^ 顔の真ん中にある部分が、前の方にしっかりと出ている様子です。(The state where the part in the middle of the face stands out firmly toward the front.) 彼女は鼻が高いので、横から見た顔の形がとてもきれいです。(She has a high nose, so her profile is very beautiful.)
+鼻が低い (hana ga hikui) (鼻子塌/扁) ^ 顔の真ん中にある部分が、あまり前の方に出ていない様子です。(The state where the part in the middle of the face does not stand out forward much.) 日本人は、西洋人に比べると鼻が低い人が多いと言われています。(It is said that many Japanese people have low noses compared to Westerners.)
+口が大きい (kuchi ga ookii) (嘴巴大) ^ 顔の中で、ご飯を食べたり話したりする部分が広い様子です。(The state where the part for eating and talking on the face is wide.) 彼女は口が大きいので、笑うととても明るい印象になります。(She has a large mouth, so when she smiles, it creates a very bright impression.)
+耳が小さい (mimi ga chiisai) (耳朵小) ^ 音を聴くための顔の横の部分が、あまり大きくない様子です。(The state where the part on the side of the face for hearing sounds is not very large.) 私の妹は耳が小さいので、イヤリングを落とさないか心配です。(My sister has small ears, so I'm worried she might drop her earrings.)
+例のように絵を見て、人の特徴を言ってみる (rei no yō ni e o mite, hito no tokuchō o itte miru) (像範例一樣看圖描述人的特徵) ^ イラストを確認して、その人がどんな見た目かを説明する練習です。(An exercise to check illustrations and explain what those people look like.) 文法の練習のために、例のように絵を見て、人の特徴を言ってみる。(For grammar practice, I'll look at the picture and describe the person's characteristics like the example.)
+太田さん (ōta-san) (太田先生/小姐) ^ 日本でよく耳にする、一般的な名字（名字）の一つです。(One of the common surnames often heard in Japan.) 太田さんは、いつも眼鏡をかけていて知的な雰囲気の人です。(Ota-san is a person who always wears glasses and has an intellectual atmosphere.)
+小林さん (kobayashi-san) (小林先生/小姐) ^ 日本全国にたくさんいる、代表的な名字の一つです。(One of the representative surnames found all over Japan.) 小林さんはテニスが上手で、毎週日曜日には練習をしています。(Kobayashi-san is good at tennis and practices every Sunday.)
+首が太い (kubi ga futoi) (脖子粗) ^ 頭を支える部分が、がっしりとしていて幅が広い様子です。(The state where the part supporting the head is sturdy and wide.) スポーツ選手は体を鍛えているので、首が太い人が多いです。(Since athletes train their bodies, many of them have thick necks.)
+首が細い (kubi ga hosoi) (脖子細) ^ 頭を支える部分が、シュッとしていてあまり幅がない様子です。(The state where the part supporting the head is slender and not very wide.) 彼女は首が細いので、ネックレスがとてもよく似合います。(She has a thin neck, so necklaces suit her very well.)
+体が太っている (karada ga futotte iru) (身材肥胖) ^ 体重が多くて、ふっくらとした体つきをしている状態です。(The state of having a lot of body weight and a plump physique.) 体が太っていると健康に良くないので、運動を始めることにした。(Being overweight is not good for health, so I decided to start exercising.)
+体がやせている (karada ga yasete iru) (身材消瘦) ^ 体に脂肪があまりなくて、細い体つきをしている状態です。(The state of having little body fat and a thin physique.) 彼は食べても太らない体質で、いつも体がやせている。(He has a constitution where he doesn't gain weight even if he eats, and is always thin.)
+ウエストが太い (uesuto ga futoi) (腰圍粗) ^ お腹の周りの長さが、前よりも大きくなっている様子です。(The state where the length around the stomach has become larger than before.) 最近食べすぎているので、ウエストが太くなって困っています。(I've been eating too much lately, so I'm troubled that my waist is getting thick.)
+足が短い (ashi ga mijikai) (腿短) ^ 腰から下までの長さが、あまり長くない様子を表す言葉です。(A word describing the length from the waist down as not being very long.) 私は足が短いので、ズボンを買うときはいつも長さを直します。(I have short legs, so I always fix the length when I buy pants.)
+足が細い (ashi ga hosoi) (腿細) ^ 足に肉があまりついていなくて、スリムな形をしている様子です。(The state where there is not much flesh on the legs and they have a slim shape.) モデルさんはみんな足が細いので、どんな服を着てもきれいです。(Models all have thin legs, so they look beautiful in any clothes.)
+浩二君 (kōji-kun) (浩二君) ^ 日本の男の子に使われる、親しみやすい名前の一つです。(One of the friendly names used for Japanese boys.) 浩二君は、サッカーが得意でクラスの人気者です。(Koji-kun is good at soccer and is popular in the class.)
+美佳ちゃん (mika-chan) (美佳醬) ^ 日本の女の子に使われる、可愛らしい名前の一つです。(One of the cute names used for Japanese girls.) 美佳ちゃんは、ピアノを弾くのが大好きな優しい女の子です。(Mika-chan is a kind girl who loves playing the piano.)
+後藤さん (gotō-san) (後藤先生/小姐) ^ 日本で古くから使われている、一般的な名字の一つです。(One of the common surnames used since old times in Japan.) 後藤さんは料理が得意で、よく美味しいお菓子をくれます。(Goto-san is good at cooking and often gives me delicious sweets.)
+野田さん (noda-san) (野田先生/小姐) ^ 日本のどこにでもいる、覚えやすい名字の一つです。(One of the easy-to-remember surnames found anywhere in Japan.) 野田さんは、いつも新しい本を読んでいる読書好きな人です。(Noda-san is a book-lover who is always reading new books.)
+中川さん (nakagawa-san) (中川先生/小姐) ^ 川の名前がついた、日本でよく使われる名字の一つです。(One of the commonly used surnames in Japan, containing a name of a river.) 中川さんはカメラが趣味で、きれいな写真をたくさん持っています。(Nakagawa-san's hobby is cameras, and they have many beautiful photos.)
+________________________________________
+◎会話2～会話3
+事情聴取 (jijō chōshu) (問訊/偵訊) ^ 事件の内容を知るために、警察が人から話を聞くことです。(It is the police listening to people's stories to understand the details of an incident.) 泥棒が入ったので、被害者は警察で事情聴取を受けています。(Since a thief broke in, the victim is being questioned by the police.)
+警察での事情聴取 (keisatsu de no jijō chōshu) (在警察局的偵訊) ^ 交番や警察署の部屋で、詳しい話を聞かれることです。(It is being asked for detailed stories in a room at a police box or station.) 警察での事情聴取は少し緊張しますが、正直に話すことが大切です。(Questioning at the police station is a bit nerve-wracking, but it's important to speak honestly.)
+警察官 (keisatsukan) (警察官) ^ 悪い人を捕まえたり、町の安全を守ったりする仕事をしている人です。(A person whose job is to catch bad people and protect the safety of the town.) 道が分からなくなったので、近くにいた警察官に尋ねました。(Since I lost my way, I asked a police officer who was nearby.)
+犯人 (hannin) (犯人) ^ 悪いことをしたり、法律を破ったりした人のことを言います。(Refers to a person who did something bad or broke the law.) 警察は今、宝石を盗んだ犯人を一生懸命に探しています。(The police are now searching hard for the criminal who stole the jewels.)
+被害者 (higaisha) (被害者) ^ 悪いことをされて、お金を盗まれたり怪我をしたりした人のことです。(A person who had something bad done to them, such as having money stolen or getting injured.) 被害者の女性は、犯人の顔をしっかり覚えていました。(The victim woman remembered the criminal's face clearly.)
+他に (hoka ni) (此外/還有其他) ^ それ以外に、もっと別のものや情報があるときに使う言葉です。(A word used when there is something else or more information besides that.) 他に何か気になることはありませんか？何でも言ってください。(Is there anything else on your mind? Please tell me anything.)
+ほくろがある (hokuro ga aru) (有痣) ^ 顔や体に、小さな黒い点のようなものがある状態のことです。(The state of having a small black dot-like thing on the face or body.) 彼は右の目の下に小さなほくろがあるのが、大きな特徴です。(A major characteristic of his is that he has a small mole under his right eye.)
+似顔絵 (nigaoe) (肖像畫/似顏繪) ^ その人の顔に似せて描いた、人物の絵のことです。(A drawing of a person made to look like their face.) お祭りで、画家の方に私の似顔絵を描いてもらいました。(I had a painter draw a caricature of me at the festival.)
+似顔絵を描いて見せる (nigaoe o kaite miseru) (畫肖像畫給人看) ^ 紙に顔の特徴を記して、相手に確認してもらうことです。(It is recording facial features on paper and having the other person confirm them.) 被害者の話を元に、警察官が似顔絵を描いて見せると、彼女は頷きました。(Based on the victim's story, when the police officer drew a sketch and showed it, she nodded.)
+いい男 (ii otoko) (好男人/帥哥) ^ 見た目がかっこいい男性、または性格が素晴らしい男性のことです。(A man who looks cool, or a man whose personality is wonderful.) 彼は仕事もできるし優しいし、本当にいい男ですね。(He is capable at work and kind; he's truly a good man.)
+油断する (yudan suru) (大意/疏忽) ^ 大丈夫だと思って、注意を忘れて失敗をしてしまうことです。(It is thinking everything is okay, forgetting to be careful, and making a mistake.) 試合に勝てると思っても、最後まで油断することは禁物です。(Even if you think you can win the match, being careless until the end is forbidden.)
+つい油断したんです (tsui yudan shita nandesu) (不小心大意了) ^ ついつい気をつけるのを忘れてしまった、と言う言い訳の言葉です。(An excuse saying that one accidentally forgot to be careful.) 鍵をかけるのを忘れて、つい油断したんです。反省しています。(I forgot to lock up; I just got careless. I am reflecting on it.)
+例のように文を作てみる (rei no yō ni bun o tsukute miru) (試著像範例一樣造句) ^ 見本のルールに従って、新しい文を作成する練習のことです。(An exercise to create new sentences following the rules of a sample.) 文法の使い方を覚えるために、例のように文を作てみることにした。(I decided to try making sentences like the example to memorize how to use the grammar.)
+このマンションは日当たりがいい (kono manshon wa hiatari ga ii) (這間公寓採光很好) ^ 部屋の中に太陽の光がたくさん入ってきて、明るいことです。(It means the room is bright because plenty of sunlight comes inside.) このマンションは日当たりがいいので、冬でもとても暖かいです。(Since this apartment has good sunlight, it is very warm even in winter.)
+このマンションは眺めがいい (kono manshon wa nagame ga ii) (這間公寓視野很好) ^ 窓から外を見たときに、きれいな景色が見えることです。(It means that when you look outside from the window, you see beautiful scenery.) 十階にあるこのマンションは眺めがいいので、富士山が見えます。(This apartment on the tenth floor has a good view, so you can see Mt. Fuji.)
+このマンションは日当たりもいいし、眺めもいいです (kono manshon wa hiatari mo ii shi, nagame mo ii desu) (這間公寓採光好，視野也很好) ^ 二つの良い点を並べて、その場所を褒めている文です。(A sentence praising the place by listing two good points.) このマンションは日当たりもいいし、眺めもいいです。ここに住みたいです。(This apartment has good sunlight and a good view. I want to live here.)
+このうちは部屋が広い (kono uchi wa heya ga hiroi) (這間房子的房間很寬敞) ^ 家の中のスペースが大きくて、ゆったりとしている様子です。(The state where the space inside the house is large and relaxed.) このうちは部屋が広いので、大きな家具を置いても大丈夫です。(Since the rooms in this house are spacious, it's okay to put large furniture.)
+このうちは庭がある (kono uchi wa niwa ga aru) (這間房子有庭院) ^ 家の建物の外に、植物を育てたり遊んだりする場所があることです。(It means there is a place outside the house building for growing plants or playing.) このうちは庭があるから、子供たちが外で元気に遊べます。(Since this house has a yard, the children can play energetically outside.)
+スポーツが得意 (supōtsu ga tokui) (擅長運動) ^ 体を動かすことが上手で、自信を持っていることです。(It is being good at moving the body and having confidence in it.) 彼は運動神経がいいので、どんなスポーツが得意で驚きます。(He has good reflexes, so it's surprising how he's good at any sport.)
+勉強を真面目にする (benkyō o majime ni suru) (認真讀書) ^ 怠けないで、一生懸命に学習に取り組むことです。(It is engaging in study hard without being lazy.) 彼女は将来の夢のために、毎日図書館で勉強を真面目にする学生です。(She is a student who studies seriously every day at the library for her future dream.)
+この教科書は絵がきれい (kono kyōkasho wa e ga kirei) (這本教科書插圖很漂亮) ^ 本の中にあるイラストの色や形が、とても美しい様子です。(The colors and shapes of the illustrations in the book are very beautiful.) この教科書は絵がきれいなので、子供たちも楽しく学べます。(This textbook has beautiful pictures, so children can also learn enjoyably.)
+日本語がぺらぺら (nihongo ga perapera) (日語流利) ^ 日本語を止まらずに、とてもスムーズに話すことができる様子です。(The state of being able to speak Japanese very smoothly without stopping.) 彼は日本に来てまだ一年ですが、もう日本語がぺらぺらです。(It's only been a year since he came to Japan, but he's already fluent in Japanese.)
+サイズがちょうどいい (saizu ga chōdo ii) (尺寸剛剛好) ^ 大きすぎず小さすぎず、自分にぴったりの大きさだと言うことです。(It means the size is not too big or too small, but perfect for oneself.) このズボンは、ウエストも長さもサイズがちょうどいいです。(The waist and length of these pants are just the right size.)
+待遇が悪い (taigū ga warui) (待遇差) ^ 給料が低かったり、休みの時間が少なかったりして、働きにくいことです。(It means it's hard to work because the salary is low or there is little time off.) あの店は忙しいのに待遇が悪いので、すぐに辞める人が多いです。(That shop is busy but has poor treatment, so many people quit immediately.)
+店員の態度が丁寧 (ten'in no taido ga teine) (店員的態度很禮貌) ^ お店で働く人が、客に対して優しい言葉や礼儀を使うことです。(It is workers at a shop using kind words and etiquette toward customers.) このデパートは店員の態度が丁寧なので、気持ちよく買い物ができます。(The staff's attitude at this department store is polite, so you can shop pleasantly.)
+仕事が速い (shigoto ga hayai) (工作速度快) ^ 頼まれたことを、短い時間でテキパキと終わらせることです。(It is finishing requested tasks briskly in a short amount of time.) 彼女は仕事が速いので、いつも定時で帰ることができます。(She works fast, so she is always able to go home on time.)
+治安がいい (chian ga ii) (治安好) ^ 事件や事故が少なくて、安心して生活できる町のことです。 (A town where there are few incidents or accidents and you can live with peace of mind.) 私の住んでいる町は治安がいいので、夜一人で歩いても怖くありません。(The town I live in has good security, so it's not scary to walk alone at night.)
+このアパートは交通は便利ですが、家賃は高いです (kono apāto wa kōtsū wa benri desu ga, yachin wa takai desu) (這間公寓交通便利，但房租很高) ^ 良い点と悪い点を、「は」を使って比べて説明している文です。(A sentence comparing and explaining the good and bad points using "wa".) このアパートは交通は便利ですが、家賃は高いです。少し迷っています。(This apartment is convenient for transport, but the rent is high. I'm hesitating a bit.)
+スポーツを何でもする (supōtsu o nandemo suru) (任何運動都做) ^ 種類に関係なく、色々な運動を積極的に楽しむことです。(It is actively enjoying various exercises regardless of the type.) 彼は元気で、テニスや水泳などスポーツを何でもする人です。(He is energetic and does any sport, such as tennis or swimming.)
+勉強を全然しない (benkyō o zenzen shinai) (完全不讀書) ^ 全く学習をしないで、遊んでばかりいる状態のことです。(The state of not studying at all and just playing.) 弟はテストが明日なのに、勉強を全然しないで寝てしまいました。(My brother has a test tomorrow, but he went to sleep without studying at all.)
+性格がいい (seikaku ga ii) (性格好) ^ 心が優しくて、周りの人から好かれるような性質のことです。(The quality of being kind-hearted and liked by people around you.) 彼女は性格がいいので、クラスには友達がたくさんいます。(She has a good personality, so she has many friends in the class.)
+仕事が遅い (shigoto ga osoi) (工作速度慢) ^ 何かをするのに時間がかかりすぎて、なかなか終わらないことです。(It is taking too much time to do something and it doesn't end easily.) 彼は一生懸命ですが、少し仕事が遅いのが悩みだそうです。(He works hard, but it seems his worry is that he's a bit slow at work.)
+あの映画はストーリーが面白い (ano eiga wa sutōrī ga omoshiroi) (那部電影劇情很有趣) ^ その物語の内容が、ワクワクして楽しい様子を表す言葉です。(A word describing the content of the story as exciting and fun.) あの映画はストーリーが面白いので、最後まで飽きずに見られました。(That movie's story is interesting, so I watched it until the end without getting bored.)
+あの映画は時間が長すぎる (ano eiga wa jikan ga nagasugiru) (那部電影時間太長了) ^ 上映の時間が三時間以上など、長すぎて疲れてしまうことです。(It means the showing time is too long, such as over three hours, and it gets tiring.) あの映画は時間が長すぎるので、途中で少し眠くなってしまいました。(That movie is too long, so I got a little sleepy in the middle.)
+歌詞が分かりにくい (kashi ga wakarinikui) (歌詞很難懂) ^ 歌の言葉が難しかったり、意味が複雑だったりすることです。(It means the words of the song are difficult or the meaning is complex.) この古い歌は歌詞が分かりにくいですが、メロディーはとても素敵です。(The lyrics of this old song are hard to understand, but the melody is very wonderful.)
+環境がいい (kankyō ga ii) (環境好) ^ 周りに緑が多かったり、静かだったりして生活しやすい様子です。(The state where it's easy to live because there is much greenery or it's quiet around.) ここは公園も近いし環境がいいので、子育てにはぴったりの場所です。(It's close to a park and the environment is good, so it's a perfect place for raising children.)
+買い物が便利 (kaimono ga benri) (購物便利) ^ 近くにスーパーやコンビニがたくさんあって、買いやすいことです。(It means there are many supermarkets and convenience stores nearby, making it easy to shop.) 街の中心は買い物が便利ですが、夜まで少しうるさいのが欠点です。(The center of town is convenient for shopping, but the downside is that it's a bit noisy until night.)
+駅に近い (eki ni chikai) (離車站很近) ^ 今いる場所から、駅まで歩いてすぐ着くことができる距離のことです。(A distance where you can arrive at the station immediately after walking from your current location.) 駅に近いアパートを探していますが、なかなかいい物件が見つかりません。(I'm looking for an apartment close to the station, but I can't easily find a good property.)
+駅までバスで10分かかります (eki made basu de juppun kakarimasu) (到車站搭巴士需要10分鐘) ^ 移動のために、バスに乗る時間が十分必要だと言う意味です。(It means ten minutes of riding the bus is necessary for moving.) 毎朝、駅までバスで10分かかりますが、歩くよりは楽です。(It takes 10 minutes by bus to the station every morning, but it's easier than walking.)
+会社まで歩いて3分かかります (kaisha made aruite sanpun kakarimasu) (到公司走路需要3分鐘) ^ 家から仕事場まで、歩いてすぐのとても近い距離だと言う文です。(A sentence saying the distance from home to the workplace is very close, just a short walk.) 会社まで歩いて3分かかりますから、ギリギリまで寝ていられます。(It takes 3 minutes on foot to the company, so I can sleep until the last minute.)
+通勤に便利なとことがいい (tsūkin ni benri na tokoro ga ii) (上班方便的地方比較好) ^ 会社へ行くのが楽な、駅に近い場所などに住みたいと言う希望です。(A wish to live in a place close to the station where going to work is easy.) 家賃が高くても、やっぱり通勤に便利なとことがいいですよね。(Even if the rent is high, it's better to have a place convenient for commuting, isn't it?)
+交通も便利だし、家賃もそんなに高くない (kōtsū mo benri da shi, yachin mo sonna ni takakunai) (交通方便，房租也不會那麼貴) ^ その場所の二つの良い理由を挙げて、選んだ理由を言う文です。(A sentence stating the reasons for choosing a place by giving two good points.) 交通も便利だし、家賃もそんなに高くないので、この部屋に決めました。(Transportation is convenient and the rent isn't that high, so I decided on this room.)
+それから (sore kara) (還有/之後) ^ 話を続けるときに、「次に」「さらに」という意味で使う言葉です。(A word used when continuing a talk, meaning "next" or "furthermore.") 昨日は買い物をしました。それから、友達と映画を見に行きました。(I went shopping yesterday. Then, I went to see a movie with my friend.)
+近くに墓地がある (chikaku ni bochi ga aru) (附近有墓地) ^ 自分の家のすぐそばに、お墓がたくさんある場所があることです。(It means there is a place with many graves right near one's house.) 静かな場所ですが、近くに墓地があるので夜は少し怖いです。(It's a quiet place, but there's a cemetery nearby, so it's a bit scary at night.)
+________________________________________
+◎文法
+丁寧体 (teineitai) (丁寧體) ^ 「です・ます」を使って、相手を敬って話す話し方のことです。(The polite way of speaking using "desu/masu" to respect the listener.) 初めて会う人や仕事の相手には、必ず丁寧体を使って話します。(Always use the polite form when speaking to people you meet for the first time or business partners.)
+普通体 (futsūtai) (普通體) ^ 友達や家族と話すときに使う、丁寧ではない自然な話し方です。(The natural, non-polite way of speaking used when talking with friends or family.) 仲が良い友達とは、昨日何をしたかを普通体で楽しく話します。(I talk enjoyably with close friends about what I did yesterday in the plain form.)
+接続助詞 (setsuzoku joshi) (連接助詞) ^ 「から」や「が」のように、二つの文をつなげるための言葉です。(Words used to connect two sentences, such as "kara" or "ga".) 接続助詞を上手に使うと、長い文をスムーズに作ることができます。(Using conjunction particles well allows you to create long sentences smoothly.)
+品物が多い (shinamono ga ooi) (商品很多) ^ お店に売っている物の種類や数が、たくさんある状態のことです。(The state where there are many types or numbers of items sold in a shop.) あのスーパーは品物が多いので、何でも買うことができて便利です。(That supermarket has many items, so it's convenient because you can buy anything.)
+品物が少ない (shinamono ga sukunai) (商品很少) ^ お店に売っている物の種類や数が、あまりない状態のことです。(The state where there are not many types or numbers of items sold in a shop.) この時間はもう品物が少ないので、別の店へ行くことにしました。(Since there are already few items at this time, I decided to go to another shop.)
+学校をよく休む (gakkō o yoku yasumu) (經常缺課/請假) ^ 体調が悪かったりして、学校へ行かない日が多いことです。(It means there are many days one doesn't go to school, perhaps due to poor health.) 彼は最近、学校をよく休むので、みんなで心配しています。(He has been absent from school often lately, so we are all worried.)
+宿題を全然出さない (shukudai o zenzen dasanai) (完全不交作業) ^ 先生に言われた課題を、一回も渡したことがない状態です。(The state of having never handed in the assignments given by the teacher.) 彼はテストの点はいいですが、宿題を全然出さないのが問題です。(He has good test scores, but the problem is that he doesn't hand in homework at all.)
+今回のボーナスはいつもと同じぐらいです (konkai no bōnasu wa itsumo to onaji gurai desu) (這次的獎金跟平常差不多) ^ 今回もらえる特別なお金が、前とあまり変わらないという意味です。(It means the special money received this time is not much different from before.) 今回のボーナスはいつもと同じぐらいです。特に旅行の計画はありません。(This time the bonus is about the same as usual. I don't have any particular travel plans.)
+まあ… (mā...) (嘛.../還好啦) ^ はっきり言いにくいときや、少し迷っているときに使う言葉です。(A word used when it's hard to say something clearly or when one is hesitating a bit.) 「テストはどうだった？」「まあ、いつも通りという感じです」(“How was the test?” “Well, it felt about the same as usual.”)
+何々をどう思いますか？ (naninani o dō omoimasu ka?) (對於...你覺得如何？) ^ あることについて、相手の意見や考えを聞くときの質問です。(A question when asking for someone's opinion or thoughts about something.) 新しいデザインについて、あなたをどう思いますか？(What do you think about the new design?)
+まあ、何と言うか… (mā, nan to iu ka...) (嘛，該怎麼說呢...) ^ 自分の気持ちをどう言葉にすればいいか、考えているときの表現です。(An expression when thinking about how to put one's feelings into words.) まあ、何と言うか、嬉しいけれど少し恥ずかしい気持ちです。(Well, how should I say it... I'm happy but feel a bit embarrassed.)
+～なあ。 (~ nā.) (（感嘆詞）啊。) ^ 「きれいだ」「すごい」など、自分の強い気持ちを表すときに使う言葉です。(A word used when expressing one's strong feelings, such as "it's beautiful" or "it's amazing.") 空がとても青いなあ。今日はいい天気になりそうだ。(The sky is so blue. It looks like it will be a nice day today.)
+きれいな景色だなあ。 (kirei na keshiki da nā.) (真是漂亮的景色啊。) ^ 目の前にある景色を見て、感動して一人でつぶやくような言葉です。(Words as if whispering to oneself, moved by the scenery before one's eyes.) 山の頂上から見るのは、本当にきれいな景色だなあ。(Looking from the top of the mountain, it really is a beautiful view.)
+これがいいと思うなあ。 (kore ga ii to omou nā.) (我覺得這個不錯喔。) ^ 自分の考えを、少し独り言のように相手に伝える話し方です。(A way of speaking that conveys one's thoughts to another, almost like a monologue.) たくさんありますが、私はデザインならこれがいいと思うなあ。(There are many, but regarding design, I think this one is good.)
+～じゃなくて、～ (~ janakute, ~) (不是...，而是...) ^ 最初のことを否定して、別の正しいことを言うときに使う言葉です。(A word used when denying the first thing and saying another correct thing.) 青じゃなくて、赤いペンを貸してください。(Please lend me a red pen, not a blue one.)
+～でしょう。 (~ deshō.) (對吧。/吧。) ^ 相手に「そうでしょ？」と確認したり、同意を求めたりするときに言います。(Said when confirming with the listener "isn't it so?" or seeking agreement.) 明日のパーティー、あなたも行くでしょう？(You're going to tomorrow's party too, right?)
+～に近い (~ ni chikai) (靠近...) ^ 場所や距離が、そこからすぐの所にあるという意味です。(It means the place or distance is right there from where you are.) 私の家は公園に近いので、毎日散歩をすることができます。(Since my house is close to the park, I can take a walk every day.)
+駅には近いですか？ (eki ni wa chikai desu ka?) (離車站近嗎？) ^ 目的地が、駅のすぐそばにあるかどうかを尋ねる質問です。(A question asking if the destination is right next to the station.) 今度行くレストランは、駅には近いですか？(Is the restaurant we're going to next time close to the station?)
+会社まで歩いて５分もかからない (kaisha made aruite gofun mo kakaranai) (到公司走路不到5分鐘) ^ 仕事場まで歩いても、五分より短い時間で着くと言う意味です。(It means arriving at the workplace takes less than five minutes on foot.) 私の家はとても便利で、会社まで歩いて５分もかからないんですよ。(My house is very convenient; it doesn't even take five minutes to walk to the company.)
+会社までは徒歩5分もかかりません (kaisha made wa toho gofun mo kakarimasen) (到公司步行不需要5分鐘) ^ 「歩いて５分もかからない」を、より丁寧に説明する言い方です。(A more polite way of explaining "it doesn't even take five minutes on foot.") 会社までは徒歩5分もかかりませんので、通勤はとても楽です。(It doesn't take even 5 minutes on foot to the company, so commuting is very easy.)
+～に便利です (~ ni benri desu) (對...很方便) ^ 何かをするために、都合が良くて使いやすいと言う意味です。(It means something is advantageous and easy to use for a certain purpose.) この駅は三つの電車が通っているので、どこへ行くのにも便利です。(This station has three train lines, so it is convenient for going anywhere.)
+このノートパソコンは小さくて、軽くて、携帯に便利です (kono nōtopasokon wa chiisakute, karukute, keitai ni benri desu) (這台筆記型電腦既小又輕，攜帶方便) ^ パソコンの良い点を並べて、持ち運びに良いと説明する文です。(A sentence explaining that a PC is good for carrying by listing its good points.) このノートパソコンは小さくて、軽くて、携帯に便利です。出張に持っていきます。(This laptop is small, light, and convenient to carry. I'll take it on business trips.)
+________________________________________
+◎干支
+葉書 (hagaki) (明信片) ^ 封筒に入れないで、そのまま切手を貼って送る厚い紙の手紙です。(A thick paper letter sent without an envelope by sticking a stamp on it.) 旅先から、友達にきれいな景色の葉書を出しました。(I sent a postcard with beautiful scenery to a friend from my travel destination.)
+年賀状 (nengajō) (賀年卡) ^ お正月に、「あけましておめでとう」と挨拶するために送る葉書です。(A postcard sent at New Year's to greet people with "Happy New Year.") 日本では、お正月にたくさんの年賀状が届くのが楽しみの一つです。(In Japan, receiving many New Year's cards is one of the joys of the New Year.)
+十二支 (jūnishi) (十二生肖) ^ 子、丑、寅など、十二種類の動物を年に当てはめた考え方です。(The concept of assigning twelve types of animals to years, such as the Rat, Ox, and Tiger.) 十二支は、自分の生まれた年を知るための大切な文化です。(The twelve zodiac signs are an important culture for knowing the year of one's birth.)
+十干 (jikkan) (十干) ^ 甲、乙、丙など、十種類の言葉で日や年を表す古い考え方です。(An old concept expressing days or years with ten types of words such as Jia, Yi, and Bing.) 十干と十二支を合わせることで、より細かい暦（カレンダー）が作られます。(By combining the ten stems and twelve branches, a more detailed calendar is created.)
+干支 (eto) (干支/生肖) ^ 十干と十二支を合わせたもので、一般的には動物の十二支を指します。(A combination of the ten stems and twelve branches, generally referring to the twelve zodiac animals.) 年賀状には、その年の干支のイラストを描くのが一般的です。(On New Year's cards, it is common to draw an illustration of that year's zodiac sign.)
+やぎ (yagi) (山羊🐐♑) ^ 白い毛があって角がある、メーと鳴く動物のことです。(An animal with white hair and horns that says "baa.") 動物園で、子供たちがやぎに餌をあげる体験をしていました。(At the zoo, the children were experiencing feeding the goats.)
+今年は何どしですか？ (kotoshi wa nani-doshi desu ka?) (今年是什麼生肖年？) ^ 今の年が、十二支のどの動物の年かを聞く質問です。(A question asking which animal year of the twelve zodiac signs the current year is.) 今年は何どしですか？うさぎどしでしょうか。(Which animal year is it this year? Is it the Year of the Rabbit?)
+私はいぬどしです。 (watashi wa inu-doshi desu.) (我是屬狗的。) ^ 自分が生まれた年が、十二支の「犬」の年だと言う意味です。(It means the year one was born is the Year of the Dog in the zodiac.) 私はいぬどしです。犬が大好きなので、この干支で良かったです。(I am Year of the Dog. I love dogs, so I'm glad this is my zodiac sign.)
+妹はいのししどしに生まれました。 (imōto wa inoshishi-doshi ni umaremashita.) (妹妹是屬豬（山豬）年出生的。) ^ 妹の生まれた年が、十二支の「猪」の年だと言う文です。(A sentence saying that the year one's younger sister was born is the Year of the Boar.) 妹はいのししどしに生まれました。とても元気で力強い女の子です。(My sister was born in the Year of the Boar. She is a very energetic and powerful girl.)
+年男 (toshi-otoko) (本命年男子) ^ その年の干支と同じ年に生まれた男性のことです。(A man born in the same zodiac year as the current year.) 今年はたつどしなので、私の父は年男としてお祝いをしました。(Since this is the Year of the Dragon, my father celebrated as a "Toshi-otoko.")
+年女 (toshi-onna) (本命年女子) ^ その年の干支と同じ年に生まれた女性のことです。(A woman born in the same zodiac year as the current year.) 私は今年年女なので、何かいいことが起きそうな気がしています。(I am a "Toshi-onna" this year, so I feel like something good might happen.)
+縁起がいい (engi ga ii) (吉利的) ^ 良いことが起きそうな、おめでたい感じがすることを言います。(It means feeling like something good will happen or being auspicious.) 朝から青い鳥を見たので、今日はとても縁起がいいです。(I saw a blue bird this morning, so today is very auspicious.)
+縁起が悪い (engi ga warui) (不吉利的) ^ 悪いことが起きそうな、良くない感じがすることを言います。(It means feeling like something bad will happen or being unlucky.) 鏡が割れるのは、昔から縁起が悪いと言われています。(It has been said since old times that breaking a mirror is unlucky.)
+歳神様 (toshigami-sama) (年神) ^ お正月に、それぞれの家に来てくれる幸せの神様のことです。(The god of happiness who visits each house during the New Year.) 歳神様を迎えるために、玄関に門松などの飾りを置きます。(To welcome the New Year god, decorations such as Kadomatsu are placed at the entrance.)
+節分 (setsubun) (節分) ^ 立春の前の日に、「鬼は外」と言って豆をまく行事のことです。(An event held on the day before the first day of spring where beans are scattered while saying "Demons out.") 節分には、家族みんなで自分の年の数だけ豆を食べて健康を願います。(On Setsubun, the whole family eats as many beans as their age and prays for health.)
+________________________________________
+◎当てはまる動物
+当てはまる動物 (atehamaru dōbutsu) (對應的動物) ^ その年や月、方位に割り当てられた特定の動物のことです。(A specific animal assigned to that year, month, or direction.) 十二支には、それぞれの年に当てはまる動物が決まっています。(In the twelve zodiac signs, the animal corresponding to each year is fixed.)
+ねずみ (nezumi) (🐭) ^ 十二支の最初（子）に当てはまる、小さな動物のことです。(The small animal that corresponds to the first of the zodiac signs (Rat).) ねずみどしの人は、真面目でよく働くと言われています。(People born in the Year of the Rat are said to be serious and hard-working.)
+うし (ushi) (🐮) ^ 十二支の二番目（丑）に当てはまる、体が大きな動物です。(The large animal that corresponds to the second of the zodiac signs (Ox).) うしどしの年は、ゆっくりと一歩ずつ進む年だと言われます。(The Year of the Ox is said to be a year for proceeding slowly, one step at a time.)
+とら (tora) (🐯) ^ 十二支の三番目（寅）に当てはまる、強くて勇敢な動物です。(The strong and brave animal that corresponds to the third of the zodiac signs (Tiger).) とらどしの人は、自信を持って新しいことに挑戦するのが得意です。(People born in the Year of the Tiger are good at confidently challenging new things.)
+うさぎ (usagi) (🐰) ^ 十二支の四番目（卯）に当てはまる、耳が長くて可愛い動物です。(The cute animal with long ears that corresponds to the fourth of the zodiac signs (Rabbit).) うさぎどしの年は、ジャンプするように大きく成長する年だそうです。(The Year of the Rabbit is said to be a year for growing significantly, like jumping.)
+たつ (tatsu) (龍) ^ 十二支の五番目（辰）に当てはまる、想像上の強い動物です。(The imaginary strong animal that corresponds to the fifth of the zodiac signs (Dragon).) たつどしは、空へ昇る龍のように勢いがある年だと言われます。(The Year of the Dragon is said to be a year with momentum, like a dragon ascending to the sky.)
+へび (hebi) (🐍) ^ 十二支の六番目（巳）に当てはまる、足がない細長い生き物です。(The legless long creature that corresponds to the sixth of the zodiac signs (Snake).) へびどしの人は、粘り強くて最後まで諦めない性格だそうです。(People born in the Year of the Snake are said to be persistent and never give up until the end.)
+うま (uma) (🐴) ^ 十二支の七番目（午）に当てはまる、走るのが速い動物です。(The fast-running animal that corresponds to the seventh of the zodiac signs (Horse).) うまどしの年は、色々なことがスピーディーに進む年になります。(The Year of the Horse becomes a year where various things proceed speedily.)
+ひつじ (hitsuji) (🐏) ^ 十二支の八番目（未）に当てはまる、毛がふわふわした動物です。(The fluffy-haired animal that corresponds to the eighth of the zodiac signs (Sheep).) ひつじどしの人は、優しくて穏やかな心を持っていると言われます。(People born in the Year of the Sheep are said to have kind and gentle hearts.)
+さる (saru) (🐵) ^ 十二支の九番目（申）に当てはまる、木登りが上手な動物です。(The animal skilled at climbing trees that corresponds to the ninth of the zodiac signs (Monkey).) さるどしの年は、知恵を使って問題を解決するのに良い年です。(The Year of the Monkey is a good year for using wisdom to solve problems.)
+とり (tori) (鶏) ^ 十二支の十番目（酉）に当てはまる、朝に鳴く鳥のことです。(The bird that crows in the morning, corresponding to the tenth of the zodiac signs (Rooster).) とりどしの人は、お洒落で人の注目を集めるのが上手だそうです。(People born in the Year of the Rooster are said to be stylish and good at attracting attention.)
+いぬ (inu) (🐶) ^ 十二支の十一番目（戌）に当てはまる、人間に忠実な動物です。(The animal loyal to humans that corresponds to the eleventh of the zodiac signs (Dog).) いぬどしの人は、正直でとても誠実な性格の人が多いと言われます。(Many people born in the Year of the Dog are said to have honest and very sincere personalities.)
+いのしし (inoshishi) (🐗 vs. ぶた🐷) ^ 十二支の最後（亥）に当てはまる、鼻が強い動物のことです。(The strong-nosed animal that corresponds to the last of the zodiac signs (Boar).) いのししどしの人は、目標に向かって真っ直ぐ進む力があります。(People born in the Year of the Boar have the power to move straight toward their goals.)
+________________________________________
+◎十二支の読み方
+子 (ne) (子（鼠）) ^ 十二支の最初で、ねずみを表す漢字の特別な読み方です。(The first of the twelve branches, the special reading of the kanji representing the Rat.) 昔の時計では、真夜中の十二時を「子の刻（ねのこく）」と言いました。(In old clocks, midnight was called the "Hour of the Rat.")
+丑 (ushi) (丑（牛）) ^ 十二支の二番目で、うしを表す漢字の特別な読み方です。(The second of the twelve branches, the special reading of the kanji representing the Ox.) 昔の方位では、北東の方向を「丑（うし）」の方向と呼びました。(In old directions, northeast was called the direction of the Ox.)
+寅 (tora) (寅（虎）) ^ 十二支の三番目で、とらを表す漢字の特別な読み方です。(The third of the twelve branches, the special reading of the kanji representing the Tiger.) 寅の年は、春が始まるおめでたい年だと言われていました。(The Year of the Tiger was said to be an auspicious year when spring begins.)
+卯 (u) (卯（兔）) ^ 十二支の四番目で、うさぎを表す漢字の特別な読み方です。(The fourth of the twelve branches, the special reading of the kanji representing the Rabbit.) 昔の時計で、朝の六時は「卯の刻（うのこく）」にあたります。(In old clocks, 6 AM corresponds to the "Hour of the Rabbit.")
+辰 (tatsu) (辰（龍）) ^ 十二支の五番目で、たつを表す漢字の特別な読み方です。(The fifth of the twelve branches, the special reading of the kanji representing the Dragon.) 辰の方向は東南東を指し、とても勢いがある場所とされました。(The direction of the Dragon points east-southeast and was considered a place of great momentum.)
+巳 (mi) (巳（蛇）) ^ 十二支の六番目で、へびを表す漢字の特別な読み方です。(The sixth of the twelve branches, the special reading of the kanji representing the Snake.) 巳の年は、お金に困らない「金運」が良い年だと言われています。(The Year of the Snake is said to be a year with good "money luck" where one won't struggle for money.)
+午 (uma) (午（馬）) ^ 十二支の七番目で、うまを表す漢字の特別な読み方です。(The seventh of the twelve branches, the special reading of the kanji representing the Horse.) お昼の十二時を「正午（しょうご）」と言うのは、ここから来ています。(Saying "Shōgo" for noon comes from here.)
+未 (hitsuji) (未（羊）) ^ 十二支の八番目で、ひつじを表す漢字の特別な読み方です。(The eighth of the twelve branches, the special reading of the kanji representing the Sheep.) 未の年は、平和で家族みんなが仲良く過ごせる年だそうです。(The Year of the Sheep is said to be a year for spending time peacefully and amicably with the whole family.)
+申 (saru) (申（猴）) ^ 十二支の九番目で、さるを表す漢字の特別な読み方です。(The ninth of the twelve branches, the special reading of the kanji representing the Monkey.) 申の日は、病気が去る（さる）と言われて、おめでたい日でした。(The Day of the Monkey was an auspicious day, as it was said that illnesses would leave (saru).)
+酉 (tori) (酉（雞）) ^ 十二支の十番目で、とりを表す漢字の特別な読み方です。(The tenth of the twelve branches, the special reading of the kanji representing the Rooster.) 夕方の六時を「酉の刻（とりのこく）」と言い、仕事が終わる時間でした。(6 PM was called the "Hour of the Rooster," and was the time work finished.)
+戌 (inu) (戌（狗）) ^ 十二支の十一番目で、いぬを表す漢字の特別な読み方です。(The eleventh of the twelve branches, the special reading of the kanji representing the Dog.) 戌の日は、子供を安全に産める「安産」の日として大切にされています。(The Day of the Dog is cherished as a day for "safe childbirth.")
+亥 (i) (亥（豬）) ^ 十二支の最後で、いのししを表す漢字の特別な読み方です。(The last of the twelve branches, the special reading of the kanji representing the Boar.) 亥の刻は夜の十時を指し、一日の終わりを静かに過ごす時間でした。(The Hour of the Boar pointed to 10 PM, a time to spend the end of the day quietly.)
+Would you like me to create a simple chart to help you remember the relationship between these animals and the years?
+
+
+`, 
+'b3l2': `
+◎Section 1
+玉山 (gyokuzan) (玉山) ^ 台湾で一番高い山で、景色がとても美しい場所のことです。(The highest mountain in Taiwan, a place with very beautiful scenery.) いつか、台湾のシンボルである玉山に登ってみたいです。(I want to climb Mt. Jade, the symbol of Taiwan, someday.)
+中華 (chūka) (中華料理) ^ 中国で生まれた、炒め物や点心などの美味しい料理のことです。(Delicious dishes born in China, such as stir-fry and dim sum.) 今晩は家族で、近くの中華を食べに行くことにしました。(We decided to go eat Chinese food nearby with the family tonight.)
+洋食 (yōshoku) (西餐/洋食) ^ ハンバーグやカレーなど、日本で独自に進化した西洋風の料理です。(Western-style dishes that uniquely evolved in Japan, such as hamburger steaks and curry.) 子供たちは、お肉がたくさん入った洋食が大好きです。(Children love Western-style meals with lots of meat.)
+バイク (baiku) (機車/摩托車) ^ 二つのタイヤがある乗り物で、台湾では移動にとても便利です。(A vehicle with two tires, very convenient for moving around in Taiwan.) バイクに乗るときは、必ずヘルメットを被らなければなりません。(When riding a motorcycle, you must always wear a helmet.)
+面倒 (mendō) (麻煩) ^ やることが多くて大変だったり、やりたくないと感じたりすることです。(It is when there are many things to do and it's tough, or when you don't feel like doing something.) 料理を作るのが面倒なので、今日は外食にしましょう。(Cooking is a hassle, so let's eat out today.)
+テレビ番組を選ぶ (terebi bangumi o erabu) (選擇電視節目) ^ たくさんのチャンネルの中から、見たい内容を一つ決めることです。(It is deciding on one content you want to watch from among many channels.) ニュースとドラマ、どちらを見るかテレビ番組を選ぶのに時間がかかりました。(It took time to choose a TV program, whether to watch news or drama.)
+巨人の試合 (kyojin no shiai) (巨人的比賽) ^ 日本の有名な野球チーム「巨人」が、戦う様子を見ることです。(Watching the famous Japanese baseball team "Giants" compete.) お父さんは野球が大好きで、毎日テレビで巨人の試合を応援しています。(Father loves baseball and cheers for the Giants' matches on TV every day.)
+どちらでもいい (dochira demo ii) (哪一個都好) ^ 二つの選択肢の中で、どちらを選んでも問題ないと言う意味です。(It means that choosing either of the two options is not a problem.) 「コーヒーと紅茶、どっちがいい？」「僕はどちらでもいいよ。」("Coffee or tea, which do you want?" "Either is fine with me.")
+甲子園 (kōshien) (甲子園) ^ 兵庫県にある野球場で、高校球児たちが目指す夢の場所のことです。(A baseball stadium in Hyogo, the dream location that high school baseball players aim for.) 夏休みに、甲子園で一生懸命に戦う高校生を見て感動しました。(I was moved by watching high school students fighting hard at Koshien during summer vacation.)
+報道特集 (hōdō tokushū) (新聞特輯) ^ ニュースの中の特別なテーマを、詳しく説明する番組のことです。(A program that explains a special theme within the news in detail.) 昨日の夜、環境問題についての報道特集を真面目に見ました。(Last night, I seriously watched a news special about environmental issues.)
+日本の旅 (nihon no tabi) (日本之旅) ^ 日本の各地を回って、観光や美味しいものを楽しむ旅行のことです。(A trip traveling around various parts of Japan, enjoying sightseeing and delicious food.) 退職した後に、一ヶ月かけてゆっくりと日本の旅をするのが夢です。(It's my dream to take a slow one-month trip through Japan after I retire.)
+洋画劇場 (yōga gekijō) (西洋電影劇場) ^ 外国の映画をテレビで放送する、特別な番組の枠のことです。(A special program slot that broadcasts foreign movies on television.) 日曜日の夜は、洋画劇場でアメリカの映画を見るのが楽しみです。(I look forward to watching American movies on the Sunday night movie theater.)
+暮らしの中の不思議 (kurashi no naka no fushigi) (生活中的奇妙之處) ^ 毎日の生活で起きる、理由が分からない面白いことのことです。(Interesting things that happen in daily life for which the reason is not understood.) 「暮らしの中の不思議」という番組を見て、科学の面白さを知りました。(I learned about the fun of science by watching a program called "Mysteries in Daily Life.")
+天気予報 (tenki yohō) (天氣預報) ^ 明日や来週の天気がどうなるかを、テレビやネットで教えることです。(It is telling what the weather will be like tomorrow or next week on TV or the internet.) 外出する前に、雨が降るかどうか天気予報をチェックします。(I check the weather forecast to see if it will rain before going out.)
+北海道の温泉巡り (hokkaidō no onsen meguri) (北海道溫泉巡禮) ^ 北海道にある色々な温泉を、順番に回って楽しむことです。(It is going around and enjoying various hot springs in Hokkaido in order.) 冬に北海道の温泉巡りをして、雪を見ながらお湯に入るのは最高です。(It's the best to go around hot springs in Hokkaido in winter and soak while looking at the snow.)
+太陽 (taiyō) (太陽) ^ 昼間の空に光っている、地球を温めてくれる大きな星のことです。(The large star shining in the daytime sky that warms the Earth.) 太陽の光を浴びると、体が温かくなって元気が出てきます。(Basking in the sunlight makes my body warm and gives me energy.)
+地球 (chikyū) (地球) ^ 私たちが住んでいる、青くて丸いこの星の名前です。(The name of this blue, round planet where we live.) 地球の環境を守るために、ゴミを減らす努力をしなければなりません。(To protect the Earth's environment, we must make efforts to reduce trash.)
+人口が多い (jinkō ga ooi) (人口多) ^ その町や国に住んでいる人の数が、とてもたくさんいることです。(It means the number of people living in that town or country is very large.) 台北は便利ですが、どこへ行っても人口が多いので少し疲れます。(Taipei is convenient, but since there are many people everywhere, it's a bit tiring.)
+魚料理 (sakana ryōri) (魚料理) ^ 魚を焼いたり煮たりして作る、体に良い美味しい料理のことです。(Delicious, healthy dishes made by grilling or simmering fish.) 日本へ行ったら、新鮮な魚料理をたくさん食べたいと思っています。(I want to eat a lot of fresh fish dishes when I go to Japan.)
+肉料理 (niku ryōri) (肉料理) ^ 牛肉や鶏肉を使って作る、元気が出る力強い料理のことです。(Powerful, energizing dishes made using beef or chicken.) 私はお腹が空いているとき、魚料理より肉料理を選びます。(When I am hungry, I choose meat dishes over fish dishes.)
+カラオケで歌う (karaoke de utau) (在卡拉OK唱歌) ^ 音楽が流れる機械を使って、大きな声で歌を楽しむことです。(It is enjoying singing in a loud voice using a machine that plays music.) ストレスが溜まったときは、友達とカラオケで歌うのが一番です。(When stress builds up, singing at karaoke with friends is the best.)
+作文を書く (sakubun o kaku) (寫作文) ^ 自分の考えや経験を、文章にして紙にまとめることです。(It is organizing one's thoughts or experiences into writing on paper.) 日本語の授業で、「私の将来の夢」というテーマで作文を書く。(I'll write an essay on the theme "My Future Dream" in Japanese class.)
+単語表 (tangohyō) (單字表) ^ 覚えなければならない言葉を、リストにして並べた紙のことです。(A paper with a list of words arranged that must be memorized.) テストの前に、自分で作った単語表を見て何度も復習します。(Before the test, I review many times looking at the vocabulary list I made.)
+単語を覚える (tango o oboeru) (記單字) ^ 新しい言葉を頭に入れて、忘れないようにすることです。(It is putting new words into one's head and trying not to forget them.) 毎日十個ずつ新しい単語を覚えるのは大変ですが、大切です。(It's hard to memorize ten new words every day, but it's important.)
+家電 (kaden) (家電) ^ 冷蔵庫や洗濯機など、家で使う電気製品のことです。(Electrical appliances used at home, such as refrigerators and washing machines.) 引っ越しをするので、新しい家電を買いに量販店へ行きました。(Since I'm moving, I went to a mass retailer to buy new home appliances.)
+量販店 (ryōhanten) (量販店/大型電器行) ^ 電化製品などをたくさん安く売っている、大きな店のことです。(A large store that sells many items like electrical appliances cheaply.) 量販店は品物が多いので、どれを買うかいつも迷ってしまいます。(Mass retailers have many items, so I always hesitate over which one to buy.)
+デジカメ (dejikame) (數位相機) ^ デジタルカメラのことで、写真をデータとして撮る機械です。(Refers to a digital camera, a machine that takes pictures as data.) 綺麗な景色を撮るために、新しいデジカメを買うことにしました。(I decided to buy a new digital camera to take pictures of beautiful scenery.)
+こちらのタイプはさっきのより軽い (kochira no taipu wa sakki no yori karui) (這款比剛才那款輕) ^ 二つの物を比べて、重さが少ないことを相手に伝える文です。(A sentence conveying to someone that one object is lighter in weight than another.) 持ち歩くなら、こちらのタイプはさっきのより軽いのでおすすめです。(If you're carrying it around, I recommend this type because it's lighter than the previous one.)
+じゃ、これにします (ja, kore ni shimasu) (那麼，就決定買這個了) ^ いくつかの中から、自分が買う物を一つ決めて伝える言葉です。(A phrase used to decide on and convey the one thing you will buy from among several options.) 色々説明してくれてありがとう。じゃ、これにします。(Thank you for explaining everything. Well then, I'll take this one.)
+________________________________________
+◎Section 2
+疑問詞 (gimonshi) (疑問詞) ^ 「なに」「だれ」「いつ」のように、質問をするときに使う言葉です。(Words used when asking questions, such as "what," "who," and "when.") 疑問詞を正しく使うと、知りたい情報をスムーズに聞くことができます。(Using interrogatives correctly allows you to smoothly ask for the information you want to know.)
+インド (indo) (印度) ^ アジアにある大きな国で、カレーや数学が有名な場所です。(A large country in Asia, a place famous for curry and mathematics.) インドはとても広いので、一度の旅行では全部回ることができません。(India is so vast that you can't see all of it in one trip.)
+スポーツの中で何が一番得意ですか？ (supōtsu no naka de nani ga ichiban tokui desu ka?) (運動之中你最擅長什麼？) ^ 色々な運動の中で、自分が最も上手にできるものを聞く質問です。(A question asking which exercise one is best at among various sports.) スポーツの中で何が一番得意ですか？私は卓球が一番得意です。(What is your strongest sport? I am best at table tennis.)
+サッカー (sakkā) (足球) ^ 十一人のチームでボールを蹴って、ゴールに入れるスポーツです。(A sport played in teams of eleven, kicking a ball to score goals.) サッカーは世界中で人気があり、私も子供の頃から大好きです。(Soccer is popular all over the world, and I've loved it since I was a child.)
+バスケット (basuketto) (籃球) ^ 高い所にある網の中に、ボールを投げ入れるスポーツです。(A sport where you throw a ball into a net located high up.) 彼は背が高いので、バスケットの選手として活躍しています。(Because he is tall, he is active as a basketball player.)
+ゴルフ (gorufu) (高爾夫) ^ 小さなボールを打って、地面の穴に入れる静かなスポーツです。(A quiet sport where you hit a small ball into holes in the ground.) 父は週末になると、友達と一緒にゴルフをしに山へ行きます。(My father goes to the mountains to play golf with friends on weekends.)
+天ぷら (tenpura) (天婦羅) ^ 魚や野菜に粉をつけて、油で揚げた美味しい日本の料理です。(A delicious Japanese dish made by flouring fish and vegetables and frying them in oil.) 揚げたての天ぷらは、サクサクしていて本当に美味しいですね。(Freshly fried tempura is crunchy and truly delicious, isn't it?)
+おでん (oden) (關東煮) ^ 大根や卵などを、出汁でゆっくり煮た温かい料理のことです。(A warm dish where radish, eggs, and other items are slowly simmered in broth.) 冬の寒い夜に食べるおでんは、体が温まって最高のご馳走です。(Eating oden on a cold winter night is the best treat as it warms the body.)
+うなぎ (unagi) (鰻魚) ^ 川に住む細長い魚で、焼いて食べると元気がもらえる食べ物です。(A long, thin fish living in rivers; a food that gives you energy when eaten grilled.) 夏の暑い時期に、うなぎを食べてスタミナをつけるのが日本の習慣です。(It is a Japanese custom to eat eel during the hot summer period to gain stamina.)
+うな重 (unajū) (鰻魚飯盒) ^ 四角い箱の中に、ご飯とうなぎをきれいに並べた高級な料理です。(A high-end dish with rice and eel neatly arranged in a square box.) 今日は給料日なので、贅沢をしてお店で一番高いうな重を食べました。(Since today is payday, I splurged and ate the most expensive unaju in the shop.)
+バラ (bara) (玫瑰) ^ 棘があって香りがとても良い、赤や白の美しい花のことです。(A beautiful red or white flower with thorns and a very nice scent.) 誕生日に、真っ赤なバラの花束をもらってとても嬉しかったです。(I was very happy to receive a bouquet of bright red roses for my birthday.)
+ユリ (yuri) (百合) ^ 白くて大きな花を咲かせる、とても上品な香りのする花です。(A flower that blooms into large white blossoms and has a very elegant scent.) 公園にたくさんのユリが咲いていて、周りがいい香りに包まれていました。(Many lilies were blooming in the park, and the surroundings were enveloped in a nice fragrance.)
+菊 (kiku) (菊花) ^ 日本の皇室のシンボルでもあり、秋にきれいに咲く花のことです。(The symbol of the Japanese Imperial Family, a flower that blooms beautifully in autumn.) 秋になると、お寺で色々な種類の菊を飾るイベントが行われます。(In autumn, events are held at temples to display various types of chrysanthemums.)
+カーネーション (kānēshon) (康乃馨) ^ 母の日に、「ありがとう」の気持ちを込めて贈る花のことです。(The flower given on Mother's Day to convey feelings of "thank you.") 母の日に、赤いカーネーションをプレゼントしたら、母は泣いて喜びました。(When I presented red carnations on Mother's Day, my mother cried with joy.)
+チューリップ (chūrippu) (鬱金香) ^ 春に赤や黄色やピンクの花を咲かせる、可愛らしい花です。(A lovely flower that blooms in red, yellow, or pink during spring.) 幼稚園の庭に、子供たちが植えたチューリップがきれいに咲いています。(The tulips planted by children in the kindergarten garden are blooming beautifully.)
+ヒマワリ (himawari) (向日葵) ^ 夏に太陽に向かって大きく咲く、黄色い元気な花のことです。(A cheerful yellow flower that blooms large toward the sun in summer.) 夏休みの絵日記に、背の高いヒマワリの絵を大きく描きました。(I drew a large picture of a tall sunflower in my summer vacation picture diary.)
+柿 (kaki) (柿子) ^ 秋にオレンジ色の実がなる、甘くて美味しい果物のことです。(A sweet and delicious fruit that bears orange-colored fruit in autumn.) 田舎の庭にある柿の実が赤くなったのを見て、秋の訪れを感じました。(Seeing the persimmons in the countryside garden turn red, I felt the arrival of autumn.)
+ブドウ (budō) (葡萄) ^ 小さな紫や緑の実がたくさん集まっている、甘酸っぱい果物です。(A sweet and sour fruit consisting of many small purple or green berries gathered together.) 秋に家族でブドウ狩りに行って、お腹いっぱい甘い実を食べました。(We went grape picking as a family in autumn and ate our fill of sweet berries.)
+メロン (meron) (哈密瓜) ^ 丸い形をしていて、中がとても甘くてジューシーな高級果物です。(A high-end fruit that is round and has a very sweet and juicy interior.) お見舞いに大きなメロンをいただいたので、家族みんなで分けました。(I received a large melon as a get-well gift, so we shared it with the whole family.)
+スイカ (suika) (西瓜) ^ 外が緑で中が赤い、夏を代表する大きくて甘い果物のことです。(A large, sweet fruit representing summer, green on the outside and red inside.) 暑い夏の日に、家族みんなで冷たいスイカを食べるのは最高です。(On a hot summer day, eating chilled watermelon with the whole family is the best.)
+コアラ (koara) (無尾熊) ^ オーストラリアに住んでいる、木の上で寝るのが大好きな動物です。(An animal living in Australia that loves to sleep in trees.) 動物園でコアラがゆっくりと動く様子を見て、とても癒されました。(Watching the koalas move slowly at the zoo was very soothing.)
+ペンギン (pengin) (企鵝) ^ 寒い所に住んでいる、歩き方が可愛くて泳ぐのが上手な鳥です。(A bird living in cold places that has a cute walk and is good at swimming.) 水族館で、ペンギンたちが一生懸命に魚を追いかける姿を見ました。(I saw the penguins chasing fish with all their might at the aquarium.)
+サル (saru) (猴子) ^ 木登りが得意で、山に住んでいる知能が高い動物のことです。(A highly intelligent animal that is good at climbing trees and lives in the mountains.) 温泉に入っているサルを見に、長野県の有名な山へ行ってきました。(I went to a famous mountain in Nagano Prefecture to see the monkeys soaking in hot springs.)
+一週間の中でいつが一番忙しいですか？ (isshūkan no naka de itsu ga ichiban isogashii desu ka?) (一週之中你什麼時候最忙？) ^ 月曜から日曜の中で、最も仕事や予定が多い日を聞く質問です。(A question asking which day from Monday to Sunday has the most work or plans.) 一週間の中でいつが一番忙しいですか？私は月曜日が一番忙しいです。(When are you busiest during the week? I am busiest on Mondays.)
+季節の中でいつが一番好きですか？ (kisetusu no naka de itsu ga ichiban suki desu ka?) (四季之中你最喜歡哪個季節？) ^ 春、夏、秋、冬の中で、どれが自分の好みに合うかを聞く質問です。(A question asking which of spring, summer, autumn, or winter fits one's preference.) 季節の中でいつが一番好きですか？私は涼しい秋が一番好きです。(Which season do you like best? I like the cool autumn best.)
+総復習 (sōfukushū) (總複習) ^ 今まで勉強した内容を、最後にもう一度全部確認して直すことです。(It is checking and correcting all the content studied so far one last time.) テストの前に、教科書の最初のページから最後までの総復習をします。(Before the test, I'll do a total review from the first to the last page of the textbook.)
+新婚旅行 (shinkon ryokō) (蜜月旅行) ^ 結婚したばかりの二人が、お祝いのために行く特別な旅行です。(A special trip that a newly married couple takes to celebrate.) 新婚旅行でハワイへ行って、青い海を見ながらゆっくり過ごしました。(We went to Hawaii for our honeymoon and spent time relaxedly looking at the blue sea.)
+新婚旅行どこにする？ (shinkon ryokō doko ni suru?) (蜜月旅行決定去哪裡？) ^ 結婚する相手に、どこの国や町へ行きたいかを尋ねる言葉です。(A phrase asking the marriage partner which country or town they want to go to.) 二人で相談して、新婚旅行どこにするか、来週までに決めましょう。(Let's discuss together and decide by next week where we'll go for our honeymoon.)
+ヨーロッパ (yōroppa) (歐洲) ^ フランスやイギリスなどがある、歴史が古い大きな地域の地域です。(The large, historical region where countries like France and England are located.) いつか一ヶ月くらいかけて、ヨーロッパの古い町をゆっくり回りたいです。(I want to take about a month someday to slowly tour the old towns of Europe.)
+古い町 (furui machi) (古鎮/老街) ^ 歴史のある建物が残っている、落ち着いた雰囲気の場所のことです。(A place with a calm atmosphere where historical buildings remain.) 私は新しい都市よりも、歴史を感じる古い町を歩くほうが好きです。(I prefer walking through old towns that feel historical over modern cities.)
+フランスもドイツもイギリスも去年行ったから、今度はイタリアがいい (furansu mo doitsu mo igirisu mo kyonen itta kara, konda wa itaria ga ii) (法國、德國、英國去年都去過了，所以這次去義大利比較好) ^ 既に行った国を説明して、次に別の場所を提案する文です。(A sentence explaining countries already visited and proposing another location for the next time.) フランスもドイツもイギリスも去年行ったから、今度はイタリアがいい。パスタが食べたい！(I went to France, Germany, and England last year, so this time Italy is better. I want to eat pasta!)
+海外旅行したことがないから、どこでもいい (kaigai ryokō shita koto ga nai kara, doko demo ii) (因為沒出過國，所以去哪裡都好) ^ 初めての外国なので、特定の希望がないことを相手に伝える文です。(A sentence conveying that since it's the first time abroad, there are no specific preferences.) 海外旅行したことがないから、どこでもいいよ。君が好きな場所を選んで。(I've never traveled abroad, so anywhere is fine. You choose the place you like.)
+________________________________________
+◎Section 3
+比較の表現 (hikaku no hyōgen) (比較的表達) ^ 二つ以上の物を比べて、どちらがより〜かを説明するための言い方です。(A way of speaking to compare two or more things and explain which is more ~.) 日本語の比較の表現を使って、東京と台北の違いを説明してみましょう。(Let's try explaining the difference between Tokyo and Taipei using Japanese comparative expressions.)
+東京と台北と、どちらが物価が高いですか？ (tōkyō to taipei to, dochira ga bukka ga takai desu ka?) (東京跟台北，哪裡的物價比較高？) ^ 二つの都市の値段のレベルを、比べて尋ねる質問です。(A question comparing and asking about the price levels of two cities.) 東京と台北と、どちらが物価が高いですか？やはり東京のほうが高いでしょうか。(Between Tokyo and Taipei, which has higher prices? Is Tokyo higher after all?)
+東京のほうが物価が高いです (tōkyō no hō ga bukka ga takai desu) (東京的物價比較高) ^ 台北よりも、東京の方がお金がかかると言う答えの文です。(A response sentence saying that Tokyo costs more money than Taipei.) 家賃や交通費を考えると、東京のほうが物価が高いです。(Considering rent and transportation costs, prices are higher in Tokyo.)
+小泉さん (koizumi-san) (小泉先生/小姐) ^ 日本で使われる、一般的で覚えやすい苗字（名字）の一つです。(One of the common and easy-to-remember surnames used in Japan.) 小泉さんは、いつも新しいニュースに詳しくて、話すのが上手な人です。(Koizumi-san is a person who is always knowledgeable about new news and good at talking.)
+どちらも好き (dochira mo suki) (兩個都喜歡) ^ 二つの選択肢があって、両方とも気に入っていると言う意味です。(It means there are two choices and one likes both of them.) 「犬と猫、どっちが好き？」「私は動物が大好きだから、どちらも好きだよ。」("Dogs or cats, which do you like?" "I love animals, so I like both.")
+勉強は大変ですが、仕事より楽ですよ (benkyō wa taihen desu ga, shigoto yori raku desu yo) (雖然讀書很辛苦，但比工作輕鬆喔) ^ 自分の経験から、二つの大変さを比べて相手を励ます文です。(A sentence encouraging someone by comparing two difficulties based on one's own experience.) 勉強は大変ですが、仕事より楽ですよ。今のうちにたくさん学んでください。(Studying is hard, but it's easier than working. Please learn a lot while you can.)
+ウイスキー (uisukī) (威士忌) ^ アルコールが強くて、麦などから作られる茶色の洋酒のことです。(A strong alcoholic brown Western liquor made from grains like barley.) お父さんは、夜寝る前に少しだけウイスキーを飲むのが習慣です。(Father has a habit of drinking a little bit of whiskey before going to sleep at night.)
+和食と洋食と中華と、どれが一番好きですか？ (washoku to yōshoku to chūka to, dore ga ichiban suki desu ka?) (日式、西式、中式料理，你最喜歡哪一種？) ^ 三つの料理の種類の中で、最も好みに合うものを聞く質問です。(A question asking which of the three types of cuisine fits one's preference best.) 和食と洋食と中華と、どれが一番好きですか？私は健康的な和食が一番好きです。(Japanese, Western, or Chinese, which do you like best? I like healthy Japanese food best.)
+スポーツと音楽と読書と、どれが一番楽しいですか？ (supōtsu to ongaku to dokusho to, dore ga ichiban tanoshii desu ka?) (運動、音樂、讀書，哪一個最快樂？) ^ 三つの趣味の中で、自分が最もワクワクするものを聞く質問です。(A question asking which of the three hobbies one finds most exciting.) スポーツと音楽と読書と、どれが一番楽しいですか？人によって答えが違いますね。(Sports, music, or reading—which is the most fun? The answer varies from person to person, doesn't it?)
+ビールとワインとウイスキーの中で、どれが一番強いですか？ (bīru to wain to uisukī no naka de, dore ga ichiban tsuyoi desu ka?) (啤酒、葡萄酒、威士忌之中，哪一種最烈？) ^ お酒の中で、アルコールの度数が最も高いものを尋ねる質問です。(A question asking which of the alcoholic beverages has the highest alcohol content.) ビールとワインとウイスキーの中で、どれが一番強いですか？やはりウイスキーですね。(Among beer, wine, and whiskey, which is the strongest? It's whiskey, after all.)
+金曜と土曜と日曜と、いつが一番暇ですか？ (kin'yō to doyō to nichiyō to, itsu ga ichiban hima desu ka?) (週五、週六、週日，你什麼時候最有空？) ^ 週末の三日間の中で、最も予定がない日を聞く質問です。(A question asking which of the three weekend days has the fewest plans.) 金曜と土曜と日曜と、いつが一番暇ですか？一緒に買い物に行きませんか？(Friday, Saturday, or Sunday—when are you most free? Why don't we go shopping together?)
+京都と大阪と東京と、どこが一番人口が多いですか？ (kyōto to ōsaka to tōkyō to, doko ga ichiban jinkō ga ooi desu ka?) (京都、大阪、東京，哪裡的人口最多？) ^ 三つの有名な都市の中で、住んでいる人の数が最も多い場所を聞く質問です。(A question asking which of the three famous cities has the largest number of residents.) 京都と大阪と東京と、どこが一番人口が多いですか？答えは東京です。(Kyoto, Osaka, or Tokyo—where is the population largest? The answer is Tokyo.)
+スポーツ（の中）で卓球が一番得意 (supōtsu de takkyū ga ichiban tokui) (運動之中我最擅長桌球) ^ 色々な運動があるけれど、自分はピンポンが最も上手だと言う文です。(A sentence saying that among various sports, one is best at ping pong.) 私はあまり走るのは速くないですが、スポーツの中で卓球が一番得意です。(I'm not a very fast runner, but among sports, I'm best at table tennis.)
+台北（の中）でどこが一番賑やかですか？ (taipei de doko ga ichiban nigiyaka desu ka?) (台北之中哪裡最熱鬧？) ^ 台北という広い町の中で、最も人が多くて活気がある場所を聞く質問です。(A question asking for the most crowded and lively place within the large city of Taipei.) 台北の中でどこが一番賑やかですか？やはり西門町でしょうか。(Where is the liveliest place in Taipei? Is it Ximending after all?)
+このクラスでだれが一番若いですか？ (kono kurasu de dare ga ichiban wakai desu ka?) (這個班級誰最年輕？) ^ 同じ教室で勉強している仲間の中で、最も年齢が低い人を聞く質問です。(A question asking who among the peers studying in the same classroom has the lowest age.) このクラスでだれが一番若いですか？林さんはまだ十八歳だそうですよ。(Who is the youngest in this class? I heard Ms. Lin is still only eighteen.)
+一週間の中でいつが一番忙しいですか？ (isshūkan no naka de itsu ga ichiban isogashii desu ka?) (一週之中你什麼時候最忙？) ^ 繰り返しの質問ですが、一週間で最も大変な時間を尋ねる文です。(A repeated question, but a sentence asking for the most difficult time in a week.) 一週間の中でいつが一番忙しいですか？私は会議が多い月曜日が一番嫌です。(When are you busiest during the week? I dislike Monday most because there are many meetings.)
+スイカとバナナとメロンと、どれが一番好きですか？ (suika to banana to meron to, dore ga ichiban suki desu ka?) (西瓜、香蕉、哈密瓜，你最喜歡哪一個？) ^ 三つの特定の果物を並べて、好みを尋ねるときに「どれ」を使う例です。(An example using "dore" when listing three specific fruits and asking for a preference.) スイカとバナナとメロンと、どれが一番好きですか？私は甘いメロンが一番です。(Watermelon, banana, or melon—which do you like best? I like sweet melon best.)
+果物の中で、何が一番好きだすか？ (kudamono no naka de, nani ga ichiban suki desu ka?) (水果之中你最喜歡什麼？) ^ 具体的な名前を挙げず、広いグループの中から好みを尋ねる質問です。(A question asking for a preference from a broad group without mentioning specific names.) 果物の中で、何が一番好きですか？私は冬に食べるみかんが一番好きです。(What is your favorite fruit? I like the tangerines eaten in winter best.)
+やっぱり食べている時が一番幸せだね (yappari tabete iru toki ga ichiban shiawase da ne) (果然吃東西的時候最幸福了呢) ^ 美味しいものを口にしている瞬間が、最も心が満たされると言う文です。(A sentence saying that the moment of putting delicious food in one's mouth is when the heart is most fulfilled.) お腹が空いていたから、やっぱり食べている時が一番幸せだね。(Since I was hungry, I'm definitely happiest when I'm eating.)
+キャンプはいつにしましょうか？ (kyanpu wa itsu ni shimashō ka?) (露營要定在什麼時候呢？) ^ 友達と山へ行く日を、カレンダーを見て相談するときの言葉です。(A phrase used when discussing the day to go to the mountains with friends while looking at a calendar.) 天気が良くなる日が知りたいですね。キャンプはいつにしましょうか？(I want to know when the weather will be good. When shall we set the camp for?)
+いつでもいいですよ (itsu demo ii desu yo) (什麼時候都可以喔) ^ 自分の予定は空いているので、相手の都合に合わせると言う返事です。(A reply saying one's schedule is open, so they will accommodate the other person's convenience.) 私は来週は暇ですから、キャンプの日はいつでもいいですよ。(I'm free next week, so any day is fine for the camp.)
+朝ご飯は何がいい？ (asa gohan wa nani ga ii?) (早餐吃什麼好？) ^ 朝、家族に何を食べたいかを優しく尋ねる言葉です。(A phrase gently asking family what they want to eat in the morning.) 朝ご飯は何がいい？パンにする？それともご飯とお味噌汁にする？(What do you want for breakfast? Do you want bread? Or rice and miso soup?)
+何でもいいよ (nan demo ii yo) (什麼都好喔) ^ 特定の希望がなくて、相手が準備してくれたものを食べると言う返事です。(A reply saying there are no specific preferences and one will eat what the other has prepared.) お腹が空いているから、朝ご飯は何でもいいよ。作ってくれてありがとう。(I'm hungry, so anything is fine for breakfast. Thanks for making it.)
+________________________________________
+◎Section 4
+観光地 (kankōchi) (觀光地) ^ 旅行客がたくさん訪れる、景色や建物が有名な場所のことです。(A place famous for scenery or buildings where many tourists visit.) 日本には、京都や富士山など魅力的な観光地がたくさんあります。(Japan has many attractive tourist spots such as Kyoto and Mt. Fuji.)
+東日本 (higashi nihon) (東日本) ^ 日本の東の方にある地域のことで、東京や東北地方を指します。(Refers to the region in the east of Japan, pointing to Tokyo and the Tohoku region.) 東日本には、都会の楽しさと豊かな自然の両方があります。(East Japan has both the fun of the city and rich nature.)
+おすすめのスポット (osusume no supotto) (推薦景點) ^ 自分が良いと思った、他の人にもぜひ行ってほしい場所のことです。(A place one thinks is good and definitely wants others to visit.) 東京へ行くなら、上野の公園はおすすめのスポットですよ。(If you're going to Tokyo, Ueno Park is a recommended spot.)
+友達以上、恋人未満 (tomodachi ijō, koibito miman) (友達以上，戀人未滿) ^ 友達よりは仲が良いけれど、まだ恋人ではない微妙な関係のことです。(A delicate relationship where you're closer than friends but not yet lovers.) 二人はいつも一緒にいますが、まだ友達以上、恋人未満のようです。(The two are always together, but it seems they are still more than friends but less than lovers.)
+上野アメ横商店街 (ueno ameyoko shōtengai) (上野阿美橫丁商店街) ^ 東京の上野にある、安くて賑やかな色々なお店が並ぶ通りです。(A street in Ueno, Tokyo, lined with various cheap and lively shops.) 上野アメ横商店街で、美味しいお菓子をたくさん安く買うことができました。(I was able to buy many delicious sweets cheaply at the Ueno Ameyoko shopping street.)
+六本木 (roppongi) (六本木) ^ 東京にある、美術館や夜の店が有名なとてもお洒落な町のことです。(A very stylish town in Tokyo famous for art museums and night spots.) 六本木には大きなビルがたくさんあって、夜の景色がとてもきれいです。(Roppongi has many large buildings, and the night view is very beautiful.)
+表参道 (omotesandō) (表參道) ^ お洒落なカフェやブランドの店が並ぶ、東京の美しい通りの名前です。(The name of a beautiful street in Tokyo lined with stylish cafes and brand shops.) 秋の表参道を歩くと、並木道の葉が色づいていてとても素敵です。(Walking along Omotesando in autumn, the leaves of the tree-lined street are colored and it's very wonderful.)
+セレブ (serebu) (名人/名流/有錢人) ^ お金持ちで、お洒落な生活をしている有名な人たちのことです。(Famous people who are wealthy and lead stylish lives.) 表参道には、セレブが通うような高級なレストランがたくさんあります。(Omotesando has many high-end restaurants where celebrities might go.)
+谷中 (yanaka) (谷中) ^ 東京にある、古い寺や町並みが残っている落ち着いた地域の名前です。(The name of a calm area in Tokyo where old temples and townscapes remain.) 谷中には「谷中銀座」という商店街があり、懐かしい雰囲気が楽しめます。(Yanaka has a shopping street called "Yanaka Ginza," where you can enjoy a nostalgic atmosphere.)
+根津 (nezu) (根津) ^ 谷中の隣にあり、古い神社が有名な歴史を感じる場所のことです。(A place next to Yanaka that feels historical and is famous for an old shrine.) 根津神社にはたくさんの赤い鳥居があり、外国人観光客に人気があります。(Nezu Shrine has many red torii gates and is popular with foreign tourists.)
+千駄木 (sendagi) (千駄木) ^ 谷中、根津と一緒に「谷根千（やねせん）」と呼ばれる古い町のことです。(An old town called "Yanesen" along with Yanaka and Nezu.) 千駄木の静かな路地を散歩していると、昔の東京にタイムスリップしたようです。(Walking through the quiet alleys of Sendagi feels like time-traveling back to old Tokyo.)
+神田 (kanda) (神田) ^ 古い本屋がたくさん集まっている、東京の歴史ある町のことです。(A historical town in Tokyo where many old bookstores are gathered.) 神田の古本屋街で、ずっと探していた珍しい本を見つけることができました。(I was able to find the rare book I had been looking for in the second-hand bookstore district of Kanda.)
+お茶の水 (ochanomizu) (御茶之水) ^ 学生が多く、楽器の店や病院が有名な神田の近くの場所のことです。(A location near Kanda where there are many students and is famous for instrument shops and hospitals.) お茶の水には楽器屋さんがたくさん並んでいて、ギターを探すのに最高です。(Ochanomizu is lined with many instrument shops, making it the best place to search for a guitar.)
+函館市の五稜郭 (hakodateshi no goryōkaku) (函館市的五稜郭) ^ 北海道の函館にある、星の形をしたとても珍しいお城の跡です。(The remains of a very rare star-shaped castle in Hakodate, Hokkaido.) 函館市の五稜郭を上から見ると、完璧な星の形をしていて驚きました。(I was surprised to see that Goryokaku in Hakodate City is a perfect star shape from above.)
+戦争 (sensō) (戰爭) ^ 国と国、またはグループ同士が武器を使って戦う悲しい出来事です。(A sad event where countries or groups fight each other using weapons.) 五稜郭は、昔の日本の大きな戦争の舞台になった場所でもあります。(Goryokaku is also the place that became the stage for a major war in old Japan.)
+戊辰戦争 (boshin sensō) (戊辰戰爭) ^ 約百五十年前に起きた、侍の時代の終わりの大きな戦いの名前です。(The name of the major battle about 150 years ago at the end of the samurai era.) 戊辰戦争の最後に、五稜郭で多くの侍たちが一生懸命に戦いました。(At the end of the Boshin War, many samurai fought with all their might at Goryokaku.)
+北海道の人気観光地 (hokkaidō no ninki kankōchi) (北海道的人氣觀光地) ^ 旅行客が選ぶ、北海道で特に行ってみたい場所のことです。(The places in Hokkaido that tourists especially want to visit.) 北海道の人気観光地といえば、やはり札幌の時計台や小樽の運河ですね。(Speaking of popular tourist spots in Hokkaido, it has to be the Sapporo Clock Tower and Otaru Canal.)
+富良野のラベンダー畑 (furano no rabendā batake) (富良野的薰衣草田) ^ 夏に紫色の美しい花が一面に広がる、富良野の有名な場所です。(A famous place in Furano where beautiful purple flowers spread all over in summer.) 富良野のラベンダー畑へ行くと、優しい香りと紫色の景色に感動します。(Going to the lavender fields of Furano, I am moved by the gentle scent and the purple scenery.)
+花畑 (hanabatake) (花田) ^ たくさんの花が植えられている、広い土地や庭のことです。(A wide area of land or garden where many flowers are planted.) 太陽の光を浴びて、色鮮やかな花畑がキラキラと輝いていました。(The vivid flower field was sparkling, bathed in the sunlight.)
+美瑛の神秘的な青い池 (biei no shinpiteki na aoi ike) (美瑛的神祕青池) ^ 水の色がとても綺麗な青色をしている、美瑛の不思議な池です。(A mysterious pond in Biei where the color of the water is a very beautiful blue.) 美瑛の神秘的な青い池は、季節や天気によって青の色が変わって見えます。(The mysterious blue pond of Biei's blue color looks different depending on the season and weather.)
+広大な花畑 (kōdai na hanabatake) (廣大的花田) ^ どこまでも続いているような、とても広い花が植えられた場所です。(A very wide place planted with flowers that seems to continue forever.) 丘の上に広がる広大な花畑は、まるで絵本の世界のように美しいです。(The vast flower field spreading over the hill is as beautiful as a world in a picture book.)
+四季彩の丘 (shikisai no oka) (四季彩之丘) ^ 美瑛にある、色々な花が虹のように並んでいる有名な丘の名前です。(The name of a famous hill in Biei where various flowers are lined up like a rainbow.) 四季彩の丘へ行くと、ストライプ模様の花畑がどこまでも続いています。(Going to Shikisai-no-Oka, the striped flower fields continue on and on.)
+大雪山 (daisetsuzan) (大雪山) ^ 北海道の真ん中にあり、冬にはスキーが楽しめる大きな山です。(A large mountain in the center of Hokkaido where you can enjoy skiing in winter.) 大雪山は日本で一番早く紅葉が見られる場所として知られています。(Mt. Daisetsu is known as the place where you can see autumn colors earliest in Japan.)
+スノーボード (sunōbōdo) (滑雪板) ^ 一枚の大きな板に乗って、雪の上を滑る冬のスポーツのことです。(A winter sport where you slide on snow while riding a single large board.) 大雪山の良質な雪の上で、一日中スノーボードを楽しむのは最高です。(It's the best to enjoy snowboarding all day on the high-quality snow of Mt. Daisetsu.)
+食の宝庫 (shoku no hōko) (美食寶庫) ^ 美味しい野菜や魚が、たくさん取れる場所を例える言葉です。(A term comparing a place where many delicious vegetables and fish can be harvested.) 北海道はまさに食の宝庫で、何を食べても本当に美味しいです。(Hokkaido is truly a treasure trove of food; no matter what you eat, it's really delicious.)
+東北 (tōhoku) (東北) ^ 青森、秋田、岩手など、日本の北の方にある六つの県のことです。(The six prefectures in the north of Japan, including Akita, Aomori, and Iwate.) 東北地方には、古い歴史や温かい温泉がたくさん残っています。(The Tohoku region has many old histories and warm hot springs remaining.)
+宮城県の松島 (miyagi-ken no matsushima) (宮城縣的松島) ^ たくさんの小さな島がある海で、日本三景の一つと言われる場所です。(A sea with many small islands, said to be one of the three most scenic spots in Japan.) 宮城県の松島で遊覧船に乗って、美しい海と島を眺めるのは素敵です。(It's wonderful to take a sightseeing boat at Matsushima in Miyagi Prefecture and gaze at the beautiful sea and islands.)
+タイムスリップ (taimusurippu) (時空穿越) ^ 昔の世界に、突然戻ってしまったような不思議な感覚のことです。(A mysterious feeling as if one has suddenly returned to an old world.) 古い建物が並ぶ町を歩いていると、まるで江戸時代にタイムスリップしたようです。(Walking through a town lined with old buildings feels as if I've time-traveled to the Edo period.)
+福島県の大内宿 (fukushima-ken no ōuchijuku) (福島縣的大內宿) ^ 江戸時代の宿場町の様子が、今もそのまま残っている有名な場所です。(A famous place where the appearance of an Edo-period post town still remains as it was.) 福島県の大内宿で、茅葺き屋根の家を見ながら名物のそばを食べるのは最高です。(Eating the famous soba while looking at thatched-roof houses in Ouchijuku, Fukushima, is the best.)
+岩手県の遠野市の河童 (iwate-ken no tōno-shi no kappa) (岩手縣遠野市的河童) ^ 河童の伝説が今も大切にされている、遠野にある不思議な場所です。(A mysterious place in Tono where the legend of the Kappa is still cherished today.) 岩手県の遠野市の河童が出るという池で、キュウリを持って待ってみました。(I tried waiting with a cucumber at a pond in Tono, Iwate, where Kappa are said to appear.)
+青森の大間マグロ (aomori no ōma maguro) (青森的大間鮪魚) ^ 青森の大間という場所で取れる、最高級の美味しいマグロのことです。(The highest-grade delicious tuna caught in a place called Oma in Aomori.) 青森の大間マグロの刺身は、口の中でとろけるような美味しさです。(The sashimi of Oma tuna from Aomori is so delicious it feels like it melts in your mouth.)
+宮城の牛タンと笹かまぼこ (miyagi no gyūtan to sasakamaboko) (宮城的牛舌與笹蒲鉾（魚板）) ^ 宮城県を代表する、とても有名な二つの美味しい食べ物のことです。(Two very famous delicious foods representing Miyagi Prefecture.) 宮城の牛タンと笹かまぼこをお土産に買って、家族で楽しむことにしました。(I decided to buy Miyagi beef tongue and bamboo leaf fish cakes as souvenirs for the family to enjoy.)
+福島の喜多方ラーメン (fukushima no kitakata rāmen) (福島的喜多方拉麵) ^ 福島県の喜多方市で作られる、醤油味のとても有名なラーメンです。(A very famous soy-sauce-flavored ramen made in Kitakata City, Fukushima.) 福島の喜多方ラーメンは麺が太くて、スープがさっぱりしていて美味しいです。(Kitakata ramen from Fukushima has thick noodles and a refreshing, delicious soup.)
+山形の米沢牛 (yamagata no yonezawa gyū) (山形的米澤牛) ^ 山形県で大切に育てられた、とても柔らかい高級な牛肉のことです。(Very tender, high-end beef from cattle raised carefully in Yamagata Prefecture.) 山形の米沢牛のステーキを食べて、その美味しさに本当に驚きました。(I was truly surprised by the deliciousness when I ate Yonezawa beef steak from Yamagata.)
+秋田のきりたんぽ鍋 (akita no kiritanpo nabe) (秋田的切蒲英火鍋) ^ ご飯を棒に巻いて焼いたものと、鶏肉を一緒に煮る秋田の料理です。(An Akita dish where rice wrapped on sticks and grilled is simmered together with chicken.) 秋田のきりたんぽ鍋は、寒い冬に家族みんなで食べると体が温まります。(Akita's kiritanpo hot pot warms the body when eaten by the whole family in the cold winter.)
+仙台の七夕祭り (sendai no tanabata matsuri) (仙台的七夕祭) ^ 八月に仙台で行われる、華やかな飾りが町中に並ぶ有名なお祭りです。(A famous festival held in Sendai in August where gorgeous decorations line the town.) 仙台の七夕祭りで、色とりどりの大きな飾りを見ながら歩くのはとても楽しいです。(It's very fun to walk through the Sendai Tanabata Festival while looking at the large, colorful decorations.)
+秋田の竿灯祭り (akita no kantō matsuri) (秋田的竿燈祭) ^ たくさんの提灯がついた長い竿を、手や額で支えて歩く秋田の祭りです。(An Akita festival where people walk while supporting long poles with many lanterns on their hands or foreheads.) 秋田の竿灯祭りで、力強く竿を操る男性たちの姿に大きな拍手が起こりました。(At the Akita Kanto Festival, loud applause broke out for the men powerfully manipulating the poles.)
+山形の花笠祭り (yamagata no hanagasa matsuri) (山形的花笠祭) ^ 花が飾られた笠を持って、賑やかな音楽に合わせて踊る山形の祭りです。(A Yamagata festival where people hold hats decorated with flowers and dance to lively music.) 山形の花笠祭りの掛け声を聞くと、自分も一緒に踊りたくなってきます。(Hearing the chants of the Yamagata Hanagasa Festival makes me want to dance along too.)
+青森のねぶた祭 (aomori no nebuta matsuri) (青森的睡魔祭) ^ 大きな武者などの形をした灯籠が、町を回る迫力ある青森の祭りです。(A powerful Aomori festival where lanterns shaped like large warriors, etc., go around the town.) 青森のねぶた祭で、「ラッセラー」という掛け声と共に跳ねるのが最高です。(Jumping along with the "Rassera" chant at the Aomori Nebuta Festival is the best.)
+Would you like me to recommend a specific travel plan to explore these Northeast Japan festivals?
+
+
+`, 
 'b3l3': ``, 
 'b3l4': ``,
 'b3l5': ``, 
@@ -2884,7 +3186,7 @@ Would you like me to create an image of one of these famous Japanese festivals f
         let currentWordIndex = 0;
         let flatWordsList = [];
         let currentSpeech = null;
-        let speechRate = 1.0;
+        let speechRate = 0.8;
         let voices = [];
         let voicesLoaded = false;
         let currentTTSSystem = 'android';
@@ -2898,6 +3200,7 @@ Would you like me to create an image of one of these famous Japanese festivals f
         let correctAnswer = null;
         let showEnglishInQuiz = false;
         let showEnglishTimeout = null;
+let isTextHidden = false;
 
         // ============ TTS FUNCTIONS ============
         function loadVoices() {
@@ -3019,9 +3322,20 @@ Would you like me to create an image of one of these famous Japanese festivals f
         };
 
         utterance.onend = function() {
-            console.log('Speech ended normally');
-            currentSpeech = null;
-        };
+    console.log('Speech ended normally');
+    currentSpeech = null;
+    // Reset all vocab toggle buttons
+    document.querySelectorAll('.vocab-toggle-btn').forEach(btn => {
+        btn.textContent = '🔊';
+        btn.title = 'Play Audio';
+    });
+    // Reset walk-through toggle button
+    const walkToggle = document.getElementById('speakCurrentBtn');
+    if (walkToggle) {
+        walkToggle.textContent = '🔊';
+        walkToggle.title = 'Play Audio';
+    }
+};
 
         utterance.onerror = function(event) {
             console.error('Speech error:', event.error);
@@ -3044,6 +3358,26 @@ Would you like me to create an image of one of these famous Japanese festivals f
             }
             currentSpeech = null;
         }
+
+function toggleHideText() {
+    isTextHidden = !isTextHidden;
+    
+    const hideBtn = document.getElementById('hideTextBtn');
+    const currentWord = document.getElementById('currentWord');
+    const currentExample = document.getElementById('currentExample');
+    
+    if (isTextHidden) {
+        hideBtn.textContent = '🙉';
+        hideBtn.title = 'Show Text';
+        if (currentWord) currentWord.style.visibility = 'hidden';
+        if (currentExample) currentExample.style.visibility = 'hidden';
+    } else {
+        hideBtn.textContent = '🙈';
+        hideBtn.title = 'Hide Text';
+        if (currentWord) currentWord.style.visibility = 'visible';
+        if (currentExample) currentExample.style.visibility = 'visible';
+    }
+}
 
         async function initializeTTS() {
             console.log('Initializing TTS...');
@@ -3101,12 +3435,10 @@ Would you like me to create an image of one of these famous Japanese festivals f
     const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
     if (isChecked) {
         const fullText = `${item.word}. ${item.example}`;
-        // Escape both single and double quotes for HTML attribute
         const escapedText = fullText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         html += `<tr class="vocab-row">
             <td class="audio-controls">
-                <button class="audio-btn play-btn" onclick="speakText('${escapedText}')">🔊</button>
-                <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                <button class="audio-btn play-btn vocab-toggle-btn" data-text="${escapedText}" title="Play Audio">🔊</button>
             </td>
             <td class="content-cell">
                 <div class="vocab-word">${item.word}</div>
@@ -3120,6 +3452,13 @@ Would you like me to create an image of one of these famous Japanese festivals f
             tableBody.innerHTML = html;
             showSectionSelector(data, lessonKey, savedCheckedWords);
             document.getElementById('overallVocabSection').style.display = 'block';
+
+// Add event listeners for vocab toggle buttons
+            document.querySelectorAll('.vocab-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    toggleVocabAudio(this);
+                });
+            });
         }
 
         async function flattenLessonData(lessonData) {
@@ -3290,10 +3629,16 @@ Would you like me to create an image of one of these famous Japanese festivals f
             correctAnswer = quizWords[currentQuizIndex];
 
             document.getElementById('listenAnswerDisplay').textContent = 'スピーカーをクリック';
-            document.getElementById('timerFeedback').textContent = '';
-            document.getElementById('timerFeedback').className = 'timer-feedback';
-            document.getElementById('listenNextBtn').disabled = true;
-            document.getElementById('listenNextBtn').style.display = 'inline-block';
+document.getElementById('timerFeedback').textContent = '';
+document.getElementById('timerFeedback').className = 'timer-feedback';
+document.getElementById('listenNextBtn').disabled = true;
+document.getElementById('listenNextBtn').style.display = 'inline-block';
+
+const speakerToggle = document.getElementById('listenSpeakerToggle');
+if (speakerToggle) {
+    speakerToggle.textContent = '🔊';
+    speakerToggle.title = 'Play Audio';
+}
 
             const toggleBtn = document.getElementById('toggleEnglishBtn');
             if (toggleBtn) {
@@ -3380,6 +3725,47 @@ Would you like me to create an image of one of these famous Japanese festivals f
                 }
             }
         }
+
+function toggleQuizAudio() {
+    const toggleBtn = document.getElementById('listenSpeakerToggle');
+    
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        // Currently playing - stop it
+        stopSpeech();
+        toggleBtn.textContent = '🔊';
+        toggleBtn.title = 'Play Audio';
+    } else {
+        // Not playing - play it
+        playQuizAudio();
+        toggleBtn.textContent = '🔇';
+        toggleBtn.title = 'Stop Audio';
+    }
+}
+
+function toggleVocabAudio(button) {
+    const text = button.getAttribute('data-text');
+    
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        // Currently playing - stop it
+        stopSpeech();
+        // Reset all buttons
+        document.querySelectorAll('.vocab-toggle-btn').forEach(btn => {
+            btn.textContent = '🔊';
+            btn.title = 'Play Audio';
+        });
+    } else {
+        // Not playing - play it
+        // Reset all buttons first
+        document.querySelectorAll('.vocab-toggle-btn').forEach(btn => {
+            btn.textContent = '🔊';
+            btn.title = 'Play Audio';
+        });
+        // Set this button to stop icon
+        button.textContent = '🔇';
+        button.title = 'Stop Audio';
+        speakText(text);
+    }
+}
 
         function toggleEnglishDisplay() {
             showEnglishInQuiz = !showEnglishInQuiz;
@@ -3701,18 +4087,18 @@ Would you like me to create an image of one of these famous Japanese festivals f
                 }
                 
                 speechBubble.innerHTML = `
-                    <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
-                    <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
-                    <div class="bubble-controls">
-                        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-                        <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
-                        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
-                    </div>
-                    <div class="translation-text" id="translationText">
-                        <div class="translation-label">🌐 翻訳：</div>
-                        <div><strong>${chineseWord}</strong></div>
-                        <div>${chineseExample}</div>
-                    </div>`;
+    <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
+    <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
+    <div class="bubble-controls">
+        <button class="bubble-btn hide-btn" id="hideTextBtn" title="Hide Text">🙈</button>
+        <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
+        <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+    </div>
+    <div class="translation-text" id="translationText">
+        <div class="translation-label">🌐 翻訳：</div>
+        <div><strong>${chineseWord}</strong></div>
+        <div>${chineseExample}</div>
+    </div>`;
 
                 attachBubbleEventListeners();
             }
@@ -3721,22 +4107,38 @@ Would you like me to create an image of one of these famous Japanese festivals f
         }
 
         function attachBubbleEventListeners() {
-            const speakBtn = document.getElementById('speakCurrentBtn');
-            const stopBtn = document.getElementById('stopCurrentBtn');
-            const translateBtn = document.getElementById('showTranslationBtn');
+    const hideBtn = document.getElementById('hideTextBtn');
+    const speakBtn = document.getElementById('speakCurrentBtn');
+    const translateBtn = document.getElementById('showTranslationBtn');
 
-            if (speakBtn) speakBtn.addEventListener('click', handleSpeakCurrent);
-            if (stopBtn) stopBtn.addEventListener('click', stopSpeech);
-            if (translateBtn) translateBtn.addEventListener('click', toggleTranslation);
+    if (hideBtn) hideBtn.addEventListener('click', toggleHideText);
+    if (speakBtn) speakBtn.addEventListener('click', toggleWalkThroughAudio);
+    if (translateBtn) translateBtn.addEventListener('click', toggleTranslation);
+}
+
+        function toggleWalkThroughAudio() {
+    const speakBtn = document.getElementById('speakCurrentBtn');
+    
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        // Currently playing - stop it
+        stopSpeech();
+        if (speakBtn) {
+            speakBtn.textContent = '🔊';
+            speakBtn.title = 'Play Audio';
         }
-
-        function handleSpeakCurrent() {
-            const currentItem = flatWordsList[currentWordIndex];
-            if (currentItem) {
-                const fullText = `${currentItem.word}. ${currentItem.example}`;
-                speakText(fullText);
+    } else {
+        // Not playing - play it
+        const currentItem = flatWordsList[currentWordIndex];
+        if (currentItem) {
+            const fullText = `${currentItem.word}. ${currentItem.example}`;
+            speakText(fullText);
+            if (speakBtn) {
+                speakBtn.textContent = '🔇';
+                speakBtn.title = 'Stop Audio';
             }
         }
+    }
+}
 
         function toggleTranslation() {
             const translationDiv = document.getElementById('translationText');
@@ -3768,7 +4170,7 @@ Would you like me to create an image of one of these famous Japanese festivals f
                 </div>
                 <div class="bubble-controls">
                     <button class="bubble-btn play-btn" id="congratsPlayBtn">🔊</button>
-                    <button class="bubble-btn stop-btn" id="congratsStopBtn">⏹</button>
+                    <button class="bubble-btn stop-btn" id="congratsStopBtn">🔇</button>
                     <button class="bubble-btn learn-again-btn" id="learnAgainBtn">🔄 もう一度挑戦する</button>
                 </div>`;
 
@@ -3835,44 +4237,51 @@ Would you like me to create an image of one of these famous Japanese festivals f
         }
 
         async function startStudySession() {
-            const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-            
-            if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-                alert('まず単語データのあるレッスンを選択してください！');
-                return;
-            }
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    
+    if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
+        alert('まず単語データのあるレッスンを選択してください！');
+        return;
+    }
 
-            currentLessonData = vocabDatabase[selectedLesson];
-            flatWordsList = await flattenLessonData(currentLessonData);
-            currentWordIndex = 0;
-            isCompleted = false;
-            translationShown = false;
-            currentEmoji = getRandomEmoji();
+    currentLessonData = vocabDatabase[selectedLesson];
+    flatWordsList = await flattenLessonData(currentLessonData);
+    currentWordIndex = 0;
+    isCompleted = false;
+    translationShown = false;
+    isTextHidden = false;  // ← Reset hide state when starting
+    currentEmoji = getRandomEmoji();
 
-            document.getElementById('studyModal').style.display = 'block';
-            updateStudySession();
-        }
+    document.getElementById('studyModal').style.display = 'block';
+    updateStudySession();
+}
 
         function handleFloatingButtons() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-            const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
-            const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
-            const buttonCategories = document.querySelector('.button-categories');
-            
-            if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
-            
-            const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
-            
-            if (window.scrollY > buttonCategoriesBottom + 100) {
-                backToTopBtn.classList.add('show');
-                floatingPrevSectionBtn.classList.add('show');
-                floatingNextSectionBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-                floatingPrevSectionBtn.classList.remove('show');
-                floatingNextSectionBtn.classList.remove('show');
-            }
-        }
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
+    const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
+    const buttonCategories = document.querySelector('.button-categories');
+    
+    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
+    
+    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollY = window.scrollY;
+    
+    // Check if we're near the bottom of the page
+    const nearBottom = (scrollY + windowHeight) >= (documentHeight - 200);
+    
+    if (window.scrollY > buttonCategoriesBottom + 100 && !nearBottom) {
+        backToTopBtn.classList.add('show');
+        floatingPrevSectionBtn.classList.add('show');
+        floatingNextSectionBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+        floatingPrevSectionBtn.classList.remove('show');
+        floatingNextSectionBtn.classList.remove('show');
+    }
+}
 
         function scrollToTop() {
             const buttonCategories = document.querySelector('.button-categories');
@@ -4167,7 +4576,7 @@ Would you like me to create an image of one of these famous Japanese festivals f
             });
 
             document.getElementById('listenChooseBtn').addEventListener('click', startListenChooseQuiz);
-            document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
+            document.getElementById('listenSpeakerToggle').addEventListener('click', toggleQuizAudio);
             document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
             document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
             document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
@@ -4181,9 +4590,10 @@ Would you like me to create an image of one of these famous Japanese festivals f
             });
 
             document.getElementById('closeStudyModal').addEventListener('click', () => {
-                studyModal.style.display = 'none';
-                stopSpeech();
-            });
+    studyModal.style.display = 'none';
+    stopSpeech();
+    isTextHidden = false;  // ← Reset hide state when closing
+});
 
             document.getElementById('nextBtn').addEventListener('click', nextWord);
             document.getElementById('backBtn').addEventListener('click', previousWord);
@@ -4244,71 +4654,72 @@ Would you like me to create an image of one of these famous Japanese festivals f
             const quizModal = document.getElementById('listenChooseModal');
             
             if (studyModal.style.display === 'block') {
-                const nextBtn = document.getElementById('nextBtn');
-                const backBtn = document.getElementById('backBtn');
-                const speakBtn = document.getElementById('speakCurrentBtn');
-                const translateBtn = document.getElementById('showTranslationBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    const speakBtn = document.getElementById('speakCurrentBtn');
+    const translateBtn = document.getElementById('showTranslationBtn');
 
-                if (event.key === 'ArrowRight' && nextBtn && !nextBtn.disabled) {
-                    event.preventDefault();
-                    nextWord();
-                }
-                if (event.key === 'ArrowLeft' && backBtn && !backBtn.disabled) {
-                    event.preventDefault();
-                    previousWord();
-                }
-                if (event.key === ' ' && speakBtn) {
-                    event.preventDefault();
-                    handleSpeakCurrent();
-                }
-                if ((event.key === 't' || event.key === 'T') && translateBtn && !translateBtn.disabled) {
-                    event.preventDefault();
-                    toggleTranslation();
-                }
-                if (event.key === 's' || event.key === 'S') {
-                    event.preventDefault();
-                    stopSpeech();
-                }
-                if (event.key === 'Escape') {
-                    studyModal.style.display = 'none';
-                    stopSpeech();
-                }
-            }
+    if (event.key === 'ArrowRight' && nextBtn && !nextBtn.disabled) {
+        event.preventDefault();
+        nextWord();
+    }
+    if (event.key === 'ArrowLeft' && backBtn && !backBtn.disabled) {
+        event.preventDefault();
+        previousWord();
+    }
+    if (event.key === ' ' && speakBtn) {
+        event.preventDefault();
+        toggleWalkThroughAudio();
+    }
+    if ((event.key === 't' || event.key === 'T') && translateBtn && !translateBtn.disabled) {
+        event.preventDefault();
+        toggleTranslation();
+    }
+    if (event.key === 'Escape') {
+        studyModal.style.display = 'none';
+        stopSpeech();
+        const walkToggle = document.getElementById('speakCurrentBtn');
+        if (walkToggle) {
+            walkToggle.textContent = '🔊';
+            walkToggle.title = 'Play Audio';
+        }
+    }
+}
 
             if (quizModal.style.display === 'block') {
-                const listenNextBtn = document.getElementById('listenNextBtn');
-                const listenSpeaker = document.getElementById('listenSpeaker');
-                const restartBtn = document.querySelector('.restart-quiz-btn');
+    const listenNextBtn = document.getElementById('listenNextBtn');
+    const listenSpeakerToggle = document.getElementById('listenSpeakerToggle');
+    const restartBtn = document.querySelector('.restart-quiz-btn');
 
-                if (event.key === 'ArrowRight' && listenNextBtn && !listenNextBtn.disabled) {
-                    event.preventDefault();
-                    listenNextBtn.classList.add('key-pressed');
-                    setTimeout(() => listenNextBtn.classList.remove('key-pressed'), 300);
-                    nextQuizQuestion();
-                }
-                if (event.key === ' ' && listenSpeaker) {
-                    event.preventDefault();
-                    playQuizAudio();
-                }
-                if ((event.key === 't' || event.key === 'T') && restartBtn) {
-                    event.preventDefault();
-                    restartBtn.classList.add('key-pressed');
-                    setTimeout(() => restartBtn.classList.remove('key-pressed'), 300);
-                    restartQuiz();
-                }
-                if (!hasAnswered && event.key >= '1' && event.key <= '8') {
-                    event.preventDefault();
-                    const choiceButtons = document.querySelectorAll('.choice-btn');
-                    const index = parseInt(event.key) - 1;
-                    if (choiceButtons[index]) {
-                        choiceButtons[index].click();
-                    }
-                }
-                if (event.key === 'Escape') {
-                    event.preventDefault();
-                    closeQuizModal();
-                }
-            }
+    if (event.key === 'ArrowRight' && listenNextBtn && !listenNextBtn.disabled) {
+        event.preventDefault();
+        listenNextBtn.classList.add('key-pressed');
+        setTimeout(() => listenNextBtn.classList.remove('key-pressed'), 300);
+        nextQuizQuestion();
+    }
+    if (event.key === ' ' && listenSpeakerToggle) {
+        event.preventDefault();
+        toggleQuizAudio();
+    }
+    if ((event.key === 't' || event.key === 'T') && restartBtn) {
+        event.preventDefault();
+        restartBtn.classList.add('key-pressed');
+        setTimeout(() => restartBtn.classList.remove('key-pressed'), 300);
+        restartQuiz();
+    }
+    if (!hasAnswered && event.key >= '1' && event.key <= '8') {
+        event.preventDefault();
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+        const index = parseInt(event.key) - 1;
+        if (choiceButtons[index]) {
+            choiceButtons[index].click();
+        }
+    }
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeQuizModal();
+    }
+}
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
