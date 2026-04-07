@@ -534,7 +534,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 28px;
             margin: 2px;
             padding: 5px;
             border-radius: 3px;
@@ -872,7 +872,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 28px;
             margin: 0 5px;
             padding: 5px;
             border-radius: 3px;
@@ -1409,7 +1409,7 @@
     </div>
     
     <div class="container">
-        <h1>📃 Vocabulary List <br>(v5.21)</h1>
+        <h1>📃 Vocabulary List <br>(v6.02)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -1442,6 +1442,15 @@
                     <button class="vocab-btn" data-category="core" data-lesson="core3">P2 U15</button>
                 </div>
             </div>
+<div class="category">
+    <div class="category-title">📝 My Own List: Monthly Schedule</div>
+    <div class="category-buttons" id="custom-category-buttons">
+        <button class="monthly-custom-btn" data-month="1">Month 1</button>
+        <button class="monthly-custom-btn" data-month="2">Month 2</button>
+        <button class="monthly-custom-btn" data-month="3">Month 3</button>
+        <button id="hidden-custom-btn" class="vocab-btn" style="display: none;"></button>
+    </div>
+</div>
         </div>
 
         <!-- Study Partner Section -->
@@ -1566,7 +1575,7 @@
         <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
         <div class="bubble-controls">
             <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-            <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+            <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
             <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
         </div>
         <div class="translation-text" id="translationText">
@@ -2374,7 +2383,7 @@ function getRandomEmoji() {
                 html += `<tr class="vocab-row">
                     <td class="audio-controls">
                         <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                        <button class="audio-btn stop-btn" onclick="stopSpeech()">⏹</button>
+                        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
                     </td>
                     <td class="content-cell">
                         <div class="vocab-word">${item.word}</div>
@@ -3068,7 +3077,7 @@ function restoreNormalInterface() {
             <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
             <div class="bubble-controls">
                 <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-                <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">⏹</button>
+                <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
                 <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
             </div>
             <div class="translation-text" id="translationText">
@@ -3140,7 +3149,7 @@ function attachBubbleEventListeners() {
                 </div>
                 <div class="bubble-controls">
                     <button class="bubble-btn play-btn" id="congratsPlayBtn">🔊</button>
-                    <button class="bubble-btn stop-btn" id="congratsStopBtn">⏹</button>
+                    <button class="bubble-btn stop-btn" id="congratsStopBtn">🔇</button>
                     <button class="bubble-btn learn-again-btn" id="learnAgainBtn">🔄 Learn Again</button>
                 </div>`;
 
