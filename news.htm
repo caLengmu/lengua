@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文方位詞互動練習</title>
+    <style>
+        body { 
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 15px; 
+            background-color: #f0f4f8; 
+        }
+        h1 { font-size: 1.5rem; text-align: center; color: #2c3e50; }
+        h2 { font-size: 1.25rem; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px; }
+        h3 { font-size: 1.1rem; }
+
+        .section { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        
+        .example { 
+            background-color: #eef7fe; 
+            padding: 12px; 
+            border-left: 5px solid #3498db; 
+            margin-bottom: 15px; 
+            border-radius: 0 8px 8px 0; 
+            font-size: 0.95rem;
+            line-height: 2;
+        }
+        .emphasis { color: #e74c3c; font-weight: bold; }
+
+        .speaker {
+            cursor: pointer;
+            margin-right: 5px;
+            font-size: 1.2rem;
+            user-select: none;
+            display: inline-block;
+            transition: transform 0.1s;
+        }
+        .speaker:active { transform: scale(0.8); }
+
+        /* 地圖示意圖容器 */
+        .map-diagrams {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 16px 0;
+        }
+        .map-card {
+            background: #f8fcff;
+            border: 1.5px solid #b8d9f5;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .map-card .map-label {
+            font-size: 0.92rem;
+            color: #2c3e50;
+            font-weight: bold;
+            text-align: center;
+        }
+        .map-card .map-label .emphasis { color: #e74c3c; }
+        .map-card svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .map-rule-tag {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: 0.82rem;
+            font-weight: bold;
+            letter-spacing: 0.03em;
+        }
+        .map-rule-tag.external { background: #e67e22; }
+
+        @media (min-width: 620px) {
+            .map-diagrams { flex-direction: row; }
+            .map-card { flex: 1; }
+        }
+
+        .exercise-item { 
+            margin-bottom: 15px; 
+            padding: 12px; 
+            border: 1px solid #eee; 
+            border-radius: 8px; 
+            background-color: #fafafa; 
+        }
+        .exercise-item p { margin-top: 0; margin-bottom: 10px; font-weight: 500; }
+
+        .input-group { display: flex; flex-direction: column; gap: 10px; }
+        input[type="text"] { 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            font-size: 16px;
+        }
+        button.check-btn { 
+            padding: 10px; 
+            background-color: #27ae60; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+        }
+
+        .nav-tabs { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 8px; 
+            margin-bottom: 20px; 
+        }
+        .nav-tabs button { 
+            padding: 10px 5px; 
+            background-color: #34495e; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .nav-tabs button:active { background-color: #2c3e50; }
+
+        .feedback { font-weight: bold; margin-top: 8px; font-size: 0.9rem; }
+        .correct { color: #27ae60; }
+        .incorrect { color: #e74c3c; }
+        .hint { color: #7f8c8d; font-size: 0.85rem; margin-bottom: 5px; line-height: 1.4; }
+
+        @media (min-width: 600px) {
+            h1 { font-size: 2rem; }
+            .nav-tabs { grid-template-columns: 1fr 1fr 1fr 1fr; }
+            .input-group { flex-direction: row; align-items: center; }
+            input[type="text"] { width: 350px; }
+            .section { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧭 英文方位詞學習系統</h1>
+    
+    <div class="nav-tabs">
+        <button onclick="showSection('part1')">一、四方位</button>
+        <button onclick="showSection('part2')">二、八方位</button>
+        <button onclick="showSection('part3')">三、綜合複習</button>
+        <button onclick="showSection('part4')">四、中翻英</button>
+    </div>
+
+    <div id="part1" class="section">
+        <h2>Part 1: 四大方位</h2>
+        <div class="example">
+            <b>1. 在內部（A 是 B 的一部分）：</b><br>
+            <span class="speaker" onclick="speak('A is in the north of B.')" title="聽發音">🔊</span> A is <span class="emphasis">in the north of</span> B.<br>
+            <span class="speaker" onclick="speak('Taipei is in the north of Taiwan.')" title="聽發音">🔊</span> Taipei is in the north of Taiwan. (台北在台灣的北部)<br>
+            <br>
+            <b>2. 在外部（A 與 B 是不同區域）：</b><br>
+            <span class="speaker" onclick="speak('C is to the north of D.')" title="聽發音">🔊</span> C is <span class="emphasis">( to the ) north of</span> D. <b>( to the 常省略)</b><br>
+            <span class="speaker" onclick="speak('Japan is to the east of China. Japan is east of China.')" title="聽發音">🔊</span> Japan is to the east of China. / Japan is east of China. (日本在中國的東邊)
+        </div>
+
+        <!-- 示意圖區域 -->
+        <div class="map-diagrams">
+
+            <!-- 圖1：台北在台灣北部 (in the north of) -->
+            <div class="map-card">
+                <div class="map-label">
+                    Taipei is <span class="emphasis">in the north of</span> Taiwan.
+                </div>
+                <span class="map-rule-tag">in = 內部，A 是 B 的一部分</span>
+                <!-- Taiwan SVG map with Taipei highlighted in north -->
+                <svg viewBox="0 0 220 320" width="200" xmlns="http://www.w3.org/2000/svg" aria-label="台灣地圖，台北位於北部示意圖">
+                  <defs>
+                    <linearGradient id="seaGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#c8e8f8"/>
+                      <stop offset="100%" stop-color="#a0d4ef"/>
+                    </linearGradient>
+                    <linearGradient id="twGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#b8e0b8"/>
+                      <stop offset="100%" stop-color="#7cbd7c"/>
+                    </linearGradient>
+                    <linearGradient id="northGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#ffe0a0"/>
+                      <stop offset="100%" stop-color="#f5c842"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Sea background -->
+                  <rect width="220" height="320" fill="url(#seaGrad)" rx="10"/>
+                  <!-- Sea label -->
+                  <text x="18" y="180" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">太</text>
+                  <text x="18" y="193" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">平</text>
+                  <text x="18" y="206" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">洋</text>
+                  <text x="185" y="180" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">台</text>
+                  <text x="185" y="193" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">灣</text>
+                  <text x="185" y="206" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">海</text>
+                  <text x="185" y="219" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.7">峽</text>
+                  <!-- Taiwan main island shape (simplified) -->
+                  <path d="M95,42 C106,38 120,40 130,50 C145,62 150,80 152,105 C155,135 153,165 148,195 C142,225 132,252 118,272 C110,284 100,290 90,286 C78,280 70,262 66,240 C60,212 60,183 63,155 C67,125 72,98 80,72 C85,58 90,46 95,42 Z" fill="url(#twGrad)" stroke="#5a9a5a" stroke-width="1.5"/>
+                  <!-- Northern highlight region -->
+                  <path d="M95,42 C106,38 120,40 130,50 C140,60 146,74 148,90 C140,95 125,98 110,97 C97,96 86,90 80,82 C80,72 85,58 90,46 Z" fill="url(#northGrad)" stroke="#d4a800" stroke-width="1.5" opacity="0.92"/>
+                  <!-- North label inside island -->
+                  <text x="100" y="78" text-anchor="middle" font-size="11" fill="#8a6200" font-family="sans-serif" font-weight="bold">北部</text>
+                  <!-- Taipei dot -->
+                  <circle cx="104" cy="60" r="7" fill="#e74c3c" stroke="white" stroke-width="2"/>
+                  <!-- Taipei label -->
+                  <text x="115" y="58" font-size="11" fill="#c0392b" font-family="sans-serif" font-weight="bold">台北</text>
+                  <text x="115" y="70" font-size="9.5" fill="#c0392b" font-family="sans-serif">Taipei</text>
+                  <!-- Taiwan label -->
+                  <text x="108" y="175" text-anchor="middle" font-size="13" fill="#2d6a2d" font-family="sans-serif" font-weight="bold">Taiwan</text>
+                  <!-- Compass rose -->
+                  <g transform="translate(32,36)">
+                    <circle cx="0" cy="0" r="16" fill="white" stroke="#aaa" stroke-width="1" opacity="0.85"/>
+                    <text x="0" y="-6" text-anchor="middle" font-size="9" fill="#e74c3c" font-family="sans-serif" font-weight="bold">N</text>
+                    <text x="0" y="14" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">S</text>
+                    <text x="-12" y="4" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">W</text>
+                    <text x="12" y="4" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">E</text>
+                    <polygon points="0,-13 2.5,-4 -2.5,-4" fill="#e74c3c"/>
+                    <polygon points="0,13 2.5,4 -2.5,4" fill="#999"/>
+                  </g>
+                  <!-- Arrow pointing to north region -->
+                  <line x1="57" y1="68" x2="78" y2="68" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr1)" opacity="0.0"/>
+                  <!-- Inside label -->
+                  <rect x="50" y="295" width="120" height="18" rx="9" fill="#3498db" opacity="0.15"/>
+                  <text x="110" y="307" text-anchor="middle" font-size="10" fill="#1a6699" font-family="sans-serif" font-weight="bold">Taipei ⊂ Taiwan （內部）</text>
+                </svg>
+            </div>
+
+            <!-- 圖2：日本在中國東邊 (to the east of) -->
+            <div class="map-card">
+                <div class="map-label">
+                    Japan is <span class="emphasis">to the east of</span> China.
+                </div>
+                <span class="map-rule-tag external">to = 外部，兩者是不同區域</span>
+                <!-- China + Japan SVG map -->
+                <svg viewBox="0 0 260 260" width="220" xmlns="http://www.w3.org/2000/svg" aria-label="中國與日本位置關係示意圖">
+                  <defs>
+                    <linearGradient id="seaGrad2" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#c8e8f8"/>
+                      <stop offset="100%" stop-color="#a0d4ef"/>
+                    </linearGradient>
+                    <linearGradient id="cnGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#a8d5a8"/>
+                      <stop offset="100%" stop-color="#6daa6d"/>
+                    </linearGradient>
+                    <linearGradient id="jpGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#f5c0a0"/>
+                      <stop offset="100%" stop-color="#e8905a"/>
+                    </linearGradient>
+                    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                      <polygon points="0 0, 8 3, 0 6" fill="#e67e22"/>
+                    </marker>
+                  </defs>
+                  <!-- Sea -->
+                  <rect width="260" height="260" fill="url(#seaGrad2)" rx="10"/>
+                  <!-- Sea label -->
+                  <text x="155" y="130" font-size="10" fill="#5599bb" font-family="sans-serif" opacity="0.8">東海 / 太平洋</text>
+                  <!-- China simplified shape -->
+                  <path d="M20,50 C35,38 65,32 95,35 C125,38 145,50 155,72 C165,95 162,122 155,145 C147,170 132,190 112,205 C92,220 68,225 48,215 C28,205 16,182 12,155 C8,128 10,100 16,75 C17,65 18,57 20,50 Z" fill="url(#cnGrad)" stroke="#4a8a4a" stroke-width="2"/>
+                  <!-- China label -->
+                  <text x="82" y="125" text-anchor="middle" font-size="15" fill="#1e5c1e" font-family="sans-serif" font-weight="bold">China</text>
+                  <text x="82" y="143" text-anchor="middle" font-size="11" fill="#2d7a2d" font-family="sans-serif">中國</text>
+                  <!-- Japan Honshu (main island) -->
+                  <path d="M198,55 C205,50 215,52 220,60 C226,70 224,84 218,95 C212,108 203,118 196,122 C190,126 185,122 183,114 C180,104 182,90 186,78 C190,67 195,60 198,55 Z" fill="url(#jpGrad)" stroke="#b06030" stroke-width="1.5"/>
+                  <!-- Japan Kyushu -->
+                  <path d="M192,132 C196,128 202,130 205,136 C208,143 206,152 201,157 C197,161 192,160 190,155 C187,149 188,140 192,132 Z" fill="url(#jpGrad)" stroke="#b06030" stroke-width="1.2"/>
+                  <!-- Japan Hokkaido -->
+                  <ellipse cx="215" cy="40" rx="14" ry="9" fill="url(#jpGrad)" stroke="#b06030" stroke-width="1.2" transform="rotate(-15,215,40)"/>
+                  <!-- Japan label -->
+                  <text x="215" y="95" text-anchor="middle" font-size="13" fill="#7a2800" font-family="sans-serif" font-weight="bold">Japan</text>
+                  <text x="215" y="110" text-anchor="middle" font-size="10" fill="#a03800" font-family="sans-serif">日本</text>
+                  <!-- Arrow: East direction from China to Japan -->
+                  <line x1="160" y1="115" x2="185" y2="100" stroke="#e67e22" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+                  <!-- East label on arrow -->
+                  <text x="168" y="102" font-size="10" fill="#c05000" font-family="sans-serif" font-weight="bold">東→</text>
+                  <!-- Compass rose -->
+                  <g transform="translate(32,34)">
+                    <circle cx="0" cy="0" r="16" fill="white" stroke="#aaa" stroke-width="1" opacity="0.88"/>
+                    <text x="0" y="-6" text-anchor="middle" font-size="9" fill="#e74c3c" font-family="sans-serif" font-weight="bold">N</text>
+                    <text x="0" y="14" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">S</text>
+                    <text x="-12" y="4" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">W</text>
+                    <text x="12" y="4" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">E</text>
+                    <polygon points="0,-13 2.5,-4 -2.5,-4" fill="#e74c3c"/>
+                    <polygon points="0,13 2.5,4 -2.5,4" fill="#999"/>
+                  </g>
+                  <!-- Separation indicator: dashed boundary line hint -->
+                  <line x1="160" y1="50" x2="160" y2="210" stroke="#e67e22" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.45"/>
+                  <!-- Bottom note -->
+                  <rect x="30" y="234" width="200" height="18" rx="9" fill="#e67e22" opacity="0.13"/>
+                  <text x="130" y="246" text-anchor="middle" font-size="10" fill="#a04400" font-family="sans-serif" font-weight="bold">Japan ≠ part of China （外部）</text>
+                </svg>
+            </div>
+
+        </div>
+        <!-- end map-diagrams -->
+
+        <h3>互動練習</h3>
+        <p class="hint">請輸入介系詞 (in / to)</p>
+        <div id="ex-p1"></div>
+    </div>
+
+    <div id="part2" class="section" style="display:none;">
+        <h2>Part 2: 進階方位 (八方位)</h2>
+        <div class="example">
+            <span class="speaker" onclick="speak('Maine is in the northeast of the USA.')" title="聽發音">🔊</span> 1. Maine is <span class="emphasis">in the northeast of</span> the USA. (緬因州在美國東北部)<br>
+            <span class="speaker" onclick="speak('Taiwan is to the southeast of mainland China.')" title="聽發音">🔊</span> 2. Taiwan is <span class="emphasis">to the southeast of</span> mainland China. (台灣在中國大陸東南方)
+        </div>
+        <h3>互動練習</h3>
+        <p class="hint">請輸入方位單字 (如: southwest)</p>
+        <div id="ex-p2"></div>
+    </div>
+
+    <div id="part3" class="section" style="display:none;">
+        <h2>Part 3: 綜合複習</h2>
+        <p class="hint">輸入完整方位，如：<span class="emphasis">in the east of</span>。<br>外部方位可寫 <span class="emphasis">to the north of</span> 或 <span class="emphasis">north of</span>。</p>
+        <div id="ex-p3"></div>
+    </div>
+
+    <div id="part4" class="section" style="display:none;">
+        <h2>Part 4: 中翻英練習</h2>
+        <p class="hint">請輸入完整英文句子。注意大小寫與標點符號。</p>
+        <div id="ex-p4"></div>
+    </div>
+
+<script>
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("您的瀏覽器不支援語音發音功能。");
+        }
+    }
+
+    const data = {
+        p1: [
+            { q: "Hokkaido is ___ the north of Japan. (北海道在日本境內北部)", a: ["in"] },
+            { q: "Mexico is ___ the south of the USA. (墨西哥在美國以南)", a: ["to"] },
+            { q: "Kaohsiung is ___ the south of Taiwan. (高雄在台灣境內南部)", a: ["in"] },
+            { q: "The Arctic Ocean is ___ the north of Russia. (北冰洋在俄羅斯以北)", a: ["to"] },
+            { q: "Australia is ___ the south of Indonesia. (澳洲在印尼以南)", a: ["to"] },
+            { q: "New York City is ___ the east of the USA. (紐約市在美國境內東部)", a: ["in"] },
+            { q: "The Atlantic Ocean is ___ the east of America. (大西洋在美洲以東)", a: ["to"] },
+            { q: "Egypt is ___ the northeast of Africa. (埃及在非洲境內東北部)", a: ["in"] },
+            { q: "Scotland is ___ the north of Great Britain. (蘇格蘭在大不列顛島北部)", a: ["in"] },
+            { q: "France is ___ the south of the UK. (法國在英國以南)", a: ["to"] }
+        ],
+        p2: [
+            { q: "London is in the ___ of England. (倫敦在英格蘭南部)", a: ["south"] },
+            { q: "California is in the ___ of the USA. (加州在美國西部)", a: ["west"] },
+            { q: "Shanghai is in the ___ of China. (上海在中國東部)", a: ["east"] }, 
+            { q: "India is to the ___ of China. (印度在中國的西南方)", a: ["southwest"] },
+            { q: "Boston is in the ___ of the USA. (波士頓在美國東北部)", a: ["northeast"] },
+            { q: "Thailand is to the ___ of Myanmar. (泰國在緬甸的東南方)", a: ["southeast"] },
+            { q: "Seattle is in the ___ of the USA. (西雅圖在美國西北部)", a: ["northwest"] },
+            { q: "Florida is in the ___ of the USA. (佛羅里達在美國東南部)", a: ["southeast"] },
+            { q: "Harbin is in the ___ of China. (哈爾濱在中國東北部)", a: ["northeast"] },
+            { q: "Xinjiang is in the ___ of China. (新疆在中國西北部)", a: ["northwest"] }
+        ],
+        p3: [
+            { q: "Beijing is ________ China. (北京在中國北部境內)", a: ["in the north of"] },
+            { q: "Japan is ________ China. (日本在中國東邊外部)", a: ["to the east of", "east of"] },
+            { q: "Guangdong is ________ China. (廣東在中國南部境內)", a: ["in the south of"] },
+            { q: "Canada is ________ the USA. (加拿大在美國北邊外部)", a: ["to the north of", "north of"] },
+            { q: "Maine is ________ the USA. (緬因州在美國東北部境內)", a: ["in the northeast of"] },
+            { q: "New Zealand is ________ Australia. (紐西蘭在澳洲東南方外部)", a: ["to the southeast of", "southeast of"] },
+            { q: "California is ________ the USA. (加利福尼亞在美國西部境內)", a: ["in the west of"] },
+            { q: "Mongolia is ________ China. (蒙古在中國北邊外部)", a: ["to the north of", "north of"] },
+            { q: "Shanghai is ________ China. (上海在中國東部境內)", a: ["in the east of"] },
+            { q: "Vietnam is ________ Laos. (越南在寮國東邊外部)", a: ["to the east of", "east of"] }
+        ],
+        p4: [
+            { q: "中國在俄羅斯的南邊。", a: ["China is to the south of Russia.", "China is south of Russia."] },
+            { q: "哈爾濱在中國的北方。", a: ["Harbin is in the north of China."] },
+            { q: "日本在中國的東邊。", a: ["Japan is to the east of China.", "Japan is east of China."] },
+            { q: "加拿大在美國的北邊。", a: ["Canada is to the north of the USA.", "Canada is north of the USA."] },
+            { q: "新疆在中國的西北部。", a: ["Xinjiang is in the northwest of China."] },
+            { q: "新西蘭在澳大利亞的東南方。", a: ["New Zealand is to the southeast of Australia.", "New Zealand is southeast of Australia."] },
+            { q: "海南在中國的南部。", a: ["Hainan is in the south of China."] },
+            { q: "英國在法國的北邊。", a: ["The UK is to the north of France.", "The UK is north of France."] },
+            { q: "非洲在歐洲的南邊。", a: ["Africa is to the south of Europe.", "Africa is south of Europe."] },
+            { q: "上海在中國的東部。", a: ["Shanghai is in the east of China."] }
+        ]
+    };
+
+    function generateExercises(containerId, questionList) {
+        const container = document.getElementById(containerId);
+        questionList.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'exercise-item';
+            div.innerHTML = `
+                <p><strong>Q${index + 1}:</strong> ${item.q}</p>
+                <div class="input-group">
+                    <input type="text" id="${containerId}-ans-${index}" placeholder="在此輸入...">
+                    <button class="check-btn" onclick="check('${containerId}-ans-${index}', ${JSON.stringify(item.a).replace(/"/g, '&quot;')})">檢查</button>
+                </div>
+                <span id="${containerId}-ans-${index}-feedback" class="feedback"></span>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function check(inputId, correctAnswers) {
+        let userAns = document.getElementById(inputId).value.trim().toLowerCase().replace(/[.!]$/, "");
+        const feedback = document.getElementById(inputId + '-feedback');
+        
+        const isCorrect = correctAnswers.some(ans => {
+            let standard = ans.toLowerCase().trim().replace(/[.!]$/, "");
+            return userAns === standard;
+        });
+
+        if (isCorrect) {
+            feedback.innerHTML = "正確！ ✨";
+            feedback.className = "feedback correct";
+        } else {
+            feedback.innerHTML = `錯誤。參考答案: ${correctAnswers[0]}`;
+            feedback.className = "feedback incorrect";
+        }
+    }
+
+    function showSection(id) {
+        ['part1', 'part2', 'part3', 'part4'].forEach(sec => {
+            document.getElementById(sec).style.display = (sec === id) ? 'block' : 'none';
+        });
+        window.scrollTo(0,0);
+    }
+
+    window.onload = () => {
+        generateExercises('ex-p1', data.p1);
+        generateExercises('ex-p2', data.p2);
+        generateExercises('ex-p3', data.p3);
+        generateExercises('ex-p4', data.p4);
+    };
+</script>
+
+</body>
+</html>
