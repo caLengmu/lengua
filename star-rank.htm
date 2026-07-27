@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>繁星校排百分比計算器</title>
+    <style>
+        /* ==========================================================================
+           日系復古配色與全域變數設定 (修改此處即可輕鬆改變整體色調)
+           ========================================================================== */
+        :root {
+            /* 主背景與卡片色彩 (柔和米白/和紙質感) */
+            --bg-color: #f7f4ed;
+            --card-bg: #ffffff;
+            --panel-header-bg: #ebe5d8;
+            
+            /* 文字顏色 */
+            --text-main: #3a3835;
+            --text-sub: #736e65;
+            --text-light: #ffffff;
+            
+            /* 主要按鈕與主題色 (復古紅豆色 / 臙脂) */
+            --primary-color: #a84e46;
+            --primary-hover: #8f3e37;
+            
+            /* 次要按鈕與主題色 (復古青苔綠 / 鐵色) */
+            --secondary-color: #486b6a;
+            --secondary-hover: #385453;
+            
+            /* 強調與標籤色 (復古芥末黃 / 鶯茶) */
+            --accent-color: #d49b4b;
+            --accent-light: #fdf6e7;
+            
+            /* 邊框與分割線 */
+            --border-color: #d8d0c1;
+            --border-soft: #eae3d5;
+            
+            /* 陰影與遮罩 */
+            --shadow: 0 4px 15px rgba(58, 56, 53, 0.06);
+            --modal-overlay: rgba(40, 38, 35, 0.45);
+            
+            /* 字型設定 */
+            --font-family: "Hiragino Sans GB", "Yu Gothic UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .header-title {
+            text-align: center;
+            padding: 28px 20px 20px;
+            border-bottom: 2px dashed var(--border-color);
+            background-color: #fbf9f5;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        /* 左右雙欄佈局 */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        @media (max-width: 768px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-panel {
+            padding: 32px 28px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-panel.left-panel {
+            border-right: 1px solid var(--border-soft);
+        }
+
+        @media (max-width: 768px) {
+            .section-panel.left-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border-soft);
+            }
+        }
+
+        .panel-badge {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .left-panel .panel-badge {
+            background-color: #f2e6e4;
+            color: var(--primary-color);
+        }
+
+        .right-panel .panel-badge {
+            background-color: #e5eceb;
+            color: var(--secondary-color);
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .panel-desc {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            margin-bottom: 24px;
+            min-height: 42px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #faf8f5;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-control:focus {
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(168, 78, 70, 0.12);
+        }
+
+        .right-panel .input-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(72, 107, 106, 0.12);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-hover);
+        }
+
+        /* 右側結果顯示區 */
+        .result-box {
+            margin-top: 24px;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: var(--accent-light);
+            border: 1px solid #ebd8b6;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .result-box.active {
+            display: block;
+        }
+
+        .result-box h4 {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-main {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .result-detail {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+
+        /* 彈出視窗 (Modal) */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--modal-overlay);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-window {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(15px);
+            transition: transform 0.25s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-backdrop.active .modal-window {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            background-color: var(--panel-header-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-sub);
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 4px;
+        }
+
+        .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .table-container {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        .table-container th, .table-container td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .table-container th {
+            background-color: #f7f4ed;
+            color: var(--text-main);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .table-container tr:hover {
+            background-color: #faf7f0;
+        }
+
+        .highlight-tag {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 腳註說明 */
+        .footer-note {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-title">
+            <h1>⭐繁星校排%計算工具⭐</h1>
+            <p>依據教育部繁星推薦規則：各百分比推薦人數採無條件進位累計計算</p>
+        </div>
+
+        <div class="layout-grid">
+            <!-- 左側功能區：全校人數 -> 名次對照表 -->
+            <div class="section-panel left-panel">
+                <span class="panel-badge">功能一</span>
+                <h2 class="panel-title">各百分比名次範圍查詢</h2>
+                <p class="panel-desc">輸入全校高三總人數，即可彈出檢視 1% 至 50% 每個百分比區間對應的名次範圍與人數。</p>
+
+                <div class="form-group">
+                    <label for="totalStudentsLeft">全校符合推薦資格人數</label>
+                    <input type="number" id="totalStudentsLeft" class="input-control" placeholder="例如：473" min="1">
+                </div>
+
+                <button class="btn btn-primary" onclick="showPercentageModal()">生成並檢視對照表</button>
+            </div>
+
+            <!-- 右側功能區：個人名次 -> 落點百分比 -->
+            <div class="section-panel right-panel">
+                <span class="panel-badge">功能二</span>
+                <h2 class="panel-title">個人校排百分比試算</h2>
+                <p class="panel-desc">輸入全校總人數與您自己的校排名次，快速計算您目前落在哪一個百分比區間。</p>
+
+                <div class="form-group">
+                    <label for="totalStudentsRight">全校符合推薦資格人數</label>
+                    <input type="number" id="totalStudentsRight" class="input-control" placeholder="例如：473" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="userRank">您的校排名次</label>
+                    <input type="number" id="userRank" class="input-control" placeholder="例如：17" min="1">
+                </div>
+
+                <button class="btn btn-secondary" onclick="calculateMyRank()">查詢個人百分比</button>
+
+                <div id="resultBox" class="result-box">
+                    <h4>試算結果</h4>
+                    <div id="resultMain" class="result-main">前 -- %</div>
+                    <div id="resultDetail" class="result-detail"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        註：公式採「無條件進位累計每百分比推薦人數」，該區間起始名次為上一百分比累計人數 + 1。
+    </div>
+
+    <!-- 彈出視窗 Modal -->
+    <div id="percentModal" class="modal-backdrop">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 id="modalTitle">百分比人數對照表</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table-container">
+                    <thead>
+                        <tr>
+                            <th>百分比</th>
+                            <th>無條件進位累計人數</th>
+                            <th>該百分比名次範圍</th>
+                            <th>該百分比推薦人數</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalTableBody">
+                        <!-- 動態插入資料 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 繁星推薦計算核心邏輯
+         * 累計人數 = Math.ceil(全校人數 * 百分比 / 100)
+         * 該百分比名次範圍 = (前一百分比累計人數 + 1) ~ (當前百分比累計人數)
+         * 該百分比推薦人數 = 當前累計人數 - 前一累計人數
+         */
+
+        // 左側：彈出視窗對照表
+        function showPercentageModal() {
+            const totalInput = document.getElementById('totalStudentsLeft').value;
+            const total = parseInt(totalInput, 10);
+
+            if (isNaN(total) || total <= 0) {
+                alert('請輸入有效的全校人數！');
+                return;
+            }
+
+            const modalTitle = document.getElementById('modalTitle');
+            const tableBody = document.getElementById('modalTableBody');
+            
+            modalTitle.innerText = `各百分比對照表 (全校總人數：${total} 人)`;
+            tableBody.innerHTML = '';
+
+            let prevCum = 0;
+
+            // 通常繁星推薦呈現 1% ~ 50%（如需更完整可算至 100%）
+            for (let p = 1; p <= 50; p++) {
+                const rawCum = (total * p) / 100;
+                const cum = Math.ceil(rawCum);
+                const currentCount = cum - prevCum;
+                
+                let rankRange = '';
+                if (cum === 0 || currentCount === 0) {
+                    rankRange = '-';
+                } else if (prevCum + 1 === cum) {
+                    rankRange = `第 ${cum} 名`;
+                } else {
+                    rankRange = `第 ${prevCum + 1} ~ ${cum} 名`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="highlight-tag">${p}%</span></td>
+                    <td>${cum} <span style="font-size:0.8rem; color:#888;">(${rawCum.toFixed(2)})</span></td>
+                    <td>${rankRange}</td>
+                    <td>${currentCount} 人</td>
+                `;
+                tableBody.appendChild(tr);
+
+                prevCum = cum;
+            }
+
+            document.getElementById('percentModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('percentModal').classList.remove('active');
+        }
+
+        // 點擊 Modal 外圍關閉
+        document.getElementById('percentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // 右側：查詢個人名次落點
+        function calculateMyRank() {
+            const total = parseInt(document.getElementById('totalStudentsRight').value, 10);
+            const rank = parseInt(document.getElementById('userRank').value, 10);
+
+            if (isNaN(total) || total <= 0) {
+                alert('請輸入有效的全校人數！');
+                return;
+            }
+
+            if (isNaN(rank) || rank <= 0) {
+                alert('請輸入有效的名次！');
+                return;
+            }
+
+            if (rank > total) {
+                alert('名次不能大於全校總人數！');
+                return;
+            }
+
+            let foundPercent = null;
+            let startRank = 1;
+            let endRank = 1;
+            let prevCum = 0;
+
+            for (let p = 1; p <= 100; p++) {
+                const cum = Math.ceil((total * p) / 100);
+                if (rank <= cum) {
+                    foundPercent = p;
+                    startRank = prevCum + 1;
+                    endRank = cum;
+                    break;
+                }
+                prevCum = cum;
+            }
+
+            const resultBox = document.getElementById('resultBox');
+            const resultMain = document.getElementById('resultMain');
+            const resultDetail = document.getElementById('resultDetail');
+
+            resultMain.innerHTML = `落在校排 <span style="color: var(--primary-color);">${foundPercent}%</span>`;
+            
+            let rangeText = (startRank === endRank) ? `第 ${endRank} 名` : `第 ${startRank} ~ ${endRank} 名`;
+            resultDetail.innerHTML = `
+                全校總人數 <strong>${total}</strong> 人中，第 <strong>${rank}</strong> 名位於 <strong>${foundPercent}%</strong> 的推薦範圍內。<br>
+                該百分比的名次涵蓋區間為：<strong>${rangeText}</strong>。
+            `;
+
+            resultBox.classList.add('active');
+        }
+    </script>
+</body>
+</html>
