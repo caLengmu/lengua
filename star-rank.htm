@@ -225,43 +225,7 @@
             background-color: var(--secondary-hover);
         }
 
-        /* 右側結果顯示區 */
-        .result-box {
-            margin-top: 24px;
-            padding: 18px;
-            border-radius: 8px;
-            background-color: var(--accent-light);
-            border: 1px solid #ebd8b6;
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .result-box.active {
-            display: block;
-        }
-
-        .result-box h4 {
-            color: var(--accent-color);
-            font-size: 0.9rem;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .result-main {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-
-        .result-detail {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            line-height: 1.5;
-        }
-
-        /* 彈出視窗 (Modal) */
+        /* 彈出視窗 (Modal) 共用樣式 */
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -332,7 +296,7 @@
         }
 
         .modal-body {
-            padding: 20px 24px;
+            padding: 24px;
             overflow-y: auto;
             flex: 1;
         }
@@ -367,9 +331,47 @@
             font-weight: 700;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* 功能二 Modal 內的結果卡片樣式 */
+        .modal-result-card {
+            background-color: var(--accent-light);
+            border: 1px solid #ebd8b6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-result-card .result-percent {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 8px 0;
+        }
+
+        .modal-result-card .result-desc {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .modal-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .modal-info-table th, .modal-info-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-soft);
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .modal-info-table th {
+            width: 40%;
+            background-color: #faf8f5;
+            color: var(--text-sub);
+            font-weight: 600;
         }
 
         /* 腳註說明 */
@@ -408,7 +410,7 @@
             <div class="section-panel right-panel">
                 <span class="panel-badge">功能二</span>
                 <h2 class="panel-title">個人校排百分比試算</h2>
-                <p class="panel-desc">輸入全校總人數與您自己的校排名次，快速計算您目前落在哪一個百分比區間。</p>
+                <p class="panel-desc">輸入全校總人數與您自己的校排名次，將以彈出視窗顯示您落在哪一個百分比區間。</p>
 
                 <div class="form-group">
                     <label for="totalStudentsRight">全校符合推薦資格人數</label>
@@ -420,13 +422,7 @@
                     <input type="number" id="userRank" class="input-control" placeholder="例如：17" min="1">
                 </div>
 
-                <button class="btn btn-secondary" onclick="calculateMyRank()">查詢個人百分比</button>
-
-                <div id="resultBox" class="result-box">
-                    <h4>試算結果</h4>
-                    <div id="resultMain" class="result-main">前 -- %</div>
-                    <div id="resultDetail" class="result-detail"></div>
-                </div>
+                <button class="btn btn-secondary" onclick="showRankResultModal()">彈出視窗查詢個人百分比</button>
             </div>
         </div>
     </div>
@@ -435,12 +431,12 @@
         註：公式採「無條件進位累計每百分比推薦人數」，該區間起始名次為上一百分比累計人數 + 1。
     </div>
 
-    <!-- 彈出視窗 Modal -->
+    <!-- 功能一 彈出視窗 Modal -->
     <div id="percentModal" class="modal-backdrop">
         <div class="modal-window">
             <div class="modal-header">
-                <h3 id="modalTitle">百分比人數對照表</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <h3 id="modalTitleLeft">百分比人數對照表</h3>
+                <button class="close-btn" onclick="closeModal('percentModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <table class="table-container">
@@ -460,6 +456,42 @@
         </div>
     </div>
 
+    <!-- 功能二 彈出視窗 Modal -->
+    <div id="rankResultModal" class="modal-backdrop">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3>個人校排百分比試算結果</h3>
+                <button class="close-btn" onclick="closeModal('rankResultModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-result-card">
+                    <div style="font-size: 0.9rem; color: var(--text-sub);">您的校排百分比落點</div>
+                    <div id="resultPercentText" class="result-percent">前 -- %</div>
+                    <div id="resultSummaryText" class="result-desc">--</div>
+                </div>
+
+                <table class="modal-info-table">
+                    <tr>
+                        <th>全校符合資格總人數</th>
+                        <td id="infoTotal">-- 人</td>
+                    </tr>
+                    <tr>
+                        <th>您的校排名次</th>
+                        <td id="infoRank">第 -- 名</td>
+                    </tr>
+                    <tr>
+                        <th>該百分比涵蓋名次範圍</th>
+                        <td id="infoRange">第 -- 名</td>
+                    </tr>
+                    <tr>
+                        <th>該百分比推薦總人數</th>
+                        <td id="infoCount">-- 人</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
         /**
          * 繁星推薦計算核心邏輯
@@ -468,7 +500,21 @@
          * 該百分比推薦人數 = 當前累計人數 - 前一累計人數
          */
 
-        // 左側：彈出視窗對照表
+        // 關閉 Modal 共用函式
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // 點擊 Modal 外圍背景時自動關閉
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // 功能一：彈出視窗顯示 1% ~ 50% 對照表
         function showPercentageModal() {
             const totalInput = document.getElementById('totalStudentsLeft').value;
             const total = parseInt(totalInput, 10);
@@ -478,7 +524,7 @@
                 return;
             }
 
-            const modalTitle = document.getElementById('modalTitle');
+            const modalTitle = document.getElementById('modalTitleLeft');
             const tableBody = document.getElementById('modalTableBody');
             
             modalTitle.innerText = `各百分比對照表 (全校總人數：${total} 人)`;
@@ -486,7 +532,6 @@
 
             let prevCum = 0;
 
-            // 通常繁星推薦呈現 1% ~ 50%（如需更完整可算至 100%）
             for (let p = 1; p <= 50; p++) {
                 const rawCum = (total * p) / 100;
                 const cum = Math.ceil(rawCum);
@@ -516,19 +561,8 @@
             document.getElementById('percentModal').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('percentModal').classList.remove('active');
-        }
-
-        // 點擊 Modal 外圍關閉
-        document.getElementById('percentModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        // 右側：查詢個人名次落點
-        function calculateMyRank() {
+        // 功能二：彈出視窗顯示個人名次落點結果
+        function showRankResultModal() {
             const total = parseInt(document.getElementById('totalStudentsRight').value, 10);
             const rank = parseInt(document.getElementById('userRank').value, 10);
 
@@ -563,19 +597,20 @@
                 prevCum = cum;
             }
 
-            const resultBox = document.getElementById('resultBox');
-            const resultMain = document.getElementById('resultMain');
-            const resultDetail = document.getElementById('resultDetail');
+            const currentPercentCount = endRank - (startRank - 1);
+            const rangeText = (startRank === endRank) ? `第 ${endRank} 名` : `第 ${startRank} ~ ${endRank} 名`;
 
-            resultMain.innerHTML = `落在校排 <span style="color: var(--primary-color);">${foundPercent}%</span>`;
+            // 更新 Modal 內部元素
+            document.getElementById('resultPercentText').innerText = ` ${foundPercent}%`;
+            document.getElementById('resultSummaryText').innerHTML = `全校 ${total} 人中，第 ${rank} 名符合 <strong>前 ${foundPercent}%</strong> 推薦資格。`;
             
-            let rangeText = (startRank === endRank) ? `第 ${endRank} 名` : `第 ${startRank} ~ ${endRank} 名`;
-            resultDetail.innerHTML = `
-                全校總人數 <strong>${total}</strong> 人中，第 <strong>${rank}</strong> 名位於 <strong>${foundPercent}%</strong> 的推薦範圍內。<br>
-                該百分比的名次涵蓋區間為：<strong>${rangeText}</strong>。
-            `;
+            document.getElementById('infoTotal').innerText = `${total} 人`;
+            document.getElementById('infoRank').innerText = `第 ${rank} 名`;
+            document.getElementById('infoRange').innerText = rangeText;
+            document.getElementById('infoCount').innerText = `${currentPercentCount} 人`;
 
-            resultBox.classList.add('active');
+            // 顯示 Modal
+            document.getElementById('rankResultModal').classList.add('active');
         }
     </script>
 </body>
