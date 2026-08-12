@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Multilingual Text Reader & Recorder</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f8fc;
+      color: #444;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh; /* accounts for mobile browser chrome */
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: #ffffff;
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #2a628f;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+      line-height: 1.3;
+    }
+
+    .flags {
+      margin-bottom: 20px;
+    }
+
+    .flags img {
+      width: 40px;
+      max-width: 18vw;
+      margin: 0 5px;
+    }
+
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px; /* 16px prevents iOS auto-zoom on focus */
+      border: 2px solid #c5dfee;
+      border-radius: 10px;
+      outline: none;
+      margin: 10px 0;
+      font-family: inherit;
+    }
+
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .controls {
+      margin: 15px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    select, button {
+      font-size: 15px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0f4c81;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1 1 auto;
+      min-width: 90px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    select:hover, button:hover {
+      background-color: #083a63;
+    }
+
+    button:active {
+      background-color: #062c4c;
+    }
+
+    button:disabled {
+      background-color: #c5dfee;
+      cursor: not-allowed;
+    }
+
+    select {
+      padding: 10px 12px;
+    }
+
+    /* Small phone screens */
+    @media (max-width: 400px) {
+      body {
+        padding: 8px;
+      }
+
+      .container {
+        padding: 16px 12px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 1.25rem;
+      }
+
+      .flags img {
+        width: 32px;
+      }
+
+      select, button {
+        font-size: 14px;
+        padding: 10px;
+        min-width: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Multilingual Text Reader & Recorder</h1>
+    <div class="flags">
+      <img src="https://flagcdn.com/w320/jp.png" alt="Japan Flag">
+      <img src="https://flagcdn.com/w320/kr.png" alt="Korea Flag">
+      <img src="https://flagcdn.com/w320/es.png" alt="Spain Flag">
+      <img src="https://flagcdn.com/w320/us.png" alt="USA Flag">
+    </div>
+    <textarea id="text-input" placeholder="Enter your passage here..."></textarea>
+    <input id="recognized-text" placeholder="Recognized speech will appear here..." disabled>
+    <div class="controls">
+      <select id="language-select">
+        <option value="ja-JP">日本語</option>
+        <option value="ko-KR">한국어</option>
+        <option value="es-ES">español</option>
+        <option value="en-US">English</option>
+      </select>
+      <select id="speed-select">
+        <option value="1">1x</option>
+        <option value="0.85">0.85x</option>
+        <option value="0.7">0.7x</option>
+        <option value="1.2">1.2x</option>
+        <option value="1.5">1.5x</option>
+      </select>
+    </div>
+    <div class="controls">
+      <button id="read-btn">Read Aloud</button>
+      <button id="pause-btn" disabled>Pause</button>
+      <button id="stop-btn" disabled>Stop</button>
+      <button id="record-btn">Record</button>
+      <button id="play-recording-btn" disabled>Play Recording</button>
+    </div>
+  </div>
+
+  <script>
+    const readBtn = document.getElementById('read-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const recordBtn = document.getElementById('record-btn');
+    const playRecordingBtn = document.getElementById('play-recording-btn');
+    const textInput = document.getElementById('text-input');
+    const recognizedText = document.getElementById('recognized-text');
+    const languageSelect = document.getElementById('language-select');
+    const speedSelect = document.getElementById('speed-select');
+
+    let synth = window.speechSynthesis;
+    let utterance;
+    let isPaused = false;
+    let recognition;
+    let recordedAudio = null;
+
+    // --- Text-to-Speech with manual pause/resume ---
+    // Native synth.pause()/resume() is unreliable on many mobile browsers
+    // (Android Chrome often just cancels speech; iOS Safari support is spotty).
+    // Instead we track the last spoken word boundary and, on "pause", cancel
+    // the utterance and remember where we were. "Resume" starts a brand-new
+    // utterance beginning at that word, which works consistently everywhere.
+
+    let fullText = '';       // the complete text currently being read
+    let spokenCharIndex = 0; // index into fullText of the next word to speak
+    let isReading = false;   // true whenever we're actively producing speech (not paused)
+
+    function speakFrom(startIndex) {
+      const remaining = fullText.slice(startIndex).trimStart();
+      if (!remaining) {
+        finishReading();
+        return;
+      }
+
+      // Track how far into *this* chunk we are, then translate back to
+      // an absolute index into fullText for the next pause.
+      const offsetInFull = fullText.length - fullText.slice(startIndex).length +
+        (fullText.slice(startIndex).length - remaining.length);
+
+      utterance = new SpeechSynthesisUtterance(remaining);
+      utterance.lang = languageSelect.value;
+      utterance.rate = parseFloat(speedSelect.value);
+
+      utterance.onboundary = (event) => {
+        if (event.name === 'word' || event.charIndex !== undefined) {
+          spokenCharIndex = offsetInFull + event.charIndex;
+        }
+      };
+
+      utterance.onend = () => {
+        // Only treat as "finished" if we weren't the one who cancelled it for a pause
+        if (isReading) {
+          finishReading();
+        }
+      };
+
+      utterance.onerror = () => {
+        if (isReading) {
+          finishReading();
+        }
+      };
+
+      isReading = true;
+      synth.speak(utterance);
+    }
+
+    function finishReading() {
+      isReading = false;
+      isPaused = false;
+      spokenCharIndex = 0;
+      readBtn.disabled = false;
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = 'Pause';
+      stopBtn.disabled = true;
+    }
+
+    readBtn.addEventListener('click', () => {
+      const text = textInput.value.trim();
+      if (!text) return alert("Please enter some text!");
+
+      fullText = text;
+      spokenCharIndex = 0;
+      isPaused = false;
+
+      readBtn.disabled = true;
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = 'Pause';
+      stopBtn.disabled = false;
+
+      speakFrom(0);
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      if (isReading && !isPaused) {
+        // Pause: cancel current speech, remember position
+        isPaused = true;
+        isReading = false; // prevents onend from treating this as "finished"
+        synth.cancel();
+        pauseBtn.textContent = 'Resume';
+      } else if (isPaused) {
+        // Resume: start a new utterance from where we left off
+        isPaused = false;
+        speakFrom(spokenCharIndex);
+        pauseBtn.textContent = 'Pause';
+      }
+    });
+
+    stopBtn.addEventListener('click', () => {
+      isReading = false;
+      synth.cancel();
+      finishReading();
+    });
+
+    // Speech Recognition
+    recordBtn.addEventListener('click', () => {
+      if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+        alert("Speech recognition not supported in this browser.");
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = languageSelect.value;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        recognizedText.value = transcript;
+        recordedAudio = transcript;
+        playRecordingBtn.disabled = false;
+      };
+
+      recognition.start();
+    });
+
+    // Play Recorded Audio
+    playRecordingBtn.addEventListener('click', () => {
+      if (recordedAudio) {
+        const playbackUtterance = new SpeechSynthesisUtterance(recordedAudio);
+        playbackUtterance.lang = languageSelect.value;
+        synth.speak(playbackUtterance);
+      }
+    });
+  </script>
+</body>
+</html>
