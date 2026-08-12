@@ -24,7 +24,7 @@
 
     .container {
       width: 100%;
-      max-width: 600px;
+      max-width: 720px;
       background: #ffffff;
       box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
       border-radius: 15px;
@@ -61,8 +61,64 @@
     }
 
     textarea {
-      height: 100px;
+      height: 90px;
       resize: vertical;
+      text-align: left;
+    }
+
+    textarea:disabled {
+      background: #f4f9fc;
+      color: #999;
+    }
+
+    .pane-label {
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #7a95a8;
+      margin: 14px 0 2px;
+    }
+
+    /* Reading view: wide, larger type, syncs with TTS playback */
+    .reading-display {
+      text-align: left;
+      border: 2px solid #c5dfee;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 6px 0 10px;
+      font-size: 19px;
+      line-height: 2;
+      min-height: 60px;
+      max-height: 280px;
+      overflow-y: auto;
+      background: #fbfdff;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .reading-display:empty::before {
+      content: "Text you type above will appear here, larger and easier to follow while you read.";
+      color: #a9c2d3;
+      font-style: italic;
+    }
+
+    .reading-display .word {
+      border-radius: 4px;
+      padding: 1px 2px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .reading-display .sentence.active-sentence {
+      background: #eaf4fb;
+      border-radius: 6px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .reading-display .word.active-word {
+      background: #ffd166;
+      color: #222;
     }
 
     .controls {
@@ -129,6 +185,12 @@
         padding: 10px;
         min-width: 80px;
       }
+
+      .reading-display {
+        font-size: 17px;
+        line-height: 1.8;
+        max-height: 220px;
+      }
     }
   </style>
 </head>
@@ -141,7 +203,13 @@
       <img src="https://flagcdn.com/w320/es.png" alt="Spain Flag">
       <img src="https://flagcdn.com/w320/us.png" alt="USA Flag">
     </div>
+
+    <div class="pane-label">Type or paste text</div>
     <textarea id="text-input" placeholder="Enter your passage here..."></textarea>
+
+    <div class="pane-label">Reading view — follows along as it's read aloud</div>
+    <div id="reading-display" class="reading-display"></div>
+
     <input id="recognized-text" placeholder="Recognized speech will appear here..." disabled>
     <div class="controls">
       <select id="language-select">
@@ -177,59 +245,175 @@
     const recognizedText = document.getElementById('recognized-text');
     const languageSelect = document.getElementById('language-select');
     const speedSelect = document.getElementById('speed-select');
+    const readingDisplay = document.getElementById('reading-display');
 
     let synth = window.speechSynthesis;
     let utterance;
-    let isPaused = false;
     let recognition;
     let recordedAudio = null;
 
-    // --- Text-to-Speech with manual pause/resume ---
-    // Native synth.pause()/resume() is unreliable on many mobile browsers
-    // (Android Chrome often just cancels speech; iOS Safari support is spotty).
-    // Instead we track the last spoken word boundary and, on "pause", cancel
-    // the utterance and remember where we were. "Resume" starts a brand-new
-    // utterance beginning at that word, which works consistently everywhere.
+    // ---------------------------------------------------------------
+    // Reading pane: splits text into sentences, then words, and
+    // renders each as its own <span> so we can highlight exactly
+    // what's being spoken and scroll it into view as playback moves.
+    // Intl.Segmenter gives locale-aware word boundaries, which matters
+    // for Japanese/Korean where words aren't separated by spaces.
+    // ---------------------------------------------------------------
 
-    let fullText = '';       // the complete text currently being read
-    let spokenCharIndex = 0; // index into fullText of the next word to speak
-    let isReading = false;   // true whenever we're actively producing speech (not paused)
+    let sentences = [];        // array of sentence strings for the current text
+    let currentSentenceIndex = 0;
+    let currentOffsetInSentence = 0; // char offset within the current sentence to resume from
+    let isReading = false;     // actively producing speech right now
+    let isPaused = false;      // paused mid-playback (can resume)
 
-    function speakFrom(startIndex) {
-      const remaining = fullText.slice(startIndex).trimStart();
-      if (!remaining) {
+    function segmentSentences(text, locale) {
+      if (window.Intl && Intl.Segmenter) {
+        try {
+          const seg = new Intl.Segmenter(locale, { granularity: 'sentence' });
+          return Array.from(seg.segment(text), s => s.segment).filter(s => s.trim().length);
+        } catch (e) { /* fall through to regex fallback */ }
+      }
+      return text.split(/(?<=[.!?。！？\n])\s*/).filter(s => s.trim().length);
+    }
+
+    function segmentWords(text, locale) {
+      if (window.Intl && Intl.Segmenter) {
+        try {
+          const seg = new Intl.Segmenter(locale, { granularity: 'word' });
+          let offset = 0;
+          return Array.from(seg.segment(text), s => {
+            const item = { text: s.segment, isWordLike: s.isWordLike, start: offset };
+            offset += s.segment.length;
+            return item;
+          });
+        } catch (e) { /* fall through */ }
+      }
+      let offset = 0;
+      return text.split(/(\s+)/).filter(Boolean).map(s => {
+        const item = { text: s, isWordLike: !/^\s+$/.test(s), start: offset };
+        offset += s.length;
+        return item;
+      });
+    }
+
+    function renderReadingPane(text) {
+      const locale = languageSelect.value;
+      sentences = segmentSentences(text, locale);
+      readingDisplay.innerHTML = '';
+
+      sentences.forEach((sentenceText, sIdx) => {
+        const sentenceSpan = document.createElement('span');
+        sentenceSpan.className = 'sentence';
+        sentenceSpan.dataset.idx = sIdx;
+
+        segmentWords(sentenceText, locale).forEach(w => {
+          if (w.isWordLike) {
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'word';
+            wordSpan.dataset.start = w.start;
+            wordSpan.textContent = w.text;
+            sentenceSpan.appendChild(wordSpan);
+          } else {
+            sentenceSpan.appendChild(document.createTextNode(w.text));
+          }
+        });
+
+        readingDisplay.appendChild(sentenceSpan);
+        readingDisplay.appendChild(document.createTextNode(' '));
+      });
+    }
+
+    function highlightSentence(sIdx) {
+      readingDisplay.querySelectorAll('.sentence.active-sentence')
+        .forEach(el => el.classList.remove('active-sentence'));
+      const el = readingDisplay.querySelector(`.sentence[data-idx="${sIdx}"]`);
+      if (el) el.classList.add('active-sentence');
+    }
+
+    function highlightWord(sIdx, charIndex) {
+      const sentenceEl = readingDisplay.querySelector(`.sentence[data-idx="${sIdx}"]`);
+      if (!sentenceEl) return;
+      readingDisplay.querySelectorAll('.word.active-word')
+        .forEach(el => el.classList.remove('active-word'));
+
+      let target = null;
+      sentenceEl.querySelectorAll('.word').forEach(w => {
+        if (parseInt(w.dataset.start, 10) <= charIndex) target = w;
+      });
+      if (target) {
+        target.classList.add('active-word');
+        target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+
+    function clearHighlights() {
+      readingDisplay.querySelectorAll('.active-sentence')
+        .forEach(el => el.classList.remove('active-sentence'));
+      readingDisplay.querySelectorAll('.active-word')
+        .forEach(el => el.classList.remove('active-word'));
+    }
+
+    // Live preview: keep the reading view in sync while typing/pasting,
+    // as long as we're not mid-playback.
+    textInput.addEventListener('input', () => {
+      if (!isReading && !isPaused) renderReadingPane(textInput.value);
+    });
+    languageSelect.addEventListener('change', () => {
+      if (!isReading && !isPaused) renderReadingPane(textInput.value);
+    });
+
+    // ---------------------------------------------------------------
+    // Text-to-Speech: plays one sentence at a time as separate
+    // utterances (a queue), rather than one long utterance. This is
+    // what makes real pause/resume possible: native
+    // synth.pause()/resume() is unreliable on mobile (Android Chrome
+    // often just cancels; iOS Safari support is spotty). Instead,
+    // "Pause" cancels the in-flight utterance but remembers exactly
+    // which sentence and character offset we'd reached, and "Resume"
+    // starts a new utterance right there — not from the beginning.
+    // Within a sentence, onboundary events (where supported) refine
+    // that resume point down to the word; where boundary events
+    // aren't fired, it still resumes from the start of that sentence
+    // rather than the start of the whole text.
+    // ---------------------------------------------------------------
+
+    function playFromSentence(sentenceIndex, charOffset = 0) {
+      if (sentenceIndex >= sentences.length) {
         finishReading();
         return;
       }
 
-      // Track how far into *this* chunk we are, then translate back to
-      // an absolute index into fullText for the next pause.
-      const offsetInFull = fullText.length - fullText.slice(startIndex).length +
-        (fullText.slice(startIndex).length - remaining.length);
+      currentSentenceIndex = sentenceIndex;
+      const sentenceText = sentences[sentenceIndex];
+      const rawRemaining = sentenceText.slice(charOffset);
+      const remaining = rawRemaining.trimStart();
+      const baseOffset = charOffset + (rawRemaining.length - remaining.length);
+
+      if (!remaining) {
+        playFromSentence(sentenceIndex + 1, 0);
+        return;
+      }
 
       utterance = new SpeechSynthesisUtterance(remaining);
       utterance.lang = languageSelect.value;
       utterance.rate = parseFloat(speedSelect.value);
 
       utterance.onboundary = (event) => {
-        if (event.name === 'word' || event.charIndex !== undefined) {
-          spokenCharIndex = offsetInFull + event.charIndex;
-        }
+        if (event.charIndex === undefined) return;
+        currentOffsetInSentence = baseOffset + event.charIndex;
+        highlightWord(sentenceIndex, currentOffsetInSentence);
       };
 
       utterance.onend = () => {
-        // Only treat as "finished" if we weren't the one who cancelled it for a pause
-        if (isReading) {
-          finishReading();
-        }
+        if (isReading) playFromSentence(sentenceIndex + 1, 0);
       };
 
       utterance.onerror = () => {
-        if (isReading) {
-          finishReading();
-        }
+        if (isReading) finishReading();
       };
 
+      highlightSentence(sentenceIndex);
+      currentOffsetInSentence = baseOffset;
       isReading = true;
       synth.speak(utterance);
     }
@@ -237,40 +421,45 @@
     function finishReading() {
       isReading = false;
       isPaused = false;
-      spokenCharIndex = 0;
+      currentSentenceIndex = 0;
+      currentOffsetInSentence = 0;
       readBtn.disabled = false;
       pauseBtn.disabled = true;
       pauseBtn.textContent = 'Pause';
       stopBtn.disabled = true;
+      textInput.disabled = false;
+      clearHighlights();
     }
 
     readBtn.addEventListener('click', () => {
       const text = textInput.value.trim();
       if (!text) return alert("Please enter some text!");
 
-      fullText = text;
-      spokenCharIndex = 0;
+      renderReadingPane(text);
+      currentSentenceIndex = 0;
+      currentOffsetInSentence = 0;
       isPaused = false;
 
+      textInput.disabled = true;
       readBtn.disabled = true;
       pauseBtn.disabled = false;
       pauseBtn.textContent = 'Pause';
       stopBtn.disabled = false;
 
-      speakFrom(0);
+      playFromSentence(0, 0);
     });
 
     pauseBtn.addEventListener('click', () => {
       if (isReading && !isPaused) {
-        // Pause: cancel current speech, remember position
+        // Pause: stop speech now, but keep the exact sentence + offset
         isPaused = true;
-        isReading = false; // prevents onend from treating this as "finished"
+        isReading = false; // so onend doesn't advance to the next sentence
         synth.cancel();
         pauseBtn.textContent = 'Resume';
       } else if (isPaused) {
-        // Resume: start a new utterance from where we left off
+        // Resume: pick up right where we left off, not from the start
         isPaused = false;
-        speakFrom(spokenCharIndex);
+        playFromSentence(currentSentenceIndex, currentOffsetInSentence);
         pauseBtn.textContent = 'Pause';
       }
     });
