@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -261,6 +261,14 @@
       <button id="btn-play-my-recording" class="secondary" disabled>▶ Play Mine</button>
       <button id="btn-delete-recording" class="secondary" disabled>🗑 Delete</button>
     </div>
+    <div id="volume-row" class="btn-row record-row">
+      <select id="playback-gain" title="Boost how loud your recording plays back">
+        <option value="1">🔊 1x</option>
+        <option value="2" selected>🔊 2x</option>
+        <option value="3">🔊 3x</option>
+        <option value="4">🔊 4x</option>
+      </select>
+    </div>
     <div id="record-status" class="record-status"></div>
 
     <div class="hint">Previous / Next / Record appear while paused or stopped</div>
@@ -328,6 +336,8 @@
   const btnDeleteRecording = document.getElementById('btn-delete-recording');
   const recordStatus = document.getElementById('record-status');
   const myRecordingAudio = document.getElementById('my-recording-audio');
+  const volumeRow = document.getElementById('volume-row');
+  const playbackGainSelect = document.getElementById('playback-gain');
 
   const recorderLanguage = document.getElementById('recorder-language');
   const recognizedText = document.getElementById('recognized-text');
@@ -481,6 +491,7 @@
     const paused = !isPlaying;
     navRow.classList.toggle('visible', paused);
     recordRow.classList.toggle('visible', paused);
+    volumeRow.classList.toggle('visible', paused);
     btnPrev.disabled = currentSentenceIndex <= 0;
     btnNext.disabled = currentSentenceIndex >= sentences.length - 1;
     if (paused) {
@@ -640,7 +651,13 @@
   async function startRecording() {
     let stream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true // asks the mic driver to boost quiet input at capture time
+        }
+      });
     } catch (err) {
       alert('Microphone access is needed to record. Please allow microphone permission and try again.');
       return;
@@ -708,11 +725,47 @@
     }
   });
 
+  // A plain <audio> element can't play louder than the phone's normal
+  // media volume — its .volume property only ever scales *down* from
+  // whatever the system volume is, never up. Since mic recordings are
+  // often captured quietly (small phone mic, conservative default gain),
+  // played-back volume can end up much softer than expected even at
+  // 100% system volume. Routing playback through the Web Audio API and
+  // applying a GainNode above 1.0 amplifies the actual signal, which
+  // does let it play back louder than the un-boosted recording — this
+  // is the fix, not just a volume-slider cosmetic change.
+  let audioCtx = null;
+
+  async function playRecordingBoosted(blob) {
+    const gainValue = parseFloat(playbackGainSelect.value) || 1;
+
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+      const arrayBuffer = await blob.arrayBuffer();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.value = gainValue;
+
+      source.connect(gainNode).connect(audioCtx.destination);
+      source.start(0);
+    } catch (err) {
+      // Fallback for browsers where Web Audio decoding fails: at least
+      // play it back normally rather than doing nothing.
+      myRecordingAudio.src = URL.createObjectURL(blob);
+      myRecordingAudio.play();
+    }
+  }
+
   btnPlayMyRecording.addEventListener('click', () => {
     const rec = sentenceRecordings[currentSentenceIndex];
     if (!rec) return;
-    myRecordingAudio.src = rec.url;
-    myRecordingAudio.play();
+    playRecordingBoosted(rec.blob);
   });
 
   btnDeleteRecording.addEventListener('click', () => {
