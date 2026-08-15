@@ -1,201 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Multilingual Text Reader & Recorder</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Multilingual Text Reader & Recorder</title>
+<style>
+  * { box-sizing: border-box; }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f1f8fc;
-      color: #444;
-      margin: 0;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      min-height: 100dvh; /* accounts for mobile browser chrome */
-    }
+  html, body {
+    height: 100%;
+  }
 
-    .container {
-      width: 100%;
-      max-width: 720px;
-      background: #ffffff;
-      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-    }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f8fc;
+    color: #444;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 
-    h1 {
-      color: #2a628f;
-      margin-bottom: 10px;
-      font-size: 1.5rem;
-      line-height: 1.3;
-    }
+  .app {
+    width: 100%;
+    max-width: 720px;
+    background: #ffffff;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 28px 24px;
+    text-align: center;
+  }
 
-    .flags {
-      margin-bottom: 20px;
-    }
+  /* ---------- view switching ---------- */
+  .view { display: none; }
+  .view.active { display: block; }
 
-    .flags img {
-      width: 40px;
-      max-width: 18vw;
-      margin: 0 5px;
-    }
+  h1 {
+    color: #2a628f;
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
 
-    textarea, input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px; /* 16px prevents iOS auto-zoom on focus */
-      border: 2px solid #c5dfee;
-      border-radius: 10px;
-      outline: none;
-      margin: 10px 0;
-      font-family: inherit;
-    }
+  h2 {
+    color: #2a628f;
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+  }
 
-    textarea {
-      height: 90px;
-      resize: vertical;
-      text-align: left;
-    }
+  .subtitle {
+    color: #8aa4b6;
+    font-size: 0.95rem;
+    margin: 0 0 26px;
+  }
 
-    textarea:disabled {
-      background: #f4f9fc;
-      color: #999;
-    }
+  .flags { margin-bottom: 18px; }
+  .flags img { width: 34px; max-width: 16vw; margin: 0 4px; }
 
-    .pane-label {
-      text-align: left;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #7a95a8;
-      margin: 14px 0 2px;
-    }
+  textarea {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    border: 2px solid #c5dfee;
+    border-radius: 16px;
+    outline: none;
+    font-family: inherit;
+    text-align: left;
+    resize: vertical;
+    background: #fbfdff;
+  }
 
-    /* Reading view: wide, larger type, syncs with TTS playback */
-    .reading-display {
-      text-align: left;
-      border: 2px solid #c5dfee;
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin: 6px 0 10px;
-      font-size: 19px;
-      line-height: 2;
-      min-height: 60px;
-      max-height: 280px;
-      overflow-y: auto;
-      background: #fbfdff;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
+  /* Big, centered, "search box"-like textarea on the home screen */
+  #home-textarea {
+    height: 130px;
+    font-size: 18px;
+    box-shadow: 0 2px 6px rgba(15, 76, 129, 0.06);
+  }
+  #home-textarea:focus {
+    border-color: #6fb3e0;
+  }
 
-    .reading-display:empty::before {
-      content: "Text you type above will appear here, larger and easier to follow while you read.";
-      color: #a9c2d3;
-      font-style: italic;
-    }
+  #reader-textarea { height: 110px; }
 
-    .reading-display .word {
-      border-radius: 4px;
-      padding: 1px 2px;
-      transition: background-color 0.15s ease, color 0.15s ease;
-    }
+  .btn-row {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
 
-    .reading-display .sentence.active-sentence {
-      background: #eaf4fb;
-      border-radius: 6px;
-      box-decoration-break: clone;
-      -webkit-box-decoration-break: clone;
-    }
+  .btn-row + .btn-row { margin-top: 12px; }
 
-    .reading-display .word.active-word {
-      background: #ffd166;
-      color: #222;
-    }
+  select, button {
+    font-size: 15px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #0f4c81;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    flex: 1 1 auto;
+    min-width: 100px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
 
-    .controls {
-      margin: 15px 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
+  select:hover, button:hover { background-color: #083a63; }
+  button:active { background-color: #062c4c; }
+  button:disabled { background-color: #c5dfee; cursor: not-allowed; }
 
-    select, button {
-      font-size: 15px;
-      padding: 10px 14px;
-      border: none;
-      border-radius: 8px;
-      background-color: #0f4c81;
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      flex: 1 1 auto;
-      min-width: 90px;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+  button.secondary {
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+  }
+  button.secondary:hover { background-color: #dcebf5; }
 
-    select:hover, button:hover {
-      background-color: #083a63;
-    }
+  select { padding: 11px 12px; }
 
-    button:active {
-      background-color: #062c4c;
-    }
+  /* ---------- playback screen ---------- */
+  .playback-display {
+    text-align: left;
+    border: 2px solid #c5dfee;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 4px 0 6px;
+    min-height: 140px;
+    background: #fbfdff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
 
-    button:disabled {
-      background-color: #c5dfee;
-      cursor: not-allowed;
-    }
+  .playback-display .line {
+    font-size: 21px;
+    line-height: 1.8;
+    word-break: break-word;
+  }
 
-    select {
-      padding: 10px 12px;
-    }
+  .playback-display .line.next-line {
+    opacity: 0.4;
+    font-size: 19px;
+  }
 
-    /* Small phone screens */
-    @media (max-width: 400px) {
-      body {
-        padding: 8px;
-      }
+  .playback-display .word {
+    border-radius: 4px;
+    padding: 1px 2px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
 
-      .container {
-        padding: 16px 12px;
-        border-radius: 10px;
-      }
+  .playback-display .word.active-word {
+    background: #ffd166;
+    color: #222;
+  }
 
-      h1 {
-        font-size: 1.25rem;
-      }
+  .nav-row {
+    display: none;
+    margin-top: 12px;
+  }
+  .nav-row.visible {
+    display: flex;
+  }
 
-      .flags img {
-        width: 32px;
-      }
+  .hint {
+    font-size: 12px;
+    color: #9db6c6;
+    margin-top: 4px;
+  }
 
-      select, button {
-        font-size: 14px;
-        padding: 10px;
-        min-width: 80px;
-      }
-
-      .reading-display {
-        font-size: 17px;
-        line-height: 1.8;
-        max-height: 220px;
-      }
-    }
-  </style>
+  @media (max-width: 400px) {
+    body { padding: 8px; }
+    .app { padding: 18px 14px; border-radius: 12px; }
+    h1 { font-size: 1.3rem; }
+    .flags img { width: 28px; }
+    select, button { font-size: 14px; padding: 10px; min-width: 84px; }
+    .playback-display .line { font-size: 18px; }
+    .playback-display .line.next-line { font-size: 16px; }
+  }
+</style>
 </head>
 <body>
-  <div class="container">
+<div class="app">
+
+  <!-- ============ HOME ============ -->
+  <div id="home-view" class="view active">
     <h1>Multilingual Text Reader & Recorder</h1>
     <div class="flags">
       <img src="https://flagcdn.com/w320/jp.png" alt="Japan Flag">
@@ -203,22 +197,27 @@
       <img src="https://flagcdn.com/w320/es.png" alt="Spain Flag">
       <img src="https://flagcdn.com/w320/us.png" alt="USA Flag">
     </div>
+    <textarea id="home-textarea" placeholder="Type or paste text here..."></textarea>
+    <div class="btn-row">
+      <button id="btn-paste" class="secondary">Paste Text</button>
+      <button id="btn-clear" class="secondary">Clear Text</button>
+      <button id="btn-activate-reader">Activate Reader</button>
+      <button id="btn-activate-recorder">Activate Recorder</button>
+    </div>
+  </div>
 
-    <div class="pane-label">Type or paste text</div>
-    <textarea id="text-input" placeholder="Enter your passage here..."></textarea>
-
-    <div class="pane-label">Reading view — follows along as it's read aloud</div>
-    <div id="reading-display" class="reading-display"></div>
-
-    <input id="recognized-text" placeholder="Recognized speech will appear here..." disabled>
-    <div class="controls">
-      <select id="language-select">
+  <!-- ============ READER SETUP ============ -->
+  <div id="reader-setup-view" class="view">
+    <h2>Reader Setup</h2>
+    <textarea id="reader-textarea" placeholder="Text to be read aloud..."></textarea>
+    <div class="btn-row">
+      <select id="reader-language">
         <option value="ja-JP">日本語</option>
         <option value="ko-KR">한국어</option>
         <option value="es-ES">español</option>
         <option value="en-US">English</option>
       </select>
-      <select id="speed-select">
+      <select id="reader-speed">
         <option value="1">1x</option>
         <option value="0.85">0.85x</option>
         <option value="0.7">0.7x</option>
@@ -226,280 +225,372 @@
         <option value="1.5">1.5x</option>
       </select>
     </div>
-    <div class="controls">
-      <button id="read-btn">Read Aloud</button>
-      <button id="pause-btn" disabled>Pause</button>
-      <button id="stop-btn" disabled>Stop</button>
-      <button id="record-btn">Record</button>
-      <button id="play-recording-btn" disabled>Play Recording</button>
+    <div class="btn-row">
+      <button id="btn-read-aloud">Read Aloud</button>
+      <button id="btn-reader-close" class="secondary">Close</button>
     </div>
   </div>
 
-  <script>
-    const readBtn = document.getElementById('read-btn');
-    const pauseBtn = document.getElementById('pause-btn');
-    const stopBtn = document.getElementById('stop-btn');
-    const recordBtn = document.getElementById('record-btn');
-    const playRecordingBtn = document.getElementById('play-recording-btn');
-    const textInput = document.getElementById('text-input');
-    const recognizedText = document.getElementById('recognized-text');
-    const languageSelect = document.getElementById('language-select');
-    const speedSelect = document.getElementById('speed-select');
-    const readingDisplay = document.getElementById('reading-display');
+  <!-- ============ PLAYBACK ============ -->
+  <div id="playback-view" class="view">
+    <h2>Now Reading</h2>
+    <div id="playback-display" class="playback-display"></div>
+    <div class="btn-row">
+      <button id="btn-pause-resume">Pause</button>
+      <button id="btn-stop" class="secondary">Stop</button>
+      <button id="btn-playback-close" class="secondary">Close</button>
+    </div>
+    <div id="nav-row" class="btn-row nav-row">
+      <button id="btn-prev" class="secondary">Previous</button>
+      <button id="btn-next" class="secondary">Next</button>
+    </div>
+    <div class="hint">Previous / Next appear while paused</div>
+  </div>
 
-    let synth = window.speechSynthesis;
-    let utterance;
-    let recognition;
-    let recordedAudio = null;
+  <!-- ============ RECORDER ============ -->
+  <div id="recorder-view" class="view">
+    <h2>Recorder</h2>
+    <div class="btn-row">
+      <select id="recorder-language">
+        <option value="ja-JP">日本語</option>
+        <option value="ko-KR">한국어</option>
+        <option value="es-ES">español</option>
+        <option value="en-US">English</option>
+      </select>
+    </div>
+    <textarea id="recognized-text" placeholder="Recognized speech will appear here..." readonly style="height:80px;"></textarea>
+    <div class="btn-row">
+      <button id="btn-record">Record</button>
+      <button id="btn-play-recording" disabled>Play Recording</button>
+    </div>
+    <div class="btn-row">
+      <button id="btn-recorder-close" class="secondary">Close</button>
+    </div>
+  </div>
 
-    // ---------------------------------------------------------------
-    // Reading pane: splits text into sentences, then words, and
-    // renders each as its own <span> so we can highlight exactly
-    // what's being spoken and scroll it into view as playback moves.
-    // Intl.Segmenter gives locale-aware word boundaries, which matters
-    // for Japanese/Korean where words aren't separated by spaces.
-    // ---------------------------------------------------------------
+</div>
 
-    let sentences = [];        // array of sentence strings for the current text
-    let currentSentenceIndex = 0;
-    let currentOffsetInSentence = 0; // char offset within the current sentence to resume from
-    let isReading = false;     // actively producing speech right now
-    let isPaused = false;      // paused mid-playback (can resume)
+<script>
+  // ---------------------------------------------------------------
+  // View switching
+  // ---------------------------------------------------------------
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
 
-    function segmentSentences(text, locale) {
-      if (window.Intl && Intl.Segmenter) {
-        try {
-          const seg = new Intl.Segmenter(locale, { granularity: 'sentence' });
-          return Array.from(seg.segment(text), s => s.segment).filter(s => s.trim().length);
-        } catch (e) { /* fall through to regex fallback */ }
-      }
-      return text.split(/(?<=[.!?。！？\n])\s*/).filter(s => s.trim().length);
+  // ---------------------------------------------------------------
+  // Element references
+  // ---------------------------------------------------------------
+  const homeTextarea = document.getElementById('home-textarea');
+  const btnPaste = document.getElementById('btn-paste');
+  const btnClear = document.getElementById('btn-clear');
+  const btnActivateReader = document.getElementById('btn-activate-reader');
+  const btnActivateRecorder = document.getElementById('btn-activate-recorder');
+
+  const readerTextarea = document.getElementById('reader-textarea');
+  const readerLanguage = document.getElementById('reader-language');
+  const readerSpeed = document.getElementById('reader-speed');
+  const btnReadAloud = document.getElementById('btn-read-aloud');
+  const btnReaderClose = document.getElementById('btn-reader-close');
+
+  const playbackDisplay = document.getElementById('playback-display');
+  const btnPauseResume = document.getElementById('btn-pause-resume');
+  const btnStop = document.getElementById('btn-stop');
+  const btnPlaybackClose = document.getElementById('btn-playback-close');
+  const navRow = document.getElementById('nav-row');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  const recorderLanguage = document.getElementById('recorder-language');
+  const recognizedText = document.getElementById('recognized-text');
+  const btnRecord = document.getElementById('btn-record');
+  const btnPlayRecording = document.getElementById('btn-play-recording');
+  const btnRecorderClose = document.getElementById('btn-recorder-close');
+
+  const synth = window.speechSynthesis;
+  let utterance;
+  let recognition;
+  let recordedAudio = null;
+
+  // ---------------------------------------------------------------
+  // Home screen: paste / clear / navigate
+  // ---------------------------------------------------------------
+  function insertAtCursor(textarea, text) {
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    textarea.value = textarea.value.slice(0, start) + text + textarea.value.slice(end);
+    const pos = start + text.length;
+    textarea.selectionStart = textarea.selectionEnd = pos;
+    textarea.focus();
+  }
+
+  btnPaste.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) insertAtCursor(homeTextarea, text);
+    } catch (err) {
+      alert('Could not read the clipboard automatically. Please paste manually (Ctrl/Cmd+V), or long-press the text box and choose Paste.');
     }
+  });
 
-    function segmentWords(text, locale) {
-      if (window.Intl && Intl.Segmenter) {
-        try {
-          const seg = new Intl.Segmenter(locale, { granularity: 'word' });
-          let offset = 0;
-          return Array.from(seg.segment(text), s => {
-            const item = { text: s.segment, isWordLike: s.isWordLike, start: offset };
-            offset += s.segment.length;
-            return item;
-          });
-        } catch (e) { /* fall through */ }
-      }
-      let offset = 0;
-      return text.split(/(\s+)/).filter(Boolean).map(s => {
-        const item = { text: s, isWordLike: !/^\s+$/.test(s), start: offset };
-        offset += s.length;
-        return item;
-      });
+  btnClear.addEventListener('click', () => {
+    homeTextarea.value = '';
+    homeTextarea.focus();
+  });
+
+  btnActivateReader.addEventListener('click', () => {
+    const text = homeTextarea.value.trim();
+    if (!text) { alert('Please enter or paste some text first!'); return; }
+    readerTextarea.value = homeTextarea.value;
+    showView('reader-setup-view');
+  });
+
+  btnActivateRecorder.addEventListener('click', () => {
+    recognizedText.value = '';
+    recordedAudio = null;
+    btnPlayRecording.disabled = true;
+    showView('recorder-view');
+  });
+
+  btnReaderClose.addEventListener('click', () => showView('home-view'));
+  btnRecorderClose.addEventListener('click', () => showView('home-view'));
+
+  // ---------------------------------------------------------------
+  // Sentence / word segmentation (locale-aware; Intl.Segmenter
+  // handles Japanese/Korean correctly, where words aren't
+  // separated by spaces)
+  // ---------------------------------------------------------------
+  function segmentSentences(text, locale) {
+    if (window.Intl && Intl.Segmenter) {
+      try {
+        const seg = new Intl.Segmenter(locale, { granularity: 'sentence' });
+        return Array.from(seg.segment(text), s => s.segment).filter(s => s.trim().length);
+      } catch (e) { /* fall through */ }
     }
+    return text.split(/(?<=[.!?。！？\n])\s*/).filter(s => s.trim().length);
+  }
 
-    function renderReadingPane(text) {
-      const locale = languageSelect.value;
-      sentences = segmentSentences(text, locale);
-      readingDisplay.innerHTML = '';
-
-      sentences.forEach((sentenceText, sIdx) => {
-        const sentenceSpan = document.createElement('span');
-        sentenceSpan.className = 'sentence';
-        sentenceSpan.dataset.idx = sIdx;
-
-        segmentWords(sentenceText, locale).forEach(w => {
-          if (w.isWordLike) {
-            const wordSpan = document.createElement('span');
-            wordSpan.className = 'word';
-            wordSpan.dataset.start = w.start;
-            wordSpan.textContent = w.text;
-            sentenceSpan.appendChild(wordSpan);
-          } else {
-            sentenceSpan.appendChild(document.createTextNode(w.text));
-          }
+  function segmentWords(text, locale) {
+    if (window.Intl && Intl.Segmenter) {
+      try {
+        const seg = new Intl.Segmenter(locale, { granularity: 'word' });
+        let offset = 0;
+        return Array.from(seg.segment(text), s => {
+          const item = { text: s.segment, isWordLike: s.isWordLike, start: offset };
+          offset += s.segment.length;
+          return item;
         });
-
-        readingDisplay.appendChild(sentenceSpan);
-        readingDisplay.appendChild(document.createTextNode(' '));
-      });
+      } catch (e) { /* fall through */ }
     }
-
-    function highlightSentence(sIdx) {
-      readingDisplay.querySelectorAll('.sentence.active-sentence')
-        .forEach(el => el.classList.remove('active-sentence'));
-      const el = readingDisplay.querySelector(`.sentence[data-idx="${sIdx}"]`);
-      if (el) el.classList.add('active-sentence');
-    }
-
-    function highlightWord(sIdx, charIndex) {
-      const sentenceEl = readingDisplay.querySelector(`.sentence[data-idx="${sIdx}"]`);
-      if (!sentenceEl) return;
-      readingDisplay.querySelectorAll('.word.active-word')
-        .forEach(el => el.classList.remove('active-word'));
-
-      let target = null;
-      sentenceEl.querySelectorAll('.word').forEach(w => {
-        if (parseInt(w.dataset.start, 10) <= charIndex) target = w;
-      });
-      if (target) {
-        target.classList.add('active-word');
-        target.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      }
-    }
-
-    function clearHighlights() {
-      readingDisplay.querySelectorAll('.active-sentence')
-        .forEach(el => el.classList.remove('active-sentence'));
-      readingDisplay.querySelectorAll('.active-word')
-        .forEach(el => el.classList.remove('active-word'));
-    }
-
-    // Live preview: keep the reading view in sync while typing/pasting,
-    // as long as we're not mid-playback.
-    textInput.addEventListener('input', () => {
-      if (!isReading && !isPaused) renderReadingPane(textInput.value);
+    let offset = 0;
+    return text.split(/(\s+)/).filter(Boolean).map(s => {
+      const item = { text: s, isWordLike: !/^\s+$/.test(s), start: offset };
+      offset += s.length;
+      return item;
     });
-    languageSelect.addEventListener('change', () => {
-      if (!isReading && !isPaused) renderReadingPane(textInput.value);
+  }
+
+  // ---------------------------------------------------------------
+  // Playback: one sentence at a time as a queue, so Pause remembers
+  // exactly where we were (sentence + char offset, refined to the
+  // word where onboundary fires) and Resume picks up right there
+  // instead of restarting. The display window always shows the
+  // sentence currently being spoken plus the next one coming up.
+  // ---------------------------------------------------------------
+
+  let sentences = [];
+  let currentSentenceIndex = 0;
+  let currentOffsetInSentence = 0;
+  let isPlaying = false;
+
+  function renderPlaybackWindow() {
+    playbackDisplay.innerHTML = '';
+    const idxs = [currentSentenceIndex];
+    if (currentSentenceIndex + 1 < sentences.length) idxs.push(currentSentenceIndex + 1);
+
+    idxs.forEach((idx, i) => {
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'line ' + (i === 0 ? 'current-line' : 'next-line');
+
+      const sentenceSpan = document.createElement('span');
+      sentenceSpan.className = 'sentence';
+      sentenceSpan.dataset.idx = idx;
+
+      segmentWords(sentences[idx], readerLanguage.value).forEach(w => {
+        if (w.isWordLike) {
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'word';
+          wordSpan.dataset.start = w.start;
+          wordSpan.textContent = w.text;
+          sentenceSpan.appendChild(wordSpan);
+        } else {
+          sentenceSpan.appendChild(document.createTextNode(w.text));
+        }
+      });
+
+      lineDiv.appendChild(sentenceSpan);
+      playbackDisplay.appendChild(lineDiv);
     });
+  }
 
-    // ---------------------------------------------------------------
-    // Text-to-Speech: plays one sentence at a time as separate
-    // utterances (a queue), rather than one long utterance. This is
-    // what makes real pause/resume possible: native
-    // synth.pause()/resume() is unreliable on mobile (Android Chrome
-    // often just cancels; iOS Safari support is spotty). Instead,
-    // "Pause" cancels the in-flight utterance but remembers exactly
-    // which sentence and character offset we'd reached, and "Resume"
-    // starts a new utterance right there — not from the beginning.
-    // Within a sentence, onboundary events (where supported) refine
-    // that resume point down to the word; where boundary events
-    // aren't fired, it still resumes from the start of that sentence
-    // rather than the start of the whole text.
-    // ---------------------------------------------------------------
+  function highlightWord(sentenceIdx, charIndex) {
+    const sentenceEl = playbackDisplay.querySelector(`.sentence[data-idx="${sentenceIdx}"]`);
+    if (!sentenceEl) return;
+    playbackDisplay.querySelectorAll('.word.active-word').forEach(el => el.classList.remove('active-word'));
 
-    function playFromSentence(sentenceIndex, charOffset = 0) {
-      if (sentenceIndex >= sentences.length) {
-        finishReading();
-        return;
-      }
-
-      currentSentenceIndex = sentenceIndex;
-      const sentenceText = sentences[sentenceIndex];
-      const rawRemaining = sentenceText.slice(charOffset);
-      const remaining = rawRemaining.trimStart();
-      const baseOffset = charOffset + (rawRemaining.length - remaining.length);
-
-      if (!remaining) {
-        playFromSentence(sentenceIndex + 1, 0);
-        return;
-      }
-
-      utterance = new SpeechSynthesisUtterance(remaining);
-      utterance.lang = languageSelect.value;
-      utterance.rate = parseFloat(speedSelect.value);
-
-      utterance.onboundary = (event) => {
-        if (event.charIndex === undefined) return;
-        currentOffsetInSentence = baseOffset + event.charIndex;
-        highlightWord(sentenceIndex, currentOffsetInSentence);
-      };
-
-      utterance.onend = () => {
-        if (isReading) playFromSentence(sentenceIndex + 1, 0);
-      };
-
-      utterance.onerror = () => {
-        if (isReading) finishReading();
-      };
-
-      highlightSentence(sentenceIndex);
-      currentOffsetInSentence = baseOffset;
-      isReading = true;
-      synth.speak(utterance);
+    let target = null;
+    sentenceEl.querySelectorAll('.word').forEach(w => {
+      if (parseInt(w.dataset.start, 10) <= charIndex) target = w;
+    });
+    if (target) {
+      target.classList.add('active-word');
+      target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
+  }
 
-    function finishReading() {
-      isReading = false;
-      isPaused = false;
+  function updatePlaybackButtons() {
+    btnPauseResume.textContent = isPlaying ? 'Pause' : 'Resume';
+    navRow.classList.toggle('visible', !isPlaying);
+    btnPrev.disabled = currentSentenceIndex <= 0;
+    btnNext.disabled = currentSentenceIndex >= sentences.length - 1;
+  }
+
+  function playFromSentence(sentenceIndex, charOffset = 0) {
+    if (sentenceIndex >= sentences.length) {
+      // Finished: reset back to the first sentence
+      isPlaying = false;
       currentSentenceIndex = 0;
       currentOffsetInSentence = 0;
-      readBtn.disabled = false;
-      pauseBtn.disabled = true;
-      pauseBtn.textContent = 'Pause';
-      stopBtn.disabled = true;
-      textInput.disabled = false;
-      clearHighlights();
+      renderPlaybackWindow();
+      updatePlaybackButtons();
+      return;
     }
 
-    readBtn.addEventListener('click', () => {
-      const text = textInput.value.trim();
-      if (!text) return alert("Please enter some text!");
+    currentSentenceIndex = sentenceIndex;
+    renderPlaybackWindow();
 
-      renderReadingPane(text);
-      currentSentenceIndex = 0;
-      currentOffsetInSentence = 0;
-      isPaused = false;
+    const sentenceText = sentences[sentenceIndex];
+    const rawRemaining = sentenceText.slice(charOffset);
+    const remaining = rawRemaining.trimStart();
+    const baseOffset = charOffset + (rawRemaining.length - remaining.length);
 
-      textInput.disabled = true;
-      readBtn.disabled = true;
-      pauseBtn.disabled = false;
-      pauseBtn.textContent = 'Pause';
-      stopBtn.disabled = false;
+    if (!remaining) {
+      playFromSentence(sentenceIndex + 1, 0);
+      return;
+    }
 
-      playFromSentence(0, 0);
-    });
+    utterance = new SpeechSynthesisUtterance(remaining);
+    utterance.lang = readerLanguage.value;
+    utterance.rate = parseFloat(readerSpeed.value);
 
-    pauseBtn.addEventListener('click', () => {
-      if (isReading && !isPaused) {
-        // Pause: stop speech now, but keep the exact sentence + offset
-        isPaused = true;
-        isReading = false; // so onend doesn't advance to the next sentence
-        synth.cancel();
-        pauseBtn.textContent = 'Resume';
-      } else if (isPaused) {
-        // Resume: pick up right where we left off, not from the start
-        isPaused = false;
-        playFromSentence(currentSentenceIndex, currentOffsetInSentence);
-        pauseBtn.textContent = 'Pause';
-      }
-    });
+    utterance.onboundary = (event) => {
+      if (event.charIndex === undefined) return;
+      currentOffsetInSentence = baseOffset + event.charIndex;
+      highlightWord(sentenceIndex, currentOffsetInSentence);
+    };
 
-    stopBtn.addEventListener('click', () => {
-      isReading = false;
+    utterance.onend = () => {
+      if (isPlaying) playFromSentence(sentenceIndex + 1, 0);
+    };
+
+    utterance.onerror = () => {
+      if (isPlaying) { isPlaying = false; updatePlaybackButtons(); }
+    };
+
+    currentOffsetInSentence = baseOffset;
+    isPlaying = true;
+    synth.speak(utterance);
+    updatePlaybackButtons();
+  }
+
+  btnReadAloud.addEventListener('click', () => {
+    const text = readerTextarea.value.trim();
+    if (!text) { alert('Please enter some text!'); return; }
+
+    sentences = segmentSentences(text, readerLanguage.value);
+    if (sentences.length === 0) { alert('No readable text found.'); return; }
+
+    currentSentenceIndex = 0;
+    currentOffsetInSentence = 0;
+    showView('playback-view');
+    playFromSentence(0, 0);
+  });
+
+  btnPauseResume.addEventListener('click', () => {
+    if (isPlaying) {
+      isPlaying = false;
       synth.cancel();
-      finishReading();
-    });
+      updatePlaybackButtons();
+    } else {
+      playFromSentence(currentSentenceIndex, currentOffsetInSentence);
+    }
+  });
 
-    // Speech Recognition
-    recordBtn.addEventListener('click', () => {
-      if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-        alert("Speech recognition not supported in this browser.");
-        return;
-      }
+  btnStop.addEventListener('click', () => {
+    synth.cancel();
+    isPlaying = false;
+    currentSentenceIndex = 0;
+    currentOffsetInSentence = 0;
+    renderPlaybackWindow();
+    updatePlaybackButtons();
+  });
 
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.lang = languageSelect.value;
-      recognition.interimResults = false;
+  btnPlaybackClose.addEventListener('click', () => {
+    synth.cancel();
+    isPlaying = false;
+    currentSentenceIndex = 0;
+    currentOffsetInSentence = 0;
+    showView('reader-setup-view');
+  });
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        recognizedText.value = transcript;
-        recordedAudio = transcript;
-        playRecordingBtn.disabled = false;
-      };
+  btnPrev.addEventListener('click', () => {
+    if (isPlaying) return;
+    currentSentenceIndex = Math.max(0, currentSentenceIndex - 1);
+    currentOffsetInSentence = 0;
+    renderPlaybackWindow();
+    updatePlaybackButtons();
+  });
 
-      recognition.start();
-    });
+  btnNext.addEventListener('click', () => {
+    if (isPlaying) return;
+    currentSentenceIndex = Math.min(sentences.length - 1, currentSentenceIndex + 1);
+    currentOffsetInSentence = 0;
+    renderPlaybackWindow();
+    updatePlaybackButtons();
+  });
 
-    // Play Recorded Audio
-    playRecordingBtn.addEventListener('click', () => {
-      if (recordedAudio) {
-        const playbackUtterance = new SpeechSynthesisUtterance(recordedAudio);
-        playbackUtterance.lang = languageSelect.value;
-        synth.speak(playbackUtterance);
-      }
-    });
-  </script>
+  // ---------------------------------------------------------------
+  // Recorder screen
+  // ---------------------------------------------------------------
+  btnRecord.addEventListener('click', () => {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      alert('Speech recognition not supported in this browser.');
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = recorderLanguage.value;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      recognizedText.value = transcript;
+      recordedAudio = transcript;
+      btnPlayRecording.disabled = false;
+    };
+
+    recognition.start();
+  });
+
+  btnPlayRecording.addEventListener('click', () => {
+    if (recordedAudio) {
+      const playbackUtterance = new SpeechSynthesisUtterance(recordedAudio);
+      playbackUtterance.lang = recorderLanguage.value;
+      synth.speak(playbackUtterance);
+    }
+  });
+</script>
 </body>
 </html>
