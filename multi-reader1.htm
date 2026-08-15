@@ -156,6 +156,27 @@
 
   .record-row { margin-top: 12px; }
 
+  #volume-row {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-top: 14px;
+    text-align: left;
+  }
+  #volume-row.visible { display: flex; }
+  #volume-row label {
+    font-size: 13px;
+    color: #2a628f;
+    font-weight: 600;
+  }
+  #volume-row input[type="range"] {
+    width: 100%;
+    accent-color: #0f4c81;
+    padding: 0;
+    background: transparent;
+  }
+
   /* Anki-style record button: red pulse while capturing audio */
   #btn-record-toggle.recording {
     background-color: #d64545;
@@ -261,13 +282,9 @@
       <button id="btn-play-my-recording" class="secondary" disabled>▶ Play Mine</button>
       <button id="btn-delete-recording" class="secondary" disabled>🗑 Delete</button>
     </div>
-    <div id="volume-row" class="btn-row record-row">
-      <select id="playback-gain" title="Boost how loud your recording plays back">
-        <option value="1">🔊 1x</option>
-        <option value="2" selected>🔊 2x</option>
-        <option value="3">🔊 3x</option>
-        <option value="4">🔊 4x</option>
-      </select>
+    <div id="volume-row" class="volume-row">
+      <label for="playback-gain">🔊 Playback boost: <span id="gain-label">3.0x</span></label>
+      <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="3">
     </div>
     <div id="record-status" class="record-status"></div>
 
@@ -337,7 +354,12 @@
   const recordStatus = document.getElementById('record-status');
   const myRecordingAudio = document.getElementById('my-recording-audio');
   const volumeRow = document.getElementById('volume-row');
-  const playbackGainSelect = document.getElementById('playback-gain');
+  const gainSlider = document.getElementById('playback-gain');
+  const gainLabel = document.getElementById('gain-label');
+
+  gainSlider.addEventListener('input', () => {
+    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
+  });
 
   const recorderLanguage = document.getElementById('recorder-language');
   const recognizedText = document.getElementById('recognized-text');
@@ -726,18 +748,36 @@
   });
 
   // A plain <audio> element can't play louder than the phone's normal
-  // media volume — its .volume property only ever scales *down* from
-  // whatever the system volume is, never up. Since mic recordings are
-  // often captured quietly (small phone mic, conservative default gain),
-  // played-back volume can end up much softer than expected even at
-  // 100% system volume. Routing playback through the Web Audio API and
-  // applying a GainNode above 1.0 amplifies the actual signal, which
-  // does let it play back louder than the un-boosted recording — this
-  // is the fix, not just a volume-slider cosmetic change.
+  // media volume — its .volume property only ever scales *down*.
+  // On top of that, mobile mic capture is usually much quieter to begin
+  // with: the platform's auto-gain control targets phone-call loudness,
+  // not full-scale recording, and phone speakers are physically weaker
+  // than desktop speakers/headphones. A fixed multiplier on a very quiet
+  // signal barely helps, and pushing gain too high just clips/distorts
+  // instead of sounding louder. So playback here does two things:
+  //   1. Auto-normalize: scan the decoded audio for its peak amplitude
+  //      and scale it up to near full-scale first, so quiet mobile
+  //      recordings and louder desktop ones both start from the same
+  //      baseline loudness.
+  //   2. Apply the user's slider gain (1x–10x) on top of that baseline,
+  //      through a limiter so high gain compresses peaks instead of
+  //      clipping them.
   let audioCtx = null;
 
+  function getPeakAmplitude(audioBuffer) {
+    let peak = 0;
+    for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
+      const data = audioBuffer.getChannelData(ch);
+      for (let i = 0; i < data.length; i++) {
+        const abs = Math.abs(data[i]);
+        if (abs > peak) peak = abs;
+      }
+    }
+    return peak;
+  }
+
   async function playRecordingBoosted(blob) {
-    const gainValue = parseFloat(playbackGainSelect.value) || 1;
+    const userGain = parseFloat(gainSlider.value) || 1;
 
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -746,13 +786,28 @@
       const arrayBuffer = await blob.arrayBuffer();
       const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
 
+      const peak = getPeakAmplitude(audioBuffer);
+      // Bring the peak up to ~95% of full scale, capped so a near-silent
+      // clip doesn't get amplified into pure noise.
+      const normalizeGain = peak > 0.0001 ? Math.min(0.95 / peak, 12) : 1;
+      const totalGain = normalizeGain * userGain;
+
       const source = audioCtx.createBufferSource();
       source.buffer = audioBuffer;
 
       const gainNode = audioCtx.createGain();
-      gainNode.gain.value = gainValue;
+      gainNode.gain.value = totalGain;
 
-      source.connect(gainNode).connect(audioCtx.destination);
+      // Limiter: keeps aggressive gain from turning into harsh digital
+      // clipping, which makes audio sound worse rather than louder.
+      const limiter = audioCtx.createDynamicsCompressor();
+      limiter.threshold.value = -6;
+      limiter.knee.value = 0;
+      limiter.ratio.value = 20;
+      limiter.attack.value = 0.003;
+      limiter.release.value = 0.25;
+
+      source.connect(gainNode).connect(limiter).connect(audioCtx.destination);
       source.start(0);
     } catch (err) {
       // Fallback for browsers where Web Audio decoding fails: at least
