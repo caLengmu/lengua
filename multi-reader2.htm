@@ -192,6 +192,9 @@
   #record-panel.visible { display: block; }
 
   .record-panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 13px;
     font-weight: 700;
     color: #b3701a;
@@ -199,6 +202,38 @@
     margin-bottom: 10px;
     letter-spacing: 0.02em;
   }
+  .save-btn {
+    flex: 0 0 auto;
+    min-width: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #fff;
+    color: #b3701a;
+    border: 2px solid #f3b23c;
+  }
+  .save-btn:hover { background-color: #fff2da; }
+
+  /* ---------- Load Text / Save-To views ---------- */
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2a628f;
+    text-align: left;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .project-row {
+    display: flex;
+    gap: 8px;
+  }
+  .project-btn { flex: 1 1 auto; text-align: left; }
+  .delete-btn { flex: 0 0 auto; min-width: 50px; }
 
   .slot-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 10px; }
   .slot-btn {
@@ -292,6 +327,9 @@
     <div class="btn-row">
       <button id="btn-activate-recorder">🎤 Activate Recorder</button>
     </div>
+    <div class="btn-row">
+      <button id="btn-load-text" class="secondary">📂 Load Text</button>
+    </div>
   </div>
 
   <!-- ============ PLAYBACK ("Now Reading") ============ -->
@@ -325,7 +363,10 @@
     <!-- Real audio recording (MediaRecorder), Anki-card style: record your
          own voice reading the current sentence, with 3 comparable takes. -->
     <div id="record-panel">
-      <div class="record-panel-title">🎙️ PRACTICE RECORDING</div>
+      <div class="record-panel-title">
+        <span>🎙️ PRACTICE RECORDING</span>
+        <button id="btn-save-recording" class="secondary save-btn">💾 Save</button>
+      </div>
 
       <div class="slot-row">
         <button id="btn-rec-slot-1" class="slot-btn active-slot">🎤 Rec #1</button>
@@ -349,6 +390,60 @@
 
     <div class="hint">Previous / Next / Recording appear while paused or stopped</div>
     <audio id="my-recording-audio" style="display:none"></audio>
+  </div>
+
+  <!-- ============ LOAD TEXT ============ -->
+  <div id="load-text-view" class="view">
+    <div class="playback-header">
+      <h2 style="margin:0;">📂 Load Text</h2>
+      <button id="btn-loadtext-close" class="icon-btn" title="Close">✕</button>
+    </div>
+
+    <div class="section-title">📚 Samples</div>
+    <div class="btn-row">
+      <button id="btn-sample-1" class="secondary">📄 Sample #1</button>
+      <button id="btn-sample-2" class="secondary">📄 Sample #2</button>
+      <button id="btn-sample-3" class="secondary">📄 Sample #3</button>
+    </div>
+
+    <div class="section-title" style="margin-top:24px;">💼 Saved Projects</div>
+    <div class="project-list">
+      <div class="project-row">
+        <button id="btn-project-1" class="secondary project-btn">⚪ Project #1</button>
+        <button id="btn-delete-project-1" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-2" class="secondary project-btn">⚪ Project #2</button>
+        <button id="btn-delete-project-2" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-3" class="secondary project-btn">⚪ Project #3</button>
+        <button id="btn-delete-project-3" class="secondary delete-btn">🗑️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SAVE TO PROJECT ============ -->
+  <div id="save-view" class="view">
+    <div class="playback-header">
+      <h2 style="margin:0;">💾 Save To…</h2>
+      <button id="btn-save-close" class="icon-btn" title="Close">✕</button>
+    </div>
+    <div class="project-list">
+      <button id="btn-save-slot-1" class="secondary project-btn">⚪ Project #1</button>
+      <button id="btn-save-slot-2" class="secondary project-btn">⚪ Project #2</button>
+      <button id="btn-save-slot-3" class="secondary project-btn">⚪ Project #3</button>
+    </div>
+  </div>
+
+  <!-- ============ OVERWRITE CONFIRMATION ============ -->
+  <div id="save-confirm-view" class="view">
+    <h2>⚠️ Overwrite Project?</h2>
+    <p id="save-confirm-text" style="color:#777; text-align:left;"></p>
+    <div class="btn-row">
+      <button id="btn-save-confirm-yes">✅ Overwrite</button>
+      <button id="btn-save-confirm-cancel" class="secondary">✕ Cancel</button>
+    </div>
   </div>
 
   <!-- ============ RECORDER (speech-to-text demo) ============ -->
@@ -392,6 +487,7 @@
   const btnClear = document.getElementById('btn-clear');
   const btnStart = document.getElementById('btn-start');
   const btnActivateRecorder = document.getElementById('btn-activate-recorder');
+  const btnLoadText = document.getElementById('btn-load-text');
 
   const playbackSpeed = document.getElementById('playback-speed');
   const btnPlaybackClose = document.getElementById('btn-playback-close');
@@ -403,6 +499,7 @@
   const btnNext = document.getElementById('btn-next');
 
   const recordPanel = document.getElementById('record-panel');
+  const btnSaveRecording = document.getElementById('btn-save-recording');
   const btnRecSlot1 = document.getElementById('btn-rec-slot-1');
   const btnRecSlot2 = document.getElementById('btn-rec-slot-2');
   const btnRecSlot3 = document.getElementById('btn-rec-slot-3');
@@ -420,10 +517,135 @@
   const btnPlayRecording = document.getElementById('btn-play-recording');
   const btnRecorderClose = document.getElementById('btn-recorder-close');
 
+  const btnLoadTextClose = document.getElementById('btn-loadtext-close');
+  const btnSample1 = document.getElementById('btn-sample-1');
+  const btnSample2 = document.getElementById('btn-sample-2');
+  const btnSample3 = document.getElementById('btn-sample-3');
+  const btnProject1 = document.getElementById('btn-project-1');
+  const btnProject2 = document.getElementById('btn-project-2');
+  const btnProject3 = document.getElementById('btn-project-3');
+  const btnDeleteProject1 = document.getElementById('btn-delete-project-1');
+  const btnDeleteProject2 = document.getElementById('btn-delete-project-2');
+  const btnDeleteProject3 = document.getElementById('btn-delete-project-3');
+
+  const btnSaveClose = document.getElementById('btn-save-close');
+  const btnSaveSlot1 = document.getElementById('btn-save-slot-1');
+  const btnSaveSlot2 = document.getElementById('btn-save-slot-2');
+  const btnSaveSlot3 = document.getElementById('btn-save-slot-3');
+
+  const saveConfirmText = document.getElementById('save-confirm-text');
+  const btnSaveConfirmYes = document.getElementById('btn-save-confirm-yes');
+  const btnSaveConfirmCancel = document.getElementById('btn-save-confirm-cancel');
+
   const synth = window.speechSynthesis;
   let utterance;
   let recognition;
   let recordedAudio = null;
+
+  // Best-effort: ask the browser not to evict our IndexedDB data under
+  // storage pressure. Not guaranteed, safe to ignore if unsupported.
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().catch(() => {});
+  }
+
+  // ---------------------------------------------------------------
+  // Sample texts — EDIT HERE to add your own built-in samples.
+  // Each entry needs a `language` (one of 'ja-JP' | 'ko-KR' | 'es-ES' |
+  // 'en-US') and the `text` itself. Leave `text` empty to keep a slot
+  // disabled (tapping it will just show a reminder to fill it in).
+  //
+  // Example:
+  //   1: { language: 'ja-JP', text: '今日はいい天気ですね。散歩に行きましょう。' },
+  // ---------------------------------------------------------------
+  const SAMPLE_TEXTS = {
+    1: { language: 'en-US', text: 'A Quick Trip to the Market
+Last Saturday, I got up early and walked to the local market with my friend Matt. We wanted to buy some fresh apples, eggs, and a small bag of nuts. On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” I had heard about it, but I had never been there.
+When we arrived at the market, it was already busy. A man was selling red peppers, fresh bread, and black coffee. I picked up a green apple and asked, “How much is it?” The seller said, “Two dollars.” I paid him and put the apple in my bag.
+After that, we went to the café. I ordered a hot cup of coffee and a piece of cake. Matt wanted a cold drink, but he accidentally asked for a cup of tea instead. We laughed and shared the cake.
+Before we went home, we sat outside and watched people walk past. It was a simple trip, but we had a great time.
+' },
+    2: { language: 'ja-JP', text: '日本のスーパーで「値引きシール」を自動で貼るロボットが登場しました
+日本のスーパーマーケットで、賞味期限が近くなった商品に「割引シール」を貼るロボットが使われ始めました。
+割引シールというのは、商品の値段を安くして売るために貼るシールのことです。例えば、「20%引き」や「半額」と書いてあるシールのことですね。半額というのは、元の値段の半分という意味です。
+夕方のスーパーでは、まだ売れていないお弁当やパンに、店員が手作業で1枚ずつシールを貼る必要がありました。手作業というのは、機械を使わないで自分の手で仕事をすることです。
+しかし、夕方は買い物客が多くて店員も忙しいため、シールを貼る時間が足りなくなることがありました。
+そこで、棚にある商品の賞味期限をカメラで確認して、自動でシールを貼るロボットが開発されました。開発するというのは、新しい便利な道具や技術を作り出すことです。
+ロボットがこの作業を担当することで、店員はレジの仕事や接客に集中できるようになります。接客というのは、店に来たお客さんの案内やお世話をすることです。
+お店の仕事が楽になるだけでなく、食品ロスを減らすことにも繋がると期待されています。
+皆さんは、スーパーで買い物をする時に割引シールがついた商品を買うことがありますか？
+' },
+    3: { language: 'ja-JP', text: '街角で傘を借りて返せる「傘シェアリング」が人気です
+雨の日にとても便利な「傘シェアリング」というサービスを使う人が増えています。
+傘シェアリングというのは、街の中にある専用のスタンドから傘を借りて、使った後に別の場所で返すことができる仕組みのことです。シェアリングというのは、みんなで物を共有して使うという意味ですね。共有するとは、1つの物を自分だけで持たないで、他の人と一緒に使うことです。
+これまでは、急に雨が降ってきた時、コンビニなどで新しいビニール傘を買う人が多くいました。ビニール傘というのは、透明なプラスチックで作られた安い傘のことです。
+しかし、急いで買った傘を家に持って帰ると、傘がたくさん増えてしまったり、使わなくなって捨てられたりして「プラスチックゴミ」が増える問題がありました。
+この傘シェアリングを使えば、スマートフォンのアプリでQRコードを読み取るだけで、すぐに傘を借りることができます。さらに、借りた場所とは違う駅やお店のスタンドに返してもいいので、持ち歩く手間がなくなります。手間がなくなるというのは、面倒なことが減って楽になるという意味です。
+無駄なゴミを減らして地球を守るためにも、とても役に立つアイデアですね。
+皆さんは、急に雨が降ってきたとき、どうやって傘を準備しますか？
+' },
+  };
+
+  // ---------------------------------------------------------------
+  // IndexedDB persistence: each "project" stores the original text,
+  // its language, and every practice recording (as real Blobs, not
+  // base64) keyed by sentence index and take number (1/2/3).
+  // ---------------------------------------------------------------
+  const DB_NAME = 'MultilingualReaderDB';
+  const DB_VERSION = 1;
+  const STORE_PROJECTS = 'projects';
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) { reject(new Error('IndexedDB not supported')); return; }
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
+          db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function dbGetProject(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readonly');
+      const req = tx.objectStore(STORE_PROJECTS).get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function dbPutProject(project) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readwrite');
+      tx.objectStore(STORE_PROJECTS).put(project);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function dbDeleteProject(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readwrite');
+      tx.objectStore(STORE_PROJECTS).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function getProjectStatuses() {
+    const ids = [1, 2, 3];
+    const results = await Promise.all(ids.map(id => dbGetProject(id).catch(() => null)));
+    const statusMap = {};
+    ids.forEach((id, i) => { statusMap[id] = !!results[i]; });
+    return statusMap;
+  }
 
   gainSlider.addEventListener('input', () => {
     gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
@@ -511,6 +733,7 @@
   let currentOffsetInSentence = 0;
   let isPlaying = false;
   let activeLanguage = 'en-US';
+  let activeFullText = '';
 
   function renderPlaybackWindow() {
     playbackDisplay.innerHTML = '';
@@ -625,13 +848,14 @@
     updatePlaybackButtons();
   }
 
-  btnStart.addEventListener('click', () => {
-    const text = homeTextarea.value.trim();
-    if (!text) { alert('Please enter or paste some text first!'); return; }
+  function enterReaderWithText(text, language) {
+    const trimmed = (text || '').trim();
+    if (!trimmed) { alert('There is no text to load.'); return false; }
 
-    activeLanguage = homeLanguage.value;
-    sentences = segmentSentences(text, activeLanguage);
-    if (sentences.length === 0) { alert('No readable text found.'); return; }
+    activeLanguage = language || 'en-US';
+    activeFullText = trimmed;
+    sentences = segmentSentences(trimmed, activeLanguage);
+    if (sentences.length === 0) { alert('No readable text found.'); return false; }
 
     resetAllRecordings();
     currentRecSlot = 1;
@@ -641,7 +865,171 @@
     showView('playback-view');
     renderPlaybackWindow();   // show the first sentence, but don't speak yet
     updatePlaybackButtons();  // "Read Aloud" waits for the user to tap it
+    return true;
+  }
+
+  btnStart.addEventListener('click', () => {
+    enterReaderWithText(homeTextarea.value, homeLanguage.value);
   });
+
+  // ---------------------------------------------------------------
+  // Load Text: Samples (built into the code) + Saved Projects (IndexedDB)
+  // ---------------------------------------------------------------
+  btnLoadText.addEventListener('click', async () => {
+    showView('load-text-view');
+    await refreshLoadTextProjectButtons();
+  });
+  btnLoadTextClose.addEventListener('click', () => showView('home-view'));
+
+  function sampleButtonHandler(n) {
+    return () => {
+      const sample = SAMPLE_TEXTS[n];
+      if (!sample || !sample.text || !sample.text.trim()) {
+        alert(`Sample #${n} is empty. Add text for it in the SAMPLE_TEXTS object in the code.`);
+        return;
+      }
+      enterReaderWithText(sample.text, sample.language);
+    };
+  }
+  btnSample1.addEventListener('click', sampleButtonHandler(1));
+  btnSample2.addEventListener('click', sampleButtonHandler(2));
+  btnSample3.addEventListener('click', sampleButtonHandler(3));
+
+  async function refreshLoadTextProjectButtons() {
+    const statusMap = await getProjectStatuses().catch(() => ({ 1: false, 2: false, 3: false }));
+    [1, 2, 3].forEach(id => {
+      const btn = document.getElementById(`btn-project-${id}`);
+      btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
+    });
+  }
+
+  function projectButtonHandler(id) {
+    return async () => {
+      let project;
+      try {
+        project = await dbGetProject(id);
+      } catch (err) {
+        alert('Could not access saved data on this device/browser.');
+        return;
+      }
+      if (!project) {
+        alert(`Project #${id} has no saved data yet. Go to Now Reading → Practice Recording → Save to store one.`);
+        return;
+      }
+      if (enterReaderWithText(project.text, project.language)) {
+        restoreRecordingsFromProject(project.recordings);
+      }
+    };
+  }
+  btnProject1.addEventListener('click', projectButtonHandler(1));
+  btnProject2.addEventListener('click', projectButtonHandler(2));
+  btnProject3.addEventListener('click', projectButtonHandler(3));
+
+  function deleteProjectButtonHandler(id) {
+    return async () => {
+      if (!confirm(`Delete all saved text and recordings in Project #${id}? This cannot be undone.`)) return;
+      try {
+        await dbDeleteProject(id);
+      } catch (err) {
+        alert('Could not delete this project.');
+        return;
+      }
+      await refreshLoadTextProjectButtons();
+    };
+  }
+  btnDeleteProject1.addEventListener('click', deleteProjectButtonHandler(1));
+  btnDeleteProject2.addEventListener('click', deleteProjectButtonHandler(2));
+  btnDeleteProject3.addEventListener('click', deleteProjectButtonHandler(3));
+
+  function restoreRecordingsFromProject(recordings) {
+    if (!recordings) return;
+    for (const sIdx in recordings) {
+      sentenceRecordings[sIdx] = {};
+      for (const slot in recordings[sIdx]) {
+        const blob = recordings[sIdx][slot];
+        sentenceRecordings[sIdx][slot] = { blob, url: URL.createObjectURL(blob) };
+      }
+    }
+    refreshSlotButtons();
+    updateRecordButtons();
+  }
+
+  // ---------------------------------------------------------------
+  // Save current session (text + all recordings) to a Project slot
+  // ---------------------------------------------------------------
+  let pendingSaveSlot = null;
+
+  btnSaveRecording.addEventListener('click', async () => {
+    showView('save-view');
+    await refreshSaveViewButtons();
+  });
+  btnSaveClose.addEventListener('click', () => showView('playback-view'));
+
+  async function refreshSaveViewButtons() {
+    const statusMap = await getProjectStatuses().catch(() => ({ 1: false, 2: false, 3: false }));
+    [1, 2, 3].forEach(id => {
+      const btn = document.getElementById(`btn-save-slot-${id}`);
+      btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
+    });
+  }
+
+  function saveSlotButtonHandler(id) {
+    return async () => {
+      let existing;
+      try {
+        existing = await dbGetProject(id);
+      } catch (err) {
+        alert('Could not access saved data on this device/browser.');
+        return;
+      }
+      if (existing) {
+        pendingSaveSlot = id;
+        saveConfirmText.textContent = `Project #${id} already has saved data. Saving now will overwrite it. Continue?`;
+        showView('save-confirm-view');
+      } else {
+        await saveCurrentSessionToProject(id);
+      }
+    };
+  }
+  btnSaveSlot1.addEventListener('click', saveSlotButtonHandler(1));
+  btnSaveSlot2.addEventListener('click', saveSlotButtonHandler(2));
+  btnSaveSlot3.addEventListener('click', saveSlotButtonHandler(3));
+
+  btnSaveConfirmYes.addEventListener('click', async () => {
+    if (pendingSaveSlot == null) return;
+    await saveCurrentSessionToProject(pendingSaveSlot);
+    pendingSaveSlot = null;
+  });
+  btnSaveConfirmCancel.addEventListener('click', () => {
+    pendingSaveSlot = null;
+    showView('save-view');
+    refreshSaveViewButtons();
+  });
+
+  async function saveCurrentSessionToProject(id) {
+    const recordingsPlain = {};
+    for (const sIdx in sentenceRecordings) {
+      recordingsPlain[sIdx] = {};
+      for (const slot in sentenceRecordings[sIdx]) {
+        recordingsPlain[sIdx][slot] = sentenceRecordings[sIdx][slot].blob;
+      }
+    }
+    const project = {
+      id,
+      text: activeFullText,
+      language: activeLanguage,
+      savedAt: Date.now(),
+      recordings: recordingsPlain
+    };
+    try {
+      await dbPutProject(project);
+    } catch (err) {
+      alert('Save failed — the browser storage may be full or unavailable (e.g. private browsing mode).');
+      return;
+    }
+    alert(`✅ Saved to Project #${id}`);
+    showView('playback-view');
+  }
 
   btnPauseResume.addEventListener('click', () => {
     if (isPlaying) {
