@@ -123,6 +123,17 @@
     margin-bottom: 14px;
   }
   #playback-speed { flex: 0 1 130px; min-width: 90px; }
+  .sentence-counter {
+    display: inline-block;
+    background: #ff9f1c;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 4px rgba(255, 159, 28, 0.4);
+  }
   .icon-btn {
     flex: 0 0 auto;
     width: 42px;
@@ -293,7 +304,9 @@
         <option value="1.2">1.2x</option>
         <option value="1.5">1.5x</option>
       </select>
-      <h2 style="margin:0;">📖 Now Reading</h2>
+      <h2 style="margin:0; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+        📖 Now Reading <span id="sentence-counter" class="sentence-counter">1 of 1</span>
+      </h2>
       <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
     </div>
 
@@ -527,6 +540,13 @@
       lineDiv.appendChild(sentenceSpan);
       playbackDisplay.appendChild(lineDiv);
     });
+
+    updateSentenceCounter();
+  }
+
+  function updateSentenceCounter() {
+    const el = document.getElementById('sentence-counter');
+    if (el) el.textContent = `${currentSentenceIndex + 1} of ${sentences.length}`;
   }
 
   function highlightWord(sentenceIdx, charIndex) {
@@ -617,8 +637,10 @@
     currentRecSlot = 1;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
+    isPlaying = false;
     showView('playback-view');
-    playFromSentence(0, 0);
+    renderPlaybackWindow();   // show the first sentence, but don't speak yet
+    updatePlaybackButtons();  // "Read Aloud" waits for the user to tap it
   });
 
   btnPauseResume.addEventListener('click', () => {
