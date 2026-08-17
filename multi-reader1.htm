@@ -7,9 +7,7 @@
 <style>
   * { box-sizing: border-box; }
 
-  html, body {
-    height: 100%;
-  }
+  html, body { height: 100%; }
 
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,24 +30,14 @@
     border-radius: 15px;
     padding: 28px 24px;
     text-align: center;
+    position: relative;
   }
 
-  /* ---------- view switching ---------- */
   .view { display: none; }
   .view.active { display: block; }
 
-  h1 {
-    color: #2a628f;
-    margin: 0 0 6px;
-    font-size: 1.6rem;
-    line-height: 1.3;
-  }
-
-  h2 {
-    color: #2a628f;
-    margin: 0 0 16px;
-    font-size: 1.2rem;
-  }
+  h1 { color: #2a628f; margin: 0 0 6px; font-size: 1.6rem; line-height: 1.3; }
+  h2 { color: #2a628f; margin: 0 0 16px; font-size: 1.2rem; }
 
   .flags { margin-bottom: 18px; }
   .flags img { width: 34px; max-width: 16vw; margin: 0 4px; }
@@ -74,8 +62,6 @@
   }
   #home-textarea:focus { border-color: #6fb3e0; }
 
-  #reader-textarea { height: 110px; }
-
   .btn-row {
     margin-top: 18px;
     display: flex;
@@ -83,7 +69,6 @@
     justify-content: center;
     gap: 10px;
   }
-
   .btn-row + .btn-row { margin-top: 12px; }
 
   select, button {
@@ -114,6 +99,59 @@
 
   select { padding: 11px 12px; }
 
+  /* ---------- home screen: paired columns ---------- */
+  .home-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .home-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #btn-start { background-color: #1c7a4d; }
+  #btn-start:hover { background-color: #145f3b; }
+
+  /* ---------- Now Reading header ---------- */
+  .playback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  #playback-speed { flex: 0 1 130px; min-width: 90px; }
+  .sentence-counter {
+    display: inline-block;
+    background: #ff9f1c;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 4px rgba(255, 159, 28, 0.4);
+  }
+  .icon-btn {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+  }
+  .icon-btn:hover { background-color: #dcebf5; }
+
   /* ---------- playback screen ---------- */
   .playback-display {
     text-align: left;
@@ -129,55 +167,90 @@
     gap: 14px;
   }
 
-  .playback-display .line {
-    font-size: 21px;
-    line-height: 1.8;
-    word-break: break-word;
-  }
-
-  .playback-display .line.next-line {
-    opacity: 0.4;
-    font-size: 19px;
-  }
+  .playback-display .line { font-size: 21px; line-height: 1.8; word-break: break-word; }
+  .playback-display .line.next-line { opacity: 0.4; font-size: 19px; }
 
   .playback-display .word {
     border-radius: 4px;
     padding: 1px 2px;
     transition: background-color 0.15s ease, color 0.15s ease;
   }
+  .playback-display .word.active-word { background: #ffd166; color: #222; }
 
-  .playback-display .word.active-word {
-    background: #ffd166;
-    color: #222;
-  }
+  .nav-row { display: none; margin-top: 12px; }
+  .nav-row.visible { display: flex; }
 
-  .nav-row, .record-row { display: none; }
-  .nav-row.visible, .record-row.visible { display: flex; }
-
-  .record-row { margin-top: 12px; }
-
-  #volume-row {
+  /* ---------- recording panel: visually boxed off ---------- */
+  #record-panel {
     display: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-    margin-top: 14px;
-    text-align: left;
+    margin-top: 16px;
+    padding: 16px;
+    border: 2px dashed #f3b23c;
+    background: #fff8ec;
+    border-radius: 14px;
   }
-  #volume-row.visible { display: flex; }
-  #volume-row label {
+  #record-panel.visible { display: block; }
+
+  .record-panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 13px;
-    color: #2a628f;
-    font-weight: 600;
+    font-weight: 700;
+    color: #b3701a;
+    text-align: left;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
   }
-  #volume-row input[type="range"] {
-    width: 100%;
-    accent-color: #0f4c81;
-    padding: 0;
-    background: transparent;
+  .save-btn {
+    flex: 0 0 auto;
+    min-width: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #fff;
+    color: #b3701a;
+    border: 2px solid #f3b23c;
+  }
+  .save-btn:hover { background-color: #fff2da; }
+
+  /* ---------- Load Text / Save-To views ---------- */
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2a628f;
+    text-align: left;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .project-row {
+    display: flex;
+    gap: 8px;
+  }
+  .project-btn { flex: 1 1 auto; text-align: left; }
+  .delete-btn { flex: 0 0 auto; min-width: 50px; }
+
+  .slot-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 10px; }
+  .slot-btn {
+    background-color: #ffffff;
+    color: #b3701a;
+    border: 2px solid #f3b23c;
+    flex: 1 1 auto;
+    min-width: 90px;
+    font-size: 14px;
+    padding: 9px 10px;
+  }
+  .slot-btn:hover { background-color: #fff2da; }
+  .slot-btn.active-slot {
+    background-color: #f3b23c;
+    color: #fff;
   }
 
-  /* Anki-style record button: red pulse while capturing audio */
   #btn-record-toggle.recording {
     background-color: #d64545;
     animation: pulse 1.1s infinite;
@@ -191,16 +264,24 @@
   .record-status {
     font-size: 13px;
     color: #d64545;
-    margin: 6px 0 0;
+    margin: 8px 0 0;
     min-height: 16px;
     font-weight: 600;
   }
 
-  .hint {
-    font-size: 12px;
-    color: #9db6c6;
-    margin-top: 8px;
+  #volume-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-top: 14px;
+    text-align: left;
   }
+  #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
+  #volume-row input[type="range"] { width: 100%; accent-color: #f3b23c; padding: 0; background: transparent; }
+  .gain-feedback { font-size: 11.5px; color: #a98750; min-height: 14px; }
+
+  .hint { font-size: 12px; color: #9db6c6; margin-top: 10px; }
 
   @media (max-width: 400px) {
     body { padding: 8px; }
@@ -210,6 +291,7 @@
     select, button { font-size: 14px; padding: 10px; min-width: 84px; }
     .playback-display .line { font-size: 18px; }
     .playback-display .line.next-line { font-size: 16px; }
+    .home-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -226,75 +308,149 @@
       <img src="https://flagcdn.com/w320/us.png" alt="USA Flag">
     </div>
     <textarea id="home-textarea" placeholder="Type or paste text here..."></textarea>
+
+    <div class="home-grid">
+      <div class="home-col">
+        <button id="btn-paste" class="secondary">📋 Paste Text</button>
+        <select id="home-language">
+          <option value="ja-JP">日本語</option>
+          <option value="ko-KR">한국어</option>
+          <option value="es-ES">español</option>
+          <option value="en-US">English</option>
+        </select>
+      </div>
+      <div class="home-col">
+        <button id="btn-clear" class="secondary">🗑️ Clear Text</button>
+        <button id="btn-start">▶️ Start</button>
+      </div>
+    </div>
+
     <div class="btn-row">
-      <button id="btn-paste" class="secondary">Paste Text</button>
-      <button id="btn-clear" class="secondary">Clear Text</button>
-      <button id="btn-activate-reader">Activate Reader</button>
-      <button id="btn-activate-recorder">Activate Recorder</button>
+      <button id="btn-activate-recorder">🎤 Activate Recorder</button>
+    </div>
+    <div class="btn-row">
+      <button id="btn-load-text" class="secondary">📂 Load Text</button>
     </div>
   </div>
 
-  <!-- ============ READER SETUP ============ -->
-  <div id="reader-setup-view" class="view">
-    <h2>Reader Setup</h2>
-    <textarea id="reader-textarea" placeholder="Text to be read aloud..."></textarea>
-    <div class="btn-row">
-      <select id="reader-language">
-        <option value="ja-JP">日本語</option>
-        <option value="ko-KR">한국어</option>
-        <option value="es-ES">español</option>
-        <option value="en-US">English</option>
-      </select>
-      <select id="reader-speed">
+  <!-- ============ PLAYBACK ("Now Reading") ============ -->
+  <div id="playback-view" class="view">
+    <div class="playback-header">
+      <select id="playback-speed">
         <option value="1">1x</option>
         <option value="0.85">0.85x</option>
         <option value="0.7">0.7x</option>
         <option value="1.2">1.2x</option>
         <option value="1.5">1.5x</option>
       </select>
+      <h2 style="margin:0; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+        📖 Now Reading <span id="sentence-counter" class="sentence-counter">1 of 1</span>
+      </h2>
+      <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
     </div>
-    <div class="btn-row">
-      <button id="btn-read-aloud">Read Aloud</button>
-      <button id="btn-reader-close" class="secondary">Close</button>
-    </div>
-  </div>
 
-  <!-- ============ PLAYBACK ============ -->
-  <div id="playback-view" class="view">
-    <h2>Now Reading</h2>
     <div id="playback-display" class="playback-display"></div>
 
     <div class="btn-row">
-      <button id="btn-pause-resume">Pause</button>
-      <button id="btn-stop" class="secondary">Stop</button>
-      <button id="btn-playback-close" class="secondary">Close</button>
+      <button id="btn-pause-resume">⏸️ Pause</button>
+      <button id="btn-stop" class="secondary">⏹️ Stop</button>
     </div>
 
     <div id="nav-row" class="btn-row nav-row">
-      <button id="btn-prev" class="secondary">Previous</button>
-      <button id="btn-next" class="secondary">Next</button>
+      <button id="btn-prev" class="secondary">⏮️ Previous</button>
+      <button id="btn-next" class="secondary">⏭️ Next</button>
     </div>
 
-    <!-- Real audio recording (MediaRecorder), Anki-card style: record your own
-         voice reading the current sentence, then play it back or re-record. -->
-    <div id="record-row" class="btn-row record-row">
-      <button id="btn-record-toggle">🎙 Record</button>
-      <button id="btn-play-my-recording" class="secondary" disabled>▶ Play Mine</button>
-      <button id="btn-delete-recording" class="secondary" disabled>🗑 Delete</button>
-    </div>
-    <div id="volume-row" class="volume-row">
-      <label for="playback-gain">🔊 Playback boost: <span id="gain-label">3.0x</span></label>
-      <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="3">
-    </div>
-    <div id="record-status" class="record-status"></div>
+    <!-- Real audio recording (MediaRecorder), Anki-card style: record your
+         own voice reading the current sentence, with 3 comparable takes. -->
+    <div id="record-panel">
+      <div class="record-panel-title">
+        <span>🎙️ PRACTICE RECORDING</span>
+        <button id="btn-save-recording" class="secondary save-btn">💾 Save</button>
+      </div>
 
-    <div class="hint">Previous / Next / Record appear while paused or stopped</div>
+      <div class="slot-row">
+        <button id="btn-rec-slot-1" class="slot-btn active-slot">🎤 Rec #1</button>
+        <button id="btn-rec-slot-2" class="slot-btn">🎤 Rec #2</button>
+        <button id="btn-rec-slot-3" class="slot-btn">🎤 Rec #3</button>
+      </div>
+
+      <div id="record-row" class="btn-row" style="margin-top:0;">
+        <button id="btn-record-toggle">🎙️ Record</button>
+        <button id="btn-play-pause" class="secondary" disabled>▶️ Play</button>
+        <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
+      </div>
+
+      <div id="volume-row">
+        <label for="playback-gain">🔊 Extra Volume: <span id="gain-label">1.5x</span></label>
+        <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="1.5">
+        <div id="gain-feedback" class="gain-feedback"></div>
+      </div>
+
+      <div id="record-status" class="record-status"></div>
+    </div>
+
+    <div class="hint">Previous / Next / Recording appear while paused or stopped</div>
     <audio id="my-recording-audio" style="display:none"></audio>
   </div>
 
-  <!-- ============ RECORDER ============ -->
+  <!-- ============ LOAD TEXT ============ -->
+  <div id="load-text-view" class="view">
+    <div class="playback-header">
+      <h2 style="margin:0;">📂 Load Text</h2>
+      <button id="btn-loadtext-close" class="icon-btn" title="Close">✕</button>
+    </div>
+
+    <div class="section-title">📚 Samples</div>
+    <div class="btn-row">
+      <button id="btn-sample-1" class="secondary">📄 Sample #1</button>
+      <button id="btn-sample-2" class="secondary">📄 Sample #2</button>
+      <button id="btn-sample-3" class="secondary">📄 Sample #3</button>
+    </div>
+
+    <div class="section-title" style="margin-top:24px;">💼 Saved Projects</div>
+    <div class="project-list">
+      <div class="project-row">
+        <button id="btn-project-1" class="secondary project-btn">⚪ Project #1</button>
+        <button id="btn-delete-project-1" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-2" class="secondary project-btn">⚪ Project #2</button>
+        <button id="btn-delete-project-2" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-3" class="secondary project-btn">⚪ Project #3</button>
+        <button id="btn-delete-project-3" class="secondary delete-btn">🗑️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SAVE TO PROJECT ============ -->
+  <div id="save-view" class="view">
+    <div class="playback-header">
+      <h2 style="margin:0;">💾 Save To…</h2>
+      <button id="btn-save-close" class="icon-btn" title="Close">✕</button>
+    </div>
+    <div class="project-list">
+      <button id="btn-save-slot-1" class="secondary project-btn">⚪ Project #1</button>
+      <button id="btn-save-slot-2" class="secondary project-btn">⚪ Project #2</button>
+      <button id="btn-save-slot-3" class="secondary project-btn">⚪ Project #3</button>
+    </div>
+  </div>
+
+  <!-- ============ OVERWRITE CONFIRMATION ============ -->
+  <div id="save-confirm-view" class="view">
+    <h2>⚠️ Overwrite Project?</h2>
+    <p id="save-confirm-text" style="color:#777; text-align:left;"></p>
+    <div class="btn-row">
+      <button id="btn-save-confirm-yes">✅ Overwrite</button>
+      <button id="btn-save-confirm-cancel" class="secondary">✕ Cancel</button>
+    </div>
+  </div>
+
+  <!-- ============ RECORDER (speech-to-text demo) ============ -->
   <div id="recorder-view" class="view">
-    <h2>Recorder</h2>
+    <h2>🎤 Recorder</h2>
     <div class="btn-row">
       <select id="recorder-language">
         <option value="ja-JP">日本語</option>
@@ -305,11 +461,11 @@
     </div>
     <textarea id="recognized-text" placeholder="Recognized speech will appear here..." readonly style="height:80px;"></textarea>
     <div class="btn-row">
-      <button id="btn-record">Record</button>
-      <button id="btn-play-recording" disabled>Play Recording</button>
+      <button id="btn-record">🎙️ Record</button>
+      <button id="btn-play-recording" disabled>▶️ Play Recording</button>
     </div>
     <div class="btn-row">
-      <button id="btn-recorder-close" class="secondary">Close</button>
+      <button id="btn-recorder-close" class="secondary">✕ Close</button>
     </div>
   </div>
 
@@ -328,38 +484,35 @@
   // Element references
   // ---------------------------------------------------------------
   const homeTextarea = document.getElementById('home-textarea');
+  const homeLanguage = document.getElementById('home-language');
   const btnPaste = document.getElementById('btn-paste');
   const btnClear = document.getElementById('btn-clear');
-  const btnActivateReader = document.getElementById('btn-activate-reader');
+  const btnStart = document.getElementById('btn-start');
   const btnActivateRecorder = document.getElementById('btn-activate-recorder');
+  const btnLoadText = document.getElementById('btn-load-text');
 
-  const readerTextarea = document.getElementById('reader-textarea');
-  const readerLanguage = document.getElementById('reader-language');
-  const readerSpeed = document.getElementById('reader-speed');
-  const btnReadAloud = document.getElementById('btn-read-aloud');
-  const btnReaderClose = document.getElementById('btn-reader-close');
-
+  const playbackSpeed = document.getElementById('playback-speed');
+  const btnPlaybackClose = document.getElementById('btn-playback-close');
   const playbackDisplay = document.getElementById('playback-display');
   const btnPauseResume = document.getElementById('btn-pause-resume');
   const btnStop = document.getElementById('btn-stop');
-  const btnPlaybackClose = document.getElementById('btn-playback-close');
   const navRow = document.getElementById('nav-row');
   const btnPrev = document.getElementById('btn-prev');
   const btnNext = document.getElementById('btn-next');
 
-  const recordRow = document.getElementById('record-row');
+  const recordPanel = document.getElementById('record-panel');
+  const btnSaveRecording = document.getElementById('btn-save-recording');
+  const btnRecSlot1 = document.getElementById('btn-rec-slot-1');
+  const btnRecSlot2 = document.getElementById('btn-rec-slot-2');
+  const btnRecSlot3 = document.getElementById('btn-rec-slot-3');
   const btnRecordToggle = document.getElementById('btn-record-toggle');
-  const btnPlayMyRecording = document.getElementById('btn-play-my-recording');
+  const btnPlayPause = document.getElementById('btn-play-pause');
   const btnDeleteRecording = document.getElementById('btn-delete-recording');
   const recordStatus = document.getElementById('record-status');
   const myRecordingAudio = document.getElementById('my-recording-audio');
-  const volumeRow = document.getElementById('volume-row');
   const gainSlider = document.getElementById('playback-gain');
   const gainLabel = document.getElementById('gain-label');
-
-  gainSlider.addEventListener('input', () => {
-    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
-  });
+  const gainFeedback = document.getElementById('gain-feedback');
 
   const recorderLanguage = document.getElementById('recorder-language');
   const recognizedText = document.getElementById('recognized-text');
@@ -367,10 +520,169 @@
   const btnPlayRecording = document.getElementById('btn-play-recording');
   const btnRecorderClose = document.getElementById('btn-recorder-close');
 
+  const btnLoadTextClose = document.getElementById('btn-loadtext-close');
+  const btnSample1 = document.getElementById('btn-sample-1');
+  const btnSample2 = document.getElementById('btn-sample-2');
+  const btnSample3 = document.getElementById('btn-sample-3');
+  const btnProject1 = document.getElementById('btn-project-1');
+  const btnProject2 = document.getElementById('btn-project-2');
+  const btnProject3 = document.getElementById('btn-project-3');
+  const btnDeleteProject1 = document.getElementById('btn-delete-project-1');
+  const btnDeleteProject2 = document.getElementById('btn-delete-project-2');
+  const btnDeleteProject3 = document.getElementById('btn-delete-project-3');
+
+  const btnSaveClose = document.getElementById('btn-save-close');
+  const btnSaveSlot1 = document.getElementById('btn-save-slot-1');
+  const btnSaveSlot2 = document.getElementById('btn-save-slot-2');
+  const btnSaveSlot3 = document.getElementById('btn-save-slot-3');
+
+  const saveConfirmText = document.getElementById('save-confirm-text');
+  const btnSaveConfirmYes = document.getElementById('btn-save-confirm-yes');
+  const btnSaveConfirmCancel = document.getElementById('btn-save-confirm-cancel');
+
   const synth = window.speechSynthesis;
   let utterance;
   let recognition;
   let recordedAudio = null;
+
+  // ---------------------------------------------------------------
+  // Platform auto-detection (no manual switch — the browser already
+  // tells us what we need). Used to apply iOS-only TTS workarounds
+  // without affecting Android/desktop behavior.
+  // ---------------------------------------------------------------
+  function detectIsIOS() {
+    const ua = navigator.userAgent || navigator.vendor || '';
+    if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return true;
+    // iPadOS 13+ Safari reports itself as "Mac" but is touch-based
+    if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true;
+    return false;
+  }
+  const IS_IOS = detectIsIOS();
+
+  // iOS/Safari sometimes returns an empty voice list on first load;
+  // the real list only becomes available after 'voiceschanged' fires.
+  let cachedVoices = [];
+  function refreshVoiceList() { cachedVoices = synth.getVoices() || []; }
+  refreshVoiceList();
+  if ('onvoiceschanged' in synth) {
+    synth.onvoiceschanged = refreshVoiceList;
+  }
+  function pickVoiceForLang(lang) {
+    if (!cachedVoices.length) return null;
+    return cachedVoices.find(v => v.lang === lang)
+        || cachedVoices.find(v => v.lang && v.lang.startsWith(lang.split('-')[0]))
+        || null;
+  }
+
+  // iOS has a known bug where speech synthesis silently stalls on
+  // utterances longer than ~15 seconds. A pause()/resume() nudge
+  // partway through resets its internal timer and keeps it going.
+  // This only runs on iOS; Android/desktop are unaffected.
+  let iosKeepAliveTimer = null;
+  function startIOSKeepAlive() {
+    if (!IS_IOS) return;
+    stopIOSKeepAlive();
+    iosKeepAliveTimer = setInterval(() => {
+      if (synth.speaking && !synth.paused) {
+        synth.pause();
+        synth.resume();
+      }
+    }, 9000);
+  }
+  function stopIOSKeepAlive() {
+    if (iosKeepAliveTimer) {
+      clearInterval(iosKeepAliveTimer);
+      iosKeepAliveTimer = null;
+    }
+  }
+
+  // Best-effort: ask the browser not to evict our IndexedDB data under
+  // storage pressure. Not guaranteed, safe to ignore if unsupported.
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().catch(() => {});
+  }
+
+  // ---------------------------------------------------------------
+  // Sample texts — EDIT HERE to add your own built-in samples.
+  // Each entry needs a `language` (one of 'ja-JP' | 'ko-KR' | 'es-ES' |
+  // 'en-US') and the `text` itself. Leave `text` empty to keep a slot
+  // disabled (tapping it will just show a reminder to fill it in).
+  //
+  // Example:
+  //   1: { language: 'ja-JP', text: '今日はいい天気ですね。散歩に行きましょう。' },
+  // ---------------------------------------------------------------
+  const SAMPLE_TEXTS = {
+    1: { language: 'en-US', text: '' },
+    2: { language: 'en-US', text: '' },
+    3: { language: 'en-US', text: '' },
+  };
+
+  // ---------------------------------------------------------------
+  // IndexedDB persistence: each "project" stores the original text,
+  // its language, and every practice recording (as real Blobs, not
+  // base64) keyed by sentence index and take number (1/2/3).
+  // ---------------------------------------------------------------
+  const DB_NAME = 'MultilingualReaderDB';
+  const DB_VERSION = 1;
+  const STORE_PROJECTS = 'projects';
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) { reject(new Error('IndexedDB not supported')); return; }
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
+          db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function dbGetProject(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readonly');
+      const req = tx.objectStore(STORE_PROJECTS).get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function dbPutProject(project) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readwrite');
+      tx.objectStore(STORE_PROJECTS).put(project);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function dbDeleteProject(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readwrite');
+      tx.objectStore(STORE_PROJECTS).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function getProjectStatuses() {
+    const ids = [1, 2, 3];
+    const results = await Promise.all(ids.map(id => dbGetProject(id).catch(() => null)));
+    const statusMap = {};
+    ids.forEach((id, i) => { statusMap[id] = !!results[i]; });
+    return statusMap;
+  }
+
+  gainSlider.addEventListener('input', () => {
+    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
+    gainFeedback.textContent = '';
+  });
 
   // ---------------------------------------------------------------
   // Home screen: paste / clear / navigate
@@ -398,13 +710,6 @@
     homeTextarea.focus();
   });
 
-  btnActivateReader.addEventListener('click', () => {
-    const text = homeTextarea.value.trim();
-    if (!text) { alert('Please enter or paste some text first!'); return; }
-    readerTextarea.value = homeTextarea.value;
-    showView('reader-setup-view');
-  });
-
   btnActivateRecorder.addEventListener('click', () => {
     recognizedText.value = '';
     recordedAudio = null;
@@ -412,7 +717,6 @@
     showView('recorder-view');
   });
 
-  btnReaderClose.addEventListener('click', () => showView('home-view'));
   btnRecorderClose.addEventListener('click', () => showView('home-view'));
 
   // ---------------------------------------------------------------
@@ -452,16 +756,17 @@
 
   // ---------------------------------------------------------------
   // Playback: one sentence at a time as a queue, so Pause remembers
-  // exactly where we were (sentence + char offset, refined to the
-  // word where onboundary fires) and Resume picks up right there
-  // instead of restarting. The display window always shows the
-  // sentence currently being spoken plus the next one coming up.
+  // exactly where we were and Read Aloud (resume) picks up right
+  // there. The display window always shows the sentence currently
+  // being spoken plus the next one coming up.
   // ---------------------------------------------------------------
 
   let sentences = [];
   let currentSentenceIndex = 0;
   let currentOffsetInSentence = 0;
   let isPlaying = false;
+  let activeLanguage = 'en-US';
+  let activeFullText = '';
 
   function renderPlaybackWindow() {
     playbackDisplay.innerHTML = '';
@@ -476,7 +781,7 @@
       sentenceSpan.className = 'sentence';
       sentenceSpan.dataset.idx = idx;
 
-      segmentWords(sentences[idx], readerLanguage.value).forEach(w => {
+      segmentWords(sentences[idx], activeLanguage).forEach(w => {
         if (w.isWordLike) {
           const wordSpan = document.createElement('span');
           wordSpan.className = 'word';
@@ -491,6 +796,13 @@
       lineDiv.appendChild(sentenceSpan);
       playbackDisplay.appendChild(lineDiv);
     });
+
+    updateSentenceCounter();
+  }
+
+  function updateSentenceCounter() {
+    const el = document.getElementById('sentence-counter');
+    if (el) el.textContent = `${currentSentenceIndex + 1} of ${sentences.length}`;
   }
 
   function highlightWord(sentenceIdx, charIndex) {
@@ -509,11 +821,10 @@
   }
 
   function updatePlaybackButtons() {
-    btnPauseResume.textContent = isPlaying ? 'Pause' : 'Resume';
+    btnPauseResume.textContent = isPlaying ? '⏸️ Pause' : '▶️ Read Aloud';
     const paused = !isPlaying;
     navRow.classList.toggle('visible', paused);
-    recordRow.classList.toggle('visible', paused);
-    volumeRow.classList.toggle('visible', paused);
+    recordPanel.classList.toggle('visible', paused);
     btnPrev.disabled = currentSentenceIndex <= 0;
     btnNext.disabled = currentSentenceIndex >= sentences.length - 1;
     if (paused) {
@@ -547,8 +858,10 @@
     }
 
     utterance = new SpeechSynthesisUtterance(remaining);
-    utterance.lang = readerLanguage.value;
-    utterance.rate = parseFloat(readerSpeed.value);
+    utterance.lang = activeLanguage;
+    utterance.rate = parseFloat(playbackSpeed.value);
+    const preferredVoice = pickVoiceForLang(activeLanguage);
+    if (preferredVoice) utterance.voice = preferredVoice;
 
     utterance.onboundary = (event) => {
       if (event.charIndex === undefined) return;
@@ -557,40 +870,214 @@
     };
 
     utterance.onend = () => {
+      stopIOSKeepAlive();
       if (isPlaying) playFromSentence(sentenceIndex + 1, 0);
     };
 
     utterance.onerror = () => {
+      stopIOSKeepAlive();
       if (isPlaying) { isPlaying = false; updatePlaybackButtons(); }
     };
 
     currentOffsetInSentence = baseOffset;
     isPlaying = true;
     synth.speak(utterance);
+    startIOSKeepAlive();
     updatePlaybackButtons();
   }
 
-  btnReadAloud.addEventListener('click', () => {
-    const text = readerTextarea.value.trim();
-    if (!text) { alert('Please enter some text!'); return; }
+  function enterReaderWithText(text, language) {
+    const trimmed = (text || '').trim();
+    if (!trimmed) { alert('There is no text to load.'); return false; }
 
-    sentences = segmentSentences(text, readerLanguage.value);
-    if (sentences.length === 0) { alert('No readable text found.'); return; }
+    activeLanguage = language || 'en-US';
+    activeFullText = trimmed;
+    sentences = segmentSentences(trimmed, activeLanguage);
+    if (sentences.length === 0) { alert('No readable text found.'); return false; }
 
     resetAllRecordings();
+    currentRecSlot = 1;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
+    isPlaying = false;
     showView('playback-view');
-    playFromSentence(0, 0);
+    renderPlaybackWindow();   // show the first sentence, but don't speak yet
+    updatePlaybackButtons();  // "Read Aloud" waits for the user to tap it
+    return true;
+  }
+
+  btnStart.addEventListener('click', () => {
+    enterReaderWithText(homeTextarea.value, homeLanguage.value);
   });
+
+  // ---------------------------------------------------------------
+  // Load Text: Samples (built into the code) + Saved Projects (IndexedDB)
+  // ---------------------------------------------------------------
+  btnLoadText.addEventListener('click', async () => {
+    showView('load-text-view');
+    await refreshLoadTextProjectButtons();
+  });
+  btnLoadTextClose.addEventListener('click', () => showView('home-view'));
+
+  function sampleButtonHandler(n) {
+    return () => {
+      const sample = SAMPLE_TEXTS[n];
+      if (!sample || !sample.text || !sample.text.trim()) {
+        alert(`Sample #${n} is empty. Add text for it in the SAMPLE_TEXTS object in the code.`);
+        return;
+      }
+      enterReaderWithText(sample.text, sample.language);
+    };
+  }
+  btnSample1.addEventListener('click', sampleButtonHandler(1));
+  btnSample2.addEventListener('click', sampleButtonHandler(2));
+  btnSample3.addEventListener('click', sampleButtonHandler(3));
+
+  async function refreshLoadTextProjectButtons() {
+    const statusMap = await getProjectStatuses().catch(() => ({ 1: false, 2: false, 3: false }));
+    [1, 2, 3].forEach(id => {
+      const btn = document.getElementById(`btn-project-${id}`);
+      btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
+    });
+  }
+
+  function projectButtonHandler(id) {
+    return async () => {
+      let project;
+      try {
+        project = await dbGetProject(id);
+      } catch (err) {
+        alert('Could not access saved data on this device/browser.');
+        return;
+      }
+      if (!project) {
+        alert(`Project #${id} has no saved data yet. Go to Now Reading → Practice Recording → Save to store one.`);
+        return;
+      }
+      if (enterReaderWithText(project.text, project.language)) {
+        restoreRecordingsFromProject(project.recordings);
+      }
+    };
+  }
+  btnProject1.addEventListener('click', projectButtonHandler(1));
+  btnProject2.addEventListener('click', projectButtonHandler(2));
+  btnProject3.addEventListener('click', projectButtonHandler(3));
+
+  function deleteProjectButtonHandler(id) {
+    return async () => {
+      if (!confirm(`Delete all saved text and recordings in Project #${id}? This cannot be undone.`)) return;
+      try {
+        await dbDeleteProject(id);
+      } catch (err) {
+        alert('Could not delete this project.');
+        return;
+      }
+      await refreshLoadTextProjectButtons();
+    };
+  }
+  btnDeleteProject1.addEventListener('click', deleteProjectButtonHandler(1));
+  btnDeleteProject2.addEventListener('click', deleteProjectButtonHandler(2));
+  btnDeleteProject3.addEventListener('click', deleteProjectButtonHandler(3));
+
+  function restoreRecordingsFromProject(recordings) {
+    if (!recordings) return;
+    for (const sIdx in recordings) {
+      sentenceRecordings[sIdx] = {};
+      for (const slot in recordings[sIdx]) {
+        const blob = recordings[sIdx][slot];
+        sentenceRecordings[sIdx][slot] = { blob, url: URL.createObjectURL(blob) };
+      }
+    }
+    refreshSlotButtons();
+    updateRecordButtons();
+  }
+
+  // ---------------------------------------------------------------
+  // Save current session (text + all recordings) to a Project slot
+  // ---------------------------------------------------------------
+  let pendingSaveSlot = null;
+
+  btnSaveRecording.addEventListener('click', async () => {
+    showView('save-view');
+    await refreshSaveViewButtons();
+  });
+  btnSaveClose.addEventListener('click', () => showView('playback-view'));
+
+  async function refreshSaveViewButtons() {
+    const statusMap = await getProjectStatuses().catch(() => ({ 1: false, 2: false, 3: false }));
+    [1, 2, 3].forEach(id => {
+      const btn = document.getElementById(`btn-save-slot-${id}`);
+      btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
+    });
+  }
+
+  function saveSlotButtonHandler(id) {
+    return async () => {
+      let existing;
+      try {
+        existing = await dbGetProject(id);
+      } catch (err) {
+        alert('Could not access saved data on this device/browser.');
+        return;
+      }
+      if (existing) {
+        pendingSaveSlot = id;
+        saveConfirmText.textContent = `Project #${id} already has saved data. Saving now will overwrite it. Continue?`;
+        showView('save-confirm-view');
+      } else {
+        await saveCurrentSessionToProject(id);
+      }
+    };
+  }
+  btnSaveSlot1.addEventListener('click', saveSlotButtonHandler(1));
+  btnSaveSlot2.addEventListener('click', saveSlotButtonHandler(2));
+  btnSaveSlot3.addEventListener('click', saveSlotButtonHandler(3));
+
+  btnSaveConfirmYes.addEventListener('click', async () => {
+    if (pendingSaveSlot == null) return;
+    await saveCurrentSessionToProject(pendingSaveSlot);
+    pendingSaveSlot = null;
+  });
+  btnSaveConfirmCancel.addEventListener('click', () => {
+    pendingSaveSlot = null;
+    showView('save-view');
+    refreshSaveViewButtons();
+  });
+
+  async function saveCurrentSessionToProject(id) {
+    const recordingsPlain = {};
+    for (const sIdx in sentenceRecordings) {
+      recordingsPlain[sIdx] = {};
+      for (const slot in sentenceRecordings[sIdx]) {
+        recordingsPlain[sIdx][slot] = sentenceRecordings[sIdx][slot].blob;
+      }
+    }
+    const project = {
+      id,
+      text: activeFullText,
+      language: activeLanguage,
+      savedAt: Date.now(),
+      recordings: recordingsPlain
+    };
+    try {
+      await dbPutProject(project);
+    } catch (err) {
+      alert('Save failed — the browser storage may be full or unavailable (e.g. private browsing mode).');
+      return;
+    }
+    alert(`✅ Saved to Project #${id}`);
+    showView('playback-view');
+  }
 
   btnPauseResume.addEventListener('click', () => {
     if (isPlaying) {
       isPlaying = false;
       synth.cancel();
+      stopIOSKeepAlive();
       updatePlaybackButtons();
     } else {
       if (isRecording) return; // don't resume mid-recording
+      resetPlaybackState();
       playFromSentence(currentSentenceIndex, currentOffsetInSentence);
     }
   });
@@ -598,9 +1085,11 @@
   btnStop.addEventListener('click', () => {
     if (isRecording) return;
     synth.cancel();
+    stopIOSKeepAlive();
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
+    resetPlaybackState();
     renderPlaybackWindow();
     updatePlaybackButtons();
   });
@@ -608,14 +1097,17 @@
   btnPlaybackClose.addEventListener('click', () => {
     if (isRecording) return;
     synth.cancel();
+    stopIOSKeepAlive();
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
-    showView('reader-setup-view');
+    resetPlaybackState();
+    showView('home-view');
   });
 
   btnPrev.addEventListener('click', () => {
     if (isPlaying || isRecording) return;
+    resetPlaybackState();
     currentSentenceIndex = Math.max(0, currentSentenceIndex - 1);
     currentOffsetInSentence = 0;
     renderPlaybackWindow();
@@ -624,6 +1116,7 @@
 
   btnNext.addEventListener('click', () => {
     if (isPlaying || isRecording) return;
+    resetPlaybackState();
     currentSentenceIndex = Math.min(sentences.length - 1, currentSentenceIndex + 1);
     currentOffsetInSentence = 0;
     renderPlaybackWindow();
@@ -633,9 +1126,8 @@
   // ---------------------------------------------------------------
   // Real audio recording (MediaRecorder), Anki-card style.
   // Shows up under Previous/Next whenever playback is paused or
-  // stopped, tied to whichever sentence is currently on screen.
-  // Each sentence keeps its own recording so you can move around
-  // and re-take individual lines.
+  // stopped. Each sentence keeps up to THREE separate takes
+  // (Rec #1/#2/#3) so you can compare progress across attempts.
   // ---------------------------------------------------------------
 
   let mediaRecorder = null;
@@ -644,20 +1136,68 @@
   let recordingChunks = [];
   let recordStartTime = 0;
   let recordTimerInterval = null;
-  const sentenceRecordings = {}; // sentenceIndex -> { blob, url }
+  let currentRecSlot = 1;
+  const sentenceRecordings = {}; // sentenceIndex -> { 1: {blob,url}, 2: {...}, 3: {...} }
+
+  // Playback of the user's own recording, with real pause/resume
+  let audioCtx = null;
+  let playbackAudioBuffer = null;
+  let playbackKey = null; // "sentenceIdx:slot" the loaded buffer belongs to
+  let playbackSource = null;
+  let playbackOffset = 0; // seconds into the buffer to resume from
+  let playbackStartCtxTime = 0;
+  let isRecPlaying = false;
+
+  function getCurrentSlotRecording() {
+    const forSentence = sentenceRecordings[currentSentenceIndex];
+    return forSentence ? forSentence[currentRecSlot] : undefined;
+  }
 
   function resetAllRecordings() {
-    Object.values(sentenceRecordings).forEach(r => URL.revokeObjectURL(r.url));
+    Object.values(sentenceRecordings).forEach(slots => {
+      Object.values(slots).forEach(r => URL.revokeObjectURL(r.url));
+    });
     for (const k in sentenceRecordings) delete sentenceRecordings[k];
+    resetPlaybackState();
+  }
+
+  function resetPlaybackState() {
+    if (playbackSource) {
+      playbackSource.onended = null;
+      try { playbackSource.stop(); } catch (e) { /* already stopped */ }
+      playbackSource = null;
+    }
+    isRecPlaying = false;
+    playbackOffset = 0;
+    playbackAudioBuffer = null;
+    playbackKey = null;
+    gainFeedback.textContent = '';
+    updatePlayPauseLabel();
+  }
+
+  function updatePlayPauseLabel() {
+    btnPlayPause.textContent = isRecPlaying ? '⏸️ Pause' : '▶️ Play';
+  }
+
+  function refreshSlotButtons() {
+    const forSentence = sentenceRecordings[currentSentenceIndex] || {};
+    [btnRecSlot1, btnRecSlot2, btnRecSlot3].forEach((btn, i) => {
+      const slot = i + 1;
+      const has = !!forSentence[slot];
+      btn.textContent = `${has ? '🎤' : '⚪'} Rec #${slot}`;
+      btn.classList.toggle('active-slot', slot === currentRecSlot);
+    });
   }
 
   function updateRecordButtons() {
-    const hasRecording = !!sentenceRecordings[currentSentenceIndex];
-    btnRecordToggle.textContent = hasRecording ? '🎙 Re-record' : '🎙 Record';
+    const hasRecording = !!getCurrentSlotRecording();
+    btnRecordToggle.textContent = hasRecording ? '🎙️ Re-record' : '🎙️ Record';
     btnRecordToggle.classList.remove('recording');
-    btnPlayMyRecording.disabled = !hasRecording;
+    btnPlayPause.disabled = !hasRecording;
     btnDeleteRecording.disabled = !hasRecording;
     recordStatus.textContent = '';
+    updatePlayPauseLabel();
+    refreshSlotButtons();
   }
 
   function setControlsDisabledForRecording(disabled) {
@@ -666,8 +1206,38 @@
     btnPlaybackClose.disabled = disabled;
     btnPrev.disabled = disabled || currentSentenceIndex <= 0;
     btnNext.disabled = disabled || currentSentenceIndex >= sentences.length - 1;
-    btnPlayMyRecording.disabled = disabled || !sentenceRecordings[currentSentenceIndex];
-    btnDeleteRecording.disabled = disabled || !sentenceRecordings[currentSentenceIndex];
+    btnRecSlot1.disabled = disabled;
+    btnRecSlot2.disabled = disabled;
+    btnRecSlot3.disabled = disabled;
+    btnPlayPause.disabled = disabled || !getCurrentSlotRecording();
+    btnDeleteRecording.disabled = disabled || !getCurrentSlotRecording();
+  }
+
+  function selectRecSlot(slot) {
+    if (isRecording) return;
+    resetPlaybackState();
+    currentRecSlot = slot;
+    updateRecordButtons();
+  }
+
+  btnRecSlot1.addEventListener('click', () => selectRecSlot(1));
+  btnRecSlot2.addEventListener('click', () => selectRecSlot(2));
+  btnRecSlot3.addEventListener('click', () => selectRecSlot(3));
+
+  // Android Chrome and iOS Safari support different recording
+  // containers (Android: webm/opus; iOS Safari: mp4/aac — it doesn't
+  // support webm at all). Asking the browser what it actually supports,
+  // rather than leaving MediaRecorder to guess, cuts down on decode
+  // failures later when we try to play the recording back boosted.
+  function pickSupportedMimeType() {
+    const candidates = [
+      'audio/mp4',               // iOS Safari
+      'audio/webm;codecs=opus',  // Chrome / Android / desktop
+      'audio/webm',
+      'audio/ogg;codecs=opus'
+    ];
+    if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return '';
+    return candidates.find(type => MediaRecorder.isTypeSupported(type)) || '';
   }
 
   async function startRecording() {
@@ -677,7 +1247,7 @@
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true // asks the mic driver to boost quiet input at capture time
+          autoGainControl: true
         }
       });
     } catch (err) {
@@ -685,12 +1255,15 @@
       return;
     }
 
+    resetPlaybackState();
     mediaStream = stream;
     recordingChunks = [];
     const recordedForSentence = currentSentenceIndex;
+    const recordedForSlot = currentRecSlot;
 
     try {
-      mediaRecorder = new MediaRecorder(mediaStream);
+      const mimeType = pickSupportedMimeType();
+      mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
     } catch (err) {
       alert('Recording is not supported in this browser.');
       mediaStream.getTracks().forEach(t => t.stop());
@@ -705,10 +1278,12 @@
     mediaRecorder.onstop = () => {
       const blob = new Blob(recordingChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
       const url = URL.createObjectURL(blob);
-      if (sentenceRecordings[recordedForSentence]) {
-        URL.revokeObjectURL(sentenceRecordings[recordedForSentence].url);
+
+      if (!sentenceRecordings[recordedForSentence]) sentenceRecordings[recordedForSentence] = {};
+      if (sentenceRecordings[recordedForSentence][recordedForSlot]) {
+        URL.revokeObjectURL(sentenceRecordings[recordedForSentence][recordedForSlot].url);
       }
-      sentenceRecordings[recordedForSentence] = { blob, url };
+      sentenceRecordings[recordedForSentence][recordedForSlot] = { blob, url };
 
       mediaStream.getTracks().forEach(t => t.stop());
       mediaStream = null;
@@ -723,8 +1298,8 @@
     isRecording = true;
     recordStartTime = Date.now();
     setControlsDisabledForRecording(true);
-    btnRecordToggle.disabled = false; // recording toggle itself stays active (to stop)
-    btnRecordToggle.textContent = '⏹ Stop';
+    btnRecordToggle.disabled = false; // stays clickable so it can be stopped
+    btnRecordToggle.textContent = '⏹️ Stop';
     btnRecordToggle.classList.add('recording');
 
     recordTimerInterval = setInterval(() => {
@@ -734,100 +1309,143 @@
   }
 
   function stopRecording() {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop();
-    }
+    if (mediaRecorder && isRecording) mediaRecorder.stop();
   }
 
   btnRecordToggle.addEventListener('click', () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
+    if (isRecording) stopRecording();
+    else startRecording();
   });
 
   // A plain <audio> element can't play louder than the phone's normal
-  // media volume — its .volume property only ever scales *down*.
-  // On top of that, mobile mic capture is usually much quieter to begin
-  // with: the platform's auto-gain control targets phone-call loudness,
-  // not full-scale recording, and phone speakers are physically weaker
-  // than desktop speakers/headphones. A fixed multiplier on a very quiet
-  // signal barely helps, and pushing gain too high just clips/distorts
-  // instead of sounding louder. So playback here does two things:
-  //   1. Auto-normalize: scan the decoded audio for its peak amplitude
-  //      and scale it up to near full-scale first, so quiet mobile
-  //      recordings and louder desktop ones both start from the same
-  //      baseline loudness.
-  //   2. Apply the user's slider gain (1x–10x) on top of that baseline,
-  //      through a limiter so high gain compresses peaks instead of
-  //      clipping them.
-  let audioCtx = null;
+  // media volume, and mobile mic capture is usually much quieter to
+  // begin with (auto-gain targets phone-call loudness, not full-scale).
+  // This is speech, not music, so the processing here is tuned for
+  // pronunciation practice specifically:
+  //   1. RMS (loudness) normalization, not peak — a single click/pop
+  //      in the recording won't throw off the whole calibration the
+  //      way a peak-based measurement would.
+  //   2. A gentle "speech leveler" (mild 3:1 compression, soft knee)
+  //      evens out loudness while preserving consonants and other
+  //      articulation detail — a hard limiter would flatten exactly
+  //      the detail a learner needs to hear to self-correct.
+  //   3. A safety brickwall limiter near true peak, only to stop rare
+  //      transients from digitally clipping — it doesn't touch normal
+  //      speech, it's just a backstop.
+  const TARGET_RMS = 0.1; // ~-20 dBFS, a typical conversational speech level
 
-  function getPeakAmplitude(audioBuffer) {
-    let peak = 0;
+  function getRMSAmplitude(audioBuffer) {
+    let sumSquares = 0;
+    let count = 0;
     for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
       const data = audioBuffer.getChannelData(ch);
       for (let i = 0; i < data.length; i++) {
-        const abs = Math.abs(data[i]);
-        if (abs > peak) peak = abs;
+        sumSquares += data[i] * data[i];
+        count++;
       }
     }
-    return peak;
+    return count > 0 ? Math.sqrt(sumSquares / count) : 0;
   }
 
-  async function playRecordingBoosted(blob) {
+  function buildPlaybackChain(buffer, offsetSeconds) {
     const userGain = parseFloat(gainSlider.value) || 1;
+    const rms = getRMSAmplitude(buffer);
+    const normalizeGain = rms > 0.0001 ? Math.min(TARGET_RMS / rms, 20) : 1;
+    const totalGain = normalizeGain * userGain;
+
+    const source = audioCtx.createBufferSource();
+    source.buffer = buffer;
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = totalGain;
+
+    // Gentle speech leveler: catches loudness swings without crushing
+    // consonant detail.
+    const leveler = audioCtx.createDynamicsCompressor();
+    leveler.threshold.value = -20;
+    leveler.knee.value = 6;
+    leveler.ratio.value = 3;
+    leveler.attack.value = 0.01;
+    leveler.release.value = 0.15;
+
+    // Safety brickwall: only engages on rare peaks close to full
+    // scale, purely to prevent digital clipping distortion.
+    const safetyLimiter = audioCtx.createDynamicsCompressor();
+    safetyLimiter.threshold.value = -1;
+    safetyLimiter.knee.value = 0;
+    safetyLimiter.ratio.value = 20;
+    safetyLimiter.attack.value = 0.002;
+    safetyLimiter.release.value = 0.1;
+
+    source.connect(gainNode).connect(leveler).connect(safetyLimiter).connect(audioCtx.destination);
+
+    source.onended = () => {
+      if (isRecPlaying) {
+        isRecPlaying = false;
+        playbackOffset = 0;
+        updatePlayPauseLabel();
+      }
+    };
+
+    playbackSource = source;
+    playbackStartCtxTime = audioCtx.currentTime;
+    isRecPlaying = true;
+    source.start(0, offsetSeconds);
+    updatePlayPauseLabel();
+
+    const totalGainDb = 20 * Math.log10(totalGain);
+    gainFeedback.textContent = `🎚️ Applied gain: +${totalGainDb.toFixed(1)} dB (normalize + boost)`;
+  }
+
+  btnPlayPause.addEventListener('click', async () => {
+    const rec = getCurrentSlotRecording();
+    if (!rec) return;
+
+    if (isRecPlaying) {
+      // Pause: remember exactly how far we'd gotten
+      const elapsed = audioCtx.currentTime - playbackStartCtxTime;
+      playbackOffset += elapsed;
+      if (playbackSource) {
+        playbackSource.onended = null;
+        try { playbackSource.stop(); } catch (e) { /* already stopped */ }
+        playbackSource = null;
+      }
+      isRecPlaying = false;
+      updatePlayPauseLabel();
+      return;
+    }
+
+    const key = `${currentSentenceIndex}:${currentRecSlot}`;
 
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') await audioCtx.resume();
 
-      const arrayBuffer = await blob.arrayBuffer();
-      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      if (playbackKey !== key || !playbackAudioBuffer) {
+        const arrayBuffer = await rec.blob.arrayBuffer();
+        playbackAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        playbackKey = key;
+        playbackOffset = 0;
+      }
+      if (playbackOffset >= playbackAudioBuffer.duration) playbackOffset = 0;
 
-      const peak = getPeakAmplitude(audioBuffer);
-      // Bring the peak up to ~95% of full scale, capped so a near-silent
-      // clip doesn't get amplified into pure noise.
-      const normalizeGain = peak > 0.0001 ? Math.min(0.95 / peak, 12) : 1;
-      const totalGain = normalizeGain * userGain;
-
-      const source = audioCtx.createBufferSource();
-      source.buffer = audioBuffer;
-
-      const gainNode = audioCtx.createGain();
-      gainNode.gain.value = totalGain;
-
-      // Limiter: keeps aggressive gain from turning into harsh digital
-      // clipping, which makes audio sound worse rather than louder.
-      const limiter = audioCtx.createDynamicsCompressor();
-      limiter.threshold.value = -6;
-      limiter.knee.value = 0;
-      limiter.ratio.value = 20;
-      limiter.attack.value = 0.003;
-      limiter.release.value = 0.25;
-
-      source.connect(gainNode).connect(limiter).connect(audioCtx.destination);
-      source.start(0);
+      buildPlaybackChain(playbackAudioBuffer, playbackOffset);
     } catch (err) {
-      // Fallback for browsers where Web Audio decoding fails: at least
-      // play it back normally rather than doing nothing.
-      myRecordingAudio.src = URL.createObjectURL(blob);
+      // Don't fail silently — some browsers can't decode certain
+      // recording formats, which would otherwise look like "the boost
+      // slider just doesn't do anything."
+      gainFeedback.textContent = '⚠️ Volume boost not supported for this recording on this browser — playing at original volume.';
+      myRecordingAudio.src = URL.createObjectURL(rec.blob);
       myRecordingAudio.play();
     }
-  }
-
-  btnPlayMyRecording.addEventListener('click', () => {
-    const rec = sentenceRecordings[currentSentenceIndex];
-    if (!rec) return;
-    playRecordingBoosted(rec.blob);
   });
 
   btnDeleteRecording.addEventListener('click', () => {
-    const rec = sentenceRecordings[currentSentenceIndex];
+    const rec = getCurrentSlotRecording();
     if (!rec) return;
     URL.revokeObjectURL(rec.url);
-    delete sentenceRecordings[currentSentenceIndex];
+    delete sentenceRecordings[currentSentenceIndex][currentRecSlot];
+    resetPlaybackState();
     updateRecordButtons();
   });
 
