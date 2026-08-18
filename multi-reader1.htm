@@ -86,6 +86,10 @@
     touch-action: manipulation;
   }
 
+  #btn-pause-resume, #btn-stop, #btn-prev, #btn-next {
+    flex: 1 1 0;
+  }
+
   select:hover, button:hover { background-color: #083a63; }
   button:active { background-color: #062c4c; }
   button:disabled { background-color: #c5dfee; cursor: not-allowed; }
@@ -113,8 +117,8 @@
   }
   #btn-start {
     background-color: #1c7a4d;
-    font-size: 1.4em;
-    padding: 18px;
+    font-size: 1.2em;
+    padding: 14px;
   }
   #btn-start:hover { background-color: #145f3b; }
 
@@ -126,7 +130,7 @@
     gap: 10px;
     margin-bottom: 14px;
   }
-  #playback-speed { flex: 0 1 100px; min-width: 70px; }
+  #playback-speed { flex: 0 1 80px; min-width: 70px; }
   .sentence-counter {
     display: inline-block;
     background: #ff9f1c;
@@ -338,7 +342,7 @@
     align-items: stretch;
     gap: 6px;
     margin-top: 14px;
-    margin-bottom: -4px;
+    margin-bottom: -25px;
     text-align: left;
   }
   #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
