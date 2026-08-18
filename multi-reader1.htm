@@ -385,9 +385,6 @@
     </div>
 
     <div class="btn-row">
-      <button id="btn-activate-recorder">🎤 Activate Recorder</button>
-    </div>
-    <div class="btn-row">
       <button id="btn-load-text" class="secondary">📂 Load Text</button>
     </div>
   </div>
@@ -524,27 +521,6 @@
     </div>
   </div>
 
-  <!-- ============ RECORDER (speech-to-text demo) ============ -->
-  <div id="recorder-view" class="view">
-    <h2>🎤 Recorder</h2>
-    <div class="btn-row">
-      <select id="recorder-language">
-        <option value="ja-JP">日本語</option>
-        <option value="ko-KR">한국어</option>
-        <option value="es-ES">español</option>
-        <option value="en-US">English</option>
-      </select>
-    </div>
-    <textarea id="recognized-text" placeholder="Recognized speech will appear here..." readonly style="height:80px;"></textarea>
-    <div class="btn-row">
-      <button id="btn-record">🎙️ Record</button>
-      <button id="btn-play-recording" disabled>▶️ Play Recording</button>
-    </div>
-    <div class="btn-row">
-      <button id="btn-recorder-close" class="secondary">✕ Close</button>
-    </div>
-  </div>
-
 </div>
 
 <script>
@@ -564,7 +540,6 @@
   const btnPaste = document.getElementById('btn-paste');
   const btnClear = document.getElementById('btn-clear');
   const btnStart = document.getElementById('btn-start');
-  const btnActivateRecorder = document.getElementById('btn-activate-recorder');
   const btnLoadText = document.getElementById('btn-load-text');
 
   const playbackSpeed = document.getElementById('playback-speed');
@@ -590,12 +565,6 @@
   const gainSlider = document.getElementById('playback-gain');
   const gainLabel = document.getElementById('gain-label');
   const gainFeedback = document.getElementById('gain-feedback');
-
-  const recorderLanguage = document.getElementById('recorder-language');
-  const recognizedText = document.getElementById('recognized-text');
-  const btnRecord = document.getElementById('btn-record');
-  const btnPlayRecording = document.getElementById('btn-play-recording');
-  const btnRecorderClose = document.getElementById('btn-recorder-close');
 
   const btnLoadTextClose = document.getElementById('btn-loadtext-close');
   const btnSample1 = document.getElementById('btn-sample-1');
@@ -628,8 +597,6 @@
 
   const synth = window.speechSynthesis;
   let utterance;
-  let recognition;
-  let recordedAudio = null;
 
   // ---------------------------------------------------------------
   // Platform auto-detection (no manual switch — the browser already
@@ -645,19 +612,49 @@
   }
   const IS_IOS = detectIsIOS();
 
+  // iOS ships specific named voices per language that are bundled
+  // on-device (reliable, work offline) — picking one of these by name
+  // avoids Safari sometimes silently defaulting to a voice that
+  // requires a network fetch and can fail/stay silent. Listed in
+  // priority order per language.
+  const PREFERRED_VOICE_NAMES = {
+    'en-US': ['Samantha', 'Alex'],
+    'ja-JP': ['Kyoko', 'Otoya'],
+    'ko-KR': ['Yuna'],
+    'es-ES': ['Mónica', 'Monica', 'Paulina', 'Jorge']
+  };
+
   // iOS/Safari sometimes returns an empty voice list on first load;
-  // the real list only becomes available after 'voiceschanged' fires.
+  // the real list only becomes available after 'voiceschanged' fires
+  // — and on some iOS versions that event doesn't fire reliably at
+  // all, so we also re-check synchronously right before speaking.
   let cachedVoices = [];
   function refreshVoiceList() { cachedVoices = synth.getVoices() || []; }
   refreshVoiceList();
   if ('onvoiceschanged' in synth) {
     synth.onvoiceschanged = refreshVoiceList;
   }
+
   function pickVoiceForLang(lang) {
+    if (!cachedVoices.length) refreshVoiceList(); // last-chance sync retry
     if (!cachedVoices.length) return null;
-    return cachedVoices.find(v => v.lang === lang)
-        || cachedVoices.find(v => v.lang && v.lang.startsWith(lang.split('-')[0]))
-        || null;
+
+    const preferredNames = PREFERRED_VOICE_NAMES[lang] || [];
+    for (const name of preferredNames) {
+      const match = cachedVoices.find(v => v.lang === lang && v.name.includes(name));
+      if (match) return match;
+    }
+
+    // Exact language+region match, preferring on-device (offline) voices
+    // over network-dependent ones for reliability.
+    const exactMatches = cachedVoices.filter(v => v.lang === lang);
+    const localExact = exactMatches.find(v => v.localService);
+    if (localExact) return localExact;
+    if (exactMatches.length) return exactMatches[0];
+
+    // Fall back to same base language regardless of region (e.g. es-MX for es-ES)
+    const base = lang.split('-')[0];
+    return cachedVoices.find(v => v.lang && v.lang.startsWith(base)) || null;
   }
 
   // iOS has a known bug where speech synthesis silently stalls on
@@ -681,6 +678,26 @@
       iosKeepAliveTimer = null;
     }
   }
+
+  // iOS Safari can leave the speech synthesis queue in a stuck state
+  // left over from a previous page visit (bfcache) or a killed
+  // background tab. Cancelling once on load clears anything stale
+  // before we ever try to speak.
+  if (IS_IOS) {
+    synth.cancel();
+  }
+
+  // iOS/mobile browsers frequently kill speech synthesis outright when
+  // the tab is backgrounded (app switch, screen lock, etc.), which can
+  // otherwise leave the UI stuck showing "Pause" for audio that isn't
+  // actually playing anymore. Reflect that in the UI when it happens.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && isPlaying) {
+      isPlaying = false;
+      stopIOSKeepAlive();
+      updatePlaybackButtons();
+    }
+  });
 
   // Best-effort: ask the browser not to evict our IndexedDB data under
   // storage pressure. Not guaranteed, safe to ignore if unsupported.
@@ -707,10 +724,54 @@
   //   公園でお弁当を食べます。` },
   // ---------------------------------------------------------------
   const SAMPLE_TEXTS = {
-    1: { language: 'en-US', text: `` },
-    2: { language: 'en-US', text: `` },
-    3: { language: 'en-US', text: `` },
-    4: { language: 'en-US', text: `` },
+    1: { language: 'en-US', text: `A Quick Trip to the Market
+
+Last Saturday, I got up early and walked to the local market with my friend Matt. We wanted to buy some fresh apples, eggs, and a small bag of nuts. On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” I had heard about it, but I had never been there.
+
+When we arrived at the market, it was already busy. A man was selling red peppers, fresh bread, and black coffee. I picked up a green apple and asked, “How much is it?” The seller said, “Two dollars.” I paid him and put the apple in my bag.
+
+After that, we went to the café. I ordered a hot cup of coffee and a piece of cake. Matt wanted a cold drink, but he accidentally asked for a cup of tea instead. We laughed and shared the cake.
+
+Before we went home, we sat outside and watched people walk past. It was a simple trip, but we had a great time.
+` },
+    2: { language: 'en-US', text: `In the 89th year of the Republic of China (2000), a rising R&B star, Jay Chou, burst onto the scene, sweeping major music awards and standing shoulder to shoulder with another legendary R&B artist, David Tao. Together, they became the two leading singer-songwriters of their time and have dominated the Mandarin music scene ever since. While David Tao's song output gradually declined over the years, Jay Chou maintained his prolific style, even excelling at "creating for dual purposes"—not only releasing albums one after another but also writing songs for other artists. These songs, composed amid his busy schedule, often turned out to be the highlight of those artists' albums. Jay Chou's abundant creative energy is truly astounding.
+
+In contrast, David Tao benefitted from his privileged background: financial support from a father who was a renowned TV producer and artistic inspiration from a mother who was a celebrated Peking opera singer. Meanwhile, Jay Chou, born and raised in a single-parent family in Taiwan, demonstrated a musical vision no less expansive than David Tao's, despite the latter having grown up in the United States, surrounded by the most diverse musical styles and backed by substantial resources. David Tao had access to a professional-grade recording studio and the means to hire top-tier musicians and arrangers to contribute to his albums. Jay Chou, however, emerged as a once-in-a-century prodigy in the Mandarin music world.
+
+Although some critics have pointed out that many of the instrumentals in Jay Chou's albums are created using a MIDI keyboard rather than live performances by a band, Jay addressed this in an interview, saying, "Because I am Jay Chou." This statement encapsulates the journey of a child from an economically disadvantaged background who relied on his unparalleled creative talent and the most modest of resources to achieve extraordinary results. After all, most people don't have the privilege of David Tao's musical lineage. Jay Chou's rise from humble beginnings undoubtedly resonates more deeply with and inspires the masses.
+` },
+    3: { language: 'ja-JP', text: `日本のスーパーで「値引きシール」を自動で貼るロボットが登場しました
+日本のスーパーマーケットで、賞味期限が近くなった商品に「割引シール」を貼るロボットが使われ始めました。
+
+割引シールというのは、商品の値段を安くして売るために貼るシールのことです。例えば、「20%引き」や「半額」と書いてあるシールのことですね。半額というのは、元の値段の半分という意味です。
+
+夕方のスーパーでは、まだ売れていないお弁当やパンに、店員が手作業で1枚ずつシールを貼る必要がありました。手作業というのは、機械を使わないで自分の手で仕事をすることです。
+
+しかし、夕方は買い物客が多くて店員も忙しいため、シールを貼る時間が足りなくなることがありました。
+
+そこで、棚にある商品の賞味期限をカメラで確認して、自動でシールを貼るロボットが開発されました。開発するというのは、新しい便利な道具や技術を作り出すことです。
+
+ロボットがこの作業を担当することで、店員はレジの仕事や接客に集中できるようになります。接客というのは、店に来たお客さんの案内やお世話をすることです。
+
+お店の仕事が楽になるだけでなく、食品ロスを減らすことにも繋がると期待されています。
+
+皆さんは、スーパーで買い物をする時に割引シールがついた商品を買うことがありますか？` },
+    4: { language: 'ja-JP', text: `街中を走る「自動運転バス」の実証実験が各地で進んでいます
+日本のいろいろな町や観光地で、「自動運転バス」を走らせる実証実験が行われています。
+
+実証実験というのは、新しい技術を町の中で実際に使ってみて、安全に問題なく動くかどうかを確かめるテストのことです。そして、自動運転というのは、運転手がハンドルを握らなくても、コンピューターやカメラが周りを見て車を動かす技術のことですね。
+
+地方の町では、高齢化が進んでバスの運転手が足りなくなる「人手不足」が問題になっています。地方というのは、東京などの大都市から離れた町や地域のことです。
+
+バスの本数が減ってしまうと、車の運転ができないお年寄りが病院や買い物へ行くのが大変になってしまいます。
+
+そこで、決まったルートを自動でゆっくり走る小さなコミュニティバスのテストが進められています。道路に置かれたセンサーやGPSを使って、安全に止まったり曲がったりする練習を重ねています。
+
+この自動運転バスが完成すれば、誰もがいつでも自由に移動できる町を作ることができます。
+
+お年寄りや子供たちの毎日の暮らしを支える技術として、これからの進化が期待されています。
+
+皆さんは、運転手がいない自動運転の車やバスに乗ってみたいですか？` },
   };
 
   // ---------------------------------------------------------------
@@ -805,15 +866,6 @@
     homeTextarea.value = '';
     homeTextarea.focus();
   });
-
-  btnActivateRecorder.addEventListener('click', () => {
-    recognizedText.value = '';
-    recordedAudio = null;
-    btnPlayRecording.disabled = true;
-    showView('recorder-view');
-  });
-
-  btnRecorderClose.addEventListener('click', () => showView('home-view'));
 
   // ---------------------------------------------------------------
   // Sentence / word segmentation (locale-aware; Intl.Segmenter
@@ -1591,38 +1643,6 @@
     delete sentenceRecordings[currentSentenceIndex][currentRecSlot];
     resetPlaybackState();
     updateRecordButtons();
-  });
-
-  // ---------------------------------------------------------------
-  // Recorder screen (separate: speech-to-text via Web Speech API)
-  // ---------------------------------------------------------------
-  btnRecord.addEventListener('click', () => {
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      alert('Speech recognition not supported in this browser.');
-      return;
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = recorderLanguage.value;
-    recognition.interimResults = false;
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      recognizedText.value = transcript;
-      recordedAudio = transcript;
-      btnPlayRecording.disabled = false;
-    };
-
-    recognition.start();
-  });
-
-  btnPlayRecording.addEventListener('click', () => {
-    if (recordedAudio) {
-      const playbackUtterance = new SpeechSynthesisUtterance(recordedAudio);
-      playbackUtterance.lang = recorderLanguage.value;
-      synth.speak(playbackUtterance);
-    }
   });
 </script>
 </body>
