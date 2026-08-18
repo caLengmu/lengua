@@ -193,8 +193,8 @@
 
   .record-panel-title {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
     font-size: 13px;
     font-weight: 700;
     color: #b3701a;
@@ -202,6 +202,7 @@
     margin-bottom: 10px;
     letter-spacing: 0.02em;
   }
+  .record-panel-title-text { flex: 1 1 auto; }
   .save-btn {
     flex: 0 0 auto;
     min-width: auto;
@@ -212,6 +213,55 @@
     border: 2px solid #f3b23c;
   }
   .save-btn:hover { background-color: #fff2da; }
+
+  /* Enable/disable switch for the recording area. Placed at the left
+     of the title row, mirroring the common pattern of a section-level
+     on/off control leading the section it governs, with actions (Save)
+     kept on the trailing/right side. */
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    flex: 0 0 auto;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cfcfcf;
+    transition: background-color 0.2s ease;
+    border-radius: 24px;
+  }
+  .toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    transition: transform 0.2s ease;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .toggle-switch input:checked + .toggle-slider { background-color: #1c7a4d; }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+  #record-controls-wrapper { transition: opacity 0.2s ease; }
+
+  /* Dark/disabled state: whole panel goes dark, controls become inert */
+  #record-panel.panel-disabled {
+    background: #383838;
+    border-color: #5a5a5a;
+  }
+  #record-panel.panel-disabled .record-panel-title-text { color: #cfcfcf; }
+  #record-panel.panel-disabled #record-controls-wrapper {
+    opacity: 0.35;
+    pointer-events: none;
+    filter: grayscale(70%);
+  }
 
   /* ---------- Load Text / Save-To views ---------- */
   .section-title {
@@ -353,7 +403,7 @@
 
     <div class="btn-row">
       <button id="btn-pause-resume">⏸️ Pause</button>
-      <button id="btn-stop" class="secondary">⏹️ Stop</button>
+      <button id="btn-stop" class="secondary">🔄 Start Over</button>
     </div>
 
     <div id="nav-row" class="btn-row nav-row">
@@ -365,29 +415,35 @@
          own voice reading the current sentence, with 3 comparable takes. -->
     <div id="record-panel">
       <div class="record-panel-title">
-        <span>🎙️ PRACTICE RECORDING</span>
+        <label class="toggle-switch" title="Enable practice recording">
+          <input type="checkbox" id="record-enable-toggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="record-panel-title-text">🎙️ PRACTICE RECORDING</span>
         <button id="btn-save-recording" class="secondary save-btn">💾 Save</button>
       </div>
 
-      <div class="slot-row">
-        <button id="btn-rec-slot-1" class="slot-btn active-slot">🎤 Rec #1</button>
-        <button id="btn-rec-slot-2" class="slot-btn">🎤 Rec #2</button>
-        <button id="btn-rec-slot-3" class="slot-btn">🎤 Rec #3</button>
-      </div>
+      <div id="record-controls-wrapper">
+        <div class="slot-row">
+          <button id="btn-rec-slot-1" class="slot-btn active-slot">🎤 Rec #1</button>
+          <button id="btn-rec-slot-2" class="slot-btn">🎤 Rec #2</button>
+          <button id="btn-rec-slot-3" class="slot-btn">🎤 Rec #3</button>
+        </div>
 
-      <div id="record-row" class="btn-row" style="margin-top:0;">
-        <button id="btn-record-toggle">🎙️ Record</button>
-        <button id="btn-play-pause" class="secondary" disabled>▶️ Play</button>
-        <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
-      </div>
+        <div id="record-row" class="btn-row" style="margin-top:0;">
+          <button id="btn-record-toggle">🎙️ Record</button>
+          <button id="btn-play-pause" class="secondary" disabled>▶️ Play</button>
+          <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
+        </div>
 
-      <div id="volume-row">
-        <label for="playback-gain">🔊 Extra Volume: <span id="gain-label">1.5x</span></label>
-        <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="1.5">
-        <div id="gain-feedback" class="gain-feedback"></div>
-      </div>
+        <div id="volume-row">
+          <label for="playback-gain">🔊 Extra Volume: <span id="gain-label">1.5x</span></label>
+          <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="1.5">
+          <div id="gain-feedback" class="gain-feedback"></div>
+        </div>
 
-      <div id="record-status" class="record-status"></div>
+        <div id="record-status" class="record-status"></div>
+      </div>
     </div>
 
     <div class="hint">Previous / Next / Recording appear while paused or stopped</div>
@@ -406,6 +462,7 @@
       <button id="btn-sample-1" class="secondary">📄 Sample #1</button>
       <button id="btn-sample-2" class="secondary">📄 Sample #2</button>
       <button id="btn-sample-3" class="secondary">📄 Sample #3</button>
+      <button id="btn-sample-4" class="secondary">📄 Sample #4</button>
     </div>
 
     <div class="section-title" style="margin-top:24px;">💼 Saved Projects</div>
@@ -422,6 +479,14 @@
         <button id="btn-project-3" class="secondary project-btn">⚪ Project #3</button>
         <button id="btn-delete-project-3" class="secondary delete-btn">🗑️</button>
       </div>
+      <div class="project-row">
+        <button id="btn-project-4" class="secondary project-btn">⚪ Project #4</button>
+        <button id="btn-delete-project-4" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-5" class="secondary project-btn">⚪ Project #5</button>
+        <button id="btn-delete-project-5" class="secondary delete-btn">🗑️</button>
+      </div>
     </div>
   </div>
 
@@ -435,6 +500,8 @@
       <button id="btn-save-slot-1" class="secondary project-btn">⚪ Project #1</button>
       <button id="btn-save-slot-2" class="secondary project-btn">⚪ Project #2</button>
       <button id="btn-save-slot-3" class="secondary project-btn">⚪ Project #3</button>
+      <button id="btn-save-slot-4" class="secondary project-btn">⚪ Project #4</button>
+      <button id="btn-save-slot-5" class="secondary project-btn">⚪ Project #5</button>
     </div>
   </div>
 
@@ -501,6 +568,7 @@
   const btnNext = document.getElementById('btn-next');
 
   const recordPanel = document.getElementById('record-panel');
+  const recordEnableToggle = document.getElementById('record-enable-toggle');
   const btnSaveRecording = document.getElementById('btn-save-recording');
   const btnRecSlot1 = document.getElementById('btn-rec-slot-1');
   const btnRecSlot2 = document.getElementById('btn-rec-slot-2');
@@ -524,17 +592,26 @@
   const btnSample1 = document.getElementById('btn-sample-1');
   const btnSample2 = document.getElementById('btn-sample-2');
   const btnSample3 = document.getElementById('btn-sample-3');
+  const btnSample4 = document.getElementById('btn-sample-4');
   const btnProject1 = document.getElementById('btn-project-1');
   const btnProject2 = document.getElementById('btn-project-2');
   const btnProject3 = document.getElementById('btn-project-3');
+  const btnProject4 = document.getElementById('btn-project-4');
+  const btnProject5 = document.getElementById('btn-project-5');
   const btnDeleteProject1 = document.getElementById('btn-delete-project-1');
   const btnDeleteProject2 = document.getElementById('btn-delete-project-2');
   const btnDeleteProject3 = document.getElementById('btn-delete-project-3');
+  const btnDeleteProject4 = document.getElementById('btn-delete-project-4');
+  const btnDeleteProject5 = document.getElementById('btn-delete-project-5');
 
   const btnSaveClose = document.getElementById('btn-save-close');
   const btnSaveSlot1 = document.getElementById('btn-save-slot-1');
   const btnSaveSlot2 = document.getElementById('btn-save-slot-2');
   const btnSaveSlot3 = document.getElementById('btn-save-slot-3');
+  const btnSaveSlot4 = document.getElementById('btn-save-slot-4');
+  const btnSaveSlot5 = document.getElementById('btn-save-slot-5');
+
+  const PROJECT_IDS = [1, 2, 3, 4, 5];
 
   const saveConfirmText = document.getElementById('save-confirm-text');
   const btnSaveConfirmYes = document.getElementById('btn-save-confirm-yes');
@@ -604,17 +681,71 @@
 
   // ---------------------------------------------------------------
   // Sample texts — EDIT HERE to add your own built-in samples.
+  //
   // Each entry needs a `language` (one of 'ja-JP' | 'ko-KR' | 'es-ES' |
   // 'en-US') and the `text` itself. Leave `text` empty to keep a slot
   // disabled (tapping it will just show a reminder to fill it in).
   //
+  // `text` uses backticks (`), not quotes, so you can paste text with
+  // real line breaks / multiple paragraphs directly — you do NOT need
+  // to keep everything on one line or add manual line-break characters.
+  // The number of sentences is detected automatically from punctuation
+  // (Intl.Segmenter), regardless of how the text is broken into lines.
+  //
   // Example:
-  //   1: { language: 'ja-JP', text: '今日はいい天気ですね。散歩に行きましょう。' },
+  //   1: { language: 'ja-JP', text: `今日はいい天気ですね。
+  //   散歩に行きましょう。
+  //   公園でお弁当を食べます。` },
   // ---------------------------------------------------------------
   const SAMPLE_TEXTS = {
-    1: { language: 'en-US', text: '' },
-    2: { language: 'en-US', text: '' },
-    3: { language: 'en-US', text: '' },
+    1: { language: 'en-US', text: `A Quick Trip to the Market
+
+Last Saturday, I got up early and walked to the local market with my friend Matt. We wanted to buy some fresh apples, eggs, and a small bag of nuts. On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” I had heard about it, but I had never been there.
+
+When we arrived at the market, it was already busy. A man was selling red peppers, fresh bread, and black coffee. I picked up a green apple and asked, “How much is it?” The seller said, “Two dollars.” I paid him and put the apple in my bag.
+
+After that, we went to the café. I ordered a hot cup of coffee and a piece of cake. Matt wanted a cold drink, but he accidentally asked for a cup of tea instead. We laughed and shared the cake.
+
+Before we went home, we sat outside and watched people walk past. It was a simple trip, but we had a great time.
+` },
+    2: { language: 'en-US', text: `In the 89th year of the Republic of China (2000), a rising R&B star, Jay Chou, burst onto the scene, sweeping major music awards and standing shoulder to shoulder with another legendary R&B artist, David Tao. Together, they became the two leading singer-songwriters of their time and have dominated the Mandarin music scene ever since. While David Tao's song output gradually declined over the years, Jay Chou maintained his prolific style, even excelling at "creating for dual purposes"—not only releasing albums one after another but also writing songs for other artists. These songs, composed amid his busy schedule, often turned out to be the highlight of those artists' albums. Jay Chou's abundant creative energy is truly astounding.
+
+In contrast, David Tao benefitted from his privileged background: financial support from a father who was a renowned TV producer and artistic inspiration from a mother who was a celebrated Peking opera singer. Meanwhile, Jay Chou, born and raised in a single-parent family in Taiwan, demonstrated a musical vision no less expansive than David Tao's, despite the latter having grown up in the United States, surrounded by the most diverse musical styles and backed by substantial resources. David Tao had access to a professional-grade recording studio and the means to hire top-tier musicians and arrangers to contribute to his albums. Jay Chou, however, emerged as a once-in-a-century prodigy in the Mandarin music world.
+
+Although some critics have pointed out that many of the instrumentals in Jay Chou's albums are created using a MIDI keyboard rather than live performances by a band, Jay addressed this in an interview, saying, "Because I am Jay Chou." This statement encapsulates the journey of a child from an economically disadvantaged background who relied on his unparalleled creative talent and the most modest of resources to achieve extraordinary results. After all, most people don't have the privilege of David Tao's musical lineage. Jay Chou's rise from humble beginnings undoubtedly resonates more deeply with and inspires the masses.
+` },
+    3: { language: 'ja-JP', text: `日本のスーパーで「値引きシール」を自動で貼るロボットが登場しました
+日本のスーパーマーケットで、賞味期限が近くなった商品に「割引シール」を貼るロボットが使われ始めました。
+
+割引シールというのは、商品の値段を安くして売るために貼るシールのことです。例えば、「20%引き」や「半額」と書いてあるシールのことですね。半額というのは、元の値段の半分という意味です。
+
+夕方のスーパーでは、まだ売れていないお弁当やパンに、店員が手作業で1枚ずつシールを貼る必要がありました。手作業というのは、機械を使わないで自分の手で仕事をすることです。
+
+しかし、夕方は買い物客が多くて店員も忙しいため、シールを貼る時間が足りなくなることがありました。
+
+そこで、棚にある商品の賞味期限をカメラで確認して、自動でシールを貼るロボットが開発されました。開発するというのは、新しい便利な道具や技術を作り出すことです。
+
+ロボットがこの作業を担当することで、店員はレジの仕事や接客に集中できるようになります。接客というのは、店に来たお客さんの案内やお世話をすることです。
+
+お店の仕事が楽になるだけでなく、食品ロスを減らすことにも繋がると期待されています。
+
+皆さんは、スーパーで買い物をする時に割引シールがついた商品を買うことがありますか？` },
+    4: { language: 'ja-JP', text: `街中を走る「自動運転バス」の実証実験が各地で進んでいます
+日本のいろいろな町や観光地で、「自動運転バス」を走らせる実証実験が行われています。
+
+実証実験というのは、新しい技術を町の中で実際に使ってみて、安全に問題なく動くかどうかを確かめるテストのことです。そして、自動運転というのは、運転手がハンドルを握らなくても、コンピューターやカメラが周りを見て車を動かす技術のことですね。
+
+地方の町では、高齢化が進んでバスの運転手が足りなくなる「人手不足」が問題になっています。地方というのは、東京などの大都市から離れた町や地域のことです。
+
+バスの本数が減ってしまうと、車の運転ができないお年寄りが病院や買い物へ行くのが大変になってしまいます。
+
+そこで、決まったルートを自動でゆっくり走る小さなコミュニティバスのテストが進められています。道路に置かれたセンサーやGPSを使って、安全に止まったり曲がったりする練習を重ねています。
+
+この自動運転バスが完成すれば、誰もがいつでも自由に移動できる町を作ることができます。
+
+お年寄りや子供たちの毎日の暮らしを支える技術として、これからの進化が期待されています。
+
+皆さんは、運転手がいない自動運転の車やバスに乗ってみたいですか？` },
   };
 
   // ---------------------------------------------------------------
@@ -672,7 +803,7 @@
   }
 
   async function getProjectStatuses() {
-    const ids = [1, 2, 3];
+    const ids = PROJECT_IDS;
     const results = await Promise.all(ids.map(id => dbGetProject(id).catch(() => null)));
     const statusMap = {};
     ids.forEach((id, i) => { statusMap[id] = !!results[i]; });
@@ -871,7 +1002,16 @@
 
     utterance.onend = () => {
       stopIOSKeepAlive();
-      if (isPlaying) playFromSentence(sentenceIndex + 1, 0);
+      if (!isPlaying) return;
+      if (recordingModeEnabled) {
+        // Practice mode: stop right after this sentence so the learner
+        // can record themselves immediately, instead of TTS racing
+        // ahead to the next line.
+        isPlaying = false;
+        updatePlaybackButtons();
+      } else {
+        playFromSentence(sentenceIndex + 1, 0);
+      }
     };
 
     utterance.onerror = () => {
@@ -932,10 +1072,13 @@
   btnSample1.addEventListener('click', sampleButtonHandler(1));
   btnSample2.addEventListener('click', sampleButtonHandler(2));
   btnSample3.addEventListener('click', sampleButtonHandler(3));
+  btnSample4.addEventListener('click', sampleButtonHandler(4));
 
   async function refreshLoadTextProjectButtons() {
-    const statusMap = await getProjectStatuses().catch(() => ({ 1: false, 2: false, 3: false }));
-    [1, 2, 3].forEach(id => {
+    const fallback = {};
+    PROJECT_IDS.forEach(id => { fallback[id] = false; });
+    const statusMap = await getProjectStatuses().catch(() => fallback);
+    PROJECT_IDS.forEach(id => {
       const btn = document.getElementById(`btn-project-${id}`);
       btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
     });
@@ -962,6 +1105,8 @@
   btnProject1.addEventListener('click', projectButtonHandler(1));
   btnProject2.addEventListener('click', projectButtonHandler(2));
   btnProject3.addEventListener('click', projectButtonHandler(3));
+  btnProject4.addEventListener('click', projectButtonHandler(4));
+  btnProject5.addEventListener('click', projectButtonHandler(5));
 
   function deleteProjectButtonHandler(id) {
     return async () => {
@@ -978,6 +1123,8 @@
   btnDeleteProject1.addEventListener('click', deleteProjectButtonHandler(1));
   btnDeleteProject2.addEventListener('click', deleteProjectButtonHandler(2));
   btnDeleteProject3.addEventListener('click', deleteProjectButtonHandler(3));
+  btnDeleteProject4.addEventListener('click', deleteProjectButtonHandler(4));
+  btnDeleteProject5.addEventListener('click', deleteProjectButtonHandler(5));
 
   function restoreRecordingsFromProject(recordings) {
     if (!recordings) return;
@@ -1004,8 +1151,10 @@
   btnSaveClose.addEventListener('click', () => showView('playback-view'));
 
   async function refreshSaveViewButtons() {
-    const statusMap = await getProjectStatuses().catch(() => ({ 1: false, 2: false, 3: false }));
-    [1, 2, 3].forEach(id => {
+    const fallback = {};
+    PROJECT_IDS.forEach(id => { fallback[id] = false; });
+    const statusMap = await getProjectStatuses().catch(() => fallback);
+    PROJECT_IDS.forEach(id => {
       const btn = document.getElementById(`btn-save-slot-${id}`);
       btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
     });
@@ -1032,6 +1181,8 @@
   btnSaveSlot1.addEventListener('click', saveSlotButtonHandler(1));
   btnSaveSlot2.addEventListener('click', saveSlotButtonHandler(2));
   btnSaveSlot3.addEventListener('click', saveSlotButtonHandler(3));
+  btnSaveSlot4.addEventListener('click', saveSlotButtonHandler(4));
+  btnSaveSlot5.addEventListener('click', saveSlotButtonHandler(5));
 
   btnSaveConfirmYes.addEventListener('click', async () => {
     if (pendingSaveSlot == null) return;
@@ -1128,7 +1279,26 @@
   // Shows up under Previous/Next whenever playback is paused or
   // stopped. Each sentence keeps up to THREE separate takes
   // (Rec #1/#2/#3) so you can compare progress across attempts.
+  //
+  // Gated behind a dedicated on/off switch (default OFF): when off,
+  // the recording area is dark/inert and Read Aloud behaves normally
+  // (auto-advances through sentences). Switching it on dims nothing,
+  // enables the recording controls, and changes Read Aloud to stop
+  // after each sentence so the learner can immediately record their
+  // own attempt at that same line.
   // ---------------------------------------------------------------
+
+  let recordingModeEnabled = false;
+
+  function applyRecordingModeUI() {
+    recordPanel.classList.toggle('panel-disabled', !recordingModeEnabled);
+  }
+  applyRecordingModeUI();
+
+  recordEnableToggle.addEventListener('change', () => {
+    recordingModeEnabled = recordEnableToggle.checked;
+    applyRecordingModeUI();
+  });
 
   let mediaRecorder = null;
   let mediaStream = null;
@@ -1214,7 +1384,7 @@
   }
 
   function selectRecSlot(slot) {
-    if (isRecording) return;
+    if (!recordingModeEnabled || isRecording) return;
     resetPlaybackState();
     currentRecSlot = slot;
     updateRecordButtons();
@@ -1241,6 +1411,7 @@
   }
 
   async function startRecording() {
+    if (!recordingModeEnabled) return;
     let stream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -1398,6 +1569,7 @@
   }
 
   btnPlayPause.addEventListener('click', async () => {
+    if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
 
@@ -1441,6 +1613,7 @@
   });
 
   btnDeleteRecording.addEventListener('click', () => {
+    if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
     URL.revokeObjectURL(rec.url);
