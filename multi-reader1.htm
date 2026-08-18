@@ -99,19 +99,23 @@
 
   select { padding: 11px 12px; }
 
-  /* ---------- home screen: paired columns ---------- */
-  .home-grid {
+    /* ---------- home screen: same layout on desktop and mobile ---------- */
+  .home-stack {
     margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .paste-clear-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-  .home-col {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  #btn-start {
+    background-color: #1c7a4d;
+    font-size: 1.4em;
+    padding: 18px;
   }
-  #btn-start { background-color: #1c7a4d; }
   #btn-start:hover { background-color: #145f3b; }
 
   /* ---------- Now Reading header ---------- */
@@ -122,7 +126,7 @@
     gap: 10px;
     margin-bottom: 14px;
   }
-  #playback-speed { flex: 0 1 130px; min-width: 90px; }
+  #playback-speed { flex: 0 1 100px; min-width: 70px; }
   .sentence-counter {
     display: inline-block;
     background: #ff9f1c;
@@ -167,7 +171,7 @@
     gap: 14px;
   }
 
-  .playback-display .line { font-size: 21px; line-height: 1.8; word-break: break-word; }
+  .playback-display .line { font-size: 21px; line-height: 1.5; word-break: break-word; }
   .playback-display .line.next-line { opacity: 0.4; font-size: 19px; }
 
   .playback-display .word {
@@ -328,12 +332,13 @@
     font-weight: 600;
   }
 
-  #volume-row {
+    #volume-row {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 6px;
     margin-top: 14px;
+    margin-bottom: -4px;
     text-align: left;
   }
   #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
@@ -350,7 +355,7 @@
     select, button { font-size: 14px; padding: 10px; min-width: 84px; }
     .playback-display .line { font-size: 18px; }
     .playback-display .line.next-line { font-size: 16px; }
-    .home-grid { grid-template-columns: 1fr; }
+    
   }
 </style>
 </head>
@@ -368,23 +373,18 @@
     </div>
     <textarea id="home-textarea" placeholder="Type or paste text here..."></textarea>
 
-    <div class="home-grid">
-      <div class="home-col">
+        <div class="home-stack">
+      <div class="paste-clear-row">
         <button id="btn-paste" class="secondary">📋 Paste Text</button>
-        <select id="home-language">
-          <option value="ja-JP">日本語</option>
-          <option value="ko-KR">한국어</option>
-          <option value="es-ES">español</option>
-          <option value="en-US">English</option>
-        </select>
-      </div>
-      <div class="home-col">
         <button id="btn-clear" class="secondary">🗑️ Clear Text</button>
-        <button id="btn-start">▶️ Start</button>
       </div>
-    </div>
-
-    <div class="btn-row">
+      <select id="home-language">
+        <option value="ja-JP">日本語</option>
+        <option value="ko-KR">한국어</option>
+        <option value="es-ES">español</option>
+        <option value="en-US">English</option>
+      </select>
+      <button id="btn-start">▶️ Start</button>
       <button id="btn-load-text" class="secondary">📂 Load Text</button>
     </div>
   </div>
@@ -425,19 +425,19 @@
           <input type="checkbox" id="record-enable-toggle">
           <span class="toggle-slider"></span>
         </label>
-        <span class="record-panel-title-text">🎙️ PRACTICE RECORDING</span>
+        <span class="record-panel-title-text">🎤 PRACTICE RECORDING</span>
         <button id="btn-save-recording" class="secondary save-btn">💾 Save</button>
       </div>
 
       <div id="record-controls-wrapper">
         <div class="slot-row">
-          <button id="btn-rec-slot-1" class="slot-btn active-slot">🎤 Rec #1</button>
-          <button id="btn-rec-slot-2" class="slot-btn">🎤 Rec #2</button>
-          <button id="btn-rec-slot-3" class="slot-btn">🎤 Rec #3</button>
+          <button id="btn-rec-slot-1" class="slot-btn active-slot">🟢 Rec #1</button>
+          <button id="btn-rec-slot-2" class="slot-btn">🟢 Rec #2</button>
+          <button id="btn-rec-slot-3" class="slot-btn">🟢 Rec #3</button>
         </div>
 
         <div id="record-row" class="btn-row" style="margin-top:0;">
-          <button id="btn-record-toggle">🎙️ Record</button>
+          <button id="btn-record-toggle">🎤 Record</button>
           <button id="btn-play-pause" class="secondary" disabled>▶️ Play</button>
           <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
         </div>
@@ -524,6 +524,30 @@
 </div>
 
 <script>
+// 在 script 頂端加入
+let wakeLock = null;
+
+async function requestWakeLock() {
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+    } catch (err) {
+      console.log('Wake Lock denied:', err);
+    }
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLock !== null) {
+    wakeLock.release().then(() => { wakeLock = null; });
+  }
+}
+
+// 在 btnStop.addEventListener 與 btnPlaybackClose.addEventListener 內加入：
+// releaseWakeLock();
+
+// 在 playFromSentence 最後 (isPlaying = true 之後) 加入：
+// requestWakeLock();
   // ---------------------------------------------------------------
   // View switching
   // ---------------------------------------------------------------
@@ -723,7 +747,8 @@
   //   散歩に行きましょう。
   //   公園でお弁当を食べます。` },
   // ---------------------------------------------------------------
-  const SAMPLE_TEXTS = {
+
+const SAMPLE_TEXTS = {
     1: { language: 'en-US', text: `A Quick Trip to the Market
 
 Last Saturday, I got up early and walked to the local market with my friend Matt. We wanted to buy some fresh apples, eggs, and a small bag of nuts. On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” I had heard about it, but I had never been there.
@@ -872,15 +897,28 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
   // handles Japanese/Korean correctly, where words aren't
   // separated by spaces)
   // ---------------------------------------------------------------
-  function segmentSentences(text, locale) {
-    if (window.Intl && Intl.Segmenter) {
-      try {
-        const seg = new Intl.Segmenter(locale, { granularity: 'sentence' });
-        return Array.from(seg.segment(text), s => s.segment).filter(s => s.trim().length);
-      } catch (e) { /* fall through */ }
-    }
-    return text.split(/(?<=[.!?。！？\n])\s*/).filter(s => s.trim().length);
+  // 【改良版】句型分割：相容不支援 Lookbehind 的舊版 iOS / 瀏覽器
+function segmentSentences(text, locale) {
+  if (window.Intl && Intl.Segmenter) {
+    try {
+      const seg = new Intl.Segmenter(locale, { granularity: 'sentence' });
+      return Array.from(seg.segment(text), s => s.segment).filter(s => s.trim().length);
+    } catch (e) { /* fall through */ }
   }
+  
+  // Fallback: 不使用 Lookbehind 的安全寫法
+  const parts = text.split(/([.!?。！？\n]+)/);
+  const result = [];
+  for (let i = 0; i < parts.length; i += 2) {
+    const str = parts[i];
+    const punc = parts[i + 1] || '';
+    const combined = (str + punc).trim();
+    if (combined.length > 0) {
+      result.push(combined);
+    }
+  }
+  return result;
+}
 
   function segmentWords(text, locale) {
     if (window.Intl && Intl.Segmenter) {
@@ -1068,9 +1106,22 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
     return true;
   }
 
-  btnStart.addEventListener('click', () => {
-    enterReaderWithText(homeTextarea.value, homeLanguage.value);
-  });
+ btnStart.addEventListener('click', () => {
+  // 【關鍵改良】在實體點擊的瞬間，立刻發送一個無聲音的 SpeechSynthesisUtterance 來解鎖行動裝置的 TTS 權限
+  const unlockUtterance = new SpeechSynthesisUtterance('');
+  unlockUtterance.volume = 0; // 靜音
+  synth.speak(unlockUtterance);
+  
+  // 針對 Web Audio API 預先解鎖 (錄音播放會用到)
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+
+  enterReaderWithText(homeTextarea.value, homeLanguage.value);
+});
 
   // ---------------------------------------------------------------
   // Load Text: Samples (built into the code) + Saved Projects (IndexedDB)
@@ -1255,13 +1306,14 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
     }
   });
 
-  btnStop.addEventListener('click', () => {
+    btnStop.addEventListener('click', () => {
     if (isRecording) return;
     synth.cancel();
     stopIOSKeepAlive();
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
+    currentRecSlot = 1;
     resetPlaybackState();
     renderPlaybackWindow();
     updatePlaybackButtons();
@@ -1283,6 +1335,7 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
     resetPlaybackState();
     currentSentenceIndex = Math.max(0, currentSentenceIndex - 1);
     currentOffsetInSentence = 0;
+    currentRecSlot = 1;
     renderPlaybackWindow();
     updatePlaybackButtons();
   });
@@ -1292,6 +1345,7 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
     resetPlaybackState();
     currentSentenceIndex = Math.min(sentences.length - 1, currentSentenceIndex + 1);
     currentOffsetInSentence = 0;
+    currentRecSlot = 1;
     renderPlaybackWindow();
     updatePlaybackButtons();
   });
@@ -1377,14 +1431,14 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
     [btnRecSlot1, btnRecSlot2, btnRecSlot3].forEach((btn, i) => {
       const slot = i + 1;
       const has = !!forSentence[slot];
-      btn.textContent = `${has ? '🎤' : '⚪'} Rec #${slot}`;
+      btn.textContent = `${has ? '🟢' : '⚪'} Rec #${slot}`;
       btn.classList.toggle('active-slot', slot === currentRecSlot);
     });
   }
 
   function updateRecordButtons() {
     const hasRecording = !!getCurrentSlotRecording();
-    btnRecordToggle.textContent = hasRecording ? '🎙️ Re-record' : '🎙️ Record';
+    btnRecordToggle.textContent = hasRecording ? '🎤 Re-record' : '🎤 Record';
     btnRecordToggle.classList.remove('recording');
     btnPlayPause.disabled = !hasRecording;
     btnDeleteRecording.disabled = !hasRecording;
