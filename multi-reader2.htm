@@ -1582,13 +1582,14 @@ function segmentSentences(text, locale) {
 
   async function startRecording() {
     if (!recordingModeEnabled) return;
-    let stream;
+    let rawStream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
+      // 改良 1：關閉 autoGainControl，防止瀏覽器強制壓低麥克風音量
+      rawStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true
+          autoGainControl: false 
         }
       });
     } catch (err) {
@@ -1597,17 +1598,40 @@ function segmentSentences(text, locale) {
     }
 
     resetPlaybackState();
-    mediaStream = stream;
     recordingChunks = [];
     const recordedForSentence = currentSentenceIndex;
     const recordedForSlot = currentRecSlot;
+
+    // 改良 2：使用 Web Audio API，在錄音的當下直接把音量放大 3 倍
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioCtx = new AudioContext();
+      const source = audioCtx.createMediaStreamSource(rawStream);
+      const gainNode = audioCtx.createGain();
+      
+      // 設定放大倍數，3 倍通常是行動裝置錄音較理想的音量（可視情況改為 2.0 ~ 4.0）
+      gainNode.gain.value = 3.0; 
+      
+      const destination = audioCtx.createMediaStreamDestination();
+      source.connect(gainNode);
+      gainNode.connect(destination);
+      
+      mediaStream = destination.stream;
+      mediaStream.rawHardwareStream = rawStream; // 記錄原始硬體串流，確保停止時能徹底關閉麥克風燈號
+    } catch (err) {
+      console.warn('硬體不支援音量放大，退回預設錄音', err);
+      mediaStream = rawStream;
+      mediaStream.rawHardwareStream = rawStream;
+    }
 
     try {
       const mimeType = pickSupportedMimeType();
       mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
     } catch (err) {
       alert('您的瀏覽器不支援錄音功能。');
-      mediaStream.getTracks().forEach(t => t.stop());
+      if (mediaStream && mediaStream.rawHardwareStream) {
+        mediaStream.rawHardwareStream.getTracks().forEach(t => t.stop());
+      }
       mediaStream = null;
       return;
     }
@@ -1626,7 +1650,13 @@ function segmentSentences(text, locale) {
       }
       sentenceRecordings[recordedForSentence][recordedForSlot] = { blob, url };
 
-      mediaStream.getTracks().forEach(t => t.stop());
+      // 確實關閉所有實體與虛擬麥克風軌道
+      if (mediaStream && mediaStream.rawHardwareStream) {
+        mediaStream.rawHardwareStream.getTracks().forEach(t => t.stop());
+      }
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(t => t.stop());
+      }
       mediaStream = null;
       isRecording = false;
       clearInterval(recordTimerInterval);
