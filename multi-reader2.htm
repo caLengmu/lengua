@@ -369,13 +369,26 @@
     100% { box-shadow: 0 0 0 0 rgba(214, 69, 69, 0); }
   }
 
-  .record-status {
+    .record-status {
     font-size: 13px;
     color: #d64545;
     margin: 8px 0 0;
     min-height: 16px;
     font-weight: 600;
   }
+
+    #volume-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-top: 14px;
+    margin-bottom: -30px;
+    text-align: left;
+  }
+  #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
+  #volume-row input[type="range"] { width: 100%; accent-color: #f3b23c; padding: 0; background: transparent; }
+  .gain-feedback { font-size: 11.5px; color: #a98750; min-height: 14px; }
 
   .hint { font-size: 12px; color: #9db6c6; margin-top: 10px; }
 
@@ -472,11 +485,19 @@
           <button id="btn-rec-slot-3" class="slot-btn">🟢 Rec #3</button>
         </div>
 
-        <div id="record-row" class="btn-row" style="margin-top:0;">
+                <div id="record-row" class="btn-row" style="margin-top:0;">
           <button id="btn-record-toggle">🎤 Record</button>
           <button id="btn-play-pause" class="secondary" disabled>▶️ Play</button>
           <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
         </div>
+
+        <div id="volume-row">
+          <label for="playback-gain">🔊 Extra Volume: <span id="gain-label">1.5x</span></label>
+          <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="1.5">
+          <div id="gain-feedback" class="gain-feedback"></div>
+        </div>
+
+        <div id="record-status" class="record-status"></div>
 
         
 
@@ -620,8 +641,11 @@ function releaseWakeLock() {
   const btnPlayPause = document.getElementById('btn-play-pause');
   const btnDeleteRecording = document.getElementById('btn-delete-recording');
   const recordStatus = document.getElementById('record-status');
-  const myRecordingAudio = document.getElementById('my-recording-audio');
-  
+    const myRecordingAudio = document.getElementById('my-recording-audio');
+  const gainSlider = document.getElementById('playback-gain');
+  const gainLabel = document.getElementById('gain-label');
+  const gainFeedback = document.getElementById('gain-feedback');
+
   const btnLoadTextClose = document.getElementById('btn-loadtext-close');
   const btnSample1 = document.getElementById('btn-sample-1');
   const btnSample2 = document.getElementById('btn-sample-2');
@@ -1499,10 +1523,99 @@ function segmentSentences(text, locale) {
     return sentenceRecordings[currentSentenceIndex][currentRecSlot] || null;
   }
 
+    // ---------------------------------------------------------------
+  // 錄音播放：保留原生 <audio> 元素做 play/pause/ended 事件控制
+  // （這是讓 iOS 穩定的關鍵，繼續保留），但把它的輸出「繞道」接進
+  // Web Audio 的音量增益鏈，藉此突破系統音量上限，解決 Android／
+  // 任何裝置錄音音量過小的問題。
+  //
+  // createMediaElementSource() 只能對同一個 <audio> 呼叫一次，所以
+  // 用 ensureAudioGraph() 加上旗標保護，只在第一次按 Play 時建立一次。
   // ---------------------------------------------------------------
-  // 簡化版錄音播放邏輯：完全使用 HTML5 原生 <audio> 播放
-  // 捨棄 Web Audio API，大幅提升 iOS/Android 的跨平台穩定性
-  // ---------------------------------------------------------------
+
+  let audioCtx = null;
+  let mediaElementSource = null;
+  let recordingGainNode = null;
+
+  function ensureAudioGraph() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (!mediaElementSource) {
+      mediaElementSource = audioCtx.createMediaElementSource(myRecordingAudio);
+      recordingGainNode = audioCtx.createGain();
+      recordingGainNode.gain.value = 1;
+
+      // 溫和的語音動態壓縮：拉齊音量但保留子音等發音細節
+      const leveler = audioCtx.createDynamicsCompressor();
+      leveler.threshold.value = -20;
+      leveler.knee.value = 6;
+      leveler.ratio.value = 3;
+      leveler.attack.value = 0.01;
+      leveler.release.value = 0.15;
+
+      // 安全限幅：只在極端峰值時介入，避免削波失真
+      const safetyLimiter = audioCtx.createDynamicsCompressor();
+      safetyLimiter.threshold.value = -1;
+      safetyLimiter.knee.value = 0;
+      safetyLimiter.ratio.value = 20;
+      safetyLimiter.attack.value = 0.002;
+      safetyLimiter.release.value = 0.1;
+
+      mediaElementSource
+        .connect(recordingGainNode)
+        .connect(leveler)
+        .connect(safetyLimiter)
+        .connect(audioCtx.destination);
+    }
+  }
+
+  const TARGET_RMS = 0.1; // 約 -20dBFS，一般對話的響度基準
+
+  function getRMSAmplitude(audioBuffer) {
+    let sumSquares = 0;
+    let count = 0;
+    for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
+      const data = audioBuffer.getChannelData(ch);
+      for (let i = 0; i < data.length; i++) {
+        sumSquares += data[i] * data[i];
+        count++;
+      }
+    }
+    return count > 0 ? Math.sqrt(sumSquares / count) : 0;
+  }
+
+  // 這裡的 decodeAudioData 只是「拿來量測音量」，不是拿來播放，
+  // 所以就算解碼失敗（極少數瀏覽器對某些格式支援不完整），
+  // 也完全不影響 <audio> 元素本身照常播放，只是少了自動正規化。
+  async function computeAndApplyGain(blob) {
+    const userGain = parseFloat(gainSlider.value) || 1;
+    let normalizeGain = 1;
+    try {
+      const arrayBuffer = await blob.arrayBuffer();
+      const decoded = await audioCtx.decodeAudioData(arrayBuffer);
+      const rms = getRMSAmplitude(decoded);
+      normalizeGain = rms > 0.0001 ? Math.min(TARGET_RMS / rms, 20) : 1;
+      gainFeedback.textContent = '';
+    } catch (err) {
+      gainFeedback.textContent = '⚠️ 此錄音無法自動正規化音量，僅套用手動倍率。';
+    }
+    const totalGain = normalizeGain * userGain;
+    recordingGainNode.gain.value = totalGain;
+    const totalGainDb = 20 * Math.log10(totalGain);
+    if (!gainFeedback.textContent) {
+      gainFeedback.textContent = `🎚️ Applied gain: +${totalGainDb.toFixed(1)} dB (normalize + boost)`;
+    }
+  }
+
+  gainSlider.addEventListener('input', () => {
+    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
+    // 如果正在播放中，讓新的倍率立刻生效，不用重新按 Play
+    if (recordingGainNode && !myRecordingAudio.paused) {
+      const rec = getCurrentSlotRecording();
+      if (rec) computeAndApplyGain(rec.blob);
+    }
+  });
 
   // 自動監聽隱藏的 <audio> 標籤事件來切換 Play/Pause 按鈕文字
   myRecordingAudio.addEventListener('play', updatePlayPauseLabel);
@@ -1517,6 +1630,7 @@ function segmentSentences(text, locale) {
       myRecordingAudio.pause();
     }
     myRecordingAudio.currentTime = 0;
+    gainFeedback.textContent = '';
     updatePlayPauseLabel();
   }
 
@@ -1695,7 +1809,7 @@ function segmentSentences(text, locale) {
     else startRecording();
   });
 
-  btnPlayPause.addEventListener('click', () => {
+    btnPlayPause.addEventListener('click', async () => {
     if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
@@ -1703,18 +1817,25 @@ function segmentSentences(text, locale) {
     if (!myRecordingAudio.paused) {
       // 如果正在播放中，按下就是暫停
       myRecordingAudio.pause();
-    } else {
-      // 確保 audio 標籤裡的來源是當前選取的錄音檔
-      if (myRecordingAudio.src !== rec.url) {
-        myRecordingAudio.src = rec.url;
-        myRecordingAudio.load();
-      }
-      // 執行播放
-      myRecordingAudio.play().catch(err => {
-        console.error('Playback failed:', err);
-        alert('無法播放此錄音檔，請檢查瀏覽器設定。');
-      });
+      return;
     }
+
+    ensureAudioGraph();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+    // 確保 audio 標籤裡的來源是當前選取的錄音檔
+    if (myRecordingAudio.src !== rec.url) {
+      myRecordingAudio.src = rec.url;
+      myRecordingAudio.load();
+    }
+
+    await computeAndApplyGain(rec.blob);
+
+    // 執行播放
+    myRecordingAudio.play().catch(err => {
+      console.error('Playback failed:', err);
+      alert('無法播放此錄音檔，請檢查瀏覽器設定。');
+    });
   });
 
   btnDeleteRecording.addEventListener('click', () => {
