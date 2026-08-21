@@ -1610,7 +1610,7 @@ function segmentSentences(text, locale) {
       const gainNode = audioCtx.createGain();
       
       // 設定放大倍數，3 倍通常是行動裝置錄音較理想的音量（可視情況改為 2.0 ~ 4.0）
-      gainNode.gain.value = 3.0; 
+      gainNode.gain.value = 4.0; 
       
       const destination = audioCtx.createMediaStreamDestination();
       source.connect(gainNode);
