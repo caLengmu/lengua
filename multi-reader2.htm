@@ -1584,12 +1584,14 @@ function segmentSentences(text, locale) {
     if (!recordingModeEnabled) return;
     let rawStream;
     try {
-      // 改良 1：關閉 autoGainControl，防止瀏覽器強制壓低麥克風音量
+      // 改良 1：因材施教的麥克風設定
+      // Android 非常依賴系統原生的 autoGainControl 來提升基礎音量，否則收音極小。
+      // iOS 則關閉原生 AGC，完全依賴我們後續的手動放大，效果較好。
       rawStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: false 
+          autoGainControl: IS_IOS ? false : true 
         }
       });
     } catch (err) {
@@ -1602,15 +1604,15 @@ function segmentSentences(text, locale) {
     const recordedForSentence = currentSentenceIndex;
     const recordedForSlot = currentRecSlot;
 
-    // 改良 2：使用 Web Audio API，在錄音的當下直接把音量放大 3 倍
+    // 改良 2：使用 Web Audio API，針對不同系統給予不同的放大倍數
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       const audioCtx = new AudioContext();
       const source = audioCtx.createMediaStreamSource(rawStream);
       const gainNode = audioCtx.createGain();
       
-      // 設定放大倍數，3 倍通常是行動裝置錄音較理想的音量（可視情況改為 2.0 ~ 4.0）
-      gainNode.gain.value = 4.0; 
+      // iOS 放大 3 倍。Android 因為已經開啟了原生 AGC，只需稍微放大 1.5 倍避免破音
+      gainNode.gain.value = IS_IOS ? 3.0 : 1.5; 
       
       const destination = audioCtx.createMediaStreamDestination();
       source.connect(gainNode);
