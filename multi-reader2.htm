@@ -1604,26 +1604,31 @@ function segmentSentences(text, locale) {
     const recordedForSentence = currentSentenceIndex;
     const recordedForSlot = currentRecSlot;
 
-    // 改良 2：使用 Web Audio API，針對不同系統給予不同的放大倍數
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const audioCtx = new AudioContext();
-      const source = audioCtx.createMediaStreamSource(rawStream);
-      const gainNode = audioCtx.createGain();
-      
-      // iOS 放大 3 倍。Android 因為已經開啟了原生 AGC，只需稍微放大 1.5 倍避免破音
-      gainNode.gain.value = IS_IOS ? 3.0 : 1.5; 
-      
-      const destination = audioCtx.createMediaStreamDestination();
-      source.connect(gainNode);
-      gainNode.connect(destination);
-      
-      mediaStream = destination.stream;
-      mediaStream.rawHardwareStream = rawStream; // 記錄原始硬體串流，確保停止時能徹底關閉麥克風燈號
-    } catch (err) {
-      console.warn('硬體不支援音量放大，退回預設錄音', err);
+    // 改良 2：針對作業系統分流，徹底解決 Android 延遲與音量不穩問題
+    if (IS_IOS) {
+      // iOS: 因為前面關閉了原生 AGC，所以必須透過 Web Audio API 手動放大音量
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        const source = audioCtx.createMediaStreamSource(rawStream);
+        const gainNode = audioCtx.createGain();
+        
+        gainNode.gain.value = 3.0; // iOS 專屬放大 3 倍
+        
+        const destination = audioCtx.createMediaStreamDestination();
+        source.connect(gainNode);
+        gainNode.connect(destination);
+        
+        mediaStream = destination.stream;
+        mediaStream.rawHardwareStream = rawStream; // 記錄原始串流以便後續徹底關閉
+      } catch (err) {
+        console.warn('iOS 音量放大失敗，退回預設', err);
+        mediaStream = rawStream;
+      }
+    } else {
+      // Android / 電腦版: 原生 AGC (自動增益) 已經足夠強大。
+      // 絕對不要經過 Web Audio API，否則會產生「緩衝延遲 (開頭靜音)」並破壞音量動態！
       mediaStream = rawStream;
-      mediaStream.rawHardwareStream = rawStream;
     }
 
     try {
