@@ -377,19 +377,6 @@
     font-weight: 600;
   }
 
-    #volume-row {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-    margin-top: 14px;
-    margin-bottom: -25px;
-    text-align: left;
-  }
-  #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
-  #volume-row input[type="range"] { width: 100%; accent-color: #f3b23c; padding: 0; background: transparent; }
-  .gain-feedback { font-size: 11.5px; color: #a98750; min-height: 14px; }
-
   .hint { font-size: 12px; color: #9db6c6; margin-top: 10px; }
 
   @media (max-width: 400px) {
@@ -491,11 +478,7 @@
           <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
         </div>
 
-        <div id="volume-row">
-          <label for="playback-gain">🔊 Extra Volume: <span id="gain-label">1.5x</span></label>
-          <input type="range" id="playback-gain" min="1" max="10" step="0.5" value="1.5">
-          <div id="gain-feedback" class="gain-feedback"></div>
-        </div>
+        
 
         <div id="record-status" class="record-status"></div>
       </div>
@@ -638,10 +621,7 @@ function releaseWakeLock() {
   const btnDeleteRecording = document.getElementById('btn-delete-recording');
   const recordStatus = document.getElementById('record-status');
   const myRecordingAudio = document.getElementById('my-recording-audio');
-  const gainSlider = document.getElementById('playback-gain');
-  const gainLabel = document.getElementById('gain-label');
-  const gainFeedback = document.getElementById('gain-feedback');
-
+  
   const btnLoadTextClose = document.getElementById('btn-loadtext-close');
   const btnSample1 = document.getElementById('btn-sample-1');
   const btnSample2 = document.getElementById('btn-sample-2');
@@ -794,10 +774,10 @@ function releaseWakeLock() {
   // The number of sentences is detected automatically from punctuation
   // (Intl.Segmenter), regardless of how the text is broken into lines.
   //
-  // Want per-sentence translations? Put "(translation)" right after a
-  // sentence's ending punctuation, e.g.:
-  //   It's a beautiful Sunday morning. (這是個美麗的星期天早晨。)
-  // Use half-width parentheses () right after the sentence, not inside it.
+  // Want per-sentence translations? Put <translation> right after a
+// sentence's ending punctuation, e.g.:
+//   It's a beautiful Sunday morning. <這是個美麗的星期天早晨。>
+// Use angle brackets <> right after the sentence.
   //
   // Example:
   //   1: { language: 'ja-JP', text: `今日はいい天気ですね。
@@ -877,11 +857,6 @@ const SAMPLE_TEXTS = {
     return statusMap;
   }
 
-  gainSlider.addEventListener('input', () => {
-    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
-    gainFeedback.textContent = '';
-  });
-
   // ---------------------------------------------------------------
   // Home screen: paste / clear / navigate
   // ---------------------------------------------------------------
@@ -949,8 +924,8 @@ function segmentSentences(text, locale) {
     const translationsByIndex = [];
     const markerChar = '\u0001';
 
-    // 1. 同時支援半形 () 與全形 （） 括號，將括號內文字暫存
-    const cleaned = text.replace(/[(（]([^()（）]+)[)）]/g, (match, inner) => {
+    // 1. 從同時支援半形 () 與全形 （） 括號， 換成 將 <> 內的文字暫存
+    const cleaned = text.replace(/<([^<>]+)>/g, (match, inner) => {
       const idx = translationsByIndex.length;
       translationsByIndex.push(inner.trim());
       return `${markerChar}${idx}${markerChar}`;
@@ -1205,6 +1180,7 @@ function segmentSentences(text, locale) {
 
     currentOffsetInSentence = baseOffset;
     isPlaying = true;
+    requestWakeLock(); // 請求螢幕常亮
     synth.speak(utterance);
     startIOSKeepAlive();
     updatePlaybackButtons();
@@ -1238,15 +1214,7 @@ function segmentSentences(text, locale) {
   const unlockUtterance = new SpeechSynthesisUtterance('');
   unlockUtterance.volume = 0; // 靜音
   synth.speak(unlockUtterance);
-  
-  // 針對 Web Audio API 預先解鎖 (錄音播放會用到)
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-
+    
   enterReaderWithText(homeTextarea.value, homeLanguage.value);
 });
 
@@ -1437,6 +1405,7 @@ function segmentSentences(text, locale) {
     if (isRecording) return;
     synth.cancel();
     stopIOSKeepAlive();
+    releaseWakeLock(); // 釋放螢幕常亮
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
@@ -1450,6 +1419,7 @@ function segmentSentences(text, locale) {
     if (isRecording) return;
     synth.cancel();
     stopIOSKeepAlive();
+    releaseWakeLock(); // 釋放螢幕常亮
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
@@ -1511,46 +1481,47 @@ function segmentSentences(text, locale) {
   let recordStartTime = 0;
   let recordTimerInterval = null;
   let currentRecSlot = 1;
-  const sentenceRecordings = {}; // sentenceIndex -> { 1: {blob,url}, 2: {...}, 3: {...} }
+  let sentenceRecordings = {}; // 將 const 改為 let 以便重置
 
-  // Playback of the user's own recording, with real pause/resume
-  let audioCtx = null;
-  let playbackAudioBuffer = null;
-  let playbackKey = null; // "sentenceIdx:slot" the loaded buffer belongs to
-  let playbackSource = null;
-  let playbackOffset = 0; // seconds into the buffer to resume from
-  let playbackStartCtxTime = 0;
-  let isRecPlaying = false;
-
-  function getCurrentSlotRecording() {
-    const forSentence = sentenceRecordings[currentSentenceIndex];
-    return forSentence ? forSentence[currentRecSlot] : undefined;
-  }
-
+  // 新增：清空所有錄音 (修復 Start 崩潰問題)
   function resetAllRecordings() {
-    Object.values(sentenceRecordings).forEach(slots => {
-      Object.values(slots).forEach(r => URL.revokeObjectURL(r.url));
-    });
-    for (const k in sentenceRecordings) delete sentenceRecordings[k];
-    resetPlaybackState();
+    for (const sIdx in sentenceRecordings) {
+      for (const slot in sentenceRecordings[sIdx]) {
+        URL.revokeObjectURL(sentenceRecordings[sIdx][slot].url);
+      }
+    }
+    sentenceRecordings = {};
   }
+
+  // 新增：取得當前選定插槽的錄音 (修復錄音控制無效問題)
+  function getCurrentSlotRecording() {
+    if (!sentenceRecordings[currentSentenceIndex]) return null;
+    return sentenceRecordings[currentSentenceIndex][currentRecSlot] || null;
+  }
+
+  // ---------------------------------------------------------------
+  // 簡化版錄音播放邏輯：完全使用 HTML5 原生 <audio> 播放
+  // 捨棄 Web Audio API，大幅提升 iOS/Android 的跨平台穩定性
+  // ---------------------------------------------------------------
+
+  // 自動監聽隱藏的 <audio> 標籤事件來切換 Play/Pause 按鈕文字
+  myRecordingAudio.addEventListener('play', updatePlayPauseLabel);
+  myRecordingAudio.addEventListener('pause', updatePlayPauseLabel);
+  myRecordingAudio.addEventListener('ended', () => {
+    myRecordingAudio.currentTime = 0;
+    updatePlayPauseLabel();
+  });
 
   function resetPlaybackState() {
-    if (playbackSource) {
-      playbackSource.onended = null;
-      try { playbackSource.stop(); } catch (e) { /* already stopped */ }
-      playbackSource = null;
+    if (!myRecordingAudio.paused) {
+      myRecordingAudio.pause();
     }
-    isRecPlaying = false;
-    playbackOffset = 0;
-    playbackAudioBuffer = null;
-    playbackKey = null;
-    gainFeedback.textContent = '';
+    myRecordingAudio.currentTime = 0;
     updatePlayPauseLabel();
   }
 
   function updatePlayPauseLabel() {
-    btnPlayPause.textContent = isRecPlaying ? '⏸️ Pause' : '▶️ Play';
+    btnPlayPause.textContent = (!myRecordingAudio.paused) ? '⏸️ Pause' : '▶️ Play';
   }
 
   function refreshSlotButtons() {
@@ -1598,15 +1569,10 @@ function segmentSentences(text, locale) {
   btnRecSlot2.addEventListener('click', () => selectRecSlot(2));
   btnRecSlot3.addEventListener('click', () => selectRecSlot(3));
 
-  // Android Chrome and iOS Safari support different recording
-  // containers (Android: webm/opus; iOS Safari: mp4/aac — it doesn't
-  // support webm at all). Asking the browser what it actually supports,
-  // rather than leaving MediaRecorder to guess, cuts down on decode
-  // failures later when we try to play the recording back boosted.
   function pickSupportedMimeType() {
     const candidates = [
-      'audio/mp4',               // iOS Safari
-      'audio/webm;codecs=opus',  // Chrome / Android / desktop
+      'audio/mp4',               // iOS Safari 的首選
+      'audio/webm;codecs=opus',  // Android / Chrome 的首選
       'audio/webm',
       'audio/ogg;codecs=opus'
     ];
@@ -1626,7 +1592,7 @@ function segmentSentences(text, locale) {
         }
       });
     } catch (err) {
-      alert('Microphone access is needed to record. Please allow microphone permission and try again.');
+      alert('需要麥克風權限才能錄音。請允許權限後重試。');
       return;
     }
 
@@ -1640,7 +1606,7 @@ function segmentSentences(text, locale) {
       const mimeType = pickSupportedMimeType();
       mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
     } catch (err) {
-      alert('Recording is not supported in this browser.');
+      alert('您的瀏覽器不支援錄音功能。');
       mediaStream.getTracks().forEach(t => t.stop());
       mediaStream = null;
       return;
@@ -1673,7 +1639,7 @@ function segmentSentences(text, locale) {
     isRecording = true;
     recordStartTime = Date.now();
     setControlsDisabledForRecording(true);
-    btnRecordToggle.disabled = false; // stays clickable so it can be stopped
+    btnRecordToggle.disabled = false;
     btnRecordToggle.textContent = '⏹️ Stop';
     btnRecordToggle.classList.add('recording');
 
@@ -1692,127 +1658,25 @@ function segmentSentences(text, locale) {
     else startRecording();
   });
 
-  // A plain <audio> element can't play louder than the phone's normal
-  // media volume, and mobile mic capture is usually much quieter to
-  // begin with (auto-gain targets phone-call loudness, not full-scale).
-  // This is speech, not music, so the processing here is tuned for
-  // pronunciation practice specifically:
-  //   1. RMS (loudness) normalization, not peak — a single click/pop
-  //      in the recording won't throw off the whole calibration the
-  //      way a peak-based measurement would.
-  //   2. A gentle "speech leveler" (mild 3:1 compression, soft knee)
-  //      evens out loudness while preserving consonants and other
-  //      articulation detail — a hard limiter would flatten exactly
-  //      the detail a learner needs to hear to self-correct.
-  //   3. A safety brickwall limiter near true peak, only to stop rare
-  //      transients from digitally clipping — it doesn't touch normal
-  //      speech, it's just a backstop.
-  const TARGET_RMS = 0.1; // ~-20 dBFS, a typical conversational speech level
-
-  function getRMSAmplitude(audioBuffer) {
-    let sumSquares = 0;
-    let count = 0;
-    for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
-      const data = audioBuffer.getChannelData(ch);
-      for (let i = 0; i < data.length; i++) {
-        sumSquares += data[i] * data[i];
-        count++;
-      }
-    }
-    return count > 0 ? Math.sqrt(sumSquares / count) : 0;
-  }
-
-  function buildPlaybackChain(buffer, offsetSeconds) {
-    const userGain = parseFloat(gainSlider.value) || 1;
-    const rms = getRMSAmplitude(buffer);
-    const normalizeGain = rms > 0.0001 ? Math.min(TARGET_RMS / rms, 20) : 1;
-    const totalGain = normalizeGain * userGain;
-
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.value = totalGain;
-
-    // Gentle speech leveler: catches loudness swings without crushing
-    // consonant detail.
-    const leveler = audioCtx.createDynamicsCompressor();
-    leveler.threshold.value = -20;
-    leveler.knee.value = 6;
-    leveler.ratio.value = 3;
-    leveler.attack.value = 0.01;
-    leveler.release.value = 0.15;
-
-    // Safety brickwall: only engages on rare peaks close to full
-    // scale, purely to prevent digital clipping distortion.
-    const safetyLimiter = audioCtx.createDynamicsCompressor();
-    safetyLimiter.threshold.value = -1;
-    safetyLimiter.knee.value = 0;
-    safetyLimiter.ratio.value = 20;
-    safetyLimiter.attack.value = 0.002;
-    safetyLimiter.release.value = 0.1;
-
-    source.connect(gainNode).connect(leveler).connect(safetyLimiter).connect(audioCtx.destination);
-
-    source.onended = () => {
-      if (isRecPlaying) {
-        isRecPlaying = false;
-        playbackOffset = 0;
-        updatePlayPauseLabel();
-      }
-    };
-
-    playbackSource = source;
-    playbackStartCtxTime = audioCtx.currentTime;
-    isRecPlaying = true;
-    source.start(0, offsetSeconds);
-    updatePlayPauseLabel();
-
-    const totalGainDb = 20 * Math.log10(totalGain);
-    gainFeedback.textContent = `🎚️ Applied gain: +${totalGainDb.toFixed(1)} dB (normalize + boost)`;
-  }
-
-  btnPlayPause.addEventListener('click', async () => {
+  btnPlayPause.addEventListener('click', () => {
     if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
 
-    if (isRecPlaying) {
-      // Pause: remember exactly how far we'd gotten
-      const elapsed = audioCtx.currentTime - playbackStartCtxTime;
-      playbackOffset += elapsed;
-      if (playbackSource) {
-        playbackSource.onended = null;
-        try { playbackSource.stop(); } catch (e) { /* already stopped */ }
-        playbackSource = null;
+    if (!myRecordingAudio.paused) {
+      // 如果正在播放中，按下就是暫停
+      myRecordingAudio.pause();
+    } else {
+      // 確保 audio 標籤裡的來源是當前選取的錄音檔
+      if (myRecordingAudio.src !== rec.url) {
+        myRecordingAudio.src = rec.url;
+        myRecordingAudio.load();
       }
-      isRecPlaying = false;
-      updatePlayPauseLabel();
-      return;
-    }
-
-    const key = `${currentSentenceIndex}:${currentRecSlot}`;
-
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') await audioCtx.resume();
-
-      if (playbackKey !== key || !playbackAudioBuffer) {
-        const arrayBuffer = await rec.blob.arrayBuffer();
-        playbackAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-        playbackKey = key;
-        playbackOffset = 0;
-      }
-      if (playbackOffset >= playbackAudioBuffer.duration) playbackOffset = 0;
-
-      buildPlaybackChain(playbackAudioBuffer, playbackOffset);
-    } catch (err) {
-      // Don't fail silently — some browsers can't decode certain
-      // recording formats, which would otherwise look like "the boost
-      // slider just doesn't do anything."
-      gainFeedback.textContent = '⚠️ Volume boost not supported for this recording on this browser — playing at original volume.';
-      myRecordingAudio.src = URL.createObjectURL(rec.blob);
-      myRecordingAudio.play();
+      // 執行播放
+      myRecordingAudio.play().catch(err => {
+        console.error('Playback failed:', err);
+        alert('無法播放此錄音檔，請檢查瀏覽器設定。');
+      });
     }
   });
 
@@ -1820,11 +1684,21 @@ function segmentSentences(text, locale) {
     if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
+    
     URL.revokeObjectURL(rec.url);
     delete sentenceRecordings[currentSentenceIndex][currentRecSlot];
+    
+    // 如果正在刪除的是正在播放的音源，清空播放器
+    if (myRecordingAudio.src === rec.url) {
+      myRecordingAudio.removeAttribute('src');
+      myRecordingAudio.load();
+    }
+    
     resetPlaybackState();
     updateRecordButtons();
   });
+
+  
 </script>
 </body>
 </html>
