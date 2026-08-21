@@ -1584,13 +1584,13 @@ function segmentSentences(text, locale) {
     if (!recordingModeEnabled) return;
     let rawStream;
     try {
-      // 改良 1：因材施教的麥克風設定
-      // Android 非常依賴系統原生的 autoGainControl 來提升基礎音量，否則收音極小。
-      // iOS 則關閉原生 AGC，完全依賴我們後續的手動放大，效果較好。
+      // 改良 1：因材施教的麥克風設定 (終極版)
+      // iOS: 原生硬體處理優秀，開啟降噪，關閉 AGC 交由我們自己放大。
+      // Android: 原生降噪會像「噪音閘門」吃掉開頭的聲音並壓低音量，必須關閉。保留 AGC 提升基礎音量。
       rawStream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
+          echoCancellation: IS_IOS ? true : false,
+          noiseSuppression: IS_IOS ? true : false,
           autoGainControl: IS_IOS ? false : true 
         }
       });
