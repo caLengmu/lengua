@@ -123,14 +123,18 @@
   #btn-start:hover { background-color: #145f3b; }
 
   /* ---------- Now Reading header ---------- */
-  .playback-header {
-    display: flex;
-    justify-content: space-between;
+    .playback-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 6px;
   }
+  .playback-header select { justify-self: start; }
+  .playback-header h2 { justify-self: center; text-align: center; }
+  .playback-header .icon-btn { justify-self: end; }
   #playback-speed { flex: 0 1 80px; min-width: 70px; }
+  .counter-row { text-align: center; margin-bottom: 14px; }
   .sentence-counter {
     display: inline-block;
     background: #ff9f1c;
@@ -178,7 +182,7 @@
   }
 
   .playback-display .line { font-size: 21px; line-height: 1.5; word-break: break-word; }
-  .playback-display .line.next-line { opacity: 0.4; font-size: 19px; }
+    .playback-display .line.next-line { color: #6b6b6b; font-size: 19px; }
 
   .playback-display .word {
     border-radius: 4px;
@@ -230,13 +234,14 @@
   .nav-row.visible { display: flex; }
 
   /* ---------- recording panel: visually boxed off ---------- */
-  #record-panel {
+    #record-panel {
     display: none;
     margin-top: 16px;
-    padding: 16px;
+    padding: 16px 16px 8px;
     border: 2px dashed #f3b23c;
     background: #fff8ec;
     border-radius: 14px;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
   }
   #record-panel.visible { display: block; }
 
@@ -369,11 +374,11 @@
     100% { box-shadow: 0 0 0 0 rgba(214, 69, 69, 0); }
   }
 
-    .record-status {
+      .record-status {
     font-size: 13px;
     color: #d64545;
-    margin: 8px 0 0;
-    min-height: 16px;
+    margin: 4px 0 0;
+    min-height: 14px;
     font-weight: 600;
   }
 
@@ -436,7 +441,7 @@
 
   <!-- ============ PLAYBACK ("Now Reading") ============ -->
   <div id="playback-view" class="view">
-    <div class="playback-header">
+        <div class="playback-header">
       <select id="playback-speed">
         <option value="1">1x</option>
         <option value="0.85">0.85x</option>
@@ -444,10 +449,11 @@
         <option value="1.2">1.2x</option>
         <option value="1.5">1.5x</option>
       </select>
-      <h2 style="margin:0; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
-        📖 Now Reading <span id="sentence-counter" class="sentence-counter">1 of 1</span>
-      </h2>
+      <h2 style="margin:0;">📖 Now Reading</h2>
       <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
+    </div>
+    <div class="counter-row">
+      <span id="sentence-counter" class="sentence-counter">1 of 1</span>
     </div>
 
     <div class="playback-display-wrapper">
@@ -505,7 +511,6 @@
       </div>
     </div>
 
-    <div class="hint">Previous / Next / Recording appear while paused or stopped</div>
     <audio id="my-recording-audio" style="display:none"></audio>
   </div>
 
