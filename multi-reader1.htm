@@ -123,14 +123,22 @@
   #btn-start:hover { background-color: #145f3b; }
 
   /* ---------- Now Reading header ---------- */
-  .playback-header {
-    display: flex;
-    justify-content: space-between;
+    .playback-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 0px;
   }
+  .playback-header select { justify-self: start; }
+  .playback-header h2 { justify-self: center; text-align: center; }
+  .playback-header .icon-btn { justify-self: end; }
   #playback-speed { flex: 0 1 80px; min-width: 70px; }
+  .counter-row { 
+    text-align: center; 
+    margin-top: -4px; 
+    margin-bottom: 14px; 
+  }
   .sentence-counter {
     display: inline-block;
     background: #ff9f1c;
@@ -161,6 +169,8 @@
   .icon-btn:hover { background-color: #dcebf5; }
 
   /* ---------- playback screen ---------- */
+  .playback-display-wrapper { position: relative; }
+
   .playback-display {
     text-align: left;
     border: 2px solid #c5dfee;
@@ -176,7 +186,7 @@
   }
 
   .playback-display .line { font-size: 21px; line-height: 1.5; word-break: break-word; }
-  .playback-display .line.next-line { opacity: 0.4; font-size: 19px; }
+    .playback-display .line.next-line { color: #6b6b6b; font-size: 19px; }
 
   .playback-display .word {
     border-radius: 4px;
@@ -185,17 +195,57 @@
   }
   .playback-display .word.active-word { background: #ffd166; color: #222; }
 
+  /* Translation toggle: bottom-right corner of the reading box, so it
+     never sits over the text itself (which reads top-down/left-aligned). */
+  .translate-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+    min-width: auto;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 16px;
+    flex: none;
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  .translate-btn:hover { background-color: #dcebf5; }
+  .translate-btn.active { background-color: #2a628f; color: #fff; border-color: #2a628f; }
+
+  .translation-panel {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: #eef8f0;
+    border: 2px dashed #7fbf9a;
+    border-radius: 12px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #2f6b47;
+    text-align: left;
+  }
+  .translation-panel.visible { display: block; }
+  .translation-panel.empty { color: #8fae9c; font-style: italic; }
+
   .nav-row { display: none; margin-top: 12px; }
   .nav-row.visible { display: flex; }
 
   /* ---------- recording panel: visually boxed off ---------- */
-  #record-panel {
+    #record-panel {
     display: none;
     margin-top: 16px;
-    padding: 16px;
+    padding: 16px 16px 8px;
     border: 2px dashed #f3b23c;
     background: #fff8ec;
     border-radius: 14px;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
   }
   #record-panel.visible { display: block; }
 
@@ -259,10 +309,10 @@
 
   #record-controls-wrapper {
     overflow: hidden;
-    max-height: 600px;
+    max-height: 220px;
     opacity: 1;
     margin-top: 12px;
-    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
+    transition: max-height 0.25s ease, opacity 0.25s ease, margin-top 0.25s ease;
   }
 
   /* Dark/disabled state: title row stays visible (so it can be turned
@@ -328,11 +378,11 @@
     100% { box-shadow: 0 0 0 0 rgba(214, 69, 69, 0); }
   }
 
-  .record-status {
+      .record-status {
     font-size: 13px;
     color: #d64545;
-    margin: 8px 0 0;
-    min-height: 16px;
+    margin: 4px 0 0;
+    min-height: 14px;
     font-weight: 600;
   }
 
@@ -342,7 +392,7 @@
     align-items: stretch;
     gap: 6px;
     margin-top: 14px;
-    margin-bottom: -25px;
+    margin-bottom: -14px;
     text-align: left;
   }
   #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
@@ -389,13 +439,19 @@
         <option value="en-US">English</option>
       </select>
       <button id="btn-start">▶️ Start</button>
-      <button id="btn-load-text" class="secondary">📂 Load Text</button>
+      
+      <!-- 將 Load Text 與新的 AI Support 按鈕包在同一個兩欄網格中 -->
+      <div class="paste-clear-row">
+        <button id="btn-load-text" class="secondary">📂 Load Text</button>
+        <button id="btn-ai-support" class="secondary">✨ AI Support</button>
+      </div>
+      
     </div>
   </div>
 
   <!-- ============ PLAYBACK ("Now Reading") ============ -->
   <div id="playback-view" class="view">
-    <div class="playback-header">
+        <div class="playback-header">
       <select id="playback-speed">
         <option value="1">1x</option>
         <option value="0.85">0.85x</option>
@@ -403,13 +459,18 @@
         <option value="1.2">1.2x</option>
         <option value="1.5">1.5x</option>
       </select>
-      <h2 style="margin:0; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
-        📖 Now Reading <span id="sentence-counter" class="sentence-counter">1 of 1</span>
-      </h2>
+      <h2 style="margin:0;">📖 Now Reading</h2>
       <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
     </div>
+    <div class="counter-row">
+      <span id="sentence-counter" class="sentence-counter">1 of 1</span>
+    </div>
 
-    <div id="playback-display" class="playback-display"></div>
+    <div class="playback-display-wrapper">
+      <div id="playback-display" class="playback-display"></div>
+      <button id="btn-toggle-translation" class="translate-btn" title="Show/hide translation">🌐</button>
+    </div>
+    <div id="translation-panel" class="translation-panel"></div>
 
     <div class="btn-row">
       <button id="btn-pause-resume">⏸️ Pause</button>
@@ -440,7 +501,7 @@
           <button id="btn-rec-slot-3" class="slot-btn">🟢 Rec #3</button>
         </div>
 
-        <div id="record-row" class="btn-row" style="margin-top:0;">
+                <div id="record-row" class="btn-row" style="margin-top:0;">
           <button id="btn-record-toggle">🎤 Record</button>
           <button id="btn-play-pause" class="secondary" disabled>▶️ Play</button>
           <button id="btn-delete-recording" class="secondary" disabled>🗑️ Delete</button>
@@ -453,10 +514,10 @@
         </div>
 
         <div id="record-status" class="record-status"></div>
+
       </div>
     </div>
 
-    <div class="hint">Previous / Next / Recording appear while paused or stopped</div>
     <audio id="my-recording-audio" style="display:none"></audio>
   </div>
 
@@ -569,6 +630,7 @@ function releaseWakeLock() {
   const btnClear = document.getElementById('btn-clear');
   const btnStart = document.getElementById('btn-start');
   const btnLoadText = document.getElementById('btn-load-text');
+  const btnAiSupport = document.getElementById('btn-ai-support');
 
   const playbackSpeed = document.getElementById('playback-speed');
   const btnPlaybackClose = document.getElementById('btn-playback-close');
@@ -578,6 +640,9 @@ function releaseWakeLock() {
   const navRow = document.getElementById('nav-row');
   const btnPrev = document.getElementById('btn-prev');
   const btnNext = document.getElementById('btn-next');
+
+  const translatePanel = document.getElementById('translation-panel');
+  const btnToggleTranslation = document.getElementById('btn-toggle-translation');
 
   const recordPanel = document.getElementById('record-panel');
   const recordEnableToggle = document.getElementById('record-enable-toggle');
@@ -589,7 +654,7 @@ function releaseWakeLock() {
   const btnPlayPause = document.getElementById('btn-play-pause');
   const btnDeleteRecording = document.getElementById('btn-delete-recording');
   const recordStatus = document.getElementById('record-status');
-  const myRecordingAudio = document.getElementById('my-recording-audio');
+    const myRecordingAudio = document.getElementById('my-recording-audio');
   const gainSlider = document.getElementById('playback-gain');
   const gainLabel = document.getElementById('gain-label');
   const gainFeedback = document.getElementById('gain-feedback');
@@ -746,6 +811,11 @@ function releaseWakeLock() {
   // The number of sentences is detected automatically from punctuation
   // (Intl.Segmenter), regardless of how the text is broken into lines.
   //
+  // Want per-sentence translations? Put <translation> right after a
+// sentence's ending punctuation, e.g.:
+//   It's a beautiful Sunday morning. <這是個美麗的星期天早晨。>
+// Use angle brackets <> right after the sentence.
+  //
   // Example:
   //   1: { language: 'ja-JP', text: `今日はいい天気ですね。
   //   散歩に行きましょう。
@@ -753,54 +823,13 @@ function releaseWakeLock() {
   // ---------------------------------------------------------------
 
 const SAMPLE_TEXTS = {
-    1: { language: 'en-US', text: `A Quick Trip to the Market
-
-Last Saturday, I got up early and walked to the local market with my friend Matt. We wanted to buy some fresh apples, eggs, and a small bag of nuts. On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” I had heard about it, but I had never been there.
-
-When we arrived at the market, it was already busy. A man was selling red peppers, fresh bread, and black coffee. I picked up a green apple and asked, “How much is it?” The seller said, “Two dollars.” I paid him and put the apple in my bag.
-
-After that, we went to the café. I ordered a hot cup of coffee and a piece of cake. Matt wanted a cold drink, but he accidentally asked for a cup of tea instead. We laughed and shared the cake.
-
-Before we went home, we sat outside and watched people walk past. It was a simple trip, but we had a great time.
+    1: { language: 'en-US', text: `
 ` },
-    2: { language: 'en-US', text: `In the 89th year of the Republic of China (2000), a rising R&B star, Jay Chou, burst onto the scene, sweeping major music awards and standing shoulder to shoulder with another legendary R&B artist, David Tao. Together, they became the two leading singer-songwriters of their time and have dominated the Mandarin music scene ever since. While David Tao's song output gradually declined over the years, Jay Chou maintained his prolific style, even excelling at "creating for dual purposes"—not only releasing albums one after another but also writing songs for other artists. These songs, composed amid his busy schedule, often turned out to be the highlight of those artists' albums. Jay Chou's abundant creative energy is truly astounding.
+    2: { language: 'en-US', text: ` ` },
+    3: { language: 'ja-JP', text: `` },
+    4: { language: 'ja-JP', text: `
 
-In contrast, David Tao benefitted from his privileged background: financial support from a father who was a renowned TV producer and artistic inspiration from a mother who was a celebrated Peking opera singer. Meanwhile, Jay Chou, born and raised in a single-parent family in Taiwan, demonstrated a musical vision no less expansive than David Tao's, despite the latter having grown up in the United States, surrounded by the most diverse musical styles and backed by substantial resources. David Tao had access to a professional-grade recording studio and the means to hire top-tier musicians and arrangers to contribute to his albums. Jay Chou, however, emerged as a once-in-a-century prodigy in the Mandarin music world.
-
-Although some critics have pointed out that many of the instrumentals in Jay Chou's albums are created using a MIDI keyboard rather than live performances by a band, Jay addressed this in an interview, saying, "Because I am Jay Chou." This statement encapsulates the journey of a child from an economically disadvantaged background who relied on his unparalleled creative talent and the most modest of resources to achieve extraordinary results. After all, most people don't have the privilege of David Tao's musical lineage. Jay Chou's rise from humble beginnings undoubtedly resonates more deeply with and inspires the masses.
 ` },
-    3: { language: 'ja-JP', text: `日本のスーパーで「値引きシール」を自動で貼るロボットが登場しました
-日本のスーパーマーケットで、賞味期限が近くなった商品に「割引シール」を貼るロボットが使われ始めました。
-
-割引シールというのは、商品の値段を安くして売るために貼るシールのことです。例えば、「20%引き」や「半額」と書いてあるシールのことですね。半額というのは、元の値段の半分という意味です。
-
-夕方のスーパーでは、まだ売れていないお弁当やパンに、店員が手作業で1枚ずつシールを貼る必要がありました。手作業というのは、機械を使わないで自分の手で仕事をすることです。
-
-しかし、夕方は買い物客が多くて店員も忙しいため、シールを貼る時間が足りなくなることがありました。
-
-そこで、棚にある商品の賞味期限をカメラで確認して、自動でシールを貼るロボットが開発されました。開発するというのは、新しい便利な道具や技術を作り出すことです。
-
-ロボットがこの作業を担当することで、店員はレジの仕事や接客に集中できるようになります。接客というのは、店に来たお客さんの案内やお世話をすることです。
-
-お店の仕事が楽になるだけでなく、食品ロスを減らすことにも繋がると期待されています。
-
-皆さんは、スーパーで買い物をする時に割引シールがついた商品を買うことがありますか？` },
-    4: { language: 'ja-JP', text: `街中を走る「自動運転バス」の実証実験が各地で進んでいます
-日本のいろいろな町や観光地で、「自動運転バス」を走らせる実証実験が行われています。
-
-実証実験というのは、新しい技術を町の中で実際に使ってみて、安全に問題なく動くかどうかを確かめるテストのことです。そして、自動運転というのは、運転手がハンドルを握らなくても、コンピューターやカメラが周りを見て車を動かす技術のことですね。
-
-地方の町では、高齢化が進んでバスの運転手が足りなくなる「人手不足」が問題になっています。地方というのは、東京などの大都市から離れた町や地域のことです。
-
-バスの本数が減ってしまうと、車の運転ができないお年寄りが病院や買い物へ行くのが大変になってしまいます。
-
-そこで、決まったルートを自動でゆっくり走る小さなコミュニティバスのテストが進められています。道路に置かれたセンサーやGPSを使って、安全に止まったり曲がったりする練習を重ねています。
-
-この自動運転バスが完成すれば、誰もがいつでも自由に移動できる町を作ることができます。
-
-お年寄りや子供たちの毎日の暮らしを支える技術として、これからの進化が期待されています。
-
-皆さんは、運転手がいない自動運転の車やバスに乗ってみたいですか？` },
   };
 
   // ---------------------------------------------------------------
@@ -865,11 +894,6 @@ Although some critics have pointed out that many of the instrumentals in Jay Cho
     return statusMap;
   }
 
-  gainSlider.addEventListener('input', () => {
-    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
-    gainFeedback.textContent = '';
-  });
-
   // ---------------------------------------------------------------
   // Home screen: paste / clear / navigate
   // ---------------------------------------------------------------
@@ -924,6 +948,92 @@ function segmentSentences(text, locale) {
   return result;
 }
 
+  // Extract "(translation)" that immediately follows a sentence, before
+  // any sentence-splitting happens — otherwise punctuation inside the
+  // translation (e.g. Chinese 。) would confuse the sentence segmenter
+  // into treating the translation as its own separate "sentence".
+  //
+  // Strategy: pull every (...) out first, replacing it with an invisible
+  // marker glued to the end of the preceding sentence. Segment the now
+  // paren-free text normally. Then, per segmented sentence, look for its
+  // marker and swap it back for the real translation text.
+  function parseTextWithTranslations(text, locale) {
+    const translationsByIndex = [];
+    const markerChar = '\u0001';
+
+    // 1. 從同時支援半形 () 與全形 （） 括號， 換成 將 <> 內的文字暫存
+    const cleaned = text.replace(/<([^<>]+)>/g, (match, inner) => {
+      const idx = translationsByIndex.length;
+      translationsByIndex.push(inner.trim());
+      return `${markerChar}${idx}${markerChar}`;
+    });
+
+    const rawSentences = segmentSentences(cleaned, locale);
+    const sentencesOut = [];
+    const translationsOut = [];
+
+    // 2. 遍歷每個切割出來的句子片段
+    rawSentences.forEach(s => {
+      const markerRegex = new RegExp(`${markerChar}(\\d+)${markerChar}`, 'g');
+      let match;
+      let markersInSegment = [];
+
+      // 取出這個片段包含的所有翻譯標記
+      while ((match = markerRegex.exec(s)) !== null) {
+        markersInSegment.push({
+          idx: parseInt(match[1], 10),
+          indexInString: match.index
+        });
+      }
+
+      // 移除標記，取得乾淨的原文
+      const cleanS = s.replace(new RegExp(`\\s*${markerChar}\\d+${markerChar}\\s*`, 'g'), ' ').trim();
+
+      if (cleanS.length > 0) {
+        // 如果有實際文字，加入結果陣列
+        sentencesOut.push(cleanS);
+        translationsOut.push(''); // 先放入空字串，後面填補
+
+        markersInSegment.forEach(m => {
+          // 判斷標記是否在此片段的句首（前面只有空白）
+          const isAtStart = s.substring(0, m.index).trim().length === 0;
+          
+          if (isAtStart && sentencesOut.length > 1) {
+            // 如果標記在句首，通常是因為斷句時，標點符號把括號擠到了下一句的開頭
+            // 這種情況應該把翻譯「還給」上一句
+            const prevIdx = sentencesOut.length - 2;
+            translationsOut[prevIdx] = translationsOut[prevIdx] 
+              ? translationsOut[prevIdx] + ' ' + translationsByIndex[m.idx] 
+              : translationsByIndex[m.idx];
+          } else {
+            // 否則歸屬於當前這句
+            const currIdx = sentencesOut.length - 1;
+            translationsOut[currIdx] = translationsOut[currIdx] 
+              ? translationsOut[currIdx] + ' ' + translationsByIndex[m.idx] 
+              : translationsByIndex[m.idx];
+          }
+        });
+      } else {
+        // 如果這段「完全沒有原文」，只有翻譯標記（被斷句器孤立）
+        if (sentencesOut.length > 0) {
+          // 把這些孤立的翻譯全部補給上一句
+          markersInSegment.forEach(m => {
+            const prevIdx = sentencesOut.length - 1;
+            translationsOut[prevIdx] = translationsOut[prevIdx] 
+              ? translationsOut[prevIdx] + ' ' + translationsByIndex[m.idx] 
+              : translationsByIndex[m.idx];
+          });
+        } else if (markersInSegment.length > 0) {
+          // 極端情況防呆：文章開頭第一個字就是括號翻譯
+          sentencesOut.push('');
+          translationsOut.push(translationsByIndex[markersInSegment[0].idx]);
+        }
+      }
+    });
+
+    return { sentences: sentencesOut, translations: translationsOut };
+  }
+
   function segmentWords(text, locale) {
     if (window.Intl && Intl.Segmenter) {
       try {
@@ -952,11 +1062,32 @@ function segmentSentences(text, locale) {
   // ---------------------------------------------------------------
 
   let sentences = [];
+  let sentenceTranslations = []; // parallel array to `sentences`; '' = no translation for that sentence
   let currentSentenceIndex = 0;
   let currentOffsetInSentence = 0;
   let isPlaying = false;
   let activeLanguage = 'en-US';
   let activeFullText = '';
+  let translationVisible = false;
+
+  function updateTranslationDisplay() {
+    const text = sentenceTranslations[currentSentenceIndex] || '';
+    btnToggleTranslation.classList.toggle('active', translationVisible);
+    translatePanel.classList.toggle('visible', translationVisible);
+    if (!translationVisible) return;
+    if (text) {
+      translatePanel.classList.remove('empty');
+      translatePanel.textContent = text;
+    } else {
+      translatePanel.classList.add('empty');
+      translatePanel.textContent = '（此句無翻譯）';
+    }
+  }
+
+  btnToggleTranslation.addEventListener('click', () => {
+    translationVisible = !translationVisible;
+    updateTranslationDisplay();
+  });
 
   function renderPlaybackWindow() {
     playbackDisplay.innerHTML = '';
@@ -993,6 +1124,7 @@ function segmentSentences(text, locale) {
     });
 
     updateSentenceCounter();
+    updateTranslationDisplay();
   }
 
   function updateSentenceCounter() {
@@ -1085,6 +1217,7 @@ function segmentSentences(text, locale) {
 
     currentOffsetInSentence = baseOffset;
     isPlaying = true;
+    requestWakeLock(); // 請求螢幕常亮
     synth.speak(utterance);
     startIOSKeepAlive();
     updatePlaybackButtons();
@@ -1096,7 +1229,9 @@ function segmentSentences(text, locale) {
 
     activeLanguage = language || 'en-US';
     activeFullText = trimmed;
-    sentences = segmentSentences(trimmed, activeLanguage);
+    const parsed = parseTextWithTranslations(trimmed, activeLanguage);
+    sentences = parsed.sentences;
+    sentenceTranslations = parsed.translations;
     if (sentences.length === 0) { alert('No readable text found.'); return false; }
 
     resetAllRecordings();
@@ -1104,6 +1239,7 @@ function segmentSentences(text, locale) {
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
     isPlaying = false;
+    translationVisible = false;
     showView('playback-view');
     renderPlaybackWindow();   // show the first sentence, but don't speak yet
     updatePlaybackButtons();  // "Read Aloud" waits for the user to tap it
@@ -1115,15 +1251,7 @@ function segmentSentences(text, locale) {
   const unlockUtterance = new SpeechSynthesisUtterance('');
   unlockUtterance.volume = 0; // 靜音
   synth.speak(unlockUtterance);
-  
-  // 針對 Web Audio API 預先解鎖 (錄音播放會用到)
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-
+    
   enterReaderWithText(homeTextarea.value, homeLanguage.value);
 });
 
@@ -1133,6 +1261,10 @@ function segmentSentences(text, locale) {
   btnLoadText.addEventListener('click', async () => {
     showView('load-text-view');
     await refreshLoadTextProjectButtons();
+  });
+  // 點擊 AI Support 在新分頁開啟 ChatGPT 連結
+  btnAiSupport.addEventListener('click', () => {
+    window.open('https://chatgpt.com/share/6a895871-d8dc-83e8-b76e-0a55c899aae5', '_blank');
   });
   btnLoadTextClose.addEventListener('click', () => showView('home-view'));
 
@@ -1314,6 +1446,7 @@ function segmentSentences(text, locale) {
     if (isRecording) return;
     synth.cancel();
     stopIOSKeepAlive();
+    releaseWakeLock(); // 釋放螢幕常亮
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
@@ -1327,6 +1460,7 @@ function segmentSentences(text, locale) {
     if (isRecording) return;
     synth.cancel();
     stopIOSKeepAlive();
+    releaseWakeLock(); // 釋放螢幕常亮
     isPlaying = false;
     currentSentenceIndex = 0;
     currentOffsetInSentence = 0;
@@ -1388,46 +1522,137 @@ function segmentSentences(text, locale) {
   let recordStartTime = 0;
   let recordTimerInterval = null;
   let currentRecSlot = 1;
-  const sentenceRecordings = {}; // sentenceIndex -> { 1: {blob,url}, 2: {...}, 3: {...} }
+  let sentenceRecordings = {}; // 將 const 改為 let 以便重置
 
-  // Playback of the user's own recording, with real pause/resume
-  let audioCtx = null;
-  let playbackAudioBuffer = null;
-  let playbackKey = null; // "sentenceIdx:slot" the loaded buffer belongs to
-  let playbackSource = null;
-  let playbackOffset = 0; // seconds into the buffer to resume from
-  let playbackStartCtxTime = 0;
-  let isRecPlaying = false;
-
-  function getCurrentSlotRecording() {
-    const forSentence = sentenceRecordings[currentSentenceIndex];
-    return forSentence ? forSentence[currentRecSlot] : undefined;
-  }
-
+  // 新增：清空所有錄音 (修復 Start 崩潰問題)
   function resetAllRecordings() {
-    Object.values(sentenceRecordings).forEach(slots => {
-      Object.values(slots).forEach(r => URL.revokeObjectURL(r.url));
-    });
-    for (const k in sentenceRecordings) delete sentenceRecordings[k];
-    resetPlaybackState();
+    for (const sIdx in sentenceRecordings) {
+      for (const slot in sentenceRecordings[sIdx]) {
+        URL.revokeObjectURL(sentenceRecordings[sIdx][slot].url);
+      }
+    }
+    sentenceRecordings = {};
   }
+
+  // 新增：取得當前選定插槽的錄音 (修復錄音控制無效問題)
+  function getCurrentSlotRecording() {
+    if (!sentenceRecordings[currentSentenceIndex]) return null;
+    return sentenceRecordings[currentSentenceIndex][currentRecSlot] || null;
+  }
+
+    // ---------------------------------------------------------------
+  // 錄音播放：保留原生 <audio> 元素做 play/pause/ended 事件控制
+  // （這是讓 iOS 穩定的關鍵，繼續保留），但把它的輸出「繞道」接進
+  // Web Audio 的音量增益鏈，藉此突破系統音量上限，解決 Android／
+  // 任何裝置錄音音量過小的問題。
+  //
+  // createMediaElementSource() 只能對同一個 <audio> 呼叫一次，所以
+  // 用 ensureAudioGraph() 加上旗標保護，只在第一次按 Play 時建立一次。
+  // ---------------------------------------------------------------
+
+  let audioCtx = null;
+  let mediaElementSource = null;
+  let recordingGainNode = null;
+
+  function ensureAudioGraph() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (!mediaElementSource) {
+      mediaElementSource = audioCtx.createMediaElementSource(myRecordingAudio);
+      recordingGainNode = audioCtx.createGain();
+      recordingGainNode.gain.value = 1;
+
+      // 溫和的語音動態壓縮：拉齊音量但保留子音等發音細節
+      const leveler = audioCtx.createDynamicsCompressor();
+      leveler.threshold.value = -20;
+      leveler.knee.value = 6;
+      leveler.ratio.value = 3;
+      leveler.attack.value = 0.01;
+      leveler.release.value = 0.15;
+
+      // 安全限幅：只在極端峰值時介入，避免削波失真
+      const safetyLimiter = audioCtx.createDynamicsCompressor();
+      safetyLimiter.threshold.value = -1;
+      safetyLimiter.knee.value = 0;
+      safetyLimiter.ratio.value = 20;
+      safetyLimiter.attack.value = 0.002;
+      safetyLimiter.release.value = 0.1;
+
+      mediaElementSource
+        .connect(recordingGainNode)
+        .connect(leveler)
+        .connect(safetyLimiter)
+        .connect(audioCtx.destination);
+    }
+  }
+
+  const TARGET_RMS = 0.1; // 約 -20dBFS，一般對話的響度基準
+
+  function getRMSAmplitude(audioBuffer) {
+    let sumSquares = 0;
+    let count = 0;
+    for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
+      const data = audioBuffer.getChannelData(ch);
+      for (let i = 0; i < data.length; i++) {
+        sumSquares += data[i] * data[i];
+        count++;
+      }
+    }
+    return count > 0 ? Math.sqrt(sumSquares / count) : 0;
+  }
+
+  // 這裡的 decodeAudioData 只是「拿來量測音量」，不是拿來播放，
+  // 所以就算解碼失敗（極少數瀏覽器對某些格式支援不完整），
+  // 也完全不影響 <audio> 元素本身照常播放，只是少了自動正規化。
+  async function computeAndApplyGain(blob) {
+    const userGain = parseFloat(gainSlider.value) || 1;
+    let normalizeGain = 1;
+    try {
+      const arrayBuffer = await blob.arrayBuffer();
+      const decoded = await audioCtx.decodeAudioData(arrayBuffer);
+      const rms = getRMSAmplitude(decoded);
+      normalizeGain = rms > 0.0001 ? Math.min(TARGET_RMS / rms, 20) : 1;
+      gainFeedback.textContent = '';
+    } catch (err) {
+      gainFeedback.textContent = '⚠️ 此錄音無法自動正規化音量，僅套用手動倍率。';
+    }
+    const totalGain = normalizeGain * userGain;
+    recordingGainNode.gain.value = totalGain;
+    const totalGainDb = 20 * Math.log10(totalGain);
+    if (!gainFeedback.textContent) {
+      gainFeedback.textContent = `🎚️ Applied gain: +${totalGainDb.toFixed(1)} dB (normalize + boost)`;
+    }
+  }
+
+  gainSlider.addEventListener('input', () => {
+    gainLabel.textContent = parseFloat(gainSlider.value).toFixed(1) + 'x';
+    // 如果正在播放中，讓新的倍率立刻生效，不用重新按 Play
+    if (recordingGainNode && !myRecordingAudio.paused) {
+      const rec = getCurrentSlotRecording();
+      if (rec) computeAndApplyGain(rec.blob);
+    }
+  });
+
+  // 自動監聽隱藏的 <audio> 標籤事件來切換 Play/Pause 按鈕文字
+  myRecordingAudio.addEventListener('play', updatePlayPauseLabel);
+  myRecordingAudio.addEventListener('pause', updatePlayPauseLabel);
+  myRecordingAudio.addEventListener('ended', () => {
+    myRecordingAudio.currentTime = 0;
+    updatePlayPauseLabel();
+  });
 
   function resetPlaybackState() {
-    if (playbackSource) {
-      playbackSource.onended = null;
-      try { playbackSource.stop(); } catch (e) { /* already stopped */ }
-      playbackSource = null;
+    if (!myRecordingAudio.paused) {
+      myRecordingAudio.pause();
     }
-    isRecPlaying = false;
-    playbackOffset = 0;
-    playbackAudioBuffer = null;
-    playbackKey = null;
+    myRecordingAudio.currentTime = 0;
     gainFeedback.textContent = '';
     updatePlayPauseLabel();
   }
 
   function updatePlayPauseLabel() {
-    btnPlayPause.textContent = isRecPlaying ? '⏸️ Pause' : '▶️ Play';
+    btnPlayPause.textContent = (!myRecordingAudio.paused) ? '⏸️ Pause' : '▶️ Play';
   }
 
   function refreshSlotButtons() {
@@ -1475,15 +1700,10 @@ function segmentSentences(text, locale) {
   btnRecSlot2.addEventListener('click', () => selectRecSlot(2));
   btnRecSlot3.addEventListener('click', () => selectRecSlot(3));
 
-  // Android Chrome and iOS Safari support different recording
-  // containers (Android: webm/opus; iOS Safari: mp4/aac — it doesn't
-  // support webm at all). Asking the browser what it actually supports,
-  // rather than leaving MediaRecorder to guess, cuts down on decode
-  // failures later when we try to play the recording back boosted.
   function pickSupportedMimeType() {
     const candidates = [
-      'audio/mp4',               // iOS Safari
-      'audio/webm;codecs=opus',  // Chrome / Android / desktop
+      'audio/mp4',               // iOS Safari 的首選
+      'audio/webm;codecs=opus',  // Android / Chrome 的首選
       'audio/webm',
       'audio/ogg;codecs=opus'
     ];
@@ -1493,32 +1713,63 @@ function segmentSentences(text, locale) {
 
   async function startRecording() {
     if (!recordingModeEnabled) return;
-    let stream;
+    let rawStream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
+      // 改良 1：因材施教的麥克風設定 (終極版)
+      // iOS: 原生硬體處理優秀，開啟降噪，關閉 AGC 交由我們自己放大。
+      // Android: 原生降噪會像「噪音閘門」吃掉開頭的聲音並壓低音量，必須關閉。保留 AGC 提升基礎音量。
+      rawStream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
+          echoCancellation: IS_IOS ? true : false,
+          noiseSuppression: IS_IOS ? true : false,
+          autoGainControl: IS_IOS ? false : true 
         }
       });
     } catch (err) {
-      alert('Microphone access is needed to record. Please allow microphone permission and try again.');
+      alert('需要麥克風權限才能錄音。請允許權限後重試。');
       return;
     }
 
     resetPlaybackState();
-    mediaStream = stream;
     recordingChunks = [];
     const recordedForSentence = currentSentenceIndex;
     const recordedForSlot = currentRecSlot;
+
+    // 改良 2：針對作業系統分流，徹底解決 Android 延遲與音量不穩問題
+    if (IS_IOS) {
+      // iOS: 因為前面關閉了原生 AGC，所以必須透過 Web Audio API 手動放大音量
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        const source = audioCtx.createMediaStreamSource(rawStream);
+        const gainNode = audioCtx.createGain();
+        
+        gainNode.gain.value = 3.0; // iOS 專屬放大 3 倍
+        
+        const destination = audioCtx.createMediaStreamDestination();
+        source.connect(gainNode);
+        gainNode.connect(destination);
+        
+        mediaStream = destination.stream;
+        mediaStream.rawHardwareStream = rawStream; // 記錄原始串流以便後續徹底關閉
+      } catch (err) {
+        console.warn('iOS 音量放大失敗，退回預設', err);
+        mediaStream = rawStream;
+      }
+    } else {
+      // Android / 電腦版: 原生 AGC (自動增益) 已經足夠強大。
+      // 絕對不要經過 Web Audio API，否則會產生「緩衝延遲 (開頭靜音)」並破壞音量動態！
+      mediaStream = rawStream;
+    }
 
     try {
       const mimeType = pickSupportedMimeType();
       mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
     } catch (err) {
-      alert('Recording is not supported in this browser.');
-      mediaStream.getTracks().forEach(t => t.stop());
+      alert('您的瀏覽器不支援錄音功能。');
+      if (mediaStream && mediaStream.rawHardwareStream) {
+        mediaStream.rawHardwareStream.getTracks().forEach(t => t.stop());
+      }
       mediaStream = null;
       return;
     }
@@ -1537,7 +1788,13 @@ function segmentSentences(text, locale) {
       }
       sentenceRecordings[recordedForSentence][recordedForSlot] = { blob, url };
 
-      mediaStream.getTracks().forEach(t => t.stop());
+      // 確實關閉所有實體與虛擬麥克風軌道
+      if (mediaStream && mediaStream.rawHardwareStream) {
+        mediaStream.rawHardwareStream.getTracks().forEach(t => t.stop());
+      }
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(t => t.stop());
+      }
       mediaStream = null;
       isRecording = false;
       clearInterval(recordTimerInterval);
@@ -1550,7 +1807,7 @@ function segmentSentences(text, locale) {
     isRecording = true;
     recordStartTime = Date.now();
     setControlsDisabledForRecording(true);
-    btnRecordToggle.disabled = false; // stays clickable so it can be stopped
+    btnRecordToggle.disabled = false;
     btnRecordToggle.textContent = '⏹️ Stop';
     btnRecordToggle.classList.add('recording');
 
@@ -1569,139 +1826,54 @@ function segmentSentences(text, locale) {
     else startRecording();
   });
 
-  // A plain <audio> element can't play louder than the phone's normal
-  // media volume, and mobile mic capture is usually much quieter to
-  // begin with (auto-gain targets phone-call loudness, not full-scale).
-  // This is speech, not music, so the processing here is tuned for
-  // pronunciation practice specifically:
-  //   1. RMS (loudness) normalization, not peak — a single click/pop
-  //      in the recording won't throw off the whole calibration the
-  //      way a peak-based measurement would.
-  //   2. A gentle "speech leveler" (mild 3:1 compression, soft knee)
-  //      evens out loudness while preserving consonants and other
-  //      articulation detail — a hard limiter would flatten exactly
-  //      the detail a learner needs to hear to self-correct.
-  //   3. A safety brickwall limiter near true peak, only to stop rare
-  //      transients from digitally clipping — it doesn't touch normal
-  //      speech, it's just a backstop.
-  const TARGET_RMS = 0.1; // ~-20 dBFS, a typical conversational speech level
-
-  function getRMSAmplitude(audioBuffer) {
-    let sumSquares = 0;
-    let count = 0;
-    for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
-      const data = audioBuffer.getChannelData(ch);
-      for (let i = 0; i < data.length; i++) {
-        sumSquares += data[i] * data[i];
-        count++;
-      }
-    }
-    return count > 0 ? Math.sqrt(sumSquares / count) : 0;
-  }
-
-  function buildPlaybackChain(buffer, offsetSeconds) {
-    const userGain = parseFloat(gainSlider.value) || 1;
-    const rms = getRMSAmplitude(buffer);
-    const normalizeGain = rms > 0.0001 ? Math.min(TARGET_RMS / rms, 20) : 1;
-    const totalGain = normalizeGain * userGain;
-
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.value = totalGain;
-
-    // Gentle speech leveler: catches loudness swings without crushing
-    // consonant detail.
-    const leveler = audioCtx.createDynamicsCompressor();
-    leveler.threshold.value = -20;
-    leveler.knee.value = 6;
-    leveler.ratio.value = 3;
-    leveler.attack.value = 0.01;
-    leveler.release.value = 0.15;
-
-    // Safety brickwall: only engages on rare peaks close to full
-    // scale, purely to prevent digital clipping distortion.
-    const safetyLimiter = audioCtx.createDynamicsCompressor();
-    safetyLimiter.threshold.value = -1;
-    safetyLimiter.knee.value = 0;
-    safetyLimiter.ratio.value = 20;
-    safetyLimiter.attack.value = 0.002;
-    safetyLimiter.release.value = 0.1;
-
-    source.connect(gainNode).connect(leveler).connect(safetyLimiter).connect(audioCtx.destination);
-
-    source.onended = () => {
-      if (isRecPlaying) {
-        isRecPlaying = false;
-        playbackOffset = 0;
-        updatePlayPauseLabel();
-      }
-    };
-
-    playbackSource = source;
-    playbackStartCtxTime = audioCtx.currentTime;
-    isRecPlaying = true;
-    source.start(0, offsetSeconds);
-    updatePlayPauseLabel();
-
-    const totalGainDb = 20 * Math.log10(totalGain);
-    gainFeedback.textContent = `🎚️ Applied gain: +${totalGainDb.toFixed(1)} dB (normalize + boost)`;
-  }
-
-  btnPlayPause.addEventListener('click', async () => {
+    btnPlayPause.addEventListener('click', async () => {
     if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
 
-    if (isRecPlaying) {
-      // Pause: remember exactly how far we'd gotten
-      const elapsed = audioCtx.currentTime - playbackStartCtxTime;
-      playbackOffset += elapsed;
-      if (playbackSource) {
-        playbackSource.onended = null;
-        try { playbackSource.stop(); } catch (e) { /* already stopped */ }
-        playbackSource = null;
-      }
-      isRecPlaying = false;
-      updatePlayPauseLabel();
+    if (!myRecordingAudio.paused) {
+      // 如果正在播放中，按下就是暫停
+      myRecordingAudio.pause();
       return;
     }
 
-    const key = `${currentSentenceIndex}:${currentRecSlot}`;
+    ensureAudioGraph();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
 
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') await audioCtx.resume();
-
-      if (playbackKey !== key || !playbackAudioBuffer) {
-        const arrayBuffer = await rec.blob.arrayBuffer();
-        playbackAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-        playbackKey = key;
-        playbackOffset = 0;
-      }
-      if (playbackOffset >= playbackAudioBuffer.duration) playbackOffset = 0;
-
-      buildPlaybackChain(playbackAudioBuffer, playbackOffset);
-    } catch (err) {
-      // Don't fail silently — some browsers can't decode certain
-      // recording formats, which would otherwise look like "the boost
-      // slider just doesn't do anything."
-      gainFeedback.textContent = '⚠️ Volume boost not supported for this recording on this browser — playing at original volume.';
-      myRecordingAudio.src = URL.createObjectURL(rec.blob);
-      myRecordingAudio.play();
+    // 確保 audio 標籤裡的來源是當前選取的錄音檔
+    if (myRecordingAudio.src !== rec.url) {
+      myRecordingAudio.src = rec.url;
+      myRecordingAudio.load();
     }
+
+    await computeAndApplyGain(rec.blob);
+
+    // 執行播放
+    myRecordingAudio.play().catch(err => {
+      console.error('Playback failed:', err);
+      alert('無法播放此錄音檔，請檢查瀏覽器設定。');
+    });
   });
 
   btnDeleteRecording.addEventListener('click', () => {
     if (!recordingModeEnabled) return;
     const rec = getCurrentSlotRecording();
     if (!rec) return;
+    
     URL.revokeObjectURL(rec.url);
     delete sentenceRecordings[currentSentenceIndex][currentRecSlot];
+    
+    // 如果正在刪除的是正在播放的音源，清空播放器
+    if (myRecordingAudio.src === rec.url) {
+      myRecordingAudio.removeAttribute('src');
+      myRecordingAudio.load();
+    }
+    
     resetPlaybackState();
     updateRecordButtons();
   });
+
+  
 </script>
 </body>
 </html>
