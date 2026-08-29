@@ -128,13 +128,17 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 0px;
   }
   .playback-header select { justify-self: start; }
   .playback-header h2 { justify-self: center; text-align: center; }
   .playback-header .icon-btn { justify-self: end; }
   #playback-speed { flex: 0 1 80px; min-width: 70px; }
-  .counter-row { text-align: center; margin-bottom: 14px; }
+  .counter-row { 
+    text-align: center; 
+    margin-top: -4px; 
+    margin-bottom: 14px; 
+  }
   .sentence-counter {
     display: inline-block;
     background: #ff9f1c;
@@ -305,10 +309,10 @@
 
   #record-controls-wrapper {
     overflow: hidden;
-    max-height: 600px;
+    max-height: 220px;
     opacity: 1;
     margin-top: 12px;
-    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
+    transition: max-height 0.25s ease, opacity 0.25s ease, margin-top 0.25s ease;
   }
 
   /* Dark/disabled state: title row stays visible (so it can be turned
@@ -388,7 +392,7 @@
     align-items: stretch;
     gap: 6px;
     margin-top: 14px;
-    margin-bottom: -30px;
+    margin-bottom: -14px;
     text-align: left;
   }
   #volume-row label { font-size: 13px; color: #b3701a; font-weight: 600; }
@@ -435,7 +439,13 @@
         <option value="en-US">English</option>
       </select>
       <button id="btn-start">▶️ Start</button>
-      <button id="btn-load-text" class="secondary">📂 Load Text</button>
+      
+      <!-- 將 Load Text 與新的 AI Support 按鈕包在同一個兩欄網格中 -->
+      <div class="paste-clear-row">
+        <button id="btn-load-text" class="secondary">📂 Load Text</button>
+        <button id="btn-ai-support" class="secondary">✨ AI Support</button>
+      </div>
+      
     </div>
   </div>
 
@@ -505,9 +515,6 @@
 
         <div id="record-status" class="record-status"></div>
 
-        
-
-        <div id="record-status" class="record-status"></div>
       </div>
     </div>
 
@@ -623,6 +630,7 @@ function releaseWakeLock() {
   const btnClear = document.getElementById('btn-clear');
   const btnStart = document.getElementById('btn-start');
   const btnLoadText = document.getElementById('btn-load-text');
+  const btnAiSupport = document.getElementById('btn-ai-support');
 
   const playbackSpeed = document.getElementById('playback-speed');
   const btnPlaybackClose = document.getElementById('btn-playback-close');
@@ -1253,6 +1261,10 @@ function segmentSentences(text, locale) {
   btnLoadText.addEventListener('click', async () => {
     showView('load-text-view');
     await refreshLoadTextProjectButtons();
+  });
+  // 點擊 AI Support 在新分頁開啟 ChatGPT 連結
+  btnAiSupport.addEventListener('click', () => {
+    window.open('https://chatgpt.com/share/6a895871-d8dc-83e8-b76e-0a55c899aae5', '_blank');
   });
   btnLoadTextClose.addEventListener('click', () => showView('home-view'));
 
