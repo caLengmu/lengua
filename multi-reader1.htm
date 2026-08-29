@@ -123,17 +123,16 @@
   #btn-start:hover { background-color: #145f3b; }
 
   /* ---------- Now Reading header ---------- */
-    .playback-header {
+  .playback-header {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 42px 1fr 42px; /* 讓標題完美置中 */
     align-items: center;
     gap: 10px;
     margin-bottom: 0px;
   }
-  .playback-header select { justify-self: start; }
   .playback-header h2 { justify-self: center; text-align: center; }
-  .playback-header .icon-btn { justify-self: end; }
-  #playback-speed { flex: 0 1 80px; min-width: 70px; }
+  .playback-header .icon-btn { justify-self: end; grid-column: 3; }
+  
   .counter-row { 
     text-align: center; 
     margin-top: -4px; 
@@ -169,14 +168,19 @@
   .icon-btn:hover { background-color: #dcebf5; }
 
   /* ---------- playback screen ---------- */
-  .playback-display-wrapper { position: relative; }
+  .playback-display-wrapper { 
+    display: flex; 
+    align-items: stretch; 
+    gap: 10px; 
+  }
 
   .playback-display {
+    flex: 1; /* 佔滿剩下的空間 */
     text-align: left;
     border: 2px solid #c5dfee;
     border-radius: 16px;
     padding: 20px;
-    margin: 4px 0 6px;
+    margin: 0;
     min-height: 140px;
     background: #fbfdff;
     display: flex;
@@ -186,7 +190,7 @@
   }
 
   .playback-display .line { font-size: 21px; line-height: 1.5; word-break: break-word; }
-    .playback-display .line.next-line { color: #6b6b6b; font-size: 19px; }
+  .playback-display .line.next-line { color: #6b6b6b; font-size: 19px; }
 
   .playback-display .word {
     border-radius: 4px;
@@ -195,29 +199,22 @@
   }
   .playback-display .word.active-word { background: #ffd166; color: #222; }
 
-  /* Translation toggle: bottom-right corner of the reading box, so it
-     never sits over the text itself (which reads top-down/left-aligned). */
-  .translate-btn {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    width: 34px;
-    height: 34px;
-    min-width: auto;
-    padding: 0;
-    border-radius: 50%;
-    font-size: 16px;
-    flex: none;
-    background-color: #eef5fa;
-    color: #2a628f;
-    border: 2px solid #c5dfee;
+  /* 上下句按鈕 (移到右側) */
+  .vertical-nav {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 10px;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   }
-  .translate-btn:hover { background-color: #dcebf5; }
-  .translate-btn.active { background-color: #2a628f; color: #fff; border-color: #2a628f; }
+  .vertical-nav button {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    padding: 0;
+    font-size: 20px;
+    border-radius: 12px;
+  }
 
   .translation-panel {
     display: none;
@@ -234,8 +231,49 @@
   .translation-panel.visible { display: block; }
   .translation-panel.empty { color: #8fae9c; font-style: italic; }
 
-  .nav-row { display: none; margin-top: 12px; }
-  .nav-row.visible { display: flex; }
+  /* 語速與翻譯按鈕列 */
+  .speed-translate-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 0 4px;
+  }
+  .speed-control-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    text-align: left;
+  }
+  .speed-control-group label {
+    font-size: 13px; color: #2a628f; font-weight: 700;
+  }
+  .speed-control-group input[type="range"] {
+    width: 100%; accent-color: #2a628f; padding: 0; background: transparent;
+  }
+
+  .translate-btn {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    padding: 0;
+    border-radius: 12px;
+    font-size: 20px;
+    flex: none;
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .translate-btn:hover { background-color: #dcebf5; }
+  .translate-btn.active { background-color: #2a628f; color: #fff; border-color: #2a628f; }
+
+  /* 原本的 nav-row 已不需要 */
+  .nav-row { display: none; }
 
   /* ---------- recording panel: visually boxed off ---------- */
     #record-panel {
@@ -452,34 +490,39 @@
   <!-- ============ PLAYBACK ("Now Reading") ============ -->
   <div id="playback-view" class="view">
         <div class="playback-header">
-      <select id="playback-speed">
-        <option value="1">1x</option>
-        <option value="0.85">0.85x</option>
-        <option value="0.7">0.7x</option>
-        <option value="1.2">1.2x</option>
-        <option value="1.5">1.5x</option>
-      </select>
+      <div></div> <!-- 空白佔位，用來把標題擠到正中間 -->
       <h2 style="margin:0;">📖 Now Reading</h2>
       <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
     </div>
+    
     <div class="counter-row">
       <span id="sentence-counter" class="sentence-counter">1 of 1</span>
     </div>
 
     <div class="playback-display-wrapper">
       <div id="playback-display" class="playback-display"></div>
+      
+      <!-- 上下句按鈕移到這裡 (右側) -->
+      <div class="vertical-nav">
+        <button id="btn-prev" class="secondary" title="Previous">⬆️</button>
+        <button id="btn-next" class="secondary" title="Next">⬇️</button>
+      </div>
+    </div>
+    
+    <div id="translation-panel" class="translation-panel"></div>
+
+    <!-- 語速進度條 與 翻譯按鈕 -->
+    <div class="speed-translate-row">
+      <div class="speed-control-group">
+        <label for="playback-speed">⏱️ Speed: <span id="speed-label">1.0x</span></label>
+        <input type="range" id="playback-speed" min="0.5" max="1.5" step="0.05" value="1.0">
+      </div>
       <button id="btn-toggle-translation" class="translate-btn" title="Show/hide translation">🌐</button>
     </div>
-    <div id="translation-panel" class="translation-panel"></div>
 
     <div class="btn-row">
       <button id="btn-pause-resume">⏸️ Pause</button>
       <button id="btn-stop" class="secondary">🔄 Start Over</button>
-    </div>
-
-    <div id="nav-row" class="btn-row nav-row">
-      <button id="btn-prev" class="secondary">⏮️ Previous</button>
-      <button id="btn-next" class="secondary">⏭️ Next</button>
     </div>
 
     <!-- Real audio recording (MediaRecorder), Anki-card style: record your
@@ -633,13 +676,18 @@ function releaseWakeLock() {
   const btnAiSupport = document.getElementById('btn-ai-support');
 
   const playbackSpeed = document.getElementById('playback-speed');
+  const speedLabel = document.getElementById('speed-label'); // 新增語速文字標籤
   const btnPlaybackClose = document.getElementById('btn-playback-close');
   const playbackDisplay = document.getElementById('playback-display');
   const btnPauseResume = document.getElementById('btn-pause-resume');
   const btnStop = document.getElementById('btn-stop');
-  const navRow = document.getElementById('nav-row');
   const btnPrev = document.getElementById('btn-prev');
   const btnNext = document.getElementById('btn-next');
+
+  // 監聽語速進度條變化，即時更新文字顯示
+  playbackSpeed.addEventListener('input', () => {
+    speedLabel.textContent = parseFloat(playbackSpeed.value).toFixed(2) + 'x';
+  });
 
   const translatePanel = document.getElementById('translation-panel');
   const btnToggleTranslation = document.getElementById('btn-toggle-translation');
@@ -823,7 +871,23 @@ function releaseWakeLock() {
   // ---------------------------------------------------------------
 
 const SAMPLE_TEXTS = {
-    1: { language: 'en-US', text: `
+    1: { language: 'en-US', text: `A Quick Trip to the Market <快速逛一趟市場>
+Last Saturday, I got up early and walked to the local market with my friend Matt. <上週六，我早早起床，和我的朋友 Matt 一起走路去附近的市場。>
+We wanted to buy some fresh apples, eggs, and a small bag of nuts. <我們想買一些新鮮的蘋果、雞蛋，以及一小袋堅果。>
+On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” <在路上，Matt 說：「你有聽說寵物店旁邊新開了一家咖啡廳嗎？」>
+I had heard about it, but I had never been there. <我有聽說過，但我從來沒去過那裡。>
+When we arrived at the market, it was already busy. <當我們抵達市場時，那裡已經很熱鬧了。>
+A man was selling red peppers, fresh bread, and black coffee. <一名男子正在販售紅椒、新鮮麵包和黑咖啡。>
+I picked up a green apple and asked, “How much is it?” <我拿起一顆青蘋果，問道：「這個多少錢？」>
+The seller said, “Two dollars.” <賣家說：「兩美元。」>
+I paid him and put the apple in my bag. <我付了錢給他，然後把蘋果放進我的袋子裡。>
+After that, we went to the café. <之後，我們去了那家咖啡廳。>
+I ordered a hot cup of coffee and a piece of cake. <我點了一杯熱咖啡和一塊蛋糕。>
+Matt wanted a cold drink, but he accidentally asked for a cup of tea instead. <Matt 想要一杯冷飲，但他不小心反而點了一杯茶。>
+We laughed and shared the cake. <我們笑了笑，並一起分著吃那塊蛋糕。>
+Before we went home, we sat outside and watched people walk past. <在回家之前，我們坐在外面，看著人們從身旁走過。>
+It was a simple trip, but we had a great time. <這是一趟簡單的出門行程，但我們度過了非常愉快的時光。>
+
 ` },
     2: { language: 'en-US', text: ` ` },
     3: { language: 'ja-JP', text: `` },
@@ -1150,7 +1214,7 @@ function segmentSentences(text, locale) {
   function updatePlaybackButtons() {
     btnPauseResume.textContent = isPlaying ? '⏸️ Pause' : '▶️ Read Aloud';
     const paused = !isPlaying;
-    navRow.classList.toggle('visible', paused);
+    // (移除了舊的 navRow 控制，因為按鈕已經固定在右側了)
     recordPanel.classList.toggle('visible', paused);
     btnPrev.disabled = currentSentenceIndex <= 0;
     btnNext.disabled = currentSentenceIndex >= sentences.length - 1;
@@ -1438,7 +1502,9 @@ function segmentSentences(text, locale) {
     } else {
       if (isRecording) return; // don't resume mid-recording
       resetPlaybackState();
-      playFromSentence(currentSentenceIndex, currentOffsetInSentence);
+      // 將字元偏移量強制歸零，確保永遠從「這句話的第一個字」開始唸
+      currentOffsetInSentence = 0; 
+      playFromSentence(currentSentenceIndex, 0);
     }
   });
 
