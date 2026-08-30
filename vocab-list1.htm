@@ -4322,8 +4322,8 @@ initDB().catch(error => {
             const examEl = document.getElementById('examCountdownDisplay');
             if (examEl) {
                 const examText = examDiffDays >= 0 
-                    ? `⏰ <span class="countdown-highlight">${examDiffDays}</span> days until 段考 (October 14, 2026)`
-                    : `⏰ 段考已結束`;
+                    ? `⏰ <span class="countdown-highlight">${examDiffDays}</span> days until 一段 (10/14)`
+                    : `⏰ 一段已結束`;
                 examEl.innerHTML = examText;
             }
 
@@ -4335,8 +4335,8 @@ initDB().catch(error => {
             const gsatEl = document.getElementById('gsatCountdownDisplay');
             if (gsatEl) {
                 const gsatText = gsatDiffDays >= 0 
-                    ? `📚 <span class="countdown-highlight">${gsatDiffDays}</span> days until 116年學測 (January 22, 2027)`
-                    : `📚 116年學測已結束`;
+                    ? `📚 <span class="countdown-highlight">${gsatDiffDays}</span> days until 116學測 (1/22)`
+                    : `📚 116學測已結束`;
                 gsatEl.innerHTML = gsatText;
             }
         }
