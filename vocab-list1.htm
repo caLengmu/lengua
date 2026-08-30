@@ -207,7 +207,7 @@
 /* Floating Navigation Buttons */
 .floating-nav-buttons {
     position: fixed;
-    bottom: 30px;
+    bottom: 95px; /* 上移避開底部進度條 (原為 30px) */
     right: 30px;
     display: flex;
     flex-direction: column;
@@ -275,8 +275,8 @@
     }
 
     .floating-nav-buttons {
-        bottom: 20px;
-        right: 20px;
+        bottom: 85px; /* 手機版同步上移避開進度條 (原為 20px) */
+        right: 15px;
         gap: 8px;
     }
     
@@ -1491,7 +1491,7 @@
             <div id="gsatCountdownDisplay">📚 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v6.06)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v6.08)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -2883,26 +2883,36 @@ function getRandomEmoji() {
                 return;
             }
 
-            // 檢查最下方統計區塊是否出現在可視範圍內
+            const windowHeight = window.innerHeight;
+
+            // 1. 檢查第一個單字是否進入可視範圍
+            const firstRow = rows[0];
+            let isFirstVocabReached = false;
+            if (firstRow) {
+                const firstRect = firstRow.getBoundingClientRect();
+                if (firstRect.top < windowHeight) {
+                    isFirstVocabReached = true;
+                }
+            }
+
+            // 2. 檢查最下方統計區塊是否出現在可視範圍內
             let isStatsVisible = false;
             if (statsContainer) {
                 const statsRect = statsContainer.getBoundingClientRect();
-                if (statsRect.top < window.innerHeight && statsRect.bottom > 0) {
+                if (statsRect.top < windowHeight && statsRect.bottom > 0) {
                     isStatsVisible = true;
                 }
             }
 
-            // 出現統計區塊時自動隱藏進度條，否則正常顯示
-            if (isStatsVisible) {
+            // 只有在第一個單字已進入畫面且統計區塊未出現時才顯示進度條
+            if (!isFirstVocabReached || isStatsVisible) {
                 if (barContainer) barContainer.style.display = 'none';
                 return;
             } else {
                 if (barContainer) barContainer.style.display = 'flex';
             }
 
-            const windowHeight = window.innerHeight;
             let viewedCount = 0;
-
             rows.forEach(row => {
                 const rect = row.getBoundingClientRect();
                 if (rect.top <= windowHeight) {
@@ -3825,19 +3835,27 @@ function attachBubbleEventListeners() {
     updateStudySession();
 }
 
-// Show/hide floating navigation buttons based on scroll position and footer visibility
+// Show/hide floating navigation buttons based on first vocab visibility and footer visibility
 function handleFloatingButtons() {
     const backToTopBtn = document.getElementById('backToTopBtn');
     const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
     const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
-    const buttonCategories = document.querySelector('.button-categories');
     const statsContainer = document.getElementById('visitStatsContainer');
+    const firstVocabRow = document.querySelector('.vocab-row');
     
-    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
+    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn) return;
     
-    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
-    
-    // 檢查最下方統計區塊是否已出現在視窗中
+    // 1. 檢查第一個單字列是否已進入視窗可視範圍
+    let isFirstVocabReached = false;
+    if (firstVocabRow) {
+        const firstRect = firstVocabRow.getBoundingClientRect();
+        // 當第一個單字列頂部進入螢幕下緣時為 true
+        if (firstRect.top < window.innerHeight) {
+            isFirstVocabReached = true;
+        }
+    }
+
+    // 2. 檢查最下方統計區塊是否出現在視窗中
     let isStatsVisible = false;
     if (statsContainer) {
         const statsRect = statsContainer.getBoundingClientRect();
@@ -3846,8 +3864,8 @@ function handleFloatingButtons() {
         }
     }
 
-    // 只有在滾動超過選單且統計區塊尚未出現時顯示按鈕
-    if (window.scrollY > buttonCategoriesBottom + 100 && !isStatsVisible) {
+    // 只有在第一個單字已進入畫面且統計區塊尚未出現時顯示按鈕
+    if (isFirstVocabReached && !isStatsVisible) {
         backToTopBtn.classList.add('show');
         floatingPrevSectionBtn.classList.add('show');
         floatingNextSectionBtn.classList.add('show');
