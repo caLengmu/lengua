@@ -28,6 +28,26 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+/* Top Countdown Banner */
+        .countdown-banner {
+            background-color: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c3e50;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .countdown-highlight {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
         h1 {
             text-align: center;
             margin-bottom: 30px;
@@ -139,10 +159,55 @@
             background-color: #f0f0f0;
         }
 
+/* Sticky Learning Progress Bar (Enhanced Yellow Floating Style) */
+.bottom-progress-container {
+    position: fixed;
+    bottom: 20px; /* 底部留白 20px 營造懸浮質感 */
+    left: 50%;
+    transform: translateX(-50%); /* 水平居中 */
+    width: 90%;
+    max-width: 620px;
+    background-color: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    border: 2px solid #ffc107; /* Listening Quiz 同款黃色邊框 */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 12px 20px;
+    z-index: 999;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.progress-text-row {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.progress-track {
+    width: 100%;
+    height: 18px; /* 加粗進度條高度 (原為 10px) */
+    background-color: #e9ecef;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #ffc107; /* Listening Quiz 同款亮黃色 */
+    border-radius: 9px;
+    transition: width 0.2s ease;
+}
+
 /* Floating Navigation Buttons */
 .floating-nav-buttons {
     position: fixed;
-    bottom: 30px;
+    bottom: 95px; /* 上移避開底部進度條 (原為 30px) */
     right: 30px;
     display: flex;
     flex-direction: column;
@@ -210,8 +275,8 @@
     }
 
     .floating-nav-buttons {
-        bottom: 20px;
-        right: 20px;
+        bottom: 85px; /* 手機版同步上移避開進度條 (原為 20px) */
+        right: 15px;
         gap: 8px;
     }
     
@@ -1401,6 +1466,16 @@
     </style>
 </head>
 <body>
+    <!-- Bottom Sticky Learning Progress Bar -->
+    <div class="bottom-progress-container" id="bottomProgressBar">
+        <div class="progress-text-row">
+            📖 學習進度：<span id="vocabProgressText">0 of 0 (0%)</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="vocabProgressFill"></div>
+        </div>
+    </div>
+
     <!-- Floating Navigation Buttons -->
     <div class="floating-nav-buttons">
         <button class="floating-nav-btn" id="backToTopBtn" title="Back to lesson buttons">🔝</button>
@@ -1409,7 +1484,14 @@
     </div>
     
     <div class="container">
-        <h1>📃 Vocabulary List for Grade 12<br>(v6.03)</h1>
+        <!-- Top Countdown Banner -->
+        <div class="countdown-banner" id="countdownBanner">
+            <div id="currentDateDisplay">🗓️ Loading date...</div>
+            <div id="examCountdownDisplay">⏰ Loading exam countdown...</div>
+            <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
+        </div>
+
+        <h1>📃 Vocabulary List for Grade 12<br>(v6.08)</h1>
 
         <div class="button-categories">
             <div class="category">
@@ -2787,68 +2869,130 @@ function getRandomEmoji() {
             currentSpeech = null;
         }
 
+        // Update Bottom Sticky Progress Bar
+        function updateLearningProgress() {
+            const rows = document.querySelectorAll('.vocab-row');
+            const barContainer = document.getElementById('bottomProgressBar');
+            const textEl = document.getElementById('vocabProgressText');
+            const fillEl = document.getElementById('vocabProgressFill');
+            const statsContainer = document.getElementById('visitStatsContainer');
+
+            const total = rows.length;
+            if (total === 0) {
+                if (barContainer) barContainer.style.display = 'none';
+                return;
+            }
+
+            const windowHeight = window.innerHeight;
+
+            // 1. 檢查第一個單字是否進入可視範圍
+            const firstRow = rows[0];
+            let isFirstVocabReached = false;
+            if (firstRow) {
+                const firstRect = firstRow.getBoundingClientRect();
+                if (firstRect.top < windowHeight) {
+                    isFirstVocabReached = true;
+                }
+            }
+
+            // 2. 檢查最下方統計區塊是否出現在可視範圍內
+            let isStatsVisible = false;
+            if (statsContainer) {
+                const statsRect = statsContainer.getBoundingClientRect();
+                if (statsRect.top < windowHeight && statsRect.bottom > 0) {
+                    isStatsVisible = true;
+                }
+            }
+
+            // 只有在第一個單字已進入畫面且統計區塊未出現時才顯示進度條
+            if (!isFirstVocabReached || isStatsVisible) {
+                if (barContainer) barContainer.style.display = 'none';
+                return;
+            } else {
+                if (barContainer) barContainer.style.display = 'flex';
+            }
+
+            let viewedCount = 0;
+            rows.forEach(row => {
+                const rect = row.getBoundingClientRect();
+                if (rect.top <= windowHeight) {
+                    viewedCount++;
+                }
+            });
+
+            const percentage = total > 0 ? Math.round((viewedCount / total) * 100) : 0;
+            if (textEl) textEl.textContent = `${viewedCount} of ${total} (${percentage}%)`;
+            if (fillEl) fillEl.style.width = `${percentage}%`;
+        }
+
         // Load vocabulary with checkboxes
         async function loadVocabulary(lessonKey) {
-    const tableBody = document.getElementById('vocabTableBody');
-    const data = vocabDatabase[lessonKey];
+            const tableBody = document.getElementById('vocabTableBody');
+            const data = vocabDatabase[lessonKey];
 
-    if (!data || data.length === 0) {
-        tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. <br>(暫無資料，請等待更新)</td></tr>';
-        document.getElementById('overallVocabSection').style.display = 'none';
-        
-        // Scroll to show the "No data" message
-        setTimeout(() => {
-            const vocabTable = document.getElementById('vocabTable');
-            if (vocabTable) {
-                vocabTable.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr class="no-data"><td colspan="2">No data available. Please wait for updates. <br>(暫無資料，請等待更新)</td></tr>';
+                document.getElementById('overallVocabSection').style.display = 'none';
+                
+                const barContainer = document.getElementById('bottomProgressBar');
+                if (barContainer) barContainer.style.display = 'none';
+
+                // Scroll to show the "No data" message
+                setTimeout(() => {
+                    const vocabTable = document.getElementById('vocabTable');
+                    if (vocabTable) {
+                        vocabTable.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                }, 50);
+                
+                return;
             }
-        }, 50);
-        
-        return;
-    }
 
-    // Load saved checked state
-    const savedCheckedWords = await loadCheckedWords(lessonKey);
+            // Load saved checked state
+            const savedCheckedWords = await loadCheckedWords(lessonKey);
 
-    // Clear checked sections when loading new lesson
-    checkedSections.clear();
+            // Clear checked sections when loading new lesson
+            checkedSections.clear();
 
-    let html = '';
-    data.forEach((section, sectionIndex) => {
-        html += `<tr>
-            <td colspan="2" class="section-header">${section.section}</td>
-        </tr>`;
-        
-        section.words.forEach((item, wordIndex) => {
-            // Check if this word is checked (default true if no saved state)
-            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-            
-            // Only show checked words
-            if (isChecked) {
-                const fullText = `${item.word}. ${item.example}`;
-                html += `<tr class="vocab-row">
-                    <td class="audio-controls">
-                        <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-                    </td>
-                    <td class="content-cell">
-                        <div class="vocab-word">${item.word}</div>
-                        <div class="example-sentence">${item.example}</div>
-                    </td>
+            let html = '';
+            data.forEach((section, sectionIndex) => {
+                html += `<tr>
+                    <td colspan="2" class="section-header">${section.section}</td>
                 </tr>`;
-            }
-        });
-    });
+                
+                section.words.forEach((item, wordIndex) => {
+                    // Check if this word is checked (default true if no saved state)
+                    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+                    
+                    // Only show checked words
+                    if (isChecked) {
+                        const fullText = `${item.word}. ${item.example}`;
+                        html += `<tr class="vocab-row">
+                            <td class="audio-controls">
+                                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                                <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
+                            </td>
+                            <td class="content-cell">
+                                <div class="vocab-word">${item.word}</div>
+                                <div class="example-sentence">${item.example}</div>
+                            </td>
+                        </tr>`;
+                    }
+                });
+            });
 
-    tableBody.innerHTML = html;
+            tableBody.innerHTML = html;
 
-    // Show section selector and Overall Vocabulary button
-    showSectionSelector(data, lessonKey, savedCheckedWords);
-    document.getElementById('overallVocabSection').style.display = 'block';
-}
+            // Show section selector and Overall Vocabulary button
+            showSectionSelector(data, lessonKey, savedCheckedWords);
+            document.getElementById('overallVocabSection').style.display = 'block';
+
+            // 即時計算載入後的進度條狀態
+            updateLearningProgress();
+        }
 
         // Flatten lesson data
         async function flattenLessonData(lessonData) {
@@ -3691,19 +3835,37 @@ function attachBubbleEventListeners() {
     updateStudySession();
 }
 
-// Show/hide floating navigation buttons based on scroll position
+// Show/hide floating navigation buttons based on first vocab visibility and footer visibility
 function handleFloatingButtons() {
     const backToTopBtn = document.getElementById('backToTopBtn');
     const floatingPrevSectionBtn = document.getElementById('floatingPrevSectionBtn');
     const floatingNextSectionBtn = document.getElementById('floatingNextSectionBtn');
-    const buttonCategories = document.querySelector('.button-categories');
+    const statsContainer = document.getElementById('visitStatsContainer');
+    const firstVocabRow = document.querySelector('.vocab-row');
     
-    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn || !buttonCategories) return;
+    if (!backToTopBtn || !floatingPrevSectionBtn || !floatingNextSectionBtn) return;
     
-    const buttonCategoriesBottom = buttonCategories.offsetTop + buttonCategories.offsetHeight;
-    
-    // Show buttons when scrolled past the lesson buttons
-    if (window.scrollY > buttonCategoriesBottom + 100) {
+    // 1. 檢查第一個單字列是否已進入視窗可視範圍
+    let isFirstVocabReached = false;
+    if (firstVocabRow) {
+        const firstRect = firstVocabRow.getBoundingClientRect();
+        // 當第一個單字列頂部進入螢幕下緣時為 true
+        if (firstRect.top < window.innerHeight) {
+            isFirstVocabReached = true;
+        }
+    }
+
+    // 2. 檢查最下方統計區塊是否出現在視窗中
+    let isStatsVisible = false;
+    if (statsContainer) {
+        const statsRect = statsContainer.getBoundingClientRect();
+        if (statsRect.top < window.innerHeight && statsRect.bottom > 0) {
+            isStatsVisible = true;
+        }
+    }
+
+    // 只有在第一個單字已進入畫面且統計區塊尚未出現時顯示按鈕
+    if (isFirstVocabReached && !isStatsVisible) {
         backToTopBtn.classList.add('show');
         floatingPrevSectionBtn.classList.add('show');
         floatingNextSectionBtn.classList.add('show');
@@ -4177,6 +4339,10 @@ initDB().catch(error => {
             
             // Initial check for floating buttons
             handleFloatingButtons();
+
+            // 滾動與縮放視窗時即時更新進度條
+            window.addEventListener('scroll', updateLearningProgress);
+            window.addEventListener('resize', updateLearningProgress);
         }
 
         // Handle keyboard navigation
@@ -4274,18 +4440,59 @@ initDB().catch(error => {
             }
         }
 
+        // Countdown Calculation Function
+        function updateCountdowns() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 1. Current Date Display
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString('en-US', dateOptions);
+            const dateEl = document.getElementById('currentDateDisplay');
+            if (dateEl) {
+                dateEl.innerHTML = `🗓️ <strong>${formattedDate}</strong>`;
+            }
+
+            // 2. Midterm Exam Countdown (October 14, 2026)
+            const examTarget = new Date(2026, 9, 14); // 9 is October (0-indexed)
+            examTarget.setHours(0, 0, 0, 0);
+            const examDiffTime = examTarget - today;
+            const examDiffDays = Math.ceil(examDiffTime / (1000 * 60 * 60 * 24));
+            const examEl = document.getElementById('examCountdownDisplay');
+            if (examEl) {
+                const examText = examDiffDays >= 0 
+                    ? `⏰ <span class="countdown-highlight">${examDiffDays}</span> days until 一段 (10/14)`
+                    : `⏰ 一段已結束`;
+                examEl.innerHTML = examText;
+            }
+
+            // 3. GSAT Countdown (January 22, 2027)
+            const gsatTarget = new Date(2027, 0, 22); // 0 is January (0-indexed)
+            gsatTarget.setHours(0, 0, 0, 0);
+            const gsatDiffTime = gsatTarget - today;
+            const gsatDiffDays = Math.ceil(gsatDiffTime / (1000 * 60 * 60 * 24));
+            const gsatEl = document.getElementById('gsatCountdownDisplay');
+            if (gsatEl) {
+                const gsatText = gsatDiffDays >= 0 
+                    ? `🎯 <span class="countdown-highlight">${gsatDiffDays}</span> days until 116學測 (1/22)`
+                    : `🎯 116學測已結束`;
+                gsatEl.innerHTML = gsatText;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await initDB();
-        initializeEventListeners();
-        // 等待一小段時間確保 DB 完全初始化
-        setTimeout(async () => {
-            await displayVisitStats();
-        }, 100);
-    } catch (error) {
-        console.error('Initialization error:', error);
-    }
-});
+            try {
+                updateCountdowns();
+                await initDB();
+                initializeEventListeners();
+                // 等待一小段時間確保 DB 完全初始化
+                setTimeout(async () => {
+                    await displayVisitStats();
+                }, 100);
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        });
 
     </script>
 <!-- Visit Statistics Section -->
