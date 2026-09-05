@@ -172,36 +172,57 @@
     border: 2px solid #ffc107; /* Listening Quiz 同款黃色邊框 */
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    padding: 12px 20px;
+    padding: 8px 16px;
     z-index: 999;
     display: none;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
     box-sizing: border-box;
 }
 
-.progress-text-row {
-    font-size: 16px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 8px;
+.progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
 }
 
-.progress-track {
-    width: 100%;
-    height: 18px; /* 加粗進度條高度 (原為 10px) */
+.progress-row-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: 68px;
+}
+
+.progress-track-mini {
+    flex: 1;
+    height: 10px;
     background-color: #e9ecef;
-    border-radius: 9px;
+    border-radius: 5px;
     overflow: hidden;
     border: 1px solid #ddd;
 }
 
-.progress-fill {
+.progress-fill-mini {
     height: 100%;
     width: 0%;
-    background-color: #ffc107; /* Listening Quiz 同款亮黃色 */
-    border-radius: 9px;
+    background-color: #ffc107;
+    border-radius: 5px;
     transition: width 0.2s ease;
+}
+
+.progress-fraction {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 68px;
+    text-align: right;
 }
 
 /* Floating Navigation Buttons */
@@ -1466,13 +1487,21 @@
     </style>
 </head>
 <body>
-    <!-- Bottom Sticky Learning Progress Bar -->
+        <!-- Bottom Sticky Learning Progress Bar -->
     <div class="bottom-progress-container" id="bottomProgressBar">
-        <div class="progress-text-row">
-            📖 學習進度：<span id="vocabProgressText">0 of 0 (0%)</span>
+        <div class="progress-row">
+            <span class="progress-row-label">This Section</span>
+            <div class="progress-track-mini">
+                <div class="progress-fill-mini" id="sectionProgressFill"></div>
+            </div>
+            <span class="progress-fraction" id="sectionProgressText">0 / 0 (0%)</span>
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" id="vocabProgressFill"></div>
+        <div class="progress-row">
+            <span class="progress-row-label">Overall</span>
+            <div class="progress-track-mini">
+                <div class="progress-fill-mini" id="vocabProgressFill"></div>
+            </div>
+            <span class="progress-fraction" id="vocabProgressText">0 / 0 (0%)</span>
         </div>
     </div>
 
@@ -1491,7 +1520,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v6.08)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v6.09)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -3619,12 +3648,15 @@ function getRandomEmoji() {
             currentSpeech = null;
         }
 
-        // Update Bottom Sticky Progress Bar
+                // Update Bottom Sticky Progress Bar
         function updateLearningProgress() {
             const rows = document.querySelectorAll('.vocab-row');
+            const headers = document.querySelectorAll('.section-header');
             const barContainer = document.getElementById('bottomProgressBar');
-            const textEl = document.getElementById('vocabProgressText');
-            const fillEl = document.getElementById('vocabProgressFill');
+            const overallTextEl = document.getElementById('vocabProgressText');
+            const overallFillEl = document.getElementById('vocabProgressFill');
+            const sectionTextEl = document.getElementById('sectionProgressText');
+            const sectionFillEl = document.getElementById('sectionProgressFill');
             const statsContainer = document.getElementById('visitStatsContainer');
 
             const total = rows.length;
@@ -3662,6 +3694,7 @@ function getRandomEmoji() {
                 if (barContainer) barContainer.style.display = 'flex';
             }
 
+            // ===== Overall progress =====
             let viewedCount = 0;
             rows.forEach(row => {
                 const rect = row.getBoundingClientRect();
@@ -3670,9 +3703,36 @@ function getRandomEmoji() {
                 }
             });
 
-            const percentage = total > 0 ? Math.round((viewedCount / total) * 100) : 0;
-            if (textEl) textEl.textContent = `${viewedCount} of ${total} (${percentage}%)`;
-            if (fillEl) fillEl.style.width = `${percentage}%`;
+            const overallPercentage = total > 0 ? Math.round((viewedCount / total) * 100) : 0;
+            if (overallTextEl) overallTextEl.textContent = `${viewedCount} / ${total} (${overallPercentage}%)`;
+            if (overallFillEl) overallFillEl.style.width = `${overallPercentage}%`;
+
+            // ===== This Section progress =====
+            let currentSection = null;
+            headers.forEach(header => {
+                const rect = header.getBoundingClientRect();
+                if (rect.top < windowHeight) {
+                    currentSection = header.getAttribute('data-section');
+                }
+            });
+
+            if (currentSection !== null) {
+                const sectionRows = document.querySelectorAll(`.vocab-row[data-section="${currentSection}"]`);
+                const sectionTotal = sectionRows.length;
+                let sectionViewed = 0;
+                sectionRows.forEach(row => {
+                    const rect = row.getBoundingClientRect();
+                    if (rect.top <= windowHeight) {
+                        sectionViewed++;
+                    }
+                });
+                const sectionPercentage = sectionTotal > 0 ? Math.round((sectionViewed / sectionTotal) * 100) : 0;
+                if (sectionTextEl) sectionTextEl.textContent = `${sectionViewed} / ${sectionTotal} (${sectionPercentage}%)`;
+                if (sectionFillEl) sectionFillEl.style.width = `${sectionPercentage}%`;
+            } else {
+                if (sectionTextEl) sectionTextEl.textContent = `0 / 0 (0%)`;
+                if (sectionFillEl) sectionFillEl.style.width = '0%';
+            }
         }
 
         // Load vocabulary with checkboxes
@@ -3707,10 +3767,10 @@ function getRandomEmoji() {
             // Clear checked sections when loading new lesson
             checkedSections.clear();
 
-            let html = '';
+                        let html = '';
             data.forEach((section, sectionIndex) => {
                 html += `<tr>
-                    <td colspan="2" class="section-header">${section.section}</td>
+                    <td colspan="2" class="section-header" data-section="${sectionIndex}">${section.section}</td>
                 </tr>`;
                 
                 section.words.forEach((item, wordIndex) => {
@@ -3720,7 +3780,7 @@ function getRandomEmoji() {
                     // Only show checked words
                     if (isChecked) {
                         const fullText = `${item.word}. ${item.example}`;
-                        html += `<tr class="vocab-row">
+                        html += `<tr class="vocab-row" data-section="${sectionIndex}">
                             <td class="audio-controls">
                                 <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
                                 <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
