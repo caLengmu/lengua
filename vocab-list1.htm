@@ -172,36 +172,57 @@
     border: 2px solid #ffc107; /* Listening Quiz 同款黃色邊框 */
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    padding: 12px 20px;
+    padding: 8px 16px;
     z-index: 999;
     display: none;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
     box-sizing: border-box;
 }
 
-.progress-text-row {
-    font-size: 16px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 8px;
+.progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
 }
 
-.progress-track {
-    width: 100%;
-    height: 18px; /* 加粗進度條高度 (原為 10px) */
+.progress-row-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: 68px;
+}
+
+.progress-track-mini {
+    flex: 1;
+    height: 10px;
     background-color: #e9ecef;
-    border-radius: 9px;
+    border-radius: 5px;
     overflow: hidden;
     border: 1px solid #ddd;
 }
 
-.progress-fill {
+.progress-fill-mini {
     height: 100%;
     width: 0%;
-    background-color: #ffc107; /* Listening Quiz 同款亮黃色 */
-    border-radius: 9px;
+    background-color: #ffc107;
+    border-radius: 5px;
     transition: width 0.2s ease;
+}
+
+.progress-fraction {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 68px;
+    text-align: right;
 }
 
 /* Floating Navigation Buttons */
@@ -1466,13 +1487,21 @@
     </style>
 </head>
 <body>
-    <!-- Bottom Sticky Learning Progress Bar -->
+        <!-- Bottom Sticky Learning Progress Bar -->
     <div class="bottom-progress-container" id="bottomProgressBar">
-        <div class="progress-text-row">
-            📖 學習進度：<span id="vocabProgressText">0 of 0 (0%)</span>
+        <div class="progress-row">
+            <span class="progress-row-label">This Section</span>
+            <div class="progress-track-mini">
+                <div class="progress-fill-mini" id="sectionProgressFill"></div>
+            </div>
+            <span class="progress-fraction" id="sectionProgressText">0 / 0 (0%)</span>
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" id="vocabProgressFill"></div>
+        <div class="progress-row">
+            <span class="progress-row-label">Overall</span>
+            <div class="progress-track-mini">
+                <div class="progress-fill-mini" id="vocabProgressFill"></div>
+            </div>
+            <span class="progress-fraction" id="vocabProgressText">0 / 0 (0%)</span>
         </div>
     </div>
 
@@ -1488,13 +1517,13 @@
         <div class="countdown-banner" id="countdownBanner">
             <div id="currentDateDisplay">🗓️ Loading date...</div>
             <div id="examCountdownDisplay">⏰ Loading exam countdown...</div>
-            <div id="gsatCountdownDisplay">📚 Loading GSAT countdown...</div>
+            <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
         <h1>📃 Vocabulary List for Grade 12<br>(v6.08)</h1>
 
         <div class="button-categories">
-            <div class="category">
+                        <div class="category">
                 <div class="category-title">📚 Textbook: Book 5 (課本第五冊)</div>
                 <div class="category-buttons">
                     <button class="vocab-btn" data-category="textbook" data-lesson="textbook1">B5 L1 單字片語</button>
@@ -1505,6 +1534,18 @@
                     <button class="vocab-btn" data-category="textbook" data-lesson="textbook6">B5 L3 課文段落</button>
                 </div>
             </div>                 
+
+            <div class="category">
+                <div class="category-title">✍🏻 Past Exams (歷屆試題)</div>
+                <div class="category-buttons">
+                    <button class="vocab-btn" data-category="past" data-lesson="past1">115</button>
+                    <button class="vocab-btn" data-category="past" data-lesson="past2">114</button>
+                    <button class="vocab-btn" data-category="past" data-lesson="past3">113</button>
+                    <button class="vocab-btn" data-category="past" data-lesson="past4">112</button>
+                    <button class="vocab-btn" data-category="past" data-lesson="past5">111</button>
+                    <button class="vocab-btn" data-category="past" data-lesson="past6">110</button>
+                </div>
+            </div>
 
             <div class="category">
                 <div class="category-title">📒 好好學</div>
@@ -1601,8 +1642,9 @@
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理（refresh）🔄」以獲取更新！</strong></p>
                     <p style="margin-bottom: 0; text-align: center;">2. 手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p><br>
 <p style="margin-bottom: 0; text-align: center;">
-3. 教材更新: <br>
-好好學: U1, U2, U3, U4
+3. 教材更新: <br>課本: 
+<br>歷屆試題: 115
+<br>好好學: U1, U2, U3, U4
 </p>
 
                 </div>
@@ -2180,10 +2222,747 @@ async function clearEntireMonth(month) {
 
 
 `,
-        'textbook6': `
+                'textbook6': `
 
 
 `,
+        'past1': `
+◎Day 1
+hasty (adj) (匆忙的；草率的) ^ He made a hasty decision without thinking carefully. (他沒有仔細思考就做了草率的決定。)
+
+
+tight (adj) (緊湊的；時間有限的) ^ I cannot relax because I have a tight schedule today. (我今天的行程很緊湊，所以無法放鬆。)
+
+
+diligent (adj) (勤奮的) ^ The diligent student studies hard every day. (這位勤奮的學生每天努力讀書。)
+
+
+routine (n) (例行公事；日常生活) ^ Exercise is part of my daily routine. (運動是我日常生活的一部分。)
+
+
+official (adj) (官方的；正式的) ^ The school made an official announcement today. (學校今天發布了一項正式公告。)
+
+
+instant (adj) (立即的；即時的) ^ The medicine gave him instant relief from pain. (這個藥立刻減輕了他的疼痛。)
+
+
+amateur (n) (業餘愛好者) ^ He is an amateur who enjoys taking photos. (他是一位喜歡拍照的業餘愛好者。)
+
+
+amateur (adj) (業餘的；非專業的) ^ He joined an amateur photography competition last weekend. (他上週末參加了一場業餘攝影比賽。) 
+elementary (adj) (基本的；初級的) ^ Students learn elementary English in this class. (學生在這堂課學習基礎英文。)
+
+
+well-qualified (adj) (非常合格的；資歷優良的) ^ She is well-qualified for the teaching position. (她非常適合這個教職。)
+
+
+applicant (n) (申請人；求職者) ^ Each applicant must complete the form carefully. (每位申請人都必須仔細填寫表格。)
+
+
+professional (adj) (專業的) ^ She gave us professional advice about the problem. (她針對這個問題給了我們專業的建議。)
+professional (n) (專業人士；專家) ^ She asked a professional for help with the problem. (她向一位專業人士尋求協助。) 
+
+studio (n) (工作室；錄音室) ^ The artist works in a small studio downtown. (這位藝術家在市中心的一間小工作室工作。)
+
+career (n) (職業生涯；事業) ^ She hopes to build a successful career someday. (她希望有一天能建立成功的事業。)
+
+vacancy (n) (職位空缺) ^ There is a vacancy at the local library. (當地圖書館有一個職位空缺。)
+
+expectation (n) (期待；期望) ^ Her parents have high expectations for her future. (她的父母對她的未來有很高的期望。)
+
+inspiration (n) (靈感；啟發) ^ Nature gives the artist inspiration for her paintings. (大自然給這位藝術家的畫作帶來靈感。)
+
+initially (adv) (起初；最初) ^ Initially, I found the job very difficult. (起初，我覺得這份工作非常困難。)
+
+genuinely (adv) (真誠地；真正地) ^ She genuinely cares about her students. (她真誠地關心她的學生。)
+
+alternatively (adv) (或者；作為替代方案) ^ Alternatively, we can take the bus home. (或者，我們可以搭公車回家。)
+fundamentally (adv) (根本地；基本上) ^ The two ideas are fundamentally different from each other. (這兩個想法在根本上彼此不同。)
+
+confirm (v) (確認；證實) ^ Please confirm your answer before giving it to me. (請在交給我之前確認你的答案。)
+
+balanced (adj) (均衡的；平衡的) ^ A balanced diet helps us stay healthy. (均衡的飲食有助於我們保持健康。)
+
+element (n) (元素；要素) ^ Trust is an important element of friendship. (信任是友誼的重要要素。)
+
+dimension (n) (面向；層面；尺寸) ^ We discussed every dimension of the problem. (我們討論了這個問題的每個層面。)
+
+integration (n) (整合；融合) ^ The integration of technology improves classroom learning. (科技的整合改善了課堂學習。)
+integrate (v) (整合；融入) ^ The school integrates technology into everyday classroom activities. (學校將科技融入日常課堂活動。) 
+
+provision (n) (提供；供應) ^ The school makes provision for students' basic needs. (學校提供學生的基本需求。)
+provide (v) (提供) ^ The school provides students with free books and meals. (學校為學生提供免費的書籍和餐點。) 
+
+consumption (n) (消費；消耗) ^ Water consumption increases during the hot summer. (炎熱的夏天，水的消耗量會增加。)
+consumption (n) (食用；攝取) ^ The consumption of fresh vegetables is good for your health. (食用新鮮蔬菜對你的健康有益。) 
+consume (v) (消耗；消費) ^ Cars consume a lot of fuel during long trips. (汽車在長途旅行中消耗大量燃料。) 
+consume (v) (吃；飲用；消耗) ^ People consume fresh fruit and vegetables to stay healthy. (人們吃新鮮水果和蔬菜來保持健康。) 
+
+make a public appearance (phr.) (公開露面) ^ The famous singer will make a public appearance tomorrow. (這位著名歌手明天將公開露面。)
+
+crown (v.) (加冕；為……戴上王冠) ^ The people will crown the new king today. (人們今天將為新國王加冕。)
+newly-crowned (adj) (新加冕的) ^ The newly-crowned king greeted the cheering crowd. (新加冕的國王向歡呼的人群致意。)
+
+competition (n) (比賽；競爭) ^ She won first place in the singing competition. (她在歌唱比賽中獲得第一名。)
+compete (v) (競爭；參加比賽) ^ Many students compete to win the school competition. (許多學生參加比賽以贏得學校的競賽。) 
+
+devote oneself to N (phr.) (致力於……；奉獻於……) ^ She devoted herself to helping poor children. (她致力於幫助貧困的孩子。)
+
+whole-heartedly (adv) (全心全意地) ^ He whole-heartedly supported his friend's new plan. (他全心全意地支持朋友的新計畫。)
+
+arrest (v.) (逮捕) ^ The police arrested the man yesterday. (警方昨天逮捕了那名男子。)
+
+dread (v.) (害怕；畏懼) ^ Many students dread taking difficult exams. (許多學生害怕參加困難的考試。)
+stress (v) (強調；著重) ^ The teacher stressed the importance of studying every day. (老師強調每天讀書的重要性。)
+
+stress (n) (壓力) ^ Too much stress can make people tired. (太多壓力會讓人感到疲倦。)
+
+wander (v.) (漫遊；閒逛) ^ We wandered around the old town all afternoon. (我們整個下午都在古老的小鎮裡閒逛。)
+
+escape (v.) (逃離；逃脫) ^ The bird escaped from its small cage. (那隻鳥從牠的小籠子裡逃脫了。)
+
+resource (n) (資源) ^ Water is an important resource for everyone. (水是每個人都重要的資源。)
+
+impact (n) (影響；衝擊) ^ The new rule had a big impact on students. (這項新規定對學生產生了很大的影響。)
+
+passion (n) (熱情；熱愛) ^ Her passion for music began when she was young. (她對音樂的熱愛從小時候就開始了。)
+
+emphasis (n) (強調；重視) ^ The teacher put emphasis on reading carefully. (老師強調要仔細閱讀。)
+
+shatter (v.) (粉碎；破碎) ^ The glass may shatter if it falls. (如果玻璃掉下來，可能會破碎。)
+
+assault (n) (襲擊；攻擊) ^ The police investigated the assault carefully. (警方仔細調查了這起襲擊事件。)
+assault (v) (襲擊；攻擊) ^ The soldiers assaulted the enemy's position at dawn. (士兵在黎明時襲擊敵人的陣地。) 
+
+overturn (v.) (推翻；翻倒) ^ Strong winds could overturn the small boat. (強風可能會吹翻這艘小船。)
+
+condemn (v.) (譴責；強烈批評) ^ Many people condemn violence against innocent people. (許多人譴責對無辜人民的暴力行為。)
+
+board (v.) (登上) ^ We will board the train at noon. (我們將在中午登上火車。)
+crash (v) (撞擊；碰撞；墜毀) ^ The car crashed into a tree during the storm. (汽車在暴風雨中撞上了一棵樹。) 
+
+crash (n) (撞車事故；墜毀事故) ^ The car crash blocked the road for hours. (這起車禍使道路堵塞了好幾個小時。)
+
+tumble (v.) (跌倒；滾落) ^ The little boy tumbled down the hill. (那個小男孩從山坡上滾了下來。)
+
+elbow (v.) (用手肘推擠) ^ He elbowed through the crowded train station. (他用手肘擠過擁擠的火車站。)
+
+struggle (v.) (奮鬥；掙扎) ^ She struggled to carry the heavy box. (她奮力搬動那個沉重的箱子。)
+
+campus (n) (校園) ^ Many students walk across the campus daily. (許多學生每天走過校園。)
+raise grave concerns (phr.) (引起嚴重關切) ^ The accident raised grave concerns about public safety. (這起事故引起了人們對公共安全的嚴重關切。)
+
+prevent (v.) (防止；阻止) ^ Wearing helmets can prevent serious injuries. (戴安全帽可以防止嚴重受傷。)
+
+tragic (adj) (悲慘的；悲劇性的) ^ The town remembered the tragic event for years. (這座城鎮多年來一直記得這起悲劇事件。)
+
+incident (n) (事件；事故) ^ The school reported the incident to parents. (學校向家長報告了這起事件。)
+
+swift (adj) (迅速的；快速的) ^ The police took swift action after the accident. (事故發生後，警方迅速採取行動。)
+
+brutal (adj) (殘酷的；野蠻的) ^ The attack was brutal and shocked the community. (這次攻擊十分殘酷，震驚了社區。)
+
+harsh (adj) (嚴厲的；嚴酷的) ^ The harsh weather made traveling very difficult. (嚴酷的天氣使旅行變得非常困難。)
+
+grave (adj) (嚴重的；重大的) ^ Doctors have grave concerns about his condition. (醫生對他的狀況有嚴重的擔憂。)
+
+
+◎Day 2
+gather (v) (聚集；收集) ^ People gathered in the park for the festival. (人們聚集在公園裡參加節慶。)
+
+indicate (v) (指出；表明) ^ The sign indicates the way to the station. (這個標誌指出前往車站的方向。)
+
+in particular (= particularly, especially) (phr.) (尤其；特別) ^ I enjoy fruit, apples in particular. (我喜歡水果，尤其是蘋果。)
+
+particularly (adv) (尤其；特別) ^ She is particularly good at learning languages. (她尤其擅長學習語言。)
+
+specifically (adv) (明確地；具體地) ^ Please tell me specifically what you need. (請具體告訴我你需要什麼。)
+
+chemical(s) (n) (化學物質) ^ Some chemicals can be harmful to humans. (有些化學物質可能對人類有害。)
+
+reproductive (adj) (生殖的；繁殖的) ^ Scientists study the reproductive habits of animals. (科學家研究動物的繁殖習性。)
+
+conditions (n) (情況；條件) ^ Plants grow well under the right conditions. (植物在適當的條件下生長良好。)
+
+specific (adj) (特定的；明確的) ^ Please give me a specific example. (請給我一個明確的例子。)
+
+significance (n) (重要性；意義) ^ We discussed the significance of this discovery. (我們討論了這項發現的重要性。)
+
+harmony (n) (和諧；融洽) ^ The family lived together in peace and harmony. (這個家庭和平且和諧地生活在一起。)
+
+dominant (adj) (占主導地位的；支配的) ^ Blue is the dominant color in this painting. (藍色是這幅畫中的主要顏色。)
+
+mate (v) (交配) ^ Many animals mate during certain seasons. (許多動物會在特定季節交配。)
+
+sniff (v) (嗅；聞) ^ The dog sniffed the food before eating it. (那隻狗在吃食物前聞了一下。)
+
+sign (n) (跡象；徵兆) ^ A smile can be a sign of happiness. (微笑可以是快樂的徵兆。)
+
+smelly (adj) (有臭味的) ^ The old shoes became smelly after the rain. (那雙舊鞋在下雨後變得有臭味。)
+
+what is more (phr.) (而且；此外) ^ The hotel is cheap, and what is more, clean. (這家飯店很便宜，而且很乾淨。)
+
+it turns out (phr.) (結果是；原來) ^ It turns out that she already knew the answer. (結果她早就知道答案了。)
+
+in other words (phr.) (換句話說) ^ He is very tired; in other words, he needs rest. (他非常累；換句話說，他需要休息。)
+
+all in all (phr.) (總而言之) ^ All in all, we had a wonderful day together. (總而言之，我們一起度過了美好的一天。)
+
+demonstrate (v) (展示；證明) ^ The teacher demonstrated how to use the machine. (老師示範如何使用這台機器。)
+
+immigrate (v) (移民) ^ Her family decided to immigrate to Canada. (她的家人決定移民到加拿大。)
+
+communicate (v) (溝通；交流) ^ We communicate with friends through messages every day. (我們每天透過訊息與朋友溝通。)
+
+manipulate (v) (操控；操作) ^ He knows how to manipulate the machine safely. (他知道如何安全地操作這台機器。)
+
+doubt (n.) (懷疑；疑問) ^ There is no doubt that she works hard. (毫無疑問，她工作很努力。)
+
+doubt (v.) (懷疑) ^ I doubt that he will arrive on time. (我懷疑他是否會準時到達。)
+
+icon (n) (象徵；偶像) ^ The singer became an icon for young people. (這位歌手成為年輕人的偶像。)
+
+match (n.) (比賽；相配的人或物) ^ We watched an exciting soccer match yesterday. (我們昨天觀看了一場精彩的足球比賽。)
+
+match (v.) (相配；符合) ^ These shoes match your new dress perfectly. (這雙鞋和你的新洋裝非常相配。)
+
+clue (n) (線索；提示) ^ The detective found an important clue yesterday. (偵探昨天找到了一條重要線索。)
+
+hardly (adv) (幾乎不) ^ I could hardly hear him in the noisy room. (在吵雜的房間裡，我幾乎聽不到他說話。)
+
+acceptable (adj) (可接受的；合格的) ^ Your answer is acceptable, but it needs improvement. (你的答案可以接受，但還需要改進。)
+
+likely (adj) (可能的) ^ Rain is likely to fall this afternoon. (今天下午可能會下雨。)
+
+be responsive to (phr.) (對……有反應；積極回應……) ^ Good teachers are responsive to students' needs. (好的老師會積極回應學生的需求。)
+
+be annoyed at (phr.) (對……感到惱怒) ^ She was annoyed at her brother's loud music. (她對哥哥大聲播放音樂感到惱怒。)
+
+be considerate of (phr.) (體貼；顧及……) ^ Please be considerate of other people's feelings. (請體貼並顧及他人的感受。)
+
+be tolerant with (phr.) (對……寬容；容忍……) ^ Good parents are tolerant with their children's mistakes. (好的父母會寬容孩子所犯的錯誤。)
+
+stretch (v) (延伸；伸展) ^ The road stretches across the wide green field. (這條道路延伸穿過寬闊的綠色田野。)
+
+stretch back to (phr.) (追溯到) ^ The town's history stretches back to ancient times. (這座城鎮的歷史可以追溯到古代。)
+
+trade (n) (貿易) ^ The two countries have trade with each other. (這兩個國家彼此進行貿易。)
+
+route (n) (路線；途徑) ^ This bus route goes directly to the station. (這條公車路線直接通往車站。)
+
+spring up (phr. v.) (突然出現；迅速興起) ^ New shops spring up along this street every year. (每年都有新商店在這條街上迅速出現。)
+
+weary (adj) (疲憊的) ^ After the long walk, we felt weary. (長途步行後，我們感到疲憊。)
+gain (v) (獲得；增加) ^ She gained useful experience from her summer job. (她從暑期工作中獲得了寶貴的經驗。)
+
+regain (v) (重新獲得；恢復) ^ He worked hard to regain his confidence. (他努力重新找回自己的信心。)
+
+culinary (adj) (烹飪的；美食的) ^ Taiwan is famous for its rich culinary culture. (臺灣以豐富的飲食文化聞名。)
+
+inappropriate (adj) (不適當的；不合適的) ^ His joke was inappropriate for the serious meeting. (他的玩笑不適合嚴肅的會議。)
+appropriate (adj) (適當的；合適的) ^ Wearing clean clothes is appropriate for a school event. (在學校活動中穿著乾淨的衣服是合適的。)
+
+aid (v) (幫助；協助) ^ Good notes can aid students in learning. (好的筆記可以幫助學生學習。)
+
+digestion (n) (消化) ^ Drinking water can help with digestion. (喝水可以幫助消化。)
+
+accompany (v) (陪伴；伴隨) ^ My mother will accompany me to the hospital. (我媽媽會陪我去醫院。)
+
+accompaniment (n) (伴隨物；配菜) ^ Rice is a common accompaniment to many dishes. (米飯是許多菜餚常見的搭配食物。)
+
+delicacy (n) (美味佳餚；珍饈) ^ This soup is considered a local delicacy. (這道湯被視為當地的美味佳餚。)
+
+cuisine (n) (菜餚；烹飪風格) ^ Italian cuisine is popular around the world. (義大利料理在世界各地都很受歡迎。)
+
+an enjoyable dining experience (phr.) (愉快的用餐體驗) ^ Friendly service creates an enjoyable dining experience. (親切的服務能創造愉快的用餐體驗。)
+
+span (v) (持續；跨越) ^ Her career spanned more than thirty years. (她的職業生涯持續了三十多年。)
+span (n) (跨度；持續時間) ^ The bridge has a very long span. (這座橋有非常長的跨度。)
+
+time span (n) (時間跨度；持續時間) ^ The project was completed within a short time span. (這個專案在短時間內完成了。)
+
+attention span (n) (注意力持續時間) ^ Young children often have a short attention span. (年幼的孩子通常注意力持續時間較短。)
+
+portion (n) (一份；部分) ^ He ate a small portion of the cake. (他吃了一小份蛋糕。)
+
+literally (adv) (確實地；字面上地) ^ I was literally standing right beside her. (我當時確實就站在她旁邊。)
+literally (adv) (按照字面意思；真正地) ^ “Break a leg” literally means to injure your leg, but as an idiom, it means “good luck.” (「Break a leg」字面上的意思是弄傷你的腿，但作為慣用語時，它的意思是「祝你好運」。)
+
+banquet (n) (宴會) ^ The family held a banquet for the wedding. (這家人為婚禮舉辦了一場宴會。)
+
+customary (adj) (習慣上的；慣常的) ^ It is customary to say thank you. (說謝謝是一種慣常的禮貌。)
+
+custom (n) (習俗；習慣) ^ This custom has continued for many years. (這個習俗已經延續了很多年。)
+
+ultimately (adv) (最終；最後) ^ Ultimately, they agreed to work together. (最後，他們同意一起合作。)
+
+accommodate (v) (提供住宿；提供休息的地方) ^ The hotel can accommodate many guests comfortably. (這家飯店可以舒適地提供許多旅客住宿。)
+
+compensate (v) (補償；賠償) ^ The company will compensate workers for their losses. (公司將補償員工的損失。)
+
+anticipate (v) (預期；預料) ^ We anticipate many visitors during the holiday. (我們預期假期期間會有許多遊客。)
+
+reinforce (v) (加強；強化) ^ Practice can reinforce what you learned in class. (練習可以強化你在課堂上所學的內容。)
+
+pass on to (phr.) (傳給；傳遞給) ^ Please pass this important message on to her. (請把這個重要訊息傳給她。)
+
+be brought up as N. (phr.) (被當作……養育) ^ She was brought up as a member of the family. (她被當作這個家庭的一員養育。)
+
+be thought to VR. (phr.) (被認為……) ^ This plant is thought to help people sleep. (這種植物被認為有助於人們睡眠。)
+be meant to VR. (phr.) (原本應該……；旨在……) ^ This book is meant to help beginners learn English. (這本書旨在幫助初學者學習英文。)
+
+if so (phr.) (如果是這樣的話) ^ Are you feeling tired? If so, take a break. (你感到累嗎？如果是這樣，休息一下。)
+
+as such (phr.) (因此；作為這樣) ^ He is a teacher and, as such, helps students. (他是一名老師，因此幫助學生。)
+
+by then (phr.) (到那時候) ^ By then, we had already finished our homework. (到那時候，我們已經完成作業了。)
+
+in that (phr.) (因為；在於) ^ The two books differ in that one is shorter. (這兩本書的不同之處在於其中一本較短。)
+
+intimate (adj) (親密的；私人的) ^ They are intimate friends who share everything. (他們是無話不談的親密朋友。)
+
+widely-known (adj) (廣為人知的) ^ This is a widely-known story around the world. (這是一個世界各地廣為人知的故事。)
+
+romantic (adj) (浪漫的) ^ They enjoyed a romantic dinner by the sea. (他們在海邊享用了浪漫的晚餐。)
+
+◎Day 3
+guilty (adj) (內疚的；有罪的) ^ She felt guilty after breaking her mother's favorite cup. (她打破媽媽最喜歡的杯子後感到內疚。)
+snooze (n) (小睡；打盹) ^ I took a short snooze after finishing my homework. (我完成作業後小睡了一會兒。)
+
+by no means (phr.) (絕不；一點也不) ^ This task is by no means easy for beginners. (這項任務對初學者來說絕不容易。)
+
+recharge (v) (恢復精力；充電) ^ A short break helps me recharge after studying. (短暫休息能幫助我在讀書後恢復精力。)
+
+refreshed (adj) (精神煥發的；恢復精神的) ^ After a good sleep, she felt refreshed again. (好好睡了一覺後，她再次感到精神煥發。)
+
+specifically (adv) (具體地；明確地) ^ Please explain specifically what you want me to do. (請具體說明你想要我做什麼。)
+
+boost (v) (提升；增加) ^ Exercise can boost your energy and improve your mood. (運動可以提升你的精力並改善心情。)
+
+cognition (n) (認知；認知能力) ^ Sleep is important for healthy cognition and learning. (睡眠對健康的認知能力和學習很重要。)
+
+shrink (v) (縮小；減少) ^ The shirt may shrink after being washed. (這件襯衫洗過後可能會縮小。)
+
+shrink–shrank–shrunk (v.) (縮小；減少) ^ My sweater shrank after I washed it. (我的毛衣洗過後縮水了。)
+
+shrinkage (n) (縮水；減少) ^ The shirt showed some shrinkage after washing. (這件襯衫洗後有些縮水。)
+
+shrinkable (adj) (可縮小的；會縮水的) ^ This fabric is shrinkable when washed in hot water. (這種布料用熱水洗時可能會縮水。)
+
+dementia (n) (失智症) ^ Dementia can affect memory and daily life. (失智症可能影響記憶和日常生活。)
+
+habitual (adj) (習慣性的) ^ Checking his phone became a habitual action. (查看手機成了他的習慣性動作。)
+
+preserve (v) (保存；維護) ^ Museums preserve old objects for future generations. (博物館為後代保存古老的物品。)
+
+enhance (v) (提升；增強) ^ Music can enhance the mood of a party. (音樂可以提升派對的氣氛。)
+
+cram (v) (臨時抱佛腳；死記硬背) ^ He tried to cram for the test overnight. (他試圖熬夜臨時抱佛腳準備考試。)
+
+acquire knowledge (phr.) (獲得知識) ^ Students read books to acquire knowledge every day. (學生每天閱讀書籍來獲得知識。)
+acquired knowledge (phr.) (獲得的知識；所學到的知識) ^ Students can use their acquired knowledge to solve new problems. (學生可以運用所學到的知識解決新的問題。)
+
+be vital for (phr.) (對……至關重要) ^ Sleep is vital for staying healthy and focused. (睡眠對保持健康和專注至關重要。)
+
+reap the benefits (phr.) (獲得好處；享受益處) ^ Exercise regularly and reap the benefits of good health. (規律運動並享受健康帶來的好處。)
+
+length (n) (長度；時間長短) ^ The length of the movie is two hours. (這部電影的長度是兩個小時。)
+
+fatigue (n) (疲勞；疲倦) ^ Long hours of work can cause fatigue. (長時間工作可能會造成疲勞。)
+
+bring about (phr. v.) (帶來；導致) ^ The new law may bring about important changes. (這項新法律可能帶來重要的改變。)
+
+play an important role (phr.) (扮演重要角色) ^ Parents play an important role in children's growth. (父母在孩子的成長中扮演重要角色。)
+
+distraction (n) (使人分心的事物；分心) ^ Loud music can be a distraction while studying. (大聲的音樂可能會在讀書時讓人分心。)
+
+ideal (adj) (理想的；最適合的) ^ A quiet room is ideal for studying. (安靜的房間很適合讀書。)
+
+soothing (adj) (舒緩的；令人放鬆的) ^ Her soothing voice helped the baby relax. (她舒緩的聲音幫助嬰兒放鬆。)
+soothe (v) (安撫；使平靜；緩和) ^ Her kind words soothed the child after the scary dream. (她溫柔的話語安撫了那個做了惡夢的孩子。)
+
+effective (adj) (有效的) ^ This method is effective for learning new words. (這個方法對學習新單字很有效。)
+
+retain (v) (保留；記住) ^ It is easier to retain information with practice. (透過練習更容易記住資訊。)
+
+depend on (phr. v.) (取決於；依靠) ^ Success often depends on hard work and patience. (成功通常取決於努力和耐心。)
+
+atmosphere (n) (氣氛；環境) ^ The café has a quiet and relaxing atmosphere. (這家咖啡館有安靜又放鬆的氣氛。)
+
+delay (n) (延遲；耽擱) ^ The train arrived after a long delay. (火車在長時間延誤後抵達。)
+
+delay (v) (延遲；耽擱) ^ Heavy rain may delay our trip home. (大雨可能會延誤我們回家的行程。)
+
+unproductive (adj) (沒有效率的；無成果的) ^ Talking all day can make meetings unproductive. (整天聊天會讓會議沒有效率。)
+
+risk (n) (風險；危險) ^ There is a risk of rain this afternoon. (今天下午有下雨的風險。)
+
+risk (v) (冒險；使遭受危險) ^ Do not risk losing your phone at the beach. (不要冒著在海灘弄丟手機的風險。)
+
+function (n) (功能；作用) ^ The main function of this button is simple. (這個按鈕的主要功能很簡單。)
+
+function (v) (運作；發揮功能) ^ The machine cannot function without electricity. (這台機器沒有電就無法運作。)
+
+minimal (adj) (最少的；極小的) ^ The room has minimal furniture and decoration. (這個房間只有極少的家具和裝飾。)
+
+dramatic (adj) (巨大的；戲劇性的) ^ The weather changed dramatically during the afternoon. (下午期間天氣發生了巨大的變化。)
+
+point to (phr. v.) (指向；表明) ^ The results point to a problem with sleep. (結果表明睡眠方面存在問題。)
+
+gesture (n) (手勢) ^ She used a hand gesture to say hello. (她用手勢打招呼。)
+
+gesture (v) (示意) ^ He gestured for me to come closer. (他示意我靠近一點。)
+
+gesture (n) (表達對某人或某事感受的言語或行為) ^ Giving flowers was a kind gesture to show her appreciation. (送花是一種表達她感謝之情的善意舉動。)
+
+engage in (phr. v.) (從事；參與) ^ Students engage in many activities after school. (學生放學後參與許多活動。)
+
+expression (n) (表情；表達) ^ Her facial expression showed that she was surprised. (她的臉部表情顯示她很驚訝。)
+
+portrait (n) (肖像；肖像畫) ^ The museum displayed a portrait of the famous writer. (博物館展示了這位著名作家的肖像畫。)
+typically (adv) (通常；一般來說) ^ People typically eat breakfast before going to school or work. (人們通常在上學或上班前吃早餐。)
+
+depict (v) (描繪；描述) ^ This painting depicts life in an old village. (這幅畫描繪了一個古老村莊的生活。)
+
+absence (n) (缺席；不存在) ^ Her absence from school worried her teacher. (她缺席學校讓老師感到擔心。)
+presence (n) (存在；出現；在場) ^ The presence of many tourists made the small town busy. (許多遊客的出現讓這座小鎮變得繁忙。)
+
+stem from (phr. v.) (源自於) ^ Many problems stem from poor communication. (許多問題源自於不良的溝通。)
+attempt (n) (嘗試；企圖) ^ His attempt to solve the problem was successful. (他嘗試解決這個問題並成功了。)
+attempt (v) (嘗試；試圖) ^ She attempted to finish her homework before dinner. (她試圖在晚餐前完成作業。)
+decayed teeth (n.) (蛀牙；腐爛的牙齒) ^ Too much sugar can cause decayed teeth. (太多糖可能會造成蛀牙。)
+
+hygiene (n) (衛生) ^ Good hygiene helps keep our bodies healthy. (良好的衛生習慣有助於保持身體健康。)
+
+perceive (v) (察覺；感知) ^ People perceive colors differently in different light. (人們在不同光線下對顏色的感知不同。)
+
+perception (n) (感知；看法) ^ Our perception of events can change over time. (我們對事件的看法可能隨時間改變。)
+
+manifestation (n) (表現；顯現) ^ A smile can be a manifestation of happiness. (微笑可以是快樂的一種表現。)
+
+manifest (v) (顯現；表現) ^ Stress can manifest in different ways. (壓力可以以不同的方式表現出來。)
+
+a lack of (phr.) (缺乏) ^ A lack of sleep can affect your health. (缺乏睡眠可能影響你的健康。)
+
+self-control (n) (自制力；自我控制) ^ Self-control helps us make better choices daily. (自制力幫助我們每天做出更好的選擇。)
+
+good manners (n.) (良好的禮貌) ^ Children should learn good manners at home. (孩子應該在家學習良好的禮貌。)
+
+emerge (v) (出現；浮現) ^ New problems may emerge during the project. (新的問題可能在專案進行期間出現。)
+emergence (n) (出現；浮現；興起) ^ The emergence of new technology changed people's daily lives. (新科技的出現改變了人們的日常生活。)
+
+the rise of (phr.) (……的興起) ^ The rise of technology changed our daily lives. (科技的興起改變了我們的日常生活。)
+
+value (v) (重視；珍惜) ^ We should value the time we spend together. (我們應該珍惜一起度過的時光。)
+
+responsive (adj) (反應迅速的；積極回應的) ^ The teacher is responsive to students' questions. (這位老師積極回應學生的問題。)
+
+responsiveness (n) (反應能力；回應性) ^ Her responsiveness made communication much easier. (她迅速的回應使溝通容易得多。)
+
+interpretation (n) (解釋；理解) ^ Everyone may have a different interpretation of art. (每個人對藝術可能有不同的理解。)
+
+interpret (v) (解釋；理解) ^ We must interpret the message carefully. (我們必須仔細理解這則訊息。)
+
+vary (v) (不同；變化) ^ Prices vary from store to store. (價格因商店而有所不同。)
+
+be associated with (phr.) (與……有關聯) ^ Exercise is associated with better physical health. (運動與較好的身體健康有關聯。)
+
+judge (v) (判斷；評價) ^ Do not judge people by their appearance. (不要以外表評價他人。)
+
+intelligent (adj) (聰明的；有智慧的) ^ The intelligent student quickly solved the difficult problem. (這位聰明的學生很快解決了困難的問題。)
+
+individual (n) (個人；個體) ^ Each individual has different ideas and experiences. (每個人都有不同的想法和經驗。)
+
+individualism (n) (個人主義) ^ Individualism values personal freedom and independence highly. (個人主義高度重視個人自由與獨立。)
+
+population (n) (人口；族群) ^ The city's population has grown quickly recently. (這座城市的人口最近快速增加。)
+
+take precedence over (phr.) (比……更重要；優先於) ^ Safety should take precedence over speed at work. (安全在工作中應優先於速度。)
+
+resort to (phr. v.) (訴諸於；採取) ^ He had to resort to asking others for help. (他不得不求助於其他人。)
+
+get along with (phr. v.) (與……相處融洽) ^ She gets along with everyone in her class. (她和班上的每個人都相處融洽。)
+
+straightforward (adj) (簡單直接的；坦率的) ^ The teacher gave a straightforward explanation of the problem. (老師對這個問題給出了簡單直接的解釋。)
+
+reliable (adj) (可靠的) ^ She is a reliable friend who always helps me. (她是一位總是幫助我的可靠朋友。)
+
+trustworthy (adj) (值得信賴的) ^ He is trustworthy and keeps his promises. (他值得信賴，並且會遵守承諾。)
+
+point out (phr. v.) (指出) ^ The teacher pointed out my small mistake. (老師指出了我的小錯誤。)
+
+complicated (adj) (複雜的) ^ The instructions look complicated but are actually simple. (這些說明看起來複雜，但其實很簡單。)
+
+complicate (v) (使複雜化) ^ Too many rules can complicate the process. (太多規則可能使這個過程變得複雜。)
+
+crucial (adj) (關鍵的；至關重要的) ^ Sleep is crucial for good health and learning. (睡眠對健康和學習至關重要。)
+
+factor (n) (因素) ^ Weather is an important factor in farming. (天氣是農業中的重要因素。)
+
+immigration (n) (移民；移民入境) ^ Immigration has changed the city's culture over time. (移民隨著時間改變了這座城市的文化。)
+
+diversity (n) (多樣性) ^ The school celebrates cultural diversity every year. (學校每年慶祝文化多樣性。)
+
+diverse (adj) (多樣的) ^ The city has a diverse group of people. (這座城市有多元的人群。)
+
+contribute to (phr. v.) (促成；有助於) ^ Regular exercise can contribute to better health. (規律運動有助於更好的健康。)
+
+phenomenon (n) (現象) ^ Rainbows are a beautiful natural phenomenon. (彩虹是一種美麗的自然現象。)
+
+fashionable (adj) (流行的；時尚的) ^ These shoes are fashionable among young people. (這雙鞋在年輕人之間很流行。)
+
+unfashionable (adj) (不流行的；過時的) ^ That style became unfashionable many years ago. (那種風格很多年前就不流行了。)
+
+distress (n) (痛苦；憂慮) ^ The bad news caused great distress to everyone. (這個壞消息讓大家感到非常痛苦。)
+
+contentment (n) (滿足；滿意) ^ She found contentment in her simple daily life. (她在簡單的日常生活中找到了滿足。)
+
+underlying (adj) (潛在的；根本的) ^ The doctor tried to find the underlying cause. (醫生試圖找出潛在的原因。)
+
+suggest (v) (顯示；表明) ^ The results suggest that the plan may work. (結果顯示這個計畫可能有效。)
+
+stupid (adj) (愚蠢的) ^ It was stupid to leave without checking the weather. (沒有查看天氣就離開是愚蠢的。)
+
+stupidity (n) (愚蠢) ^ His stupidity caused him to make the same mistake. (他的愚蠢讓他犯了同樣的錯誤。)
+
+proverb (n) (諺語；俗語) ^ My grandfather taught me a useful proverb yesterday. (我的祖父昨天教了我一句有用的諺語。)
+
+◎Day 4
+vessel (n) (船；船隻) ^ The large vessel carried many people across the ocean. (這艘大型船隻載著許多人渡過海洋。)
+explore (v) (探索；探險) ^ They traveled to explore the unknown island. (他們前往探索那座未知的島嶼。)
+explorer (n) (探險家；探索者) ^ The explorer traveled far to discover new places. (這位探險家走了很遠去發現新的地方。)
+made headlines (phr.) (成為新聞頭條；成為熱門新聞) ^ The young explorer made headlines after reaching the distant island. (這位年輕探險家抵達遙遠的島嶼後成為新聞頭條。)
+incredible (adj) (難以置信的；驚人的) ^ It was an incredible journey across the cold ocean. (那是一趟穿越寒冷海洋的驚人旅程。)
+achieve (v) (達成；實現) ^ She worked hard to achieve her goal. (她努力工作以達成她的目標。)
+achievement (n) (成就；成果) ^ Winning the race was a great achievement for him. (贏得比賽對他來說是一項很大的成就。)
+mark the final chapter (phr.) (標誌著最後一章；象徵最後階段) ^ This journey marked the final chapter of his long career. (這趟旅程標誌著他漫長職業生涯的最後階段。)
+legendary (adj) (傳奇的；著名的) ^ The explorer became a legendary figure after his journey. (這位探險家在旅程後成為傳奇人物。)
+extraordinary (adj) (非凡的；非同尋常的) ^ Her extraordinary courage helped the team survive. (她非凡的勇氣幫助團隊生存下來。)
+persevere (v) (堅持不懈；堅忍) ^ He continued to persevere despite many difficult problems. (儘管遇到許多困難，他仍繼續堅持。)
+perseverance (n) (毅力；堅持不懈) ^ Her perseverance helped her finish the difficult journey. (她的毅力幫助她完成了艱難的旅程。)
+along with (phr.) (和……一起；連同) ^ She traveled along with three other explorers. (她和另外三位探險家一起旅行。)
+settlement (n) (定居地；殖民地) ^ The explorers built a small settlement near the river. (探險家在河邊建立了一個小型定居地。)
+civilization (n) (文明) ^ The museum teaches us about an ancient civilization. (這座博物館教導我們關於古老文明的知識。)
+en route to (phr.) (在前往……的路上) ^ The ship stopped for fuel en route to Antarctica. (這艘船在前往南極洲的途中停下來加油。)
+Antarctica (n) (南極洲) ^ Scientists travel to Antarctica to study the cold environment. (科學家前往南極洲研究寒冷的環境。)
+encounter (v) (遇到；遭遇) ^ The explorers encountered strong winds during the journey. (探險家在旅途中遇到了強風。)
+float (v) (漂浮) ^ The small boat continued to float on the water. (那艘小船繼續漂浮在水面上。)
+be trapped in (phr.) (被困在……) ^ The sailors were trapped in the ice for many days. (水手們被困在冰中許多天。)
+worthy (adj) (值得的；值得尊敬的) ^ Her brave actions were worthy of great respect. (她勇敢的行動值得高度尊敬。)
+drift (v) (漂流；漂移) ^ The boat began to drift away from the shore. (那艘船開始漂離海岸。)
+abandon (v) (放棄；遺棄) ^ The explorers had to abandon the damaged boat. (探險家不得不放棄那艘損壞的船。)
+pitch (v) (劇烈搖晃；上下顛簸) ^ The ship began to pitch during the strong storm. (暴風雨期間船開始劇烈搖晃。)
+sink–sank–sunk (v.) (下沉；沉沒) ^ The old ship sank after hitting a large rock. (那艘舊船撞上一塊大岩石後沉沒了。)
+survive (v) (生存；倖存) ^ The sailors worked together to survive the difficult journey. (水手們一起努力在艱難的旅程中生存下來。)
+inhabit (v) (居住於；棲息於) ^ Many animals inhabit the cold regions of Antarctica. (許多動物棲息在南極洲的寒冷地區。)
+inhabited (adj) (有人居住的) ^ The island has been inhabited for hundreds of years. (這座島已有人居住數百年。)
+uninhabited (adj) (無人居住的) ^ They discovered a small uninhabited island. (他們發現了一座無人居住的小島。)
+make an attempt to (phr.) (試圖；嘗試做……) ^ They made an attempt to cross the frozen sea. (他們試圖穿越結冰的海洋。)
+at hand (phr.) (在手邊；即將到來) ^ The explorers kept their tools close at hand. (探險家把工具放在手邊。)
+hinder (v) (阻礙；妨礙) ^ Bad weather can hinder the team's progress. (惡劣天氣可能阻礙團隊的進展。)
+expedition (n) (探險；遠征) ^ The team prepared for a long expedition to Antarctica. (團隊為前往南極洲的長途探險做準備。)
+remain (v) (留下；保持) ^ The explorers remained on the island until morning. (探險家留在島上直到早晨。)
+
+spiral (n/v) (螺旋；螺旋上升或下降) ^ The stairs spiral up around the tall tower. (樓梯繞著高塔螺旋向上。)
+stair (n) (樓梯；階梯) ^ Be careful when you walk down the narrow stair. (走下狹窄的樓梯時要小心。)
+staircase (n) (樓梯；樓梯間) ^ The old staircase led up to the second floor. (這座舊樓梯通往二樓。)
+captivate (v) (迷住；吸引) ^ The beautiful view captivated everyone in the room. (美麗的景色吸引了房間裡的每個人。)
+captivating (adj) (迷人的；吸引人的) ^ The artist gave a captivating speech about ancient buildings. (這位藝術家發表了一場關於古建築的迷人演講。)
+focal point (n) (焦點；中心點) ^ The large statue is the focal point of the square. (那座大型雕像是廣場的焦點。)
+wind (v) (蜿蜒；轉彎) ^ The road winds through the mountains before reaching the village. (這條路蜿蜒穿過山區後才到達村莊。)
+winding (adj) (蜿蜒的；曲折的) ^ We followed a winding road through the mountains. (我們沿著一條蜿蜒的山路前進。)
+prominent (adj) (著名的；突出的) ^ The building has a prominent place in the city. (這棟建築在城市中占有重要地位。)
+in reference to (phr.) (關於；提及) ^ I am writing in reference to your recent question. (我寫信是關於你最近提出的問題。)
+refer to (phr. v.) (提到；指的是) ^ The word may refer to an ancient building. (這個詞可能指的是一座古老建築。)
+carve (v) (雕刻) ^ Workers carved beautiful patterns into the stone wall. (工人在石牆上雕刻美麗的圖案。)
+marble (n) (大理石) ^ The floor was made of smooth white marble. (地板是由光滑的白色大理石製成的。)
+suggest (v) (顯示；表明) ^ The design suggests that the building was very important. (這個設計顯示這棟建築非常重要。)
+architecture (n) (建築；建築風格) ^ The city is famous for its beautiful architecture. (這座城市以美麗的建築聞名。)
+defend against (phr. v.) (防禦；抵禦) ^ The walls helped defend the city against attacks. (城牆幫助城市抵禦攻擊。)
+ascend (v) (上升；攀登) ^ They began to ascend the stairs slowly. (他們開始慢慢地走上樓梯。)
+launch a mass attack (phr.) (發動大規模攻擊) ^ The army planned to launch a mass attack at dawn. (軍隊計畫在黎明時發動大規模攻擊。)
+clockwise (adv/adj) (順時針地；順時針的) ^ Turn the handle clockwise to open the door. (順時針轉動把手來打開門。)
+counterclockwise (adv/adj) (逆時針地；逆時針的) ^ Turn the handle counterclockwise to open the door. (逆時針轉動把手來打開門。)
+design (n/v) (設計；設計) ^ The architect designed a beautiful building for the city. (建築師為這座城市設計了一座美麗的建築。)
+as a result (phr.) (因此；結果) ^ It rained heavily, and as a result, the road closed. (雨下得很大，因此道路封閉了。)
+sword (n) (劍) ^ The museum displayed an old sword from medieval times. (博物館展示了一把中世紀的古劍。)
+effectively (adv) (有效地) ^ The new system helps people work more effectively. (新系統幫助人們更有效地工作。)
+complicate (v) (使複雜化) ^ Too many rules can complicate the building process. (太多規則可能使建築過程變得複雜。)
+uneven (adj) (不平坦的；不均勻的) ^ The old stone road was uneven and difficult to walk on. (古老的石路凹凸不平，很難行走。)
+strategy (n) (策略；戰略) ^ The team made a careful strategy before the expedition. (團隊在探險前制定了仔細的策略。)
+strategically (adv) (策略性地；有策略地) ^ The castle was strategically built on a high hill. (這座城堡策略性地建在一座高山上。)
+pattern (n) (圖案；模式) ^ The walls have a beautiful pattern of flowers. (牆上有美麗的花朵圖案。)
+retreat (v) (撤退；退後) ^ The soldiers had to retreat when the weather worsened. (天氣變差時，士兵們不得不撤退。)
+swiftly (adv) (迅速地) ^ The explorers swiftly returned to the ship. (探險家迅速回到了船上。)
+stumble (v) (絆倒；踉蹌) ^ He stumbled on the uneven stairs but did not fall. (他在不平的樓梯上絆了一下，但沒有跌倒。)
+particularly (adv) (尤其；特別) ^ I particularly enjoyed the beautiful architecture of the city. (我尤其喜歡這座城市美麗的建築。)
+dimly lit (adj) (光線昏暗的) ^ We walked through a dimly lit hallway in the castle. (我們走過城堡裡一條光線昏暗的走廊。)
+dim (adj/v) (昏暗的；使變暗) ^ The room was dim because there were few lights. (房間因為燈很少而很昏暗。)
+confine (v) (限制；使受困) ^ The small room confined the workers for several hours. (小房間限制工人待在裡面好幾個小時。)
+confine (n) (界限；範圍) ^ The animal stayed within the confines of the small area. (動物待在小區域的範圍內。)
+medieval (adj) (中世紀的) ^ The castle was built during the medieval period. (這座城堡建於中世紀時期。)
+material (n) (材料；原料) ^ Stone was an important building material in the past. (石頭過去是一種重要的建築材料。)
+emerge (v) (出現；浮現) ^ A beautiful castle emerged from the morning fog. (一座美麗的城堡從晨霧中浮現。)
+cope with (phr. v.) (應付；處理) ^ The team learned to cope with the difficult weather. (團隊學會應付惡劣的天氣。)
+iron (n) (鐵) ^ The old gate was made of strong iron. (那扇古老的大門是由堅固的鐵製成的。)
+frame (n/v) (框架；構成框架) ^ The windows have strong wooden frames. (這些窗戶有堅固的木製框架。)
+cost-effective (adj) (划算的；符合成本效益的) ^ This material is cost-effective for large buildings. (這種材料對大型建築來說很划算。)
+affordable (adj) (負擔得起的；價格合理的) ^ The new houses are affordable for many families. (這些新房子許多家庭都負擔得起。)
+come in (phr. v.) (進來；以……形式出現) ^ The new chairs come in many different designs. (新的椅子有許多不同的設計。)
+steel (n) (鋼；鋼鐵) ^ The bridge is made of strong steel. (這座橋是由堅固的鋼鐵製成的。)
+concrete (n) (混凝土) ^ The workers used concrete to build the strong walls. (工人使用混凝土建造堅固的牆壁。)
+timeless (adj) (永恆的；不受時代影響的) ^ The building has a timeless design that people still love. (這棟建築有永恆的設計，人們至今仍喜愛。)
+appeal (n/v) (吸引力；吸引) ^ The simple design has great appeal to many people. (簡約的設計對許多人有很大的吸引力。)
+classical (adj) (古典的；經典的) ^ The museum has many classical works of art. (博物館有許多古典藝術作品。)
+feature (n/v) (特色；以……為特色) ^ The building features beautiful marble floors and tall windows. (這棟建築以美麗的大理石地板和高窗戶為特色。)
+luxury (n) (奢華；奢侈品) ^ The hotel offers luxury rooms with beautiful views. (這家飯店提供擁有美麗景色的豪華房間。)
+favor (v) (有利於；偏愛) ^ The new design favors natural light and open spaces. (新的設計有利於自然光和開放空間。)
+
+◎Day 5
+document (n) (文件；文獻) ^ This document contains important information about the ancient city. (這份文件包含關於這座古城的重要資訊。)
+ancient times (phr.) (古代) ^ People lived very differently in ancient times. (人們在古代的生活方式非常不同。)
+be oriented to/toward (phr.) (以……為導向；面向……) ^ The program is oriented toward helping young people learn new skills. (這個計畫以幫助年輕人學習新技能為導向。)
+orient (v) (使適應方向；使熟悉) ^ The map helped us orient ourselves in the new city. (這張地圖幫助我們熟悉新城市的方向。)
+the Orient (n) (東方；東方國家) ^ Traders once traveled from Europe to the Orient for valuable goods. (商人過去曾從歐洲前往東方尋找珍貴商品。)
+orientation (n) (方向；定位；適應新環境) ^ The map helped us find our orientation in the new city. (這張地圖幫助我們在新城市中找到方向。)
+evidence (n) (證據；證明) ^ The researchers found evidence of an ancient settlement nearby. (研究人員在附近找到古代定居地的證據。)
+ample (adj) (充足的；足夠的) ^ The village has ample water for its people. (這個村莊有充足的水供居民使用。)
+Biblical (adj) (《聖經》的；聖經中的) ^ The museum displays several Biblical stories in its paintings. (這座博物館在畫作中展示了幾個聖經故事。)
+era (n) (時代；年代) ^ The building was created during a famous historical era. (這座建築建於一個著名的歷史時代。)
+be referred to as (phr.) (被稱為；被稱作) ^ The city is often referred to as the cultural center. (這座城市常被稱為文化中心。)
+refer to (phr. v.) (提到；指的是) ^ This word refers to an ancient type of boat. (這個詞指的是一種古代船隻。)
+be vital to (phr.) (對……至關重要) ^ The river is vital to the people's daily lives. (這條河對人們的日常生活至關重要。)
+the Nile (n) (尼羅河) ^ The Nile has supported people in Egypt for thousands of years. (尼羅河數千年來一直養育著埃及人民。)
+livelihood (n) (生計；謀生方式) ^ Fishing provides a livelihood for many people near the coast. (捕魚為許多沿海居民提供生計。)
+originate (v) (起源；發源) ^ The tradition is believed to originate in ancient India. (這項傳統被認為起源於古代印度。)
+flow (v) (流動；流經) ^ The river flows through the city before reaching the sea. (這條河流經城市後流入大海。)
+Muslim (adj/n) (穆斯林的；穆斯林) ^ Many Muslim people visit this important religious site. (許多穆斯林參觀這個重要的宗教場所。)
+Arab (adj/n) (阿拉伯的；阿拉伯人) ^ The museum shows the history of Arab culture. (這座博物館展示阿拉伯文化的歷史。)
+Arabia (n) (阿拉伯；阿拉伯半島) ^ Ancient traders traveled across Arabia to reach distant lands. (古代商人穿越阿拉伯半島前往遙遠的土地。)
+India (n) (印度) ^ India has a long and rich history. (印度有悠久而豐富的歷史。)
+Indian (adj/n) (印度的；印度人) ^ Indian culture includes many different traditions and festivals. (印度文化包含許多不同的傳統和節慶。)
+the Old Testament (n) (《舊約聖經》) ^ The story appears in the Old Testament of the Bible. (這個故事出現在《聖經》的舊約中。)
+Egypt (n) (埃及) ^ Many tourists visit Egypt to see its ancient monuments. (許多遊客到埃及參觀古老的遺跡。)
+Egyptian (adj/n) (埃及的；埃及人) ^ Egyptian history includes many famous ancient buildings. (埃及歷史包含許多著名的古代建築。)
+preference (n) (偏好；喜愛) ^ Everyone has a different preference for food and music. (每個人對食物和音樂都有不同的偏好。)
+prefer (v) (較喜歡；偏愛) ^ I prefer traveling by train because it is comfortable. (我比較喜歡搭火車旅行，因為很舒適。)
+arise–arose–arisen (v.) (產生；出現) ^ New problems arose after the weather became worse. (天氣變差後產生了新的問題。)
+exploration (n) (探索；探險) ^ The exploration of the island took several months. (探索這座島花了好幾個月。)
+explore (v) (探索；探險) ^ They traveled to explore the unknown parts of the island. (他們前往探索這座島未知的地區。)
+explorer (n) (探險家；探索者) ^ The explorer wrote about his journey across the ocean. (這位探險家寫下了他橫越海洋的旅程。)
+rely on= depend on (phr. v.) (依靠；依賴) ^ Many farmers rely on the river for water. (許多農民依靠這條河取得水源。)
+the Mediterranean (n) (地中海) ^ Many ancient ships traveled across the Mediterranean Sea. (許多古代船隻航行穿越地中海。)
+the Atlantic (n) (大西洋) ^ The ship crossed the Atlantic during the long journey. (這艘船在漫長旅程中橫越大西洋。)
+peak (n) (頂峰；最高點) ^ The mountain peak was covered with snow. (山頂被白雪覆蓋。)
+expansion (n) (擴張；擴展) ^ The city's expansion changed the surrounding villages. (城市的擴張改變了周圍的村莊。)
+orientation (n) (方向；定位；適應) ^ The map gave us a clear sense of orientation. (這張地圖讓我們清楚知道方向。)
+take on (phr. v.) (呈現；承擔；接受) ^ The building took on a new appearance after renovation. (這棟建築整修後呈現出新的樣貌。)
+perspective (n) (觀點；角度) ^ Traveling can give you a new perspective on life. (旅行可以讓你對生活有新的觀點。)
+take on a new perspective (phr.) (採取新的觀點) ^ Travel helped her take on a new perspective on history. (旅行幫助她用新的觀點看待歷史。)
+interaction (n) (互動；交流) ^ Regular interaction with others helps children learn social skills. (與他人經常互動能幫助孩子學習社交技巧。)
+interact (v) (互動；交流) ^ Students interact with each other during group activities. (學生在團體活動中互相交流。)
+layout (n) (布局；配置) ^ The museum has a simple layout that is easy to follow. (這座博物館有簡單易懂的布局。)
+dynamic (adj) (充滿活力的；動態的) ^ The city has a dynamic culture with many new ideas. (這座城市有充滿活力且充滿新想法的文化。)
+direction (n) (方向；指示) ^ Please show me the direction to the train station. (請告訴我火車站的方向。)
+path (n) (道路；小徑；途徑) ^ We followed a narrow path through the forest. (我們沿著一條狹窄的小徑穿過森林。)
+advancement (n) (進步；發展) ^ Technology has brought great advancement to modern life. (科技為現代生活帶來了很大的進步。)
+advance (v) (前進；進步) ^ The team advanced slowly toward the mountain. (團隊慢慢地向山前進。)
+advanced (adj) (先進的；高級的) ^ The city has advanced technology and modern transportation. (這座城市擁有先進的科技和現代交通。)
+destination (n) (目的地) ^ The island is a popular destination for tourists. (這座島是受遊客歡迎的目的地。)
+temporary (adj) (暫時的；臨時的) ^ The workers stayed in a temporary building during construction. (工人在施工期間住在臨時建築裡。)
+state (n) (狀態；情況) ^ The old building is still in good state. (這座老建築仍處於良好狀態。)
+an urgent need (phr.) (迫切的需要) ^ There is an urgent need for clean water in the village. (這個村莊迫切需要乾淨的水。)
+critical (adj) (重要的；關鍵的) ^ Clean water is critical to the health of everyone. (乾淨的水對每個人的健康都非常重要。)
+critical (adj) (批判性的；批評的) ^ Students should develop critical thinking when reading information. (學生閱讀資訊時應培養批判性思考。)
+
+coastline (n) (海岸線) ^ The city has a beautiful coastline along the Pacific. (這座城市沿著太平洋擁有美麗的海岸線。)
+the Pacific Ocean (n) (太平洋) ^ The Pacific Ocean is the largest ocean on Earth. (太平洋是地球上最大的海洋。)
+indigenous (adj) (原住民的；本土的) ^ The museum teaches visitors about indigenous cultures. (這座博物館向遊客介紹原住民文化。)
+district (n) (地區；區域) ^ This district is famous for its old buildings. (這個地區以古老建築聞名。)
+exhibit (n/v) (展覽品；展示) ^ The museum exhibits many objects from ancient Egypt. (博物館展示許多來自古埃及的物品。)
+tribe (n) (部落) ^ The tribe lived near the river for many years. (這個部落在河邊生活了許多年。)
+numerous (adj) (眾多的；許多的) ^ The city has numerous shops and restaurants for visitors. (這座城市有許多商店和餐廳供遊客使用。)
+spring up (spring–sprang–sprung) (phr. v.) (突然出現；迅速興起) ^ New shops sprang up around the busy train station. (繁忙的火車站周圍突然出現了許多新商店。)
+a commercial zone (n) (商業區) ^ The city built a new commercial zone near the station. (這座城市在車站附近建立了新的商業區。)
+specialty stores (n) (特色商店；專門店) ^ The street has many specialty stores selling local products. (這條街有許多販售當地產品的特色商店。)
+be concerned about (phr.) (擔心；關心) ^ Many people are concerned about the environment. (許多人關心環境。)
+presence (n) (存在；出現) ^ The presence of tourists changed the small village. (遊客的出現改變了這座小村莊。)
+environmentally friendly (adj) (環保的；對環境友善的) ^ These bags are environmentally friendly and easy to use. (這些袋子很環保，也很容易使用。)
+a sense of community (phr.) (社區意識；群體歸屬感) ^ Local events help create a strong sense of community. (當地活動有助於建立強烈的社區意識。)
+rejoice (v) (歡欣；喜悅) ^ The people rejoiced when the long journey finally ended. (漫長旅程終於結束時，人們感到非常喜悅。)
+aside from (= apart from, other than, besides, in addition to, except for, except) (phr.) (除了；除……之外) ^ Aside from English, she can speak two other languages. (除了英文之外，她還會說另外兩種語言。)
+handcraft (n) (手工藝品；手工藝) ^ The market sells beautiful handcraft from local artists. (這個市場販售當地藝術家的美麗手工藝品。)
+handcrafted (adj) (手工製作的) ^ She bought a beautiful handcrafted bag at the market. (她在市場買了一個漂亮的手工製包包。)
+boast (v) (以……自豪；擁有) ^ The city boasts many beautiful buildings and parks. (這座城市擁有許多美麗的建築和公園。)
+gourmet (adj) (美食的；精緻的) ^ The restaurant serves gourmet dishes made with fresh ingredients. (這家餐廳提供用新鮮食材製作的精緻料理。)
+be loaded with (phr.) (充滿；裝滿) ^ The market is loaded with fresh fruit and local food. (這個市場充滿新鮮水果和當地食物。)
+blend (v) (混合；融合) ^ The chef blended local flavors with modern cooking styles. (廚師將當地風味與現代烹飪方式融合。)
+be blended with (phr.) (與……混合；與……融合) ^ The traditional design is blended with modern ideas. (傳統設計與現代想法融合在一起。)
+aroma (n) (香氣；芳香) ^ The warm aroma of bread filled the small shop. (溫暖的麵包香氣充滿了小商店。)
+aromatic (adj) (芳香的；香味濃郁的) ^ The restaurant uses aromatic herbs in many dishes. (這家餐廳在許多料理中使用香氣濃郁的香草。)
+fragrance (n) (香味；香氣) ^ The flowers filled the garden with a sweet fragrance. (花朵讓花園充滿甜美的香氣。)
+fragrant (adj) (芳香的；香氣濃郁的) ^ The fragrant flowers made the garden smell wonderful. (芳香的花朵讓花園聞起來非常美好。)
+odor (n) (氣味；通常指異味) ^ The old room had a strange odor. (那間老房間有一股奇怪的氣味。)
+smell (n/v) (氣味；聞起來) ^ The bread smells wonderful when it comes out of the oven. (麵包從烤箱出來時聞起來很香。)
+smelly (adj) (有臭味的) ^ The garbage became very smelly after several hot days. (垃圾經過幾天炎熱的天氣後變得很臭。)
+scent (n/v) (香味；氣味；聞到氣味) ^ The flowers gave the room a fresh scent. (花朵讓房間充滿清新的香味。)
+customize (v) (客製化；訂製) ^ Customers can customize the bags with their favorite designs. (顧客可以用自己喜歡的設計客製化包包。)
+one of a kind (adj/phr.) (獨一無二的) ^ She found a one-of-a-kind necklace at the small shop. (她在小店找到了一條獨一無二的項鍊。)
+paradise (n) (天堂；樂園) ^ The beautiful island looked like a tropical paradise. (這座美麗的島嶼看起來像熱帶天堂。)
+antique (adj/n) (古老的；古董) ^ The shop sells antique furniture from many different countries. (這家商店販售來自許多國家的古董家具。)
+accessory (n) (配件；飾品) ^ She bought a simple accessory to match her new bag. (她買了一個簡單的配件來搭配新包包。)
+range from (phr. v.) (範圍從……到……) ^ The prices range from ten dollars to fifty dollars. (價格從十美元到五十美元不等。)
+cabinet (n) (櫥櫃；展示櫃) ^ The old cabinet holds many beautiful pieces of pottery. (這個老櫥櫃收藏了許多美麗的陶器。)
+picture frame (n) (相框) ^ She put the family photo in a wooden picture frame. (她把家庭照片放進木製相框裡。)
+boutique (n) (精品店；時裝小店) ^ The boutique sells unique clothes made by local designers. (這家精品店販售當地設計師製作的獨特服裝。)
+showcase (v/n) (展示；展示場所) ^ The museum showcases the best art from the local community. (這座博物館展示當地社區最優秀的藝術作品。)
+spirit (n) (精神；精神特質) ^ The festival shows the strong spirit of the local people. (這個節慶展現當地人民強烈的精神。)
+artisan (n) (工匠；手工藝人) ^ The artisan made each bowl carefully by hand. (這位工匠仔細地手工製作每個碗。)
+populate (v) (居住於；使……有人居住) ^ Many people populate the coastal area near the city. (許多人居住在城市附近的沿海地區。)
+innovative (adj) (創新的) ^ The company created an innovative way to reduce waste. (這家公司創造了一種創新的減少浪費方法。)
+innovation (n) (創新；革新) ^ This invention is an important innovation in modern technology. (這項發明是現代科技中的一項重要創新。)
+a tourist destination (n) (旅遊目的地) ^ The island has become a popular tourist destination. (這座島已成為熱門的旅遊目的地。)
+a tourist attraction (n) (旅遊景點；觀光勝地) ^ The ancient temple is a famous tourist attraction. (這座古老寺廟是著名的旅遊景點。)
+diverse (adj) (多樣的；多元的) ^ The city has a diverse population from many countries. (這座城市有來自許多國家的多元人口。)
+diversity (n) (多樣性；多元化) ^ Cultural diversity makes the city more interesting. (文化多樣性讓這座城市更加有趣。)
+densely populated (adj) (人口稠密的；人口密集的) ^ This city is densely populated, with many people living in small areas. (這座城市人口稠密，許多人住在小範圍的區域內。)
+
+
+
+
+
+        `,
+        'past2': `
+
+
+
+
+        `,
+        'past3': `
+
+
+
+
+        `,
+        'past4': `
+
+
+
+
+        `,
+        'past5': `
+
+
+
+
+        `,
+        'past6': `
+
+
+
+
+        `,
+
         'core1': `
 ◎單字
 account (n) (1.帳號) ^ She created a new account on the social media platform. (她在社群媒體平台上建立了一個新帳號。)
@@ -2869,12 +3648,15 @@ function getRandomEmoji() {
             currentSpeech = null;
         }
 
-        // Update Bottom Sticky Progress Bar
+                // Update Bottom Sticky Progress Bar
         function updateLearningProgress() {
             const rows = document.querySelectorAll('.vocab-row');
+            const headers = document.querySelectorAll('.section-header');
             const barContainer = document.getElementById('bottomProgressBar');
-            const textEl = document.getElementById('vocabProgressText');
-            const fillEl = document.getElementById('vocabProgressFill');
+            const overallTextEl = document.getElementById('vocabProgressText');
+            const overallFillEl = document.getElementById('vocabProgressFill');
+            const sectionTextEl = document.getElementById('sectionProgressText');
+            const sectionFillEl = document.getElementById('sectionProgressFill');
             const statsContainer = document.getElementById('visitStatsContainer');
 
             const total = rows.length;
@@ -2912,6 +3694,7 @@ function getRandomEmoji() {
                 if (barContainer) barContainer.style.display = 'flex';
             }
 
+            // ===== Overall progress =====
             let viewedCount = 0;
             rows.forEach(row => {
                 const rect = row.getBoundingClientRect();
@@ -2920,9 +3703,36 @@ function getRandomEmoji() {
                 }
             });
 
-            const percentage = total > 0 ? Math.round((viewedCount / total) * 100) : 0;
-            if (textEl) textEl.textContent = `${viewedCount} of ${total} (${percentage}%)`;
-            if (fillEl) fillEl.style.width = `${percentage}%`;
+            const overallPercentage = total > 0 ? Math.round((viewedCount / total) * 100) : 0;
+            if (overallTextEl) overallTextEl.textContent = `${viewedCount} / ${total} (${overallPercentage}%)`;
+            if (overallFillEl) overallFillEl.style.width = `${overallPercentage}%`;
+
+            // ===== This Section progress =====
+            let currentSection = null;
+            headers.forEach(header => {
+                const rect = header.getBoundingClientRect();
+                if (rect.top < windowHeight) {
+                    currentSection = header.getAttribute('data-section');
+                }
+            });
+
+            if (currentSection !== null) {
+                const sectionRows = document.querySelectorAll(`.vocab-row[data-section="${currentSection}"]`);
+                const sectionTotal = sectionRows.length;
+                let sectionViewed = 0;
+                sectionRows.forEach(row => {
+                    const rect = row.getBoundingClientRect();
+                    if (rect.top <= windowHeight) {
+                        sectionViewed++;
+                    }
+                });
+                const sectionPercentage = sectionTotal > 0 ? Math.round((sectionViewed / sectionTotal) * 100) : 0;
+                if (sectionTextEl) sectionTextEl.textContent = `${sectionViewed} / ${sectionTotal} (${sectionPercentage}%)`;
+                if (sectionFillEl) sectionFillEl.style.width = `${sectionPercentage}%`;
+            } else {
+                if (sectionTextEl) sectionTextEl.textContent = `0 / 0 (0%)`;
+                if (sectionFillEl) sectionFillEl.style.width = '0%';
+            }
         }
 
         // Load vocabulary with checkboxes
@@ -2957,10 +3767,10 @@ function getRandomEmoji() {
             // Clear checked sections when loading new lesson
             checkedSections.clear();
 
-            let html = '';
+                        let html = '';
             data.forEach((section, sectionIndex) => {
                 html += `<tr>
-                    <td colspan="2" class="section-header">${section.section}</td>
+                    <td colspan="2" class="section-header" data-section="${sectionIndex}">${section.section}</td>
                 </tr>`;
                 
                 section.words.forEach((item, wordIndex) => {
@@ -2970,7 +3780,7 @@ function getRandomEmoji() {
                     // Only show checked words
                     if (isChecked) {
                         const fullText = `${item.word}. ${item.example}`;
-                        html += `<tr class="vocab-row">
+                        html += `<tr class="vocab-row" data-section="${sectionIndex}">
                             <td class="audio-controls">
                                 <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
                                 <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
