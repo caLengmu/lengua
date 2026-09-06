@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>瀏覽器純本機離線 AI 測試</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 680px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.6;
+      background-color: #f9fafb;
+      color: #1f2937;
+    }
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    #status {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 14px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      min-height: 50px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>WebLLM 本機離線對話</h2>
+    <div id="status">檢查環境中...</div>
+
+    <textarea id="prompt" placeholder="輸入問題（例如：請用繁體中文寫一首關於貓的短詩）..." disabled></textarea><br />
+    <button id="send-btn" disabled>發送訊息</button>
+
+    <h3>AI 回覆：</h3>
+    <div id="output">等待模型載入完成...</div>
+  </div>
+
+  <script type="module">
+    // 從 CDN 載入 WebLLM
+    import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
+
+    const statusEl = document.getElementById("status");
+    const promptInput = document.getElementById("prompt");
+    const sendBtn = document.getElementById("send-btn");
+    const outputEl = document.getElementById("output");
+
+    // 檢查瀏覽器是否支援 WebGPU
+    if (!navigator.gpu) {
+      statusEl.innerHTML = "<b style='color:red;'>您的瀏覽器不支援 WebGPU！請使用最新版 Chrome 或 Edge。</b>";
+      outputEl.innerText = "無法載入本機模型。";
+    } else {
+      initAI();
+    }
+
+    let engine = null;
+
+    async function initAI() {
+      // 挑選輕量且適合本機的 1B 模型
+      const selectedModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
+
+      try {
+        statusEl.innerText = "正在下載並載入本機模型（僅首次需要下載，請稍候）...";
+
+        // 初始化引擎並回報進度
+        engine = await CreateMLCEngine(selectedModel, {
+          initProgressCallback: (report) => {
+            statusEl.innerText = report.text;
+          }
+        });
+
+        statusEl.innerText = "✅ 模型已載入完畢！運算完全在您的電腦本機執行。";
+        promptInput.disabled = false;
+        sendBtn.disabled = false;
+        outputEl.innerText = "模型準備就緒，請在上方輸入問題。";
+      } catch (err) {
+        statusEl.innerText = "❌ 載入失敗: " + err.message;
+        console.error(err);
+      }
+    }
+
+    // 發送對話處理
+    sendBtn.addEventListener("click", async () => {
+      const userText = promptInput.value.trim();
+      if (!userText || !engine) return;
+
+      promptInput.disabled = true;
+      sendBtn.disabled = true;
+      outputEl.innerText = "AI 正在思考並本地生成中...";
+
+      try {
+        // 使用類似 OpenAI 的標準對話請求
+        const reply = await engine.chat.completions.create({
+          messages: [
+            { role: "system", content: "You are a helpful assistant. Please reply in Traditional Chinese." },
+            { role: "user", content: userText }
+          ]
+        });
+
+        outputEl.innerText = reply.choices[0].message.content;
+      } catch (error) {
+        outputEl.innerText = "產生回覆時出錯: " + error.message;
+      } finally {
+        promptInput.disabled = false;
+        sendBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
