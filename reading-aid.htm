@@ -199,23 +199,6 @@
   }
   .playback-display .word.active-word { background: #ffd166; color: #222; }
 
-  /* 上下句按鈕 (移到右側) */
-  .vertical-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-  }
-  .vertical-nav button {
-    flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
-    min-width: 46px;
-    padding: 0;
-    font-size: 20px;
-    border-radius: 12px;
-  }
-
   .translation-panel {
     display: none;
     margin-top: 10px;
@@ -275,184 +258,68 @@
   /* 原本的 nav-row 已不需要 */
   .nav-row { display: none; }
 
-  /* ---------- recording panel: visually boxed off ---------- */
-    #record-panel {
+  /* ---------- 底部彈出面板 (Bottom Sheet) ---------- */
+  .notes-overlay {
     display: none;
-    margin-top: 16px;
-    padding: 16px 16px 8px;
-    border: 2px dashed #f3b23c;
-    background: #fff8ec;
-    border-radius: 14px;
-    transition: background-color 0.25s ease, border-color 0.25s ease;
-  }
-  #record-panel.visible { display: block; }
-
-  .record-panel-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #b3701a;
-    text-align: left;
-    margin-bottom: 10px;
-    letter-spacing: 0.02em;
-  }
-  .record-panel-title-text { flex: 1 1 auto; }
-  .save-btn {
-    flex: 0 0 auto;
-    min-width: auto;
-    padding: 6px 12px;
-    font-size: 13px;
-    background-color: #fff;
-    color: #b3701a;
-    border: 2px solid #f3b23c;
-  }
-  .save-btn:hover { background-color: #fff2da; }
-
-  /* Enable/disable switch for the recording area. Placed at the left
-     of the title row, mirroring the common pattern of a section-level
-     on/off control leading the section it governs, with actions (Save)
-     kept on the trailing/right side. */
-  .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 42px;
-    height: 24px;
-    flex: 0 0 auto;
-  }
-  .toggle-switch input { opacity: 0; width: 0; height: 0; }
-  .toggle-slider {
-    position: absolute;
-    cursor: pointer;
+    position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #cfcfcf;
-    transition: background-color 0.2s ease;
-    border-radius: 24px;
-  }
-  .toggle-slider::before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: #fff;
-    transition: transform 0.2s ease;
-    border-radius: 50%;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  }
-  .toggle-switch input:checked + .toggle-slider { background-color: #1c7a4d; }
-  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
-
-  #record-controls-wrapper {
-    overflow-y: auto; /* 允許內容過多時產生上下捲動條 */
-    overflow-x: hidden;
-    max-height: 60vh; /* 將高度放寬到視窗高度的 60%，確保有足夠空間顯示 */
-    opacity: 1;
-    margin-top: 12px;
-    transition: max-height 0.25s ease, opacity 0.25s ease, margin-top 0.25s ease;
-  }
-
-  /* Dark/disabled state: title row stays visible (so it can be turned
-     back on), everything below it collapses away entirely rather than
-     just being dimmed, since it's not usable while off. */
-  #record-panel.panel-disabled {
-    background: #383838;
-    border-color: #5a5a5a;
-  }
-  #record-panel.panel-disabled .record-panel-title-text { color: #cfcfcf; }
-  #record-panel.panel-disabled #record-controls-wrapper {
-    max-height: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
     opacity: 0;
-    margin-top: 0;
-    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .notes-overlay.active {
+    display: block;
+    opacity: 1;
   }
 
-  /* ---------- Reading Aid: 單字&片語 / 文法&句型 ---------- */
-  .aid-section { margin-bottom: 14px; }
-  .aid-section:last-child { margin-bottom: 0; }
-  .aid-section-title {
-    font-size: 13px;
-    font-weight: 800;
-    color: #b3701a;
-    text-align: left;
-    margin-bottom: 8px;
-  }
-  .aid-list {
+  .notes-bottom-sheet {
+    position: fixed;
+    bottom: -100%; 
+    left: 0; right: 0;
+    height: 70vh; 
+    background: #fbfdff;
+    z-index: 1000;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-height: 240px;
-    overflow-y: auto;
+    transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  .aid-empty {
-    font-size: 13px;
-    color: #c2a878;
-    font-style: italic;
-    text-align: left;
-  }
-  .aid-item {
-    background: #ffffff;
-    border: 1px solid #f0d9ab;
-    border-radius: 10px;
-    padding: 10px 12px;
-    text-align: left;
-  }
-  .aid-item-head {
+  .notes-bottom-sheet.active { bottom: 0; }
+
+  .sheet-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 6px;
-    font-size: 15px;
-    color: #333;
+    padding: 16px 20px;
+    border-bottom: 2px solid #eef5fa;
+    background: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
   }
-  .aid-item-pos {
-    font-size: 12px;
-    color: #a98750;
-    font-weight: 600;
-  }
-  .aid-item-cn {
-    font-size: 13px;
-    color: #b3701a;
-    margin-top: 2px;
-  }
-  .aid-example {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13.5px;
-    color: #555;
-    margin-top: 6px;
-  }
-  .aid-example-cn {
-    font-size: 12.5px;
-    color: #8a8a8a;
-    margin-top: 2px;
-  }
-  .tts-btn {
-    flex: 0 0 auto;
-    width: 26px;
-    height: 26px;
-    min-width: 26px;
-    padding: 0;
-    border-radius: 50%;
-    font-size: 13px;
-    background-color: #fff2da;
-    color: #b3701a;
-    border: none;
-  }
-  .tts-btn:hover { background-color: #ffe6bd; }
-  .grammar-item-title {
-    font-size: 14.5px;
+  .sheet-title {
+    font-size: 1.1rem;
     font-weight: 800;
-    color: #2a628f;
+    color: #b3701a;
   }
-  .grammar-explain {
-    font-size: 13.5px;
-    color: #555;
-    margin-top: 4px;
-    line-height: 1.5;
+  
+  .sheet-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    -webkit-overflow-scrolling: touch;
   }
+
+  .sheet-content .aid-item-head { font-size: 17px; }
+  .sheet-content .aid-item-pos { font-size: 14px; }
+  .sheet-content .aid-item-cn { font-size: 15px; margin-top: 6px; }
+  .sheet-content .aid-example { font-size: 16px; margin-top: 10px; }
+  .sheet-content .aid-example-cn { font-size: 14px; }
+  .sheet-content .grammar-item-title { font-size: 17px; }
+  .sheet-content .grammar-explain { font-size: 15px; }
+  .sheet-content .aid-list { max-height: none; overflow-y: visible; }
 
   /* ---------- Load Text / Save-To views ---------- */
   .section-title {
@@ -528,8 +395,8 @@
 
   <!-- ============ PLAYBACK ("Now Reading") ============ -->
   <div id="playback-view" class="view">
-        <div class="playback-header">
-      <div></div> <!-- 空白佔位，用來把標題擠到正中間 -->
+    <div class="playback-header">
+      <div></div>
       <h2 style="margin:0;">📖 Now Reading</h2>
       <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
     </div>
@@ -538,50 +405,44 @@
       <span id="sentence-counter" class="sentence-counter">1 of 1</span>
     </div>
 
+    <!-- 閱讀區 -->
     <div class="playback-display-wrapper">
       <div id="playback-display" class="playback-display"></div>
-      
-      <!-- 上下句按鈕移到這裡 (右側) -->
-      <div class="vertical-nav">
-        <button id="btn-prev" class="secondary" title="Previous">⬆️</button>
-        <button id="btn-next" class="secondary" title="Next">⬇️</button>
-      </div>
     </div>
     
     <div id="translation-panel" class="translation-panel"></div>
 
-    <!-- 語速進度條 與 翻譯按鈕 -->
-    <div class="speed-translate-row">
+    <!-- 工具列：語速、翻譯、💡筆記按鈕 -->
+    <div class="speed-translate-row" style="margin-top: 15px; margin-bottom: 10px;">
       <div class="speed-control-group">
         <label for="playback-speed">⏱️ Speed: <span id="speed-label">1.0x</span></label>
         <input type="range" id="playback-speed" min="0.5" max="1.5" step="0.05" value="1.0">
       </div>
       <button id="btn-toggle-translation" class="translate-btn" title="Show/hide translation">🌐</button>
+      <button id="btn-open-notes" class="translate-btn" style="background-color: #fff2da; border-color: #f3b23c;" title="Reading Aid">💡</button>
+      <button id="btn-stop" class="translate-btn secondary" title="Start Over">🔄</button>
     </div>
 
-    <div class="btn-row">
-      <button id="btn-pause-resume">⏸️ Pause</button>
-      <button id="btn-stop" class="secondary">🔄 Start Over</button>
+    <!-- 主控台 -->
+    <div class="btn-row" style="display: flex; gap: 12px; margin-bottom: 15px;">
+      <button id="btn-prev" class="secondary" style="flex: 1; font-size: 20px;">⏮️</button>
+      <button id="btn-pause-resume" style="flex: 2.5; font-size: 1.2rem; padding: 14px;">⏸️ Pause</button>
+      <button id="btn-next" class="secondary" style="flex: 1; font-size: 20px;">⏭️</button>
     </div>
 
-    <!-- Reading Aid: per-sentence 單字&片語 / 文法&句型 notes, parsed
-         from [ ] and { } blocks in the loaded text. -->
-    <div id="record-panel">
-      <div class="record-panel-title">
-        <label class="toggle-switch" title="Enable Reading Aid">
-          <input type="checkbox" id="record-enable-toggle" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="record-panel-title-text">📘 READING AID</span>
-        <button id="btn-save-recording" class="secondary save-btn">💾 Save</button>
+    <!-- 底部彈出面板 (筆記區) -->
+    <div id="notes-overlay" class="notes-overlay"></div>
+    <div id="notes-bottom-sheet" class="notes-bottom-sheet">
+      <div class="sheet-header">
+        <span class="sheet-title">📘 單字與文法筆記</span>
+        <button id="btn-close-notes" class="icon-btn" style="width: 36px; height: 36px;">✕</button>
       </div>
-
-      <div id="record-controls-wrapper">
+      <div class="sheet-content">
         <div class="aid-section">
           <div class="aid-section-title">🔤 單字&片語</div>
           <div id="vocab-list" class="aid-list"></div>
         </div>
-        <div class="aid-section">
+        <div class="aid-section" style="margin-top: 24px;">
           <div class="aid-section-title">📐 文法&句型</div>
           <div id="grammar-list" class="aid-list"></div>
         </div>
@@ -717,9 +578,10 @@ function releaseWakeLock() {
   const translatePanel = document.getElementById('translation-panel');
   const btnToggleTranslation = document.getElementById('btn-toggle-translation');
 
-  const recordPanel = document.getElementById('record-panel');
-  const recordEnableToggle = document.getElementById('record-enable-toggle');
-  const btnSaveRecording = document.getElementById('btn-save-recording');
+  const btnOpenNotes = document.getElementById('btn-open-notes');
+  const btnCloseNotes = document.getElementById('btn-close-notes');
+  const notesOverlay = document.getElementById('notes-overlay');
+  const notesBottomSheet = document.getElementById('notes-bottom-sheet');
   const vocabListEl = document.getElementById('vocab-list');
   const grammarListEl = document.getElementById('grammar-list');
 
@@ -1244,7 +1106,7 @@ function segmentSentences(text, locale) {
     btnPauseResume.textContent = isPlaying ? '⏸️ Pause' : '▶️ Read Aloud';
     const paused = !isPlaying;
     // (移除了舊的 navRow 控制，因為按鈕已經固定在右側了)
-    recordPanel.classList.toggle('visible', paused);
+    
     btnPrev.disabled = currentSentenceIndex <= 0;
     btnNext.disabled = currentSentenceIndex >= sentences.length - 1;
     if (paused) {
@@ -1565,18 +1427,21 @@ function segmentSentences(text, locale) {
   // ---------------------------------------------------------------
 
   let recordingModeEnabled = true;
-  let isRecording = false; // kept so older guard checks stay harmless
+  let isRecording = false; 
 
-  function applyRecordingModeUI() {
-    recordPanel.classList.toggle('panel-disabled', !recordingModeEnabled);
-  }
-  applyRecordingModeUI();
-
-  recordEnableToggle.addEventListener('change', () => {
-    recordingModeEnabled = recordEnableToggle.checked;
-    applyRecordingModeUI();
-    if (sentences.length > 0) renderPlaybackWindow();
+  // 打開筆記面板
+  btnOpenNotes.addEventListener('click', () => {
+    notesOverlay.classList.add('active');
+    notesBottomSheet.classList.add('active');
   });
+
+  // 關閉筆記面板
+  const closeNotes = () => {
+    notesOverlay.classList.remove('active');
+    notesBottomSheet.classList.remove('active');
+  };
+  btnCloseNotes.addEventListener('click', closeNotes);
+  notesOverlay.addEventListener('click', closeNotes);
 
   function resetPlaybackState() {
     // no-op (audio recording/playback feature removed)
