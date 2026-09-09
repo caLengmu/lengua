@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Multilingual Text Reader & Recorder</title>
+<style>
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f8fc;
+    color: #444;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 720px;
+    background: #ffffff;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  h1 { color: #2a628f; margin: 0 0 6px; font-size: 1.6rem; line-height: 1.3; }
+  h2 { color: #2a628f; margin: 0 0 16px; font-size: 1.2rem; }
+
+  .flags { margin-bottom: 18px; }
+  .flags img { width: 34px; max-width: 16vw; margin: 0 4px; }
+
+  textarea {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    border: 2px solid #c5dfee;
+    border-radius: 16px;
+    outline: none;
+    font-family: inherit;
+    text-align: left;
+    resize: vertical;
+    background: #fbfdff;
+  }
+
+  #home-textarea {
+    height: 130px;
+    font-size: 18px;
+    box-shadow: 0 2px 6px rgba(15, 76, 129, 0.06);
+  }
+  #home-textarea:focus { border-color: #6fb3e0; }
+
+  .btn-row {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-row + .btn-row { margin-top: 12px; }
+
+  select, button {
+    font-size: 15px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #0f4c81;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    flex: 1 1 auto;
+    min-width: 100px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  #btn-pause-resume, #btn-stop, #btn-prev, #btn-next {
+    flex: 1 1 0;
+  }
+
+  select:hover, button:hover { background-color: #083a63; }
+  button:active { background-color: #062c4c; }
+  button:disabled { background-color: #c5dfee; cursor: not-allowed; }
+
+  button.secondary {
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+  }
+  button.secondary:hover { background-color: #dcebf5; }
+
+  select { padding: 11px 12px; }
+
+    /* ---------- home screen: same layout on desktop and mobile ---------- */
+  .home-stack {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .paste-clear-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  #btn-start {
+    background-color: #1c7a4d;
+    font-size: 1.2em;
+    padding: 14px;
+  }
+  #btn-start:hover { background-color: #145f3b; }
+
+  /* ---------- Now Reading header ---------- */
+  .playback-header {
+    display: grid;
+    grid-template-columns: 42px 1fr 42px; /* 讓標題完美置中 */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0px;
+  }
+  .playback-header h2 { justify-self: center; text-align: center; }
+  .playback-header .icon-btn { justify-self: end; grid-column: 3; }
+  
+  .counter-row { 
+    text-align: center; 
+    margin-top: -4px; 
+    margin-bottom: 14px; 
+  }
+  .sentence-counter {
+    display: inline-block;
+    background: #ff9f1c;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 4px rgba(255, 159, 28, 0.4);
+  }
+  .icon-btn {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+  }
+  .icon-btn:hover { background-color: #dcebf5; }
+
+  /* ---------- playback screen ---------- */
+  .playback-display-wrapper { 
+    display: flex; 
+    align-items: stretch; 
+    gap: 10px; 
+  }
+
+  .playback-display {
+    flex: 1; /* 佔滿剩下的空間 */
+    text-align: left;
+    border: 2px solid #c5dfee;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 0;
+    min-height: 140px;
+    background: #fbfdff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .playback-display .line { font-size: 21px; line-height: 1.5; word-break: break-word; }
+  .playback-display .line.next-line { color: #6b6b6b; font-size: 19px; }
+
+  .playback-display .word {
+    border-radius: 4px;
+    padding: 1px 2px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .playback-display .word.active-word { background: #ffd166; color: #222; }
+
+  /* 上下句按鈕 (移到右側) */
+  .vertical-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  .vertical-nav button {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    padding: 0;
+    font-size: 20px;
+    border-radius: 12px;
+  }
+
+  .translation-panel {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: #eef8f0;
+    border: 2px dashed #7fbf9a;
+    border-radius: 12px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #2f6b47;
+    text-align: left;
+  }
+  .translation-panel.visible { display: block; }
+  .translation-panel.empty { color: #8fae9c; font-style: italic; }
+
+  /* 語速與翻譯按鈕列 */
+  .speed-translate-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 0 4px;
+  }
+  .speed-control-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    text-align: left;
+  }
+  .speed-control-group label {
+    font-size: 13px; color: #2a628f; font-weight: 700;
+  }
+  .speed-control-group input[type="range"] {
+    width: 100%; accent-color: #2a628f; padding: 0; background: transparent;
+  }
+
+  .translate-btn {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    padding: 0;
+    border-radius: 12px;
+    font-size: 20px;
+    flex: none;
+    background-color: #eef5fa;
+    color: #2a628f;
+    border: 2px solid #c5dfee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .translate-btn:hover { background-color: #dcebf5; }
+  .translate-btn.active { background-color: #2a628f; color: #fff; border-color: #2a628f; }
+
+  /* 原本的 nav-row 已不需要 */
+  .nav-row { display: none; }
+
+  /* ---------- recording panel: visually boxed off ---------- */
+    #record-panel {
+    display: none;
+    margin-top: 16px;
+    padding: 16px 16px 8px;
+    border: 2px dashed #f3b23c;
+    background: #fff8ec;
+    border-radius: 14px;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+  }
+  #record-panel.visible { display: block; }
+
+  .record-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #b3701a;
+    text-align: left;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .record-panel-title-text { flex: 1 1 auto; }
+  .save-btn {
+    flex: 0 0 auto;
+    min-width: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #fff;
+    color: #b3701a;
+    border: 2px solid #f3b23c;
+  }
+  .save-btn:hover { background-color: #fff2da; }
+
+  /* Enable/disable switch for the recording area. Placed at the left
+     of the title row, mirroring the common pattern of a section-level
+     on/off control leading the section it governs, with actions (Save)
+     kept on the trailing/right side. */
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    flex: 0 0 auto;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cfcfcf;
+    transition: background-color 0.2s ease;
+    border-radius: 24px;
+  }
+  .toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    transition: transform 0.2s ease;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .toggle-switch input:checked + .toggle-slider { background-color: #1c7a4d; }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+  #record-controls-wrapper {
+    overflow-y: auto; /* 允許內容過多時產生上下捲動條 */
+    overflow-x: hidden;
+    max-height: 60vh; /* 將高度放寬到視窗高度的 60%，確保有足夠空間顯示 */
+    opacity: 1;
+    margin-top: 12px;
+    transition: max-height 0.25s ease, opacity 0.25s ease, margin-top 0.25s ease;
+  }
+
+  /* Dark/disabled state: title row stays visible (so it can be turned
+     back on), everything below it collapses away entirely rather than
+     just being dimmed, since it's not usable while off. */
+  #record-panel.panel-disabled {
+    background: #383838;
+    border-color: #5a5a5a;
+  }
+  #record-panel.panel-disabled .record-panel-title-text { color: #cfcfcf; }
+  #record-panel.panel-disabled #record-controls-wrapper {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    pointer-events: none;
+  }
+
+  /* ---------- Reading Aid: 單字&片語 / 文法&句型 ---------- */
+  .aid-section { margin-bottom: 14px; }
+  .aid-section:last-child { margin-bottom: 0; }
+  .aid-section-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #b3701a;
+    text-align: left;
+    margin-bottom: 8px;
+  }
+  .aid-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .aid-empty {
+    font-size: 13px;
+    color: #c2a878;
+    font-style: italic;
+    text-align: left;
+  }
+  .aid-item {
+    background: #ffffff;
+    border: 1px solid #f0d9ab;
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .aid-item-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    color: #333;
+  }
+  .aid-item-pos {
+    font-size: 12px;
+    color: #a98750;
+    font-weight: 600;
+  }
+  .aid-item-cn {
+    font-size: 13px;
+    color: #b3701a;
+    margin-top: 2px;
+  }
+  .aid-example {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    color: #555;
+    margin-top: 6px;
+  }
+  .aid-example-cn {
+    font-size: 12.5px;
+    color: #8a8a8a;
+    margin-top: 2px;
+  }
+  .tts-btn {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 13px;
+    background-color: #fff2da;
+    color: #b3701a;
+    border: none;
+  }
+  .tts-btn:hover { background-color: #ffe6bd; }
+  .grammar-item-title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #2a628f;
+  }
+  .grammar-explain {
+    font-size: 13.5px;
+    color: #555;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* ---------- Load Text / Save-To views ---------- */
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2a628f;
+    text-align: left;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .project-row {
+    display: flex;
+    gap: 8px;
+  }
+  .project-btn { flex: 1 1 auto; text-align: left; }
+  .delete-btn { flex: 0 0 auto; min-width: 50px; }
+
+  .hint { font-size: 12px; color: #9db6c6; margin-top: 10px; }
+
+  @media (max-width: 400px) {
+    body { padding: 8px; }
+    .app { padding: 18px 14px; border-radius: 12px; }
+    h1 { font-size: 1.3rem; }
+    .flags img { width: 28px; }
+    select, button { font-size: 14px; padding: 10px; min-width: 84px; }
+    .playback-display .line { font-size: 18px; }
+    .playback-display .line.next-line { font-size: 16px; }
+    
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ HOME ============ -->
+  <div id="home-view" class="view active">
+    <h1>Multilingual Text Reader & Recorder</h1>
+    <div class="flags">
+      <img src="https://flagcdn.com/w320/jp.png" alt="Japan Flag">
+      <img src="https://flagcdn.com/w320/kr.png" alt="Korea Flag">
+      <img src="https://flagcdn.com/w320/es.png" alt="Spain Flag">
+      <img src="https://flagcdn.com/w320/us.png" alt="USA Flag">
+    </div>
+    <textarea id="home-textarea" placeholder="Type or paste text here..."></textarea>
+
+        <div class="home-stack">
+      <div class="paste-clear-row">
+        <button id="btn-paste" class="secondary">📋 Paste Text</button>
+        <button id="btn-clear" class="secondary">🗑️ Clear Text</button>
+      </div>
+      <select id="home-language">
+        <option value="ja-JP">日本語</option>
+        <option value="ko-KR">한국어</option>
+        <option value="es-ES">español</option>
+        <option value="en-US">English</option>
+      </select>
+      <button id="btn-start">▶️ Start</button>
+      
+      <!-- 將 Load Text 與新的 AI Support 按鈕包在同一個兩欄網格中 -->
+      <div class="paste-clear-row">
+        <button id="btn-load-text" class="secondary">📂 Load Text</button>
+        <button id="btn-ai-support" class="secondary">✨ AI Support</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ============ PLAYBACK ("Now Reading") ============ -->
+  <div id="playback-view" class="view">
+        <div class="playback-header">
+      <div></div> <!-- 空白佔位，用來把標題擠到正中間 -->
+      <h2 style="margin:0;">📖 Now Reading</h2>
+      <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
+    </div>
+    
+    <div class="counter-row">
+      <span id="sentence-counter" class="sentence-counter">1 of 1</span>
+    </div>
+
+    <div class="playback-display-wrapper">
+      <div id="playback-display" class="playback-display"></div>
+      
+      <!-- 上下句按鈕移到這裡 (右側) -->
+      <div class="vertical-nav">
+        <button id="btn-prev" class="secondary" title="Previous">⬆️</button>
+        <button id="btn-next" class="secondary" title="Next">⬇️</button>
+      </div>
+    </div>
+    
+    <div id="translation-panel" class="translation-panel"></div>
+
+    <!-- 語速進度條 與 翻譯按鈕 -->
+    <div class="speed-translate-row">
+      <div class="speed-control-group">
+        <label for="playback-speed">⏱️ Speed: <span id="speed-label">1.0x</span></label>
+        <input type="range" id="playback-speed" min="0.5" max="1.5" step="0.05" value="1.0">
+      </div>
+      <button id="btn-toggle-translation" class="translate-btn" title="Show/hide translation">🌐</button>
+    </div>
+
+    <div class="btn-row">
+      <button id="btn-pause-resume">⏸️ Pause</button>
+      <button id="btn-stop" class="secondary">🔄 Start Over</button>
+    </div>
+
+    <!-- Reading Aid: per-sentence 單字&片語 / 文法&句型 notes, parsed
+         from [ ] and { } blocks in the loaded text. -->
+    <div id="record-panel">
+      <div class="record-panel-title">
+        <label class="toggle-switch" title="Enable Reading Aid">
+          <input type="checkbox" id="record-enable-toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="record-panel-title-text">📘 READING AID</span>
+        <button id="btn-save-recording" class="secondary save-btn">💾 Save</button>
+      </div>
+
+      <div id="record-controls-wrapper">
+        <div class="aid-section">
+          <div class="aid-section-title">🔤 單字&片語</div>
+          <div id="vocab-list" class="aid-list"></div>
+        </div>
+        <div class="aid-section">
+          <div class="aid-section-title">📐 文法&句型</div>
+          <div id="grammar-list" class="aid-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LOAD TEXT ============ -->
+  <div id="load-text-view" class="view">
+    <div class="playback-header">
+      <h2 style="margin:0;">📂 Load Text</h2>
+      <button id="btn-loadtext-close" class="icon-btn" title="Close">✕</button>
+    </div>
+
+    <div class="section-title">📚 Samples</div>
+    <div class="btn-row">
+      <button id="btn-sample-1" class="secondary">📄 Sample #1</button>
+      <button id="btn-sample-2" class="secondary">📄 Sample #2</button>
+      <button id="btn-sample-3" class="secondary">📄 Sample #3</button>
+      <button id="btn-sample-4" class="secondary">📄 Sample #4</button>
+    </div>
+
+    <div class="section-title" style="margin-top:24px;">💼 Saved Projects</div>
+    <div class="project-list">
+      <div class="project-row">
+        <button id="btn-project-1" class="secondary project-btn">⚪ Project #1</button>
+        <button id="btn-delete-project-1" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-2" class="secondary project-btn">⚪ Project #2</button>
+        <button id="btn-delete-project-2" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-3" class="secondary project-btn">⚪ Project #3</button>
+        <button id="btn-delete-project-3" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-4" class="secondary project-btn">⚪ Project #4</button>
+        <button id="btn-delete-project-4" class="secondary delete-btn">🗑️</button>
+      </div>
+      <div class="project-row">
+        <button id="btn-project-5" class="secondary project-btn">⚪ Project #5</button>
+        <button id="btn-delete-project-5" class="secondary delete-btn">🗑️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SAVE TO PROJECT ============ -->
+  <div id="save-view" class="view">
+    <div class="playback-header">
+      <h2 style="margin:0;">💾 Save To…</h2>
+      <button id="btn-save-close" class="icon-btn" title="Close">✕</button>
+    </div>
+    <div class="project-list">
+      <button id="btn-save-slot-1" class="secondary project-btn">⚪ Project #1</button>
+      <button id="btn-save-slot-2" class="secondary project-btn">⚪ Project #2</button>
+      <button id="btn-save-slot-3" class="secondary project-btn">⚪ Project #3</button>
+      <button id="btn-save-slot-4" class="secondary project-btn">⚪ Project #4</button>
+      <button id="btn-save-slot-5" class="secondary project-btn">⚪ Project #5</button>
+    </div>
+  </div>
+
+  <!-- ============ OVERWRITE CONFIRMATION ============ -->
+  <div id="save-confirm-view" class="view">
+    <h2>⚠️ Overwrite Project?</h2>
+    <p id="save-confirm-text" style="color:#777; text-align:left;"></p>
+    <div class="btn-row">
+      <button id="btn-save-confirm-yes">✅ Overwrite</button>
+      <button id="btn-save-confirm-cancel" class="secondary">✕ Cancel</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 在 script 頂端加入
+let wakeLock = null;
+
+async function requestWakeLock() {
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+    } catch (err) {
+      console.log('Wake Lock denied:', err);
+    }
+  }
+}
+
+function releaseWakeLock() {
+  if (wakeLock !== null) {
+    wakeLock.release().then(() => { wakeLock = null; });
+  }
+}
+
+// 在 btnStop.addEventListener 與 btnPlaybackClose.addEventListener 內加入：
+// releaseWakeLock();
+
+// 在 playFromSentence 最後 (isPlaying = true 之後) 加入：
+// requestWakeLock();
+  // ---------------------------------------------------------------
+  // View switching
+  // ---------------------------------------------------------------
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // ---------------------------------------------------------------
+  // Element references
+  // ---------------------------------------------------------------
+  const homeTextarea = document.getElementById('home-textarea');
+  const homeLanguage = document.getElementById('home-language');
+  const btnPaste = document.getElementById('btn-paste');
+  const btnClear = document.getElementById('btn-clear');
+  const btnStart = document.getElementById('btn-start');
+  const btnLoadText = document.getElementById('btn-load-text');
+  const btnAiSupport = document.getElementById('btn-ai-support');
+
+  const playbackSpeed = document.getElementById('playback-speed');
+  const speedLabel = document.getElementById('speed-label'); // 新增語速文字標籤
+  const btnPlaybackClose = document.getElementById('btn-playback-close');
+  const playbackDisplay = document.getElementById('playback-display');
+  const btnPauseResume = document.getElementById('btn-pause-resume');
+  const btnStop = document.getElementById('btn-stop');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  // 監聽語速進度條變化，即時更新文字顯示
+  playbackSpeed.addEventListener('input', () => {
+    speedLabel.textContent = parseFloat(playbackSpeed.value).toFixed(2) + 'x';
+  });
+
+  const translatePanel = document.getElementById('translation-panel');
+  const btnToggleTranslation = document.getElementById('btn-toggle-translation');
+
+  const recordPanel = document.getElementById('record-panel');
+  const recordEnableToggle = document.getElementById('record-enable-toggle');
+  const btnSaveRecording = document.getElementById('btn-save-recording');
+  const vocabListEl = document.getElementById('vocab-list');
+  const grammarListEl = document.getElementById('grammar-list');
+
+  const btnLoadTextClose = document.getElementById('btn-loadtext-close');
+  const btnSample1 = document.getElementById('btn-sample-1');
+  const btnSample2 = document.getElementById('btn-sample-2');
+  const btnSample3 = document.getElementById('btn-sample-3');
+  const btnSample4 = document.getElementById('btn-sample-4');
+  const btnProject1 = document.getElementById('btn-project-1');
+  const btnProject2 = document.getElementById('btn-project-2');
+  const btnProject3 = document.getElementById('btn-project-3');
+  const btnProject4 = document.getElementById('btn-project-4');
+  const btnProject5 = document.getElementById('btn-project-5');
+  const btnDeleteProject1 = document.getElementById('btn-delete-project-1');
+  const btnDeleteProject2 = document.getElementById('btn-delete-project-2');
+  const btnDeleteProject3 = document.getElementById('btn-delete-project-3');
+  const btnDeleteProject4 = document.getElementById('btn-delete-project-4');
+  const btnDeleteProject5 = document.getElementById('btn-delete-project-5');
+
+  const btnSaveClose = document.getElementById('btn-save-close');
+  const btnSaveSlot1 = document.getElementById('btn-save-slot-1');
+  const btnSaveSlot2 = document.getElementById('btn-save-slot-2');
+  const btnSaveSlot3 = document.getElementById('btn-save-slot-3');
+  const btnSaveSlot4 = document.getElementById('btn-save-slot-4');
+  const btnSaveSlot5 = document.getElementById('btn-save-slot-5');
+
+  const PROJECT_IDS = [1, 2, 3, 4, 5];
+
+  const saveConfirmText = document.getElementById('save-confirm-text');
+  const btnSaveConfirmYes = document.getElementById('btn-save-confirm-yes');
+  const btnSaveConfirmCancel = document.getElementById('btn-save-confirm-cancel');
+
+  const synth = window.speechSynthesis;
+  let utterance;
+
+  // ---------------------------------------------------------------
+  // Platform auto-detection (no manual switch — the browser already
+  // tells us what we need). Used to apply iOS-only TTS workarounds
+  // without affecting Android/desktop behavior.
+  // ---------------------------------------------------------------
+  function detectIsIOS() {
+    const ua = navigator.userAgent || navigator.vendor || '';
+    if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return true;
+    // iPadOS 13+ Safari reports itself as "Mac" but is touch-based
+    if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true;
+    return false;
+  }
+  const IS_IOS = detectIsIOS();
+
+  // iOS ships specific named voices per language that are bundled
+  // on-device (reliable, work offline) — picking one of these by name
+  // avoids Safari sometimes silently defaulting to a voice that
+  // requires a network fetch and can fail/stay silent. Listed in
+  // priority order per language.
+  const PREFERRED_VOICE_NAMES = {
+    'en-US': ['Samantha', 'Alex'],
+    'ja-JP': ['Kyoko', 'Otoya'],
+    'ko-KR': ['Yuna'],
+    'es-ES': ['Mónica', 'Monica', 'Paulina', 'Jorge']
+  };
+
+  // iOS/Safari sometimes returns an empty voice list on first load;
+  // the real list only becomes available after 'voiceschanged' fires
+  // — and on some iOS versions that event doesn't fire reliably at
+  // all, so we also re-check synchronously right before speaking.
+  let cachedVoices = [];
+  function refreshVoiceList() { cachedVoices = synth.getVoices() || []; }
+  refreshVoiceList();
+  if ('onvoiceschanged' in synth) {
+    synth.onvoiceschanged = refreshVoiceList;
+  }
+
+  function pickVoiceForLang(lang) {
+    if (!cachedVoices.length) refreshVoiceList(); // last-chance sync retry
+    if (!cachedVoices.length) return null;
+
+    const preferredNames = PREFERRED_VOICE_NAMES[lang] || [];
+    for (const name of preferredNames) {
+      const match = cachedVoices.find(v => v.lang === lang && v.name.includes(name));
+      if (match) return match;
+    }
+
+    // Exact language+region match, preferring on-device (offline) voices
+    // over network-dependent ones for reliability.
+    const exactMatches = cachedVoices.filter(v => v.lang === lang);
+    const localExact = exactMatches.find(v => v.localService);
+    if (localExact) return localExact;
+    if (exactMatches.length) return exactMatches[0];
+
+    // Fall back to same base language regardless of region (e.g. es-MX for es-ES)
+    const base = lang.split('-')[0];
+    return cachedVoices.find(v => v.lang && v.lang.startsWith(base)) || null;
+  }
+
+  // iOS has a known bug where speech synthesis silently stalls on
+  // utterances longer than ~15 seconds. A pause()/resume() nudge
+  // partway through resets its internal timer and keeps it going.
+  // This only runs on iOS; Android/desktop are unaffected.
+  let iosKeepAliveTimer = null;
+  function startIOSKeepAlive() {
+    if (!IS_IOS) return;
+    stopIOSKeepAlive();
+    iosKeepAliveTimer = setInterval(() => {
+      if (synth.speaking && !synth.paused) {
+        synth.pause();
+        synth.resume();
+      }
+    }, 9000);
+  }
+  function stopIOSKeepAlive() {
+    if (iosKeepAliveTimer) {
+      clearInterval(iosKeepAliveTimer);
+      iosKeepAliveTimer = null;
+    }
+  }
+
+  // iOS Safari can leave the speech synthesis queue in a stuck state
+  // left over from a previous page visit (bfcache) or a killed
+  // background tab. Cancelling once on load clears anything stale
+  // before we ever try to speak.
+  if (IS_IOS) {
+    synth.cancel();
+  }
+
+  // iOS/mobile browsers frequently kill speech synthesis outright when
+  // the tab is backgrounded (app switch, screen lock, etc.), which can
+  // otherwise leave the UI stuck showing "Pause" for audio that isn't
+  // actually playing anymore. Reflect that in the UI when it happens.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && isPlaying) {
+      isPlaying = false;
+      stopIOSKeepAlive();
+      updatePlaybackButtons();
+    }
+  });
+
+  // Best-effort: ask the browser not to evict our IndexedDB data under
+  // storage pressure. Not guaranteed, safe to ignore if unsupported.
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().catch(() => {});
+  }
+
+  // ---------------------------------------------------------------
+  // Sample texts — EDIT HERE to add your own built-in samples.
+  //
+  // Each entry needs a `language` (one of 'ja-JP' | 'ko-KR' | 'es-ES' |
+  // 'en-US') and the `text` itself. Leave `text` empty to keep a slot
+  // disabled (tapping it will just show a reminder to fill it in).
+  //
+  // `text` uses backticks (`), not quotes, so you can paste text with
+  // real line breaks / multiple paragraphs directly — you do NOT need
+  // to keep everything on one line or add manual line-break characters.
+  // The number of sentences is detected automatically from punctuation
+  // (Intl.Segmenter), regardless of how the text is broken into lines.
+  //
+  // Want per-sentence translations? Put <translation> right after a
+// sentence's ending punctuation, e.g.:
+//   It's a beautiful Sunday morning. <這是個美麗的星期天早晨。>
+// Use angle brackets <> right after the sentence.
+  //
+  // Example:
+  //   1: { language: 'ja-JP', text: `今日はいい天気ですね。
+  //   散歩に行きましょう。
+  //   公園でお弁当を食べます。` },
+  // ---------------------------------------------------------------
+
+const SAMPLE_TEXTS = {
+    1: { language: 'en-US', text: `A Quick Trip to the Market <快速逛一趟市場>
+Last Saturday, I got up early and walked to the local market with my friend Matt. <上週六，我早早起床，和我的朋友 Matt 一起走路去附近的市場。>
+We wanted to buy some fresh apples, eggs, and a small bag of nuts. <我們想買一些新鮮的蘋果、雞蛋，以及一小袋堅果。>
+On the way, Matt said, “Did you hear that the new café opened next to the pet shop?” <在路上，Matt 說：「你有聽說寵物店旁邊新開了一家咖啡廳嗎？」>
+I had heard about it, but I had never been there. <我有聽說過，但我從來沒去過那裡。>
+When we arrived at the market, it was already busy. <當我們抵達市場時，那裡已經很熱鬧了。>
+A man was selling red peppers, fresh bread, and black coffee. <一名男子正在販售紅椒、新鮮麵包和黑咖啡。>
+I picked up a green apple and asked, “How much is it?” <我拿起一顆青蘋果，問道：「這個多少錢？」>
+The seller said, “Two dollars.” <賣家說：「兩美元。」>
+I paid him and put the apple in my bag. <我付了錢給他，然後把蘋果放進我的袋子裡。>
+After that, we went to the café. <之後，我們去了那家咖啡廳。>
+I ordered a hot cup of coffee and a piece of cake. <我點了一杯熱咖啡和一塊蛋糕。>
+Matt wanted a cold drink, but he accidentally asked for a cup of tea instead. <Matt 想要一杯冷飲，但他不小心反而點了一杯茶。>
+We laughed and shared the cake. <我們笑了笑，並一起分著吃那塊蛋糕。>
+Before we went home, we sat outside and watched people walk past. <在回家之前，我們坐在外面，看著人們從身旁走過。>
+It was a simple trip, but we had a great time. <這是一趟簡單的出門行程，但我們度過了非常愉快的時光。>
+
+` },
+    2: { language: 'en-US', text: `The history of dim sum stretches back to the early days of the Silk Road, an ancient network of trade routes connecting the East and the West. <點心的歷史可以追溯到絲路的早期，絲路是一個連結東方與西方的古老貿易路線網絡。>
+[
+stretch (v) (伸展、延伸)：example sentence (例句的繁體中譯)
+stretch back to… (phr) (可以追溯到…)：example sentence (例句的繁體中譯)
+]
+{
+一、同位語
+說明：逗號後面的 the Silk Road, an ancient network of trade routes... 是專有名詞 the Silk Road 的同位語，用來進一步定義與說明絲路的歷史定位與功能。
+例句：Tokyo, the capital of Japan, is very crowded. (東京是日本的首都，非常擁擠。)
+二、形容詞子句簡化成分詞片語
+說明：句尾的 connecting the East and the West 是由形容詞子句簡化而來的分詞片語，修飾前面的名詞片語 trade routes。
+例句：Look at the bridge crossing the wide river. = Look at the bridge which crosses the wide river. (看看那座橫跨寬闊河流的橋。)
+}
+` },
+    3: { language: 'ja-JP', text: `` },
+    4: { language: 'ja-JP', text: `
+
+` },
+  };
+
+  // ---------------------------------------------------------------
+  // IndexedDB persistence: each "project" stores the original text,
+  // its language, and every practice recording (as real Blobs, not
+  // base64) keyed by sentence index and take number (1/2/3).
+  // ---------------------------------------------------------------
+  const DB_NAME = 'MultilingualReaderDB';
+  const DB_VERSION = 1;
+  const STORE_PROJECTS = 'projects';
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) { reject(new Error('IndexedDB not supported')); return; }
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
+          db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function dbGetProject(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readonly');
+      const req = tx.objectStore(STORE_PROJECTS).get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function dbPutProject(project) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readwrite');
+      tx.objectStore(STORE_PROJECTS).put(project);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function dbDeleteProject(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_PROJECTS, 'readwrite');
+      tx.objectStore(STORE_PROJECTS).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function getProjectStatuses() {
+    const ids = PROJECT_IDS;
+    const results = await Promise.all(ids.map(id => dbGetProject(id).catch(() => null)));
+    const statusMap = {};
+    ids.forEach((id, i) => { statusMap[id] = !!results[i]; });
+    return statusMap;
+  }
+
+  // ---------------------------------------------------------------
+  // Home screen: paste / clear / navigate
+  // ---------------------------------------------------------------
+  function insertAtCursor(textarea, text) {
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    textarea.value = textarea.value.slice(0, start) + text + textarea.value.slice(end);
+    const pos = start + text.length;
+    textarea.selectionStart = textarea.selectionEnd = pos;
+    textarea.focus();
+  }
+
+  btnPaste.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) insertAtCursor(homeTextarea, text);
+    } catch (err) {
+      alert('Could not read the clipboard automatically. Please paste manually (Ctrl/Cmd+V), or long-press the text box and choose Paste.');
+    }
+  });
+
+  btnClear.addEventListener('click', () => {
+    homeTextarea.value = '';
+    homeTextarea.focus();
+  });
+
+  // ---------------------------------------------------------------
+  // Sentence / word segmentation (locale-aware; Intl.Segmenter
+  // handles Japanese/Korean correctly, where words aren't
+  // separated by spaces)
+  // ---------------------------------------------------------------
+  // 【改良版】句型分割：相容不支援 Lookbehind 的舊版 iOS / 瀏覽器
+function segmentSentences(text, locale) {
+  if (window.Intl && Intl.Segmenter) {
+    try {
+      const seg = new Intl.Segmenter(locale, { granularity: 'sentence' });
+      return Array.from(seg.segment(text), s => s.segment).filter(s => s.trim().length);
+    } catch (e) { /* fall through */ }
+  }
+  
+  // Fallback: 不使用 Lookbehind 的安全寫法
+  const parts = text.split(/([.!?。！？\n]+)/);
+  const result = [];
+  for (let i = 0; i < parts.length; i += 2) {
+    const str = parts[i];
+    const punc = parts[i + 1] || '';
+    const combined = (str + punc).trim();
+    if (combined.length > 0) {
+      result.push(combined);
+    }
+  }
+  return result;
+}
+
+  // Extract "(translation)" that immediately follows a sentence, before
+  // any sentence-splitting happens — otherwise punctuation inside the
+  // translation (e.g. Chinese 。) would confuse the sentence segmenter
+  // into treating the translation as its own separate "sentence".
+  //
+  // Strategy: pull every (...) out first, replacing it with an invisible
+  // marker glued to the end of the preceding sentence. Segment the now
+  // paren-free text normally. Then, per segmented sentence, look for its
+  // marker and swap it back for the real translation text.
+  function parseTextWithTranslations(text, locale) {
+    const translationsByIndex = [];
+    const markerChar = '\u0001';
+
+    // 1. 從同時支援半形 () 與全形 （） 括號， 換成 將 <> 內的文字暫存
+    const cleaned = text.replace(/<([^<>]+)>/g, (match, inner) => {
+      const idx = translationsByIndex.length;
+      translationsByIndex.push(inner.trim());
+      return `${markerChar}${idx}${markerChar}`;
+    });
+
+    const rawSentences = segmentSentences(cleaned, locale);
+    const sentencesOut = [];
+    const translationsOut = [];
+
+    // 2. 遍歷每個切割出來的句子片段
+    rawSentences.forEach(s => {
+      const markerRegex = new RegExp(`${markerChar}(\\d+)${markerChar}`, 'g');
+      let match;
+      let markersInSegment = [];
+
+      // 取出這個片段包含的所有翻譯標記
+      while ((match = markerRegex.exec(s)) !== null) {
+        markersInSegment.push({
+          idx: parseInt(match[1], 10),
+          indexInString: match.index
+        });
+      }
+
+      // 移除標記，取得乾淨的原文
+      const cleanS = s.replace(new RegExp(`\\s*${markerChar}\\d+${markerChar}\\s*`, 'g'), ' ').trim();
+
+      if (cleanS.length > 0) {
+        // 如果有實際文字，加入結果陣列
+        sentencesOut.push(cleanS);
+        translationsOut.push(''); // 先放入空字串，後面填補
+
+        markersInSegment.forEach(m => {
+          // 判斷標記是否在此片段的句首（前面只有空白）
+          const isAtStart = s.substring(0, m.index).trim().length === 0;
+          
+          if (isAtStart && sentencesOut.length > 1) {
+            // 如果標記在句首，通常是因為斷句時，標點符號把括號擠到了下一句的開頭
+            // 這種情況應該把翻譯「還給」上一句
+            const prevIdx = sentencesOut.length - 2;
+            translationsOut[prevIdx] = translationsOut[prevIdx] 
+              ? translationsOut[prevIdx] + ' ' + translationsByIndex[m.idx] 
+              : translationsByIndex[m.idx];
+          } else {
+            // 否則歸屬於當前這句
+            const currIdx = sentencesOut.length - 1;
+            translationsOut[currIdx] = translationsOut[currIdx] 
+              ? translationsOut[currIdx] + ' ' + translationsByIndex[m.idx] 
+              : translationsByIndex[m.idx];
+          }
+        });
+      } else {
+        // 如果這段「完全沒有原文」，只有翻譯標記（被斷句器孤立）
+        if (sentencesOut.length > 0) {
+          // 把這些孤立的翻譯全部補給上一句
+          markersInSegment.forEach(m => {
+            const prevIdx = sentencesOut.length - 1;
+            translationsOut[prevIdx] = translationsOut[prevIdx] 
+              ? translationsOut[prevIdx] + ' ' + translationsByIndex[m.idx] 
+              : translationsByIndex[m.idx];
+          });
+        } else if (markersInSegment.length > 0) {
+          // 極端情況防呆：文章開頭第一個字就是括號翻譯
+          sentencesOut.push('');
+          translationsOut.push(translationsByIndex[markersInSegment[0].idx]);
+        }
+      }
+    });
+
+    return { sentences: sentencesOut, translations: translationsOut };
+  }
+
+  function segmentWords(text, locale) {
+    if (window.Intl && Intl.Segmenter) {
+      try {
+        const seg = new Intl.Segmenter(locale, { granularity: 'word' });
+        let offset = 0;
+        return Array.from(seg.segment(text), s => {
+          const item = { text: s.segment, isWordLike: s.isWordLike, start: offset };
+          offset += s.segment.length;
+          return item;
+        });
+      } catch (e) { /* fall through */ }
+    }
+    let offset = 0;
+    return text.split(/(\s+)/).filter(Boolean).map(s => {
+      const item = { text: s, isWordLike: !/^\s+$/.test(s), start: offset };
+      offset += s.length;
+      return item;
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // Playback: one sentence at a time as a queue, so Pause remembers
+  // exactly where we were and Read Aloud (resume) picks up right
+  // there. The display window always shows the sentence currently
+  // being spoken plus the next one coming up.
+  // ---------------------------------------------------------------
+
+  let sentences = [];
+  let sentenceTranslations = []; // parallel array to `sentences`; '' = no translation for that sentence
+  let sentenceVocab = [];        // parallel array; each item is an array of vocab entries for that sentence
+  let sentenceGrammar = [];      // parallel array; each item is an array of grammar entries for that sentence
+  let currentSentenceIndex = 0;
+  let currentOffsetInSentence = 0;
+  let isPlaying = false;
+  let activeLanguage = 'en-US';
+  let activeFullText = '';
+  let translationVisible = false;
+
+  function updateTranslationDisplay() {
+    const text = sentenceTranslations[currentSentenceIndex] || '';
+    btnToggleTranslation.classList.toggle('active', translationVisible);
+    translatePanel.classList.toggle('visible', translationVisible);
+    if (!translationVisible) return;
+    if (text) {
+      translatePanel.classList.remove('empty');
+      translatePanel.textContent = text;
+    } else {
+      translatePanel.classList.add('empty');
+      translatePanel.textContent = '（此句無翻譯）';
+    }
+  }
+
+  btnToggleTranslation.addEventListener('click', () => {
+    translationVisible = !translationVisible;
+    updateTranslationDisplay();
+  });
+
+  function renderPlaybackWindow() {
+    playbackDisplay.innerHTML = '';
+    const idxs = [currentSentenceIndex];
+    if (currentSentenceIndex + 1 < sentences.length) {
+      idxs.push(currentSentenceIndex + 1);
+    }
+
+    idxs.forEach((idx, i) => {
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'line ' + (i === 0 ? 'current-line' : 'next-line');
+
+      const sentenceSpan = document.createElement('span');
+      sentenceSpan.className = 'sentence';
+      sentenceSpan.dataset.idx = idx;
+
+      segmentWords(sentences[idx], activeLanguage).forEach(w => {
+        if (w.isWordLike) {
+          const wordSpan = document.createElement('span');
+          wordSpan.className = 'word';
+          wordSpan.dataset.start = w.start;
+          wordSpan.textContent = w.text;
+          sentenceSpan.appendChild(wordSpan);
+        } else {
+          sentenceSpan.appendChild(document.createTextNode(w.text));
+        }
+      });
+
+      lineDiv.appendChild(sentenceSpan);
+      playbackDisplay.appendChild(lineDiv);
+    });
+
+    updateSentenceCounter();
+    updateTranslationDisplay();
+    updateReadingAidDisplay();
+  }
+
+  function updateSentenceCounter() {
+    const el = document.getElementById('sentence-counter');
+    if (el) el.textContent = `${currentSentenceIndex + 1} of ${sentences.length}`;
+  }
+
+  function highlightWord(sentenceIdx, charIndex) {
+    const sentenceEl = playbackDisplay.querySelector(`.sentence[data-idx="${sentenceIdx}"]`);
+    if (!sentenceEl) return;
+    playbackDisplay.querySelectorAll('.word.active-word').forEach(el => el.classList.remove('active-word'));
+
+    let target = null;
+    sentenceEl.querySelectorAll('.word').forEach(w => {
+      if (parseInt(w.dataset.start, 10) <= charIndex) target = w;
+    });
+    if (target) {
+      target.classList.add('active-word');
+      target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  function updatePlaybackButtons() {
+    btnPauseResume.textContent = isPlaying ? '⏸️ Pause' : '▶️ Read Aloud';
+    const paused = !isPlaying;
+    // (移除了舊的 navRow 控制，因為按鈕已經固定在右側了)
+    recordPanel.classList.toggle('visible', paused);
+    btnPrev.disabled = currentSentenceIndex <= 0;
+    btnNext.disabled = currentSentenceIndex >= sentences.length - 1;
+    if (paused) {
+      updateReadingAidDisplay();
+    }
+  }
+
+  function playFromSentence(sentenceIndex, charOffset = 0) {
+    if (sentenceIndex >= sentences.length) {
+      isPlaying = false;
+      currentSentenceIndex = 0;
+      currentOffsetInSentence = 0;
+      renderPlaybackWindow();
+      updatePlaybackButtons();
+      return;
+    }
+
+    currentSentenceIndex = sentenceIndex;
+    renderPlaybackWindow();
+
+    const sentenceText = sentences[sentenceIndex];
+    const rawRemaining = sentenceText.slice(charOffset);
+    const remaining = rawRemaining.trimStart();
+    const baseOffset = charOffset + (rawRemaining.length - remaining.length);
+
+    if (!remaining) {
+      playFromSentence(sentenceIndex + 1, 0);
+      return;
+    }
+
+    utterance = new SpeechSynthesisUtterance(remaining);
+    utterance.lang = activeLanguage;
+    utterance.rate = parseFloat(playbackSpeed.value);
+    const preferredVoice = pickVoiceForLang(activeLanguage);
+    if (preferredVoice) utterance.voice = preferredVoice;
+
+    utterance.onboundary = (event) => {
+      if (event.charIndex === undefined) return;
+      currentOffsetInSentence = baseOffset + event.charIndex;
+      highlightWord(sentenceIndex, currentOffsetInSentence);
+    };
+
+    utterance.onend = () => {
+      stopIOSKeepAlive();
+      if (!isPlaying) return;
+      if (recordingModeEnabled) {
+        // Practice mode: stop right after this sentence so the learner
+        // can record themselves immediately, instead of TTS racing
+        // ahead to the next line.
+        isPlaying = false;
+        updatePlaybackButtons();
+      } else {
+        playFromSentence(sentenceIndex + 1, 0);
+      }
+    };
+
+    utterance.onerror = () => {
+      stopIOSKeepAlive();
+      if (isPlaying) { isPlaying = false; updatePlaybackButtons(); }
+    };
+
+    currentOffsetInSentence = baseOffset;
+    isPlaying = true;
+    requestWakeLock(); // 請求螢幕常亮
+    synth.speak(utterance);
+    startIOSKeepAlive();
+    updatePlaybackButtons();
+  }
+
+  function enterReaderWithText(text, language) {
+    const trimmed = (text || '').trim();
+    if (!trimmed) { alert('There is no text to load.'); return false; }
+
+    activeLanguage = language || 'en-US';
+    activeFullText = trimmed;
+    const aidExtract = extractAidBlocks(trimmed);
+    const parsed = parseTextWithTranslations(aidExtract.plainText, activeLanguage);
+    sentences = parsed.sentences;
+    sentenceTranslations = parsed.translations;
+    sentenceVocab = sentences.map((_, i) => aidExtract.vocabBySentence[i] || []);
+    sentenceGrammar = sentences.map((_, i) => aidExtract.grammarBySentence[i] || []);
+    if (sentences.length === 0) { alert('No readable text found.'); return false; }
+
+    currentSentenceIndex = 0;
+    currentOffsetInSentence = 0;
+    isPlaying = false;
+    translationVisible = false;
+    showView('playback-view');
+    renderPlaybackWindow();   // show the first sentence, but don't speak yet
+    updatePlaybackButtons();  // "Read Aloud" waits for the user to tap it
+    return true;
+  }
+
+ btnStart.addEventListener('click', () => {
+  // 【關鍵改良】在實體點擊的瞬間，立刻發送一個無聲音的 SpeechSynthesisUtterance 來解鎖行動裝置的 TTS 權限
+  const unlockUtterance = new SpeechSynthesisUtterance('');
+  unlockUtterance.volume = 0; // 靜音
+  synth.speak(unlockUtterance);
+    
+  enterReaderWithText(homeTextarea.value, homeLanguage.value);
+});
+
+  // ---------------------------------------------------------------
+  // Load Text: Samples (built into the code) + Saved Projects (IndexedDB)
+  // ---------------------------------------------------------------
+  btnLoadText.addEventListener('click', async () => {
+    showView('load-text-view');
+    await refreshLoadTextProjectButtons();
+  });
+  // 點擊 AI Support 在新分頁開啟 ChatGPT 連結
+  btnAiSupport.addEventListener('click', () => {
+    window.open('https://chatgpt.com/share/6a895871-d8dc-83e8-b76e-0a55c899aae5', '_blank');
+  });
+  btnLoadTextClose.addEventListener('click', () => showView('home-view'));
+
+  function sampleButtonHandler(n) {
+    return () => {
+      const sample = SAMPLE_TEXTS[n];
+      if (!sample || !sample.text || !sample.text.trim()) {
+        alert(`Sample #${n} is empty. Add text for it in the SAMPLE_TEXTS object in the code.`);
+        return;
+      }
+      enterReaderWithText(sample.text, sample.language);
+    };
+  }
+  btnSample1.addEventListener('click', sampleButtonHandler(1));
+  btnSample2.addEventListener('click', sampleButtonHandler(2));
+  btnSample3.addEventListener('click', sampleButtonHandler(3));
+  btnSample4.addEventListener('click', sampleButtonHandler(4));
+
+  async function refreshLoadTextProjectButtons() {
+    const fallback = {};
+    PROJECT_IDS.forEach(id => { fallback[id] = false; });
+    const statusMap = await getProjectStatuses().catch(() => fallback);
+    PROJECT_IDS.forEach(id => {
+      const btn = document.getElementById(`btn-project-${id}`);
+      btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
+    });
+  }
+
+  function projectButtonHandler(id) {
+    return async () => {
+      let project;
+      try {
+        project = await dbGetProject(id);
+      } catch (err) {
+        alert('Could not access saved data on this device/browser.');
+        return;
+      }
+      if (!project) {
+        alert(`Project #${id} has no saved data yet. Go to Now Reading → Reading Aid → Save to store one.`);
+        return;
+      }
+      enterReaderWithText(project.text, project.language);
+    };
+  }
+  btnProject1.addEventListener('click', projectButtonHandler(1));
+  btnProject2.addEventListener('click', projectButtonHandler(2));
+  btnProject3.addEventListener('click', projectButtonHandler(3));
+  btnProject4.addEventListener('click', projectButtonHandler(4));
+  btnProject5.addEventListener('click', projectButtonHandler(5));
+
+  function deleteProjectButtonHandler(id) {
+    return async () => {
+      if (!confirm(`Delete all saved text and recordings in Project #${id}? This cannot be undone.`)) return;
+      try {
+        await dbDeleteProject(id);
+      } catch (err) {
+        alert('Could not delete this project.');
+        return;
+      }
+      await refreshLoadTextProjectButtons();
+    };
+  }
+  btnDeleteProject1.addEventListener('click', deleteProjectButtonHandler(1));
+  btnDeleteProject2.addEventListener('click', deleteProjectButtonHandler(2));
+  btnDeleteProject3.addEventListener('click', deleteProjectButtonHandler(3));
+  btnDeleteProject4.addEventListener('click', deleteProjectButtonHandler(4));
+  btnDeleteProject5.addEventListener('click', deleteProjectButtonHandler(5));
+
+  // ---------------------------------------------------------------
+  // Save current session (text only) to a Project slot
+  // ---------------------------------------------------------------
+  let pendingSaveSlot = null;
+
+  btnSaveRecording.addEventListener('click', async () => {
+    showView('save-view');
+    await refreshSaveViewButtons();
+  });
+  btnSaveClose.addEventListener('click', () => showView('playback-view'));
+
+  async function refreshSaveViewButtons() {
+    const fallback = {};
+    PROJECT_IDS.forEach(id => { fallback[id] = false; });
+    const statusMap = await getProjectStatuses().catch(() => fallback);
+    PROJECT_IDS.forEach(id => {
+      const btn = document.getElementById(`btn-save-slot-${id}`);
+      btn.textContent = `${statusMap[id] ? '🟢' : '⚪'} Project #${id}`;
+    });
+  }
+
+  function saveSlotButtonHandler(id) {
+    return async () => {
+      let existing;
+      try {
+        existing = await dbGetProject(id);
+      } catch (err) {
+        alert('Could not access saved data on this device/browser.');
+        return;
+      }
+      if (existing) {
+        pendingSaveSlot = id;
+        saveConfirmText.textContent = `Project #${id} already has saved data. Saving now will overwrite it. Continue?`;
+        showView('save-confirm-view');
+      } else {
+        await saveCurrentSessionToProject(id);
+      }
+    };
+  }
+  btnSaveSlot1.addEventListener('click', saveSlotButtonHandler(1));
+  btnSaveSlot2.addEventListener('click', saveSlotButtonHandler(2));
+  btnSaveSlot3.addEventListener('click', saveSlotButtonHandler(3));
+  btnSaveSlot4.addEventListener('click', saveSlotButtonHandler(4));
+  btnSaveSlot5.addEventListener('click', saveSlotButtonHandler(5));
+
+  btnSaveConfirmYes.addEventListener('click', async () => {
+    if (pendingSaveSlot == null) return;
+    await saveCurrentSessionToProject(pendingSaveSlot);
+    pendingSaveSlot = null;
+  });
+  btnSaveConfirmCancel.addEventListener('click', () => {
+    pendingSaveSlot = null;
+    showView('save-view');
+    refreshSaveViewButtons();
+  });
+
+  async function saveCurrentSessionToProject(id) {
+    const project = {
+      id,
+      text: activeFullText,
+      language: activeLanguage,
+      savedAt: Date.now()
+    };
+    try {
+      await dbPutProject(project);
+    } catch (err) {
+      alert('Save failed — the browser storage may be full or unavailable (e.g. private browsing mode).');
+      return;
+    }
+    alert(`✅ Saved to Project #${id}`);
+    showView('playback-view');
+  }
+
+  btnPauseResume.addEventListener('click', () => {
+    if (isPlaying) {
+      isPlaying = false;
+      synth.cancel();
+      stopIOSKeepAlive();
+      updatePlaybackButtons();
+    } else {
+      if (isRecording) return; // don't resume mid-recording
+      resetPlaybackState();
+      // 將字元偏移量強制歸零，確保永遠從「這句話的第一個字」開始唸
+      currentOffsetInSentence = 0; 
+      playFromSentence(currentSentenceIndex, 0);
+    }
+  });
+
+    btnStop.addEventListener('click', () => {
+    if (isRecording) return;
+    synth.cancel();
+    stopIOSKeepAlive();
+    releaseWakeLock(); // 釋放螢幕常亮
+    isPlaying = false;
+    currentSentenceIndex = 0;
+    currentOffsetInSentence = 0;
+    resetPlaybackState();
+    renderPlaybackWindow();
+    updatePlaybackButtons();
+  });
+
+  btnPlaybackClose.addEventListener('click', () => {
+    if (isRecording) return;
+    synth.cancel();
+    stopIOSKeepAlive();
+    releaseWakeLock(); // 釋放螢幕常亮
+    isPlaying = false;
+    currentSentenceIndex = 0;
+    currentOffsetInSentence = 0;
+    resetPlaybackState();
+    showView('home-view');
+  });
+
+  btnPrev.addEventListener('click', () => {
+    if (isPlaying || isRecording) return;
+    resetPlaybackState();
+    currentSentenceIndex = Math.max(0, currentSentenceIndex - 1);
+    currentOffsetInSentence = 0;
+    renderPlaybackWindow();
+    updatePlaybackButtons();
+  });
+
+  btnNext.addEventListener('click', () => {
+    if (isPlaying || isRecording) return;
+    resetPlaybackState();
+    currentSentenceIndex = Math.min(sentences.length - 1, currentSentenceIndex + 1);
+    currentOffsetInSentence = 0;
+    renderPlaybackWindow();
+    updatePlaybackButtons();
+  });
+
+  // ---------------------------------------------------------------
+  // Reading Aid: shows this sentence's 單字&片語 (vocab/phrases) and
+  // 文法&句型 (grammar) notes, parsed out of the loaded text's
+  // [ ... ] and { ... } blocks. Toggled on/off with the same switch
+  // that used to gate the old recording panel; when ON, Read Aloud
+  // also pauses after each sentence so there's time to read the notes.
+  // ---------------------------------------------------------------
+
+  let recordingModeEnabled = true;
+  let isRecording = false; // kept so older guard checks stay harmless
+
+  function applyRecordingModeUI() {
+    recordPanel.classList.toggle('panel-disabled', !recordingModeEnabled);
+  }
+  applyRecordingModeUI();
+
+  recordEnableToggle.addEventListener('change', () => {
+    recordingModeEnabled = recordEnableToggle.checked;
+    applyRecordingModeUI();
+    if (sentences.length > 0) renderPlaybackWindow();
+  });
+
+  function resetPlaybackState() {
+    // no-op (audio recording/playback feature removed)
+  }
+
+  // ---- Parsing: pull [ ...vocab... ] and { ...grammar... } blocks out
+  // of the raw text, one sentence per line, and attach each block to
+  // the sentence line that immediately precedes it. -------------------
+  function extractAidBlocks(text) {
+    const lines = text.split(/\r?\n/);
+    const sentenceLines = [];
+    const vocabBySentence = {};
+    const grammarBySentence = {};
+    let mode = null;
+    let buffer = [];
+
+    for (const rawLine of lines) {
+      const trimmed = rawLine.trim();
+      if (mode === null) {
+        if (trimmed === '[') { mode = 'vocab'; buffer = []; continue; }
+        if (trimmed === '{') { mode = 'grammar'; buffer = []; continue; }
+        if (trimmed === '') continue;
+        sentenceLines.push(trimmed);
+      } else if (mode === 'vocab') {
+        if (trimmed === ']') {
+          const idx = sentenceLines.length - 1;
+          if (idx >= 0) vocabBySentence[idx] = parseVocabBlock(buffer);
+          mode = null;
+        } else if (trimmed !== '') {
+          buffer.push(trimmed);
+        }
+      } else if (mode === 'grammar') {
+        if (trimmed === '}') {
+          const idx = sentenceLines.length - 1;
+          if (idx >= 0) grammarBySentence[idx] = parseGrammarBlock(buffer);
+          mode = null;
+        } else if (trimmed !== '') {
+          buffer.push(trimmed);
+        }
+      }
+    }
+
+    return { plainText: sentenceLines.join('\n'), vocabBySentence, grammarBySentence };
+  }
+
+  // Each vocab line: TERM (pos) (中文翻譯)：example sentence (例句中譯)
+  function parseVocabBlock(lines) {
+    return lines.map(line => {
+      const colonSplit = line.split(/[:：]/);
+      const head = (colonSplit[0] || '').trim();
+      const examplePart = colonSplit.slice(1).join('：').trim();
+
+      let term = head, pos = '', cn = '';
+      const headMatch = head.match(/^(.*?)\s*\(([^()]*)\)\s*\(([^()]*)\)\s*$/);
+      if (headMatch) {
+        term = headMatch[1].trim();
+        pos = headMatch[2].trim();
+        cn = headMatch[3].trim();
+      }
+
+      let example = examplePart, exampleCn = '';
+      const exMatch = examplePart.match(/^(.*?)\s*\(([^()]*)\)\s*$/);
+      if (exMatch) {
+        example = exMatch[1].trim();
+        exampleCn = exMatch[2].trim();
+      }
+
+      return { term, pos, cn, example, exampleCn };
+    });
+  }
+
+  // Each grammar entry: a title line, then 說明：..., then 例句：...(中譯)
+  function parseGrammarBlock(lines) {
+    const entries = [];
+    let current = null;
+    lines.forEach(line => {
+      if (line.startsWith('說明')) {
+        if (!current) current = { title: '', explain: '', example: '', exampleCn: '' };
+        current.explain = line.replace(/^說明[:：]\s*/, '');
+      } else if (line.startsWith('例句')) {
+        if (!current) current = { title: '', explain: '', example: '', exampleCn: '' };
+        const rest = line.replace(/^例句[:：]\s*/, '');
+        const m = rest.match(/^(.*)\(([^()]*)\)\s*$/);
+        if (m) { current.example = m[1].trim(); current.exampleCn = m[2].trim(); }
+        else { current.example = rest; current.exampleCn = ''; }
+      } else {
+        if (current) entries.push(current);
+        current = { title: line, explain: '', example: '', exampleCn: '' };
+      }
+    });
+    if (current) entries.push(current);
+    return entries;
+  }
+
+  // ---- Rendering ------------------------------------------------------
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  }
+
+  function speakSnippet(text) {
+    if (!text) return;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = activeLanguage;
+    const v = pickVoiceForLang(activeLanguage);
+    if (v) u.voice = v;
+    synth.speak(u);
+  }
+
+  function makeTTSButton(text) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tts-btn';
+    btn.textContent = '🔊';
+    btn.title = 'Read aloud';
+    btn.addEventListener('click', (e) => { e.stopPropagation(); speakSnippet(text); });
+    return btn;
+  }
+
+  function updateReadingAidDisplay() {
+    renderVocabList(sentenceVocab[currentSentenceIndex] || []);
+    renderGrammarList(sentenceGrammar[currentSentenceIndex] || []);
+  }
+
+  function renderVocabList(vocab) {
+    vocabListEl.innerHTML = '';
+    if (!vocab.length) {
+      vocabListEl.innerHTML = '<div class="aid-empty">（此句無單字/片語筆記）</div>';
+      return;
+    }
+    vocab.forEach(v => {
+      const item = document.createElement('div');
+      item.className = 'aid-item';
+
+      const head = document.createElement('div');
+      head.className = 'aid-item-head';
+      const termSpan = document.createElement('span');
+      termSpan.innerHTML = `<strong>${escapeHtml(v.term)}</strong>` + (v.pos ? ` <span class="aid-item-pos">(${escapeHtml(v.pos)})</span>` : '');
+      head.appendChild(termSpan);
+      head.appendChild(makeTTSButton(v.term));
+      item.appendChild(head);
+
+      if (v.cn) {
+        const cn = document.createElement('div');
+        cn.className = 'aid-item-cn';
+        cn.textContent = v.cn;
+        item.appendChild(cn);
+      }
+
+      if (v.example) {
+        const ex = document.createElement('div');
+        ex.className = 'aid-example';
+        const exText = document.createElement('span');
+        exText.textContent = v.example;
+        ex.appendChild(exText);
+        ex.appendChild(makeTTSButton(v.example));
+        item.appendChild(ex);
+
+        if (v.exampleCn) {
+          const exCn = document.createElement('div');
+          exCn.className = 'aid-example-cn';
+          exCn.textContent = v.exampleCn;
+          item.appendChild(exCn);
+        }
+      }
+
+      vocabListEl.appendChild(item);
+    });
+  }
+
+  function renderGrammarList(grammar) {
+    grammarListEl.innerHTML = '';
+    if (!grammar.length) {
+      grammarListEl.innerHTML = '<div class="aid-empty">（此句無文法/句型筆記）</div>';
+      return;
+    }
+    grammar.forEach(g => {
+      const item = document.createElement('div');
+      item.className = 'aid-item';
+
+      if (g.title) {
+        const title = document.createElement('div');
+        title.className = 'grammar-item-title';
+        title.textContent = g.title;
+        item.appendChild(title);
+      }
+      if (g.explain) {
+        const exp = document.createElement('div');
+        exp.className = 'grammar-explain';
+        exp.textContent = g.explain;
+        item.appendChild(exp);
+      }
+      if (g.example) {
+        const ex = document.createElement('div');
+        ex.className = 'aid-example';
+        const exText = document.createElement('span');
+        exText.textContent = g.example;
+        ex.appendChild(exText);
+        ex.appendChild(makeTTSButton(g.example));
+        item.appendChild(ex);
+
+        if (g.exampleCn) {
+          const exCn = document.createElement('div');
+          exCn.className = 'aid-example-cn';
+          exCn.textContent = g.exampleCn;
+          item.appendChild(exCn);
+        }
+      }
+
+      grammarListEl.appendChild(item);
+    });
+  }
+
+  
+</script>
+</body>
+</html>
