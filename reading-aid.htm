@@ -9,7 +9,7 @@
 
   html, body { height: 100%; }
 
-  body {
+  body {ㄇ
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f1f8fc;
     color: #444;
@@ -393,10 +393,11 @@
     </div>
   </div>
 
-  <!-- ============ PLAYBACK ("Now Reading") ============ -->
+<!-- ============ PLAYBACK ("Now Reading") ============ -->
   <div id="playback-view" class="view">
     <div class="playback-header">
-      <div></div>
+      <!-- 替換原本的空白 div，把儲存按鈕放在左上角 -->
+      <button id="btn-save-recording" class="icon-btn" style="font-size: 1.2rem;" title="Save Project">💾</button>
       <h2 style="margin:0;">📖 Now Reading</h2>
       <button id="btn-playback-close" class="icon-btn" title="Close">✕</button>
     </div>
@@ -575,10 +576,11 @@ function releaseWakeLock() {
     speedLabel.textContent = parseFloat(playbackSpeed.value).toFixed(2) + 'x';
   });
 
-  const translatePanel = document.getElementById('translation-panel');
+const translatePanel = document.getElementById('translation-panel');
   const btnToggleTranslation = document.getElementById('btn-toggle-translation');
 
   const btnOpenNotes = document.getElementById('btn-open-notes');
+  const btnSaveRecording = document.getElementById('btn-save-recording'); // <--- 加回這一行
   const btnCloseNotes = document.getElementById('btn-close-notes');
   const notesOverlay = document.getElementById('notes-overlay');
   const notesBottomSheet = document.getElementById('notes-bottom-sheet');
