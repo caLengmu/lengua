@@ -1675,8 +1675,8 @@
                 </table>
             </div>
 
-            <!-- 解決二-1: 加上 padding-bottom: 120px，確保滾到底部時進度條不會遮擋按鈕 -->
-            <div style="display: flex; gap: 15px; width: 100%; margin-top: 30px; padding-bottom: 120px;">
+            <!-- 底部按鈕區 (加上 ID 以利 Progress bar 追蹤，並縮減多餘留白) -->
+            <div id="learningHubBottomBtns" style="display: flex; gap: 15px; width: 100%; margin-top: 30px; padding-bottom: 40px;">
                 <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
                     📋 重新選擇範圍
                 </button>
@@ -3915,14 +3915,14 @@ function getRandomEmoji() {
             currentSpeech = null;
         }
 
-                // Update Bottom Sticky Progress Bar (針對 Modal 內滾動最佳化)
+            // Update Bottom Sticky Progress Bar (修復邏輯：看到表格才顯示，看到底端按鈕就隱藏)
         function updateLearningProgress() {
             const rows = document.querySelectorAll('.vocab-row');
             const barContainer = document.getElementById('bottomProgressBar');
             const sectionTextEl = document.getElementById('sectionProgressText');
             const sectionFillEl = document.getElementById('sectionProgressFill');
             
-            // 隱藏原本的 Overall 區塊 (因為我們已經身處單一範圍內)
+            // 隱藏原本的 Overall 區塊
             const overallRow = document.getElementById('vocabProgressText')?.closest('.progress-row');
             if (overallRow) overallRow.style.display = 'none';
 
@@ -3932,47 +3932,44 @@ function getRandomEmoji() {
                 return;
             }
 
-            // 抓取學習視窗的滾動範圍
             const scrollArea = document.getElementById('learningScrollArea');
             if (!scrollArea) return;
             
             const scrollRect = scrollArea.getBoundingClientRect();
             const viewBottom = scrollRect.bottom;
 
-            // 1. 檢查第一個單字是否進入可視範圍
-            const firstRow = rows[0];
-            let isFirstVocabReached = false;
-            if (firstRow) {
-                const firstRect = firstRow.getBoundingClientRect();
-                if (firstRect.top < viewBottom) {
-                    isFirstVocabReached = true;
+            // 1. 檢查表格是否進入視野 (開始看單字)
+            let isTableVisible = false;
+            const tableContainer = document.querySelector('.vocab-table-container');
+            if (tableContainer) {
+                const tableRect = tableContainer.getBoundingClientRect();
+                if (tableRect.top < viewBottom) {
+                    isTableVisible = true;
                 }
             }
 
-            // 2. 檢查最下方的測驗按鈕區塊是否出現
+            // 2. 檢查最底下的「兩個按鈕區塊」是否已經出現
             let isEndReached = false;
-            const walkMeThruBtn = document.getElementById('walkMeThruBtn');
-            if (walkMeThruBtn) {
-                const btnRect = walkMeThruBtn.getBoundingClientRect();
-                // 若按鈕出現在滾動視窗的可見範圍內
+            const bottomBtns = document.getElementById('learningHubBottomBtns');
+            if (bottomBtns) {
+                const btnRect = bottomBtns.getBoundingClientRect();
+                // 若按鈕區塊的頂部進入視窗底部以上，代表使用者已經滑到底了
                 if (btnRect.top < viewBottom && btnRect.bottom > scrollRect.top) {
                     isEndReached = true;
                 }
             }
 
-            // 顯示邏輯：已經開始看單字，且還沒滑到底部的按鈕區
-            if (!isFirstVocabReached || isEndReached) {
-                if (barContainer) barContainer.style.display = 'none';
-                return;
-            } else {
+            // 顯示邏輯：已經開始看單字 且 還沒完全滑到底部按鈕
+            if (isTableVisible && !isEndReached) {
                 if (barContainer) barContainer.style.display = 'flex';
+            } else {
+                if (barContainer) barContainer.style.display = 'none';
             }
 
             // 計算目前範圍的進度
             let viewedCount = 0;
             rows.forEach(row => {
                 const rect = row.getBoundingClientRect();
-                // 若單字列的頂部已經進入視窗下緣，就算已瀏覽
                 if (rect.top <= viewBottom) {
                     viewedCount++;
                 }
@@ -3982,7 +3979,6 @@ function getRandomEmoji() {
             if (sectionTextEl) sectionTextEl.textContent = `${viewedCount} / ${total} (${percentage}%)`;
             if (sectionFillEl) sectionFillEl.style.width = `${percentage}%`;
             
-            // 同步觸發浮動按鈕的顯示邏輯
             handleFloatingButtons();
         }
 
@@ -4015,12 +4011,15 @@ function getRandomEmoji() {
                 });
 
                 if (checkedCount > 0) {
-                    // 解決三-1: 移除結尾的 checked，讓 checkbox 預設沒有勾選
+                    // 美化 Select sections 選項：加大字體、藍色外框、加上 items、全框可點擊
                     html += `
-                    <div class="section-checkbox-item" style="justify-content: flex-start; padding: 12px; font-size: 16px;">
-                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox">
-                        <label for="sec_chk_${sectionIndex}">${section.section} <span style="color:#e74c3c; font-size: 14px; font-weight:bold;">(${checkedCount})</span></label>
-                    </div>`;
+                    <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 15px; font-size: 18px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 12px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
+                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 22px; height: 22px; margin-right: 12px; cursor: pointer;">
+                        <span style="font-weight: bold; color: #2c3e50; display: flex; align-items: center; width: 100%;">
+                            ${section.section} 
+                            <span style="color:#e74c3c; font-size: 16px; margin-left: auto;">(${checkedCount} items)</span>
+                        </span>
+                    </label>`;
                 }
             });
             grid.innerHTML = html;
