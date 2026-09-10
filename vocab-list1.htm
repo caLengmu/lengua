@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.11)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.12)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1801,8 +1801,11 @@
 </div>
 
 <div id="monthly-modal" class="modal">
-    <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
-        <h2 id="monthly-modal-title" style="text-align: center; color: #2c3e50; margin-bottom: 20px;">🗓️ Month X</h2>
+    <!-- 加入 position: relative 讓 X 能固定在右上角 -->
+    <div class="modal-content" style="position: relative; max-width: 900px; max-height: 90vh; overflow-y: auto;">
+        <!-- 新增右上角 X 按鈕 -->
+        <span class="close" id="closeMonthlyModal">&times;</span>
+        <h2 id="monthly-modal-title" style="text-align: center; color: #2c3e50; margin-bottom: 20px; padding-top: 10px;">🗓️ Month X</h2>
         <div id="monthly-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
             <script>
                 // We generate the 4 weeks dynamically in HTML to keep it clean
@@ -4791,7 +4794,13 @@ function handleFloatingButtons() {
 function scrollToTop() {
     const scrollArea = document.getElementById('learningScrollArea');
     if (scrollArea) {
-        scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
+        // 精準定位到最頂部的標題，確保徹底執行
+        const topElement = document.getElementById('learningSectionTitle');
+        if (topElement) {
+            topElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 }
 
@@ -4799,7 +4808,13 @@ function scrollToTop() {
 function scrollToBottom() {
     const scrollArea = document.getElementById('learningScrollArea');
     if (scrollArea) {
-        scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+        // 精準定位到最底部的「回主畫面」按鈕，確保徹底執行
+        const bottomElement = document.getElementById('backToMainBtn');
+        if (bottomElement) {
+            bottomElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        } else {
+            scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+        }
     }
 }
 
@@ -4925,6 +4940,14 @@ document.querySelectorAll('.monthly-custom-btn').forEach(btn => {
 document.getElementById('monthly-close-btn').addEventListener('click', () => {
     document.getElementById('monthly-modal').style.display = 'none';
 });
+
+// 新增：右上角 X 按鈕關閉功能
+const closeMonthlyModalBtn = document.getElementById('closeMonthlyModal');
+if (closeMonthlyModalBtn) {
+    closeMonthlyModalBtn.addEventListener('click', () => {
+        document.getElementById('monthly-modal').style.display = 'none';
+    });
+}
 
 // 3. Clear Month Button
 document.getElementById('monthly-clear-all-btn').addEventListener('click', async () => {
