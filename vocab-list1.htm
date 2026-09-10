@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.12)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.21)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1614,13 +1614,27 @@
         </div>
     </div>
 
-    <!-- 新增：單元範圍選擇視窗 (Modal 1) -->
+<!-- 新增：單元範圍選擇視窗 (Modal 1) -->
     <div id="sectionSelectModal" class="modal">
         <div class="modal-content" style="max-width: 600px; text-align: center;">
             <span class="close" id="closeSectionSelectModal">&times;</span>
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select A Section<br>(選擇學習範圍)</h2>
-            <div id="sectionButtonsGrid" class="section-checkboxes-grid" style="margin-top: 20px;">
-                <!-- 這裡會透過 JS 動態產生範圍按鈕 -->
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select Sections<br>(請勾選學習/測驗範圍)</h2>
+            
+            <div id="sectionButtonsGrid" class="section-checkboxes-grid" style="margin-top: 20px; text-align: left;">
+                <!-- 這裡會透過 JS 動態產生範圍核取方塊 -->
+            </div>
+
+            <!-- 樞紐控制按鈕區 -->
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc;">
+                <button class="study-partner-btn" id="startLearningBtn" style="width: 100%; background-color: #27ae60; font-size: 20px;">
+                    🚀 Start Learning! <br>(開始學習勾選內容)
+                </button>
+                <button class="study-partner-btn" id="walkMeThruBtn" style="width: 100%; background-color: #3498db;">
+                    👀 Walk Me Through <br>(帶我複習：英翻中)
+                </button>
+                <button class="quiz-btn" id="listenChooseBtn" style="width: 100%;">
+                    🎧 Listening Quiz <br>(聽力測驗 8題)
+                </button>
             </div>
         </div>
     </div>
@@ -1631,7 +1645,7 @@
             <span class="close" id="closeLearningContentModal">&times;</span>
             
             <h2 id="learningSectionTitle" style="text-align: center; color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
-                Section Title
+                Selected Sections
             </h2>
 
             <!-- 專屬此 Section 的功能區 -->
@@ -1659,24 +1673,14 @@
                 </table>
             </div>
 
-            <!-- 最下方的兩個測驗/複習按鈕 -->
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
-                <button class="study-partner-btn" id="walkMeThruBtn" style="width: 100%;">
-                    👀 Walk Me Through <br>(帶我複習：英翻中)
+            <!-- 底部返回按鈕 -->
+            <div style="display: flex; gap: 15px; width: 100%; margin-top: 30px;">
+                <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
+                    📋 重新選擇範圍
                 </button>
-                <button class="quiz-btn" id="listenChooseBtn" style="width: 100%;">
-                    🎧 Listening Quiz <br>(聽力測驗 8題)
+                <button class="nav-btn" id="backToMainBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #6c757d;">
+                    🏠 回主畫面
                 </button>
-                <!-- 新增：平行排列的兩個按鈕 -->
-                <div style="display: flex; gap: 15px; width: 100%;">
-                    <!-- 顏色更改為較淺的藍色 #5dade2 -->
-                    <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
-                        📋 其他範圍
-                    </button>
-                    <button class="nav-btn" id="backToMainBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #6c757d;">
-                        🏠 回主畫面
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -3827,9 +3831,9 @@ const studyEmojis = ['🧑', '👱', '🧔', '👨‍🦰', '👩', '👧', '�
 let currentEmoji = '🧑';
 let translationShown = false;
 
-        // Global state
+// Global state
         let currentLessonData = null;
-        let currentSelectedSectionIndex = -1; // 追蹤目前選擇的學習範圍
+        let currentSelectedSectionIndices = []; // 追蹤目前勾選的「多個」學習範圍
         let currentWordIndex = 0;
         let flatWordsList = [];
         let currentSpeech = null;
@@ -3980,7 +3984,14 @@ function getRandomEmoji() {
             handleFloatingButtons();
         }
 
-        // 點擊首頁單元按鈕時觸發：打開 Modal 1，產生範圍按鈕
+   // 幫助函數：讀取目前有勾選的 sections
+        function updateSelectedSections() {
+            const checkboxes = document.querySelectorAll('.section-selector-checkbox:checked');
+            currentSelectedSectionIndices = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            return currentSelectedSectionIndices.length > 0;
+        }
+
+        // 點擊首頁單元按鈕時觸發：打開 Modal 1，產生範圍核取方塊
         async function loadVocabulary(lessonKey) {
             const data = vocabDatabase[lessonKey];
             if (!data || data.length === 0) {
@@ -3993,6 +4004,7 @@ function getRandomEmoji() {
             const grid = document.getElementById('sectionButtonsGrid');
             grid.innerHTML = '';
 
+            let html = '';
             data.forEach((section, sectionIndex) => {
                 let checkedCount = 0;
                 section.words.forEach((word, wordIndex) => {
@@ -4001,75 +4013,90 @@ function getRandomEmoji() {
                 });
 
                 if (checkedCount > 0) {
-                    const btn = document.createElement('button');
-                    btn.className = 'section-btn';
-                    btn.innerHTML = `<span>${section.section}</span> <span class="count-badge">${checkedCount} items</span>`;
-                    
-                    // 點擊某個 Section，開啟學習內容 Modal 2
-                    btn.onclick = () => openLearningContent(lessonKey, sectionIndex, section.section, savedCheckedWords);
-                    grid.appendChild(btn);
+                    // 改為產生 Checkbox
+                    html += `
+                    <div class="section-checkbox-item" style="justify-content: flex-start; padding: 12px; font-size: 16px;">
+                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" checked>
+                        <label for="sec_chk_${sectionIndex}">${section.section} <span style="color:#e74c3c; font-size: 14px; font-weight:bold;">(${checkedCount})</span></label>
+                    </div>`;
                 }
             });
+            grid.innerHTML = html;
+
+            // 綁定 Start Learning 按鈕
+            document.getElementById('startLearningBtn').onclick = () => {
+                if (!updateSelectedSections()) {
+                    alert('Please select at least one section. (請至少勾選一個範圍)');
+                    return;
+                }
+                openLearningContent(lessonKey, savedCheckedWords);
+            };
 
             document.getElementById('sectionSelectModal').style.display = 'block';
         }
 
-        // 打開 Modal 2 並渲染該範圍專屬內容
-        function openLearningContent(lessonKey, sectionIndex, sectionTitle, savedCheckedWords) {
+        // 打開 Modal 2 並渲染多個範圍專屬內容
+        function openLearningContent(lessonKey, savedCheckedWords) {
             document.getElementById('sectionSelectModal').style.display = 'none';
-            currentSelectedSectionIndex = sectionIndex; // 記錄目前操作的 Section
             
-            // 設定標題
-            document.getElementById('learningSectionTitle').textContent = sectionTitle;
+            // 設定標題 (組合所選的標題)
+            let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
+            let titleText = titles.length > 2 ? `${titles[0]} 等共 ${titles.length} 個範圍` : titles.join(' + ');
+            document.getElementById('learningSectionTitle').textContent = titleText;
 
             const tableBody = document.getElementById('vocabTableBody');
             let html = '';
-            const sectionData = currentLessonData[sectionIndex];
 
-            sectionData.words.forEach((item, wordIndex) => {
-                const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-                if (isChecked) {
-                    const fullText = `${item.word}. ${item.example}`;
-                    html += `<tr class="vocab-row" data-section="${sectionIndex}">
-                        <td class="audio-controls">
-                            <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                            <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-                        </td>
-                        <td class="content-cell">
-                            <div class="vocab-word">${item.word}</div>
-                            <div class="example-sentence">${item.example}</div>
-                        </td>
-                    </tr>`;
-                }
+            // 迴圈處理所有被勾選的 section
+            currentSelectedSectionIndices.forEach(sectionIndex => {
+                const sectionData = currentLessonData[sectionIndex];
+                
+                // 每個 Section 加上一個小標題分隔
+                html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
+
+                sectionData.words.forEach((item, wordIndex) => {
+                    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+                    if (isChecked) {
+                        const fullText = `${item.word}. ${item.example}`;
+                        html += `<tr class="vocab-row" data-section="${sectionIndex}">
+                            <td class="audio-controls">
+                                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                                <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
+                            </td>
+                            <td class="content-cell">
+                                <div class="vocab-word">${item.word}</div>
+                                <div class="example-sentence">${item.example}</div>
+                            </td>
+                        </tr>`;
+                    }
+                });
             });
 
             tableBody.innerHTML = html;
             document.getElementById('learningContentModal').style.display = 'block';
-            
-            // 將滾動條拉回頂部
             document.getElementById('learningScrollArea').scrollTop = 0;
-            
-            // 由於進度條現在綁定在此 Modal 內，需主動觸發更新
             updateLearningProgress();
         }
 
-        // 取得目前學習中的單一 Section 單字 (供測驗與複習使用)
+        // 取得目前學習中的多個 Section 單字 (供測驗與複習使用)
         async function getWordsFromCurrentSection() {
             const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
             const savedCheckedWords = await loadCheckedWords(selectedLesson);
             const allWords = [];
             
-            const section = currentLessonData[currentSelectedSectionIndex];
-            section.words.forEach((word, wordIndex) => {
-                const isChecked = !savedCheckedWords || savedCheckedWords[`${currentSelectedSectionIndex}_${wordIndex}`] !== false;
-                if (isChecked) {
-                    allWords.push({
-                        ...word,
-                        sectionIndex: currentSelectedSectionIndex,
-                        sectionTitle: section.section,
-                        wordIndex
-                    });
-                }
+            currentSelectedSectionIndices.forEach(sectionIndex => {
+                const section = currentLessonData[sectionIndex];
+                section.words.forEach((word, wordIndex) => {
+                    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+                    if (isChecked) {
+                        allWords.push({
+                            ...word,
+                            sectionIndex: sectionIndex,
+                            sectionTitle: section.section,
+                            wordIndex
+                        });
+                    }
+                });
             });
             return allWords;
         }
@@ -4130,13 +4157,20 @@ function getRandomEmoji() {
         }
 
 // Start quiz
-        async function startListenChooseQuiz() {
+async function startListenChooseQuiz() {
+    if (!updateSelectedSections()) {
+        alert('Please select at least one section. (請至少勾選一個範圍)');
+        return;
+    }
+
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-    
     if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
         alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
         return;
     }
+    
+    // 關閉選擇範圍的 Modal 1
+    document.getElementById('sectionSelectModal').style.display = 'none';
 
     // Get words from current section
     const allWords = await getWordsFromCurrentSection();
@@ -4423,44 +4457,47 @@ async function populateOverallVocabList(lessonKey) {
     const listContainer = document.getElementById('overallVocabList');
     const savedCheckedWords = await loadCheckedWords(lessonKey);
     
-    // 改為只抓取目前選擇的特定 Section
-    const sectionIndex = currentSelectedSectionIndex;
-    if (sectionIndex === -1) return;
+    if (!currentSelectedSectionIndices || currentSelectedSectionIndices.length === 0) return;
     
-    const section = lessonData[sectionIndex];
-    const sectionId = `section_${lessonKey}_${sectionIndex}`;
+    let html = '';
     
-    let checkedCount = 0;
-    section.words.forEach((word, wordIndex) => {
-        const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-        if (isChecked) checkedCount++;
+    // 渲染所有選中的 section
+    currentSelectedSectionIndices.forEach(sectionIndex => {
+        const section = lessonData[sectionIndex];
+        const sectionId = `section_${lessonKey}_${sectionIndex}`;
+        
+        let checkedCount = 0;
+        section.words.forEach((word, wordIndex) => {
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            if (isChecked) checkedCount++;
+        });
+        
+        html += `<div class="vocab-section-block">
+            <div class="section-title-row">
+                <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
+                       data-section-index="${sectionIndex}" checked>
+                <label for="${sectionId}_all">${section.section} <span class="section-count" id="count_${sectionIndex}">(${checkedCount} items checked)</span></label>
+            </div>
+            <div class="vocab-items-grid">`;
+            
+        section.words.forEach((word, wordIndex) => {
+            const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
+            const displayText = word.word.replace(/:$/, '');  
+            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            
+            html += `<div class="vocab-item-row">
+                <input type="checkbox" id="${wordId}" class="word-checkbox" 
+                       data-section-index="${sectionIndex}" 
+                       data-word-index="${wordIndex}" 
+                       ${isChecked ? 'checked' : ''}>
+                <label for="${wordId}">${displayText}</label>  
+            </div>`;
+        });
+        
+        html += `</div></div>`;
     });
     
-    let html = `<div class="vocab-section-block">
-        <div class="section-title-row">
-            <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
-                   data-section-index="${sectionIndex}" checked>
-            <label for="${sectionId}_all">${section.section} <span class="section-count" id="count_${sectionIndex}">(${checkedCount} items checked)</span></label>
-        </div>
-        <div class="vocab-items-grid">`;
-        
-    section.words.forEach((word, wordIndex) => {
-        const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
-        const displayText = word.word.replace(/:$/, '');  
-        const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-        
-        html += `<div class="vocab-item-row">
-            <input type="checkbox" id="${wordId}" class="word-checkbox" 
-                   data-section-index="${sectionIndex}" 
-                   data-word-index="${wordIndex}" 
-                   ${isChecked ? 'checked' : ''}>
-            <label for="${wordId}">${displayText}</label>  
-        </div>`;
-    });
-    
-    html += `</div></div>`;
     listContainer.innerHTML = html;
-    
     attachOverallVocabListeners(lessonKey);
 }
 
@@ -4468,7 +4505,6 @@ async function saveOverallVocabState() {
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
     if (!selectedLesson) return;
     
-    // 【關鍵點】先載入「整個單元」舊的紀錄，再把「目前範圍」的新紀錄合併進去，以免覆蓋掉其他範圍的設定！
     const checkedWords = (await loadCheckedWords(selectedLesson)) || {};
     
     document.querySelectorAll('.word-checkbox').forEach(checkbox => {
@@ -4484,7 +4520,7 @@ async function saveOverallVocabState() {
         document.getElementById('overallVocabModal').style.display = 'none';
         
         // 直接重新渲染 Modal 2 (學習畫面) 以反映最新的勾選狀態
-        openLearningContent(selectedLesson, currentSelectedSectionIndex, currentLessonData[currentSelectedSectionIndex].section, checkedWords);
+        openLearningContent(selectedLesson, checkedWords);
     } catch (error) {
         console.error('Error saving:', error);
         alert('Failed to save settings. (儲存設定失敗)');
@@ -4750,13 +4786,20 @@ function attachBubbleEventListeners() {
     updateStudySession();
 }
 
-        async function startStudySession() {
+async function startStudySession() {
+    if (!updateSelectedSections()) {
+        alert('Please select at least one section. (請至少勾選一個範圍)');
+        return;
+    }
+
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
-    
     if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
         alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
         return;
     }
+    
+    // 關閉選擇範圍的 Modal 1
+    document.getElementById('sectionSelectModal').style.display = 'none';
 
     currentLessonData = vocabDatabase[selectedLesson];
     flatWordsList = await getWordsFromCurrentSection();
