@@ -223,7 +223,13 @@
     color: #2c3e50;
     white-space: nowrap;
     flex-shrink: 0;
-    width: 82px;
+    width: 65px; /* 從 82px 縮短，讓進度條更靠近文字 */
+}
+
+/* 讓所有第二層彈出視窗 (測驗、複習、字彙管理等) 的層級為 1100，
+   藉此完美「蓋過」進度條與浮動按鈕 (1050) */
+#studyModal, #listenChooseModal, #sectionSelectModal, #monthly-modal, #edit-entry-modal, #welcomeModal {
+    z-index: 1100;
 }
 
 .progress-track-mini {
@@ -394,7 +400,7 @@
 .overall-vocab-modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1100; /* 改為 1100，蓋過浮動按鈕 */
     left: 0;
     top: 0;
     width: 100%;
@@ -1518,7 +1524,7 @@
         <!-- Bottom Sticky Learning Progress Bar -->
     <div class="bottom-progress-container" id="bottomProgressBar">
         <div class="progress-row">
-            <span class="progress-row-label">Progress</span>
+            <span class="progress-row-label">Progress:</span>
             <div class="progress-track-mini">
                 <div class="progress-fill-mini" id="sectionProgressFill"></div>
             </div>
@@ -1547,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.1)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.11)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1612,7 +1618,7 @@
     <div id="sectionSelectModal" class="modal">
         <div class="modal-content" style="max-width: 600px; text-align: center;">
             <span class="close" id="closeSectionSelectModal">&times;</span>
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select sections for learning<br>(選擇學習範圍)</h2>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select A Section<br>(選擇學習範圍)</h2>
             <div id="sectionButtonsGrid" class="section-checkboxes-grid" style="margin-top: 20px;">
                 <!-- 這裡會透過 JS 動態產生範圍按鈕 -->
             </div>
@@ -1631,7 +1637,7 @@
             <!-- 專屬此 Section 的功能區 -->
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px;">
                 <button class="study-partner-btn" id="overallVocabBtn" style="background-color: #17a2b8; padding: 10px 20px; font-size: 16px;">
-                    🗃️ Vocabulary Management
+                    🗃️ Vocabulary Management<br>(字彙管理)
                 </button>
             </div>
 
@@ -1663,7 +1669,8 @@
                 </button>
                 <!-- 新增：平行排列的兩個按鈕 -->
                 <div style="display: flex; gap: 15px; width: 100%;">
-                    <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #f39c12;">
+                    <!-- 顏色更改為較淺的藍色 #5dade2 -->
+                    <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
                         📋 其他範圍
                     </button>
                     <button class="nav-btn" id="backToMainBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #6c757d;">
@@ -1705,6 +1712,8 @@
     <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
         <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
+        <!-- 新增 🔇 停止按鈕 -->
+        <div class="listen-speaker" id="listenStopBtn" title="Stop Audio">🔇</div>
         <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
             Show English
         </button>
@@ -5053,6 +5062,7 @@ lessonButtons.forEach(btn => {
             // Listen and Choose Quiz button
 document.getElementById('listenChooseBtn').addEventListener('click', startListenChooseQuiz);
 document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
+document.getElementById('listenStopBtn').addEventListener('click', stopSpeech); // 新增這行停止發音
 document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
 document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
 document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
