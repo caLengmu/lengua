@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.23)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.25)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1618,14 +1618,14 @@
     <div id="sectionSelectModal" class="modal">
         <div class="modal-content" style="max-width: 600px; text-align: center;">
             <span class="close" id="closeSectionSelectModal">&times;</span>
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select Sections<br>(請選擇範圍)</h2>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select Sections<br>(選擇範圍)</h2>
             
-            <div id="sectionButtonsGrid" class="section-checkboxes-grid" style="margin-top: 20px; text-align: left;">
+            <div id="sectionButtonsGrid" class="section-checkboxes-grid" style="margin-top: 15px; text-align: left;">
                 <!-- 這裡會透過 JS 動態產生範圍核取方塊 -->
             </div>
 
-            <!-- 樞紐控制按鈕區 -->
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc;">
+            <!-- 樞紐控制按鈕區：將 margin-top 從 30px 縮小為 15px，padding-top 從 20px 縮小為 15px -->
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 2px dashed #ccc;">
                 <!-- 解決三-2: 對調 Start Learning 跟 Walk me through 顏色 -->
                 <button class="study-partner-btn" id="startLearningBtn" style="width: 100%; background-color: #3498db; font-size: 20px;">
                     🚀 Start Learning! <br>(開始學習)
@@ -1678,7 +1678,7 @@
             <!-- 底部按鈕區 (加上 ID 以利 Progress bar 追蹤，並縮減多餘留白) -->
             <div id="learningHubBottomBtns" style="display: flex; gap: 15px; width: 100%; margin-top: 30px; padding-bottom: 40px;">
                 <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
-                    📋 重新選擇範圍
+                    📋 重選範圍
                 </button>
                 <button class="nav-btn" id="backToMainBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #6c757d;">
                     🏠 回主畫面
@@ -4010,14 +4010,14 @@ function getRandomEmoji() {
                     if (isChecked) checkedCount++;
                 });
 
-                if (checkedCount > 0) {
-                    // 美化 Select sections 選項：加大字體、藍色外框、加上 items、全框可點擊
+            if (checkedCount > 0) {
+                    // 調整 Select sections 選項：縮小字體(16px)、縮小框內間距(padding 10px)、縮小框外間距(margin-bottom 8px)
                     html += `
-                    <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 15px; font-size: 18px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 12px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
-                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 22px; height: 22px; margin-right: 12px; cursor: pointer;">
+                    <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 10px 12px; font-size: 16px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 8px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
+                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
                         <span style="font-weight: bold; color: #2c3e50; display: flex; align-items: center; width: 100%;">
                             ${section.section} 
-                            <span style="color:#e74c3c; font-size: 16px; margin-left: auto;">(${checkedCount} items)</span>
+                            <span style="color:#e74c3c; font-size: 14px; margin-left: auto;">(${checkedCount} items)</span>
                         </span>
                     </label>`;
                 }
@@ -4475,11 +4475,14 @@ async function populateOverallVocabList(lessonKey) {
             if (isChecked) checkedCount++;
         });
         
+        // 修正 checkbox 擠壓變形的問題
         html += `<div class="vocab-section-block">
-            <div class="section-title-row">
+            <div class="section-title-row" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
-                       data-section-index="${sectionIndex}" checked>
-                <label for="${sectionId}_all">${section.section} <span class="section-count" id="count_${sectionIndex}">(${checkedCount} items checked)</span></label>
+                       data-section-index="${sectionIndex}" checked style="width: 24px; height: 24px; flex-shrink: 0; margin: 0;">
+                <label for="${sectionId}_all" style="flex: 1; display: flex; align-items: center; flex-wrap: wrap; margin: 0;">
+                    ${section.section} <span class="section-count" id="count_${sectionIndex}" style="margin-left: 8px;">(${checkedCount} items checked)</span>
+                </label>
             </div>
             <div class="vocab-items-grid">`;
             
@@ -4500,8 +4503,24 @@ async function populateOverallVocabList(lessonKey) {
         html += `</div></div>`;
     });
     
+    // 迴圈結束後，加上 ⬆️ 回到頂部按鈕
+    html += `
+    <div style="text-align: center; margin-top: 30px; padding-bottom: 20px;">
+        <button id="vocabBackToTopBtn" style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+            ⬆️ Back to Top
+        </button>
+    </div>`;
+    
     listContainer.innerHTML = html;
     attachOverallVocabListeners(lessonKey);
+
+    // 綁定回到頂部事件 (因為 Modal 內部有自己的滾動條)
+    const topBtn = document.getElementById('vocabBackToTopBtn');
+    if (topBtn) {
+        topBtn.addEventListener('click', () => {
+            document.getElementById('overallVocabModal').scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 }
 
 // 解決一-1 與 一-2: 綁定單字管理勾選框事件，實現全選與數字即時更新
