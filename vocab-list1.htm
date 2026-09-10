@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.21)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.22)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1618,7 +1618,7 @@
     <div id="sectionSelectModal" class="modal">
         <div class="modal-content" style="max-width: 600px; text-align: center;">
             <span class="close" id="closeSectionSelectModal">&times;</span>
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select Sections<br>(請勾選學習/測驗範圍)</h2>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">📋 Select Sections<br>(請選擇範圍)</h2>
             
             <div id="sectionButtonsGrid" class="section-checkboxes-grid" style="margin-top: 20px; text-align: left;">
                 <!-- 這裡會透過 JS 動態產生範圍核取方塊 -->
@@ -1626,10 +1626,11 @@
 
             <!-- 樞紐控制按鈕區 -->
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ccc;">
-                <button class="study-partner-btn" id="startLearningBtn" style="width: 100%; background-color: #27ae60; font-size: 20px;">
-                    🚀 Start Learning! <br>(開始學習勾選內容)
+                <!-- 解決三-2: 對調 Start Learning 跟 Walk me through 顏色 -->
+                <button class="study-partner-btn" id="startLearningBtn" style="width: 100%; background-color: #3498db; font-size: 20px;">
+                    🚀 Start Learning! <br>(開始學習)
                 </button>
-                <button class="study-partner-btn" id="walkMeThruBtn" style="width: 100%; background-color: #3498db;">
+                <button class="study-partner-btn" id="walkMeThruBtn" style="width: 100%; background-color: #27ae60;">
                     👀 Walk Me Through <br>(帶我複習：英翻中)
                 </button>
                 <button class="quiz-btn" id="listenChooseBtn" style="width: 100%;">
@@ -1641,10 +1642,11 @@
 
     <!-- 新增：專屬學習內容視窗 (Modal 2) -->
     <div id="learningContentModal" class="modal">
-        <div class="modal-content" id="learningScrollArea" style="max-width: 900px; height: 100vh; max-height: 100vh; margin: 0 auto; border-radius: 0; overflow-y: auto; position: relative;">
-            <span class="close" id="closeLearningContentModal">&times;</span>
+        <div class="modal-content" id="learningScrollArea" style="max-width: 900px; height: 100vh; max-height: 100vh; margin: 0 auto; border-radius: 0; overflow-y: auto; position: relative; padding-top: 40px;">
+            <!-- 解決二-2: X鍵加上白色圓形背景跟更高層級，避免被長標題蓋住 -->
+            <span class="close" id="closeLearningContentModal" style="position: absolute; top: 10px; right: 15px; z-index: 1050; background: white; border-radius: 50%; width: 35px; height: 35px; line-height: 35px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">&times;</span>
             
-            <h2 id="learningSectionTitle" style="text-align: center; color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+            <h2 id="learningSectionTitle" style="text-align: center; color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; padding-right: 30px;">
                 Selected Sections
             </h2>
 
@@ -1673,8 +1675,8 @@
                 </table>
             </div>
 
-            <!-- 底部返回按鈕 -->
-            <div style="display: flex; gap: 15px; width: 100%; margin-top: 30px;">
+            <!-- 解決二-1: 加上 padding-bottom: 120px，確保滾到底部時進度條不會遮擋按鈕 -->
+            <div style="display: flex; gap: 15px; width: 100%; margin-top: 30px; padding-bottom: 120px;">
                 <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
                     📋 重新選擇範圍
                 </button>
@@ -4013,10 +4015,10 @@ function getRandomEmoji() {
                 });
 
                 if (checkedCount > 0) {
-                    // 改為產生 Checkbox
+                    // 解決三-1: 移除結尾的 checked，讓 checkbox 預設沒有勾選
                     html += `
                     <div class="section-checkbox-item" style="justify-content: flex-start; padding: 12px; font-size: 16px;">
-                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" checked>
+                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox">
                         <label for="sec_chk_${sectionIndex}">${section.section} <span style="color:#e74c3c; font-size: 14px; font-weight:bold;">(${checkedCount})</span></label>
                     </div>`;
                 }
@@ -4418,7 +4420,7 @@ function restartQuiz() {
     startListenChooseQuiz();
 }
 
-        // Close quiz modal
+// Close quiz modal
 function closeQuizModal() {
     // Clear timeout when closing modal
     if (showEnglishTimeout) {
@@ -4436,6 +4438,8 @@ function closeQuizModal() {
         toggleBtn.textContent = 'Show English';
         toggleBtn.style.backgroundColor = '#6c757d';
     }
+    // 解決三-3: 關閉後回到 Select Sections 頁面
+    document.getElementById('sectionSelectModal').style.display = 'block';
 }
 
 // ============ OVERALL VOCABULARY FUNCTIONS ============
@@ -4499,6 +4503,57 @@ async function populateOverallVocabList(lessonKey) {
     
     listContainer.innerHTML = html;
     attachOverallVocabListeners(lessonKey);
+}
+
+// 解決一-1 與 一-2: 綁定單字管理勾選框事件，實現全選與數字即時更新
+function attachOverallVocabListeners(lessonKey) {
+    const sectionAllCheckboxes = document.querySelectorAll('.section-checkbox-all');
+    const wordCheckboxes = document.querySelectorAll('.word-checkbox');
+
+    // 1. 處理標題的全選與全取消
+    sectionAllCheckboxes.forEach(sectionCb => {
+        sectionCb.addEventListener('change', function() {
+            const sectionIndex = this.getAttribute('data-section-index');
+            const isChecked = this.checked;
+            
+            // 找到該標題下所有的單字勾選框，並使其與標題同步
+            const relatedWords = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`);
+            relatedWords.forEach(wordCb => {
+                wordCb.checked = isChecked;
+            });
+            
+            // 即時更新項目數字
+            updateSectionCountText(sectionIndex);
+        });
+    });
+
+    // 2. 處理個別單字的勾選動作
+    wordCheckboxes.forEach(wordCb => {
+        wordCb.addEventListener('change', function() {
+            const sectionIndex = this.getAttribute('data-section-index');
+            
+            // 即時更新項目數字
+            updateSectionCountText(sectionIndex);
+            
+            // 判斷是否要自動勾選或取消標題的「全選」
+            const relatedWords = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`);
+            const allChecked = Array.from(relatedWords).every(cb => cb.checked);
+            
+            const sectionCb = document.querySelector(`.section-checkbox-all[data-section-index="${sectionIndex}"]`);
+            if (sectionCb) {
+                sectionCb.checked = allChecked;
+            }
+        });
+    });
+
+    // 更新標題旁邊的數字文字
+    function updateSectionCountText(sectionIndex) {
+        const checkedCount = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]:checked`).length;
+        const countSpan = document.getElementById(`count_${sectionIndex}`);
+        if (countSpan) {
+            countSpan.textContent = `(${checkedCount} items checked)`;
+        }
+    }
 }
 
 async function saveOverallVocabState() {
@@ -5145,6 +5200,8 @@ walkMeThruBtn.addEventListener('click', () => {
 document.getElementById('closeStudyModal').addEventListener('click', () => {
     studyModal.style.display = 'none';
     stopSpeech();
+    // 解決三-3: 關閉後回到 Select Sections 頁面
+    document.getElementById('sectionSelectModal').style.display = 'block';
 });
 
             // Navigation buttons
@@ -5178,17 +5235,16 @@ window.addEventListener('click', (e) => {
     }
 });
 
-            // Click outside modal to close
+// Click outside modal to close
             window.addEventListener('click', (e) => {
     if (e.target === studyModal) {
         studyModal.style.display = 'none';
         stopSpeech();
+        // 解決三-3: 點擊背景關閉後回到 Select Sections 頁面
+        document.getElementById('sectionSelectModal').style.display = 'block';
     }
     if (e.target === document.getElementById('listenChooseModal')) {
         closeQuizModal();
-    }
-    if (e.target === document.getElementById('overallVocabModal')) {
-        document.getElementById('overallVocabModal').style.display = 'none';
     }
 });
 
