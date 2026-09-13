@@ -4064,8 +4064,10 @@ function getRandomEmoji() {
                     // 2. 處理單字顯示：加上 <br> 換行，並用 span 包裹設定 font-size: 0.8em
 const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
                         
-                    // 3. 處理例句顯示：加上 <br> 換行，並用 span 包裹設定 font-size: 0.8em
-const displayExample = item.example.replace(/\s*\(([^)]+)\)\s*$/, '<br><span style="font-size: 0.8em; color: #888;">$1</span>');
+// 3. 處理例句顯示：使用全域匹配 (/g)，將所有括號內的中文替換並換行
+let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em;">$1</span><br>');
+// 移除字串最後面多餘的 <br> (避免最後面多空出一行)
+displayExample = displayExample.replace(/(<br>)+$/, '');
 
                         html += `<tr class="vocab-row" data-section="${sectionIndex}">
                             <td class="audio-controls">
@@ -4129,16 +4131,17 @@ const displayExample = item.example.replace(/\s*\(([^)]+)\)\s*$/, '<br><span sty
             return wordString.split('(')[0].trim().replace(':', '');
         }
 
-        // Extract English example without Chinese translation
+// Extract English example without Chinese translation
         function extractEnglishExampleOnly(exampleString) {
-            // Remove everything from first ( to end
-            return exampleString.split('(')[0].trim();
+            // 移除所有括號及其內容，保留所有的英文例句
+            return exampleString.replace(/\s*\([^)]+\)\s*/g, ' ').trim();
         }
 
-        // Extract Chinese translation from word
-        function extractChineseWord(wordString) {
-            const match = wordString.match(/\(([^)]+)\):/);
-            return match ? match[1] : '';
+        // Extract Chinese translation from example
+        function extractChineseExample(exampleString) {
+            // 找出所有括號內的中文，並用 <br> 換行連接起來
+            const matches = exampleString.match(/\(([^)]+)\)/g);
+            return matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
         }
 
         // Extract Chinese translation from example
