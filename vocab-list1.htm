@@ -4024,12 +4024,14 @@ let html = '';
             grid.innerHTML = html;
 
             // 綁定 Start Learning 按鈕
-            document.getElementById('startLearningBtn').onclick = () => {
+            document.getElementById('startLearningBtn').onclick = async () => {
                 if (!updateSelectedSections()) {
                     alert('Please select at least one section. (請至少勾選一個範圍)');
                     return;
                 }
-                openLearningContent(lessonKey, savedCheckedWords);
+                // 在按下去的這一刻，重新從資料庫讀取最新的勾選狀態！
+                const freshCheckedWords = await loadCheckedWords(lessonKey);
+                openLearningContent(lessonKey, freshCheckedWords);
             };
 
             document.getElementById('sectionSelectModal').style.display = 'block';
@@ -4807,8 +4809,8 @@ function attachBubbleEventListeners() {
 }
 
         function showCongratulations() {
-            const partnerName = partners[currentPartner].name;
-            const message = `Fantastic work! You've completed the entire vocabulary list! ${partnerName} is so proud of you!`;
+            // 移除舊的 partners 變數，直接給予鼓勵訊息避免系統當機
+            const message = `Fantastic work! You've completed the entire vocabulary list! I am so proud of you!`;
 
             const speechBubble = document.getElementById('speechBubble');
             speechBubble.innerHTML = `<div class="congratulations">
@@ -4935,20 +4937,28 @@ function handleFloatingButtons() {
     if(scrollToBottomBtn) scrollToBottomBtn.classList.add('show');
 }
 
-// Scroll to top (Modal area)
+// Scroll to top (Modal area & Vocab Management)
 function scrollToTop() {
+    const vocabModal = document.getElementById('overallVocabModal');
     const scrollArea = document.getElementById('learningScrollArea');
-    if (scrollArea) {
-        // 直接讓滾動條回到絕對的 0 座標，確保上方 padding 和 X 按鈕完整顯示
+    
+    // 如果字彙管理視窗開著，就捲動它；否則捲動學習畫面
+    if (vocabModal && vocabModal.style.display === 'block') {
+        vocabModal.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (scrollArea) {
         scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 
-// Scroll to bottom (Modal area)
+// Scroll to bottom (Modal area & Vocab Management)
 function scrollToBottom() {
+    const vocabModal = document.getElementById('overallVocabModal');
     const scrollArea = document.getElementById('learningScrollArea');
-    if (scrollArea) {
-        // 直接讓滾動條捲到底部最大高度，確保下方 padding 完全顯示
+    
+    // 如果字彙管理視窗開著，就捲動它；否則捲動學習畫面
+    if (vocabModal && vocabModal.style.display === 'block') {
+        vocabModal.scrollTo({ top: vocabModal.scrollHeight, behavior: 'smooth' });
+    } else if (scrollArea) {
         scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
     }
 }
