@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.29)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.30)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -4002,7 +4002,7 @@ function getRandomEmoji() {
             const grid = document.getElementById('sectionButtonsGrid');
             grid.innerHTML = '';
 
-            let html = '';
+let html = '';
             data.forEach((section, sectionIndex) => {
                 let checkedCount = 0;
                 section.words.forEach((word, wordIndex) => {
@@ -4010,17 +4010,16 @@ function getRandomEmoji() {
                     if (isChecked) checkedCount++;
                 });
 
-            if (checkedCount > 0) {
-                    // 調整 Select sections 選項：縮小字體(16px)、縮小框內間距(padding 10px)、縮小框外間距(margin-bottom 8px)
-                    html += `
-                    <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 10px 12px; font-size: 16px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 8px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
-                        <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
-                        <span style="font-weight: bold; color: #2c3e50; display: flex; align-items: center; width: 100%;">
-                            ${section.section} 
-                            <span style="color:#e74c3c; font-size: 14px; margin-left: auto;">(${checkedCount} items)</span>
-                        </span>
-                    </label>`;
-                }
+                // 移除 if (checkedCount > 0) 判斷，無論是否為 0 都保留 section header
+                // 並在顯示數量的 span 加上 ID (modal1_sec_count_...)，方便儲存後即時更新
+                html += `
+                <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 10px 12px; font-size: 16px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 8px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
+                    <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+                    <span style="font-weight: bold; color: #2c3e50; display: flex; align-items: center; width: 100%;">
+                        ${section.section} 
+                        <span id="modal1_sec_count_${sectionIndex}" style="color:#e74c3c; font-size: 14px; margin-left: auto;">(${checkedCount} items)</span>
+                    </span>
+                </label>`;
             });
             grid.innerHTML = html;
 
@@ -4180,17 +4179,18 @@ async function startListenChooseQuiz() {
         alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
         return;
     }
-    
-    // 關閉選擇範圍的 Modal 1
-    document.getElementById('sectionSelectModal').style.display = 'none';
 
-    // Get words from current section
+    // 先取得單字資料
     const allWords = await getWordsFromCurrentSection();
     
+    // 檢查單字數量，如果不夠就跳出警告並停止執行 (此時 Modal 1 依然保持開啟)
     if (allWords.length < 8) {
         alert('This section has fewer than 8 words. (此區塊不足 8 個單字，無法進行測驗)');
         return;
     }
+
+    // 確認單字數量足夠後，才關閉選擇範圍的 Modal 1
+    document.getElementById('sectionSelectModal').style.display = 'none';
 
     // Select 8 random words
     quizWords = shuffleArray([...allWords]).slice(0, 8);
@@ -4605,6 +4605,22 @@ async function saveOverallVocabState() {
         alert('Settings saved successfully! (設定已成功儲存！)');
         document.getElementById('overallVocabModal').style.display = 'none';
         
+        // --- 新增：同步更新 Modal 1 (Select Sections) 裡的數量顯示 ---
+        if (currentLessonData) {
+            currentLessonData.forEach((section, sectionIndex) => {
+                let count = 0;
+                section.words.forEach((word, wordIndex) => {
+                    const isChecked = checkedWords[`${sectionIndex}_${wordIndex}`] !== false;
+                    if (isChecked) count++;
+                });
+                const countSpan = document.getElementById(`modal1_sec_count_${sectionIndex}`);
+                if (countSpan) {
+                    countSpan.textContent = `(${count} items)`;
+                }
+            });
+        }
+        // -------------------------------------------------------------
+
         // 直接重新渲染 Modal 2 (學習畫面) 以反映最新的勾選狀態
         openLearningContent(selectedLesson, checkedWords);
     } catch (error) {
