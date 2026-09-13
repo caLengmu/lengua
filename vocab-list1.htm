@@ -267,7 +267,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 1050;
+    z-index: 1150; /* 修正：將層級調到最高，避免被字彙管理視窗蓋住 */
 }
 
 .floating-nav-btn {
@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.30)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.40)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1765,13 +1765,12 @@
             <div>請先選擇單字</div>
         </div>
     </div>
-                <div class="progress-info" id="progressInfo">
-                    Ready to start!
+                <div class="progress-info" id="progressInfo" style="font-weight: bold; color: #2980b9;">
+                    Loading...
                 </div>
                 <div class="navigation-controls" id="navigationControls">
                     <button class="nav-btn" id="backBtn">← Back</button>
                     <button class="nav-btn" id="nextBtn">Next →</button>
-                    <button class="nav-btn" id="studyModalNextSectionBtn">Next Section</button>
                 </div>
             </div>
         </div>
@@ -2264,7 +2263,7 @@ plain (adj) (1.簡單樸素的、不加修飾的) ^ She prefers to wear plain cl
 plain (adj) (2.清楚的、明顯的) ^ It was plain to everyone that he was telling the truth. (每個人都很清楚他講的是事實。)
 penetrating (adj) (1.（聲音）響亮刺耳的 = piercing) ^ A penetrating scream was heard in the dead of night. (夜深人靜之時，傳來一聲刺耳的尖叫。)
 penetrating (adj) (2.目光銳利的、有洞察力的) ^ The scholar offered a penetrating comment on this issue. (這位學者對這個問題提出了一針見血的評論。)
-penetrating looks/eyes/gaze… (銳利的目光/眼神/凝視等) ^ The detective looked at the suspect with a penetrating gaze. (警探以敏銳看穿一切的目光凝視著嫌疑犯。)
+penetrating looks/ eyes/ gaze… (銳利的目光/ 眼神/ 凝視等) ^ The detective looked at the suspect with a penetrating gaze. (警探以敏銳看穿一切的目光凝視著嫌疑犯。)
 renowned (adj) (著名的、有聲譽的 = famous, well known, noted, celebrated, famed) ^ The city is renowned for (= is famous for) its delicious seafood and historical sites. (這座城市以其美味的海鮮和歷史遺跡而著名的。)
 notorious (adj) (惡名昭彰的、聲名狼藉的 = infamous) ^ This food company is notorious for (= is infamous for) selling problematic cooking oil. (這間食品公司因販賣有問題的食用油而惡名昭彰。)
 outstanding (adj) (傑出的、出色的) ^ Her outstanding performance on stage won the hearts of the audience. (她在舞台上傑出的表現贏得了觀眾的心。)
@@ -4126,48 +4125,34 @@ displayExample = displayExample.replace(/(<br>)+$/, '');
 
         // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
 
-// Extract English word without Chinese translation (for study partner mode)
-        function extractEnglishWordOnly(wordString) {
-            // Remove everything from first ( to end
-            return wordString.split('(')[0].trim().replace(':', '');
-        }
+// ============ EXTRACT FUNCTIONS ============
 
-// Extract English example without Chinese translation
-        function extractEnglishExampleOnly(exampleString) {
-            // 移除所有括號及其內容，保留所有的英文例句
-            return exampleString.replace(/\s*\([^)]+\)\s*/g, ' ').trim();
-        }
+// Extract English word without Chinese translation
+function extractEnglishWordOnly(wordString) {
+    return wordString.replace(/\s*\(([^)]+)\):?\s*$/, '').trim();
+}
 
-        // Extract Chinese translation from example
-        function extractChineseExample(exampleString) {
-            // 找出所有括號內的中文，並用 <br> 換行連接起來
-            const matches = exampleString.match(/\(([^)]+)\)/g);
-            return matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
-        }
+// Extract Chinese translation from word
+function extractChineseTranslation(wordString) {
+    const match = wordString.match(/\(([^)]+)\):?\s*$/);
+    return match ? match[1] : wordString; // 若無匹配則回傳原字串以防出錯
+}
 
-        // Extract Chinese translation from example
-        function extractChineseExample(exampleString) {
-            const match = exampleString.match(/\(([^)]+)\)/);
-            return match ? match[1] : '';
-        }
+// Extract English example without Chinese translation (支援多句換行)
+function extractEnglishExampleOnly(exampleString) {
+    let eng = exampleString.replace(/\s*\([^)]+\)\s*/g, '<br>');
+    return eng.replace(/^(<br>)+|(<br>)+$/g, '').trim();
+}
 
+// Extract Chinese translation from example (支援多句換行)
+function extractChineseExample(exampleString) {
+    const matches = exampleString.match(/\(([^)]+)\)/g);
+    return matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+}
 
-        // Extract Chinese translation from word
-        function extractChineseTranslation(wordString) {
-            const match = wordString.match(/\(([^)]+)\):/);
-            return match ? match[1] : wordString;
-        }
-
-        // Extract English word/phrase only
-        function extractEnglishWord(wordString) {
-            const match = wordString.match(/^(.+?)\s*\([^)]+\):/);
-            return match ? match[1].trim() : wordString.split('(')[0].trim();
-        }
-
-        // Extract example sentence without Chinese translation
-        function extractExampleOnly(exampleString) {
-            return exampleString.split('(')[0].trim();
-        }
+// 為了相容 Listening Quiz 舊有命名，保留以下兩個轉址函數
+function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
+function extractExampleOnly(exampleString) { return extractEnglishExampleOnly(exampleString); }
 
 // Start quiz
 async function startListenChooseQuiz() {
@@ -4635,51 +4620,34 @@ async function saveOverallVocabState() {
 
 function updateStudySession() {
     if (!currentLessonData || !flatWordsList.length) {
-        document.getElementById('currentWord').textContent = 'Select a lesson first!';
-        document.getElementById('currentExample').textContent = 'Please choose a lesson from the main page before starting your study session.';
+        document.getElementById('currentWord').innerHTML = 'Select a lesson first!';
+        document.getElementById('currentExample').innerHTML = 'Please choose a lesson from the main page before starting your study session.';
         document.getElementById('progressInfo').textContent = 'Ready to start!';
         return;
-    }
-
-    if (isCompleted) {
-        restoreNormalInterface();
     }
 
     const currentItem = flatWordsList[currentWordIndex];
     if (!currentItem) return;
 
-    // Get new random emoji when moving to next word
     if (!translationShown) {
         currentEmoji = getRandomEmoji();
     }
-
-    // Update emoji display
     const avatarElement = document.getElementById('currentPartnerAvatar');
-    if (avatarElement) {
-        avatarElement.textContent = currentEmoji;
+    if (avatarElement) avatarElement.textContent = currentEmoji;
+
+    const englishWord = extractEnglishWordOnly(currentItem.word);
+    const englishExample = extractEnglishExampleOnly(currentItem.example);
+    const chineseWord = extractChineseTranslation(currentItem.word);
+    const chineseExample = extractChineseExample(currentItem.example);
+
+    const questionPrompt = document.getElementById('questionPrompt');
+    if (questionPrompt) {
+        questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
     }
 
-    // Show English only initially
-const englishWord = extractEnglishWordOnly(currentItem.word);
-const englishExample = extractEnglishExampleOnly(currentItem.example);
+    document.getElementById('currentWord').innerHTML = englishWord;
+    document.getElementById('currentExample').innerHTML = englishExample;
 
-// Update the question prompt
-const questionPrompt = document.getElementById('questionPrompt');
-if (questionPrompt) {
-    questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
-}
-
-// Always show vocab and example in their designated area
-document.getElementById('currentWord').textContent = englishWord;
-document.getElementById('currentExample').textContent = englishExample;
-
-    // Store Chinese translations
-    const chineseWord = extractChineseWord(currentItem.word);
-    const chineseExample = extractChineseExample(currentItem.example);
-    document.getElementById('currentWord').setAttribute('data-chinese', chineseWord);
-    document.getElementById('currentExample').setAttribute('data-chinese', chineseExample);
-
-    // Hide/show translation based on state
     const translationDiv = document.getElementById('translationText');
     const translateBtn = document.getElementById('showTranslationBtn');
     
@@ -4690,9 +4658,9 @@ document.getElementById('currentExample').textContent = englishExample;
             translationDiv.classList.remove('show');
         }
         translationDiv.innerHTML = `
-            <div class="translation-label">🌐 Translation:</div>
+            <div class="translation-label">🌐 中文翻譯：</div>
             <div><strong>${chineseWord}</strong></div>
-            <div>${chineseExample}</div>
+            <div style="margin-top: 5px;">${chineseExample}</div>
         `;
     }
     
@@ -4701,93 +4669,32 @@ document.getElementById('currentExample').textContent = englishExample;
         translateBtn.style.cursor = translationShown ? 'not-allowed' : 'pointer';
     }
 
-    const totalWords = flatWordsList.length;
-    const progressText = `Word ${currentWordIndex + 1} of ${totalWords} • ${currentItem.sectionTitle}`;
-    document.getElementById('progressInfo').textContent = progressText;
+    // 🎯 進度顯示更新: 移除多餘的◎，因為 sectionTitle 已經有自帶 ◎ 了
+    const wordsInSection = flatWordsList.filter(item => item.sectionIndex === currentItem.sectionIndex);
+    const indexInSection = wordsInSection.findIndex(item => item.wordIndex === currentItem.wordIndex) + 1;
+    const totalInSection = wordsInSection.length;
+    
+    document.getElementById('progressInfo').textContent = `${currentItem.sectionTitle}: ${indexInSection} / ${totalInSection}`;
 
-    updateNavigationButtons();
+    // 更新導覽按鈕
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    if (backBtn) backBtn.disabled = false;
+    if (nextBtn) nextBtn.disabled = false;
 }
 
-        function updateNavigationButtons() {
-            const backBtn = document.getElementById('backBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const nextSectionBtn = document.getElementById('nextSectionBtn');
-
-            if (!flatWordsList.length) return;
-
-            const totalWords = flatWordsList.length;
-            const currentItem = flatWordsList[currentWordIndex];
-
-            backBtn.disabled = currentWordIndex === 0;
-            nextBtn.disabled = currentWordIndex === totalWords - 1;
-
-            const isLastSection = currentItem && currentItem.sectionIndex === Math.max(...flatWordsList.map(item => item.sectionIndex));
-            nextSectionBtn.disabled = isLastSection;
-        }
-
-function restoreNormalInterface() {
-    const speechBubble = document.getElementById('speechBubble');
-    const questionPrompt = document.getElementById('questionPrompt');
+// 獨立出來的發音函數：精準唸出過濾後的英文
+function handleSpeakCurrent() {
     const currentItem = flatWordsList[currentWordIndex];
-
     if (currentItem) {
         const englishWord = extractEnglishWordOnly(currentItem.word);
-        const englishExample = extractEnglishExampleOnly(currentItem.example);
-        const chineseWord = extractChineseWord(currentItem.word);
-        const chineseExample = extractChineseExample(currentItem.example);
-        
-        // Update question prompt
-        if (questionPrompt) {
-            questionPrompt.textContent = 'What does it mean?';
-        }
-        
-        // Update speech bubble content
-        speechBubble.innerHTML = `
-            <div class="current-word" id="currentWord" data-chinese="${chineseWord}">${englishWord}</div>
-            <div class="current-example" id="currentExample" data-chinese="${chineseExample}">${englishExample}</div>
-            <div class="bubble-controls">
-                <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-                <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
-                <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
-            </div>
-            <div class="translation-text" id="translationText">
-                <div class="translation-label">🌐 中文翻譯：</div>
-                <div><strong>${chineseWord}</strong></div>
-                <div>${chineseExample}</div>
-            </div>`;
-
-        attachBubbleEventListeners();
+        const englishExample = extractEnglishExampleOnly(currentItem.example).replace(/<br>/g, ' '); // 語音不需要 <br> 換行
+        speakText(`${englishWord}. ${englishExample}`);
     }
-
-    isCompleted = false;
 }
 
-function attachBubbleEventListeners() {
-            const speakBtn = document.getElementById('speakCurrentBtn');
-            const stopBtn = document.getElementById('stopCurrentBtn');
-            const translateBtn = document.getElementById('showTranslationBtn');
-
-            if (speakBtn) {
-                speakBtn.addEventListener('click', handleSpeakCurrent);
-            }
-            if (stopBtn) {
-                stopBtn.addEventListener('click', stopSpeech);
-            }
-            if (translateBtn) {
-                translateBtn.addEventListener('click', toggleTranslation);
-            }
-        }
-
-        function handleSpeakCurrent() {
-            const currentItem = flatWordsList[currentWordIndex];
-            if (currentItem) {
-                const fullText = `${currentItem.word}. ${currentItem.example}`;
-                speakText(fullText);
-            }
-        }
-
-// Show translation (one-time, no toggle)
-        function toggleTranslation() {
+// 獨立出來的翻譯顯示函數
+function toggleTranslation() {
     const translationDiv = document.getElementById('translationText');
     const translateBtn = document.getElementById('showTranslationBtn');
     const questionPrompt = document.getElementById('questionPrompt');
@@ -4796,11 +4703,7 @@ function attachBubbleEventListeners() {
         translationDiv.classList.add('show');
         translationShown = true;
         
-        // Change question prompt to "Did you get it right?"
-        if (questionPrompt) {
-            questionPrompt.textContent = 'Did you get it right?';
-        }
-        
+        if (questionPrompt) questionPrompt.textContent = 'Did you get it right?';
         if (translateBtn) {
             translateBtn.disabled = true;
             translateBtn.style.cursor = 'not-allowed';
@@ -4808,85 +4711,23 @@ function attachBubbleEventListeners() {
     }
 }
 
-        function showCongratulations() {
-            // 移除舊的 partners 變數，直接給予鼓勵訊息避免系統當機
-            const message = `Fantastic work! You've completed the entire vocabulary list! I am so proud of you!`;
-
-            const speechBubble = document.getElementById('speechBubble');
-            speechBubble.innerHTML = `<div class="congratulations">
-                    <h3>Congratulations!</h3>
-                    <p>${message}</p>
-                </div>
-                <div class="bubble-controls">
-                    <button class="bubble-btn play-btn" id="congratsPlayBtn">🔊</button>
-                    <button class="bubble-btn stop-btn" id="congratsStopBtn">🔇</button>
-                    <button class="bubble-btn learn-again-btn" id="learnAgainBtn">🔄 Learn Again</button>
-                </div>`;
-
-            document.getElementById('congratsPlayBtn').addEventListener('click', () => speakText(message));
-            document.getElementById('congratsStopBtn').addEventListener('click', stopSpeech);
-            document.getElementById('learnAgainBtn').addEventListener('click', restartLesson);
-
-            setTimeout(() => speakText(message), 500);
-
-            document.getElementById('progressInfo').textContent = 'Lesson Complete!';
-            isCompleted = true;
-            updateNavigationButtons();
-        }
-
-        function checkCompletion() {
-            if (currentWordIndex >= flatWordsList.length && !isCompleted) {
-                showCongratulations();
-                currentWordIndex = flatWordsList.length - 1;
-            }
-        }
-
-        function nextWord() {
-    // Reset translation state for next word
+function nextWord() {
     translationShown = false;
-    
     if (currentWordIndex < flatWordsList.length - 1) {
         currentWordIndex++;
-        updateStudySession();
-    } else if (currentWordIndex === flatWordsList.length - 1) {
-        currentWordIndex++;
-        checkCompletion();
+    } else {
+        currentWordIndex = 0; // 進度到最後一個字時，重頭開始循環
     }
+    updateStudySession();
 }
 
-        function previousWord() {
-    // Reset translation state when going back
+function previousWord() {
     translationShown = false;
-    
     if (currentWordIndex > 0) {
         currentWordIndex--;
-        if (isCompleted) {
-            isCompleted = false;
-        }
-        updateStudySession();
+    } else {
+        currentWordIndex = flatWordsList.length - 1; // 往回按也會循環到最後一個字
     }
-}
-
-        function goToNextSection() {
-    translationShown = false;
-    
-    const currentItem = flatWordsList[currentWordIndex];
-    if (!currentItem) return;
-    
-    const currentSectionIndex = currentItem.sectionIndex;
-    const nextSectionFirstWord = flatWordsList.find(item => item.sectionIndex > currentSectionIndex);
-    
-    if (nextSectionFirstWord) {
-        currentWordIndex = flatWordsList.indexOf(nextSectionFirstWord);
-        updateStudySession();
-        checkCompletion();
-    }
-}
-
-        function restartLesson() {
-    currentWordIndex = 0;
-    isCompleted = false;
-    translationShown = false;  // ADD THIS LINE
     updateStudySession();
 }
 
@@ -4902,18 +4743,14 @@ async function startStudySession() {
         return;
     }
     
-    // 關閉選擇範圍的 Modal 1
     document.getElementById('sectionSelectModal').style.display = 'none';
 
     currentLessonData = vocabDatabase[selectedLesson];
     flatWordsList = await getWordsFromCurrentSection();
     currentWordIndex = 0;
-    isCompleted = false;
     translationShown = false;
     
-    // Set initial random emoji
     currentEmoji = getRandomEmoji();
-
     document.getElementById('studyModal').style.display = 'block';
 
     updateStudySession();
@@ -4941,12 +4778,10 @@ function handleFloatingButtons() {
 function scrollToTop() {
     const vocabModal = document.getElementById('overallVocabModal');
     const scrollArea = document.getElementById('learningScrollArea');
-    
-    // 如果字彙管理視窗開著，就捲動它；否則捲動學習畫面
     if (vocabModal && vocabModal.style.display === 'block') {
-        vocabModal.scrollTo({ top: 0, behavior: 'smooth' });
+        vocabModal.scrollTop = 0;
     } else if (scrollArea) {
-        scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollArea.scrollTop = 0;
     }
 }
 
@@ -4954,12 +4789,10 @@ function scrollToTop() {
 function scrollToBottom() {
     const vocabModal = document.getElementById('overallVocabModal');
     const scrollArea = document.getElementById('learningScrollArea');
-    
-    // 如果字彙管理視窗開著，就捲動它；否則捲動學習畫面
     if (vocabModal && vocabModal.style.display === 'block') {
-        vocabModal.scrollTo({ top: vocabModal.scrollHeight, behavior: 'smooth' });
+        vocabModal.scrollTop = vocabModal.scrollHeight;
     } else if (scrollArea) {
-        scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+        scrollArea.scrollTop = scrollArea.scrollHeight;
     }
 }
 
@@ -5251,12 +5084,14 @@ document.getElementById('closeStudyModal').addEventListener('click', () => {
     document.getElementById('sectionSelectModal').style.display = 'block';
 });
 
-            // Navigation buttons
-document.getElementById('nextBtn').addEventListener('click', nextWord);
-document.getElementById('backBtn').addEventListener('click', previousWord);
-document.getElementById('studyModalNextSectionBtn').addEventListener('click', goToNextSection);
+           // Navigation buttons
+            document.getElementById('nextBtn').addEventListener('click', nextWord);
+            document.getElementById('backBtn').addEventListener('click', previousWord);
 
-            attachBubbleEventListeners();
+            // TTS & Translate buttons (明確綁定，避免找不到函數的錯誤)
+            document.getElementById('speakCurrentBtn').addEventListener('click', handleSpeakCurrent);
+            document.getElementById('stopCurrentBtn').addEventListener('click', stopSpeech);
+            document.getElementById('showTranslationBtn').addEventListener('click', toggleTranslation);
 
             // Welcome modal removed
             
