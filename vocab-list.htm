@@ -1678,10 +1678,10 @@
             <!-- 底部按鈕區 (加上 ID 以利 Progress bar 追蹤，並縮減多餘留白) -->
             <div id="learningHubBottomBtns" style="display: flex; gap: 15px; width: 100%; margin-top: 30px; padding-bottom: 40px;">
                 <button class="nav-btn" id="otherSectionsBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #5dade2; color: white;">
-                    📋 重選範圍
+                    📋 選範圍 / 測驗
                 </button>
                 <button class="nav-btn" id="backToMainBtn" style="flex: 1; padding: 15px; font-size: 16px; font-weight: bold; background-color: #6c757d;">
-                    🏠 回主畫面
+                    🏠 回首頁
                 </button>
             </div>
         </div>
@@ -4061,11 +4061,11 @@ function getRandomEmoji() {
                         // 1. 保留原本帶有括號的完整文字給 TTS，這樣它就不會唸出中文
                         const fullText = `${item.word}. ${item.example}`;
                         
-                        // 2. 處理單字顯示：將字尾的 "(中文):" 替換成 "中文" (去除括號與冒號)
-                        const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, ' $1');
+                    // 2. 處理單字顯示：加上 <br> 換行，並用 span 包裹設定 font-size: 0.8em
+const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
                         
-                        // 3. 處理例句顯示：將字尾的 "(中文例句)" 替換成 "<br>中文例句" (去除括號並換行)
-                        const displayExample = item.example.replace(/\s*\(([^)]+)\)\s*$/, '<br>$1');
+                    // 3. 處理例句顯示：加上 <br> 換行，並用 span 包裹設定 font-size: 0.8em
+const displayExample = item.example.replace(/\s*\(([^)]+)\)\s*$/, '<br><span style="font-size: 0.8em; color: #888;">$1</span>');
 
                         html += `<tr class="vocab-row" data-section="${sectionIndex}">
                             <td class="audio-controls">
