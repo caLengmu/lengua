@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.40)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.41)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -4121,6 +4121,8 @@ displayExample = displayExample.replace(/(<br>)+$/, '');
             document.getElementById('bottomProgressBar').style.display = 'none'; // 隱藏進度條
             handleFloatingButtons(); // 隱藏浮動按鈕
             stopSpeech();
+            // 新增這行：關閉 Learning Content 後，重新顯示 Select Sections 頁面
+            document.getElementById('sectionSelectModal').style.display = 'block';
         });
 
         // ============ LISTEN AND CHOOSE QUIZ FUNCTIONS ============
@@ -4138,15 +4140,17 @@ function extractChineseTranslation(wordString) {
     return match ? match[1] : wordString; // 若無匹配則回傳原字串以防出錯
 }
 
-// Extract English example without Chinese translation (支援多句換行)
+// Extract English example without Chinese translation (支援多句換行，且避開純英文補充)
 function extractEnglishExampleOnly(exampleString) {
-    let eng = exampleString.replace(/\s*\([^)]+\)\s*/g, '<br>');
+    // 利用正則表達式，只替換「包含至少一個中文字的括號」，保留純英文的括號如 (= about)
+    let eng = exampleString.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, '<br>');
     return eng.replace(/^(<br>)+|(<br>)+$/g, '').trim();
 }
 
-// Extract Chinese translation from example (支援多句換行)
+// Extract Chinese translation from example (支援多句換行，且只抓取含中文的括號)
 function extractChineseExample(exampleString) {
-    const matches = exampleString.match(/\(([^)]+)\)/g);
+    // 同樣只比對「包含中文字的括號」
+    const matches = exampleString.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
     return matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
 }
 
@@ -4451,6 +4455,7 @@ function openOverallVocabModal() {
     
     populateOverallVocabList(selectedLesson);
     document.getElementById('overallVocabModal').style.display = 'block';
+    handleFloatingButtons(); // 新增：打開字彙管理時，隱藏浮動按鈕
 }
 
 async function populateOverallVocabList(lessonKey) {
@@ -4761,37 +4766,34 @@ function handleFloatingButtons() {
     const backToTopBtn = document.getElementById('backToTopBtn');
     const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
     const scrollArea = document.getElementById('learningScrollArea');
+    const vocabModal = document.getElementById('overallVocabModal');
     
-    // 如果 Modal 沒打開，就不顯示
-    if (!scrollArea || document.getElementById('learningContentModal').style.display !== 'block') {
+    // 如果學習畫面沒打開，或者字彙管理視窗(Vocab Management)打開了，就隱藏按鈕
+    if (!scrollArea || 
+        document.getElementById('learningContentModal').style.display !== 'block' ||
+        (vocabModal && vocabModal.style.display === 'block')) {
         if(backToTopBtn) backToTopBtn.classList.remove('show');
         if(scrollToBottomBtn) scrollToBottomBtn.classList.remove('show');
         return;
     }
     
-    // 只要 Modal 打開，就直接顯示這些按鈕
+    // 否則正常顯示
     if(backToTopBtn) backToTopBtn.classList.add('show');
     if(scrollToBottomBtn) scrollToBottomBtn.classList.add('show');
 }
 
-// Scroll to top (Modal area & Vocab Management)
+// Scroll to top (Learning Content Area only)
 function scrollToTop() {
-    const vocabModal = document.getElementById('overallVocabModal');
     const scrollArea = document.getElementById('learningScrollArea');
-    if (vocabModal && vocabModal.style.display === 'block') {
-        vocabModal.scrollTop = 0;
-    } else if (scrollArea) {
+    if (scrollArea) {
         scrollArea.scrollTop = 0;
     }
 }
 
-// Scroll to bottom (Modal area & Vocab Management)
+// Scroll to bottom (Learning Content Area only)
 function scrollToBottom() {
-    const vocabModal = document.getElementById('overallVocabModal');
     const scrollArea = document.getElementById('learningScrollArea');
-    if (vocabModal && vocabModal.style.display === 'block') {
-        vocabModal.scrollTop = vocabModal.scrollHeight;
-    } else if (scrollArea) {
+    if (scrollArea) {
         scrollArea.scrollTop = scrollArea.scrollHeight;
     }
 }
@@ -5100,6 +5102,7 @@ document.getElementById('overallVocabBtn').addEventListener('click', openOverall
 document.getElementById('saveVocabBtn').addEventListener('click', saveOverallVocabState);
 document.getElementById('closeOverallVocabBtn').addEventListener('click', () => {
     document.getElementById('overallVocabModal').style.display = 'none';
+    handleFloatingButtons(); // 新增：關閉字彙管理後，恢復學習畫面的浮動按鈕
 });
 
 // Quiz History button
