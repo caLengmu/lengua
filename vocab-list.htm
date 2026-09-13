@@ -1553,7 +1553,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.25)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v7.26)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -4055,18 +4055,26 @@ function getRandomEmoji() {
                 // 每個 Section 加上一個小標題分隔
                 html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
 
-                sectionData.words.forEach((item, wordIndex) => {
+         sectionData.words.forEach((item, wordIndex) => {
                     const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
                     if (isChecked) {
+                        // 1. 保留原本帶有括號的完整文字給 TTS，這樣它就不會唸出中文
                         const fullText = `${item.word}. ${item.example}`;
+                        
+                        // 2. 處理單字顯示：將字尾的 "(中文):" 替換成 "中文" (去除括號與冒號)
+                        const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, ' $1');
+                        
+                        // 3. 處理例句顯示：將字尾的 "(中文例句)" 替換成 "<br>中文例句" (去除括號並換行)
+                        const displayExample = item.example.replace(/\s*\(([^)]+)\)\s*$/, '<br>$1');
+
                         html += `<tr class="vocab-row" data-section="${sectionIndex}">
                             <td class="audio-controls">
                                 <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
                                 <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
                             </td>
                             <td class="content-cell">
-                                <div class="vocab-word">${item.word}</div>
-                                <div class="example-sentence">${item.example}</div>
+                                <div class="vocab-word">${displayWord}</div>
+                                <div class="example-sentence">${displayExample}</div>
                             </td>
                         </tr>`;
                     }
@@ -4486,9 +4494,11 @@ async function populateOverallVocabList(lessonKey) {
             </div>
             <div class="vocab-items-grid">`;
             
-        section.words.forEach((word, wordIndex) => {
+     section.words.forEach((word, wordIndex) => {
             const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
-            const displayText = word.word.replace(/:$/, '');  
+            
+            // 移除結尾的冒號，並把中文翻譯的括號拿掉以維持畫面一致性
+            const displayText = word.word.replace(/:$/, '').replace(/\s*\(([^)]+)\)\s*$/, ' $1');  
             const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
             
             html += `<div class="vocab-item-row">
