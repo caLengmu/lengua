@@ -1517,7 +1517,22 @@
 @media (max-width: 768px) {
     #monthly-grid { grid-template-columns: 1fr !important; }
 }
+/* ================= 替換起點 (新增樣式) ================= */
+/* Familiarity Levels (熟悉度燈號) */
+.fam-btn {
+    background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 8px; flex-shrink: 0; outline: none; transition: transform 0.2s;
+}
+.fam-btn:hover { transform: scale(1.1); }
+.fam-level-0::before { content: '⚪⚪'; }
+.fam-level-1::before { content: '🟢⚪'; }
+.fam-level-2::before { content: '🟢🟢'; }
 
+/* Mode Selection Modals (模式選擇按鈕) */
+.mode-btn {
+    background-color: #3498db; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; margin: 10px 0; width: 100%; cursor: pointer; font-weight: bold; transition: all 0.3s;
+}
+.mode-btn:hover { background-color: #2980b9; transform: translateY(-2px); }
+/* ================= 替換終點 ================= */
     </style>
 </head>
 <body>
@@ -1553,7 +1568,7 @@
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
 
-        <h1>📃 Vocabulary List for Grade 12<br>(v7.41)</h1>
+        <h1>📃 Vocabulary List for Grade 12<br>(v8.0)</h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1708,14 +1723,37 @@
             </div>
         </div>
     </div>
+<!-- ================= 替換起點 ================= -->
+<!-- Walk Me Through 模式選擇 Modal -->
+<div id="walkModeModal" class="modal" style="z-index: 1200;">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <span class="close" onclick="document.getElementById('walkModeModal').style.display='none'">&times;</span>
+        <h2 style="color: #2c3e50; margin-bottom: 20px;">Choose Review Style</h2>
+        <button class="mode-btn" onclick="startStudySession('inOrder')">In order (照順序)</button>
+        <button class="mode-btn" onclick="startStudySession('randomPriority')" style="background-color: #e67e22;">Random + Priority<br>(隨機 + 不熟優先)</button>
+    </div>
+</div>
 
+<!-- Listening Quiz 模式選擇 Modal -->
+<div id="quizModeModal" class="modal" style="z-index: 1200;">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <span class="close" onclick="document.getElementById('quizModeModal').style.display='none'">&times;</span>
+        <h2 style="color: #2c3e50; margin-bottom: 20px;">How to take the test?</h2>
+        <button class="mode-btn" onclick="startListenChooseQuiz('8qs')">8 Qs + Score<br>(8題 + 評分)</button>
+        <button class="mode-btn" onclick="startListenChooseQuiz('nonstop')" style="background-color: #e67e22;">Non-stop + Priority<br>(連續 + 不熟優先)</button>
+    </div>
+</div>
+<!-- ================= 替換終點 ================= -->
 <!-- Listen and Choose Modal -->
     <div id="listenChooseModal" class="modal">
         <div class="modal-content quiz-modal-content">
             <span class="close" id="closeListenChoose">&times;</span>
 <h2 class="quiz-header">🎧 Listen and Choose</h2>
             <div class="listen-answer-section">
-    <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
+    <!-- ================= 替換起點 ================= -->
+<div id="quizProgressDisplay" style="color: #856404; font-weight: bold; margin-bottom: 5px; font-size: 16px;"></div>
+<div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
+<!-- ================= 替換終點 ================= -->
     <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
         <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
         <!-- 新增 🔇 停止按鈕 -->
@@ -1785,7 +1823,11 @@
                 <button class="overall-vocab-btn close-btn" id="closeOverallVocabBtn">✖ Close</button>
             </div>
         </div>
-        <p style="color: red; margin-bottom: 20px; font-size: 18px;">Uncheck the items you've learned and save. (取消勾選已學會的項目並儲存。)</p>
+        <!-- ================= 替換起點 ================= -->
+<p style="color: red; margin-bottom: 20px; font-size: 18px; font-weight: bold;">
+    Check words to study and click ⚪⚪ to set familiarity. <br>(勾選欲學習的單字，並點擊燈號設定熟悉度。)
+</p>
+<!-- ================= 替換終點 ================= -->
         <div id="overallVocabList"></div>
     </div>
 </div>
@@ -2264,8 +2306,8 @@ plain (adj) (2.清楚的、明顯的) ^ It was plain to everyone that he was tel
 penetrating (adj) (1.（聲音）響亮刺耳的 = piercing) ^ A penetrating scream was heard in the dead of night. (夜深人靜之時，傳來一聲刺耳的尖叫。)
 penetrating (adj) (2.目光銳利的、有洞察力的) ^ The scholar offered a penetrating comment on this issue. (這位學者對這個問題提出了一針見血的評論。)
 penetrating looks/ eyes/ gaze… (銳利的目光/ 眼神/ 凝視等) ^ The detective looked at the suspect with a penetrating gaze. (警探以敏銳看穿一切的目光凝視著嫌疑犯。)
-renowned (adj) (著名的、有聲譽的 = famous, well known, noted, celebrated, famed) ^ The city is renowned for (= is famous for) its delicious seafood and historical sites. (這座城市以其美味的海鮮和歷史遺跡而著名的。)
-notorious (adj) (惡名昭彰的、聲名狼藉的 = infamous) ^ This food company is notorious for (= is infamous for) selling problematic cooking oil. (這間食品公司因販賣有問題的食用油而惡名昭彰。)
+renowned (adj) (著名的、有聲譽的 = famous, well known, noted, celebrated, famed) ^ The city is renowned for its delicious seafood and historical sites. (這座城市以其美味的海鮮和歷史遺跡而著名的。)
+notorious (adj) (惡名昭彰的、聲名狼藉的 = infamous) ^ This food company is notorious for selling problematic cooking oil. (這間食品公司因販賣有問題的食用油而惡名昭彰。)
 outstanding (adj) (傑出的、出色的) ^ Her outstanding performance on stage won the hearts of the audience. (她在舞台上傑出的表現贏得了觀眾的心。)
 publish (v) (出版、發行) ^ The writer plans to publish her new fiction novel by the end of the year. (這位作家計畫在今年底前出版她的新科幻小說。)
 compose (v) (1.創作（音樂、詩歌等）) ^ It took the young musician three months to compose this beautiful piece. (這位年輕音樂家花了三個月的時間來創作這首優美的樂曲。)
@@ -2282,7 +2324,7 @@ compelling (adj) (2.（理由、論證、證據等）有說服力的) ^ The lawy
 prediction (n) (預測、預言) ^ Weather predictions indicate that heavy rain will fall tomorrow afternoon. (天氣預測顯示明天下午將會下大雨。)
 acceptance (n) (1.接受、收受) ^ Her acceptance of the job offer made her entire family very happy. (她對這份工作邀約的接受讓她全家人都非常開心。)
 acceptance (n) (2.認可、接納) ^ The new theory gained widespread acceptance among top scientists. (這項新理論頂尖科學家之間獲得了廣泛的認可。)
-declaration (n) (宣佈、宣言) ^ The government issued an official declaration regarding (= about) the new policy. (政府發表了關於新政策的官方宣佈。)
+declaration (n) (宣佈、宣言) ^ The government issued an official declaration regarding the new policy. (政府發表了關於新政策的官方宣佈。)
 conventional (adj) (傳統的、常規的) ^ He decided to break away from conventional teaching methods and try new ideas. (他決定擺脫傳統的教學方法並嘗試新想法。)
 unconventional (adj) (不落俗套的、非傳統的) ^ The artist was known for her unconventional approach to sculpture. (這名藝術家以其對雕塑不落俗套的手法而聞名。)
 justify (v) (證明…是正當的、為…辯護) ^ You cannot justify breaking the law regardless of your reasons. (不管你的理由是什麼，你都不能證明違法是正當的。)
@@ -2321,7 +2363,7 @@ lay out (phr) (1.攤開排列、擺放) ^ The designer began to lay out the tool
 lay out (phr) (2.清楚說明) ^ The document aims to lay out the official rules of the project. (這份文件旨在清楚說明該計畫的官方規則。)
 stem from… (phr) (源自於…、起因於…) ^ Many environmental problems stem from human pollution and waste. (許多環境問題源自於人類的污染和浪費。)
 get at someone (phr) (指責某人、挑剔某人) ^ Why do you always get at your brother for such minor mistakes? (你為什麼總是為了這樣微小的錯誤指責你的弟弟？)
-get at something (= reach sth) (phr) (夠得到某物、達到某物) ^ The top shelf is too high for the little boy to get at the books. (最頂層的架子太高了，小男孩夠不到書。)
+get at something (phr) (夠得到某物、達到某物 = reach sth) ^ The top shelf is too high for the little boy to get at the books. (最頂層的架子太高了，小男孩夠不到書。)
 get at the truth (phr) (查明真相、發現事實) ^ The police investigator went to great lengths to get at the truth. (警察調查員竭盡全力去查明真相。)
 strike a chord (with someone) (phr) (引起（某人的）共鳴、觸動心弦) ^ The singer's emotional new song managed to strike a chord with teenagers. (這名歌手動人的新歌成功引起了青少年的共鳴。)
 
@@ -2496,7 +2538,7 @@ gather (v) (聚集；收集) ^ People gathered in the park for the festival. (�
 
 indicate (v) (指出；表明) ^ The sign indicates the way to the station. (這個標誌指出前往車站的方向。)
 
-in particular (= particularly, especially) (phr.) (尤其；特別) ^ I enjoy fruit, apples in particular. (我喜歡水果，尤其是蘋果。)
+in particular (phr.) (尤其；特別 = particularly, especially) ^ I enjoy fruit, apples in particular. (我喜歡水果，尤其是蘋果。)
 
 particularly (adv) (尤其；特別) ^ She is particularly good at learning languages. (她尤其擅長學習語言。)
 
@@ -3014,7 +3056,8 @@ presence (n) (存在；出現) ^ The presence of tourists changed the small vill
 environmentally friendly (adj) (環保的；對環境友善的) ^ These bags are environmentally friendly and easy to use. (這些袋子很環保，也很容易使用。)
 a sense of community (phr.) (社區意識；群體歸屬感) ^ Local events help create a strong sense of community. (當地活動有助於建立強烈的社區意識。)
 rejoice (v) (歡欣；喜悅) ^ The people rejoiced when the long journey finally ended. (漫長旅程終於結束時，人們感到非常喜悅。)
-aside from (= apart from, other than, besides, in addition to, except for, except) (phr.) (除了；除……之外) ^ Aside from English, she can speak two other languages. (除了英文之外，她還會說另外兩種語言。)
+aside from... (phr) (1.除...之外（有包括）= besides...; in addition to...) ^ Aside from English, she speaks two other languages. (除了英文之外，她還會說另外兩種語言。)
+aside from...(= apart from…) (phr) (2.除...之外（不包括）= except for…) ^ Aside from the ending, it’s a really good film. (除了結局之外，這是部很好的電影。)
 handcraft (n) (手工藝品；手工藝) ^ The market sells beautiful handcraft from local artists. (這個市場販售當地藝術家的美麗手工藝品。)
 handcrafted (adj) (手工製作的) ^ She bought a beautiful handcrafted bag at the market. (她在市場買了一個漂亮的手工製包包。)
 boast (v) (以……自豪；擁有) ^ The city boasts many beautiful buildings and parks. (這座城市擁有許多美麗的建築和公園。)
@@ -3335,11 +3378,11 @@ make up (組成、構成 < > be made up of…=由…組成) ^ 12 players make up
 top something off (為某事畫上完美句點、結束某事) ^ We enjoyed a nice dinner and topped it off with delicious ice cream. (我們享受了一頓美好的晚餐，並用美味的冰淇淋為它畫上完美句點。)
 in a row (接連地、連續地) ^ Our school team won the basketball game three times in a row. (我們校隊接連三次贏得了籃球比賽。)
 by no means (絕不、一點也不) ^ Learning a foreign language is by no means an easy task. (學習一門外語絕不是一件容易的任務。)
-on a daily/weekly/monthly/yearly basis (以每天/每週/每月/每年為單位 = every day/week/month/year) ^ You should practice reading English stories on a daily basis (= every day). (你應該以每天為單位練習閱讀英文故事。)
+on a daily/weekly/monthly/yearly basis (以每天/每週/每月/每年為單位 = every day/week/month/year) ^ You should practice reading English stories on a daily basis. (你應該以每天為單位練習閱讀英文故事。)
 all the while (一直、始終) ^ She sat quietly in the corner, all the while listening to our talk. (她靜靜地坐在角落裡，始終在聽我們的談話。)
 center around… (以…為中心、圍繞著…) ^ The discussion during the class centered around the problem of pollution. (課堂上的討論圍繞著污染的問題展開。)
 put… on the map (使…出名) ^ Winning the food prize successfully put this small village on the map. (贏得這項美食獎成功讓這個小村莊出名了。)
-take place (發生、舉行) ^ The school sports competition will take place (= be held) next Friday morning. (學校的體育比賽將在下週五早上舉行。)
+take place (發生、舉行) ^ The school sports competition will take place next Friday morning. (學校的體育比賽將在下週五早上舉行。)
 engage in… (參加…、從事…) ^ More and more students love to engage in outdoor sports after school. (越來越多的學生喜歡在放學後參加戶外運動。)
 at risk (of…) (冒著…的危險、處於危險中) ^ The rare animals are at risk of dying out if we do not protect them. (如果我們不保護牠們，這些稀有動物正面臨滅絕的危險。)
 in turn (1.輪流) ^ The children stood in line, and each spoke to the teacher in turn. (孩子們排成一隊，每個人輪流對老師說話。)
@@ -3495,7 +3538,7 @@ end up (phr) (結果竟然是…、最後落得… (+ V-ing / adj / 介系詞片
 up to… (phr) (1.高達（某數量）) ^ The local library can hold up to five hundred people collectively. (這座當地圖書館集體可容納高達五百人。) 
 up to…(phr) (2.取決於…) ^ Whether we go on a picnic tomorrow is entirely up to the weather. (我們明天是否去野餐完全取決於天氣。)
 in earnest (phr) (認真地、誠摯地、真正開始地) ^ After the winter break, the students started to study for the exam in earnest. (寒假過後，學生們開始認真地為考試做準備。)
-with a view to… (phr) (為了…、目的在於… + N / V-ing = in order to V) ^ He saved money on a monthly basis *with a view to buying* (= in order to buy) a professional camera. (他以每月為單位存錢，目的是為了買一台專業相機。)
+with a view to… (phr) (為了…、目的在於… + N / V-ing = in order to V) ^ He saved money on a monthly basis with a view to buying a professional camera. (他以每月為單位存錢，目的是為了買一台專業相機。)
 point out (phr) (指出、提出) ^ The sharp guide stood up to point out the specific landmark on the map. (敏銳的導遊站起來指出地圖上的特定地地標。)
 in the face of… (phr) (面對（困難、危險等）) ^ She managed to keep a bright smile even in the face of great hardship. (即使面對巨大的艱難，她依然成功保持著開朗的笑容。)
 in the light of… (phr) (根據…、考慮到…) ^ In the light of the fierce weather report, the outdoor awards ceremony was cancelled. (考慮到惡劣的天氣預報，戶外頒獎典禮被取消了。)
@@ -3515,7 +3558,7 @@ with respect to… (phr) (關於…、在…方面 = regarding) ^ The customer s
 to the extent of… (phr) (到了…的程度、甚至到…的地位) ^ The two countries argued over the island to the extent of declaring war. (這兩個國家為了這個島嶼爭吵，甚至到了要宣戰的程度。)
 out of the question (phr) (不可能的、完全不用考慮的) ^ Buying a luxury watch is completely out of the question for the poor student for the time being. (目前對這個貧困的學生來說，買一隻名貴手錶是完全不可能的。)
 nothing but… (phr) (僅僅是…、只不過是… = only) ^ The little boy did nothing but cry when he encountered the fierce dog. (小男孩遇到那隻兇猛的狗時，除了哭之外什麼都沒做。)
-anything but… (phr) (絕不是…、一點也不… = not... at all) ^ The final exam was anything but simple (= not simple at all); almost everyone fell short of the average. (期末考絕不簡單；幾乎每個人的分數都低於平均數。)
+anything but… (phr) (絕不是…、一點也不… = not... at all) ^ The final exam was anything but simple; almost everyone fell short of the average. (期末考絕不簡單；幾乎每個人的分數都低於平均數。)
 at any cost (phr) (不惜任何代價) ^ These brave soldiers promised to defend their home country at any cost. (這些勇敢的士兵承諾要不惜任何代價捍衛他們的祖國。)
 
 `,
@@ -3653,15 +3696,15 @@ make believe that… (假裝、裝作 = pretend that…) ^ The kids love to make
 account for… (phr) (1.佔（比例）) ^ International tourists account for forty percent of total hotel visitors. (國際觀光客佔了飯店總訪客的百分之四十。)
 account for… (phr) (2.解釋…) ^ Can you account for your absence last Friday? = Can you explain why you were absent last Friday? (你能解釋一下上週五你為何缺席嗎?)
 make do with… (phr) (將就使用…、湊合著用…) ^ We didn't have a ruler, so we had to make do with a piece of string. (我們沒有直尺，所以我們只好將就使用一條繩子。)
-as opposed to… (phr) (而不是…、與…對比) ^ I prefer to go in May, *as opposed to* (= rather than) September. (我更願意五月去，而不是九月。)
+as opposed to… (phr) (而不是…、與…對比) ^ I prefer to go in May, as opposed to September. (我更願意五月去，而不是九月。)
 
 `,
         'core5': `
 ◎單字levels 2-4
 address (n) (1.地址) ^ I need your home address so I can send you a birthday card. (我需要你的住家地址，這樣我才能寄生日卡片給你。)
 address (n) (2.演說、演講) ^ The president gave an important address to the whole nation on TV. (總統在電視上向全國發表了一場重要的演說。)
-address (v) (1.應付、處理 = deal with…) ^ We must address the trash problem in our school before it gets worse. (我們必須在學校的垃圾問題變糟糕前去處理它。)
-address (v) (2.對…講話) ^ The principal will address the students in the gym this morning. (校長今天早上將會在體育館對學生們講話。)
+to address (v) (1.應付、處理 = deal with…) ^ We must address the trash problem in our school before it gets worse. (我們必須在學校的垃圾問題變糟糕前去處理它。)
+to address (v) (2.對…講話) ^ The principal will address the students in the gym this morning. (校長今天早上將會在體育館對學生們講話。)
 be addressed as… (phr) (被尊稱為…) ^ She likes to be addressed as Doctor Lin by her patients. (她喜歡被她的病人尊稱為林醫生。)
 (letter, package, etc.) be addressed to someone (（信、包裹等）署名寄給某人) ^ This letter is addressed to my father, so I cannot open it. (這封信是署名寄給我的父親的，所以我不能打開。)
 atmosphere (n) (1.大氣層) ^ The Earth's atmosphere protects us from the hot sun rays. (地球的大氣層保護我們免受熾熱陽光的照射。)
@@ -3684,7 +3727,7 @@ electrical (adj) (與電相關的、電氣的) ^ Sparks came out from the broken
 eliminate (v) (消除、淘汰) ^ Good hand washing can eliminate germs and keep you healthy. (好好洗手可以消除細菌並保持你的健康。)
 elimination (n) (消除、淘汰) ^ The elimination of waste is essential for a clean city. (廢棄物的消除對一座乾淨的城市至關重要。)
 grind–ground–ground (v) (磨碎、碾碎) ^ We need to grind these coffee beans to make coffee. (我們需要把這些咖啡豆磨碎來煮咖啡。)
-halt (v/n) (停止、停下) ^ The red light forced all cars to *come to a halt*(= come to a stop). (紅燈迫使所有車輛停下。)
+halt (v/n) (停止、停下 = stop) ^ The red light forced all cars to come to a halt. (紅燈迫使所有車輛停下。)
 impose (v) (強制實施、把…強加於) ^ The school will impose strict rules against cheating. (學校將會強制實施反對作弊的嚴格規定。)
 intense (adj) (強烈的、劇烈的) ^ The bright sun was so intense that I had to wear sunglasses. (耀眼的太陽非常強烈，以致於我必須戴上太陽眼鏡。)
 motivation (n) (動機、動力) ^ Winning the prize was his main motivation to study hard. (贏得獎品是他努力讀書的主要動力。)
@@ -3989,106 +4032,97 @@ function getRandomEmoji() {
         }
 
         // 點擊首頁單元按鈕時觸發：打開 Modal 1，產生範圍核取方塊
-        async function loadVocabulary(lessonKey) {
-            const data = vocabDatabase[lessonKey];
-            if (!data || data.length === 0) {
-                alert('No data available. Please wait for updates. (暫無資料，請等待更新)');
-                return;
+       // ================= 替換起點 =================
+// 取得單字儲存狀態 (相容舊版 boolean，加入 level)
+function getWordState(savedState, secIdx, wordIdx) {
+    const val = savedState ? savedState[`${secIdx}_${wordIdx}`] : null;
+    if (val === undefined || val === null) return { checked: true, level: 0 };
+    if (typeof val === 'boolean') return { checked: val, level: 0 };
+    return { checked: val.checked !== false, level: val.level || 0 };
+}
+
+async function loadVocabulary(lessonKey) {
+    const data = vocabDatabase[lessonKey];
+    if (!data || data.length === 0) {
+        alert('No data available. Please wait for updates. (暫無資料，請等待更新)');
+        return;
+    }
+    currentLessonData = data;
+    const savedCheckedWords = await loadCheckedWords(lessonKey);
+    const grid = document.getElementById('sectionButtonsGrid');
+    grid.innerHTML = '';
+
+    let html = '';
+    data.forEach((section, sectionIndex) => {
+        let checkedCount = 0;
+        section.words.forEach((word, wordIndex) => {
+            if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) checkedCount++;
+        });
+
+        html += `
+        <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 10px 12px; font-size: 16px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 8px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
+            <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+            <span style="font-weight: bold; color: #2c3e50; display: flex; align-items: center; width: 100%;">
+                ${section.section} 
+                <span id="modal1_sec_count_${sectionIndex}" style="color:#e74c3c; font-size: 14px; margin-left: auto;">(${checkedCount} items)</span>
+            </span>
+        </label>`;
+    });
+    grid.innerHTML = html;
+
+    document.getElementById('startLearningBtn').onclick = async () => {
+        if (!updateSelectedSections()) {
+            alert('Please select at least one section. (請至少勾選一個範圍)');
+            return;
+        }
+        const freshCheckedWords = await loadCheckedWords(lessonKey);
+        openLearningContent(lessonKey, freshCheckedWords);
+    };
+    document.getElementById('sectionSelectModal').style.display = 'block';
+}
+
+function openLearningContent(lessonKey, savedCheckedWords) {
+    document.getElementById('sectionSelectModal').style.display = 'none';
+    let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
+    let titleText = titles.length > 2 ? `${titles[0]} 等共 ${titles.length} 個範圍` : titles.join(' + ');
+    document.getElementById('learningSectionTitle').textContent = titleText;
+
+    const tableBody = document.getElementById('vocabTableBody');
+    let html = '';
+
+    currentSelectedSectionIndices.forEach(sectionIndex => {
+        const sectionData = currentLessonData[sectionIndex];
+        html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
+
+        sectionData.words.forEach((item, wordIndex) => {
+            if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
+                const fullText = `${item.word}. ${item.example}`;
+                const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
+                let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em;">$1</span><br>');
+                displayExample = displayExample.replace(/(<br>)+$/, '');
+
+                html += `<tr class="vocab-row" data-section="${sectionIndex}">
+                    <td class="audio-controls">
+                        <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
+                    </td>
+                    <td class="content-cell">
+                        <div class="vocab-word">${displayWord}</div>
+                        <div class="example-sentence">${displayExample}</div>
+                    </td>
+                </tr>`;
             }
+        });
+    });
 
-            currentLessonData = data;
-            const savedCheckedWords = await loadCheckedWords(lessonKey);
-            const grid = document.getElementById('sectionButtonsGrid');
-            grid.innerHTML = '';
+    tableBody.innerHTML = html;
+    document.getElementById('learningContentModal').style.display = 'block';
+    document.getElementById('learningScrollArea').scrollTop = 0;
+    updateLearningProgress();
+}
+// ================= 替換終點 =================
 
-let html = '';
-            data.forEach((section, sectionIndex) => {
-                let checkedCount = 0;
-                section.words.forEach((word, wordIndex) => {
-                    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-                    if (isChecked) checkedCount++;
-                });
-
-                // 移除 if (checkedCount > 0) 判斷，無論是否為 0 都保留 section header
-                // 並在顯示數量的 span 加上 ID (modal1_sec_count_...)，方便儲存後即時更新
-                html += `
-                <label for="sec_chk_${sectionIndex}" class="section-checkbox-item" style="justify-content: flex-start; padding: 10px 12px; font-size: 16px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 8px; background-color: #f8f9fa; cursor: pointer; transition: all 0.2s;">
-                    <input type="checkbox" id="sec_chk_${sectionIndex}" value="${sectionIndex}" class="section-selector-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
-                    <span style="font-weight: bold; color: #2c3e50; display: flex; align-items: center; width: 100%;">
-                        ${section.section} 
-                        <span id="modal1_sec_count_${sectionIndex}" style="color:#e74c3c; font-size: 14px; margin-left: auto;">(${checkedCount} items)</span>
-                    </span>
-                </label>`;
-            });
-            grid.innerHTML = html;
-
-            // 綁定 Start Learning 按鈕
-            document.getElementById('startLearningBtn').onclick = async () => {
-                if (!updateSelectedSections()) {
-                    alert('Please select at least one section. (請至少勾選一個範圍)');
-                    return;
-                }
-                // 在按下去的這一刻，重新從資料庫讀取最新的勾選狀態！
-                const freshCheckedWords = await loadCheckedWords(lessonKey);
-                openLearningContent(lessonKey, freshCheckedWords);
-            };
-
-            document.getElementById('sectionSelectModal').style.display = 'block';
-        }
-
-        // 打開 Modal 2 並渲染多個範圍專屬內容
-        function openLearningContent(lessonKey, savedCheckedWords) {
-            document.getElementById('sectionSelectModal').style.display = 'none';
-            
-            // 設定標題 (組合所選的標題)
-            let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
-            let titleText = titles.length > 2 ? `${titles[0]} 等共 ${titles.length} 個範圍` : titles.join(' + ');
-            document.getElementById('learningSectionTitle').textContent = titleText;
-
-            const tableBody = document.getElementById('vocabTableBody');
-            let html = '';
-
-            // 迴圈處理所有被勾選的 section
-            currentSelectedSectionIndices.forEach(sectionIndex => {
-                const sectionData = currentLessonData[sectionIndex];
-                
-                // 每個 Section 加上一個小標題分隔
-                html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
-
-         sectionData.words.forEach((item, wordIndex) => {
-                    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-                    if (isChecked) {
-                        // 1. 保留原本帶有括號的完整文字給 TTS，這樣它就不會唸出中文
-                        const fullText = `${item.word}. ${item.example}`;
-                        
-                    // 2. 處理單字顯示：加上 <br> 換行，並用 span 包裹設定 font-size: 0.8em
-const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
-                        
-// 3. 處理例句顯示：使用全域匹配 (/g)，將所有括號內的中文替換並換行
-let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em;">$1</span><br>');
-// 移除字串最後面多餘的 <br> (避免最後面多空出一行)
-displayExample = displayExample.replace(/(<br>)+$/, '');
-
-                        html += `<tr class="vocab-row" data-section="${sectionIndex}">
-                            <td class="audio-controls">
-                                <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                                <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-                            </td>
-                            <td class="content-cell">
-                                <div class="vocab-word">${displayWord}</div>
-                                <div class="example-sentence">${displayExample}</div>
-                            </td>
-                        </tr>`;
-                    }
-                });
-            });
-
-            tableBody.innerHTML = html;
-            document.getElementById('learningContentModal').style.display = 'block';
-            document.getElementById('learningScrollArea').scrollTop = 0;
-            updateLearningProgress();
-        }
-
+        // ================= 替換起點 5-1 =================
         // 取得目前學習中的多個 Section 單字 (供測驗與複習使用)
         async function getWordsFromCurrentSection() {
             const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
@@ -4098,19 +4132,21 @@ displayExample = displayExample.replace(/(<br>)+$/, '');
             currentSelectedSectionIndices.forEach(sectionIndex => {
                 const section = currentLessonData[sectionIndex];
                 section.words.forEach((word, wordIndex) => {
-                    const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-                    if (isChecked) {
+                    const state = getWordState(savedCheckedWords, sectionIndex, wordIndex);
+                    if (state.checked) {
                         allWords.push({
                             ...word,
                             sectionIndex: sectionIndex,
                             sectionTitle: section.section,
-                            wordIndex
+                            wordIndex,
+                            level: state.level // 寫入熟悉度供後續排序
                         });
                     }
                 });
             });
             return allWords;
         }
+// ================= 替換終點 5-1 =================
 
         // 綁定關閉 Modal 按鈕
         document.getElementById('closeSectionSelectModal').addEventListener('click', () => {
@@ -4158,40 +4194,49 @@ function extractChineseExample(exampleString) {
 function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
 function extractExampleOnly(exampleString) { return extractEnglishExampleOnly(exampleString); }
 
-// Start quiz
-async function startListenChooseQuiz() {
+// ================= 替換起點 5-2 =================
+window.allQuizWordsPool = [];
+let currentQuizMode = '8qs';
+
+async function startListenChooseQuiz(mode = '8qs') {
     if (!updateSelectedSections()) {
         alert('Please select at least one section. (請至少勾選一個範圍)');
         return;
     }
-
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
     if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        alert('Please select a lesson with vocabulary data first!');
         return;
     }
 
-    // 先取得單字資料
     const allWords = await getWordsFromCurrentSection();
-    
-    // 檢查單字數量，如果不夠就跳出警告並停止執行 (此時 Modal 1 依然保持開啟)
-    if (allWords.length < 8) {
-        alert('This section has fewer than 8 words. (此區塊不足 8 個單字，無法進行測驗)');
+    if (allWords.length < 4) { // 需要至少 4 個字才有選項可選
+        alert('This section has fewer than 4 words. (此區塊不足 4 個單字，無法進行測驗)');
         return;
     }
 
-    // 確認單字數量足夠後，才關閉選擇範圍的 Modal 1
+    document.getElementById('quizModeModal').style.display = 'none';
     document.getElementById('sectionSelectModal').style.display = 'none';
 
-    // Select 8 random words
-    quizWords = shuffleArray([...allWords]).slice(0, 8);
+    currentQuizMode = mode;
+    window.allQuizWordsPool = [...allWords]; // 儲存全局題庫供提取干擾選項
+
+    if (mode === 'nonstop') {
+        let lvl0 = allWords.filter(w => w.level === 0);
+        let lvl1 = allWords.filter(w => w.level === 1);
+        let lvl2 = allWords.filter(w => w.level === 2);
+        quizWords = [...shuffleArray(lvl0), ...shuffleArray(lvl1), ...shuffleArray(lvl2)];
+    } else {
+        quizWords = shuffleArray([...allWords]).slice(0, 8);
+    }
+
     currentQuizIndex = 0;
     quizScore = 0;
 
-    // Open modal and load first question
     document.getElementById('listenChooseModal').style.display = 'block';
     loadQuizQuestion();
 }
+// ================= 替換終點 5-2 =================
 
         // Shuffle array
         function shuffleArray(array) {
@@ -4202,14 +4247,12 @@ async function startListenChooseQuiz() {
             return array;
         }
 
-        // Load quiz question
-        function loadQuizQuestion() {
+        // ================= 替換起點 6 =================
+function loadQuizQuestion() {
     if (currentQuizIndex >= quizWords.length) {
         showQuizComplete();
         return;
     }
-
-    // Clear any existing timeout from previous question
     if (showEnglishTimeout) {
         clearTimeout(showEnglishTimeout);
         showEnglishTimeout = null;
@@ -4218,29 +4261,33 @@ async function startListenChooseQuiz() {
     hasAnswered = false;
     correctAnswer = quizWords[currentQuizIndex];
 
-    // Reset UI
+    // 更新介面與進度文字
+    let progressEl = document.getElementById('quizProgressDisplay');
+    if(progressEl) progressEl.textContent = `Progress: ${currentQuizIndex + 1} / ${quizWords.length}`;
+    
     document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker';
     document.getElementById('timerFeedback').textContent = '';
     document.getElementById('timerFeedback').className = 'timer-feedback';
     document.getElementById('listenNextBtn').disabled = true;
     document.getElementById('listenNextBtn').style.display = 'inline-block';
 
-    // Update toggle button text based on current state (don't reset)
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
         toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
 
-    // Generate all 8 choices (include all quiz words)
-    displayChoices(shuffleArray([...quizWords]));
+    // 產生選項：1個正確答案 + 3個隨機干擾選項(來自所有打勾單字庫)
+    let pool = window.allQuizWordsPool.filter(w => w.word !== correctAnswer.word);
+    pool = shuffleArray(pool).slice(0, 3);
+    let choices = [correctAnswer, ...pool];
+    
+    displayChoices(shuffleArray(choices));
 }
 
-        // Display choices - show only Chinese translation
 function displayChoices(choices) {
     const grid = document.getElementById('choicesGrid');
     grid.innerHTML = '';
-
     choices.forEach((choice) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
@@ -4250,56 +4297,36 @@ function displayChoices(choices) {
     });
 }
 
-// Handle choice click
-        function handleChoiceClick(selectedChoice, btn) {
-            if (hasAnswered) return;
+function handleChoiceClick(selectedChoice, btn) {
+    if (hasAnswered) return;
+    hasAnswered = true;
+    const allChoices = document.querySelectorAll('.choice-btn');
+    const correctChinese = extractChineseTranslation(correctAnswer.word);
+    
+    if (extractChineseTranslation(selectedChoice.word) === correctChinese) {
+        btn.classList.add('correct');
+        document.getElementById('timerFeedback').textContent = '✓ Correct!';
+        document.getElementById('timerFeedback').className = 'timer-feedback correct';
+        quizScore++;
+        setTimeout(() => speakText('Correct!'), 0);
+    } else {
+        btn.classList.add('incorrect');
+        document.getElementById('timerFeedback').textContent = '✗ Wrong! The answer is ' + correctChinese;
+        document.getElementById('timerFeedback').className = 'timer-feedback incorrect';
+        allChoices.forEach(choiceBtn => {
+            if (choiceBtn.textContent === correctChinese) choiceBtn.classList.add('correct');
+        });
+        setTimeout(() => speakText('Wrong!'), 0);
+    }
 
-            hasAnswered = true;
-            const allChoices = document.querySelectorAll('.choice-btn');
-            const correctChinese = extractChineseTranslation(correctAnswer.word);
-            
-            if (extractChineseTranslation(selectedChoice.word) === correctChinese) {
-                // Correct answer
-                btn.classList.add('correct');
-                document.getElementById('timerFeedback').textContent = '✓ Correct!';
-                document.getElementById('timerFeedback').className = 'timer-feedback correct';
-                quizScore++;
-                
-                // Speak "Correct!"
-                setTimeout(() => speakText('Correct!'), 0);
-            } else {
-                // Wrong answer
-                btn.classList.add('incorrect');
-                document.getElementById('timerFeedback').textContent = '✗ Wrong! The answer is ' + correctChinese;
-                document.getElementById('timerFeedback').className = 'timer-feedback incorrect';
-                
-                // Highlight correct answer
-                allChoices.forEach(choiceBtn => {
-                    if (choiceBtn.textContent === correctChinese) {
-                        choiceBtn.classList.add('correct');
-                    }
-                });
-                
-                // Speak "Wrong!"
-                setTimeout(() => speakText('Wrong!'), 0);
-            }
+    allChoices.forEach(choiceBtn => { choiceBtn.disabled = true; });
+    const englishWord = extractEnglishWord(correctAnswer.word);
+    const exampleOnly = extractExampleOnly(correctAnswer.example);
+    document.getElementById('listenAnswerDisplay').innerHTML = 
+        `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+    document.getElementById('listenNextBtn').disabled = false;
+}
 
-            // Disable all buttons
-            allChoices.forEach(choiceBtn => {
-                choiceBtn.disabled = true;
-            });
-
-            // Show English word/phrase and example (without Chinese)
-            const englishWord = extractEnglishWord(correctAnswer.word);
-            const exampleOnly = extractExampleOnly(correctAnswer.example);
-            document.getElementById('listenAnswerDisplay').innerHTML = 
-                `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
-
-            // Enable next button
-            document.getElementById('listenNextBtn').disabled = false;
-        }
-
-        // Play quiz audio - play English word and example only
 function playQuizAudio() {
     if (correctAnswer) {
         const englishWord = extractEnglishWord(correctAnswer.word);
@@ -4307,16 +4334,12 @@ function playQuizAudio() {
         const fullText = `${englishWord}. ${exampleOnly}`;
         speakText(fullText);
         
-        // Clear any existing timeout before setting a new one
         if (showEnglishTimeout) {
             clearTimeout(showEnglishTimeout);
             showEnglishTimeout = null;
         }
-        
-        // Show English text if toggle is on - with 4 second delay
         if (showEnglishInQuiz && !hasAnswered) {
             showEnglishTimeout = setTimeout(() => {
-                // Only show if still on same question and haven't answered
                 if (!hasAnswered && correctAnswer === quizWords[currentQuizIndex]) {
                     document.getElementById('listenAnswerDisplay').innerHTML = 
                         `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
@@ -4327,39 +4350,28 @@ function playQuizAudio() {
     }
 }
 
-// Toggle English display in quiz
 function toggleEnglishDisplay() {
     showEnglishInQuiz = !showEnglishInQuiz;
     const toggleBtn = document.getElementById('toggleEnglishBtn');
-    
     if (toggleBtn) {
         toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
-    
-    // When toggling off, hide English immediately
     if (!showEnglishInQuiz && !hasAnswered) {
         document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker';
     }
-    // Note: When toggling on, English won't show until speaker is pressed and 2 seconds pass
 }
 
-        // Next quiz question
-        function nextQuizQuestion() {
-            currentQuizIndex++;
-            loadQuizQuestion();
-        }
+function nextQuizQuestion() {
+    currentQuizIndex++;
+    loadQuizQuestion();
+}
 
-        // Show quiz complete
 async function showQuizComplete() {
     const grid = document.getElementById('choicesGrid');
     const percentage = Math.round((quizScore / quizWords.length) * 100);
-    
-    // Save quiz result to database
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
     const lessonName = document.querySelector('.vocab-btn.active')?.textContent || 'Unknown';
-
-    // Get category title (the parent category section)
     const selectedButton = document.querySelector('.vocab-btn.active');
     let categoryName = 'Unknown Category';
     
@@ -4367,16 +4379,11 @@ async function showQuizComplete() {
         const categoryDiv = selectedButton.closest('.category');
         if (categoryDiv) {
             const categoryTitle = categoryDiv.querySelector('.category-title');
-            if (categoryTitle && categoryTitle.textContent) {
-                categoryName = categoryTitle.textContent.trim();
-            }
+            if (categoryTitle && categoryTitle.textContent) categoryName = categoryTitle.textContent.trim();
         }
     }
     
-    console.log('Debug - Category Name:', categoryName); // For debugging
-    
-    // Get section names
-    const sectionNames = [...checkedSections].map(index => {
+    const sectionNames = [...currentSelectedSectionIndices].map(index => {
         const lessonData = vocabDatabase[selectedLesson];
         return lessonData[index]?.section || `Section ${index + 1}`;
     });
@@ -4384,7 +4391,7 @@ async function showQuizComplete() {
     const quizData = {
         date: new Date().toISOString(),
         lessonKey: selectedLesson,
-        categoryName: categoryName,  // ✅ ADD THIS LINE
+        categoryName: categoryName,  
         lessonName: lessonName.trim(),
         sections: sectionNames,
         score: quizScore,
@@ -4394,7 +4401,6 @@ async function showQuizComplete() {
     
     try {
         await saveQuizResult(quizData);
-        console.log('Quiz result saved successfully');
     } catch (error) {
         console.error('Failed to save quiz result:', error);
     }
@@ -4408,40 +4414,34 @@ async function showQuizComplete() {
             <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
         </div>
     `;
-
     document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
     document.getElementById('timerFeedback').textContent = '';
     document.getElementById('listenNextBtn').style.display = 'none';
 }
 
-        // Restart quiz
 function restartQuiz() {
     document.getElementById('listenNextBtn').style.display = 'inline-block';
-    showEnglishInQuiz = false;  // Reset toggle to default when restarting
-    startListenChooseQuiz();
+    showEnglishInQuiz = false; 
+    startListenChooseQuiz(currentQuizMode);
 }
 
-// Close quiz modal
 function closeQuizModal() {
-    // Clear timeout when closing modal
     if (showEnglishTimeout) {
         clearTimeout(showEnglishTimeout);
         showEnglishTimeout = null;
     }
-    
     document.getElementById('listenChooseModal').style.display = 'none';
     stopSpeech();
-    showEnglishInQuiz = false;  // Reset toggle to default when closing
+    showEnglishInQuiz = false; 
     
-    // Reset toggle button appearance
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
         toggleBtn.textContent = 'Show English';
         toggleBtn.style.backgroundColor = '#6c757d';
     }
-    // 解決三-3: 關閉後回到 Select Sections 頁面
     document.getElementById('sectionSelectModal').style.display = 'block';
 }
+// ================= 替換終點 6 =================
 
 // ============ OVERALL VOCABULARY FUNCTIONS ============
 
@@ -4458,6 +4458,7 @@ function openOverallVocabModal() {
     handleFloatingButtons(); // 新增：打開字彙管理時，隱藏浮動按鈕
 }
 
+// ================= 替換起點 =================
 async function populateOverallVocabList(lessonKey) {
     const lessonData = vocabDatabase[lessonKey];
     const listContainer = document.getElementById('overallVocabList');
@@ -4466,19 +4467,15 @@ async function populateOverallVocabList(lessonKey) {
     if (!currentSelectedSectionIndices || currentSelectedSectionIndices.length === 0) return;
     
     let html = '';
-    
-    // 渲染所有選中的 section
     currentSelectedSectionIndices.forEach(sectionIndex => {
         const section = lessonData[sectionIndex];
         const sectionId = `section_${lessonKey}_${sectionIndex}`;
         
         let checkedCount = 0;
         section.words.forEach((word, wordIndex) => {
-            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
-            if (isChecked) checkedCount++;
+            if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) checkedCount++;
         });
         
-        // 修正 checkbox 擠壓變形的問題
         html += `<div class="vocab-section-block">
             <div class="section-title-row" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <input type="checkbox" id="${sectionId}_all" class="section-checkbox-all" 
@@ -4489,26 +4486,24 @@ async function populateOverallVocabList(lessonKey) {
             </div>
             <div class="vocab-items-grid">`;
             
-     section.words.forEach((word, wordIndex) => {
+        section.words.forEach((word, wordIndex) => {
             const wordId = `word_${lessonKey}_${sectionIndex}_${wordIndex}`;
-            
-            // 移除結尾的冒號，並把中文翻譯的括號拿掉以維持畫面一致性
             const displayText = word.word.replace(/:$/, '').replace(/\s*\(([^)]+)\)\s*$/, ' $1');  
-            const isChecked = !savedCheckedWords || savedCheckedWords[`${sectionIndex}_${wordIndex}`] !== false;
+            const state = getWordState(savedCheckedWords, sectionIndex, wordIndex);
             
-            html += `<div class="vocab-item-row">
+            html += `<div class="vocab-item-row" style="align-items: center;">
                 <input type="checkbox" id="${wordId}" class="word-checkbox" 
                        data-section-index="${sectionIndex}" 
                        data-word-index="${wordIndex}" 
-                       ${isChecked ? 'checked' : ''}>
+                       ${state.checked ? 'checked' : ''} style="margin-right: 5px;">
+                <button type="button" class="fam-btn fam-level-${state.level}" 
+                        data-section-index="${sectionIndex}" data-word-index="${wordIndex}" data-level="${state.level}"></button>
                 <label for="${wordId}">${displayText}</label>  
             </div>`;
         });
-        
         html += `</div></div>`;
     });
     
-    // 迴圈結束後，加上 ⬆️ 回到頂部按鈕
     html += `
     <div style="text-align: center; margin-top: 30px; padding-bottom: 20px;">
         <button id="vocabBackToTopBtn" style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
@@ -4519,7 +4514,6 @@ async function populateOverallVocabList(lessonKey) {
     listContainer.innerHTML = html;
     attachOverallVocabListeners(lessonKey);
 
-    // 綁定回到頂部事件 (因為 Modal 內部有自己的滾動條)
     const topBtn = document.getElementById('vocabBackToTopBtn');
     if (topBtn) {
         topBtn.addEventListener('click', () => {
@@ -4528,54 +4522,46 @@ async function populateOverallVocabList(lessonKey) {
     }
 }
 
-// 解決一-1 與 一-2: 綁定單字管理勾選框事件，實現全選與數字即時更新
 function attachOverallVocabListeners(lessonKey) {
     const sectionAllCheckboxes = document.querySelectorAll('.section-checkbox-all');
     const wordCheckboxes = document.querySelectorAll('.word-checkbox');
+    const famBtns = document.querySelectorAll('.fam-btn');
 
-    // 1. 處理標題的全選與全取消
     sectionAllCheckboxes.forEach(sectionCb => {
         sectionCb.addEventListener('change', function() {
             const sectionIndex = this.getAttribute('data-section-index');
             const isChecked = this.checked;
-            
-            // 找到該標題下所有的單字勾選框，並使其與標題同步
-            const relatedWords = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`);
-            relatedWords.forEach(wordCb => {
+            document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`).forEach(wordCb => {
                 wordCb.checked = isChecked;
             });
-            
-            // 即時更新項目數字
             updateSectionCountText(sectionIndex);
         });
     });
 
-    // 2. 處理個別單字的勾選動作
     wordCheckboxes.forEach(wordCb => {
         wordCb.addEventListener('change', function() {
             const sectionIndex = this.getAttribute('data-section-index');
-            
-            // 即時更新項目數字
             updateSectionCountText(sectionIndex);
-            
-            // 判斷是否要自動勾選或取消標題的「全選」
             const relatedWords = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`);
             const allChecked = Array.from(relatedWords).every(cb => cb.checked);
-            
             const sectionCb = document.querySelector(`.section-checkbox-all[data-section-index="${sectionIndex}"]`);
-            if (sectionCb) {
-                sectionCb.checked = allChecked;
-            }
+            if (sectionCb) sectionCb.checked = allChecked;
         });
     });
 
-    // 更新標題旁邊的數字文字
+    famBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            let lvl = parseInt(this.getAttribute('data-level'));
+            lvl = (lvl + 1) % 3; // 循環 0 -> 1 -> 2 -> 0
+            this.setAttribute('data-level', lvl);
+            this.className = `fam-btn fam-level-${lvl}`;
+        });
+    });
+
     function updateSectionCountText(sectionIndex) {
         const checkedCount = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]:checked`).length;
         const countSpan = document.getElementById(`count_${sectionIndex}`);
-        if (countSpan) {
-            countSpan.textContent = `(${checkedCount} items checked)`;
-        }
+        if (countSpan) countSpan.textContent = `(${checkedCount} items checked)`;
     }
 }
 
@@ -4589,7 +4575,10 @@ async function saveOverallVocabState() {
         const sectionIndex = checkbox.getAttribute('data-section-index');
         const wordIndex = checkbox.getAttribute('data-word-index');
         const key = `${sectionIndex}_${wordIndex}`;
-        checkedWords[key] = checkbox.checked;
+        const famBtn = document.querySelector(`.fam-btn[data-section-index="${sectionIndex}"][data-word-index="${wordIndex}"]`);
+        const level = famBtn ? parseInt(famBtn.getAttribute('data-level')) : 0;
+        
+        checkedWords[key] = { checked: checkbox.checked, level: level };
     });
     
     try {
@@ -4597,29 +4586,23 @@ async function saveOverallVocabState() {
         alert('Settings saved successfully! (設定已成功儲存！)');
         document.getElementById('overallVocabModal').style.display = 'none';
         
-        // --- 新增：同步更新 Modal 1 (Select Sections) 裡的數量顯示 ---
         if (currentLessonData) {
             currentLessonData.forEach((section, sectionIndex) => {
                 let count = 0;
                 section.words.forEach((word, wordIndex) => {
-                    const isChecked = checkedWords[`${sectionIndex}_${wordIndex}`] !== false;
-                    if (isChecked) count++;
+                    if (getWordState(checkedWords, sectionIndex, wordIndex).checked) count++;
                 });
                 const countSpan = document.getElementById(`modal1_sec_count_${sectionIndex}`);
-                if (countSpan) {
-                    countSpan.textContent = `(${count} items)`;
-                }
+                if (countSpan) countSpan.textContent = `(${count} items)`;
             });
         }
-        // -------------------------------------------------------------
-
-        // 直接重新渲染 Modal 2 (學習畫面) 以反映最新的勾選狀態
         openLearningContent(selectedLesson, checkedWords);
     } catch (error) {
         console.error('Error saving:', error);
         alert('Failed to save settings. (儲存設定失敗)');
     }
 }
+// ================= 替換終點 =================
 
         // ============ STUDY SESSION FUNCTIONS ============
 
@@ -4736,30 +4719,41 @@ function previousWord() {
     updateStudySession();
 }
 
-async function startStudySession() {
+// ================= 替換起點 5-3 =================
+async function startStudySession(mode = 'inOrder') {
     if (!updateSelectedSections()) {
         alert('Please select at least one section. (請至少勾選一個範圍)');
         return;
     }
-
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
     if (!selectedLesson || !vocabDatabase[selectedLesson] || vocabDatabase[selectedLesson].length === 0) {
-        alert('Please select a lesson with vocabulary data first! (請先選擇一個已匯入教材內容的單元)');
+        alert('Please select a lesson with vocabulary data first!');
         return;
     }
     
+    document.getElementById('walkModeModal').style.display = 'none';
     document.getElementById('sectionSelectModal').style.display = 'none';
 
     currentLessonData = vocabDatabase[selectedLesson];
-    flatWordsList = await getWordsFromCurrentSection();
+    let rawWords = await getWordsFromCurrentSection();
+    
+    // 依據熟悉度分群洗牌串接
+    if (mode === 'randomPriority') {
+        let lvl0 = rawWords.filter(w => w.level === 0);
+        let lvl1 = rawWords.filter(w => w.level === 1);
+        let lvl2 = rawWords.filter(w => w.level === 2);
+        flatWordsList = [...shuffleArray(lvl0), ...shuffleArray(lvl1), ...shuffleArray(lvl2)];
+    } else {
+        flatWordsList = rawWords;
+    }
+
     currentWordIndex = 0;
     translationShown = false;
-    
     currentEmoji = getRandomEmoji();
     document.getElementById('studyModal').style.display = 'block';
-
     updateStudySession();
 }
+// ================= 替換終點 5-3 =================
 
 // Show/hide floating navigation buttons
 function handleFloatingButtons() {
@@ -5062,8 +5056,12 @@ lessonButtons.forEach(btn => {
                 });
             });
 
+            // ================= 替換起點 7-1 =================
             // Listen and Choose Quiz button
-document.getElementById('listenChooseBtn').addEventListener('click', startListenChooseQuiz);
+document.getElementById('listenChooseBtn').addEventListener('click', () => {
+    document.getElementById('quizModeModal').style.display = 'block';
+});
+// ================= 替換終點 7-1 =================
 document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
 document.getElementById('listenStopBtn').addEventListener('click', stopSpeech); // 新增這行停止發音
 document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
@@ -5071,13 +5069,15 @@ document.getElementById('listenCloseBtn').addEventListener('click', closeQuizMod
 document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
 document.getElementById('toggleEnglishBtn').addEventListener('click', toggleEnglishDisplay);  // ADD THIS LINE
 
+            // ================= 替換起點 7-2 =================
             // Walk Me Thru button
 const walkMeThruBtn = document.getElementById('walkMeThruBtn');
 const studyModal = document.getElementById('studyModal');
 
 walkMeThruBtn.addEventListener('click', () => {
-    startStudySession();
+    document.getElementById('walkModeModal').style.display = 'block';
 });
+// ================= 替換終點 7-2 =================
 
 document.getElementById('closeStudyModal').addEventListener('click', () => {
     studyModal.style.display = 'none';
