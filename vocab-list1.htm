@@ -825,18 +825,18 @@
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 12px 10px;
+            padding: 8px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             transition: all 0.3s;
-            min-height: 60px;
+            min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .choice-btn:hover:not(:disabled) {
@@ -1533,6 +1533,26 @@
 }
 .mode-btn:hover { background-color: #2980b9; transform: translateY(-2px); }
 /* ================= 替換終點 ================= */
+/* ================= 替換起點 1 (新增分批學習樣式) ================= */
+.hidden-cell {
+    color: transparent !important;
+    background-color: #e9ecef !important;
+    user-select: none;
+    transition: background-color 0.3s;
+}
+.disabled-btn {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+}
+@keyframes fade-flash {
+    0% { opacity: 0; background-color: #f1c40f; }
+    100% { opacity: 1; background-color: transparent; }
+}
+.flash-reveal {
+    animation: fade-flash 0.6s ease-out;
+}
+/* ================= 替換終點 1 ================= */
     </style>
 </head>
 <body>
@@ -1567,8 +1587,12 @@
             <div id="examCountdownDisplay">⏰ Loading exam countdown...</div>
             <div id="gsatCountdownDisplay">🎯 Loading GSAT countdown...</div>
         </div>
-
-        <h1>📃 Vocabulary List for Grade 12<br>(v8.0)</h1>
+       
+        <h1 style="line-height: 1.3;">
+            <span style="font-size: 1em;">Vocabulary List</span><br>
+            <span style="font-size: 0.8em;">for Grade 12</span><br>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.20)</span>
+        </h1>
 
         <div class="button-categories">
                         <div class="category">
@@ -1584,7 +1608,7 @@
             </div>                 
 
             <div class="category">
-                <div class="category-title">✍🏻 Past Exams (歷屆試題)</div>
+                <div class="category-title">✍ Past Exams (歷屆試題)</div>
                 <div class="category-buttons">
                     <button class="vocab-btn" data-category="past" data-lesson="past1">115</button>
                     <button class="vocab-btn" data-category="past" data-lesson="past2">114</button>
@@ -1649,7 +1673,7 @@
                     👀 Walk Me Through <br>(帶我複習：英翻中)
                 </button>
                 <button class="quiz-btn" id="listenChooseBtn" style="width: 100%;">
-                    🎧 Listening Quiz <br>(聽力測驗 8題)
+                    🎧 Listening Quiz <br>(聽力測驗)
                 </button>
             </div>
         </div>
@@ -1665,12 +1689,17 @@
                 Selected Sections
             </h2>
 
+            <!-- ================= 替換起點 2-1 ================= -->
             <!-- 專屬此 Section 的功能區 -->
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px;">
                 <button class="study-partner-btn" id="overallVocabBtn" style="background-color: #17a2b8; padding: 10px 20px; font-size: 16px;">
                     🗃️ Vocabulary Management<br>(字彙管理)
                 </button>
+                <button class="study-partner-btn" id="batchLearnBtn" style="background-color: #9b59b6; padding: 10px 20px; font-size: 16px; display: none;">
+                    📚 10 at a time<br>(分批學習)
+                </button>
             </div>
+<!-- ================= 替換終點 2-1 ================= -->
 
             <!-- Speed Control -->
             <div class="speed-control-section" style="margin: 15px 0;">
@@ -1709,11 +1738,13 @@
                 <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Important Notice</h2>
                 <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理（refresh）🔄」以獲取更新！</strong></p>
-                    <p style="margin-bottom: 0; text-align: center;">2. 手機有時會更新「文字轉語音」功能，導致🔊無法運作，重開機即可解決。</p><br>
+                    <p style="margin-bottom: 0; text-align: center;">2. 本網頁的發音仰賴「文字轉語音」（text to speech）功能，而手機（尤其是Android系統）有時會更新此功能，導致🔊無法運作，重開機即可解決。</p><br>
 <p style="margin-bottom: 0; text-align: center;">
-3. 教材更新: <br>課本: L1 單
-<br>歷屆試題: 115
-<br>好好學: U1, U2, U3, U4, U5
+3. 部分單字的名詞與動詞發音不同，為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>to record（動詞）🆚 record（名詞）</p><br>
+<p style="margin-bottom: 0; text-align: center;">
+4. 教材更新: <br>📚 課本: L1 單
+<br>✍ 歷屆試題: 115
+<br>📒 好好學: U1, U2, U3, U4, U5
 </p>
 
                 </div>
@@ -1744,6 +1775,57 @@
     </div>
 </div>
 <!-- ================= 替換終點 ================= -->
+<!-- ================= 替換起點 2-2 ================= -->
+<!-- Batch Study Modal (分批學習 - 單字卡) -->
+<div id="batchStudyModal" class="modal" style="z-index: 1250;">
+    <div class="modal-content" style="max-width: 600px; text-align: center;">
+        <span class="close" onclick="document.getElementById('batchStudyModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
+        <div id="batchProgressInfo" style="color: #7f8c8d; font-size: 18px; margin-bottom: 20px; line-height: 1.4;"></div>
+        <div style="background: #fff; padding: 30px 20px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <div id="batchWord" style="font-size: 28px; font-weight: bold; color: #2c3e50; margin-bottom: 15px;"></div>
+            <div id="batchExample" style="font-size: 20px; color: #555; line-height: 1.6; text-align: left;"></div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 15px;">
+            <button class="nav-btn" id="batchBackBtn" style="padding: 12px 25px; font-size: 18px;">← Back</button>
+            <button class="nav-btn" id="batchNextBtn" style="padding: 12px 25px; font-size: 18px; background-color: #27ae60;">Next →</button>
+        </div>
+    </div>
+</div>
+
+<!-- Batch Quiz Modal (分批學習 - 雙欄測驗) -->
+<div id="batchQuizModal" class="modal" style="z-index: 1250;">
+    <div class="modal-content" style="max-width: 600px; text-align: center;">
+        <span class="close" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
+        <h3 id="batchQuizTitle" style="color: #28a745; margin-bottom: 10px; font-size: 22px;">Congrats on finishing this round! 🎉</h3>
+        <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 16px;">Time for two quizzes. Check ✅ the boxes when finished.</p>
+
+        <button id="batchShuffleBtn" class="quiz-btn" style="padding: 10px 20px; font-size: 16px; margin-bottom: 15px; background-color: #9b59b6; color: white; width: auto;">🔀 Shuffle</button>
+        
+        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 15px; margin-bottom: 20px;">
+           <thead>
+               <tr>
+                   <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50;">English</th>
+                   <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50;">Chinese</th>
+               </tr>
+           </thead>
+           <tbody id="batchQuizTableBody"></tbody>
+        </table>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-bottom: 25px;">
+            <div style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
+                <button id="btnHideEng" class="quiz-btn" style="padding: 10px; font-size: 16px; width: 180px; background-color: #3498db; color: white;">Hide English</button>
+                <input type="checkbox" id="chkEngDone" style="width: 25px; height: 25px; cursor: pointer;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
+                <button id="btnHideChi" class="quiz-btn" style="padding: 10px; font-size: 16px; width: 180px; background-color: #e67e22; color: white;">Hide Chinese</button>
+                <input type="checkbox" id="chkChiDone" style="width: 25px; height: 25px; cursor: pointer;">
+            </div>
+        </div>
+        <div id="batchQuizFooter" style="display: flex; gap: 10px; justify-content: center;"></div>
+    </div>
+</div>
+<!-- ================= 替換終點 2-2 ================= -->
+
 <!-- Listen and Choose Modal -->
     <div id="listenChooseModal" class="modal">
         <div class="modal-content quiz-modal-content">
@@ -1823,11 +1905,19 @@
                 <button class="overall-vocab-btn close-btn" id="closeOverallVocabBtn">✖ Close</button>
             </div>
         </div>
-        <!-- ================= 替換起點 ================= -->
-<p style="color: red; margin-bottom: 20px; font-size: 18px; font-weight: bold;">
-    Check words to study and click ⚪⚪ to set familiarity. <br>(勾選欲學習的單字，並點擊燈號設定熟悉度。)
-</p>
-<!-- ================= 替換終點 ================= -->
+        <!-- ================= 替換起點 1 (單字熟悉度圖例說明) ================= -->
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 20px; text-align: left; font-size: 16px; color: #2c3e50; line-height: 1.6; font-weight: bold;">
+            <!-- ================= 替換起點 2 (強制垂直四行) ================= -->
+            <div style="margin-bottom: 8px; color: #e74c3c;">請按指示設定單字的熟悉度：</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div>1. ⚪⚪: 很不熟</div>
+                <div>2. 🟢⚪: 有點熟</div>
+                <div>3. 🟢🟢: 很熟</div>
+                <div>4. ⬜ (取消勾選): 熟到不用再複習</div>
+            </div>
+        </div>
+<!-- ================= 替換終點 2 ================= -->
+<!-- ================= 替換終點 1 ================= -->
         <div id="overallVocabList"></div>
     </div>
 </div>
@@ -3709,9 +3799,9 @@ be addressed as… (phr) (被尊稱為…) ^ She likes to be addressed as Doctor
 (letter, package, etc.) be addressed to someone (（信、包裹等）署名寄給某人) ^ This letter is addressed to my father, so I cannot open it. (這封信是署名寄給我的父親的，所以我不能打開。)
 atmosphere (n) (1.大氣層) ^ The Earth's atmosphere protects us from the hot sun rays. (地球的大氣層保護我們免受熾熱陽光的照射。)
 atmosphere (n) (2.氣氛、氛圍) ^ The party had a happy and relaxing atmosphere with good music. (伴隨著好音樂，派對擁有歡樂且放鬆的氣氛。)
-concentrate (v) (1.專注、專心 + on…) ^ Please turn off the TV so I can concentrate on my homework. (請關掉電視，這樣我才能專心做作業。)
+concentrate (v) (1.專注、專心 + on… = focus on...) ^ Please turn off the TV so I can concentrate on my homework. (請關掉電視，這樣我才能專心做作業。)
 concentrate (v) (2.集中、聚集) ^ Most shops in this city are concentrated on Main Street. (這座城市的店家大多集中在大街上。)
-costly (adj) (昂貴的、代價高的) ^ Buying a brand new car is a very costly choice. (買一輛全新汽車是一個非常昂貴的選擇。)
+costly (adj) (昂貴的、代價高的 = expensive; pricey) ^ Buying a brand new car is a very costly choice. (買一輛全新汽車是一個非常昂貴的選擇。)
 destroy (v) (破壞、毀壞) ^ Fire can destroy a whole forest in just a few hours. (火災可以在短短幾個小時內毀壞整片森林。)
 destructive (adj) (破壞性的、毀滅性的) ^ Typhoons can be very destructive and break many trees. (颱風可能是非常有破壞性的，會弄斷許多樹木。)
 destruction (n) (破壞、毀滅) ^ The earthquake caused total destruction to many houses. (地震對許多房屋造成了完全的破壞。)
@@ -3723,12 +3813,14 @@ distribution (n) (分發、分布、分配) ^ Food distribution began right afte
 electricity (n) (電、電力) ^ Without electricity, the lights and refrigerator will not work. (沒有電，電燈和冰箱就無法運作。)
 electric (adj) (用電的、電動的) ^ He rides an electric bike to school every day. (他每天騎電動單車去上學。)
 electronic (adj) (電子（設備）的) ^ Laptops and smartphones are common *electronic devices*. (筆記型電腦和智慧型手機是常見的*電子設備*。)
+electronics (n) (1.電子學 2.電子設備) ^ She has a degree in electronics and works in the electronics industry. (她擁有電子學學位，並從事電子業。)
 electrical (adj) (與電相關的、電氣的) ^ Sparks came out from the broken electrical wire. (火花從破損的電氣線路中冒了出來。)
 eliminate (v) (消除、淘汰) ^ Good hand washing can eliminate germs and keep you healthy. (好好洗手可以消除細菌並保持你的健康。)
 elimination (n) (消除、淘汰) ^ The elimination of waste is essential for a clean city. (廢棄物的消除對一座乾淨的城市至關重要。)
 grind–ground–ground (v) (磨碎、碾碎) ^ We need to grind these coffee beans to make coffee. (我們需要把這些咖啡豆磨碎來煮咖啡。)
 halt (v/n) (停止、停下 = stop) ^ The red light forced all cars to come to a halt. (紅燈迫使所有車輛停下。)
-impose (v) (強制實施、把…強加於) ^ The school will impose strict rules against cheating. (學校將會強制實施反對作弊的嚴格規定。)
+impose (v) (1.強制實施 + rule/ban/tax…) ^ The government *has imposed a ban on* smoking in public areas. (政府已強制實施公共場所的禁菸令。)
+impose (v) (2.把（思想、價值觀等）強加於…) ^ Many parents *impose their own values on* their children without knowing it. (許多父母在不知不覺中將自己的價值觀強加在孩子身上。)
 intense (adj) (強烈的、劇烈的) ^ The bright sun was so intense that I had to wear sunglasses. (耀眼的太陽非常強烈，以致於我必須戴上太陽眼鏡。)
 motivation (n) (動機、動力) ^ Winning the prize was his main motivation to study hard. (贏得獎品是他努力讀書的主要動力。)
 motivate (v) (激勵、驅使) ^ A good coach knows how to motivate the team to win. (一位好的教練知道如何激勵隊伍去獲勝。)
@@ -3749,7 +3841,7 @@ reservation (n) (3.存疑、持保留意見) ^ I have some reservations about hi
 resource (n) (資源) ^ Oil is a limited resource that will run out one day. (石油是一種終有一天會耗盡的有限資源。)
 resourceful (adj) (足智多謀的、資源豐富的) ^ She is resourceful and can always solve problems quickly. (她足智多謀，總能快速解決問題。)
 rot–rotted–rotted (v) (腐爛、腐朽) ^ Old apples left in the sun will rot quickly. (留在太陽下的舊蘋果會快速腐爛。)
-rural (adj) (鄉村的、農村的) ^ Life in rural villages is quiet and full of green trees. (鄉村村莊的生活很安靜，且充滿綠樹。)
+rural (adj) (鄉村的、農村的 vs. urban 都市的) ^ Life in rural villages is quiet and full of green trees. (鄉村村莊的生活很安靜，且充滿綠樹。)
 security (n) (安全、保障) ^ Airport security checks every bag for safety. (機場安全人員會檢查每個背包以確保安全。)
 secure (adj) (安全的、牢固的) ^ Check that the door is secure before you go to sleep. (在你睡覺前，檢查門是否是牢固安全的。)
 secure (v) (獲得、確保) ^ He worked hard to secure a good job in a big company. (他努力工作以在大公司獲得一份好工作。)
@@ -3758,9 +3850,9 @@ spark (v) (引發、觸發) ^ The bad news will spark anger among the workers. (
 species (n) (物種) ^ Cats and dogs belong to two different animal species. (貓和狗屬於兩種不同的動物物種。)
 supply (v/n) (供應、供給) ^ Supermarkets supply food and drinks to local residents. (超級市場向當地居民供應食物和飲料。)
 threat (n) (威脅、恐嚇) ^ Pollution is a serious threat to sea animals. (污染對海洋動物是一個嚴重的威脅。)
-threaten (v) (威脅、恐嚇) ^ Dark clouds threaten to bring a big rainstorm soon. (烏雲威脅著很快會帶來一場大暴雨。)
+threaten (v) (威脅、恐嚇 = threat + -en) ^ Dark clouds threaten to bring a big rainstorm soon. (烏雲威脅著很快會帶來一場大暴雨。)
 threatening (adj) (具威脅性的、恐嚇的) ^ The angry dog let out a threatening sound. (那隻生氣的狗發出了具威脅性的聲音。)
-vanish (v) (消失、消逝) ^ The magic coin seemed to vanish into thin air. (這枚魔術硬幣似乎消失得無影無蹤了。)
+vanish (v) (消失、消逝 = disappear) ^ The magic coin seemed to vanish into thin air. (這枚魔術硬幣似乎消失得無影無蹤了。)
 vehicle (n) (車輛、交通工具) ^ Cars, buses, and trucks are all kinds of vehicles. (汽車、公車和卡車都是各種交通工具。)
 
 ◎單字levels 5-6
@@ -3773,7 +3865,7 @@ disposal (n) (處置、廢棄) ^ Proper trash disposal keeps our city streets cl
 disposable (adj) (用完即丟的、一次性的) ^ Disposable chopsticks are easy to use, but bad for trees. (免洗筷子很容易使用，但對樹木不好。)
 drought (n) (旱災、乾旱) ^ Farmers lost their crops because of the long drought. (農夫們因為長期的旱災而失去了農作物。)
 emission (n) (排放、排放物) ^ Electric cars produce zero carbon emission while driving. (電動車在行駛時產生零碳排放。)
-emit (v) (排放、散發) ^ Smoke stacks emit black smoke into the clean air. (煙囪向乾淨的空氣中排放黑煙。)
+emit (v) (排放、散發) ^ Cars emit CO2 into the atmosphere. (汽車會向大氣中排放二氧化碳。)
 fertilize (v) (施肥、使受精) ^ Farmers fertilize the ground to help vegetables grow bigger. (農夫給土地施肥以幫助蔬菜長得更大。)
 fertilizer (n) (肥料) ^ Using good fertilizer makes flowers bloom faster. (使用好的肥料會讓花朵開得更快。)
 illusion (n) (1.幻覺、幻想) ^ Mirages on hot roads create the illusion of water. (熾熱道路上的海市蜃樓會創造出水影的幻覺。)
@@ -4081,6 +4173,7 @@ async function loadVocabulary(lessonKey) {
     document.getElementById('sectionSelectModal').style.display = 'block';
 }
 
+// ================= 替換起點 3 =================
 function openLearningContent(lessonKey, savedCheckedWords) {
     document.getElementById('sectionSelectModal').style.display = 'none';
     let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
@@ -4089,6 +4182,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
     const tableBody = document.getElementById('vocabTableBody');
     let html = '';
+    let totalCheckedWords = 0; // 新增：用來計算打勾的總字數
 
     currentSelectedSectionIndices.forEach(sectionIndex => {
         const sectionData = currentLessonData[sectionIndex];
@@ -4096,6 +4190,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
         sectionData.words.forEach((item, wordIndex) => {
             if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
+                totalCheckedWords++;
                 const fullText = `${item.word}. ${item.example}`;
                 const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
                 let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em;">$1</span><br>');
@@ -4115,11 +4210,18 @@ function openLearningContent(lessonKey, savedCheckedWords) {
         });
     });
 
+    // 動態顯示「分批學習」按鈕
+    const batchBtn = document.getElementById('batchLearnBtn');
+    if (batchBtn) {
+        batchBtn.style.display = totalCheckedWords > 15 ? 'block' : 'none';
+    }
+
     tableBody.innerHTML = html;
     document.getElementById('learningContentModal').style.display = 'block';
     document.getElementById('learningScrollArea').scrollTop = 0;
     updateLearningProgress();
 }
+// ================= 替換終點 3 =================
 // ================= 替換終點 =================
 
         // ================= 替換起點 5-1 =================
@@ -4209,11 +4311,13 @@ async function startListenChooseQuiz(mode = '8qs') {
         return;
     }
 
+    // ================= 替換起點 3 (修改最少單字限制) =================
     const allWords = await getWordsFromCurrentSection();
-    if (allWords.length < 4) { // 需要至少 4 個字才有選項可選
-        alert('This section has fewer than 4 words. (此區塊不足 4 個單字，無法進行測驗)');
+    if (allWords.length < 8) { // 需要至少 8 個字才能湊滿 8 個選項
+        alert('This section has fewer than 8 words. (此區塊不足 8 個單字，無法進行測驗)');
         return;
     }
+// ================= 替換終點 3 =================
 
     document.getElementById('quizModeModal').style.display = 'none';
     document.getElementById('sectionSelectModal').style.display = 'none';
@@ -4277,12 +4381,18 @@ function loadQuizQuestion() {
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
 
-    // 產生選項：1個正確答案 + 3個隨機干擾選項(來自所有打勾單字庫)
+    // ================= 替換起點 4 (改成 7 個干擾選項) =================
+    // 產生選項：1個正確答案 + 7個隨機干擾選項(來自目前勾選範圍的單字庫)
+    // 過濾掉正確答案，確保不會有重複的正確選項
     let pool = window.allQuizWordsPool.filter(w => w.word !== correctAnswer.word);
-    pool = shuffleArray(pool).slice(0, 3);
+    // 將剩下的單字洗牌，並安全地取出 7 個
+    pool = shuffleArray(pool).slice(0, 7); 
+    // 合併正確答案與 7 個干擾選項 (共 8 個)
     let choices = [correctAnswer, ...pool];
     
+    // 將這 8 個選項再次洗牌，打亂正確答案的位置後顯示
     displayChoices(shuffleArray(choices));
+// ================= 替換終點 4 =================
 }
 
 function displayChoices(choices) {
@@ -4894,6 +5004,210 @@ async function clearAllQuizHistory() {
         alert('Failed to clear quiz history.');
     }
 }
+
+// ================= 替換起點 4 (分批學習與雙欄測驗邏輯) =================
+let batchChunks = [];
+let currentChunkIdx = 0;
+let currentCardIdx = 0;
+let isReviewMode = false;
+let currentQuizWords = [];
+let isEnglishHidden = false;
+let isChineseHidden = false;
+
+document.getElementById('batchLearnBtn').addEventListener('click', async () => {
+    const allWords = await getWordsFromCurrentSection();
+    batchChunks = [];
+    // 將所有單字每 10 個切成一組
+    for (let i = 0; i < allWords.length; i += 10) {
+        batchChunks.push(allWords.slice(i, i + 10));
+    }
+    currentChunkIdx = 0;
+    currentCardIdx = 0;
+    document.getElementById('learningContentModal').style.display = 'none';
+    document.getElementById('batchStudyModal').style.display = 'block';
+    renderBatchCard();
+});
+
+function renderBatchCard() {
+    const chunk = batchChunks[currentChunkIdx];
+    const wordData = chunk[currentCardIdx];
+    
+    document.getElementById('batchProgressInfo').innerHTML = 
+        `<strong>${batchChunks.length} Rounds in Total</strong><br>Round ${currentChunkIdx + 1}: ${currentCardIdx + 1} of ${chunk.length}`;
+    
+    const displayWord = wordData.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em; color: #7f8c8d;">$1</span>');
+    let displayExample = wordData.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em; color: #7f8c8d;">$1</span><br>');
+    displayExample = displayExample.replace(/(<br>)+$/, '');
+
+    document.getElementById('batchWord').innerHTML = displayWord;
+    document.getElementById('batchExample').innerHTML = displayExample;
+
+    document.getElementById('batchBackBtn').disabled = (currentCardIdx === 0);
+    document.getElementById('batchBackBtn').style.opacity = (currentCardIdx === 0) ? '0.5' : '1';
+    document.getElementById('batchNextBtn').textContent = (currentCardIdx === chunk.length - 1) ? 'Finish Round' : 'Next →';
+}
+
+document.getElementById('batchBackBtn').onclick = () => {
+    if (currentCardIdx > 0) { currentCardIdx--; renderBatchCard(); }
+};
+
+document.getElementById('batchNextBtn').onclick = () => {
+    const chunk = batchChunks[currentChunkIdx];
+    if (currentCardIdx < chunk.length - 1) {
+        currentCardIdx++;
+        renderBatchCard();
+    } else {
+        document.getElementById('batchStudyModal').style.display = 'none';
+        openBatchQuiz(chunk, false);
+    }
+};
+
+function openBatchQuiz(wordsToQuiz, isOverall) {
+    currentQuizWords = [...wordsToQuiz];
+    isReviewMode = isOverall;
+    
+    document.getElementById('chkEngDone').checked = false;
+    document.getElementById('chkChiDone').checked = false;
+    resetQuizToggles();
+
+    if (isOverall) {
+        document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
+        document.getElementById('batchQuizSubtitle').textContent = "Tap Random Review to keep practicing.";
+        document.getElementById('batchShuffleBtn').innerHTML = "🔄 Random Review";
+    } else {
+        document.getElementById('batchQuizTitle').textContent = "Congrats on finishing this round! 🎉";
+        document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes when finished.";
+        document.getElementById('batchShuffleBtn').innerHTML = "🔀 Shuffle";
+    }
+
+    renderBatchQuizTable();
+    updateBatchQuizFooter();
+    document.getElementById('batchQuizModal').style.display = 'block';
+}
+
+function renderBatchQuizTable(addFlash = false) {
+    const tbody = document.getElementById('batchQuizTableBody');
+    let html = '';
+    currentQuizWords.forEach(w => {
+        const eng = extractEnglishWordOnly(w.word);
+        const chi = extractChineseTranslation(w.word);
+        
+        const engClass = isEnglishHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
+        const chiClass = isChineseHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
+        
+        html += `<tr>
+            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word;"><div class="quiz-eng ${engClass}">${eng}</div></td>
+            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word;"><div class="quiz-chi ${chiClass}">${chi}</div></td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+}
+
+function resetQuizToggles() {
+    isEnglishHidden = false;
+    isChineseHidden = false;
+    const btnEng = document.getElementById('btnHideEng');
+    const btnChi = document.getElementById('btnHideChi');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    
+    btnEng.textContent = "Hide English";
+    btnEng.classList.remove('disabled-btn');
+    btnChi.textContent = "Hide Chinese";
+    btnChi.classList.remove('disabled-btn');
+    btnShuffle.classList.remove('disabled-btn');
+}
+
+document.getElementById('btnHideEng').onclick = function() {
+    isEnglishHidden = !isEnglishHidden;
+    const btnChi = document.getElementById('btnHideChi');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    let addFlash = false;
+    
+    if (isEnglishHidden) {
+        this.textContent = "Check Answers";
+        btnChi.classList.add('disabled-btn');
+        btnShuffle.classList.add('disabled-btn');
+    } else {
+        this.textContent = "Hide English";
+        btnChi.classList.remove('disabled-btn');
+        btnShuffle.classList.remove('disabled-btn');
+        addFlash = true; // 顯示答案時觸發閃爍
+    }
+    renderBatchQuizTable(addFlash);
+};
+
+document.getElementById('btnHideChi').onclick = function() {
+    isChineseHidden = !isChineseHidden;
+    const btnEng = document.getElementById('btnHideEng');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    let addFlash = false;
+    
+    if (isChineseHidden) {
+        this.textContent = "Check Answers";
+        btnEng.classList.add('disabled-btn');
+        btnShuffle.classList.add('disabled-btn');
+    } else {
+        this.textContent = "Hide Chinese";
+        btnEng.classList.remove('disabled-btn');
+        btnShuffle.classList.remove('disabled-btn');
+        addFlash = true; // 顯示答案時觸發閃爍
+    }
+    renderBatchQuizTable(addFlash);
+};
+
+document.getElementById('batchShuffleBtn').onclick = async () => {
+    if (isEnglishHidden || isChineseHidden) return; // 雙重防呆
+    
+    if (isReviewMode) {
+        const allWords = await getWordsFromCurrentSection();
+        currentQuizWords = shuffleArray([...allWords]).slice(0, 10);
+    } else {
+        currentQuizWords = shuffleArray([...currentQuizWords]);
+    }
+    renderBatchQuizTable(true); // 洗牌後閃爍更新
+};
+
+document.getElementById('chkEngDone').onchange = updateBatchQuizFooter;
+document.getElementById('chkChiDone').onchange = updateBatchQuizFooter;
+
+function updateBatchQuizFooter() {
+    const footer = document.getElementById('batchQuizFooter');
+    const engDone = document.getElementById('chkEngDone').checked;
+    const chiDone = document.getElementById('chkChiDone').checked;
+    
+    if (isReviewMode) {
+        footer.innerHTML = `
+            <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('sectionSelectModal').style.display='block';" style="background-color: #5dade2; padding: 12px 20px;">📋 選範圍 / 測驗</button>
+            <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='none';" style="background-color: #6c757d; padding: 12px 20px;">🏠 回首頁</button>
+        `;
+    } else {
+        if (engDone && chiDone) {
+            if (currentChunkIdx < batchChunks.length - 1) {
+                footer.innerHTML = `<button class="study-partner-btn" onclick="startNextBatchRound()" style="width: 100%;">Next Round ➡️</button>`;
+            } else {
+                footer.innerHTML = `<button class="study-partner-btn" onclick="startOverallReview()" style="background-color: #e67e22; width: 100%;">Overall Review 🔎</button>`;
+            }
+        } else {
+            footer.innerHTML = '';
+        }
+    }
+}
+
+function startNextBatchRound() {
+    currentChunkIdx++;
+    currentCardIdx = 0;
+    document.getElementById('batchQuizModal').style.display = 'none';
+    document.getElementById('batchStudyModal').style.display = 'block';
+    renderBatchCard();
+}
+
+async function startOverallReview() {
+    document.getElementById('batchQuizModal').style.display = 'none';
+    const allWords = await getWordsFromCurrentSection();
+    const reviewWords = shuffleArray([...allWords]).slice(0, 10);
+    openBatchQuiz(reviewWords, true);
+}
+// ================= 替換終點 4 =================
 
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
