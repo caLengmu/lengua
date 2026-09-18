@@ -1533,6 +1533,26 @@
 }
 .mode-btn:hover { background-color: #2980b9; transform: translateY(-2px); }
 /* ================= 替換終點 ================= */
+/* ================= 替換起點 1 (新增分批學習樣式) ================= */
+.hidden-cell {
+    color: transparent !important;
+    background-color: #e9ecef !important;
+    user-select: none;
+    transition: background-color 0.3s;
+}
+.disabled-btn {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+}
+@keyframes fade-flash {
+    0% { opacity: 0; background-color: #f1c40f; }
+    100% { opacity: 1; background-color: transparent; }
+}
+.flash-reveal {
+    animation: fade-flash 0.6s ease-out;
+}
+/* ================= 替換終點 1 ================= */
     </style>
 </head>
 <body>
@@ -1571,7 +1591,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.12)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.21)</span>
         </h1>
 
         <div class="button-categories">
@@ -1669,12 +1689,17 @@
                 Selected Sections
             </h2>
 
+            <!-- ================= 替換起點 2-1 ================= -->
             <!-- 專屬此 Section 的功能區 -->
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px;">
                 <button class="study-partner-btn" id="overallVocabBtn" style="background-color: #17a2b8; padding: 10px 20px; font-size: 16px;">
                     🗃️ Vocabulary Management<br>(字彙管理)
                 </button>
+                <button class="quiz-btn" id="batchLearnBtn" style="padding: 10px 20px; font-size: 16px; display: none; margin: 0;">
+                    📚 10 at a time<br>(分批學習)
+                </button>
             </div>
+<!-- ================= 替換終點 2-1 ================= -->
 
             <!-- Speed Control -->
             <div class="speed-control-section" style="margin: 15px 0;">
@@ -1750,6 +1775,65 @@
     </div>
 </div>
 <!-- ================= 替換終點 ================= -->
+<!-- ================= 替換起點 2-2 ================= -->
+<!-- ================= 替換起點 2 (Modal 版面更新) ================= -->
+<!-- Batch Study Modal (分批學習 - 單字卡) -->
+<div id="batchStudyModal" class="modal" style="z-index: 1250;">
+    <div class="modal-content" style="max-width: 600px; text-align: center;">
+        <span class="close" onclick="document.getElementById('batchStudyModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
+        <!-- 醒目的進度顏色與上方留白 -->
+        <div id="batchProgressInfo" style="padding-top: 15px; color: #e74c3c; font-size: 20px; margin-bottom: 20px; line-height: 1.4;"></div>
+        <div style="background: #fff; padding: 30px 20px; border: 2px solid #3498db; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <div id="batchWordArea" style="margin-bottom: 15px;"></div>
+            <div id="batchExampleArea" style="line-height: 1.6;"></div>
+            <div id="batchAudioArea" style="margin-top: 20px;"></div>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 15px;">
+            <button class="nav-btn" id="batchBackBtn" style="padding: 12px 25px; font-size: 18px; background-color: #3498db;">← Back</button>
+            <button class="nav-btn" id="batchNextBtn" style="padding: 12px 25px; font-size: 18px; background-color: #3498db;">Next →</button>
+        </div>
+    </div>
+</div>
+
+<!-- Batch Quiz Modal (分批學習 - 雙欄測驗) -->
+<div id="batchQuizModal" class="modal" style="z-index: 1250;">
+    <div class="modal-content" style="max-width: 600px; text-align: center;">
+        <span class="close" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
+        <!-- 增加上方留白 -->
+        <h3 id="batchQuizTitle" style="padding-top: 20px; color: #28a745; margin-bottom: 10px; font-size: 24px;">Congrats! Round N is done!</h3>
+        <!-- 👈 這裡調整 Subtitle 字體大小 (目前 1.2em) -->
+        <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 1.2em; font-weight: bold;">Time for two quizzes. Check ✅ the boxes when finished.</p>
+
+        <button id="batchShuffleBtn" class="quiz-btn" style="padding: 10px 20px; font-size: 16px; margin-bottom: 15px; background-color: #9b59b6; color: white; width: auto;">🔀 Shuffle</button>
+        
+        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 20px;">
+           <thead>
+               <tr>
+                   <!-- 👈 這裡調整 Table Header 字體大小 (目前 1.2em) -->
+                   <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50; font-size: 1.2em;">English</th>
+                   <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50; font-size: 1.2em;">Chinese</th>
+               </tr>
+           </thead>
+           <tbody id="batchQuizTableBody"></tbody>
+        </table>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-bottom: 25px;">
+            <div id="chkEngContainer" style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
+                <button id="btnHideEng" class="quiz-btn" style="padding: 10px; font-size: 16px; width: 220px; background-color: #3498db; color: white;">Quiz #1: Hide English</button>
+                <input type="checkbox" id="chkEngDone" style="width: 25px; height: 25px; cursor: pointer;">
+            </div>
+            <div id="chkChiContainer" style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
+                <button id="btnHideChi" class="quiz-btn" style="padding: 10px; font-size: 16px; width: 220px; background-color: #e67e22; color: white;">Quiz #2: Hide Chinese</button>
+                <input type="checkbox" id="chkChiDone" style="width: 25px; height: 25px; cursor: pointer;">
+            </div>
+        </div>
+        <!-- 底部增加留白 margin-bottom -->
+        <div id="batchQuizFooter" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;"></div>
+    </div>
+</div>
+<!-- ================= 替換終點 2 ================= -->
+<!-- ================= 替換終點 2-2 ================= -->
+
 <!-- Listen and Choose Modal -->
     <div id="listenChooseModal" class="modal">
         <div class="modal-content quiz-modal-content">
@@ -4097,6 +4181,7 @@ async function loadVocabulary(lessonKey) {
     document.getElementById('sectionSelectModal').style.display = 'block';
 }
 
+// ================= 替換起點 3 =================
 function openLearningContent(lessonKey, savedCheckedWords) {
     document.getElementById('sectionSelectModal').style.display = 'none';
     let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
@@ -4105,6 +4190,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
     const tableBody = document.getElementById('vocabTableBody');
     let html = '';
+    let totalCheckedWords = 0; // 新增：用來計算打勾的總字數
 
     currentSelectedSectionIndices.forEach(sectionIndex => {
         const sectionData = currentLessonData[sectionIndex];
@@ -4112,6 +4198,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
         sectionData.words.forEach((item, wordIndex) => {
             if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
+                totalCheckedWords++;
                 const fullText = `${item.word}. ${item.example}`;
                 const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
                 let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em;">$1</span><br>');
@@ -4131,11 +4218,18 @@ function openLearningContent(lessonKey, savedCheckedWords) {
         });
     });
 
+    // 動態顯示「分批學習」按鈕
+    const batchBtn = document.getElementById('batchLearnBtn');
+    if (batchBtn) {
+        batchBtn.style.display = totalCheckedWords > 14 ? 'block' : 'none';
+    }
+
     tableBody.innerHTML = html;
     document.getElementById('learningContentModal').style.display = 'block';
     document.getElementById('learningScrollArea').scrollTop = 0;
     updateLearningProgress();
 }
+// ================= 替換終點 3 =================
 // ================= 替換終點 =================
 
         // ================= 替換起點 5-1 =================
@@ -4918,6 +5012,249 @@ async function clearAllQuizHistory() {
         alert('Failed to clear quiz history.');
     }
 }
+
+// ================= 替換起點 4 (分批學習與雙欄測驗邏輯) =================
+let batchChunks = [];
+let currentChunkIdx = 0;
+let currentCardIdx = 0;
+let isReviewMode = false;
+let currentQuizWords = [];
+let isEnglishHidden = false;
+let isChineseHidden = false;
+
+document.getElementById('batchLearnBtn').addEventListener('click', async () => {
+    const allWords = await getWordsFromCurrentSection();
+    batchChunks = [];
+    // 將所有單字每 10 個切成一組
+    for (let i = 0; i < allWords.length; i += 10) {
+        batchChunks.push(allWords.slice(i, i + 10));
+    }
+    currentChunkIdx = 0;
+    currentCardIdx = 0;
+    document.getElementById('learningContentModal').style.display = 'none';
+    document.getElementById('batchStudyModal').style.display = 'block';
+    renderBatchCard();
+});
+
+// ================= 替換起點 4 (渲染卡片與雙欄測驗邏輯更新) =================
+function renderBatchCard() {
+    const chunk = batchChunks[currentChunkIdx];
+    const wordData = chunk[currentCardIdx];
+    
+    document.getElementById('batchProgressInfo').innerHTML = 
+        `<strong>${batchChunks.length} Rounds in Total</strong><br>Round ${currentChunkIdx + 1}: ${currentCardIdx + 1} of ${chunk.length}`;
+    
+    // 解析各部位文字
+    const engWord = extractEnglishWordOnly(wordData.word);
+    const chiWord = extractChineseTranslation(wordData.word);
+    const engEx = extractEnglishExampleOnly(wordData.example).replace(/<br>/g, ' '); 
+    const chiEx = extractChineseExample(wordData.example).replace(/<br>/g, ' ');
+
+    // 依指定字體排版
+    document.getElementById('batchWordArea').innerHTML = `
+        <div style="font-size: 28px; font-weight: bold; color: #2c3e50;">${engWord}</div>
+        <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 5px;">${chiWord}</div>
+    `;
+    document.getElementById('batchExampleArea').innerHTML = `
+        <div style="font-size: 20px; color: #555; margin-top: 15px;">${engEx}</div>
+        <div style="font-size: 16px; color: #555; margin-top: 5px;">${chiEx}</div>
+    `;
+    
+    // 生成專屬發音按鈕
+    const fullSpeechText = `${engWord}. ${engEx}`;
+    document.getElementById('batchAudioArea').innerHTML = `
+        <button class="audio-btn play-btn" onclick="speakText('${fullSpeechText.replace(/'/g, "\\'")}')">🔊</button>
+        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
+    `;
+
+    document.getElementById('batchBackBtn').disabled = (currentCardIdx === 0);
+    document.getElementById('batchBackBtn').style.opacity = (currentCardIdx === 0) ? '0.5' : '1';
+    document.getElementById('batchNextBtn').textContent = (currentCardIdx === chunk.length - 1) ? 'Finish Round' : 'Next →';
+}
+
+document.getElementById('batchBackBtn').onclick = () => {
+    if (currentCardIdx > 0) { currentCardIdx--; renderBatchCard(); stopSpeech(); }
+};
+
+document.getElementById('batchNextBtn').onclick = () => {
+    const chunk = batchChunks[currentChunkIdx];
+    stopSpeech();
+    if (currentCardIdx < chunk.length - 1) {
+        currentCardIdx++;
+        renderBatchCard();
+    } else {
+        document.getElementById('batchStudyModal').style.display = 'none';
+        openBatchQuiz(chunk, false);
+    }
+};
+
+function openBatchQuiz(wordsToQuiz, isOverall) {
+    currentQuizWords = [...wordsToQuiz];
+    isReviewMode = isOverall;
+    
+    document.getElementById('chkEngDone').checked = false;
+    document.getElementById('chkChiDone').checked = false;
+    resetQuizToggles();
+
+    if (isOverall) {
+        document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
+        document.getElementById('batchQuizSubtitle').textContent = "Tap Random Review to keep practicing.";
+        document.getElementById('batchShuffleBtn').innerHTML = "🔄 Random Review";
+        // 隱藏 Checkbox
+        document.getElementById('chkEngContainer').style.display = 'none';
+        document.getElementById('chkChiContainer').style.display = 'none';
+    } else {
+        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done!`;
+        document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes when finished.";
+        document.getElementById('batchShuffleBtn').innerHTML = "🔀 Shuffle";
+        // 顯示 Checkbox
+        document.getElementById('chkEngContainer').style.display = 'flex';
+        document.getElementById('chkChiContainer').style.display = 'flex';
+    }
+
+    renderBatchQuizTable();
+    updateBatchQuizFooter();
+    document.getElementById('batchQuizModal').style.display = 'block';
+}
+
+function renderBatchQuizTable(addFlash = false) {
+    const tbody = document.getElementById('batchQuizTableBody');
+    let html = '';
+    currentQuizWords.forEach(w => {
+        const eng = extractEnglishWordOnly(w.word);
+        const chi = extractChineseTranslation(w.word);
+        
+        const engClass = isEnglishHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
+        const chiClass = isChineseHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
+        
+        html += `<tr>
+            <!-- 👈 這裡調整 Column 1 英文單字大小 (目前 1.2em) -->
+            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word;"><div class="quiz-eng ${engClass}" style="font-size: 1.2em; font-weight: bold;">${eng}</div></td>
+            <!-- 中文欄位維持一般大小，避免太擠 -->
+            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word;"><div class="quiz-chi ${chiClass}" style="font-size: 1em;">${chi}</div></td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+}
+
+function resetQuizToggles() {
+    isEnglishHidden = false;
+    isChineseHidden = false;
+    const btnEng = document.getElementById('btnHideEng');
+    const btnChi = document.getElementById('btnHideChi');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    
+    btnEng.textContent = "Quiz #1: Hide English";
+    btnEng.classList.remove('disabled-btn');
+    btnChi.textContent = "Quiz #2: Hide Chinese";
+    btnChi.classList.remove('disabled-btn');
+    btnShuffle.classList.remove('disabled-btn');
+    
+    // 恢復 Checkbox 狀態
+    document.getElementById('chkEngDone').disabled = false;
+    document.getElementById('chkChiDone').disabled = false;
+}
+
+document.getElementById('btnHideEng').onclick = function() {
+    isEnglishHidden = !isEnglishHidden;
+    const btnChi = document.getElementById('btnHideChi');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    const chkEng = document.getElementById('chkEngDone');
+    let addFlash = false;
+    
+    if (isEnglishHidden) {
+        this.textContent = "Check Answers";
+        btnChi.classList.add('disabled-btn');
+        btnShuffle.classList.add('disabled-btn');
+        chkEng.disabled = true; // 隱藏時 Checkbox 失效
+    } else {
+        this.textContent = "Quiz #1: Hide English";
+        btnChi.classList.remove('disabled-btn');
+        btnShuffle.classList.remove('disabled-btn');
+        chkEng.disabled = false; // 恢復 Checkbox
+        addFlash = true; 
+    }
+    renderBatchQuizTable(addFlash);
+};
+
+document.getElementById('btnHideChi').onclick = function() {
+    isChineseHidden = !isChineseHidden;
+    const btnEng = document.getElementById('btnHideEng');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    const chkChi = document.getElementById('chkChiDone');
+    let addFlash = false;
+    
+    if (isChineseHidden) {
+        this.textContent = "Check Answers";
+        btnEng.classList.add('disabled-btn');
+        btnShuffle.classList.add('disabled-btn');
+        chkChi.disabled = true; // 隱藏時 Checkbox 失效
+    } else {
+        this.textContent = "Quiz #2: Hide Chinese";
+        btnEng.classList.remove('disabled-btn');
+        btnShuffle.classList.remove('disabled-btn');
+        chkChi.disabled = false; // 恢復 Checkbox
+        addFlash = true; 
+    }
+    renderBatchQuizTable(addFlash);
+};
+
+document.getElementById('batchShuffleBtn').onclick = async () => {
+    if (isEnglishHidden || isChineseHidden) return; 
+    
+    if (isReviewMode) {
+        const allWords = await getWordsFromCurrentSection();
+        currentQuizWords = shuffleArray([...allWords]).slice(0, 10);
+    } else {
+        currentQuizWords = shuffleArray([...currentQuizWords]);
+    }
+    renderBatchQuizTable(true); 
+};
+
+document.getElementById('chkEngDone').onchange = updateBatchQuizFooter;
+document.getElementById('chkChiDone').onchange = updateBatchQuizFooter;
+
+function updateBatchQuizFooter() {
+    const footer = document.getElementById('batchQuizFooter');
+    const engDone = document.getElementById('chkEngDone').checked;
+    const chiDone = document.getElementById('chkChiDone').checked;
+    
+    if (isReviewMode) {
+        footer.innerHTML = `
+            <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('sectionSelectModal').style.display='block';" style="background-color: #5dade2; padding: 12px 20px;">📋 選範圍 / 測驗</button>
+            <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='none';" style="background-color: #6c757d; padding: 12px 20px;">🏠 回上頁</button>
+        `;
+    } else {
+        if (engDone && chiDone) {
+            if (currentChunkIdx < batchChunks.length - 1) {
+                footer.innerHTML = `<button class="study-partner-btn" onclick="startNextBatchRound()" style="background-color: #27ae60; width: 100%;">Next Round ➡️</button>`;
+            } else {
+                footer.innerHTML = `<button class="study-partner-btn" onclick="startOverallReview()" style="background-color: #27ae60; width: 100%;">Overall Review 🔎</button>`;
+            }
+        } else {
+            footer.innerHTML = '';
+        }
+    }
+}
+
+function startNextBatchRound() {
+    currentChunkIdx++;
+    currentCardIdx = 0;
+    document.getElementById('batchQuizModal').style.display = 'none';
+    document.getElementById('batchStudyModal').style.display = 'block';
+    renderBatchCard();
+}
+
+async function startOverallReview() {
+    document.getElementById('batchQuizModal').style.display = 'none';
+    const allWords = await getWordsFromCurrentSection();
+    // 依據規則：若不滿 10 個就顯示全部，若 >=10 則隨機抽 10 個
+    const reviewAmount = allWords.length < 10 ? allWords.length : 10;
+    const reviewWords = shuffleArray([...allWords]).slice(0, reviewAmount);
+    openBatchQuiz(reviewWords, true);
+}
+// ================= 替換終點 4 =================
+// ================= 替換終點 4 =================
 
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
