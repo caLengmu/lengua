@@ -1598,7 +1598,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.23)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.24)</span>
         </h1>
 
         <div class="button-categories">
@@ -1747,9 +1747,9 @@
                 <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Important Notice</h2>
                 <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理（refresh）🔄」以獲取更新！</strong></p>
-                    <p style="margin-bottom: 0; text-align: center;">2. 本網頁的發音仰賴「文字轉語音」（text to speech）功能，而手機（尤其是Android系統）有時會更新此功能，導致🔊無法運作，重開機即可解決。</p><br>
+                    <p style="margin-bottom: 0; text-align: center;">2. 🔊若無法運作，可能是手機更新了「文字轉語音」（text to speech）功能，重新開機即可解決。</p><br>
 <p style="margin-bottom: 0; text-align: center;">
-3. 部分單字的名詞與動詞發音不同，為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>to record（動詞）🆚 record（名詞）</p><br>
+3. 有些單字可作動詞或名詞使用，但發音不同。為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>to record（動詞）🆚 record（名詞）</p><br>
 <p style="margin-bottom: 0; text-align: center;">
 4. 教材更新: <br>📚 課本: L1 單
 <br>✍ 歷屆試題: 115
@@ -5070,7 +5070,7 @@ function renderBatchCard() {
 
     // 2. 調整單字與中譯大小 (👈 這裡可以調參數)
     document.getElementById('batchWordArea').innerHTML = `
-        <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
+        <div style="font-size: 26px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
         <div style="font-size: 20px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
     `;
     // 3. 調整例句與中譯大小 (👈 這裡可以調參數)
@@ -5109,6 +5109,7 @@ document.getElementById('batchNextBtn').onclick = () => {
 };
 
 // ================= 替換起點 5 (Quiz邏輯與閃爍特效) =================
+// ================= 替換起點 1 (加入自動捲動到頂部) =================
 function openBatchQuiz(wordsToQuiz, isOverall) {
     currentQuizWords = [...wordsToQuiz];
     isReviewMode = isOverall;
@@ -5119,13 +5120,13 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
 
     if (isOverall) {
         document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
-        document.getElementById('batchQuizSubtitle').textContent = "Tap 🔄 Random Review to practice a new set of vocabulary.";
+        document.getElementById('batchQuizSubtitle').textContent = "Tap Random Review to keep practicing.";
         document.getElementById('batchShuffleBtn').innerHTML = "🔄 Random Review";
         // 隱藏 Checkbox，只留下按鈕
         document.getElementById('chkEngDone').style.display = 'none';
         document.getElementById('chkChiDone').style.display = 'none';
     } else {
-        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done!`;
+        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done! 🎉`;
         document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes when finished.";
         document.getElementById('batchShuffleBtn').innerHTML = "🔀 Shuffle";
         // 顯示 Checkbox
@@ -5136,7 +5137,11 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
     renderBatchQuizTable();
     updateBatchQuizFooter();
     document.getElementById('batchQuizModal').style.display = 'block';
+    
+    // 新增：強制將該彈出視窗的捲軸歸零，確保永遠從最上方開始顯示
+    document.getElementById('batchQuizModal').scrollTop = 0;
 }
+// ================= 替換終點 1 =================
 
 // ================= 替換起點 1 (加入 🔊 喇叭與防作弊隱藏) =================
 function renderBatchQuizTable(addFlash = false) {
