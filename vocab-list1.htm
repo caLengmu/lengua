@@ -1518,14 +1518,16 @@
     #monthly-grid { grid-template-columns: 1fr !important; }
 }
 /* ================= 替換起點 (新增樣式) ================= */
+/* ================= 替換起點 1 (更新熟悉度燈號為紅色系) ================= */
 /* Familiarity Levels (熟悉度燈號) */
 .fam-btn {
     background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 8px; flex-shrink: 0; outline: none; transition: transform 0.2s;
 }
 .fam-btn:hover { transform: scale(1.1); }
-.fam-level-0::before { content: '⚪⚪'; }
-.fam-level-1::before { content: '🟢⚪'; }
-.fam-level-2::before { content: '🟢🟢'; }
+.fam-level-0::before { content: '🔴🔴'; }
+.fam-level-1::before { content: '🔴⚪'; }
+.fam-level-2::before { content: '⚪⚪'; }
+/* ================= 替換終點 1 ================= */
 
 /* Mode Selection Modals (模式選擇按鈕) */
 .mode-btn {
@@ -1598,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.22)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.25)</span>
         </h1>
 
         <div class="button-categories">
@@ -1747,9 +1749,9 @@
                 <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Important Notice</h2>
                 <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理（refresh）🔄」以獲取更新！</strong></p>
-                    <p style="margin-bottom: 0; text-align: center;">2. 本網頁的發音仰賴「文字轉語音」（text to speech）功能，而手機（尤其是Android系統）有時會更新此功能，導致🔊無法運作，重開機即可解決。</p><br>
+                    <p style="margin-bottom: 0; text-align: center;">2. 🔊若無法運作，可能是手機更新了「文字轉語音」（text to speech）功能，重新開機即可解決。</p><br>
 <p style="margin-bottom: 0; text-align: center;">
-3. 部分單字的名詞與動詞發音不同，為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>to record（動詞）🆚 record（名詞）</p><br>
+3. 有些單字可作動詞或名詞使用，但發音不同。為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>to record（動詞）🆚 record（名詞）</p><br>
 <p style="margin-bottom: 0; text-align: center;">
 4. 教材更新: <br>📚 課本: L1 單
 <br>✍ 歷屆試題: 115
@@ -1925,16 +1927,17 @@
             </div>
         </div>
         <!-- ================= 替換起點 1 (單字熟悉度圖例說明) ================= -->
+<!-- ================= 替換起點 2 (更新單字管理說明) ================= -->
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 20px; text-align: left; font-size: 16px; color: #2c3e50; line-height: 1.6; font-weight: bold;">
-            <!-- ================= 替換起點 2 (強制垂直四行) ================= -->
             <div style="margin-bottom: 8px; color: #e74c3c;">請按指示設定單字的熟悉度：</div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div>1. ⚪⚪: 很不熟</div>
-                <div>2. 🟢⚪: 有點熟</div>
-                <div>3. 🟢🟢: 很熟</div>
+                <div>1. 🔴🔴: 很不熟 (預設)</div>
+                <div>2. 🔴⚪: 有點熟</div>
+                <div>3. ⚪⚪: 很熟</div>
                 <div>4. ⬜ (取消勾選): 熟到不用再複習</div>
             </div>
         </div>
+<!-- ================= 替換終點 2 ================= -->
 <!-- ================= 替換終點 2 ================= -->
 <!-- ================= 替換終點 1 ================= -->
         <div id="overallVocabList"></div>
@@ -4651,26 +4654,50 @@ async function populateOverallVocabList(lessonKey) {
     }
 }
 
+// ================= 替換起點 3 (加入取消勾選連動燈號的智慧邏輯) =================
 function attachOverallVocabListeners(lessonKey) {
     const sectionAllCheckboxes = document.querySelectorAll('.section-checkbox-all');
     const wordCheckboxes = document.querySelectorAll('.word-checkbox');
     const famBtns = document.querySelectorAll('.fam-btn');
 
+    // 1. 處理標題的全選與全取消
     sectionAllCheckboxes.forEach(sectionCb => {
         sectionCb.addEventListener('change', function() {
             const sectionIndex = this.getAttribute('data-section-index');
             const isChecked = this.checked;
             document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`).forEach(wordCb => {
                 wordCb.checked = isChecked;
+                
+                // 🎯 智慧連動：群組取消勾選變 ⚪⚪(2)，重新勾選變 🔴🔴(0)
+                const wordIndex = wordCb.getAttribute('data-word-index');
+                const famBtn = document.querySelector(`.fam-btn[data-section-index="${sectionIndex}"][data-word-index="${wordIndex}"]`);
+                if (famBtn) {
+                    const newLevel = isChecked ? 0 : 2;
+                    famBtn.setAttribute('data-level', newLevel);
+                    famBtn.className = `fam-btn fam-level-${newLevel}`;
+                }
             });
             updateSectionCountText(sectionIndex);
         });
     });
 
+    // 2. 處理個別單字的勾選動作
     wordCheckboxes.forEach(wordCb => {
         wordCb.addEventListener('change', function() {
             const sectionIndex = this.getAttribute('data-section-index');
+            
+            // 🎯 智慧連動：單字取消勾選變 ⚪⚪(2)，重新勾選變 🔴🔴(0)
+            const wordIndex = this.getAttribute('data-word-index');
+            const famBtn = document.querySelector(`.fam-btn[data-section-index="${sectionIndex}"][data-word-index="${wordIndex}"]`);
+            if (famBtn) {
+                const newLevel = this.checked ? 0 : 2;
+                famBtn.setAttribute('data-level', newLevel);
+                famBtn.className = `fam-btn fam-level-${newLevel}`;
+            }
+
             updateSectionCountText(sectionIndex);
+            
+            // 檢查是否需要同步改變群組全選框的狀態
             const relatedWords = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`);
             const allChecked = Array.from(relatedWords).every(cb => cb.checked);
             const sectionCb = document.querySelector(`.section-checkbox-all[data-section-index="${sectionIndex}"]`);
@@ -4678,12 +4705,28 @@ function attachOverallVocabListeners(lessonKey) {
         });
     });
 
+    // 3. 處理燈號的點擊切換
     famBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             let lvl = parseInt(this.getAttribute('data-level'));
             lvl = (lvl + 1) % 3; // 循環 0 -> 1 -> 2 -> 0
             this.setAttribute('data-level', lvl);
             this.className = `fam-btn fam-level-${lvl}`;
+            
+            // 🎯 智慧防呆：如果使用者手動點擊燈號，代表想要複習，自動幫他把前面的 checkbox 打勾！
+            const sectionIndex = this.getAttribute('data-section-index');
+            const wordIndex = this.getAttribute('data-word-index');
+            const wordCb = document.querySelector(`.word-checkbox[data-section-index="${sectionIndex}"][data-word-index="${wordIndex}"]`);
+            
+            if (wordCb && !wordCb.checked) {
+                wordCb.checked = true;
+                updateSectionCountText(sectionIndex);
+                
+                const relatedWords = document.querySelectorAll(`.word-checkbox[data-section-index="${sectionIndex}"]`);
+                const allChecked = Array.from(relatedWords).every(cb => cb.checked);
+                const sectionCb = document.querySelector(`.section-checkbox-all[data-section-index="${sectionIndex}"]`);
+                if (sectionCb) sectionCb.checked = allChecked;
+            }
         });
     });
 
@@ -4693,6 +4736,7 @@ function attachOverallVocabListeners(lessonKey) {
         if (countSpan) countSpan.textContent = `(${checkedCount} items checked)`;
     }
 }
+// ================= 替換終點 3 =================
 
 async function saveOverallVocabState() {
     const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
@@ -5048,18 +5092,18 @@ document.getElementById('batchLearnBtn').addEventListener('click', async () => {
 });
 
 // ================= 替換起點 4 (渲染卡片與雙欄測驗邏輯更新) =================
+// ================= 替換起點 1 (加入單字卡自動捲動到頂部) =================
 function renderBatchCard() {
     const chunk = batchChunks[currentChunkIdx];
     const wordData = chunk[currentCardIdx];
     
-    // ================= 替換起點 4 (美化進度與參數化字體) =================
     // 1. 進度顯示美化 (加入圓角標籤與對比色彩)
     document.getElementById('batchProgressInfo').innerHTML = `
         <div style="display: inline-block; background-color: #f1c40f; color: #2c3e50; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            Total Rounds: ${batchChunks.length}
+            Total: ${batchChunks.length} Rounds
         </div>
         <div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-top: 10px; letter-spacing: 1px;">
-            Round ${currentChunkIdx + 1} : <span style="color: #2c3e50;">${currentCardIdx + 1} of ${chunk.length}</span>
+            Round ${currentChunkIdx + 1} : <span style="color: #2c3e50;">${currentCardIdx + 1} / ${chunk.length}</span>
         </div>
     `;
     
@@ -5071,14 +5115,13 @@ function renderBatchCard() {
     // 2. 調整單字與中譯大小 (👈 這裡可以調參數)
     document.getElementById('batchWordArea').innerHTML = `
         <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
-        <div style="font-size: 20px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
+        <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
     `;
     // 3. 調整例句與中譯大小 (👈 這裡可以調參數)
     document.getElementById('batchExampleArea').innerHTML = `
-        <div style="font-size: 24px; color: #555; margin-top: 15px; text-align: center;">${engEx}</div>
-        <div style="font-size: 18px; color: #555; margin-top: 5px; text-align: center;">${chiEx}</div>
+        <div style="font-size: 23px; color: #555; margin-top: 15px; text-align: center;">${engEx}</div>
+        <div style="font-size: 19px; color: #555; margin-top: 5px; text-align: center;">${chiEx}</div>
     `;
-// ================= 替換終點 4 =================
     
     // 生成專屬發音按鈕
     const fullSpeechText = `${engWord}. ${engEx}`;
@@ -5090,8 +5133,11 @@ function renderBatchCard() {
     document.getElementById('batchBackBtn').disabled = (currentCardIdx === 0);
     document.getElementById('batchBackBtn').style.opacity = (currentCardIdx === 0) ? '0.5' : '1';
     document.getElementById('batchNextBtn').textContent = (currentCardIdx === chunk.length - 1) ? 'Finish Round' : 'Next →';
+    
+    // 🎯 新增：強制將單字卡視窗的捲軸歸零，確保每次換字都從最上方顯示
+    document.getElementById('batchStudyModal').scrollTop = 0;
 }
-
+// ================= 替換終點 1 =================
 document.getElementById('batchBackBtn').onclick = () => {
     if (currentCardIdx > 0) { currentCardIdx--; renderBatchCard(); stopSpeech(); }
 };
@@ -5109,6 +5155,7 @@ document.getElementById('batchNextBtn').onclick = () => {
 };
 
 // ================= 替換起點 5 (Quiz邏輯與閃爍特效) =================
+// ================= 替換起點 1 (加入自動捲動到頂部) =================
 function openBatchQuiz(wordsToQuiz, isOverall) {
     currentQuizWords = [...wordsToQuiz];
     isReviewMode = isOverall;
@@ -5119,13 +5166,13 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
 
     if (isOverall) {
         document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
-        document.getElementById('batchQuizSubtitle').textContent = "Tap 🔄 Random Review to practice a new set of vocabulary.";
+        document.getElementById('batchQuizSubtitle').textContent = "Tap Random Review to keep practicing.";
         document.getElementById('batchShuffleBtn').innerHTML = "🔄 Random Review";
         // 隱藏 Checkbox，只留下按鈕
         document.getElementById('chkEngDone').style.display = 'none';
         document.getElementById('chkChiDone').style.display = 'none';
     } else {
-        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done!`;
+        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done! 🎉`;
         document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes when finished.";
         document.getElementById('batchShuffleBtn').innerHTML = "🔀 Shuffle";
         // 顯示 Checkbox
@@ -5136,8 +5183,14 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
     renderBatchQuizTable();
     updateBatchQuizFooter();
     document.getElementById('batchQuizModal').style.display = 'block';
+    
+    // 新增：強制將該彈出視窗的捲軸歸零，確保永遠從最上方開始顯示
+    document.getElementById('batchQuizModal').scrollTop = 0;
 }
+// ================= 替換終點 1 =================
 
+// ================= 替換起點 1 (加入 🔊 喇叭與防作弊隱藏) =================
+// ================= 替換起點 1 (加入單格個別點擊揭曉功能) =================
 function renderBatchQuizTable(addFlash = false) {
     const tbody = document.getElementById('batchQuizTableBody');
     let html = '';
@@ -5148,13 +5201,88 @@ function renderBatchQuizTable(addFlash = false) {
         const engClass = isEnglishHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
         const chiClass = isChineseHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
         
+        const safeSpeakWord = eng.replace(/'/g, "\\'");
+        
+        // 喇叭加上 event.stopPropagation() 防止點擊時觸發外層的 td onclick
+        const speakerHtml = `<span class="speaker-icon" style="cursor: pointer; font-size: 1.1em; margin-right: 8px; user-select: none; ${isEnglishHidden ? 'visibility: hidden;' : ''}" onclick="event.stopPropagation(); speakText('${safeSpeakWord}')">🔊</span>`;
+        
+        // 將 td 加上 onclick 事件與游標變化，點擊時呼叫 revealSingleCell
         html += `<tr>
-            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word;"><div class="quiz-eng ${engClass}" style="font-size: 1.2em; font-weight: bold;">${eng}</div></td>
-            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word;"><div class="quiz-chi ${chiClass}" style="font-size: 1.2em;">${chi}</div></td>
+            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word; cursor: ${isEnglishHidden ? 'pointer' : 'default'};" onclick="if(isEnglishHidden) revealSingleCell(this.querySelector('.quiz-eng'), 'eng')">
+                <div class="quiz-eng ${engClass}" style="font-size: 1.2em; font-weight: bold; width: 100%; height: 100%;">
+                    ${speakerHtml}<span>${eng}</span>
+                </div>
+            </td>
+            <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word; cursor: ${isChineseHidden ? 'pointer' : 'default'};" onclick="if(isChineseHidden) revealSingleCell(this.querySelector('.quiz-chi'), 'chi')">
+                <div class="quiz-chi ${chiClass}" style="font-size: 1.2em; width: 100%; height: 100%;">${chi}</div>
+            </td>
         </tr>`;
     });
     tbody.innerHTML = html;
 }
+
+// 點擊個別隱藏單字的處理函數
+function revealSingleCell(element, type) {
+    if (element && element.classList.contains('hidden-cell')) {
+        element.classList.remove('hidden-cell');
+        element.classList.add('flash-reveal'); // 加入輕微閃爍特效
+        
+        // 如果是英文區塊，恢復喇叭顯示
+        if (type === 'eng') {
+            const speaker = element.querySelector('.speaker-icon');
+            if (speaker) speaker.style.visibility = 'visible';
+        }
+        
+        // 檢查是否全部都點開了
+        checkAllRevealed();
+    }
+}
+
+// 檢查是否所有隱藏的格子都被點開了
+function checkAllRevealed() {
+    if (isEnglishHidden) {
+        const remaining = document.querySelectorAll('.quiz-eng.hidden-cell').length;
+        if (remaining === 0) {
+            isEnglishHidden = false; // 系統自動取消隱藏狀態
+            resetUIFromReveal();
+        }
+    } else if (isChineseHidden) {
+        const remaining = document.querySelectorAll('.quiz-chi.hidden-cell').length;
+        if (remaining === 0) {
+            isChineseHidden = false; // 系統自動取消隱藏狀態
+            resetUIFromReveal();
+        }
+    }
+}
+
+// 當所有格子都被點開時，自動還原按鈕與 Checkbox 狀態
+function resetUIFromReveal() {
+    const btnEng = document.getElementById('btnHideEng');
+    const btnChi = document.getElementById('btnHideChi');
+    const btnShuffle = document.getElementById('batchShuffleBtn');
+    const chkEng = document.getElementById('chkEngDone');
+    const chkChi = document.getElementById('chkChiDone');
+    
+    // 恢復所有按鈕的初始狀態，並移除閃爍
+    btnChi.textContent = "Quiz #1: Hide Chinese";
+    btnChi.classList.remove('blinking-text', 'disabled-btn');
+    
+    btnEng.textContent = "Quiz #2: Hide English";
+    btnEng.classList.remove('blinking-text', 'disabled-btn');
+    
+    btnShuffle.classList.remove('disabled-btn');
+    
+    // 解鎖 Checkbox
+    chkEng.disabled = false;
+    chkChi.disabled = false;
+    
+    // 將所有表格儲存格的游標恢復預設
+    document.querySelectorAll('#batchQuizTableBody td').forEach(td => {
+        td.style.cursor = 'default';
+    });
+}
+// ================= 替換終點 1 =================
+// ================= 替換終點 1 =================
 
 function resetQuizToggles() {
     isEnglishHidden = false;
