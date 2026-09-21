@@ -1813,7 +1813,7 @@
     <div class="modal-content" style="max-width: 600px; text-align: center;">
         <span class="close" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
         
-        <h3 id="batchQuizTitle" style="padding-top: 20px; color: #28a745; margin-bottom: 10px; font-size: 24px;">Congrats! Round N is done!</h3>
+        <h3 id="batchQuizTitle" style="padding-top: 20px; color: #28a745; margin-bottom: 10px; font-size: 24px;">Congrats! Round N is done! 🎉</h3>
         <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 1.2em; font-weight: bold;">Time for two quizzes. Check ✅ the boxes when finished.</p>
 
         <!-- 🎯 新增：專屬 Overall Review 的頂部重新抽題按鈕 (預設隱藏) -->
@@ -5173,7 +5173,7 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
         document.getElementById('chkEngDone').style.display = 'none';
         document.getElementById('chkChiDone').style.display = 'none';
     } else {
-        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done!`;
+        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done! 🎉`;
         document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes when finished.";
         
         // 隱藏頂部按鈕，顯示打勾 Checkbox
