@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.27)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.32)</span>
         </h1>
 
         <div class="button-categories">
@@ -1673,8 +1673,7 @@
             </div>
 
 <!-- 樞紐控制按鈕區：加上 padding-bottom 讓下方多一點留白，視覺更平衡 -->
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px; padding-top: 15px; padding-bottom: 25px; border-top: 2px dashed #ccc;">
-                <!-- 解決三-2: 對調 Start Learning 跟 Walk me through 顏色 -->
+<div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px; padding-top: 15px; padding-bottom: 25px; border-top: 2px dashed #ccc;">
                 <button class="study-partner-btn" id="startLearningBtn" style="width: 100%; background-color: #3498db; font-size: 20px;">
                     🚀 Start Learning! <br>(開始學習)
                 </button>
@@ -1683,6 +1682,10 @@
                 </button>
                 <button class="quiz-btn" id="listenChooseBtn" style="width: 100%;">
                     🎧 Listening Quiz <br>(聽力測驗)
+                </button>
+<!-- 🎯 新增：直達雙欄測驗的捷徑按鈕 -->
+                <button class="quiz-btn" id="scratchOffBtn" style="width: 100%; background-color: #e74c3c; color: white;">
+                    ☘️ Scratch-off Quiz <br>(單字記憶刮刮樂)
                 </button>
             </div>
         </div>
@@ -1750,8 +1753,12 @@
                 <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
                     <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理（refresh）🔄」以獲取更新！</strong></p>
                     <p style="margin-bottom: 0; text-align: center;">2. 🔊若無法運作，可能是手機更新了「文字轉語音」（text to speech）功能，重新開機即可解決。</p><br>
-<p style="margin-bottom: 0; text-align: center;">
-3. 有些單字可作動詞或名詞使用，但發音不同。為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>to record（動詞）🆚 record（名詞）</p><br>
+<!-- ================= 替換起點 ================= -->
+<p style="margin-bottom: 0; text-align: center; line-height: 2;">
+3. 有些單字可作動詞或名詞使用，但發音不同。為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>
+<span style="cursor: pointer; user-select: none; font-size: 1.2em; display: inline-block; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="speakText('to record')">🔊</span> to record（動詞） 🆚 <span style="cursor: pointer; user-select: none; font-size: 1.2em; display: inline-block; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="speakText('record')">🔊</span> record（名詞）
+</p><br>
+<!-- ================= 替換終點 ================= -->
 <p style="margin-bottom: 0; text-align: center;">
 4. 教材更新: <br>📚 課本: L1 單
 <br>✍ 歷屆試題: 115
@@ -1773,6 +1780,22 @@
         <h2 style="color: #2c3e50; margin-bottom: 20px;">Choose Review Style</h2>
         <button class="mode-btn" onclick="startStudySession('inOrder')">In order (照順序)</button>
         <button class="mode-btn" onclick="startStudySession('randomPriority')" style="background-color: #e67e22;">Random + Priority<br>(隨機 + 不熟優先)</button>
+    </div>
+</div>
+
+<!-- 🎯 新增：Scratch-off Quiz 模式選擇 Modal -->
+<div id="scratchModeModal" class="modal" style="z-index: 1200;">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <span class="close" onclick="document.getElementById('scratchModeModal').style.display='none'">&times;</span>
+        <h2 style="color: #2c3e50; margin-bottom: 15px;">Choose Quiz Style</h2>
+        
+        <!-- 💡 新增的提醒說明 -->
+        <div style="background-color: #fdf2e9; color: #d35400; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 15px; text-align: left; font-weight: bold; line-height: 1.5;">
+            💡 Reminder：<br>此為快速驗收功能。建議先點擊 🚀 Start Learning! 進行完整學習（包含例句與發音），避免直接進來死背中英翻譯喔！
+        </div>
+
+        <button class="mode-btn" onclick="startScratchOffSession('inOrder')">In order (照順序)</button>
+        <button class="mode-btn" onclick="startScratchOffSession('randomPriority')" style="background-color: #e67e22;">Random + Priority<br>(隨機 + 不熟優先)</button>
     </div>
 </div>
 
@@ -1811,7 +1834,7 @@
 <!-- Batch Quiz Modal (分批學習 - 雙欄測驗) -->
 <div id="batchQuizModal" class="modal" style="z-index: 1250;">
     <div class="modal-content" style="max-width: 600px; text-align: center;">
-        <span class="close" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
+<span class="close" onclick="closeBatchQuizModal()">&times;</span>
         
         <h3 id="batchQuizTitle" style="padding-top: 20px; color: #28a745; margin-bottom: 10px; font-size: 24px;">Congrats! Round N is done! 🎉</h3>
         <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 1.2em; font-weight: bold;">Time for two quizzes. Check ✅ the boxes when finished.</p>
@@ -4363,7 +4386,8 @@ async function startListenChooseQuiz(mode = '8qs') {
 }
 // ================= 替換終點 5-2 =================
 
-        // Shuffle array
+// ================= 替換起點 2 (權重抽題演算法) =================
+        // Shuffle array (一般洗牌)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -4371,6 +4395,43 @@ async function startListenChooseQuiz(mode = '8qs') {
             }
             return array;
         }
+
+        // 🎯 新增：設定熟悉度對應的抽中權重 (倍率)
+        const REVIEW_WEIGHTS = {
+            0: 2.0,  // 🔴🔴 很不熟 (2倍機率)
+            1: 1.5,  // 🔴⚪ 有點熟 (1.5倍機率)
+            2: 1.0   // ⚪⚪ 很熟 (1倍機率)
+        };
+
+        // 🎯 新增：輪盤法抽題 (Weighted Random Selection)
+        function getWeightedRandomWords(words, count) {
+            // 防呆：如果總字數小於等於欲抽取的數量，直接全部打亂回傳
+            if (words.length <= count) return shuffleArray([...words]);
+            
+            let pool = [...words];
+            let result = [];
+            
+            for (let i = 0; i < count; i++) {
+                // 1. 計算目前池子裡所有單字的總權重
+                let totalWeight = pool.reduce((sum, w) => sum + (REVIEW_WEIGHTS[w.level !== undefined ? w.level : 0] || 1.0), 0);
+                
+                // 2. 轉輪盤射飛鏢 (0 ~ totalWeight 之間的隨機數)
+                let random = Math.random() * totalWeight;
+                let cumulativeWeight = 0;
+                
+                // 3. 找出飛鏢落在哪個區塊
+                for (let j = 0; j < pool.length; j++) {
+                    cumulativeWeight += (REVIEW_WEIGHTS[pool[j].level !== undefined ? pool[j].level : 0] || 1.0);
+                    if (random <= cumulativeWeight) {
+                        result.push(pool[j]);
+                        pool.splice(j, 1); // 抽中後移出池子，避免重複
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+// ================= 替換終點 2 =================        
 
         // ================= 替換起點 6 =================
 function loadQuizQuestion() {
@@ -5068,6 +5129,7 @@ async function clearAllQuizHistory() {
 }
 
 // ================= 替換起點 4 (分批學習與雙欄測驗邏輯) =================
+// ================= 替換起點 3 (分批學習與捷徑邏輯) =================
 let batchChunks = [];
 let currentChunkIdx = 0;
 let currentCardIdx = 0;
@@ -5075,31 +5137,65 @@ let isReviewMode = false;
 let currentQuizWords = [];
 let isEnglishHidden = false;
 let isChineseHidden = false;
+let isScratchOffOnlyMode = false; // 🎯 新增：標記是否為純刮刮樂直達模式
 
 document.getElementById('batchLearnBtn').addEventListener('click', async () => {
     const allWords = await getWordsFromCurrentSection();
     batchChunks = [];
-    // 將所有單字每 10 個切成一組
     for (let i = 0; i < allWords.length; i += 10) {
         batchChunks.push(allWords.slice(i, i + 10));
     }
     currentChunkIdx = 0;
     currentCardIdx = 0;
+    isScratchOffOnlyMode = false; // 正常分批學習
     document.getElementById('learningContentModal').style.display = 'none';
     document.getElementById('batchStudyModal').style.display = 'block';
     renderBatchCard();
 });
 
-// ================= 替換起點 4 (渲染卡片與雙欄測驗邏輯更新) =================
-// ================= 替換起點 1 (加入單字卡自動捲動到頂部) =================
+// 🎯 新增：純刮刮樂測驗的啟動邏輯
+async function startScratchOffSession(mode = 'inOrder') {
+    if (!updateSelectedSections()) {
+        alert('Please select at least one section. (請至少勾選一個範圍)');
+        return;
+    }
+    const selectedLesson = document.querySelector('.vocab-btn.active')?.getAttribute('data-lesson');
+    if (!selectedLesson) return;
+
+    document.getElementById('scratchModeModal').style.display = 'none';
+    document.getElementById('sectionSelectModal').style.display = 'none';
+
+    currentLessonData = vocabDatabase[selectedLesson];
+    let rawWords = await getWordsFromCurrentSection();
+
+    if (mode === 'randomPriority') {
+        let lvl0 = rawWords.filter(w => w.level === 0);
+        let lvl1 = rawWords.filter(w => w.level === 1);
+        let lvl2 = rawWords.filter(w => w.level === 2);
+        flatWordsList = [...shuffleArray(lvl0), ...shuffleArray(lvl1), ...shuffleArray(lvl2)];
+    } else {
+        flatWordsList = rawWords;
+    }
+
+    // 將單字切塊，直接跳過單字卡進入測驗
+    batchChunks = [];
+    for (let i = 0; i < flatWordsList.length; i += 10) {
+        batchChunks.push(flatWordsList.slice(i, i + 10));
+    }
+
+    currentChunkIdx = 0;
+    isScratchOffOnlyMode = true; // 標記為純測驗模式
+    document.getElementById('learningContentModal').style.display = 'none';
+    openBatchQuiz(batchChunks[currentChunkIdx], false);
+}
+
 function renderBatchCard() {
     const chunk = batchChunks[currentChunkIdx];
     const wordData = chunk[currentCardIdx];
     
-    // 1. 進度顯示美化 (加入圓角標籤與對比色彩)
     document.getElementById('batchProgressInfo').innerHTML = `
         <div style="display: inline-block; background-color: #f1c40f; color: #2c3e50; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            Total: ${batchChunks.length} Rounds
+            Total Rounds: ${batchChunks.length}
         </div>
         <div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-top: 10px; letter-spacing: 1px;">
             Round ${currentChunkIdx + 1} : <span style="color: #2c3e50;">${currentCardIdx + 1} / ${chunk.length}</span>
@@ -5111,18 +5207,15 @@ function renderBatchCard() {
     const engEx = extractEnglishExampleOnly(wordData.example).replace(/<br>/g, ' '); 
     const chiEx = extractChineseExample(wordData.example).replace(/<br>/g, ' ');
 
-    // 2. 調整單字與中譯大小 (👈 這裡可以調參數)
     document.getElementById('batchWordArea').innerHTML = `
         <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
         <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
     `;
-    // 3. 調整例句與中譯大小 (👈 這裡可以調參數)
     document.getElementById('batchExampleArea').innerHTML = `
         <div style="font-size: 23px; color: #555; margin-top: 15px; text-align: center;">${engEx}</div>
         <div style="font-size: 19px; color: #555; margin-top: 5px; text-align: center;">${chiEx}</div>
     `;
     
-    // 生成專屬發音按鈕
     const fullSpeechText = `${engWord}. ${engEx}`;
     document.getElementById('batchAudioArea').innerHTML = `
         <button class="audio-btn play-btn" onclick="speakText('${fullSpeechText.replace(/'/g, "\\'")}')">🔊</button>
@@ -5133,10 +5226,9 @@ function renderBatchCard() {
     document.getElementById('batchBackBtn').style.opacity = (currentCardIdx === 0) ? '0.5' : '1';
     document.getElementById('batchNextBtn').textContent = (currentCardIdx === chunk.length - 1) ? 'Finish Round' : 'Next →';
     
-    // 🎯 新增：強制將單字卡視窗的捲軸歸零，確保每次換字都從最上方顯示
     document.getElementById('batchStudyModal').scrollTop = 0;
 }
-// ================= 替換終點 1 =================
+
 document.getElementById('batchBackBtn').onclick = () => {
     if (currentCardIdx > 0) { currentCardIdx--; renderBatchCard(); stopSpeech(); }
 };
@@ -5153,9 +5245,16 @@ document.getElementById('batchNextBtn').onclick = () => {
     }
 };
 
-// ================= 替換起點 5 (Quiz邏輯與閃爍特效) =================
-// ================= 替換起點 1 (加入自動捲動到頂部) =================
-// ================= 替換起點 2 =================
+// ================= 替換起點 (終極修復：包含刮刮樂表格、自動洗牌、強制置頂) =================
+function closeBatchQuizModal() {
+    document.getElementById('batchQuizModal').style.display = 'none';
+    if (isScratchOffOnlyMode) {
+        document.getElementById('sectionSelectModal').style.display = 'block';
+    } else {
+        document.getElementById('learningContentModal').style.display = 'block';
+    }
+}
+
 function openBatchQuiz(wordsToQuiz, isOverall) {
     currentQuizWords = [...wordsToQuiz];
     isReviewMode = isOverall;
@@ -5168,15 +5267,13 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
         document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
         document.getElementById('batchQuizSubtitle').textContent = "Tap 🔄 Random Review for a new set of vocabulary.";
         
-        // 顯示頂部的 Random Review，隱藏打勾 Checkbox
         document.getElementById('btnRandomReviewTop').style.display = 'inline-block';
         document.getElementById('chkEngDone').style.display = 'none';
         document.getElementById('chkChiDone').style.display = 'none';
     } else {
-        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done! 🎉`;
+        document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done!`;
         document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes when finished.";
         
-        // 隱藏頂部按鈕，顯示打勾 Checkbox
         document.getElementById('btnRandomReviewTop').style.display = 'none';
         document.getElementById('chkEngDone').style.display = 'inline-block';
         document.getElementById('chkChiDone').style.display = 'inline-block';
@@ -5188,7 +5285,6 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
     document.getElementById('batchQuizModal').scrollTop = 0;
 }
 
-// ================= 替換起點 (修復缺失的表格渲染與刮刮樂函數) =================
 function resetQuizToggles() {
     isEnglishHidden = false;
     isChineseHidden = false;
@@ -5208,7 +5304,7 @@ function resetQuizToggles() {
     document.getElementById('chkChiDone').disabled = false;
 }
 
-// 👇 這裡開始是您不小心遺失的畫表格與點擊核心函數，請務必一起貼上！
+// 🎯 補回：您遺失的渲染雙欄測驗與刮刮樂函數
 function renderBatchQuizTable(addFlash = false) {
     const tbody = document.getElementById('batchQuizTableBody');
     let html = '';
@@ -5220,11 +5316,8 @@ function renderBatchQuizTable(addFlash = false) {
         const chiClass = isChineseHidden ? 'hidden-cell' : (addFlash && !isEnglishHidden && !isChineseHidden ? 'flash-reveal' : '');
         
         const safeSpeakWord = eng.replace(/'/g, "\\'");
-        
-        // 喇叭加上 event.stopPropagation() 防止點擊時觸發外層的 td onclick
         const speakerHtml = `<span class="speaker-icon" style="cursor: pointer; font-size: 1.1em; margin-right: 8px; user-select: none; ${isEnglishHidden ? 'visibility: hidden;' : ''}" onclick="event.stopPropagation(); speakText('${safeSpeakWord}')">🔊</span>`;
         
-        // 將 td 加上 onclick 事件與游標變化，點擊時呼叫 revealSingleCell
         html += `<tr>
             <td style="border: 1px solid #bdc3c7; padding: 12px; word-wrap: break-word; cursor: ${isEnglishHidden ? 'pointer' : 'default'};" onclick="if(isEnglishHidden) revealSingleCell(this.querySelector('.quiz-eng'), 'eng')">
                 <div class="quiz-eng ${engClass}" style="font-size: 1.2em; font-weight: bold; width: 100%; height: 100%;">
@@ -5242,14 +5335,12 @@ function renderBatchQuizTable(addFlash = false) {
 function revealSingleCell(element, type) {
     if (element && element.classList.contains('hidden-cell')) {
         element.classList.remove('hidden-cell');
-        element.classList.add('flash-reveal'); // 加入輕微閃爍特效
+        element.classList.add('flash-reveal'); 
         
-        // 如果是英文區塊，恢復喇叭顯示
         if (type === 'eng') {
             const speaker = element.querySelector('.speaker-icon');
             if (speaker) speaker.style.visibility = 'visible';
         }
-        
         checkAllRevealed();
     }
 }
@@ -5290,11 +5381,8 @@ function resetUIFromReveal() {
         td.style.cursor = 'default';
     });
 }
-// ================= 替換終點 =================
-// ================= 替換終點 2 =================
 
-// ================= 替換起點 3 (點擊隱藏時自動洗牌與置頂) =================
-// Quiz #1 (Hide Chinese)
+// 🎯 更新：點擊隱藏按鈕時，自動洗牌＋強制畫面回到最上方
 document.getElementById('btnHideChi').onclick = function() {
     isChineseHidden = !isChineseHidden;
     const btnEng = document.getElementById('btnHideEng');
@@ -5307,11 +5395,11 @@ document.getElementById('btnHideChi').onclick = function() {
         this.textContent = "Check Answers";
         this.classList.add('blinking-text'); 
         btnEng.classList.add('disabled-btn');
-        btnRandomTop.classList.add('disabled-btn'); // 測驗中鎖定頂部按鈕
+        btnRandomTop.classList.add('disabled-btn'); 
         chkChi.disabled = true; 
         chkEng.disabled = true; 
         
-        // 🎯 關鍵：只有進入「隱藏」狀態時才洗牌 (眼前的10個字打亂)
+        // 洗牌 (僅打亂目前的 10 個字)
         currentQuizWords = shuffleArray([...currentQuizWords]);
     } else {
         this.textContent = "Quiz #1: Hide Chinese";
@@ -5320,15 +5408,12 @@ document.getElementById('btnHideChi').onclick = function() {
         btnRandomTop.classList.remove('disabled-btn');
         chkChi.disabled = false; 
         chkEng.disabled = false;
-        addFlash = true; // 解除隱藏時觸發閃爍對答案
+        addFlash = true; 
     }
     renderBatchQuizTable(addFlash);
-    
-    // 🎯 動作完成後，強制畫面回到最上方
-    document.getElementById('batchQuizModal').scrollTop = 0;
+    document.getElementById('batchQuizModal').scrollTop = 0; // 自動置頂
 };
 
-// Quiz #2 (Hide English)
 document.getElementById('btnHideEng').onclick = function() {
     isEnglishHidden = !isEnglishHidden;
     const btnChi = document.getElementById('btnHideChi');
@@ -5341,11 +5426,11 @@ document.getElementById('btnHideEng').onclick = function() {
         this.textContent = "Check Answers";
         this.classList.add('blinking-text'); 
         btnChi.classList.add('disabled-btn');
-        btnRandomTop.classList.add('disabled-btn'); // 測驗中鎖定頂部按鈕
+        btnRandomTop.classList.add('disabled-btn'); 
         chkChi.disabled = true; 
         chkEng.disabled = true; 
         
-        // 🎯 關鍵：只有進入「隱藏」狀態時才洗牌 (眼前的10個字打亂)
+        // 洗牌 (僅打亂目前的 10 個字)
         currentQuizWords = shuffleArray([...currentQuizWords]);
     } else {
         this.textContent = "Quiz #2: Hide English";
@@ -5354,28 +5439,20 @@ document.getElementById('btnHideEng').onclick = function() {
         btnRandomTop.classList.remove('disabled-btn');
         chkChi.disabled = false; 
         chkEng.disabled = false;
-        addFlash = true; // 解除隱藏時觸發閃爍對答案
+        addFlash = true; 
     }
     renderBatchQuizTable(addFlash);
-    
-    // 🎯 動作完成後，強制畫面回到最上方
-    document.getElementById('batchQuizModal').scrollTop = 0;
+    document.getElementById('batchQuizModal').scrollTop = 0; // 自動置頂
 };
-// ================= 替換終點 3 =================
 
-// ================= 替換起點 4 (整體複習的重新抽題邏輯) =================
-// 點擊上方的 Random Review (從總字庫重新抽 10 題)
+// Overall Review 頂部抽題按鈕
 document.getElementById('btnRandomReviewTop').onclick = async () => {
-    if (isEnglishHidden || isChineseHidden) return; // 雙重防呆
-    
+    if (isEnglishHidden || isChineseHidden) return; 
     const allWords = await getWordsFromCurrentSection();
-    const reviewAmount = allWords.length < 10 ? allWords.length : 10;
-    const reviewWords = shuffleArray([...allWords]).slice(0, reviewAmount);
-    
-    // 重新載入 Modal 畫面
+    // 依據不熟機率重新抽 10 題
+    const reviewWords = getWeightedRandomWords(allWords, 10);
     openBatchQuiz(reviewWords, true);
 };
-// ================= 替換終點 4 =================
 
 document.getElementById('chkEngDone').onchange = updateBatchQuizFooter;
 document.getElementById('chkChiDone').onchange = updateBatchQuizFooter;
@@ -5385,11 +5462,23 @@ function updateBatchQuizFooter() {
     const engDone = document.getElementById('chkEngDone').checked;
     const chiDone = document.getElementById('chkChiDone').checked;
     
+    const returnAction = isScratchOffOnlyMode 
+        ? "closeBatchQuizModal()" 
+        : "document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';";
+        
+    const returnText = isScratchOffOnlyMode ? "📋 選範圍 / 測驗" : "↩️ 回字彙管理";
+
     if (isReviewMode) {
-        footer.innerHTML = `
-            <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('sectionSelectModal').style.display='block';" style="background-color: #5dade2; padding: 12px 20px;">📋 選範圍 / 測驗</button>
-            <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';" style="background-color: #6c757d; padding: 12px 20px;">↩️ 回字彙管理</button>
-        `;
+        if (isScratchOffOnlyMode) {
+            footer.innerHTML = `
+                <button class="nav-btn" onclick="closeBatchQuizModal()" style="background-color: #5dade2; padding: 12px 20px;">📋 選範圍 / 測驗</button>
+            `;
+        } else {
+            footer.innerHTML = `
+                <button class="nav-btn" onclick="document.getElementById('batchQuizModal').style.display='none'; document.getElementById('sectionSelectModal').style.display='block';" style="background-color: #5dade2; padding: 12px 20px;">📋 選範圍 / 測驗</button>
+                <button class="nav-btn" onclick="${returnAction}" style="background-color: #6c757d; padding: 12px 20px;">${returnText}</button>
+            `;
+        }
     } else {
         if (engDone && chiDone) {
             if (currentChunkIdx < batchChunks.length - 1) {
@@ -5407,20 +5496,26 @@ function startNextBatchRound() {
     currentChunkIdx++;
     currentCardIdx = 0;
     document.getElementById('batchQuizModal').style.display = 'none';
-    document.getElementById('batchStudyModal').style.display = 'block';
-    renderBatchCard();
+    
+    if (isScratchOffOnlyMode) {
+        openBatchQuiz(batchChunks[currentChunkIdx], false);
+    } else {
+        const studyModal = document.getElementById('batchStudyModal');
+        studyModal.style.display = 'block';
+        renderBatchCard();
+        // 延遲置頂防呆
+        setTimeout(() => { studyModal.scrollTop = 0; }, 10);
+    }
 }
 
 async function startOverallReview() {
     document.getElementById('batchQuizModal').style.display = 'none';
     const allWords = await getWordsFromCurrentSection();
-    const reviewAmount = allWords.length < 10 ? allWords.length : 10;
-    const reviewWords = shuffleArray([...allWords]).slice(0, reviewAmount);
+    // 依據不熟機率重新抽 10 題
+    const reviewWords = getWeightedRandomWords(allWords, 10);
     openBatchQuiz(reviewWords, true);
 }
-// ================= 替換終點 5 =================
-// ================= 替換終點 4 =================
-// ================= 替換終點 4 =================
+// ================= 替換終點 =================
 
         function initializeEventListeners() {
             document.body.addEventListener('click', () => loadVoices(), { once: true });
@@ -5587,6 +5682,9 @@ lessonButtons.forEach(btn => {
             // Listen and Choose Quiz button
 document.getElementById('listenChooseBtn').addEventListener('click', () => {
     document.getElementById('quizModeModal').style.display = 'block';
+});
+document.getElementById('scratchOffBtn').addEventListener('click', () => {
+    document.getElementById('scratchModeModal').style.display = 'block';
 });
 // ================= 替換終點 7-1 =================
 document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
