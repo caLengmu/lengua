@@ -6269,15 +6269,20 @@ function displayQuizHistory(history) {
         });
         
         const percentage = item.percentage || Math.round((item.score / item.total) * 100);
-let scoreClass = 'needs-improvement';
-let scoreEmoji = '😓';  // ADD THIS LINE
-if (percentage >= 90) {
-    scoreClass = 'excellent';
-    scoreEmoji = '😄';  // ADD THIS LINE
-} else if (percentage >= 70) {
-    scoreClass = 'good';
-    scoreEmoji = '🙂';  // ADD THIS LINE
-}
+        let scoreClass = 'needs-improvement';
+        let scoreEmoji = '😓';
+
+        // 🎯 統一同測驗結算的 4 個等級與 Emoji
+        if (percentage === 100) {
+            scoreClass = 'excellent';
+            scoreEmoji = '🏆';
+        } else if (percentage >= 90) {
+            scoreClass = 'excellent';
+            scoreEmoji = '😄';
+        } else if (percentage >= 70) {
+            scoreClass = 'good';
+            scoreEmoji = '🙂';
+        }
         
         const sectionsText = item.sections && item.sections.length > 0 
             ? item.sections.join(', ') 
