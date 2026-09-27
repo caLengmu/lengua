@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.49)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.51)</span>
         </h1>
 
         <div class="button-categories">
@@ -4982,34 +4982,48 @@ function getRandomEmoji() {
     return studyEmojis[Math.floor(Math.random() * studyEmojis.length)];
 }
 
-        // Speak text
-        function speakText(text) {
-            stopSpeech();
-            const cleaned = cleanTextForTTS(text);
-            if (!cleaned) return;
+// ================= 替換起點 1 (加入重置按鈕輔助函數與語音控制) =================
+// 🎯 輔助函數：將 Example 按鈕恢復為預設的黃色播放狀態
+function resetListenExampleBtn() {
+    const btn = document.getElementById('listenExampleBtn');
+    if (btn && btn.innerHTML.includes('Stop')) {
+        btn.innerHTML = '🔊 Example';
+        btn.style.backgroundColor = '#ffc107';
+        btn.style.color = '#000';
+    }
+}
 
-            const utterance = new SpeechSynthesisUtterance(cleaned);
-            utterance.lang = 'en-US';
-            utterance.rate = speechRate;
+// Speak text
+function speakText(text) {
+    stopSpeech();
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
 
-            const voice = getEnglishVoice();
-            if (voice) utterance.voice = voice;
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = 'en-US';
+    utterance.rate = speechRate;
 
-            utterance.onend = () => {
-                currentSpeech = null;
-            };
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
 
-            currentSpeech = utterance;
-            speechSynthesis.speak(utterance);
-        }
+    utterance.onend = () => {
+        currentSpeech = null;
+        resetListenExampleBtn(); // 🎯 語音自然結束時，恢復按鈕狀態
+    };
 
-        // Stop speech
-        function stopSpeech() {
-            if (speechSynthesis.speaking || speechSynthesis.pending) {
-                speechSynthesis.cancel();
-            }
-            currentSpeech = null;
-        }
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+
+// Stop speech
+function stopSpeech() {
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+    }
+    currentSpeech = null;
+    resetListenExampleBtn(); // 🎯 語音被強制停止時，立刻恢復按鈕狀態
+}
+// ================= 替換終點 1 =================
 
             // Update Bottom Sticky Progress Bar (修復邏輯：看到表格才顯示，看到底端按鈕就隱藏)
         function updateLearningProgress() {
@@ -5351,8 +5365,10 @@ async function startListenChooseQuiz(mode = '8qs') {
         }
 // ================= 替換終點 2 =================        
 
-        // ================= 替換起點 6 =================
+// ================= 替換起點 2 (確保切換題目時停止語音與重置按鈕) =================
 function loadQuizQuestion() {
+    stopSpeech(); // 🎯 新增：確保進入新題目時，中止所有舊語音並重置 Example 按鈕
+
     if (currentQuizIndex >= quizWords.length) {
         showQuizComplete();
         return;
@@ -5381,19 +5397,13 @@ function loadQuizQuestion() {
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
 
-    // ================= 替換起點 4 (改成 7 個干擾選項) =================
-    // 產生選項：1個正確答案 + 7個隨機干擾選項(來自目前勾選範圍的單字庫)
-    // 過濾掉正確答案，確保不會有重複的正確選項
     let pool = window.allQuizWordsPool.filter(w => w.word !== correctAnswer.word);
-    // 將剩下的單字洗牌，並安全地取出 7 個
     pool = shuffleArray(pool).slice(0, 7); 
-    // 合併正確答案與 7 個干擾選項 (共 8 個)
     let choices = [correctAnswer, ...pool];
     
-    // 將這 8 個選項再次洗牌，打亂正確答案的位置後顯示
     displayChoices(shuffleArray(choices));
-// ================= 替換終點 4 =================
 }
+// ================= 替換終點 2 =================
 
 function displayChoices(choices) {
     const grid = document.getElementById('choicesGrid');
@@ -5523,6 +5533,7 @@ async function showQuizComplete() {
         console.error('Failed to save quiz result:', error);
     }
     
+    // ================= 替換起點 1 =================
     grid.innerHTML = `
         <div class="quiz-complete">
             <h3>🎉 Quiz Complete!</h3>
@@ -5532,10 +5543,32 @@ async function showQuizComplete() {
             <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
         </div>
     `;
-    document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
+
+    // 🎯 依據答對率設定動態評語與表情符號
+    let feedbackEmoji = '';
+    let feedbackText = '';
+    if (percentage === 100) {
+        feedbackEmoji = '🏆';
+        feedbackText = 'Outstanding!';
+    } else if (percentage >= 90) {
+        feedbackEmoji = '😄';
+        feedbackText = 'Excellent!';
+    } else if (percentage >= 70) {
+        feedbackEmoji = '🙂';
+        feedbackText = 'Good!';
+    } else {
+        feedbackEmoji = '😓';
+        feedbackText = 'Keep improving!';
+    }
+
+    document.getElementById('listenAnswerDisplay').textContent = `${feedbackEmoji} ${feedbackText}`;
     document.getElementById('timerFeedback').textContent = '';
     document.getElementById('listenNextBtn').style.display = 'none';
+
+    // 🎯 啟動 TTS 自動朗讀評語 (加入微小延遲以確保順暢)
+    setTimeout(() => speakText(feedbackText), 300);
 }
+// ================= 替換終點 1 =================
 
 function restartQuiz() {
     document.getElementById('listenNextBtn').style.display = 'inline-block';
@@ -5762,6 +5795,7 @@ async function showTransQuizComplete() {
     
     try { await saveQuizResult(quizData); } catch (error) {}
     
+// ================= 替換起點 2 =================
     grid.innerHTML = `
         <div class="quiz-complete">
             <h3 style="color: #e67e22;">🎉 Quiz Complete!</h3>
@@ -5771,11 +5805,33 @@ async function showTransQuizComplete() {
             <button class="restart-quiz-btn" style="background-color: #e67e22;" onclick="restartTransQuiz()">Try Again</button>
         </div>
     `;
-    document.getElementById('transAnswerDisplay').innerHTML = '<strong>Great job!</strong>';
+
+    // 🎯 依據答對率設定動態評語與表情符號
+    let feedbackEmoji = '';
+    let feedbackText = '';
+    if (percentage === 100) {
+        feedbackEmoji = '🏆';
+        feedbackText = 'Outstanding!';
+    } else if (percentage >= 90) {
+        feedbackEmoji = '😄';
+        feedbackText = 'Excellent!';
+    } else if (percentage >= 70) {
+        feedbackEmoji = '🙂';
+        feedbackText = 'Good!';
+    } else {
+        feedbackEmoji = '😓';
+        feedbackText = 'Keep improving!';
+    }
+
+    document.getElementById('transAnswerDisplay').innerHTML = `<strong>${feedbackEmoji} ${feedbackText}</strong>`;
     document.getElementById('transHintBtn').style.display = 'none';
     document.getElementById('transTimerFeedback').textContent = '';
     document.getElementById('transNextBtn').style.display = 'none';
+
+    // 🎯 啟動 TTS 自動朗讀評語 (加入微小延遲以確保順暢)
+    setTimeout(() => speakText(feedbackText), 300);
 }
+// ================= 替換終點 2 =================
 
 function restartTransQuiz() {
     document.getElementById('transNextBtn').style.display = 'inline-block';
@@ -6908,21 +6964,36 @@ document.getElementById('scratchOffBtn').addEventListener('click', () => {
 // ================= 替換起點 4-2 =================
 document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
 
-// 🎯 規則 5：按下 [🔊 Example] 的專屬事件
-document.getElementById('listenExampleBtn').addEventListener('click', () => {
+// ================= 替換起點 3 =================
+// 🎯 按下 [🔊 Example] 的專屬事件 (包含 Toggle Stop 邏輯)
+document.getElementById('listenExampleBtn').addEventListener('click', function() {
     if (!correctAnswer) return;
-    const exampleOnly = extractExampleOnly(correctAnswer.example);
-    speakText(exampleOnly); // 唸出例句
     
-    // 如果裝例句的 div 已經存在 (表示已經自動顯示，或已經答題)，則解除隱藏！
+    // 🎯 如果目前是 Stop 狀態，則停止發音並提早返回
+    if (this.innerHTML.includes('Stop')) {
+        stopSpeech(); // 內部會呼叫 resetListenExampleBtn() 自動將按鈕變回黃色
+        return;
+    }
+
+    const exampleOnly = extractExampleOnly(correctAnswer.example);
+    
+    // 解除例句隱藏
     const exampleDiv = document.getElementById('lq-example-part');
     if (exampleDiv) {
         exampleDiv.style.display = 'block';
     }
+
+    // 1. 開始朗讀 (這會先呼叫 stopSpeech() 確保先前的音檔停止)
+    speakText(exampleOnly);
+    
+    // 2. 將按鈕變成紅色 🔇 Stop (必須在 speakText 後面，才不會被覆蓋)
+    this.innerHTML = '🔇 Stop';
+    this.style.backgroundColor = '#e74c3c';
+    this.style.color = 'white';
 });
 
 document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
-// ================= 替換終點 4-2 =================
+// ================= 替換終點 3 =================
 document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
 document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
 document.getElementById('toggleEnglishBtn').addEventListener('click', toggleEnglishDisplay);  // ADD THIS LINE
