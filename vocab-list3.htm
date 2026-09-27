@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.51)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.52)</span>
         </h1>
 
         <div class="button-categories">
@@ -1868,47 +1868,39 @@
 <!-- ================= 替換終點 ================= -->
 <!-- ================= 替換起點 2-2 ================= -->
 <!-- ================= 替換起點 2 (Modal 版面更新) ================= -->
-<!-- ================= 插入起點 1 ================= -->
-<!-- 🎯 新增：分批學習說明 Modal -->
+<!-- ================= 替換起點 1 ================= -->
+<!-- 🎯 新增：分批學習說明 Modal (簡潔任務版) -->
 <div id="batchInstructionsModal" class="modal" style="z-index: 1240;">
-    <div class="modal-content" style="max-width: 500px; text-align: left; padding: 25px;">
+    <div class="modal-content" style="max-width: 450px; text-align: left; padding: 25px;">
         <!-- 點擊 X 退回主學習畫面 -->
         <span class="close" onclick="document.getElementById('batchInstructionsModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
         
         <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center; font-size: 22px;">
-            🏔️ 任務山大 ➡️ 🕹️ 分段闖關
+            🧭「分批學習」任務說明
         </h2>
         
-        <div style="font-size: 16px; line-height: 1.6; color: #34495e; margin-bottom: 20px;">
-            <p style="margin-bottom: 15px;">本次任務共有 <strong id="instTotalWords" style="color: #e74c3c; font-size: 20px;">[A]</strong> 個單字，我們已經幫你切分成 <strong id="instTotalRounds" style="color: #e74c3c; font-size: 20px;">[B]</strong> 個迷你回合囉！</p>
-            <p style="margin-bottom: 15px;">每回合結束會立刻進行驗收，最後還會有總驗收。破關後，就可以去「Review & Quizzes」挑戰各種測驗。</p>
-            <div style="background-color: #fcf3cf; padding: 12px; border-radius: 6px; border-left: 4px solid #f1c40f; margin-bottom: 20px;">
-                💡 <strong>中斷也沒關係</strong>：下次進來，直接點擊上方的「下拉選單」，就能無縫接軌上次的回合！
-            </div>
+        <div style="font-size: 18px; line-height: 1.8; color: #34495e; margin-bottom: 20px;">
+            <p style="margin-bottom: 12px;">本次任務共有 <strong id="instTotalWords" style="color: #e74c3c; font-size: 22px;">[A]</strong> 個單字，分成 <strong id="instTotalRounds" style="color: #e74c3c; font-size: 22px;">[B]</strong> 個回合闖關。</p>
+            <p style="margin-bottom: 12px;">每回合結束會立刻進行 <strong style="color: #0080FF;">中英配對</strong> 驗收，最後還會有總驗收。</p>
+            <p style="margin-bottom: 20px;">破關後，就可以去 <strong style="color: #0080FF;">Review & Quizzes</strong> 挑戰各種測驗。</p>
             
-            <h3 style="color: #2980b9; font-size: 18px; margin-bottom: 10px;">👇 如何將「背過即忘的單字」變成「刻在我心底的單字」？</h3>
-            <ul style="list-style-type: none; padding-left: 5px; margin-bottom: 15px; font-size: 17px; line-height: 1.8;">
-                <li>👀 <strong>眼看字形</strong></li>
-                <li>👂 <strong>耳聽發音</strong></li>
-                <li>👄 <strong>口唸出聲</strong></li>
-                <li>💭 <strong>心想畫面</strong></li>
-                <li>✏️ <strong>手寫拼字</strong></li>
-            </ul>
-            <p style="margin-bottom: 0;">大腦是很現實的，唯有足夠的感官刺激，才能把單字深深鎖進記憶深處。而且記得要經常透過各種方式去喚醒它們，沉睡太久的單字，可是會變成<strong>「最熟悉的陌生人」</strong>喔！</p>
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
+                💡 <strong>中斷也沒關係：</strong>下次進來，直接點擊上方的 
+                <!-- 🎯 偽裝的紅色下拉選單樣式 -->
+                <span style="font-size: 16px; font-weight: bold; color: #e74c3c; background-color: #fff; padding: 2px 8px; border-radius: 6px; border: 2px solid #e74c3c; margin: 0 4px; display: inline-block; cursor: default;">Round 1 ▼</span>
+                就能接續上次的回合。
+            </div>
         </div>
         
-        <!-- 底部按鈕與勾選框 -->
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 20px;">
-            <label style="cursor: pointer; font-size: 15px; color: #7f8c8d; display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="chkSkipInstructions" style="width: 18px; height: 18px; cursor: pointer;"> Don't show again
-            </label>
+        <!-- 底部按鈕 -->
+        <div style="display: flex; justify-content: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
             <button id="btnReadyBatch" class="study-partner-btn" style="width: 100%; background-color: #27ae60; font-size: 20px;">
                 🚀 I'm ready!
             </button>
         </div>
     </div>
 </div>
-<!-- ================= 插入終點 1 ================= -->
+<!-- ================= 替換終點 1 ================= -->
 <!-- Batch Study Modal (分批學習 - 單字卡) -->
 <div id="batchStudyModal" class="modal" style="z-index: 1250;">
     <div class="modal-content" style="max-width: 600px; text-align: center;">
@@ -6406,29 +6398,14 @@ document.getElementById('batchLearnBtn').addEventListener('click', async () => {
     
     document.getElementById('learningContentModal').style.display = 'none';
 
-    // 🎯 檢查 localStorage 是否設定為不再顯示
-    const skipInst = localStorage.getItem('skipBatchInstructions');
-    
-    if (skipInst === 'true') {
-        // 老鳥直接進入學習
-        document.getElementById('batchStudyModal').style.display = 'block';
-        renderBatchCard();
-    } else {
-        // 新手顯示教學說明，並動態填入字數 [A] 與回合數 [B]
-        document.getElementById('instTotalWords').textContent = allWords.length;
-        document.getElementById('instTotalRounds').textContent = batchChunks.length;
-        document.getElementById('chkSkipInstructions').checked = false; // 預設不勾選
-        document.getElementById('batchInstructionsModal').style.display = 'block';
-    }
+    // 🎯 每次都顯示簡潔版任務說明，並動態填入字數 [A] 與回合數 [B]
+    document.getElementById('instTotalWords').textContent = allWords.length;
+    document.getElementById('instTotalRounds').textContent = batchChunks.length;
+    document.getElementById('batchInstructionsModal').style.display = 'block';
 });
 
-// 🎯 新增：說明視窗內的 [ I'm ready! ] 點擊事件
+// 🎯 說明視窗內的 [ I'm ready! ] 點擊事件
 document.getElementById('btnReadyBatch').addEventListener('click', () => {
-    // 若有勾選不再顯示，則存入 localStorage
-    if (document.getElementById('chkSkipInstructions').checked) {
-        localStorage.setItem('skipBatchInstructions', 'true');
-    }
-    
     // 關閉說明，正式進入分批學習
     document.getElementById('batchInstructionsModal').style.display = 'none';
     document.getElementById('batchStudyModal').style.display = 'block';
