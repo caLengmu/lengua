@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.52)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.53)</span>
         </h1>
 
         <div class="button-categories">
@@ -1880,9 +1880,9 @@
         </h2>
         
         <div style="font-size: 18px; line-height: 1.8; color: #34495e; margin-bottom: 20px;">
-            <p style="margin-bottom: 12px;">本次任務共有 <strong id="instTotalWords" style="color: #e74c3c; font-size: 22px;">[A]</strong> 個單字，分成 <strong id="instTotalRounds" style="color: #e74c3c; font-size: 22px;">[B]</strong> 個回合闖關。</p>
-            <p style="margin-bottom: 12px;">每回合結束會立刻進行 <strong style="color: #0080FF;">中英配對</strong> 驗收，最後還會有總驗收。</p>
-            <p style="margin-bottom: 20px;">破關後，就可以去 <strong style="color: #0080FF;">Review & Quizzes</strong> 挑戰各種測驗。</p>
+            <p style="margin-bottom: 12px;">🚩 本次任務共有 <strong id="instTotalWords" style="color: #e74c3c; font-size: 22px;">[A]</strong> 個單字，分成 <strong id="instTotalRounds" style="color: #e74c3c; font-size: 22px;">[B]</strong> 個回合闖關。</p>
+            <p style="margin-bottom: 12px;">🚩 每回合結束都會進行 <strong style="color: #0080FF;">中英配對</strong> 驗收，完成後將兩個☑️打勾以進入下一回合。最後還有總驗收。</p>
+            <p style="margin-bottom: 20px;">🚩 破關後，就可以去 <strong style="color: #0080FF;">Review & Quizzes</strong> 挑戰各種測驗。</p>
             
             <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
                 💡 <strong>中斷也沒關係：</strong>下次進來，直接點擊上方的 
@@ -1927,11 +1927,8 @@
 <span class="close" onclick="closeBatchQuizModal()">&times;</span>
         
         <h3 id="batchQuizTitle" style="padding-top: 20px; color: #28a745; margin-bottom: 10px; font-size: 24px;">Congrats! Round N is done! 🎉</h3>
-        <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 1.2em; font-weight: bold;">Time for two quizzes. Check ✅ the boxes below when finished.</p>
+        <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 1.2em; font-weight: bold;">Time for two quizzes. Check ☑️ the boxes below when finished.</p>
 
-        <!-- 🎯 新增：專屬 Overall Review 的頂部重新抽題按鈕 (預設隱藏) -->
-        <button id="btnRandomReviewTop" class="quiz-btn" style="padding: 10px 20px; font-size: 16px; margin: 0 auto 15px auto; background-color: #9b59b6; color: white; width: auto; display: none;">🔄 Random Review</button>
-        
         <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 20px;">
            <thead>
                <tr>
@@ -1949,6 +1946,11 @@
            </thead>
            <tbody id="batchQuizTableBody"></tbody>
         </table>
+
+        <!-- 🎯 移到表格下方：專屬 Overall Review 的重新抽題按鈕 (預設隱藏) -->
+        <button id="btnRandomReviewTop" class="quiz-btn" style="padding: 10px 20px; font-size: 16px; margin: 0 auto 20px auto; background-color: #9b59b6; color: white; width: auto; display: none; border-radius: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            🔄 Random Review
+        </button>
 
         <!-- 🎯 底部操作面板：保留灰色區塊與兩個 Quiz 按鈕 -->
         <div id="quizControlPanel" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #ecf0f1; margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px; align-items: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
@@ -6534,7 +6536,7 @@ function closeBatchQuizModal() {
 }
 
 // ================= 替換起點 1 (區分兩種模式的標題) =================
-function openBatchQuiz(wordsToQuiz, isOverall) {
+function openBatchQuiz(wordsToQuiz, isOverall, keepScroll = false) {
     currentQuizWords = [...wordsToQuiz];
     isReviewMode = isOverall;
     
@@ -6544,20 +6546,20 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
 
     if (isOverall) {
         document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
-        document.getElementById('batchQuizSubtitle').textContent = "Tap 🔄 Random Review for a new set of vocabulary.";
         
-        document.getElementById('btnRandomReviewTop').style.display = 'inline-block';
+        // 🎯 內嵌連動按鈕維持原名Random Review
+        document.getElementById('batchQuizSubtitle').innerHTML = `Tap <span style="background-color: #9b59b6; color: white; padding: 4px 12px; border-radius: 15px; font-size: 16px; cursor: pointer; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="document.getElementById('btnRandomReviewTop').click();">🔄 Random Review</span> for a new set of vocabulary.`;
+        
+        document.getElementById('btnRandomReviewTop').style.display = 'block';
         document.getElementById('chkEngDone').style.display = 'none';
         document.getElementById('chkChiDone').style.display = 'none';
     } else {
         if (isScratchOffOnlyMode) {
-            // 🎯 針對「刮刮樂捷徑」模式的專屬標題與副標題
             document.getElementById('batchQuizTitle').textContent = `Quick Review: Round ${currentChunkIdx + 1} / ${batchChunks.length}`;
-            document.getElementById('batchQuizSubtitle').textContent = "Check ✅ the boxes below when finished.";
+            document.getElementById('batchQuizSubtitle').textContent = "Check ☑️ the boxes below when finished.";
         } else {
-            // 原始「分批學習」模式的標題與副標題
-            document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done! 🎉`;
-            document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes below when finished.";
+            document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done!`;
+            document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ☑️ the boxes below when finished.";
         }
         
         document.getElementById('btnRandomReviewTop').style.display = 'none';
@@ -6568,7 +6570,11 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
     renderBatchQuizTable();
     updateBatchQuizFooter();
     document.getElementById('batchQuizModal').style.display = 'block';
-    document.getElementById('batchQuizModal').scrollTop = 0;
+    
+    // 🎯 控制是否要捲動到最上方 (如果有傳入 keepScroll = true 就不會跳回最上方)
+    if (!keepScroll) {
+        document.getElementById('batchQuizModal').scrollTop = 0;
+    }
 }
 // ================= 替換終點 1 =================
 
@@ -6754,13 +6760,15 @@ document.getElementById('btnHideEng').onclick = function() {
 };
 // ================= 替換終點 2 =================
 
-// Overall Review 頂部抽題按鈕
+// Overall Review 重新抽題按鈕
 document.getElementById('btnRandomReviewTop').onclick = async () => {
     if (isEnglishHidden || isChineseHidden) return; 
     const allWords = await getWordsFromCurrentSection();
     // 依據不熟機率重新抽 10 題
     const reviewWords = getWeightedRandomWords(allWords, 10);
-    openBatchQuiz(reviewWords, true);
+    
+    // 🎯 傳入 true，表示「更新表格後保持滾動位置」，方便直接點擊 Quiz
+    openBatchQuiz(reviewWords, true, true); 
 };
 
 document.getElementById('chkEngDone').onchange = updateBatchQuizFooter;
