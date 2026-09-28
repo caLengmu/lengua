@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.60)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.61)</span>
         </h1>
 
         <div class="button-categories">
@@ -6127,10 +6127,11 @@ function updateStudySession() {
     const avatarElement = document.getElementById('currentPartnerAvatar');
     if (avatarElement) avatarElement.textContent = currentEmoji;
 
+// ================= 替換起點 =================
     const englishWord = extractEnglishWordOnly(currentItem.word);
-    const englishExample = extractEnglishExampleOnly(currentItem.example);
+    const englishExample = extractEnglishExampleOnly(currentItem.example, true); // 🎯 加入 true，只抓第一句英文
     const chineseWord = extractChineseTranslation(currentItem.word);
-    const chineseExample = extractChineseExample(currentItem.example);
+    const chineseExample = extractChineseExample(currentItem.example, true); // 🎯 加入 true，只抓第一句中文
 
     const questionPrompt = document.getElementById('questionPrompt');
     if (questionPrompt) {
@@ -6180,10 +6181,11 @@ function handleSpeakCurrent() {
     const currentItem = flatWordsList[currentWordIndex];
     if (currentItem) {
         const englishWord = extractEnglishWordOnly(currentItem.word);
-        const englishExample = extractEnglishExampleOnly(currentItem.example).replace(/<br>/g, ' '); // 語音不需要 <br> 換行
+        const englishExample = extractEnglishExampleOnly(currentItem.example, true).replace(/<br>/g, ' '); // 🎯 加入 true，只唸第一句
         speakText(`${englishWord}. ${englishExample}`);
     }
 }
+// ================= 替換終點 =================
 
 // 獨立出來的翻譯顯示函數
 function toggleTranslation() {
