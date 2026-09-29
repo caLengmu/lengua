@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.47)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.62)</span>
         </h1>
 
         <div class="button-categories">
@@ -1764,22 +1764,29 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="text-align: center; padding: 10px;">
                 <h2 style="color: #2c3e50; margin-bottom: 20px;">📢 Important Notice</h2>
-                <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
-                    <p style="margin-bottom: 15px; color: red; text-align: center;"><strong>1. 每次使用請點擊「重新整理（refresh）🔄」以獲取更新！</strong></p>
-                    <p style="margin-bottom: 0; text-align: center;">2. 🔊若無法運作，可能是手機更新了「文字轉語音」（text to speech）功能，重新開機即可解決。</p><br>
 <!-- ================= 替換起點 ================= -->
-<p style="margin-bottom: 0; text-align: center; line-height: 2;">
-3. 有些單字可作動詞或名詞使用，但發音不同。為確保「文字轉語音」正確辨識詞性，動詞前會加上 to，例如：<br>
-<span style="cursor: pointer; user-select: none; font-size: 1.2em; display: inline-block; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="speakText('to record')">🔊</span> to record（動詞）🆚 <span style="cursor: pointer; user-select: none; font-size: 1.2em; display: inline-block; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="speakText('record')">🔊</span> record（名詞）
-</p><br>
-<!-- ================= 替換終點 ================= -->
-<p style="margin-bottom: 0; text-align: center;">
-4. 教材更新: <br>📚 課本: L1 單
-<br>✍ 歷屆試題: 115, 114
-<br>📒 好好學: U1, U2, U3, U4, U5, U6
-</p>
-
+                <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">
+                    <p style="margin-bottom: 12px; padding-left: 1.4em; text-indent: -1.4em;"><strong style="color: red;">1. 每次使用請點擊「🔄 重新整理（refresh）」以獲取更新！</strong></p>
+                    
+                    <p style="margin-bottom: 12px; padding-left: 1.4em; text-indent: -1.4em;">2. 🔊 若無法運作，可能是手機更新了<strong>「文字轉語音」（text to speech）</strong>功能，<strong style="color: #3498db;">重新開機</strong> 即可解決。</p>
+                    
+                    <div style="margin-bottom: 12px; padding-left: 1.4em; text-indent: -1.4em; line-height: 1.8;">
+                        3. 有些單字可作動詞或名詞使用，但發音不同。為確保<strong>「文字轉語音」</strong>正確辨識詞性，動詞前會加上 to，例如：
+                        <!-- 🎯 重置 text-indent 為 0，避免符號被往左拉 -->
+                        <div style="text-indent: 0; margin-top: 4px; padding-left: 1.4em;">
+                            <span style="white-space: nowrap;"><span style="cursor: pointer; user-select: none; font-size: 1.2em; display: inline-block; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="speakText('to record')">🔊</span> <strong>to record</strong>（動詞）</span> 🆚 
+                            <span style="white-space: nowrap;"><span style="cursor: pointer; user-select: none; font-size: 1.2em; display: inline-block; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="speakText('record')">🔊</span> <strong>record</strong>（名詞）</span>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-bottom: 0; padding-left: 1.4em; text-indent: -1.4em;">
+                    4. 教材更新: <br>
+                    <span style="display: inline-block; margin-left: 1.4em;">📚 課本: L1 單</span><br>
+                    <span style="display: inline-block; margin-left: 1.4em;">✍ 歷屆試題: 115, 114</span><br>
+                    <span style="display: inline-block; margin-left: 1.4em;">📒 好好學: U1, U2, U3, U4, U5, U6</span>
+                    </p>
                 </div>
+<!-- ================= 替換終點 ================= -->
                 <button id="welcomeOkBtn" onclick="document.getElementById('welcomeModal').style.display='none';" style="background-color: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; min-height: 48px; touch-action: manipulation;">
     OK. I got it.
 </button>
@@ -1868,6 +1875,44 @@
 <!-- ================= 替換終點 ================= -->
 <!-- ================= 替換起點 2-2 ================= -->
 <!-- ================= 替換起點 2 (Modal 版面更新) ================= -->
+<!-- ================= 替換起點 1 ================= -->
+<!-- 🎯 新增：分批學習說明 Modal (簡潔任務版) -->
+<div id="batchInstructionsModal" class="modal" style="z-index: 1240;">
+    <div class="modal-content" style="max-width: 450px; text-align: left; padding: 25px;">
+        <!-- 點擊 X 退回主學習畫面 -->
+        <span class="close" onclick="document.getElementById('batchInstructionsModal').style.display='none'; document.getElementById('learningContentModal').style.display='block';">&times;</span>
+        
+        <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center; font-size: 22px;">
+            🧭「分批學習」任務說明
+        </h2>
+        
+<!-- ================= 替換起點 2 ================= -->
+        <div style="font-size: 18px; line-height: 1.8; color: #34495e; margin-bottom: 20px;">
+            <p style="margin-bottom: 12px; padding-left: 1.6em; text-indent: -1.6em;">🚩 本次任務共有 <strong id="instTotalWords" style="color: #e74c3c; font-size: 22px;">[A]</strong> 個單字，分成 <strong id="instTotalRounds" style="color: #e74c3c; font-size: 22px;">[B]</strong> 個回合闖關。</p>
+            
+            <p style="margin-bottom: 12px; padding-left: 1.6em; text-indent: -1.6em;">🚩 每回合結束都會進行 <strong style="color: #3498db;">中英配對</strong> 驗收，完成後將兩個✅打勾以進入下一回合。最後還有總驗收。</p>
+            
+            <p style="margin-bottom: 20px; padding-left: 1.6em; text-indent: -1.6em;">🚩 破關後，就可以去 <strong style="color: #3498db;">Review & Quizzes</strong> 挑戰 👀🎧🌐🧩 四種測驗。</p>
+            
+            <!-- 🎯 背景換成柔和的 #fdf2e9，左側邊框同步換成橘黃色搭配 -->
+            <div style="background-color: #fdf2e9; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22;">
+                💡 <strong>中斷也沒關係：</strong>下次進來，直接點擊上方的 
+                <!-- 🎯 偽裝的紅色下拉選單樣式 -->
+                <span style="font-size: 16px; font-weight: bold; color: #e74c3c; background-color: #fff; padding: 2px 8px; border-radius: 6px; border: 2px solid #e74c3c; margin: 0 4px; display: inline-block; cursor: default;">Round 1 ▼</span>
+                就能接續上次的回合。
+            </div>
+        </div>
+<!-- ================= 替換終點 2 ================= -->
+        
+        <!-- 底部按鈕 -->
+        <div style="display: flex; justify-content: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+            <button id="btnReadyBatch" class="study-partner-btn" style="width: 100%; background-color: #27ae60; font-size: 20px;">
+                🚀 I'm ready!
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ================= 替換終點 1 ================= -->
 <!-- Batch Study Modal (分批學習 - 單字卡) -->
 <div id="batchStudyModal" class="modal" style="z-index: 1250;">
     <div class="modal-content" style="max-width: 600px; text-align: center;">
@@ -1896,9 +1941,6 @@
         <h3 id="batchQuizTitle" style="padding-top: 20px; color: #28a745; margin-bottom: 10px; font-size: 24px;">Congrats! Round N is done! 🎉</h3>
         <p id="batchQuizSubtitle" style="color: #555; margin-bottom: 15px; font-size: 1.2em; font-weight: bold;">Time for two quizzes. Check ✅ the boxes below when finished.</p>
 
-        <!-- 🎯 新增：專屬 Overall Review 的頂部重新抽題按鈕 (預設隱藏) -->
-        <button id="btnRandomReviewTop" class="quiz-btn" style="padding: 10px 20px; font-size: 16px; margin: 0 auto 15px auto; background-color: #9b59b6; color: white; width: auto; display: none;">🔄 Random Review</button>
-        
         <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 20px;">
            <thead>
                <tr>
@@ -1916,6 +1958,11 @@
            </thead>
            <tbody id="batchQuizTableBody"></tbody>
         </table>
+
+        <!-- 🎯 移到表格下方：專屬 Overall Review 的重新抽題按鈕 (預設隱藏) -->
+        <button id="btnRandomReviewTop" class="quiz-btn" style="padding: 10px 20px; font-size: 16px; margin: 0 auto 20px auto; background-color: #9b59b6; color: white; width: auto; display: none; border-radius: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            🔄 Random Review
+        </button>
 
         <!-- 🎯 底部操作面板：保留灰色區塊與兩個 Quiz 按鈕 -->
         <div id="quizControlPanel" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #ecf0f1; margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px; align-items: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
@@ -1944,14 +1991,18 @@
 <div id="quizProgressDisplay" style="color: #856404; font-weight: bold; margin-bottom: 5px; font-size: 16px;"></div>
 <div id="listenAnswerDisplay" class="listen-answer-display">Click the speaker</div>
 <!-- ================= 替換終點 ================= -->
-    <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-        <div class="listen-speaker" id="listenSpeaker" title="Play Audio">🔊</div>
-        <!-- 新增 🔇 停止按鈕 -->
-        <div class="listen-speaker" id="listenStopBtn" title="Stop Audio">🔇</div>
-        <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;">
+<!-- ================= 替換起點 1 ================= -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px;">
+        <div class="listen-speaker" id="listenSpeaker" title="Play Word">🔊</div>
+        
+        <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;" title="Auto-show Word">
             Show English
         </button>
+        <button id="listenExampleBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #ffc107; color: #000;" title="Play & Show Example">
+            🔊 Example
+        </button>
     </div>
+<!-- ================= 替換終點 1 ================= -->
 </div>
             <div class="timer-feedback-section">
                 <div id="timerFeedback" class="timer-feedback"></div>
@@ -2016,7 +2067,7 @@
         <!-- ================= 替換起點 1 (單字熟悉度圖例說明) ================= -->
 <!-- ================= 替換起點 2 (更新單字管理說明) ================= -->
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 20px; text-align: left; font-size: 16px; color: #2c3e50; line-height: 1.6; font-weight: bold;">
-            <div style="margin-bottom: 8px; color: #e74c3c;">請按指示設定單字的熟悉度：</div>
+            <div style="margin-bottom: 8px; color: #e74c3c;">請依指示設定單字的熟悉度：</div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 <div>1. 🔴🔴: 很不熟 (預設)</div>
                 <div>2. 🔴⚪: 有點熟</div>
@@ -2384,14 +2435,19 @@ function parseSimplifiedDatabase(text) {
                 section: line,
                 words: []
             };
+// ================= 替換起點 1 =================
         } else if (line.includes('^') && currentSection) {
-            // Word entry
-            const [wordPart, examplePart] = line.split('^').map(s => s.trim());
+            // 🎯 階段一升級：支援多個 ^ 符號，第一個為單字，其餘全為例句
+            const parts = line.split('^').map(s => s.trim());
+            const wordPart = parts.shift(); // 取出單字部分
+            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來保留給後續函數處理
+            
             currentSection.words.push({
                 word: wordPart + ':',
                 example: examplePart
             });
         }
+// ================= 替換終點 1 =================
     }
 
     if (currentSection) {
@@ -4963,49 +5019,65 @@ let showEnglishTimeout = null;  // ADD THIS LINE - track the timeout
             return voice || null;
         }
 
-        // Clean text for TTS
-        function cleanTextForTTS(text) {
-            return text.replace(/\*/g, '')
-                      .replace(/\//g, '')
-                      .replace(/\([^)]*\)/g, '')
-                      .replace(/\[[^\]]*\]/g, '')
-                      .replace(/\s+/g, ' ')
-                      .trim();
-        }
+// Clean text for TTS
+function cleanTextForTTS(text) {
+    return text.replace(/\*/g, '')
+               .replace(/\//g, '')
+               .replace(/\([^)]*\)/g, '')
+               .replace(/\[[^\]]*\]/g, '')
+               // 🎯 新增：自動過濾掉所有的 Emojis，讓 TTS 變成「視而不見」
+               .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
+               .replace(/\s+/g, ' ')
+               .trim();
+}
 
 // Get random emoji
 function getRandomEmoji() {
     return studyEmojis[Math.floor(Math.random() * studyEmojis.length)];
 }
 
-        // Speak text
-        function speakText(text) {
-            stopSpeech();
-            const cleaned = cleanTextForTTS(text);
-            if (!cleaned) return;
+// ================= 替換起點 1 (加入重置按鈕輔助函數與語音控制) =================
+// 🎯 輔助函數：將 Example 按鈕恢復為預設的黃色播放狀態
+function resetListenExampleBtn() {
+    const btn = document.getElementById('listenExampleBtn');
+    if (btn && btn.innerHTML.includes('Stop')) {
+        btn.innerHTML = '🔊 Example';
+        btn.style.backgroundColor = '#ffc107';
+        btn.style.color = '#000';
+    }
+}
 
-            const utterance = new SpeechSynthesisUtterance(cleaned);
-            utterance.lang = 'en-US';
-            utterance.rate = speechRate;
+// Speak text
+function speakText(text) {
+    stopSpeech();
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
 
-            const voice = getEnglishVoice();
-            if (voice) utterance.voice = voice;
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = 'en-US';
+    utterance.rate = speechRate;
 
-            utterance.onend = () => {
-                currentSpeech = null;
-            };
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
 
-            currentSpeech = utterance;
-            speechSynthesis.speak(utterance);
-        }
+    utterance.onend = () => {
+        currentSpeech = null;
+        resetListenExampleBtn(); // 🎯 語音自然結束時，恢復按鈕狀態
+    };
 
-        // Stop speech
-        function stopSpeech() {
-            if (speechSynthesis.speaking || speechSynthesis.pending) {
-                speechSynthesis.cancel();
-            }
-            currentSpeech = null;
-        }
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+
+// Stop speech
+function stopSpeech() {
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+        speechSynthesis.cancel();
+    }
+    currentSpeech = null;
+    resetListenExampleBtn(); // 🎯 語音被強制停止時，立刻恢復按鈕狀態
+}
+// ================= 替換終點 1 =================
 
             // Update Bottom Sticky Progress Bar (修復邏輯：看到表格才顯示，看到底端按鈕就隱藏)
         function updateLearningProgress() {
@@ -5146,12 +5218,16 @@ function openLearningContent(lessonKey, savedCheckedWords) {
         const sectionData = currentLessonData[sectionIndex];
         html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
 
+// ================= 替換起點 3 =================
         sectionData.words.forEach((item, wordIndex) => {
             if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
                 totalCheckedWords++;
-                const fullText = `${item.word}. ${item.example}`;
+                const fullText = `${item.word}. ${item.example.replace(/\^/g, '.')}`; // 🎯 發音時把 ^ 換成句號停頓
                 const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
-                let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em;">$1</span><br>');
+                
+                // 🎯 處理例句顯示，並把多個例句的 ^ 換成分隔線
+                let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em; color: #7f8c8d;">$1</span><br>');
+                displayExample = displayExample.replace(/\s*\^\s*/g, '<hr style="border: 0; border-top: 1px dashed #bdc3c7; margin: 8px 0;">');
                 displayExample = displayExample.replace(/(<br>)+$/, '');
 
                 html += `<tr class="vocab-row" data-section="${sectionIndex}">
@@ -5166,6 +5242,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
                 </tr>`;
             }
         });
+// ================= 替換終點 3 =================
     });
 
     // 動態顯示「分批學習」按鈕
@@ -5236,23 +5313,41 @@ function extractChineseTranslation(wordString) {
     return match ? match[1] : wordString; // 若無匹配則回傳原字串以防出錯
 }
 
-// Extract English example without Chinese translation (支援多句換行，且避開純英文補充)
-function extractEnglishExampleOnly(exampleString) {
-    // 利用正則表達式，只替換「包含至少一個中文字的括號」，保留純英文的括號如 (= about)
-    let eng = exampleString.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, '<br>');
-    return eng.replace(/^(<br>)+|(<br>)+$/g, '').trim();
+// ================= 替換起點 1 =================
+// ================= 替換起點 =================
+// Extract English example without Chinese translation (支援多句換行與指定只抓第一句)
+function extractEnglishExampleOnly(exampleString, firstOnly = false) {
+    let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
+    // 把中文括號移除後，改用單一空格取代，不再產生多餘換行
+    let eng = exStr.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, ' ');
+    
+    // 🎯 處理 [] 標籤：自動換行並縮小為 0.8 倍字體 (加入微弱的灰色讓補充視覺更柔和)
+    eng = eng.replace(/\s*(\[[^\]]+\])/g, '<br><span style="font-size: 0.8em; color: #7f8c8d; line-height: 1.4; display: inline-block; margin-top: 2px;">$1</span>');
+    
+    // 多例句之間的 ^ 改為單一換行即可
+    eng = eng.replace(/\s*\^\s*/g, '<br>'); 
+    return eng.trim();
 }
 
-// Extract Chinese translation from example (支援多句換行，且只抓取含中文的括號)
-function extractChineseExample(exampleString) {
-    // 同樣只比對「包含中文字的括號」
-    const matches = exampleString.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
-    return matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+// Extract Chinese translation from example (支援多句換行與指定只抓第一句)
+function extractChineseExample(exampleString, firstOnly = false) {
+    let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
+    const matches = exStr.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
+    
+    // 抓出中文後，改用單一換行連接
+    let chi = matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+    
+    // 🎯 中文翻譯中的 [] 標籤也同步：自動換行並縮小為 0.8 倍字體
+    chi = chi.replace(/\s*(\[[^\]]+\])/g, '<br><span style="font-size: 0.8em; color: #95a5a6; line-height: 1.4; display: inline-block; margin-top: 2px;">$1</span>');
+    
+    return chi;
 }
+// ================= 替換終點 =================
 
-// 為了相容 Listening Quiz 舊有命名，保留以下兩個轉址函數
+// 為了相容 Listening Quiz 舊有命名，加入 firstOnly 參數傳遞
 function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
-function extractExampleOnly(exampleString) { return extractEnglishExampleOnly(exampleString); }
+function extractExampleOnly(exampleString, firstOnly = false) { return extractEnglishExampleOnly(exampleString, firstOnly); }
+// ================= 替換終點 1 =================
 
 // ================= 替換起點 5-2 =================
 window.allQuizWordsPool = [];
@@ -5347,8 +5442,10 @@ async function startListenChooseQuiz(mode = '8qs') {
         }
 // ================= 替換終點 2 =================        
 
-        // ================= 替換起點 6 =================
+// ================= 替換起點 2 (確保切換題目時停止語音與重置按鈕) =================
 function loadQuizQuestion() {
+    stopSpeech(); // 🎯 新增：確保進入新題目時，中止所有舊語音並重置 Example 按鈕
+
     if (currentQuizIndex >= quizWords.length) {
         showQuizComplete();
         return;
@@ -5377,19 +5474,13 @@ function loadQuizQuestion() {
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
 
-    // ================= 替換起點 4 (改成 7 個干擾選項) =================
-    // 產生選項：1個正確答案 + 7個隨機干擾選項(來自目前勾選範圍的單字庫)
-    // 過濾掉正確答案，確保不會有重複的正確選項
     let pool = window.allQuizWordsPool.filter(w => w.word !== correctAnswer.word);
-    // 將剩下的單字洗牌，並安全地取出 7 個
     pool = shuffleArray(pool).slice(0, 7); 
-    // 合併正確答案與 7 個干擾選項 (共 8 個)
     let choices = [correctAnswer, ...pool];
     
-    // 將這 8 個選項再次洗牌，打亂正確答案的位置後顯示
     displayChoices(shuffleArray(choices));
-// ================= 替換終點 4 =================
 }
+// ================= 替換終點 2 =================
 
 function displayChoices(choices) {
     const grid = document.getElementById('choicesGrid');
@@ -5427,39 +5518,46 @@ function handleChoiceClick(selectedChoice, btn) {
 
     allChoices.forEach(choiceBtn => { choiceBtn.disabled = true; });
     const englishWord = extractEnglishWord(correctAnswer.word);
-    const exampleOnly = extractExampleOnly(correctAnswer.example);
+    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+    
+    // 🎯 規則 3：答題後單字在上，例句在下，且例句預設隱藏 (display: none)
     document.getElementById('listenAnswerDisplay').innerHTML = 
-        `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+        `<strong style="font-size: 1.2em;">${englishWord}</strong><div id="lq-example-part" style="display:none; font-size: 18px; margin-top: 8px; font-weight: normal; color: #555;">${exampleOnly}</div>`;
+    
     document.getElementById('listenNextBtn').disabled = false;
 }
 
 function playQuizAudio() {
     if (correctAnswer) {
         const englishWord = extractEnglishWord(correctAnswer.word);
-        const exampleOnly = extractExampleOnly(correctAnswer.example);
-        const fullText = `${englishWord}. ${exampleOnly}`;
-        speakText(fullText);
+        // 🎯 規則 1：按 🔊 只唸單字
+        speakText(englishWord);
         
         if (showEnglishTimeout) {
             clearTimeout(showEnglishTimeout);
             showEnglishTimeout = null;
         }
         if (showEnglishInQuiz && !hasAnswered) {
+            // 🎯 規則 2：延遲改成 1 秒
             showEnglishTimeout = setTimeout(() => {
                 if (!hasAnswered && correctAnswer === quizWords[currentQuizIndex]) {
+                    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+                    // 🎯 規則 3：單字在上，例句在下，且例句預設隱藏 (display: none 不留白)
                     document.getElementById('listenAnswerDisplay').innerHTML = 
-                        `<strong>${englishWord}</strong><br><span style="font-size: 18px;">${exampleOnly}</span>`;
+                        `<strong style="font-size: 1.2em;">${englishWord}</strong><div id="lq-example-part" style="display:none; font-size: 18px; margin-top: 8px; font-weight: normal; color: #555;">${exampleOnly}</div>`;
                 }
                 showEnglishTimeout = null;
-            }, 4000);
+            }, 1500); 
         }
     }
 }
 
+// ================= 替換起點 2 =================
 function toggleEnglishDisplay() {
     showEnglishInQuiz = !showEnglishInQuiz;
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
+        // 復原為文字顯示
         toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
@@ -5467,6 +5565,7 @@ function toggleEnglishDisplay() {
         document.getElementById('listenAnswerDisplay').textContent = 'Click the speaker';
     }
 }
+// ================= 替換終點 2 =================
 
 function nextQuizQuestion() {
     currentQuizIndex++;
@@ -5511,6 +5610,7 @@ async function showQuizComplete() {
         console.error('Failed to save quiz result:', error);
     }
     
+    // ================= 替換起點 1 =================
     grid.innerHTML = `
         <div class="quiz-complete">
             <h3>🎉 Quiz Complete!</h3>
@@ -5520,10 +5620,32 @@ async function showQuizComplete() {
             <button class="restart-quiz-btn" onclick="restartQuiz()">Try Again</button>
         </div>
     `;
-    document.getElementById('listenAnswerDisplay').textContent = 'Great job!';
+
+    // 🎯 依據答對率設定動態評語與表情符號
+    let feedbackEmoji = '';
+    let feedbackText = '';
+    if (percentage === 100) {
+        feedbackEmoji = '🏆';
+        feedbackText = 'Outstanding!';
+    } else if (percentage >= 90) {
+        feedbackEmoji = '😄';
+        feedbackText = 'Excellent!';
+    } else if (percentage >= 70) {
+        feedbackEmoji = '🙂';
+        feedbackText = 'Good!';
+    } else {
+        feedbackEmoji = '😓';
+        feedbackText = 'Keep improving!';
+    }
+
+    document.getElementById('listenAnswerDisplay').textContent = `${feedbackEmoji} ${feedbackText}`;
     document.getElementById('timerFeedback').textContent = '';
     document.getElementById('listenNextBtn').style.display = 'none';
+
+    // 🎯 啟動 TTS 自動朗讀評語 (加入微小延遲以確保順暢)
+    setTimeout(() => speakText(feedbackText), 300);
 }
+// ================= 替換終點 1 =================
 
 function restartQuiz() {
     document.getElementById('listenNextBtn').style.display = 'inline-block';
@@ -5542,7 +5664,7 @@ function closeQuizModal() {
     
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
-        toggleBtn.textContent = 'Show English';
+        toggleBtn.textContent = 'Show English'; // 恢復成預設文字
         toggleBtn.style.backgroundColor = '#6c757d';
     }
     document.getElementById('sectionSelectModal').style.display = 'block';
@@ -5687,7 +5809,7 @@ function handleTransChoiceClick(selectedChoice, btn) {
 
 // 🎯 智慧挖空 Hint 系統
 document.getElementById('transHintBtn').addEventListener('click', () => {
-    let engEx = extractEnglishExampleOnly(correctTransAnswer.example);
+    let engEx = extractEnglishExampleOnly(correctTransAnswer.example, true);
     let baseWord = extractEnglishWordOnly(correctTransAnswer.word).replace(/^to\s+/i, ''); 
     
     let regex = new RegExp(baseWord, 'gi');
@@ -5750,6 +5872,7 @@ async function showTransQuizComplete() {
     
     try { await saveQuizResult(quizData); } catch (error) {}
     
+// ================= 替換起點 2 =================
     grid.innerHTML = `
         <div class="quiz-complete">
             <h3 style="color: #e67e22;">🎉 Quiz Complete!</h3>
@@ -5759,11 +5882,33 @@ async function showTransQuizComplete() {
             <button class="restart-quiz-btn" style="background-color: #e67e22;" onclick="restartTransQuiz()">Try Again</button>
         </div>
     `;
-    document.getElementById('transAnswerDisplay').innerHTML = '<strong>Great job!</strong>';
+
+    // 🎯 依據答對率設定動態評語與表情符號
+    let feedbackEmoji = '';
+    let feedbackText = '';
+    if (percentage === 100) {
+        feedbackEmoji = '🏆';
+        feedbackText = 'Outstanding!';
+    } else if (percentage >= 90) {
+        feedbackEmoji = '😄';
+        feedbackText = 'Excellent!';
+    } else if (percentage >= 70) {
+        feedbackEmoji = '🙂';
+        feedbackText = 'Good!';
+    } else {
+        feedbackEmoji = '😓';
+        feedbackText = 'Keep improving!';
+    }
+
+    document.getElementById('transAnswerDisplay').innerHTML = `<strong>${feedbackEmoji} ${feedbackText}</strong>`;
     document.getElementById('transHintBtn').style.display = 'none';
     document.getElementById('transTimerFeedback').textContent = '';
     document.getElementById('transNextBtn').style.display = 'none';
+
+    // 🎯 啟動 TTS 自動朗讀評語 (加入微小延遲以確保順暢)
+    setTimeout(() => speakText(feedbackText), 300);
 }
+// ================= 替換終點 2 =================
 
 function restartTransQuiz() {
     document.getElementById('transNextBtn').style.display = 'inline-block';
@@ -5996,10 +6141,11 @@ function updateStudySession() {
     const avatarElement = document.getElementById('currentPartnerAvatar');
     if (avatarElement) avatarElement.textContent = currentEmoji;
 
+// ================= 替換起點 =================
     const englishWord = extractEnglishWordOnly(currentItem.word);
-    const englishExample = extractEnglishExampleOnly(currentItem.example);
+    const englishExample = extractEnglishExampleOnly(currentItem.example, true); // 🎯 加入 true，只抓第一句英文
     const chineseWord = extractChineseTranslation(currentItem.word);
-    const chineseExample = extractChineseExample(currentItem.example);
+    const chineseExample = extractChineseExample(currentItem.example, true); // 🎯 加入 true，只抓第一句中文
 
     const questionPrompt = document.getElementById('questionPrompt');
     if (questionPrompt) {
@@ -6049,10 +6195,11 @@ function handleSpeakCurrent() {
     const currentItem = flatWordsList[currentWordIndex];
     if (currentItem) {
         const englishWord = extractEnglishWordOnly(currentItem.word);
-        const englishExample = extractEnglishExampleOnly(currentItem.example).replace(/<br>/g, ' '); // 語音不需要 <br> 換行
+        const englishExample = extractEnglishExampleOnly(currentItem.example, true).replace(/<br>/g, ' '); // 🎯 加入 true，只唸第一句
         speakText(`${englishWord}. ${englishExample}`);
     }
 }
+// ================= 替換終點 =================
 
 // 獨立出來的翻譯顯示函數
 function toggleTranslation() {
@@ -6201,15 +6348,20 @@ function displayQuizHistory(history) {
         });
         
         const percentage = item.percentage || Math.round((item.score / item.total) * 100);
-let scoreClass = 'needs-improvement';
-let scoreEmoji = '😓';  // ADD THIS LINE
-if (percentage >= 90) {
-    scoreClass = 'excellent';
-    scoreEmoji = '😄';  // ADD THIS LINE
-} else if (percentage >= 70) {
-    scoreClass = 'good';
-    scoreEmoji = '🙂';  // ADD THIS LINE
-}
+        let scoreClass = 'needs-improvement';
+        let scoreEmoji = '😓';
+
+        // 🎯 統一同測驗結算的 4 個等級與 Emoji
+        if (percentage === 100) {
+            scoreClass = 'excellent';
+            scoreEmoji = '🏆';
+        } else if (percentage >= 90) {
+            scoreClass = 'excellent';
+            scoreEmoji = '😄';
+        } else if (percentage >= 70) {
+            scoreClass = 'good';
+            scoreEmoji = '🙂';
+        }
         
         const sectionsText = item.sections && item.sections.length > 0 
             ? item.sections.join(', ') 
@@ -6279,6 +6431,7 @@ let isEnglishHidden = false;
 let isChineseHidden = false;
 let isScratchOffOnlyMode = false; // 🎯 新增：標記是否為純刮刮樂直達模式
 
+// ================= 替換起點 2 =================
 document.getElementById('batchLearnBtn').addEventListener('click', async () => {
     const allWords = await getWordsFromCurrentSection();
     batchChunks = [];
@@ -6288,10 +6441,23 @@ document.getElementById('batchLearnBtn').addEventListener('click', async () => {
     currentChunkIdx = 0;
     currentCardIdx = 0;
     isScratchOffOnlyMode = false; // 正常分批學習
+    
     document.getElementById('learningContentModal').style.display = 'none';
+
+    // 🎯 每次都顯示簡潔版任務說明，並動態填入字數 [A] 與回合數 [B]
+    document.getElementById('instTotalWords').textContent = allWords.length;
+    document.getElementById('instTotalRounds').textContent = batchChunks.length;
+    document.getElementById('batchInstructionsModal').style.display = 'block';
+});
+
+// 🎯 說明視窗內的 [ I'm ready! ] 點擊事件
+document.getElementById('btnReadyBatch').addEventListener('click', () => {
+    // 關閉說明，正式進入分批學習
+    document.getElementById('batchInstructionsModal').style.display = 'none';
     document.getElementById('batchStudyModal').style.display = 'block';
     renderBatchCard();
 });
+// ================= 替換終點 2 =================
 
 // 🎯 新增：純刮刮樂測驗的啟動邏輯
 async function startScratchOffSession(mode = 'inOrder') {
@@ -6333,34 +6499,70 @@ function renderBatchCard() {
     const chunk = batchChunks[currentChunkIdx];
     const wordData = chunk[currentCardIdx];
     
+    // 🎯 產生回合下拉選單的選項
+    let roundOptions = '';
+    for (let i = 0; i < batchChunks.length; i++) {
+        roundOptions += `<option value="${i}" ${i === currentChunkIdx ? 'selected' : ''}>Round ${i + 1}</option>`;
+    }
+    
     document.getElementById('batchProgressInfo').innerHTML = `
         <div style="display: inline-block; background-color: #f1c40f; color: #2c3e50; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             Total Rounds: ${batchChunks.length}
         </div>
-        <div style="font-size: 24px; color: #e74c3c; font-weight: bold; margin-top: 10px; letter-spacing: 1px;">
-            Round ${currentChunkIdx + 1} : <span style="color: #2c3e50;">${currentCardIdx + 1} / ${chunk.length}</span>
+        <div style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 24px; font-weight: bold;">
+            <!-- 🎯 可操作的下拉式選單 -->
+            <select id="roundJumpSelect" style="font-size: 22px; font-weight: bold; color: #e74c3c; background-color: #fff; padding: 2px 10px; border-radius: 8px; border: 2px solid #e74c3c; cursor: pointer; outline: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                ${roundOptions}
+            </select>
+            <span style="color: #2c3e50;"> : ${currentCardIdx + 1} / ${chunk.length}</span>
         </div>
     `;
     
+    // 🎯 綁定下拉選單切換事件：選擇後立刻跳轉並更新卡片
+    document.getElementById('roundJumpSelect').addEventListener('change', function() {
+        currentChunkIdx = parseInt(this.value);
+        currentCardIdx = 0; // 回到新回合的第 1 個單字
+        stopSpeech();
+        renderBatchCard();
+    });
+    
+// ================= 替換起點 2 =================
     const engWord = extractEnglishWordOnly(wordData.word);
     const chiWord = extractChineseTranslation(wordData.word);
-    const engEx = extractEnglishExampleOnly(wordData.example).replace(/<br>/g, ' '); 
-    const chiEx = extractChineseExample(wordData.example).replace(/<br>/g, ' ');
+    
+    // 🎯 將多個例句切開，讓中文翻譯緊跟在相對應的英文底下
+    const exParts = wordData.example.split('^');
+    let interleavedExHtml = '';
+    let fullSpeechExText = '';
+    
+    exParts.forEach(part => {
+        const engPart = extractEnglishExampleOnly(part, true); // 只抓當前切塊的英文
+        const chiPart = extractChineseExample(part, true);     // 只抓當前切塊的中文
+        
+        interleavedExHtml += `
+            <div style="margin-bottom: 15px;">
+                <div style="font-size: 23px; color: #555; text-align: center;">${engPart}</div>
+                ${chiPart ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 2px; text-align: center;">${chiPart}</div>` : ''}
+            </div>
+        `;
+        fullSpeechExText += engPart + '. '; // 收集給發音引擎唸的純英文句子
+    });
 
     document.getElementById('batchWordArea').innerHTML = `
         <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
         <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
     `;
-    document.getElementById('batchExampleArea').innerHTML = `
-        <div style="font-size: 23px; color: #555; margin-top: 15px; text-align: center;">${engEx}</div>
-        <div style="font-size: 19px; color: #555; margin-top: 5px; text-align: center;">${chiEx}</div>
-    `;
     
-    const fullSpeechText = `${engWord}. ${engEx}`;
+    // 🎯 放入交錯排版好的例句 HTML
+    document.getElementById('batchExampleArea').innerHTML = interleavedExHtml;
+    
+    // 🎯 語音朗讀時，只唸乾淨的英文句子
+    const fullSpeechText = `${engWord}. ${fullSpeechExText}`;
     document.getElementById('batchAudioArea').innerHTML = `
         <button class="audio-btn play-btn" onclick="speakText('${fullSpeechText.replace(/'/g, "\\'")}')">🔊</button>
         <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
     `;
+// ================= 替換終點 2 =================
 
     document.getElementById('batchBackBtn').disabled = (currentCardIdx === 0);
     document.getElementById('batchBackBtn').style.opacity = (currentCardIdx === 0) ? '0.5' : '1';
@@ -6396,7 +6598,7 @@ function closeBatchQuizModal() {
 }
 
 // ================= 替換起點 1 (區分兩種模式的標題) =================
-function openBatchQuiz(wordsToQuiz, isOverall) {
+function openBatchQuiz(wordsToQuiz, isOverall, keepScroll = false) {
     currentQuizWords = [...wordsToQuiz];
     isReviewMode = isOverall;
     
@@ -6406,18 +6608,18 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
 
     if (isOverall) {
         document.getElementById('batchQuizTitle').textContent = `Congrats on finishing all ${batchChunks.length} rounds! 🎉🎉🎉`;
-        document.getElementById('batchQuizSubtitle').textContent = "Tap 🔄 Random Review for a new set of vocabulary.";
         
-        document.getElementById('btnRandomReviewTop').style.display = 'inline-block';
+        // 🎯 內嵌連動按鈕維持原名Random Review
+        document.getElementById('batchQuizSubtitle').innerHTML = `Tap <span style="background-color: #9b59b6; color: white; padding: 4px 12px; border-radius: 15px; font-size: 16px; cursor: pointer; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="document.getElementById('btnRandomReviewTop').click();">🔄 Random Review</span> for a new set of vocabulary.`;
+        
+        document.getElementById('btnRandomReviewTop').style.display = 'block';
         document.getElementById('chkEngDone').style.display = 'none';
         document.getElementById('chkChiDone').style.display = 'none';
     } else {
         if (isScratchOffOnlyMode) {
-            // 🎯 針對「刮刮樂捷徑」模式的專屬標題與副標題
             document.getElementById('batchQuizTitle').textContent = `Quick Review: Round ${currentChunkIdx + 1} / ${batchChunks.length}`;
             document.getElementById('batchQuizSubtitle').textContent = "Check ✅ the boxes below when finished.";
         } else {
-            // 原始「分批學習」模式的標題與副標題
             document.getElementById('batchQuizTitle').textContent = `Congrats! Round ${currentChunkIdx + 1} is done! 🎉`;
             document.getElementById('batchQuizSubtitle').textContent = "Time for two quizzes. Check ✅ the boxes below when finished.";
         }
@@ -6430,7 +6632,11 @@ function openBatchQuiz(wordsToQuiz, isOverall) {
     renderBatchQuizTable();
     updateBatchQuizFooter();
     document.getElementById('batchQuizModal').style.display = 'block';
-    document.getElementById('batchQuizModal').scrollTop = 0;
+    
+    // 🎯 控制是否要捲動到最上方 (如果有傳入 keepScroll = true 就不會跳回最上方)
+    if (!keepScroll) {
+        document.getElementById('batchQuizModal').scrollTop = 0;
+    }
 }
 // ================= 替換終點 1 =================
 
@@ -6616,13 +6822,15 @@ document.getElementById('btnHideEng').onclick = function() {
 };
 // ================= 替換終點 2 =================
 
-// Overall Review 頂部抽題按鈕
+// Overall Review 重新抽題按鈕
 document.getElementById('btnRandomReviewTop').onclick = async () => {
     if (isEnglishHidden || isChineseHidden) return; 
     const allWords = await getWordsFromCurrentSection();
     // 依據不熟機率重新抽 10 題
     const reviewWords = getWeightedRandomWords(allWords, 10);
-    openBatchQuiz(reviewWords, true);
+    
+    // 🎯 傳入 true，表示「更新表格後保持滾動位置」，方便直接點擊 Quiz
+    openBatchQuiz(reviewWords, true, true); 
 };
 
 document.getElementById('chkEngDone').onchange = updateBatchQuizFooter;
@@ -6875,9 +7083,39 @@ document.getElementById('scratchOffBtn').addEventListener('click', () => {
     document.getElementById('scratchModeModal').style.display = 'block';
 });
 // ================= 替換終點 7-1 =================
+// ================= 替換起點 4-2 =================
 document.getElementById('listenSpeaker').addEventListener('click', playQuizAudio);
-document.getElementById('listenStopBtn').addEventListener('click', stopSpeech); // 新增這行停止發音
+
+// ================= 替換起點 3 =================
+// 🎯 按下 [🔊 Example] 的專屬事件 (包含 Toggle Stop 邏輯)
+document.getElementById('listenExampleBtn').addEventListener('click', function() {
+    if (!correctAnswer) return;
+    
+    // 🎯 如果目前是 Stop 狀態，則停止發音並提早返回
+    if (this.innerHTML.includes('Stop')) {
+        stopSpeech(); // 內部會呼叫 resetListenExampleBtn() 自動將按鈕變回黃色
+        return;
+    }
+
+    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+    
+    // 解除例句隱藏
+    const exampleDiv = document.getElementById('lq-example-part');
+    if (exampleDiv) {
+        exampleDiv.style.display = 'block';
+    }
+
+    // 1. 開始朗讀 (這會先呼叫 stopSpeech() 確保先前的音檔停止)
+    speakText(exampleOnly);
+    
+    // 2. 將按鈕變成紅色 🔇 Stop (必須在 speakText 後面，才不會被覆蓋)
+    this.innerHTML = '🔇 Stop';
+    this.style.backgroundColor = '#e74c3c';
+    this.style.color = 'white';
+});
+
 document.getElementById('listenNextBtn').addEventListener('click', nextQuizQuestion);
+// ================= 替換終點 3 =================
 document.getElementById('listenCloseBtn').addEventListener('click', closeQuizModal);
 document.getElementById('closeListenChoose').addEventListener('click', closeQuizModal);
 document.getElementById('toggleEnglishBtn').addEventListener('click', toggleEnglishDisplay);  // ADD THIS LINE
