@@ -1059,10 +1059,10 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 15px 25px;
             border-radius: 3px;
             cursor: pointer;
-            font-size: 17px;
+            font-size: 20px;
         }
 
         .nav-btn:hover:not(:disabled) {
@@ -1276,8 +1276,8 @@
             }
 
             .nav-btn {
-                padding: 8px 12px;
-                font-size: 15px;
+                padding: 12px 18px;
+                font-size: 18px;
             }
         }
 
@@ -1600,7 +1600,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.62)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.63)</span>
         </h1>
 
         <div class="button-categories">
@@ -2039,15 +2039,26 @@
             <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
             <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
         </div>
-        <div class="translation-text" id="translationText">
-            <div class="translation-label">🌐 中文翻譯：</div>
-            <div>請先選擇單字</div>
-        </div>
-    </div>
-                <div class="progress-info" id="progressInfo" style="font-weight: bold; color: #2980b9;">
-                    Loading...
+<!-- ================= 替換起點 1 ================= -->
+                <div class="translation-text" id="translationText">
+                    <div class="translation-label">🌐 中文翻譯：</div>
+                    <div>請先選擇單字</div>
                 </div>
-                <div class="navigation-controls" id="navigationControls">
+            </div>
+            
+            <!-- 🎯 新增：黃色 Progress Bar 樣式的總進度條 -->
+            <div id="walkProgressContainer" style="margin: 0 auto 20px auto; width: 100%; max-width: 500px; background-color: #fffbf0; border: 2px solid #ffc107; border-radius: 12px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div class="progress-row" style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                    <span class="progress-row-label" style="font-size: 14px; font-weight: bold; color: #2c3e50; white-space: nowrap; flex-shrink: 0;">Progress:</span>
+                    <div class="progress-track-mini" style="flex: 1; height: 12px; background-color: #e9ecef; border-radius: 6px; overflow: hidden; border: 1px solid #ddd;">
+                        <div class="progress-fill-mini" id="walkProgressFill" style="height: 100%; width: 0%; background-color: #ffc107; border-radius: 6px; transition: width 0.3s ease;"></div>
+                    </div>
+                    <span class="progress-fraction" id="walkProgressText" style="font-size: 14px; font-weight: bold; color: #2c3e50; white-space: nowrap; flex-shrink: 0; min-width: 82px; text-align: right;">0 / 0 (0%)</span>
+                </div>
+            </div>
+
+            <div class="navigation-controls" id="navigationControls">
+<!-- ================= 替換終點 1 ================= -->
                     <button class="nav-btn" id="backBtn">← Back</button>
                     <button class="nav-btn" id="nextBtn">Next →</button>
                 </div>
@@ -3425,8 +3436,8 @@ praise (v) (讚美、稱讚) ^ The teacher praised the young student for his exc
 grace (n) (優雅、體面) ^ The ice skater moved across the rink with high grace. (這名滑冰選手以極高的優雅在冰場上移動。)
 grace (v) (為…增色、增添光彩) ^ Many famous stars came to grace the red carpet at the ceremony. (許多著名明星蒞臨頒獎典禮，為紅毯增添光彩。)
 graceful (adj) (優雅的、優美的) ^ Dancers spend years practicing to make their movements graceful. (舞者花費數年練習以使他們的動作優美。)
-address (v) (1.應付、處理 = deal with…) ^ We need to address the safety problem before opening the store. (我們需要在開店前去處理這個安全問題。)
-address (v) (2.對…講話 = speak to…) ^ The president will address the public on TV tonight. (總統今晚將會在電視上對大眾講話。)
+to address (v) (1.應付、處理 = deal with…) ^ We need to address the safety problem before opening the store. (我們需要在開店前去處理這個安全問題。)
+to address (v) (2.對…講話 = speak to…) ^ The president will address the public on TV tonight. (總統今晚將會在電視上對大眾講話。)
 (letter, package…) be addressed to… (phr) (（信、包裹等）署名寄給…) ^ This small package is addressed to my elder sister. (這個小包裹是署名寄給我的姊姊的。)
 credit (v) (歸功於) ^ Teachers credit his success to his long hard work. (老師們將他的成功歸功於他長期的努力工作。)
 despite (prep) (儘管、雖然 = in spite of…) ^ We enjoyed our outdoor picnic despite the cold wind. (儘管吹著冷風，我們依然享受了我們的戶外野餐。)
@@ -3445,7 +3456,7 @@ abuse (v) (2.濫用) ^ Leaders should never abuse their power for personal gain.
 colleague (n) (同事 = co-worker) ^ She works well with every colleague in her office. (她與辦公室裡的每一位同事都合作得很好。)
 hopeless (adj) (無望的、絕望的) ^ He felt hopeless when he lost his passport in a foreign country. (當他在外國丟失護照時，他感到很絕望。)
 
-◎Day 2: 綜合測驗
+◎Day 2: 綜合一
 academic (adj) (學術的) ^ The university library offers many academic journals for students. (大學圖書館為學生提供許多學術期刊。)
 be about to V (phr) (即將…) ^ Hurry up! The train is about to leave the station. (快一點！火車即將離開車站。)
 innovation (n) (創新、革新) ^ Smartphone technology was a major innovation that changed our lives. (智慧型手機技術是一項改變我們生活的大創新。)
@@ -3464,7 +3475,8 @@ one dozen (n) (一打、十二個) ^ I bought two dozen fresh eggs from the loca
 participant (n) (參加者、參與者，補充: participate參與) ^ Every participant in the race received a free T-shirt. (跑步比賽中的每位參加者都獲得了一件免費T恤。)
 squeeze (v) (擠壓、擠出) ^ Squeeze some lemon juice onto the fresh fish for better flavor. (擠一些檸檬汁在鮮魚上以獲得更好的風味。)
 squeeze into (a place) (phr) (擠進（地方）) ^ Too many people tried to squeeze into the small elevator. (太毒人試圖擠進這個小電梯裡。)
-break into (a place) (phr) (闖入（地方）) ^ A thief tried to break into the house during the night. (一名小偷試圖在夜間闖入這棟房子。)
+break into (a place) (phr) (1.闖入（某地方）) ^ A thief tried to break into the house during the night. (一名小偷試圖在夜間闖入這棟房子。)
+break into (something) (phr) (2.突然開始做（某事）= suddenly begin to do sth) ^ He felt so happy that he *broke into song*. = He felt so happy that he *suddenly began to sing*. (他高興得突然唱起歌來。)
 intimate (adj) (親密的、私密的) ^ They held an intimate birthday party with only close family members. (他們舉辦了一場只有親近家人參加的親密生日派對。)
 to record (v) (記錄、錄音/影) ^ Please record the main points of today's team meeting. (請記錄今天團隊會議的要點。)
 record (n) (記錄) ^ He broke the school record for the hundred-meter race. (他打破了這所學校百米賽跑的紀錄。)
@@ -3517,7 +3529,7 @@ cooperative (adj) (合作的、配合的 = co- + operative) ^ Students were very
 cooperation (n) (合作、配合 = co- + operation) ^ Success requires close cooperation among all team members. (成功需要所有團隊成員之間密切的合作。)
 industry (n) (1.工業 2.產業) ^ The movie industry brings entertainment to millions of people. (電影產業給數百萬人帶來娛樂。)
 institution (n) (機構、制度) ^ This hospital is a top medical institution in our city. (這家醫院是我們城市裡頂尖的醫療機構。)
-
+◎Day 2: 綜合二
 sick to one’s stomach (phr) (感到反胃、想吐) ^ Riding the fast roller coaster made him feel sick to his stomach. (搭乘快速雲霄飛車讓他感到反胃想吐。)
 rocking chair (n) (搖椅) ^ My dad fell asleep peacefully in the rocking chair. (我父親在搖椅上安詳地睡著了。)
 rocking boat (n) (搖晃的船) ^ Standing on a rocking boat can easily make you lose balance. (站在搖晃的船上很容易讓你失去平衡。)
@@ -3569,7 +3581,7 @@ at least (phr) (至少) ^ You should brush your teeth at least twice a day. (你
 after all (phr) (畢竟) ^ Don't be too hard on him; after all, he is only five years old. (不要對他太嚴苛；畢竟他只有五歲。)
 
 
-◎Day 3: 文意、篇章
+◎Day 3: 文意選填
 refer to… (phr) (1.提及、意指  2.參考) ^ The speaker used a map to refer to different cities. (講者使用地圖來指稱不同的城市。)
 reference (to…) (n) (1.提及  2.參考、參考資料) ^ He made a quick reference to his past experiences during the speech. (他在演講中簡短提及了他過去的經歷。)
 bear (v) (1.忍受、容忍) ^ She could not bear the extreme cold without a thick jacket. (沒有穿厚外套，她無法忍受極度嚴寒。)
@@ -3649,7 +3661,7 @@ generation (n) (世代、一代人) ^ Traditions are passed down from one genera
 for generations to come (phr) (世世代代、在未來的幾代) ^ Protecting forests keeps natural beauty alive for generations to come. (保護森林能為世世代代保留自然之美。)
 for years to come (phr) (在未來的歲月中) ^ This classical song will remain popular for years to come. (這首經典歌曲在未來的歲月中將繼續保持流行。)
 
-
+◎Day 3: 篇章結構
 capsule (n) (膠囊、膠囊艙) ^ Modern capsule hotels offer compact spaces for travelers. (現代膠囊旅館為旅客提供緊湊的空間。)
 also known as… (phr) (也被稱為…) ^ The city is also known as the cultural center of the region. (這座城市也被稱為該地區的文化中心。)
 pod (n) (艙體、小膠囊艙) ^ Sleeping in a pod can be a comfortable experience. (睡在小膠囊艙裡可以是一種舒適的體驗。)
@@ -3726,7 +3738,7 @@ lodging (n) (住宿、寄宿) ^ Compact micro lodging is gaining popularity acro
 commerce (n) (商業、貿易) ^ Dense areas of international commerce generate strong demand for short stays. (國際商業發達的區域產生了對短暫停留的強烈需求。)
 
 
-◎Day 4: 閱測一二
+◎Day 4: 閱測一
 intersection (n) (交叉路口 vs. crossroads十字路口) ^ Drive slowly when approaching a busy intersection. (靠近繁忙的十字路口時請減速慢行。)
 be at a crossroads (phr) (面臨重要的轉折點、需要做重大決定的時刻) ^ The teacher is at a crossroads in her career. She is thinking about quitting her job. (這個老師的職涯正處於一個關鍵抉擇點。她正在考慮是否辭職。)
 invent (v) (發明、創造) ^ Alexander Graham Bell helped invent the electric telephone. (亞歷山大·格拉漢姆·貝爾協助發明了電話。)
@@ -3809,6 +3821,7 @@ manage (v) (管理、經營) ^ She knows how to manage a team under high pressur
 manager (n) (經理、管理者) ^ The general manager signed the important contract yesterday. (總經理昨天簽署了這份重要的合約。)
 management (n) (管理、管理層) ^ Effective time management is essential for busy students. (有效的時間管理對忙碌的學生來說至關重要。)
 
+◎Day 4: 閱測二
 horror movie (n) (恐怖電影) ^ Watching a creepy horror movie late at night can be thrilling. (在深夜看一部令人毛骨悚然的恐怖電影可以很刺激。)
 typically (adv) (典型地、通常) ^ Tropical regions typically experience hot and humid weather year-round. (熱帶地區通常全年氣候炎熱潮濕。)
 zombie (n) (喪屍、殭屍) ^ Stories about a zombie outbreak are popular in horror fiction. (關於喪屍爆發的故事在恐怖小說中很受歡迎。)
@@ -3902,7 +3915,7 @@ aggression (n) (攻擊性、侵略行為) ^ Animals show aggression when they fe
 aggressive (adj) (1.好鬥的、富攻擊性的) ^ The stray dog showed aggressive behavior when approached. (這隻流浪狗被靠近時展現出好鬥的行為。)
 aggressive (adj) (2.積極進取的、野心勃勃的) ^ The ambitious company adopted an aggressive marketing strategy. (這家野心勃勃的公司採取了積極進取的行銷策略。)
 
-◎Day 5: 閱測三、混合
+◎Day 5: 閱測三
 Russia (n) (俄羅斯) ^ Russia is the largest country in the world by land area. (俄羅斯是世界上陸地面積最大的國家。)
 Russian (adj / n) (俄羅斯的；俄羅斯人、俄語) ^ Russian literature is world-famous for its deep philosophical themes. (俄羅斯文學以其深刻的哲學主題而聞名世界。)
 portray (v) (描繪) ^ The movie portrays the main hero as a wise and brave leader. (這部電影將主角描繪成一位明智而英勇的領袖。)
@@ -3991,7 +4004,8 @@ first place (n) (第一名、首位) ^ The young runner worked hard to capture f
 when it comes to (+ N / V-ing) (phr) (當提到…、談及…) ^ When it comes to cooking pasta, fresh garlic makes a difference. (當提到煮義大利麵時，新鮮大蒜會帶來很大的不同。)
 per capita (adj / adv) (人均的；按人口平均計算地) ^ The country boasts a high GDP per capita due to thriving tech industries. (由於繁榮的科技產業，該國擁有很高的人均國內生產總值。)
 
-captivity (n) (囚禁、圈養) ^ Animals raised in captivity may lack natural wild survival skills. (在圈養環境下長大的動物可能缺乏天然的野生生存技能。)
+◎Day 5: 混合題
+captivity (n) (囚禁、圈養) ^ Animals raised *in captivity* may lack natural wild survival skills. (在圈養環境下長大的動物可能缺乏天然的野生生存技能。)
 display (v / n) (1.陳列、展覽) ^ Antique artifacts are on display in the museum's main hall. (古董文物正在博物館的大廳展出。)
 display (v / n) (2.顯示、表現) ^ The screen will display live navigation maps clearly while driving. (螢幕會在駕駛時清晰顯示實時導航地圖。)
 on display (phr) (展出中、陳列著) ^ Beautiful modern paintings were on display throughout the gallery. (美麗的現代畫作在整個畫廊中展出。)
@@ -5021,11 +5035,11 @@ let showEnglishTimeout = null;  // ADD THIS LINE - track the timeout
 
 // Clean text for TTS
 function cleanTextForTTS(text) {
-    return text.replace(/\*/g, '')
+    return text.replace(/<[^>]*>/g, '') // 🎯 新增：過濾所有 HTML 標籤 (防止 TTS 唸出換行與字體縮小的程式碼)
+               .replace(/\*/g, '')
                .replace(/\//g, '')
                .replace(/\([^)]*\)/g, '')
-               .replace(/\[[^\]]*\]/g, '')
-               // 🎯 新增：自動過濾掉所有的 Emojis，讓 TTS 變成「視而不見」
+               .replace(/\[[^\]]*\]/g, '') // 🎯 確保 [] 內的補充內容也不會被 TTS 唸出來干擾聽力
                .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
                .replace(/\s+/g, ' ')
                .trim();
@@ -5218,21 +5232,27 @@ function openLearningContent(lessonKey, savedCheckedWords) {
         const sectionData = currentLessonData[sectionIndex];
         html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
 
-// ================= 替換起點 3 =================
+// ================= 替換起點 2 =================
         sectionData.words.forEach((item, wordIndex) => {
             if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
                 totalCheckedWords++;
-                const fullText = `${item.word}. ${item.example.replace(/\^/g, '.')}`; // 🎯 發音時把 ^ 換成句號停頓
+                const fullText = `${item.word}. ${item.example.replace(/\^/g, '.')}`; 
+                // 🎯 預防性修復：為發音文字加上雙引號跳脫，避免對話題材搞壞版面
+                const safeFullText = fullText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                
                 const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
                 
-                // 🎯 處理例句顯示，並把多個例句的 ^ 換成分隔線
+                // 處理例句顯示，並把多個例句的 ^ 換成分隔線
                 let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em; color: #7f8c8d;">$1</span><br>');
                 displayExample = displayExample.replace(/\s*\^\s*/g, '<hr style="border: 0; border-top: 1px dashed #bdc3c7; margin: 8px 0;">');
+                
+                // 處理 [] 標籤：自動換行並縮小 0.8 倍字體
+                displayExample = displayExample.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
                 displayExample = displayExample.replace(/(<br>)+$/, '');
 
                 html += `<tr class="vocab-row" data-section="${sectionIndex}">
                     <td class="audio-controls">
-                        <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
+                        <button class="audio-btn play-btn" onclick="speakText('${safeFullText}')">🔊</button>
                         <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
                     </td>
                     <td class="content-cell">
@@ -5242,7 +5262,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
                 </tr>`;
             }
         });
-// ================= 替換終點 3 =================
+// ================= 替換終點 2 =================
     });
 
     // 動態顯示「分批學習」按鈕
@@ -5313,19 +5333,15 @@ function extractChineseTranslation(wordString) {
     return match ? match[1] : wordString; // 若無匹配則回傳原字串以防出錯
 }
 
-// ================= 替換起點 1 =================
-// ================= 替換起點 =================
 // Extract English example without Chinese translation (支援多句換行與指定只抓第一句)
 function extractEnglishExampleOnly(exampleString, firstOnly = false) {
     let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
     // 把中文括號移除後，改用單一空格取代，不再產生多餘換行
     let eng = exStr.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, ' ');
-    
-    // 🎯 處理 [] 標籤：自動換行並縮小為 0.8 倍字體 (加入微弱的灰色讓補充視覺更柔和)
-    eng = eng.replace(/\s*(\[[^\]]+\])/g, '<br><span style="font-size: 0.8em; color: #7f8c8d; line-height: 1.4; display: inline-block; margin-top: 2px;">$1</span>');
-    
     // 多例句之間的 ^ 改為單一換行即可
     eng = eng.replace(/\s*\^\s*/g, '<br>'); 
+    // 🎯 處理 [] 標籤：自動換行並縮小 0.8 倍字體，顏色稍微調淡以增加層次感
+    eng = eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
     return eng.trim();
 }
 
@@ -5333,21 +5349,15 @@ function extractEnglishExampleOnly(exampleString, firstOnly = false) {
 function extractChineseExample(exampleString, firstOnly = false) {
     let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
     const matches = exStr.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
-    
-    // 抓出中文後，改用單一換行連接
-    let chi = matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
-    
-    // 🎯 中文翻譯中的 [] 標籤也同步：自動換行並縮小為 0.8 倍字體
-    chi = chi.replace(/\s*(\[[^\]]+\])/g, '<br><span style="font-size: 0.8em; color: #95a5a6; line-height: 1.4; display: inline-block; margin-top: 2px;">$1</span>');
-    
-    return chi;
+    let result = matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+    // 🎯 處理 [] 標籤：自動換行並縮小 0.8 倍字體
+    result = result.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+    return result;
 }
-// ================= 替換終點 =================
 
 // 為了相容 Listening Quiz 舊有命名，加入 firstOnly 參數傳遞
 function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
 function extractExampleOnly(exampleString, firstOnly = false) { return extractEnglishExampleOnly(exampleString, firstOnly); }
-// ================= 替換終點 1 =================
 
 // ================= 替換起點 5-2 =================
 window.allQuizWordsPool = [];
@@ -6147,13 +6157,15 @@ function updateStudySession() {
     const chineseWord = extractChineseTranslation(currentItem.word);
     const chineseExample = extractChineseExample(currentItem.example, true); // 🎯 加入 true，只抓第一句中文
 
+// ================= 替換起點 2 =================
     const questionPrompt = document.getElementById('questionPrompt');
     if (questionPrompt) {
         questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
     }
 
-    document.getElementById('currentWord').innerHTML = englishWord;
-    document.getElementById('currentExample').innerHTML = englishExample;
+    // 🎯 1. 放大英文字體，比照分批學習的 28px 與 23px
+    document.getElementById('currentWord').innerHTML = `<div style="font-size: 28px; font-weight: bold; color: #2c3e50;">${englishWord}</div>`;
+    document.getElementById('currentExample').innerHTML = `<div style="font-size: 23px; color: #555;">${englishExample}</div>`;
 
     const translationDiv = document.getElementById('translationText');
     const translateBtn = document.getElementById('showTranslationBtn');
@@ -6164,10 +6176,11 @@ function updateStudySession() {
         } else {
             translationDiv.classList.remove('show');
         }
+        // 🎯 調整中文字體與配色 (單字縮小為19px，例句維持19px，皆採用與標籤相同的 #856404 配色)
         translationDiv.innerHTML = `
-            <div class="translation-label">🌐 中文翻譯：</div>
-            <div><strong>${chineseWord}</strong></div>
-            <div style="margin-top: 5px;">${chineseExample}</div>
+            <div class="translation-label" style="font-size: 16px;">🌐 中文翻譯：</div>
+            <div style="font-size: 19px; font-weight: bold; color: #856404; margin-top: 5px;">${chineseWord}</div>
+            <div style="font-size: 19px; color: #856404; margin-top: 8px;">${chineseExample}</div>
         `;
     }
     
@@ -6176,12 +6189,16 @@ function updateStudySession() {
         translateBtn.style.cursor = translationShown ? 'not-allowed' : 'pointer';
     }
 
-    // 🎯 進度顯示更新: 移除多餘的◎，因為 sectionTitle 已經有自帶 ◎ 了
-    const wordsInSection = flatWordsList.filter(item => item.sectionIndex === currentItem.sectionIndex);
-    const indexInSection = wordsInSection.findIndex(item => item.wordIndex === currentItem.wordIndex) + 1;
-    const totalInSection = wordsInSection.length;
+    // 🎯 3. 將進度顯示改為總進度與百分比，連動新的黃色進度條
+    const totalWalkWords = flatWordsList.length;
+    const currentWalkIndex = currentWordIndex + 1;
+    const walkPercentage = totalWalkWords > 0 ? Math.round((currentWalkIndex / totalWalkWords) * 100) : 0;
     
-    document.getElementById('progressInfo').textContent = `${currentItem.sectionTitle}: ${indexInSection} / ${totalInSection}`;
+    const walkProgressText = document.getElementById('walkProgressText');
+    const walkProgressFill = document.getElementById('walkProgressFill');
+    
+    if (walkProgressText) walkProgressText.textContent = `${currentWalkIndex} / ${totalWalkWords} (${walkPercentage}%)`;
+    if (walkProgressFill) walkProgressFill.style.width = `${walkPercentage}%`;
 
     // 更新導覽按鈕
     const backBtn = document.getElementById('backBtn');
@@ -6189,7 +6206,7 @@ function updateStudySession() {
     if (backBtn) backBtn.disabled = false;
     if (nextBtn) nextBtn.disabled = false;
 }
-
+// ================= 替換終點 2 =================
 // 獨立出來的發音函數：精準唸出過濾後的英文
 function handleSpeakCurrent() {
     const currentItem = flatWordsList[currentWordIndex];
@@ -6535,6 +6552,7 @@ function renderBatchCard() {
     let interleavedExHtml = '';
     let fullSpeechExText = '';
     
+// ================= 替換起點 1 =================
     exParts.forEach(part => {
         const engPart = extractEnglishExampleOnly(part, true); // 只抓當前切塊的英文
         const chiPart = extractChineseExample(part, true);     // 只抓當前切塊的中文
@@ -6545,7 +6563,10 @@ function renderBatchCard() {
                 ${chiPart ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 2px; text-align: center;">${chiPart}</div>` : ''}
             </div>
         `;
-        fullSpeechExText += engPart + '. '; // 收集給發音引擎唸的純英文句子
+        
+        // 🎯 拔除 HTML 標籤，只保留純文字給發音引擎，避免引號搞壞按鈕
+        const plainEngPart = engPart.replace(/<[^>]*>/g, '');
+        fullSpeechExText += plainEngPart + '. '; 
     });
 
     document.getElementById('batchWordArea').innerHTML = `
@@ -6556,12 +6577,15 @@ function renderBatchCard() {
     // 🎯 放入交錯排版好的例句 HTML
     document.getElementById('batchExampleArea').innerHTML = interleavedExHtml;
     
-    // 🎯 語音朗讀時，只唸乾淨的英文句子
+    // 🎯 語音朗讀時，同時處理單引號與雙引號的跳脫
     const fullSpeechText = `${engWord}. ${fullSpeechExText}`;
+    const safeSpeechText = fullSpeechText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    
     document.getElementById('batchAudioArea').innerHTML = `
-        <button class="audio-btn play-btn" onclick="speakText('${fullSpeechText.replace(/'/g, "\\'")}')">🔊</button>
+        <button class="audio-btn play-btn" onclick="speakText('${safeSpeechText}')">🔊</button>
         <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
     `;
+// ================= 替換終點 1 =================
 // ================= 替換終點 2 =================
 
     document.getElementById('batchBackBtn').disabled = (currentCardIdx === 0);
