@@ -650,28 +650,45 @@
             line-height: 1.5;
         }
 
-        .audio-btn {
-            background: none;
-            border: none;
+/* ================= 替換起點 1 ================= */
+        .audio-toggle-btn {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #bdc3c7;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
-            font-size: 28px;
-            margin: 2px;
-            padding: 5px;
-            border-radius: 3px;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            vertical-align: top;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            outline: none;
+            flex-shrink: 0;
         }
 
-        .audio-btn:hover {
-            background-color: #f0f0f0;
+        .audio-toggle-btn:hover {
+            transform: scale(1.1);
+            background-color: #d5d8dc;
         }
 
-        .play-btn {
-            color: #27ae60;
+        .audio-toggle-btn.playing {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+            animation: pulse-audio 1.5s infinite;
         }
 
-        .stop-btn {
-            color: #e74c3c;
+        @keyframes pulse-audio {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
+/* ================= 替換終點 1 ================= */
 
         .no-data {
             text-align: center;
@@ -1600,7 +1617,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.64)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.71)</span>
         </h1>
 
         <div class="button-categories">
@@ -2034,11 +2051,11 @@
     <div class="speech-bubble" id="speechBubble" style="background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #dee2e6; margin-bottom: 20px;">
         <div class="current-word" id="currentWord">Select a lesson first!</div>
         <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
-        <div class="bubble-controls">
-            <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-            <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
-            <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+<!-- ================= 替換起點 1-2 ================= -->
+        <div class="bubble-controls" style="margin-top: 25px; text-align: center;">
+            <button id="showTranslationBtn" class="study-partner-btn" style="background-color: #e67e22; width: 100%; max-width: 300px; padding: 12px; font-size: 18px;">🀄 顯示中文翻譯</button>
         </div>
+<!-- ================= 替換終點 1-2 ================= -->
 <!-- ================= 替換起點 1 ================= -->
                 <div class="translation-text" id="translationText">
                     <div class="translation-label">🌐 中文翻譯：</div>
@@ -2154,13 +2171,15 @@
     </div>
 </div>
 
+<!-- ================= 替換起點 1 ================= -->
 <div id="edit-entry-modal" class="modal">
     <div class="modal-content" style="max-width: 700px;">
         <h2 style="text-align: center; color: #2c3e50; margin-bottom: 10px;">✏️ Edit This Entry</h2>
-        <p style="color: #e74c3c; margin-bottom: 15px; text-align: center; font-weight: bold;">(Paste using format: word (n) (中文) ^ example (中文))</p>
-        <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="◎Section Title&#10;word (n) (翻譯) ^ Example sentence (翻譯)"></textarea>
+        <!-- 🎯 移除紅色說明，並將最新版語法教學放進 placeholder 屬性裡 -->
+        <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="@Section Title&#10;單字 (詞性) (單字中譯) ^ 例句1 (例句1中譯) [補充資訊] ^ 例句2 (例句2中譯) [補充資訊] | 特殊標記區塊"></textarea>
         
         <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+<!-- ================= 替換終點 1 ================= -->
             <button id="edit-save-btn" class="quiz-btn" style="background-color: #28a745; color: white;">💾 Save</button>
             <button id="edit-ai-link-btn" class="quiz-btn" style="background-color: #17a2b8; color: white;">💡 AI (中+句)</button>
             <button id="edit-clear-btn" class="quiz-btn" style="background-color: #f39c12; color: white;">🈳 Clear</button>
@@ -2432,11 +2451,13 @@ function parseSimplifiedDatabase(text) {
     const lines = text.trim().split('\n');
     let currentSection = null;
 
+// ================= 替換起點 2 =================
     for (let line of lines) {
         line = line.trim();
         if (!line) continue;
 
-        if (line.startsWith('◎')) {
+        // 🎯 讓系統同時支援 ◎ 和 @ 作為 Section Title 的開頭
+        if (line.startsWith('◎') || line.startsWith('@')) {
             // New section
             if (currentSection) {
                 sections.push(currentSection);
@@ -2445,8 +2466,8 @@ function parseSimplifiedDatabase(text) {
                 section: line,
                 words: []
             };
-// ================= 替換起點 1 =================
         } else if (line.includes('^') && currentSection) {
+// ================= 替換終點 2 =================
             // 🎯 階段一升級：支援多個 ^ 符號，第一個為單字，其餘全為例句
             const parts = line.split('^').map(s => s.trim());
             const wordPart = parts.shift(); // 取出單字部分
@@ -5049,48 +5070,66 @@ function getRandomEmoji() {
     return studyEmojis[Math.floor(Math.random() * studyEmojis.length)];
 }
 
-// ================= 替換起點 1 (加入重置按鈕輔助函數與語音控制) =================
-// 🎯 輔助函數：將 Example 按鈕恢復為預設的黃色播放狀態
-function resetListenExampleBtn() {
+// ================= 替換起點 2-1 =================
+// 🎯 智慧單一 Toggle 語音播放系統
+function toggleSpeech(text, btnElement) {
+    if (btnElement && btnElement.classList.contains('playing')) {
+        stopSpeech();
+        return;
+    }
+    stopSpeech(); // 確保停止其他正在播放的聲音
+    if (btnElement) {
+        btnElement.classList.add('playing');
+        btnElement.innerHTML = '🔇'; // 播放中顯示暫停符號
+    }
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = 'en-US';
+    utterance.rate = speechRate;
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onend = () => { resetAllAudioButtons(); };
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+
+function resetAllAudioButtons() {
+    document.querySelectorAll('.audio-toggle-btn').forEach(b => {
+        b.classList.remove('playing');
+        b.innerHTML = '🔊';
+    });
     const btn = document.getElementById('listenExampleBtn');
     if (btn && btn.innerHTML.includes('Stop')) {
         btn.innerHTML = '🔊 Example';
         btn.style.backgroundColor = '#ffc107';
         btn.style.color = '#000';
     }
+    currentSpeech = null;
 }
 
-// Speak text
-function speakText(text) {
-    stopSpeech();
-    const cleaned = cleanTextForTTS(text);
-    if (!cleaned) return;
-
-    const utterance = new SpeechSynthesisUtterance(cleaned);
-    utterance.lang = 'en-US';
-    utterance.rate = speechRate;
-
-    const voice = getEnglishVoice();
-    if (voice) utterance.voice = voice;
-
-    utterance.onend = () => {
-        currentSpeech = null;
-        resetListenExampleBtn(); // 🎯 語音自然結束時，恢復按鈕狀態
-    };
-
-    currentSpeech = utterance;
-    speechSynthesis.speak(utterance);
-}
-
-// Stop speech
 function stopSpeech() {
     if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
     }
-    currentSpeech = null;
-    resetListenExampleBtn(); // 🎯 語音被強制停止時，立刻恢復按鈕狀態
+    resetAllAudioButtons();
 }
-// ================= 替換終點 1 =================
+
+function speakText(text) {
+    // 保留給舊的 Listening Quiz 與 Translation Quiz 使用
+    stopSpeech();
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = 'en-US';
+    utterance.rate = speechRate;
+    const voice = getEnglishVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onend = () => { resetAllAudioButtons(); };
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+// ================= 替換終點 2-1 =================
 
             // Update Bottom Sticky Progress Bar (修復邏輯：看到表格才顯示，看到底端按鈕就隱藏)
         function updateLearningProgress() {
@@ -5216,7 +5255,7 @@ async function loadVocabulary(lessonKey) {
     document.getElementById('sectionSelectModal').style.display = 'block';
 }
 
-// ================= 替換起點 3 =================
+// ================= 替換起點 1 =================
 function openLearningContent(lessonKey, savedCheckedWords) {
     document.getElementById('sectionSelectModal').style.display = 'none';
     let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
@@ -5225,43 +5264,69 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
     const tableBody = document.getElementById('vocabTableBody');
     let html = '';
-    let totalCheckedWords = 0; // 新增：用來計算打勾的總字數
+    let totalCheckedWords = 0; // 用來計算打勾的總字數
 
     currentSelectedSectionIndices.forEach(sectionIndex => {
         const sectionData = currentLessonData[sectionIndex];
         html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
 
-// ================= 替換起點 2 =================
+        // 🎯 這裡補回被誤刪的單字迴圈
         sectionData.words.forEach((item, wordIndex) => {
             if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
                 totalCheckedWords++;
-                const fullText = `${item.word}. ${item.example.replace(/\^/g, '.')}`; 
-                // 🎯 預防性修復：為發音文字加上雙引號跳脫，避免對話題材搞壞版面
-                const safeFullText = fullText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 
-                const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
+                const engWord = extractEnglishWordOnly(item.word);
+                const chiWord = extractChineseTranslation(item.word);
+                const safeWordSpeech = engWord.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 
-                // 處理例句顯示，並把多個例句的 ^ 換成分隔線
-                let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em; color: #7f8c8d;">$1</span><br>');
-                displayExample = displayExample.replace(/\s*\^\s*/g, '<hr style="border: 0; border-top: 1px dashed #bdc3c7; margin: 8px 0;">');
+                let displayExampleHtml = '';
+                const parsedEx = parseExamples(item.example);
                 
-                // 處理 [] 標籤：自動換行並縮小 0.8 倍字體
-                displayExample = displayExample.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
-                displayExample = displayExample.replace(/(<br>)+$/, '');
+                parsedEx.forEach((p, idx) => {
+                    if (p.type === 'example') {
+                        let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+                        let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+                        const safeSpeech = p.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        displayExampleHtml += `
+                            <div style="margin-bottom: ${idx === parsedEx.length - 1 ? '0' : '15px'};">
+                                <div style="font-size: 1.3em; color: #444; line-height: 1.5; display: flex; align-items: flex-start;">
+                                    <button class="audio-toggle-btn" onclick="toggleSpeech('${safeSpeech}', this)">🔊</button>
+                                    <span style="flex: 1;">${engHtml}</span>
+                                </div>
+                                ${chiHtml ? `<div style="font-size: 1.1em; color: #7f8c8d; margin-top: 4px; padding-left: 42px;">${chiHtml}</div>` : ''}
+                            </div>
+                        `;
+                    } else if (p.type === 'supplement') {
+                        let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+                        displayExampleHtml += `
+                            <div style="margin-bottom: ${idx === parsedEx.length - 1 ? '0' : '15px'}; padding-left: 42px;">
+                                <div style="font-size: 1.1em; color: #2c3e50; font-weight: bold; background-color: #fdf2e9; padding: 10px 15px; border-left: 4px solid #e67e22; border-radius: 6px;">
+                                    💡 ${suppText}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
 
                 html += `<tr class="vocab-row" data-section="${sectionIndex}">
-                    <td class="audio-controls">
-                        <button class="audio-btn play-btn" onclick="speakText('${safeFullText}')">🔊</button>
-                        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-                    </td>
-                    <td class="content-cell">
-                        <div class="vocab-word">${displayWord}</div>
-                        <div class="example-sentence">${displayExample}</div>
+                    <td style="padding: 20px;">
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #2c3e50; display: flex; align-items: center;">
+                                <button class="audio-toggle-btn" style="width: 36px; height: 36px; font-size: 18px;" onclick="toggleSpeech('${safeWordSpeech}', this)">🔊</button>
+                                <span>${engWord}</span>
+                            </div>
+                            <div style="font-size: 1.3em; color: #856404; font-weight: bold; margin-top: 5px; padding-left: 46px;">
+                                ${chiWord}
+                            </div>
+                        </div>
+                        <div class="example-container" style="border-top: 1px dashed #bdc3c7; padding-top: 15px;">
+                            ${displayExampleHtml}
+                        </div>
                     </td>
                 </tr>`;
             }
         });
-// ================= 替換終點 2 =================
     });
 
     // 動態顯示「分批學習」按鈕
@@ -5275,7 +5340,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
     document.getElementById('learningScrollArea').scrollTop = 0;
     updateLearningProgress();
 }
-// ================= 替換終點 3 =================
+// ================= 替換終點 1 =================
 // ================= 替換終點 =================
 
         // ================= 替換起點 5-1 =================
@@ -5321,42 +5386,56 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
 // ============ EXTRACT FUNCTIONS ============
 
-// Extract English word without Chinese translation
-function extractEnglishWordOnly(wordString) {
-    return wordString.replace(/\s*\(([^)]+)\):?\s*$/, '').trim();
-}
-
-// Extract Chinese translation from word
-function extractChineseTranslation(wordString) {
-    const match = wordString.match(/\(([^)]+)\):?\s*$/);
-    return match ? match[1] : wordString; // 若無匹配則回傳原字串以防出錯
-}
-
-// Extract English example without Chinese translation (支援多句換行與指定只抓第一句)
-function extractEnglishExampleOnly(exampleString, firstOnly = false) {
-    let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
-    // 把中文括號移除後，改用單一空格取代，不再產生多餘換行
-    let eng = exStr.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, ' ');
-    // 多例句之間的 ^ 改為單一換行即可
-    eng = eng.replace(/\s*\^\s*/g, '<br>'); 
-    // 🎯 處理 [] 標籤：自動換行並縮小 0.8 倍字體，顏色稍微調淡以增加層次感
-    eng = eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
-    return eng.trim();
-}
-
-// Extract Chinese translation from example (支援多句換行與指定只抓第一句)
-function extractChineseExample(exampleString, firstOnly = false) {
-    let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
-    const matches = exStr.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
-    let result = matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
-    // 🎯 處理 [] 標籤：自動換行並縮小 0.8 倍字體
-    result = result.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+// ================= 替換起點 2-2 =================
+// 🎯 解析器大升級：將字串拆分為「英文例句」與「中文補充」
+function parseExamples(exampleStr) {
+    let result = [];
+    let str = exampleStr.trim();
+    if (!str.startsWith('^') && !str.startsWith('|')) str = '^ ' + str; 
+    const tokens = str.split(/(?=[\^\|])/g);
+    
+    tokens.forEach(token => {
+        let t = token.trim();
+        if (t.startsWith('^')) {
+            let content = t.substring(1).trim();
+            if (!content) return;
+            let chiMatch = content.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
+            let chi = chiMatch ? chiMatch.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+            let eng = content.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, ' ').trim();
+            result.push({ type: 'example', eng: eng, chi: chi });
+        } else if (t.startsWith('|')) {
+            let content = t.substring(1).trim();
+            if (content) result.push({ type: 'supplement', text: content });
+        }
+    });
     return result;
 }
 
-// 為了相容 Listening Quiz 舊有命名，加入 firstOnly 參數傳遞
+// 萃取函數：支援測驗系統 (自動過濾掉 `|` 補充資料)
+function extractEnglishWordOnly(wordString) { return wordString.replace(/\s*\(([^)]+)\):?\s*$/, '').trim(); }
+function extractChineseTranslation(wordString) {
+    const match = wordString.match(/\(([^)]+)\):?\s*$/);
+    return match ? match[1] : wordString;
+}
+function extractEnglishExampleOnly(exampleString, firstOnly = false) {
+    const parsed = parseExamples(exampleString);
+    const examples = parsed.filter(p => p.type === 'example');
+    if (examples.length === 0) return '';
+    let engs = firstOnly ? [examples[0].eng] : examples.map(e => e.eng);
+    let text = engs.join('<br>');
+    return text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+}
+function extractChineseExample(exampleString, firstOnly = false) {
+    const parsed = parseExamples(exampleString);
+    const examples = parsed.filter(p => p.type === 'example');
+    if (examples.length === 0) return '';
+    let chis = firstOnly ? [examples[0].chi] : examples.map(e => e.chi);
+    let text = chis.join('<br><br>');
+    return text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+}
 function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
 function extractExampleOnly(exampleString, firstOnly = false) { return extractEnglishExampleOnly(exampleString, firstOnly); }
+// ================= 替換終點 2-2 =================
 
 // ================= 替換起點 5-2 =================
 window.allQuizWordsPool = [];
@@ -6151,31 +6230,45 @@ function updateStudySession() {
     if (avatarElement) avatarElement.textContent = currentEmoji;
 
 // ================= 替換起點 =================
+// ================= 替換起點 3-3 =================
+    const parsedEx = parseExamples(currentItem.example);
+    const firstEx = parsedEx.find(p => p.type === 'example') || {eng:'', chi:''};
+
     const englishWord = extractEnglishWordOnly(currentItem.word);
-    const englishExample = extractEnglishExampleOnly(currentItem.example, true); // 🎯 加入 true，只抓第一句英文
     const chineseWord = extractChineseTranslation(currentItem.word);
-    const chineseExample = extractChineseExample(currentItem.example, true); // 🎯 加入 true，只抓第一句中文
+    let englishExample = firstEx.eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+    let chineseExample = firstEx.chi.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
 
-// ================= 替換起點 2 =================
     const questionPrompt = document.getElementById('questionPrompt');
-    if (questionPrompt) {
-        questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
-    }
+    if (questionPrompt) questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
 
-    // 🎯 1. 放大英文字體，比照分批學習的 28px 與 23px
-    document.getElementById('currentWord').innerHTML = `<div style="font-size: 28px; font-weight: bold; color: #2c3e50;">${englishWord}</div>`;
-    document.getElementById('currentExample').innerHTML = `<div style="font-size: 23px; color: #555;">${englishExample}</div>`;
+    const safeWordSpeech = englishWord.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    document.getElementById('currentWord').innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <button class="audio-toggle-btn" style="width: 40px; height: 40px; font-size: 20px;" onclick="toggleSpeech('${safeWordSpeech}', this)">🔊</button>
+            <div style="font-size: 28px; font-weight: bold; color: #2c3e50;">${englishWord}</div>
+        </div>
+    `;
+
+    if (englishExample) {
+        const safeExSpeech = firstEx.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        document.getElementById('currentExample').innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: flex-start; gap: 10px; margin-top: 20px;">
+                <button class="audio-toggle-btn" style="margin-top: 2px;" onclick="toggleSpeech('${safeExSpeech}', this)">🔊</button>
+                <div style="font-size: 23px; color: #555; text-align: left; flex: 1;">${englishExample}</div>
+            </div>
+        `;
+    } else {
+        document.getElementById('currentExample').innerHTML = '';
+    }
 
     const translationDiv = document.getElementById('translationText');
     const translateBtn = document.getElementById('showTranslationBtn');
     
     if (translationDiv) {
-        if (translationShown) {
-            translationDiv.classList.add('show');
-        } else {
-            translationDiv.classList.remove('show');
-        }
-        // 🎯 調整中文字體與配色 (單字縮小為19px，例句維持19px，皆採用與標籤相同的 #856404 配色)
+        if (translationShown) { translationDiv.classList.add('show'); } 
+        else { translationDiv.classList.remove('show'); }
+        
         translationDiv.innerHTML = `
             <div class="translation-label" style="font-size: 16px;">🌐 中文翻譯：</div>
             <div style="font-size: 19px; font-weight: bold; color: #856404; margin-top: 5px;">${chineseWord}</div>
@@ -6185,26 +6278,25 @@ function updateStudySession() {
     
     if (translateBtn) {
         translateBtn.disabled = translationShown;
+        translateBtn.style.opacity = translationShown ? '0.5' : '1';
         translateBtn.style.cursor = translationShown ? 'not-allowed' : 'pointer';
     }
 
-    // 🎯 3. 將進度顯示改為總進度與百分比，連動新的黃色進度條
     const totalWalkWords = flatWordsList.length;
     const currentWalkIndex = currentWordIndex + 1;
     const walkPercentage = totalWalkWords > 0 ? Math.round((currentWalkIndex / totalWalkWords) * 100) : 0;
     
     const walkProgressText = document.getElementById('walkProgressText');
     const walkProgressFill = document.getElementById('walkProgressFill');
-    
     if (walkProgressText) walkProgressText.textContent = `${currentWalkIndex} / ${totalWalkWords} (${walkPercentage}%)`;
     if (walkProgressFill) walkProgressFill.style.width = `${walkPercentage}%`;
 
-    // 更新導覽按鈕
     const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
     if (backBtn) backBtn.disabled = false;
     if (nextBtn) nextBtn.disabled = false;
 }
+// ================= 替換終點 3-3 =================
 // ================= 替換終點 2 =================
 // 獨立出來的發音函數：精準唸出過濾後的英文
 function handleSpeakCurrent() {
@@ -6543,47 +6635,52 @@ function renderBatchCard() {
     });
     
 // ================= 替換起點 2 =================
+// ================= 替換起點 3-2 =================
     const engWord = extractEnglishWordOnly(wordData.word);
     const chiWord = extractChineseTranslation(wordData.word);
-    
-    // 🎯 將多個例句切開，讓中文翻譯緊跟在相對應的英文底下
-    const exParts = wordData.example.split('^');
+    const safeWordSpeech = engWord.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+    const parsedEx = parseExamples(wordData.example);
     let interleavedExHtml = '';
-    let fullSpeechExText = '';
     
-// ================= 替換起點 1 =================
-    exParts.forEach(part => {
-        const engPart = extractEnglishExampleOnly(part, true); // 只抓當前切塊的英文
-        const chiPart = extractChineseExample(part, true);     // 只抓當前切塊的中文
-        
-        interleavedExHtml += `
-            <div style="margin-bottom: 15px;">
-                <div style="font-size: 23px; color: #555; text-align: center;">${engPart}</div>
-                ${chiPart ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 2px; text-align: center;">${chiPart}</div>` : ''}
-            </div>
-        `;
-        
-        // 🎯 拔除 HTML 標籤，只保留純文字給發音引擎，避免引號搞壞按鈕
-        const plainEngPart = engPart.replace(/<[^>]*>/g, '');
-        fullSpeechExText += plainEngPart + '. '; 
+    parsedEx.forEach(p => {
+        if (p.type === 'example') {
+            let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+            let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+            const safeSpeech = p.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            
+            interleavedExHtml += `
+                <div style="margin-bottom: 20px; text-align: left; padding-left: 10px;">
+                    <div style="font-size: 23px; color: #555; line-height: 1.5; display: flex; align-items: flex-start;">
+                        <button class="audio-toggle-btn" style="margin-top: 2px;" onclick="toggleSpeech('${safeSpeech}', this)">🔊</button>
+                        <span style="flex: 1;">${engHtml}</span>
+                    </div>
+                    ${chiHtml ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 6px; padding-left: 42px;">${chiHtml}</div>` : ''}
+                </div>
+            `;
+        } else if (p.type === 'supplement') {
+            let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+            interleavedExHtml += `
+                <div style="margin-bottom: 20px; padding-left: 52px; text-align: left;">
+                    <div style="font-size: 19px; color: #2c3e50; font-weight: bold; background-color: #fdf2e9; padding: 12px 18px; border-left: 4px solid #e67e22; border-radius: 6px;">
+                        💡 ${suppText}
+                    </div>
+                </div>
+            `;
+        }
     });
 
     document.getElementById('batchWordArea').innerHTML = `
-        <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
-        <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <button class="audio-toggle-btn" style="width: 40px; height: 40px; font-size: 20px;" onclick="toggleSpeech('${safeWordSpeech}', this)">🔊</button>
+            <div style="font-size: 28px; font-weight: bold; color: #2c3e50;">${engWord}</div>
+        </div>
+        <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 8px; text-align: center;">${chiWord}</div>
     `;
     
-    // 🎯 放入交錯排版好的例句 HTML
     document.getElementById('batchExampleArea').innerHTML = interleavedExHtml;
-    
-    // 🎯 語音朗讀時，同時處理單引號與雙引號的跳脫
-    const fullSpeechText = `${engWord}. ${fullSpeechExText}`;
-    const safeSpeechText = fullSpeechText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-    
-    document.getElementById('batchAudioArea').innerHTML = `
-        <button class="audio-btn play-btn" onclick="speakText('${safeSpeechText}')">🔊</button>
-        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-    `;
+    document.getElementById('batchAudioArea').innerHTML = ''; // 隱藏底部音效
+// ================= 替換終點 3-2 =================
 // ================= 替換終點 1 =================
 // ================= 替換終點 2 =================
 
@@ -7164,12 +7261,13 @@ document.getElementById('closeStudyModal').addEventListener('click', () => {
             document.getElementById('nextBtn').addEventListener('click', nextWord);
             document.getElementById('backBtn').addEventListener('click', previousWord);
 
-            // TTS & Translate buttons (明確綁定，避免找不到函數的錯誤)
-            document.getElementById('speakCurrentBtn').addEventListener('click', handleSpeakCurrent);
-            document.getElementById('stopCurrentBtn').addEventListener('click', stopSpeech);
-            document.getElementById('showTranslationBtn').addEventListener('click', toggleTranslation);
-
-            // Welcome modal removed
+            // ================= 替換起點 2 =================
+            // TTS & Translate buttons (移除已作廢的舊發音按鈕，安全綁定翻譯按鈕)
+            const showTransBtn = document.getElementById('showTranslationBtn');
+            if (showTransBtn) {
+                showTransBtn.addEventListener('click', toggleTranslation);
+            }
+// ================= 替換終點 2 =================
             
 // Overall Vocabulary button
 document.getElementById('overallVocabBtn').addEventListener('click', openOverallVocabModal);
