@@ -1617,7 +1617,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.73)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.74)</span>
         </h1>
 
         <div class="button-categories">
@@ -5284,21 +5284,21 @@ function openLearningContent(lessonKey, savedCheckedWords) {
                 
                 parsedEx.forEach((p, idx) => {
                     if (p.type === 'example') {
-                        let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
-                        let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+                        let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+                        let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
                         const safeSpeech = p.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         
                         displayExampleHtml += `
                             <div style="margin-bottom: ${idx === parsedEx.length - 1 ? '0' : '15px'};">
                                 <div style="font-size: 1.3em; color: #444; line-height: 1.5; display: flex; align-items: flex-start;">
                                     <button class="audio-toggle-btn" onclick="toggleSpeech('${safeSpeech}', this)">🔊</button>
-                                    <span style="flex: 1;">${engHtml}</span>
+                                    <div style="flex: 1;">${engHtml}</div>
                                 </div>
                                 ${chiHtml ? `<div style="font-size: 1.1em; color: #7f8c8d; margin-top: 4px; padding-left: 42px;">${chiHtml}</div>` : ''}
                             </div>
                         `;
                     } else if (p.type === 'supplement') {
-                        let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+                        let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
                         displayExampleHtml += `
                             <div style="margin-bottom: ${idx === parsedEx.length - 1 ? '0' : '15px'}; padding-left: 42px;">
                                 <div style="font-size: 1.1em; color: #2c3e50; background-color: #fdf2e9; padding: 10px 15px; border-left: 4px solid #e67e22; border-radius: 6px;">
@@ -5389,7 +5389,6 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
 // ============ EXTRACT FUNCTIONS ============
 
-// ================= 替換起點 2-2 =================
 // 🎯 解析器大升級：將字串拆分為「英文例句」與「中文補充」
 function parseExamples(exampleStr) {
     let result = [];
@@ -5420,25 +5419,27 @@ function extractChineseTranslation(wordString) {
     const match = wordString.match(/\(([^)]+)\):?\s*$/);
     return match ? match[1] : wordString;
 }
-function extractEnglishExampleOnly(exampleString, firstOnly = false) {
+function extractEnglishExampleOnly(exampleString, firstOnly = false, hideBrackets = false) {
     const parsed = parseExamples(exampleString);
     const examples = parsed.filter(p => p.type === 'example');
     if (examples.length === 0) return '';
     let engs = firstOnly ? [examples[0].eng] : examples.map(e => e.eng);
     let text = engs.join('<br>');
-    return text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+    if (hideBrackets) return text.replace(/\s*\[.*?\]/g, '').trim();
+    // 🎯 [] 升級：字體顏色不變、加上藍色底色、去除括號並加上📌
+    return text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
 }
-function extractChineseExample(exampleString, firstOnly = false) {
+function extractChineseExample(exampleString, firstOnly = false, hideBrackets = false) {
     const parsed = parseExamples(exampleString);
     const examples = parsed.filter(p => p.type === 'example');
     if (examples.length === 0) return '';
     let chis = firstOnly ? [examples[0].chi] : examples.map(e => e.chi);
     let text = chis.join('<br><br>');
-    return text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+    if (hideBrackets) return text.replace(/\s*\[.*?\]/g, '').trim();
+    return text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
 }
 function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
-function extractExampleOnly(exampleString, firstOnly = false) { return extractEnglishExampleOnly(exampleString, firstOnly); }
-// ================= 替換終點 2-2 =================
+function extractExampleOnly(exampleString, firstOnly = false, hideBrackets = false) { return extractEnglishExampleOnly(exampleString, firstOnly, hideBrackets); }
 
 // ================= 替換起點 5-2 =================
 window.allQuizWordsPool = [];
@@ -5609,7 +5610,7 @@ function handleChoiceClick(selectedChoice, btn) {
 
     allChoices.forEach(choiceBtn => { choiceBtn.disabled = true; });
     const englishWord = extractEnglishWord(correctAnswer.word);
-    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+    const exampleOnly = extractExampleOnly(correctAnswer.example, true, true);
     
     // 🎯 規則 3：答題後單字在上，例句在下，且例句預設隱藏 (display: none)
     document.getElementById('listenAnswerDisplay').innerHTML = 
@@ -5632,7 +5633,7 @@ function playQuizAudio() {
             // 🎯 規則 2：延遲改成 1 秒
             showEnglishTimeout = setTimeout(() => {
                 if (!hasAnswered && correctAnswer === quizWords[currentQuizIndex]) {
-                    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+                    const exampleOnly = extractExampleOnly(correctAnswer.example, true, true);
                     // 🎯 規則 3：單字在上，例句在下，且例句預設隱藏 (display: none 不留白)
                     document.getElementById('listenAnswerDisplay').innerHTML = 
                         `<strong style="font-size: 1.2em;">${englishWord}</strong><div id="lq-example-part" style="display:none; font-size: 18px; margin-top: 8px; font-weight: normal; color: #555;">${exampleOnly}</div>`;
@@ -5900,7 +5901,7 @@ function handleTransChoiceClick(selectedChoice, btn) {
 
 // 🎯 智慧挖空 Hint 系統
 document.getElementById('transHintBtn').addEventListener('click', () => {
-    let engEx = extractEnglishExampleOnly(correctTransAnswer.example, true);
+    let engEx = extractEnglishExampleOnly(correctTransAnswer.example, true, true);
     let baseWord = extractEnglishWordOnly(correctTransAnswer.word).replace(/^to\s+/i, ''); 
     
     let regex = new RegExp(baseWord, 'gi');
@@ -6239,8 +6240,8 @@ function updateStudySession() {
 
     const englishWord = extractEnglishWordOnly(currentItem.word);
     const chineseWord = extractChineseTranslation(currentItem.word);
-    let englishExample = firstEx.eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
-    let chineseExample = firstEx.chi.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+    let englishExample = firstEx.eng.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+    let chineseExample = firstEx.chi.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
 
     const questionPrompt = document.getElementById('questionPrompt');
     if (questionPrompt) questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
@@ -6654,21 +6655,21 @@ function renderBatchCard() {
     
     parsedEx.forEach(p => {
         if (p.type === 'example') {
-            let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
-            let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+            let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+            let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
             const safeSpeech = p.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
             
             interleavedExHtml += `
                 <div style="margin-bottom: 20px; text-align: left; padding-left: 10px;">
                     <div style="font-size: 23px; color: #555; line-height: 1.5; display: flex; align-items: flex-start;">
                         <button class="audio-toggle-btn" style="margin-top: 2px;" onclick="toggleSpeech('${safeSpeech}', this)">🔊</button>
-                        <span style="flex: 1;">${engHtml}</span>
+                        <div style="flex: 1;">${engHtml}</div>
                     </div>
                     ${chiHtml ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 6px; padding-left: 42px;">${chiHtml}</div>` : ''}
                 </div>
             `;
         } else if (p.type === 'supplement') {
-            let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<span style="display: block; font-size: 0.8em; margin-top: 3px; color: #7f8c8d; line-height: 1.4;">[$1]</span>');
+            let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
             interleavedExHtml += `
                 <div style="margin-bottom: 20px; padding-left: 52px; text-align: left;">
                     <div style="font-size: 19px; color: #2c3e50; background-color: #fdf2e9; padding: 12px 18px; border-left: 4px solid #e67e22; border-radius: 6px;">
@@ -7232,7 +7233,7 @@ document.getElementById('listenExampleBtn').addEventListener('click', function()
         return;
     }
 
-    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+    const exampleOnly = extractExampleOnly(correctAnswer.example, true, true);
     
     // 解除例句隱藏
     const exampleDiv = document.getElementById('lq-example-part');
