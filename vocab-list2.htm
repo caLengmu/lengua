@@ -2450,8 +2450,8 @@ function parseSimplifiedDatabase(text) {
     const sections = [];
     const lines = text.trim().split('\n');
     let currentSection = null;
+    let lastWord = null; // 🎯 新增：用來記憶「上一個被處理的單字」，以支援跨行補充
 
-// ================= 替換起點 2 =================
     for (let line of lines) {
         line = line.trim();
         if (!line) continue;
@@ -2466,19 +2466,23 @@ function parseSimplifiedDatabase(text) {
                 section: line,
                 words: []
             };
+            lastWord = null; // 換新標題時重置記憶
         } else if (line.includes('^') && currentSection) {
-// ================= 替換終點 2 =================
-            // 🎯 階段一升級：支援多個 ^ 符號，第一個為單字，其餘全為例句
+            // 有 ^ 符號，代表這是一個全新的單字項目
             const parts = line.split('^').map(s => s.trim());
             const wordPart = parts.shift(); // 取出單字部分
-            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來保留給後續函數處理
+            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來
             
-            currentSection.words.push({
+            lastWord = {
                 word: wordPart + ':',
                 example: examplePart
-            });
+            };
+            currentSection.words.push(lastWord);
+        } else if (lastWord && currentSection) {
+            // 🎯 最強升級：如果這一行沒有 ^ 符號，且前面已經有單字了
+            // 系統會把這行當作「換行補充」，自動加上 <br> 並接在上一行的後面！
+            lastWord.example += '<br>' + line;
         }
-// ================= 替換終點 1 =================
     }
 
     if (currentSection) {
