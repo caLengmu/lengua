@@ -650,28 +650,45 @@
             line-height: 1.5;
         }
 
-        .audio-btn {
-            background: none;
-            border: none;
+/* ================= 替換起點 1 ================= */
+        .audio-toggle-btn {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #bdc3c7;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
-            font-size: 28px;
-            margin: 2px;
-            padding: 5px;
-            border-radius: 3px;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            vertical-align: top;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            outline: none;
+            flex-shrink: 0;
         }
 
-        .audio-btn:hover {
-            background-color: #f0f0f0;
+        .audio-toggle-btn:hover {
+            transform: scale(1.1);
+            background-color: #d5d8dc;
         }
 
-        .play-btn {
-            color: #27ae60;
+        .audio-toggle-btn.playing {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+            animation: pulse-audio 1.5s infinite;
         }
 
-        .stop-btn {
-            color: #e74c3c;
+        @keyframes pulse-audio {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
+/* ================= 替換終點 1 ================= */
 
         .no-data {
             text-align: center;
@@ -1059,10 +1076,10 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 15px 25px;
             border-radius: 3px;
             cursor: pointer;
-            font-size: 17px;
+            font-size: 20px;
         }
 
         .nav-btn:hover:not(:disabled) {
@@ -1276,8 +1293,8 @@
             }
 
             .nav-btn {
-                padding: 8px 12px;
-                font-size: 15px;
+                padding: 12px 18px;
+                font-size: 18px;
             }
         }
 
@@ -1600,7 +1617,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.61)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.75)</span>
         </h1>
 
         <div class="button-categories">
@@ -1781,7 +1798,7 @@
                     
                     <p style="margin-bottom: 0; padding-left: 1.4em; text-indent: -1.4em;">
                     4. 教材更新: <br>
-                    <span style="display: inline-block; margin-left: 1.4em;">📚 課本: L1 單</span><br>
+                    <span style="display: inline-block; margin-left: 1.4em;">📚 課本: L1單, L1文, L2單</span><br>
                     <span style="display: inline-block; margin-left: 1.4em;">✍ 歷屆試題: 115, 114</span><br>
                     <span style="display: inline-block; margin-left: 1.4em;">📒 好好學: U1, U2, U3, U4, U5, U6</span>
                     </p>
@@ -1924,7 +1941,7 @@
             <div id="batchExampleArea" style="line-height: 1.6;"></div>
             <div id="batchAudioArea" style="margin-top: 20px;"></div>
         </div>
-        <div style="display: flex; justify-content: center; gap: 15px;">
+        <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
             <button class="nav-btn" id="batchBackBtn" style="padding: 12px 25px; font-size: 18px; background-color: #3498db;">← Back</button>
             <button class="nav-btn" id="batchNextBtn" style="padding: 12px 25px; font-size: 18px; background-color: #3498db;">Next →</button>
         </div>
@@ -1945,7 +1962,7 @@
            <thead>
                <tr>
                    <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50; font-size: 1.2em;">
-                       English
+                       Japanese
                        <!-- 🎯 新增：Auto TTS Switch 開關 -->
                        <div id="autoTtsContainer" style="display: none; align-items: center; justify-content: center; margin-top: 6px; font-size: 0.8em; font-weight: normal; color: #555;">
                            <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: #fff; padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -1971,7 +1988,7 @@
                 <input type="checkbox" id="chkChiDone" style="width: 25px; height: 25px; cursor: pointer;">
             </div>
             <div id="chkEngContainer" style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
-                <button id="btnHideEng" class="quiz-btn" style="padding: 10px; font-size: 16px; width: 220px; background-color: #e67e22; color: white; margin: 0;">Quiz #2: Hide English</button>
+                <button id="btnHideEng" class="quiz-btn" style="padding: 10px; font-size: 16px; width: 220px; background-color: #e67e22; color: white; margin: 0;">Quiz #2: Hide Japanese</button>
                 <input type="checkbox" id="chkEngDone" style="width: 25px; height: 25px; cursor: pointer;">
             </div>
         </div>
@@ -1996,7 +2013,7 @@
         <div class="listen-speaker" id="listenSpeaker" title="Play Word">🔊</div>
         
         <button id="toggleEnglishBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #6c757d;" title="Auto-show Word">
-            Show English
+            Show Japanese
         </button>
         <button id="listenExampleBtn" class="listen-next-btn" style="padding: 8px 16px; font-size: 16px; background-color: #ffc107; color: #000;" title="Play & Show Example">
             🔊 Example
@@ -2034,23 +2051,33 @@
     <div class="speech-bubble" id="speechBubble" style="background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #dee2e6; margin-bottom: 20px;">
         <div class="current-word" id="currentWord">Select a lesson first!</div>
         <div class="current-example" id="currentExample">Please choose a lesson from the main page before starting your study session.</div>
-        <div class="bubble-controls">
-            <button class="bubble-btn play-btn" id="speakCurrentBtn" title="Play Audio">🔊</button>
-            <button class="bubble-btn stop-btn" id="stopCurrentBtn" title="Stop">🔇</button>
-            <button class="bubble-btn translate-btn" id="showTranslationBtn" title="Show Translation">🀄</button>
+<!-- ================= 替換起點 1-2 ================= -->
+        <div class="bubble-controls" style="margin-top: 25px; text-align: center;">
+            <button id="showTranslationBtn" class="study-partner-btn" style="background-color: #e67e22; width: 100%; max-width: 300px; padding: 12px; font-size: 18px;">🌐 Show Translation</button>
         </div>
-        <div class="translation-text" id="translationText">
-            <div class="translation-label">🌐 中文翻譯：</div>
-            <div>請先選擇單字</div>
-        </div>
-    </div>
-                <div class="progress-info" id="progressInfo" style="font-weight: bold; color: #2980b9;">
-                    Loading...
+<!-- ================= 替換終點 1-2 ================= -->
+<!-- ================= 替換起點 1 ================= -->
+                <div class="translation-text" id="translationText">
+                    <div class="translation-label">🌐 中文翻譯：</div>
+                    <div>請先選擇單字</div>
                 </div>
-                <div class="navigation-controls" id="navigationControls">
-                    <button class="nav-btn" id="backBtn">← Back</button>
-                    <button class="nav-btn" id="nextBtn">Next →</button>
+            </div>
+            
+            <!-- 🎯 新增：黃色 Progress Bar 樣式的總進度條 -->
+            <div id="walkProgressContainer" style="margin: 0 auto 20px auto; width: 100%; max-width: 500px; background-color: #fffbf0; border: 2px solid #ffc107; border-radius: 12px; padding: 10px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div class="progress-row" style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                    <span class="progress-row-label" style="font-size: 14px; font-weight: bold; color: #2c3e50; white-space: nowrap; flex-shrink: 0;">Progress:</span>
+                    <div class="progress-track-mini" style="flex: 1; height: 12px; background-color: #e9ecef; border-radius: 6px; overflow: hidden; border: 1px solid #ddd;">
+                        <div class="progress-fill-mini" id="walkProgressFill" style="height: 100%; width: 0%; background-color: #ffc107; border-radius: 6px; transition: width 0.3s ease;"></div>
+                    </div>
+                    <span class="progress-fraction" id="walkProgressText" style="font-size: 14px; font-weight: bold; color: #2c3e50; white-space: nowrap; flex-shrink: 0; min-width: 82px; text-align: right;">0 / 0 (0%)</span>
                 </div>
+            </div>
+
+            <div class="navigation-controls" id="navigationControls" style="margin-bottom: 20px;">
+                <button class="nav-btn" id="backBtn">← Back</button>
+                <button class="nav-btn" id="nextBtn">Next →</button>
+            </div>
             </div>
         </div>
     </div>
@@ -2144,13 +2171,15 @@
     </div>
 </div>
 
+<!-- ================= 替換起點 1 ================= -->
 <div id="edit-entry-modal" class="modal">
     <div class="modal-content" style="max-width: 700px;">
         <h2 style="text-align: center; color: #2c3e50; margin-bottom: 10px;">✏️ Edit This Entry</h2>
-        <p style="color: #e74c3c; margin-bottom: 15px; text-align: center; font-weight: bold;">(Paste using format: word (n) (中文) ^ example (中文))</p>
-        <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="◎Section Title&#10;word (n) (翻譯) ^ Example sentence (翻譯)"></textarea>
+        <!-- 🎯 移除紅色說明，並將最新版語法教學放進 placeholder 屬性裡 -->
+        <textarea id="edit-entry-content" style="width: 100%; height: 400px; padding: 15px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 6px; box-sizing: border-box; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="@Section Title&#10;單字 (詞性) (單字中譯) ^ 例句1 (例句1中譯) [補充資訊] ^ 例句2 (例句2中譯) [補充資訊] | 特殊標記區塊"></textarea>
         
         <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+<!-- ================= 替換終點 1 ================= -->
             <button id="edit-save-btn" class="quiz-btn" style="background-color: #28a745; color: white;">💾 Save</button>
             <button id="edit-ai-link-btn" class="quiz-btn" style="background-color: #17a2b8; color: white;">💡 AI (中+句)</button>
             <button id="edit-clear-btn" class="quiz-btn" style="background-color: #f39c12; color: white;">🈳 Clear</button>
@@ -2421,12 +2450,14 @@ function parseSimplifiedDatabase(text) {
     const sections = [];
     const lines = text.trim().split('\n');
     let currentSection = null;
+    let lastWord = null; // 🎯 新增：用來記憶「上一個被處理的單字」，以支援跨行補充
 
     for (let line of lines) {
         line = line.trim();
         if (!line) continue;
 
-        if (line.startsWith('◎')) {
+        // 🎯 讓系統同時支援 ◎ 和 @ 作為 Section Title 的開頭
+        if (line.startsWith('◎') || line.startsWith('@')) {
             // New section
             if (currentSection) {
                 sections.push(currentSection);
@@ -2435,19 +2466,23 @@ function parseSimplifiedDatabase(text) {
                 section: line,
                 words: []
             };
-// ================= 替換起點 1 =================
+            lastWord = null; // 換新標題時重置記憶
         } else if (line.includes('^') && currentSection) {
-            // 🎯 階段一升級：支援多個 ^ 符號，第一個為單字，其餘全為例句
+            // 有 ^ 符號，代表這是一個全新的單字項目
             const parts = line.split('^').map(s => s.trim());
             const wordPart = parts.shift(); // 取出單字部分
-            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來保留給後續函數處理
+            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來
             
-            currentSection.words.push({
+            lastWord = {
                 word: wordPart + ':',
                 example: examplePart
-            });
+            };
+            currentSection.words.push(lastWord);
+        } else if (lastWord && currentSection) {
+            // 🎯 最強升級：如果這一行沒有 ^ 符號，且前面已經有單字了
+            // 系統會把這行當作「換行補充」，自動加上 <br> 並接在上一行的後面！
+            lastWord.example += '<br>' + line;
         }
-// ================= 替換終點 1 =================
     }
 
     if (currentSection) {
@@ -2561,7 +2596,7 @@ plain (adj) (2.清楚的、明顯的) ^ It was plain to everyone that he was tel
 penetrating (adj) (1.（聲音）響亮刺耳的 = piercing) ^ A penetrating scream was heard in the dead of night. (夜深人靜之時，傳來一聲刺耳的尖叫。)
 penetrating (adj) (2.目光銳利的、有洞察力的) ^ The scholar offered a penetrating comment on this issue. (這位學者對這個問題提出了一針見血的評論。)
 penetrating looks/ eyes/ gaze… (銳利的目光/ 眼神/ 凝視等) ^ The detective looked at the suspect with a penetrating gaze. (警探以敏銳看穿一切的目光凝視著嫌疑犯。)
-renowned (adj) (著名的、有聲譽的 = famous, well known, noted, celebrated, famed) ^ The city is renowned for its delicious seafood and historical sites. (這座城市以其美味的海鮮和歷史遺跡而著名的。)
+renowned (adj) (著名的、有聲譽的 = famous) ^ The city is renowned for its delicious seafood and historical sites. (這座城市以其美味的海鮮和歷史遺跡而著名的。) | 同義詞整理: famous, well-known, renowned, noted, celebrated, famed
 notorious (adj) (惡名昭彰的、聲名狼藉的 = infamous) ^ This food company is notorious for selling problematic cooking oil. (這間食品公司因販賣有問題的食用油而惡名昭彰。)
 outstanding (adj) (傑出的、出色的) ^ Her outstanding performance on stage won the hearts of the audience. (她在舞台上傑出的表現贏得了觀眾的心。)
 publish (v) (出版、發行) ^ The writer plans to publish her new fiction novel by the end of the year. (這位作家計畫在今年底前出版她的新科幻小說。)
@@ -2624,10 +2659,258 @@ strike a chord (with someone) (phr) (引起（某人的）共鳴、觸動心弦)
 
         `,
         'textbook2': `
+◎Paragraphs 1-2
+
+beloved (adj) (深受喜愛的、親愛的) ^ Robert Frost is one of the most beloved American poets of all time. (羅伯特·佛洛斯特是有史以來最深受喜愛的美國詩人之一。)
+poet (n) (詩人) ^ The poet recited his new work in front of an attentive audience. (這位詩人在專注的聽眾面前朗誦了他的新作品。)
+poem (n) (詩) ^ She wrote a touching poem to express her gratitude to her teacher. (她寫了一首感人的詩來表達對老師的感謝。)
+poetry (n) (詩歌、詩集 [總稱，不可數]) ^ Reading classic English poetry helps expand your vocabulary and cultural knowledge. (閱讀經典英文詩歌有助於擴展你的詞彙量與文化知識。)
+be known for… (phr) (以…聞名 = be famous for…) ^ The country town is known for its beautiful scenery and friendly locals. (這座鄉村小鎮以其美麗的景致與友善的在地人聞名。)
+contemporary (n) (同時代的人) ^ He was well respected by his peers and artistic contemporaries. (他深受同儕與藝術同時代者的尊敬。)
+favor (v) (偏好、喜愛) ^ Many modern readers favor clear and concise writing styles over complex ones. (許多現代讀者偏好清晰簡潔的寫作風格，勝過複雜的風格。)
+complicated (adj) (複雜的、難懂的 = complex ↔️ simple) ^ Solving this complicated math puzzle requires deep analytical thinking. (解決這個複雜的數學難題需要深刻的分析思考。)
+all walks of life (phr) (各行各業、社會各階層) ^ People from all walks of life gathered at the community center. (來自各行各業的人們聚集在社區中心。)
+appear (+ Adj) (v) (看起來…、顯得… = seem) ^ Although the problem appeared simple, it required hours of careful testing. (儘管這個問題看起來簡單，但它需要數小時的仔細測試。)
+plain (adj) (樸素的、簡樸的) ^ The book was bound in a plain brown paper cover. (這本書用樸素的棕色紙封面裝訂。)
+beneath (prep) (在…下方、在…掩蓋之下 = under) ^ Beneath his calm appearance lay a strong determination to succeed. (在他平靜的外表之下，隱藏著成功的強烈決心。)
+simplicity (n) (簡單、樸素、單純) ^ The graphic designer was praised for the elegant simplicity of her logo design. (這位平面設計師因其標誌設計的高雅簡單而獲得讚揚。)
+penetrating (adj) (看透的、洞察銳利的) ^ The essay provided a penetrating critique of modern economic policy. (這篇論文對現代經濟政策提供了洞察銳利的批判。)
+insight (n) (洞察力、深刻見解) ^ The lecture offered valuable insight into human psychological behavior. (這場講座對人類心理行為提供了寶貴的深刻見解。)
+lie–lay–lain (+ somewhere) (1.位於…) ^ The quiet small village lies near the foot of the tall mountain. (這座安靜的小村莊位於高山腳下附近。)
+lie–lay–lain (+ somewhere) (2.存在於…) ^ A deep sense of insecurity lies beneath his confident appearance. (在他自信的外表之下，潛藏著深深的不安全感。)
+renowned (adj) (著名的、著名的 = famous) ^ The university is renowned worldwide for its cutting-edge medical research. (這所大學因其尖端的醫學研究而聞名全球。) | 同義詞整理: famous, well-known, renowned, noted, celebrated, famed
+work (n) (作品、著作 [可數]) ^ The gallery exhibits famous works of art created by local masters. (這間畫廊展出了在地大師創作的著名藝術作品。)
+exemplify (v) (作為…的範例、舉例說明 = example + -ify) ^ Her continuous efforts exemplify the spirit of true sportsmanship. (她持續的努力展現了真正體育精神的範例。)
+outstanding (adj) (傑出的、出色的) ^ The young student received an award for her outstanding academic performance. (這位年輕學生因其出色的學業表現而獲得獎項。)
+draw A from B (phr) (從 B 取得/獲取 A) ^ Writers often draw inspiration from their everyday personal experiences. (作者經常從他們日常的個人經歷中獲取靈感。)
+profound (adj) (深刻的、深奧的 = deep) ^ The philosophical book made a profound impression on the young reader. (這本哲學書籍給這位年輕讀者留下了深刻的印象。)
+ordinary (adj) (平凡的、一般的) ^ Great inventions often stem from solving ordinary everyday problems. (偉大的發明往往源於解決平凡的日常問題。)
+publish (v) (出版、發表) ^ The independent researcher hopes to publish her study in a journal next month. (這名獨立研究員希望下個月能在期刊上記發表她的研究。)
+originate (v) (發源、起源) ^ This ancient traditional festival originated in a small farming village. (這個古老的傳統節日起源於一個農業小村莊。)
+woodland (n) (林地、森林區) ^ A winding dirt path stretches deep into the quiet woodland. (一條蜿蜒的泥土小徑延伸至靜謐的林地深處。)
+hesitate (v) (猶豫、遲疑) ^ Please do not hesitate to contact us if you need further assistance. (如果您需要進一步的協助，請毫不猶豫地聯繫我們。)
+fork (n) (叉路、分岔處) ^ When you reach the fork in the path, turn left toward the river. (當你走到小徑的分岔處時，向左轉朝河流方向走。)
+wonder (v) (想知道、納悶) ^ Many travelers stop to wonder which direction will lead to the town. (許多旅人停下來想知道哪個方向會通往城鎮。)
+explore (v) (探索、探險) ^ The team ventured out to explore the unexplored coastal areas. (團隊冒險出發去探索未經開墾的海岸地區。)
+route (n) (路線、航線) ^ Using a modern map helps drivers choose the fastest travel route. (使用現代地圖有助於駕駛選擇最快的行車路線。)
+compose (v) (作曲、作詩、撰寫) ^ The musician spent months composing a new melody for the orchestra. (這名音樂家花了數月時間為管弦樂團作曲新旋律。)
+partly (adv) (部分地、某種程度上) ^ Her success was partly due to luck, but mostly due to hard work. (她的成功部分是由於幸運，但主要是由於努力。) | 比較: <br> largely 在很大程度上 <br>mostly, mainly 主要地 <br> entirely 完全地
+comment (n) (評論、意見) ^ The public reviewer left a thoughtful comment on the online blog. (公開評論者線上部落格上留下了深思熟慮的意見。)
+indecision (n) (優柔寡斷、猶豫不決) ^ After minutes of indecision, he finally chose the chocolate cake. (經過幾分鐘的猶豫不決後，他終於選擇了巧克力蛋糕。)
+
+◎Paragraphs 3-6
+
+diverge (v) (分岔、分歧) ^ Two narrow hiking tracks diverge in the middle of the quiet forest. (兩條狹窄的健行步道在靜謐的森林中央分岔。)
+wood(s) (n) (樹林、森林) ^ Children enjoy playing hide-and-seek among the trees in the woods. (孩子們喜歡在樹林的樹木之間玩捉迷藏。)
+bend–bent–bent (v) (彎曲、轉彎) ^ The old metal road sign was bent during the severe typhoon storm. (這面舊金屬路標在強烈颱風暴風雨中被折彎了。)
+undergrowth (n) (（尤指大樹下生長的）矮樹叢等植物) ^ Small wild animals often hide safely inside the dense undergrowth. (野生小動物經常安全地躲藏在密集的灌木叢中。) | 生活中較常用的詞彙是 bush (灌木叢)
+fair (adj) (1.公正的、公平的) ^ It’s not fair to blame me for everything! (把一切都怪到我頭上，這不公平！)
+fair (adj) (2.（皮膚）白皙的 = pale) ^ My sister has dark skin but my brother has fair skin. (我妹妹的皮膚黑，但弟弟的皮膚白。) | 英文形容皮膚白會使用 pale, fair, light-skinned，形容皮膚黑則是 dark，另外還有 tanned (曬成古銅色的)
+fair (adj) (3.（天氣）晴朗的) ^ The weather forecast predicts a fair and warm sunny afternoon. (天氣預報預測午後會有一個美好且溫暖的晴天。)
+perhaps (adv) (或許 = maybe) ^ Perhaps we should take a brief rest before continuing our long trek. (或許我們在繼續長途跋涉之前應該先短暫休息。)
+claim (v) (1.宣稱) ^ The owner claimed that the lost leather wallet belonged to him. (失主宣稱那個遺失的皮夾屬於他。)
+claim (v) (2.主張所有權、認領、索取) ^ Passengers can claim their checked luggage at *baggage claim*. (乘客可以在*行李領取處*領取他們的託運行李。)
+claim someone’s life (奪去某人的生命) ^ The war has claimed thousands of lives. (戰爭已奪去了數千人的生命。)
+grassy (adj) (長滿草的、草地狀的) ^ Families sat down to relax on the lush grassy hillside. (家庭們坐在鬱鬱蔥蔥的長滿草的山坡上放鬆。)
+want (v) (2.需要、缺乏 = need, lack) ^ In many poorer countries, people still want basic food and shelter. (在許多較貧窮的國家，人們仍然需要基本的食物和住所。)
+be wanted by the police (phr) (被警方通緝) ^ The bank robber is wanted by the police. (這個銀行搶匪正被警方通緝。)
+wear and tear (n) (磨損、損耗) ^ Regular car maintenance helps protect your vehicle from normal wear and tear. (定期的汽車維護有助於保護您的車輛免受正常的磨損。)
+as for… (phr) (至於…) ^ I will order coffee; as for my sister, she prefers cold tea. (我會點咖啡；至於我妹妹，她更喜歡冰茶。)
+wear–wore–worn (v) (2.磨損) ^ I really like this shirt but it's starting to wear at the collar. (我非常喜歡這件襯衫，但是它的領子已經有些磨破了。)
+about the same (phr) (大約相同、差不多) ^ Both choices will cost about the same amount of time and money. (兩種選擇花費的時間和金錢大約相同。)
+equal (adj) (相等的、平等的) ^ Everyone should have equal opportunities to receive quality public education. (每個人都應該享有接受優質公立教育的平等機會。)
+lie–lay–lain (v) (1.平躺、躺臥) ^ The exhausted runner decided to lie down on the soft grass. (疲憊的跑者決定躺在柔軟的草地上。)
+lie–lay–lain (v) (2.位於、坐落於) ^ The small fishing port lies on the eastern coast of the island. (這個小漁港位於該島的東海岸。)
+lie in… (phr) (存在於…、在於…) ^ The beauty of the poem lies in its simplicity. (這首詩的美在於它的簡潔。) ^ The key to success lies in hard work. (成功的關鍵在於努力。)
+tread–trod–trodden (v) (踩、踏) ^ Hikers should tread lightly to avoid harming delicate wild flowers. (健行者應該輕踩，以避免傷害脆弱的野生花朵。)
+tread carefully (phr) (謹慎行事、小心翼翼) ^ Politicians must tread carefully when discussing complex policy changes. (政治家在討論複雜的政策變更時必須謹慎行事。)
+yet (adv / conj) (然而、儘管) ^ The journey was tiring, yet everyone felt deeply satisfied with the results. (旅程很累人，然而每個人都對結果感到深刻滿意。)
+lead to… (phr) (1.通往… 2.導致、造成...) ^ This door leads to the garden. (這扇門通往花園。) ^ The typhoon has led to serious flooding. (颱風造成了嚴重的淹水。) |「導致、造成、引發…」(因果關係) 統整 <br> 片語: lead to…, result in…, give rise to…, contribute to…, bring about…<br>單字: cause, trigger, spark, prompt
+one thing leads to another (phr) (一件事引發另一件事、接連發生) ^ We started chatting, and one thing led to another, until we became business partners. (我們開始聊天，談著談著，我們就成了商業夥伴。)
+doubt (v) (懷疑、不相信) ^ I doubt whether the old bus will arrive on schedule in this rain. (我懷疑這班老舊公車在這種雨天是否會準時到達。)
+sigh (n / v) (歎氣、歎息) ^ He let out a long sigh of relief after finishing the difficult exam. (完成艱難的考試後，他長長地鬆了一口氣歎息。)
+ages (n) (許久、很長時間 = a very long time) ^ I haven't seen my elementary school classmates for ages. (我已經許久沒有見到我的小學同學了。)
+hence (adv) (因此 = therefore; thus) ^ The company cut costs; hence, profits increased significantly in the next quarter. (公司削減了成本；因此，下一季的利潤顯著增加。)
+(time +) hence (phr) (從現在起…時間之後 = time + from now) ^ Five years hence (= Five years from now), I’m going to start my own business. (從現在起五年之後，我打算創業。)
+make a difference (phr) (產生影響、起關鍵作用) ^ Voting in public elections can make a difference in shaping regional policies. (在公共選舉中投票可以在塑造區域政策上產生影響。)
+
+◎Paragraph 7
+
+theme (n) (主題) ^ The central theme of the novel explores family relationships across generations. (這本小說的核心主題探討了跨世代的家庭關係。)
+surface (n) (表面、水面) ^ The serene mountain lake has a smooth surface that reflects the sky. (這座寧靜的 alpine 湖泊擁有平滑的表面，映照著天空。)
+on the surface (phr) (表面上) ^ On the surface, the solution looks easy, but hidden problems exist beneath. (表面上這個解決方案看起來容易，但底下存在著隱藏的問題。)
+depict (v) (描繪、描述) ^ The detailed mural depicts the rich history of the seaside fishing town. (這幅細緻的壁畫描繪了這個海濱漁鎮的豐富歷史。)
+solitary (adj) (單獨的、孤獨的) ^ A solitary traveler walked along the empty beach during sunset. (一位單獨的旅人在日落時分沿著空曠的沙灘漫步。)
+journey (n) (旅程) ^ Learning a second language is a long but rewarding educational journey. (學習第二語言是一段漫長但具回報性的教育旅程。)
+present (v) (呈現、提出) ^ The expert team will present their research findings at the annual conference. (專家團隊將在年度會議上呈現他們的研究發現。)
+philosophical (adj) (哲學的) ^ The book poses complex philosophical questions about the nature of reality. (這本書提出了關於現實本質的複雜哲學問題。)
+reflection (n) (反思、深思 + on...) ^ Writing a journal entries allows for deep personal reflection on daily life choices. (寫日誌能對日常生活選擇進行深刻的個人反思。)
+function as… (phr) (充當…、起…作用) ^ This historic hall can function as both a theater and a community space. (這座歷史大廳既可以充當劇院，也可以充當社區空間。)
+compelling (adj) (1.令人信服的  2.極具吸引力的) ^ The attorney made a compelling argument that convinced the entire jury. (律師提出了一個令人信服的論點，說服了整個陪審團。)
+metaphor (n) (隱喻、暗喻) ^ The crossroads in the poem is a famous metaphor for life choices. (詩中的十字路口是人生選擇的著名隱喻。)
+crucial (adj) (至關重要的、關鍵的 = vital; critical; key; significant) ^ Sleep is a crucial factor in maintaining long-term physical and mental health. (睡眠是維持長期身心健康的至關重要因素。)
+lay out (phr) (清楚說明) ^ The comprehensive guide lays out clear steps for launching a new business. (這本全面的指南清楚說明了開創新事業的明確步驟。)
+reflect (v) (反映) ^ Her artwork deeply reflects her cultural background and life values. (她的藝術作品深刻地反映了她的文化背景與人生價值觀。)
+universal (adj) (普遍的、全人類的) ^ The desire for peace and safety is a universal human need. (對和平與安全的渴望是全人類普遍的需求。)
+dilemma (n) (困境、兩難處境) ^ The manager faced a dilemma between saving money and quality control. (經理面臨著省錢與品質控制之間的兩難處境。)
+at a crossroads (phr) (處於交叉路口、處於人生的抉擇處) ^ After graduating, she felt at a crossroads regarding her future career path. (畢業後，她在未來的職業道路上面臨抉擇。)
+prediction (n) (預測、預言) ^ Weather predictions are not always completely accurate during storm seasons. (在暴風雨季節，天氣預測並不總是完全準確。)
+be clouded by uncertainty (phr) (被不確定性所籠罩) ^ The small business's future plans were clouded by economic uncertainty. (這家小企業的未來計劃被經濟的不確定性所籠罩。)
+demonstrate (v) (2.顯示 = show) ^ The detailed experiment results demonstrate the high efficiency of the software. (詳細的實驗結果顯示了該軟體的高效率。)
+mature (adj) (成熟的) ^ Taking full responsibility for your actions is a sign of a mature mindset. (對自己的行為承擔完全責任是成熟心態的標誌。)
+acceptance (n) (接受、認可) ^ Finding inner peace often begins with the quiet acceptance of reality. (尋找內心平靜往往始於對現實平靜的接受。)
+irreversible (adj) (不可逆的、無法改變的) ^ Time loss is completely irreversible, so manage your schedule wisely. (時間的流逝是完全不可逆的，因此請明智地管理你的日程。)
+choice’s irreversible nature (phr) (選擇的不可逆本質) ^ The poem highlights each choice’s irreversible nature as time moves forward. (這首詩強調了隨著時間推移，每個選擇的不可逆本質。)
+rather than… (phr) (而不是…) ^ Choose healthy whole foods rather than quick processed snacks for energy. (選擇健康的原型食物而不是快速加工零食來補充能量。)
+regret (n / v) (遺憾、後悔) ^ He expressed deep regret for not visiting his grandparents more often. (他對沒有更常拜訪外祖父母表達了深刻的後悔。)
+awareness (n) (意識、察覺) ^ Raising environmental awareness encourages communities to recycle effectively. (提升環境意識能鼓勵社區進行有效回收。)
+add weight to… (phr) (增加…的分量/可信度) ^ Recent scientific statistics add weight to the climate change argument. (最新的科學統計數據增加了氣候變遷論點的分量。)
+alternative (adj / n) (替代的；替代方案) ^ Wind power is a widely used alternative energy source today. (風力發電是當今被廣泛使用的替代能源。)
+
+◎Paragraphs 8-9
+
+lasting (adj) (持久的、長遠的) ^ The novel left a lasting impression on readers around the world. (這本小說給世界各地的讀者留下了持久的印象。)
+appeal (n) (吸引力、感染力) ^ Classic jazz music has a timeless appeal that spans across generations. (經典爵士樂擁有跨越世代的永恆吸引力。)
+fascination (n) (迷戀、著迷) ^ Her fascination with space exploration began in early childhood. (她對太空探索的迷戀始於幼童時期。)
+stem from… (phr) (源自於…、由…引起) ^ Many interpersonal conflicts stem from poor communication between friends. (許多人際衝突源自於朋友之間不良的溝通。)
+invite (v) (3.引起、招致) ^ Leaving your home door unlocked may invite unwanted security risks. (房屋大門不上鎖可能會招致不必要的安全風險。)
+interpretation (n) (詮釋、解讀) ^ The poem allows for more than one valid literary interpretation. (這首詩允許有一種以上的合理文學解讀。)
+declaration (n) (宣告、聲明) ^ The official declaration of independence was signed in the public square. (官方的獨立宣告是在公共廣場簽署的。) | declare independence 宣佈獨立<br>declare war on… = 對…宣戰
+unconventional (adj) (不尋常的、非傳統的) ^ The designer was known for her bold and unconventional fashion choices. (這位設計師以其大膽且非傳統的時尚選擇而聞名。)
+point to… (phr) (指向…、表明…) ^ Recent economic indicators point to a strong recovery in market demand. (最新的經濟指標表明市場需求正在強勁復甦。)
+argue that… (phr) (主張…、論證… 🆚 argue with sb 爭吵) ^ Many modern educators argue that practical skills are as vital as theory. (許多現代教育家主張實用技能與理論同樣重要。)
+genuinely (adv) (真誠地、真正地) ^ She was genuinely happy for her friend's well-deserved promotion. (她真誠地為朋友實至名歸的升遷感到高興。)
+suggest (v) (2.間接表示、暗示) ^ The sudden drop in temperatures suggests that winter is approaching fast. (氣溫的突然下降暗示著冬天正在快速臨近。)
+justify someone’s decision (phr) (為某人的決定合理化/辯護) ^ Clear positive outcomes helped justify her decision to change career paths. (明確的積極結果有助於為她轉行職涯的決定合理化。)
+More importantly, … (phr) (更重要的是…) ^ Work hard; more importantly, remember to maintain good health. (努力工作；更重要的是，記得保持良好的健康。)
+lie in… (phr) (存在於…、在於…) ^ The primary beauty of the painting lies in its subtle color combinations. (這幅畫作的主要美感存在於其微妙的顏色組合中。)
+claim (v) (1.宣稱、斷言) ^ The news advertisement claimed that the new phone battery lasts two days. (新聞廣告宣稱這款新手機電池可持續兩天。)
+anticipate (v) (預期、期望) ^ Experts anticipate that global electric vehicle sales will rise next year. (專家預期明年全球電動車銷量將會上升。)
+display (v) (2.顯示 = show) ^ The dashboard panel displays real-time driving speed and fuel levels. (儀表板面板顯示實時行車速度和油量。)
+complexity (n) (複雜性) ^ Understanding the full complexity of global climate systems takes time. (理解全球氣候系統完整的複雜性需要時間。)
+present (adj) (在場的、存在的 ↔️ absent 缺席的、不存在的) ^ Traces of ancient civil architecture are still present in the old town. (古老文明建築的痕跡依然存在於這座老鎮中。)
+pause (n / v) (停頓、暫停) ^ The speaker took a brief pause before delivering the final sentence. (講者在說出最後一句話之前進行了短暫的停頓。)
+the third-to-last line (phr) (倒數第三行 = the third line from the bottom) ^ Look at the third-to-last line on page five for the correct spelling. (請看第五頁倒數第三行以取得正確拼寫。)
+dash (n) (破折號) ^ The writer used a dash to create a dramatic pause in her sentence. (作者使用破折號在句子中創造戲劇性的停頓。)
+struggle to V (phr) (艱難地做某事) ^ Many young students struggle to balance study hours and social life. (很多學生很難在課業和社交生活之間取得平衡。) | struggle to V 本身不表示「有做到」或「沒做到」。它強調的是「做這件事很困難、需要很大努力」。如果要明確表示是否做到，可以在後面加上結果: <br>She struggled to finish the job, but she couldn’t. <br>She struggled to finish the job, but she eventually succeeded. 
+echo (v / n) (回音、回響、呼應) ^ Her strong speech echoed the growing concerns of local residents. (她強有力的演講呼應了在地居民日益增加的疑慮。)
+criticism (n) (批評、評論) ^ Constructive criticism helps authors refine and improve their writing. (建設性的批評有助於作者完善並改進他們的寫作。)
+throughout (+ time) (prep) (在整個…期間) ^ It rained heavily throughout the entire weekend afternoon. (整個週末下午都在下大雨。)
+throughout (+ place) (prep) (遍及…地方) ^ Historic stone landmarks can be found throughout the European town. (歷史悠久的石頭地標可以在整座歐洲小鎮各處被找到。)
+the opening (n) (開頭、開端、開幕) ^ The intriguing opening chapter grabbed the reader's immediate attention. (吸引人的開頭章節立即吸引了讀者的注意。)
+convey (v) (傳達、表達) ^ Words sometimes fail to convey the deep appreciation we feel inside. (言語有時無法傳達我們內心深處感受到的深刻感激。)
+loss (n) (遺失、損失、迷失) ^ The unexpected financial loss forced the company to cut extra costs. (這筆意外的財務損失迫使公司削減額外成本。) | 動詞三態為 lose–lost–lost <br>I lost my wallet and still haven’t found it. <br>我遺失了皮夾且還沒找到。
+weigh (v) (1.秤重 2.仔細考慮、權衡) ^ Wise decision-makers always weigh the pros and cons before acting. (明智的決策者在採取行動前總是會權衡利弊。)
+anxious (adj) (焦慮的、不安的) ^ Students often feel anxious right before taking major national exams. (學生在參加重大國家考試之前往往感到焦慮。)
+
+◎Paragraphs 10-11
+
+life lesson (n) (人生課題、生活教訓) ^ Overcoming difficult challenges teaches us a valuable life lesson. (克服艱難的挑戰教會了我們寶貴的人生課題。)
+whoever… (= anyone who…) (pron) (凡是…的人、無論是誰) ^ Whoever completes survey early will receive a free gift. (凡是提早填完問卷的人都將收到一份免費禮物。)
+encounter (v / n) (遭遇、遇到) ^ Travelers may encounter unexpected weather delays during trips. (旅人在旅行期間可能會遭遇意想不到的天氣延誤。)
+numerous (adj) (許多的、大量的 = many) ^ There are numerous reasons why regular sleep is vital for good health. (有許多的理由解釋為什麼定期的睡眠對健康至關重要。)
+a university major (n) (大學主修) ^ Choosing a university major is an important step for future career growth. (選擇大學主修是未來職涯發展的重要一步。)
+decide on (+ N) (phr) (決定…、選定…) ^ After discussing for hours, they finally decided on a travel destination. (討論數小時後，他們終於選定了旅遊目的地。) | <b>decide + to V = 決定「做某事」</b><br>She decided to study abroad. <br>她決定出國留學。<br><br><b>decide on + N = 決定「選某個東西」</b><br>Have you decided on a name? <br>你決定好名字了嗎?
+career path (n) (職涯發展路線) ^ Following your passion can lead to a fulfilling career path. (跟隨你的熱情可以帶領你走上一條充實的職涯發展路線。)
+outcome (n) (結果、結局 = result) ^ Careful planning increases the likelihood of a positive business outcome. (仔細的規劃增加了積極商業結果的可能性。)
+significance (n) (重要性、意義) ^ The historical event carries immense cultural significance for the community. (這起歷史事件對該社區載負著巨大的文化意義。)
+emphasize (v) (強調、重視 = stress) ^ Teachers emphasize the importance of reviewing vocabulary every day. (老師們強調每天複習單字的重要性。)
+prompt (v) (促使、引起 = cause) ^ The ruling party’s remarks have prompted an angry response from the opposition parties. (*執政黨*的言論引發了*在野黨*的憤怒回應。) | 一字多義: <br><b>prompt (adj): 迅速的、即時的</b> <br>a prompt reply = 立即的回應<br><b>prompt (n): 1.（給忘詞演員的）提詞、  2.（給AI的）提示詞、指令</b>
+
+prompt someone to V (phr) (促使某人做某事) ^ The urgent news prompted the city mayor to take immediate action. (這則緊急新聞促使市長立即採取行動。)
+enduring (adj) (持久的、不朽的) ^ Shakespeare’s plays have had an enduring influence on world drama. (莎士比亞的戲劇對世界戲劇產生了不朽的影響。)
+get at something (phr) (意指…、表達…) ^ What are you trying to get at with that joke? (你那個笑話到底想表達什麼？)
+the essence of… (n) (…的精髓/本質) ^ Simplicity and honesty lie at the heart of the essence of good design. (簡單與誠實位於優秀設計精髓的核心。)
+instead of… (phr) (而不是…) ^ Drink fresh water throughout the day instead of sugary soft drinks. (整天多喝新鮮水，而不是含糖軟飲料。)
+reflect on… (phr) (反思…、深思…) ^ Take time at night to reflect on what you learned during the day. (在晚上抽空反思你在白天學到了什麼。)
+strike a chord (with someone) (phr) (（與某人）產生共鳴) ^ The singer's emotional lyrics struck a chord with audience members. (歌手充滿情感的歌詞與觀眾產生了共鳴。)
+timeless (adj) (永恆的、不受時間影響的) ^ Classic literature contains timeless wisdom that remains relevant today. (經典文學包含著至今依然相關的永恆智慧。)
+classic (n) (經典名著、典範) ^ Frost’s famous poem is widely considered an American literary classic. (佛洛斯特的著名詩作被廣泛認為是美國文學的經典名著。)
+a timeless classic (n) (永恆的經典) ^ The film remains a timeless classic enjoyed by audiences across ages. (這部電影依然是一部深受跨世代觀眾喜愛的永恆經典。)
+timely (adj) (及時的、適時的) ^ A timely intervention by doctors saved the critical patient's life. (醫生及時的介入救了這位危重病患的生命。)
+a timely reminder (n) (及時的提醒) ^ The safety inspection served as a timely reminder to follow factory rules. (安全檢查充當了遵循工廠規則的及時提醒。)
+receive timely assistance (phr) (收到及時的協助) ^ Victims of the earthquake were fortunate to receive timely assistance. (地震災民幸運地收到了及時的協助。)
+
 
 
 `,
         'textbook3': `
+◎Vocab #1-#13
+
+define (v) (給…下定義、界定) ^ Dictionaries define words clearly to help language learners. (字典清晰地界定詞彙以幫助語言學習者。)
+misleading (adj) (誤導的、引入歧途的) ^ The headline was misleading and did not reflect the true story. (該新聞標題具有誤導性，並未反映真實情況。)
+truthful (adj) (1.（人）講真話的、誠實的 = honest) ^ She is a truthful person who always admits her mistakes. (她是一個講真話的人，總是承認自己的錯誤。)
+truthful (adj) (2.（敘述等）真實的、符合事實的) ^ The witness gave a truthful account of what happened at the scene. (目擊者對現場發生的事情作出了符合事實的描述。)
+deceive (v) (欺騙、蒙蔽) ^ You should never deceive your friends for personal gain. (你絕不應該為了個人利益而欺騙朋友。)
+journalism (n) (新聞業、新聞工作) ^ He decided to study journalism to become an investigative reporter. (他決定攻讀新聞業以成為一名調查報導記者。)
+prior (adj) (先前的、事先的) ^ The course required students to have prior knowledge of Spanish. (這門課要求學生事先學過西班牙語。)
+political (adj) (政治的) ^ Citizens gathered in the city center to discuss important political issues. (公民聚集在市中心討論重要的政治議題。)
+attempt (n) (企圖、嘗試) ^ Her first attempt to pass the driver's test was unsuccessful. (她第一次考駕照的嘗試並沒有成功。)
+candidate (n) (1.候選人) ^ Each candidate who is *running for mayor* in this election has presented a different vision for the future of the city. (在這次選舉中*競選市長*的每位候選人都對這座城市的未來提出了不同的願景。)
+candidate (n) (2.應徵者、求職者 = job applicant) ^ Over fifty qualified candidates applied for the open manager position. (超過五十名合格的求職者應徵了這個經理職缺。)
+illustrate (v) (1.（用說明或例子）說明、闡明) ^ The teacher used a real example to illustrate the complex scientific theory. (老師用一個真實的例子來闡明這個複雜的科學理論。)
+illustrate (v) (2.給…加插圖) ^ An artist was hired to illustrate the classic children's storybook. (一位藝術家被雇來給這本經典兒童故事書加插圖。)
+extensive (adj) (1.廣泛的、全面的) ^ The library offers an extensive collection of rare historical books. (這間圖書館提供了豐富且廣泛的珍貴歷史書籍收藏。)
+extensive (adj) (2.廣闊的、大規模的) ^ Severe storms caused extensive damage to crops across the region. (強烈暴風雨對該地區的作物造成了大範圍的損害。)
+flawed (adj) (有瑕疵的、有缺陷的) ^ The plan was flawed from the beginning due to poor research. (由於研究不足，這項計劃從一開始就是有缺陷的。)
+shatter (v) (1.（使）粉碎、砸碎) ^ The loud explosion shattered the glass windows of nearby houses. (巨大的爆炸聲砸碎了附近房屋的玻璃窗。)
+shatter (v) (2.（使夢想、希望等）破滅) ^ Losing the final game shattered their hopes of winning the championship. (輸掉決賽使他們奪冠的希望徹底破滅。)
+
+◎Vocab #14-#25
+
+sequel (n) (（電影、書等的）續集 + to…) ^ Fans are eagerly waiting for the sequel to the popular movie. (粉絲們正在熱切期待這部熱門電影的續集。)
+consequence (n) (結果、後果 = bad result) ^ Taking responsibility means accepting the consequence of your actions. (承擔責任意味著接受你行為的後果。)
+subsequent (adj) (隨後的、後來的 = following) ^ The first meeting was unsuccessful, but subsequent discussions led to an agreement. (第一次會議並不成功，但隨後的討論促成了協議。)
+mainstream (adj) (主流的 🆚 lesser-known, niche) ^ Solar energy has moved from an alternative option to a mainstream power source. (太陽能已從替代選項轉變為主流的電力來源。)
+lesser-known (adj) (較少人知的、知名度較低的) ^ The tour guide took us to visit a lesser-known scenic spot near the mountain village. (導遊帶我們去參觀了這座山村附近一個知名度較低的景點。) 
+niche (adj) (小眾的、針對特定族群的) ^ She is a niche singer with a very loyal fanbase. (她是一位小眾歌手，但有一群非常忠實的粉絲。)
+panic (n) (恐慌、驚慌) ^ News of the spreading storm caused panic among the local residents. (風暴蔓延的消息在地居民中引發了恐慌。)
+necessity (n) (必需品、必要性) ^ Access to clean drinking water is a basic human necessity. (取得乾淨的飲用水是人類的基本必需品。)
+evaluate (v) (評估、評價) ^ Teachers regularly evaluate student performance through tests and projects. (老師定期透過測驗和專案評估學生的表現。)
+validity (n) (1.正當性、合理性、有效性) ^ Experts questioned the validity of the study's conclusions. (專家質疑該研究結論的正當性與合理性。)
+validity (n) (2.（法律上的）效力、有效期限) ^ Please check the validity of your passport before booking international flights. (預訂國際航班前請檢查您護照的有效期限。)
+notable (adj) (顯著的、值得注意的) ^ The young scientist made a notable contribution to medical research. (這位年輕的科學家對醫學研究作出了顯著的貢獻。)
+biography (n) (傳記) ^ She wrote a bestseller biography which introduced the life of the famous inventor in detail. (她寫了一本詳細介紹這位著名發明家生平的暢銷傳記。)
+autobiography (n) (自傳) ^ In his autobiography, the former president shared his early struggles. (在他的自傳中，這位前總統分享了他早年的掙扎。)
+verify (v) (核實、證實) ^ Always verify news sources before sharing reports on social media. (在社群媒體上分享報導前，務必先核實新聞來源。)
+credibility (n) (可信度、可靠性) ^ Repeatedly giving false information will ruin your personal credibility. (重複給予虛假訊息會毀掉你的個人可信度。)
+cite (v) (1.引用、引述) ^ In her essay, she cited the famous line, “Two roads diverged in a yellow wood,” from Robert Frost’s poem The Road Not Taken. (她在文章中引用了羅伯特・弗羅斯特詩作《未選之路》中的名句：「黃色的林中分出了兩條路。」)
+cite (v) (2.舉例、引證) ^ He cited *a whole bunch of* reasons why *staying in shape* is so hard. (他舉了*一大堆*理由，說明為何*維持好身材*這麼難。)
+objective (adj) (客觀的、公正的 ↔️ subjective 主觀的) ^ A news reporter should always provide an objective account of the facts. (新聞報導員應始終對事實提供客觀的描述。)
+objective (n) (目標、目的 = goal) ^ The main objective of this workshop is to improve communication skills. (本次工作坊的主要目標是提升溝通技巧。)
+
+◎詞類變化補充
+
+definition (n) (定義、界定) ^ Clear definitions prevented misunderstandings during the business negotiation. (清晰的定義避免了商業談判中的誤解。)
+mislead (v) (誤導、使產生錯誤想法) ^ Advertisements must not mislead customers with false promises. (廣告不得以虛假承諾誤導顧客。)
+deception (n) (欺騙、騙局) ^ The entire investment scheme turned out to be a clever deception. (整個投資方案結果被證明是一個聰明的騙局。)
+journalist (n) (記者、新聞工作者) ^ The brave journalist risked her safety to report from the war zone. (這位勇敢的新聞記者冒著安全風險從戰區進行報導。) | journalist 指廣義的新聞工作者，包括reporter (記者)、anchor / anchorman / anchorwoman (主播)、columnist (專欄作家)等。
+journal (n) (1.學術期刊、刊物、雜誌) ^ Researchers published their findings in a prestigious medical journal. (研究人員將他們的發現發表在一份權威醫學期刊上。)
+journal (n) (2.日誌、日記 = diary) ^ Keeping a daily journal helps process thoughts and clear the mind. (保持寫日常日誌習慣有助於整理思緒並清空大腦。)
+politics (n) (政治、政治學) ^ She is studying international politics at university to become a diplomat. (她正在大學攻讀國際政治學以成為一名外交官。)
+politician (n) (政治家、政客) ^ The local politician promised to build more public parks for families. (在地政治家承諾為家庭建造更多公共公園。)
+attempt to V (phr) (嘗試/企圖做某事 = try to V) ^ Drivers should never attempt to cross flooded roads during severe storms. (駕駛絕不應該在強烈暴風雨期間嘗試穿越積水的道路。)
+illustration (n) (插圖、圖解、說明) ^ The textbook uses a clear illustration to explain how the human heart works. (這本教科書使用清晰的圖解來解釋人體心臟如何運作。)
+extend (v) (延伸、擴展、延長) ^ The hotel decided to extend its stay discount offer for another week. (飯店決定將住房折扣優惠延長一週。)
+extension (n) (1.延伸、擴展  2.電話分機) ^ If you need more time for the project, you may apply for a deadline extension. (如果你需要更多時間完成專案，可以申請截止日期延期。)
+flaw (n) (缺點、瑕疵、漏洞) ^ Engineers found a technical flaw in the new software system. (工程師在新軟體系統中發現了一個技術漏洞。)
+mainstream (n) (主流) ^ Independent art styles gradually merged into the cultural mainstream. (獨立藝術風格逐漸融入了文化主流。)
+panic (v) (恐慌、驚慌失措) ^ Passengers were advised not to panic when the engine stalled. (當引擎熄火時，乘客被建議不要驚慌失措。)
+evaluation (n) (評估、估價) ^ Regular performance evaluation helps employees grow in their career. (定期的績效評估有助於員工在職涯中成長。)
+valid (adj) (1.有根據的、合理的) ^ She raised a valid objection regarding the safety of the new procedure. (她對新流程的安全性提出了一個合理的反對意見。)
+valid (adj) (2.（法律上）有效的) ^ You need a valid passport to enter the country legally. (你需要一本有效的護照才能合法入境該國。)
+verification (n) (核實、確認) ^ The system sends a verification code to your phone for security. (系統會傳送核實驗證碼至你的手機以維護安全。)
+credible (adj) (可信的、可靠的) ^ Always check if the story comes from a credible source before believing it. (在相信故事之前，務必先檢查它是否來自可信的來源。)
+
+◎片語
+
+prior to… (phr) (在…之前) ^ Prior to the meeting, please review all the attached budget files. (在會議之前，請先複習所有附加的預算檔案。)
+stock up (phr) (囤積、備貨) ^ Residents rushed to stock up on food before the typhoon hit. (居民在颱風來襲前趕忙囤積食物。)
+mistake A for B (phr) (把 A 誤認為 B) ^ It is easy to mistake this twin for his brother from a distance. (從遠處看很容易把這位雙胞胎誤認為他的兄弟。)
+last but not least (phr) ([轉承詞] 最後但同樣重要的是… = lastly) ^ Last but not least, I would like to thank our team for their hard work. (最後但同樣重要的是，我想感謝我們團隊的努力工作。)
+fall for something (phr) (上…的當、對…信以為真) ^ Do not fall for online scams that ask for private bank details. (不要上索取私密銀行資訊的線上詐騙的當。)
+fall for someone (phr) (迷戀、對…傾心) ^ She always falls for older men. (她總是愛上年紀比較大的男人。)
+
 
 
 `,
@@ -3425,8 +3708,8 @@ praise (v) (讚美、稱讚) ^ The teacher praised the young student for his exc
 grace (n) (優雅、體面) ^ The ice skater moved across the rink with high grace. (這名滑冰選手以極高的優雅在冰場上移動。)
 grace (v) (為…增色、增添光彩) ^ Many famous stars came to grace the red carpet at the ceremony. (許多著名明星蒞臨頒獎典禮，為紅毯增添光彩。)
 graceful (adj) (優雅的、優美的) ^ Dancers spend years practicing to make their movements graceful. (舞者花費數年練習以使他們的動作優美。)
-address (v) (1.應付、處理 = deal with…) ^ We need to address the safety problem before opening the store. (我們需要在開店前去處理這個安全問題。)
-address (v) (2.對…講話 = speak to…) ^ The president will address the public on TV tonight. (總統今晚將會在電視上對大眾講話。)
+to address (v) (1.應付、處理 = deal with…) ^ We need to address the safety problem before opening the store. (我們需要在開店前去處理這個安全問題。)
+to address (v) (2.對…講話 = speak to…) ^ The president will address the public on TV tonight. (總統今晚將會在電視上對大眾講話。)
 (letter, package…) be addressed to… (phr) (（信、包裹等）署名寄給…) ^ This small package is addressed to my elder sister. (這個小包裹是署名寄給我的姊姊的。)
 credit (v) (歸功於) ^ Teachers credit his success to his long hard work. (老師們將他的成功歸功於他長期的努力工作。)
 despite (prep) (儘管、雖然 = in spite of…) ^ We enjoyed our outdoor picnic despite the cold wind. (儘管吹著冷風，我們依然享受了我們的戶外野餐。)
@@ -3445,7 +3728,7 @@ abuse (v) (2.濫用) ^ Leaders should never abuse their power for personal gain.
 colleague (n) (同事 = co-worker) ^ She works well with every colleague in her office. (她與辦公室裡的每一位同事都合作得很好。)
 hopeless (adj) (無望的、絕望的) ^ He felt hopeless when he lost his passport in a foreign country. (當他在外國丟失護照時，他感到很絕望。)
 
-◎Day 2: 綜合測驗
+◎Day 2: 綜合一
 academic (adj) (學術的) ^ The university library offers many academic journals for students. (大學圖書館為學生提供許多學術期刊。)
 be about to V (phr) (即將…) ^ Hurry up! The train is about to leave the station. (快一點！火車即將離開車站。)
 innovation (n) (創新、革新) ^ Smartphone technology was a major innovation that changed our lives. (智慧型手機技術是一項改變我們生活的大創新。)
@@ -3464,7 +3747,8 @@ one dozen (n) (一打、十二個) ^ I bought two dozen fresh eggs from the loca
 participant (n) (參加者、參與者，補充: participate參與) ^ Every participant in the race received a free T-shirt. (跑步比賽中的每位參加者都獲得了一件免費T恤。)
 squeeze (v) (擠壓、擠出) ^ Squeeze some lemon juice onto the fresh fish for better flavor. (擠一些檸檬汁在鮮魚上以獲得更好的風味。)
 squeeze into (a place) (phr) (擠進（地方）) ^ Too many people tried to squeeze into the small elevator. (太毒人試圖擠進這個小電梯裡。)
-break into (a place) (phr) (闖入（地方）) ^ A thief tried to break into the house during the night. (一名小偷試圖在夜間闖入這棟房子。)
+break into (a place) (phr) (1.闖入（某地方）) ^ A thief tried to break into the house during the night. (一名小偷試圖在夜間闖入這棟房子。)
+break into (something) (phr) (2.突然開始做（某事）= suddenly begin to do sth) ^ He felt so happy that he *broke into song*. = He felt so happy that he *suddenly began to sing*. (他高興得突然唱起歌來。)
 intimate (adj) (親密的、私密的) ^ They held an intimate birthday party with only close family members. (他們舉辦了一場只有親近家人參加的親密生日派對。)
 to record (v) (記錄、錄音/影) ^ Please record the main points of today's team meeting. (請記錄今天團隊會議的要點。)
 record (n) (記錄) ^ He broke the school record for the hundred-meter race. (他打破了這所學校百米賽跑的紀錄。)
@@ -3494,7 +3778,7 @@ innovative (adj) (創新的) ^ The company created an innovative app to help use
 process (n) (過程、步驟) ^ Learning a new language is a slow but fun process. (學習一門新語言是一個慢速但有趣的過程。)
 make up for… (phr) (補償…、彌補…) ^ He bought her flowers to make up for being late. (他買花給她以彌補遲到。)
 keep track of… (phr) (追蹤…、記錄…) ^ Use a notebook to keep track of your daily expenses. (使用筆記本來追蹤你每天的開銷。)
-give rise to… (phr) (引起…、導致… = lead to…; cause) ^ Bad weather can give rise to severe traffic accidents. (惡劣的天氣可能會引起嚴重的交通事故。)
+give rise to… (phr) (引起…、導致… = lead to…; cause) ^ Bad weather can give rise to severe traffic accidents. (惡劣的天氣可能會引起嚴重的交通事故。)|「導致、造成、引發…」(因果關係) 統整 <br> 片語: lead to…, result in…, give rise to…, contribute to…, bring about…<br>單字: cause, trigger, spark, prompt
 look out for… (phr) (留心…、注意…) ^ You should look out for cars when crossing the street. (你過馬路時應該留心車輛。)
 a form of… (phr) (一種…的形式) ^ Dancing is a fun form of daily physical exercise. (跳舞是一種有趣的日常體能運動形式。)
 collective (adj) (集體的、共同的) ^ Cleaning the park was a collective effort by all students. (清理公園是所有學生共同努力的結果。)
@@ -3517,7 +3801,7 @@ cooperative (adj) (合作的、配合的 = co- + operative) ^ Students were very
 cooperation (n) (合作、配合 = co- + operation) ^ Success requires close cooperation among all team members. (成功需要所有團隊成員之間密切的合作。)
 industry (n) (1.工業 2.產業) ^ The movie industry brings entertainment to millions of people. (電影產業給數百萬人帶來娛樂。)
 institution (n) (機構、制度) ^ This hospital is a top medical institution in our city. (這家醫院是我們城市裡頂尖的醫療機構。)
-
+◎Day 2: 綜合二
 sick to one’s stomach (phr) (感到反胃、想吐) ^ Riding the fast roller coaster made him feel sick to his stomach. (搭乘快速雲霄飛車讓他感到反胃想吐。)
 rocking chair (n) (搖椅) ^ My dad fell asleep peacefully in the rocking chair. (我父親在搖椅上安詳地睡著了。)
 rocking boat (n) (搖晃的船) ^ Standing on a rocking boat can easily make you lose balance. (站在搖晃的船上很容易讓你失去平衡。)
@@ -3535,7 +3819,7 @@ progress (v/n) (進步、進展) ^ She has made great progress in her English sp
 to progress from… to… (phr) (從…進展到…) ^ Students progress from basic words to full sentences quickly. (學生們快速地從基本單字進展到完整句子。)
 uneasy (adj) (不安的、心神不寧的，名詞: uneasiness) ^ Walking alone in the dark forest made him feel uneasy. (獨自在黑暗森林裡行走讓他感到不安。)
 sweat (n/v) (流汗；汗水) ^ Hot summer weather makes people sweat a lot. (炎熱的夏天天氣讓人流很多汗。)
-lead to… (phr) (導致、引導至… = cause; give rise to…) ^ Eating too much sweet candy can lead to bad teeth. (吃太多甜糖果可能會導致壞牙。)
+lead to… (phr) (導致、造成… = cause; give rise to…) ^ Eating too much sweet candy can lead to bad teeth. (吃太多甜糖果可能會導致壞牙。) |「導致、造成、引發…」(因果關係) 統整 <br> 片語: lead to…, result in…, give rise to…, contribute to…, bring about…<br>單字: cause, trigger, spark, prompt
 dizzy (adj) (頭暈目眩的，名詞: dizziness) ^ Spinning around in circles made the boy feel dizzy. (原地旋轉圈圈讓這個男孩感到頭暈目眩。)
 nausea (n) (噁心、反胃) ^ The bad smell of the garbage gave her a sense of nausea. (垃圾的惡臭給了她一種噁心感。)
 vomit (v) (嘔吐) ^ Eating spoiled food forced him to vomit late at night. (吃變質的食物迫使他在深夜嘔吐。)
@@ -3569,9 +3853,11 @@ at least (phr) (至少) ^ You should brush your teeth at least twice a day. (你
 after all (phr) (畢竟) ^ Don't be too hard on him; after all, he is only five years old. (不要對他太嚴苛；畢竟他只有五歲。)
 
 
-◎Day 3: 文意、篇章
-refer to… (phr) (1.提及、意指  2.參考) ^ The speaker used a map to refer to different cities. (講者使用地圖來指稱不同的城市。)
-reference (to…) (n) (1.提及  2.參考、參考資料) ^ He made a quick reference to his past experiences during the speech. (他在演講中簡短提及了他過去的經歷。)
+◎Day 3: 文意選填
+refer to… (phr) (1.提及、意指 ) ^ The speaker used a map to refer to different cities. (講者使用地圖來指稱不同的城市。)
+refer to... (phr) (2.參考、查閱) ^ He referred to a history book to find out the dates of the French Revolution. (他查閱歷史書來弄清法國大革命的日期。)
+reference (n) (1.提及 + to...) ^ He made a quick reference to his past experiences during the speech. (他在演講中簡短提及了他過去的經歷。)
+reference (n) (2.參考資料、引文出處) ^ The book has a list of references at the end. (這本書在最後列出了參考書目。)
 bear (v) (1.忍受、容忍) ^ She could not bear the extreme cold without a thick jacket. (沒有穿厚外套，她無法忍受極度嚴寒。)
 bear (v) (2.具有、帶有) ^ The official letter must bear the manager's signature. (這封正式信件必須帶有經理的簽名。)
 bear… in mind (phr) (牢記…、將…放在心上 = remember) ^ Please bear in mind that the deadline is tomorrow afternoon. (請牢記截止日期是明天下午。)
@@ -3612,7 +3898,7 @@ acoustic (adj) (聲學的、聲音的) ^ The modern concert hall was engineered 
 quality (n) (品質、音質) ^ High resolution headphones deliver much better audio quality. (高解析度耳機傳遞出好得多的音質。)
 replace (v) (替代、取代) ^ Modern machines have begun to replace old manual tools. (現代機器已經開始取代舊的手工工具。)
 except for… (phr) (除了…之外) ^ The office was quiet except for the sound of typing. (除了打字聲之外，辦公室裡一片寂靜。)
-renowned (adj) (著名的、聲名遠播的) ^ She is a renowned pianist who performs in major cities worldwide. (她是一位在世界各地主要城市巡迴演出的大名鼎鼎的鋼琴家。)
+renowned (adj) (著名的、聲名遠播的 = famous) ^ She is a renowned pianist who performs in major cities worldwide. (她是一位在世界各地主要城市巡迴演出的大名鼎鼎的鋼琴家。) | 同義詞整理: famous, well-known, renowned, noted, celebrated, famed
 particular (adj) (特別的、特定的) ^ Is there any particular reason why you chose this design? (你有什麼特別的理由選擇這個設計嗎？)
 the key of F sharp (n) (升F調) ^ The song was composed specifically in the key of F sharp. (這首歌特別是以升F調創作的。)
 the key of F flat (n) (降F調) ^ The sheet music transposes the melody into the key of F flat. (這份樂譜將旋律轉調至降F調。)
@@ -3649,10 +3935,11 @@ generation (n) (世代、一代人) ^ Traditions are passed down from one genera
 for generations to come (phr) (世世代代、在未來的幾代) ^ Protecting forests keeps natural beauty alive for generations to come. (保護森林能為世世代代保留自然之美。)
 for years to come (phr) (在未來的歲月中) ^ This classical song will remain popular for years to come. (這首經典歌曲在未來的歲月中將繼續保持流行。)
 
-
+◎Day 3: 篇章結構
 capsule (n) (膠囊、膠囊艙) ^ Modern capsule hotels offer compact spaces for travelers. (現代膠囊旅館為旅客提供緊湊的空間。)
 also known as… (phr) (也被稱為…) ^ The city is also known as the cultural center of the region. (這座城市也被稱為該地區的文化中心。)
-pod (n) (艙體、小膠囊艙) ^ Sleeping in a pod can be a comfortable experience. (睡在小膠囊艙裡可以是一種舒適的體驗。)
+pod (n) (1.豆莢) ^ The farmer opened the pod and took out the beans. (農夫打開豆莢，並取出豆子。)
+pod (n) (2.（太空船、機器等的）艙) ^ The astronaut rushed into the escape pod. (太空人趕緊進入了逃生艙。)
 affordable (adj) (負擔得起的、價格實惠的) ^ The hostel provides affordable room options for young travelers. (這家青年旅館為年輕旅客提供負擔得起的房間選項。)
 accommodation (n) (住宿、住宿設施) ^ Finding comfortable accommodation is key to a good trip. (找到舒適的住宿是完美旅行的關鍵。)
 originate (v) (起源於、發源) ^ Capsule hotels originate from Japan in the late twentieth century. (膠囊旅館起源於二十世紀末的日本。)
@@ -3685,7 +3972,7 @@ element (n) (元素、要素) ^ Good ventilation is a key element in designing s
 spread (v / n) (散播、擴展、流行) ^ The capsule hotel concept quickly spread from Asian cities worldwide. (膠囊旅館的概念迅速從亞洲城市擴展到全世界。)
 (hotel/restaurant…) chains (n) (（飯店/餐廳等）連鎖店) ^ International hotel chains are now launching their own pod brands. (國際連鎖飯店現在正在推出他們自己的膠囊品牌。)
 emerge (v) (出現、興起) ^ Compact housing designs emerge in response to rising land values. (緊湊型住宅設計在因應地價上漲中興起。)
-resort (n) (渡假勝地) ^ Some boutique resort destinations now feature premium luxury pod pods. (一些精緻渡假勝地現在以頂級豪華膠囊艙為特色。)
+(tourist, seaside, beach, mountain, ski...) resort (n) (（觀光、海邊、沙灘、山區、滑雪等的）渡假勝地) ^ We stayed in a relaxed beach resort on the east coast. (我們住在東海岸一家輕鬆愜意的海濱度假村。)
 bare (adj) (1.赤裸的、無覆蓋的 + hands/ feet/ tree/ wall…) ^ Walking barefoot on soft carpets feels comfortable after a long journey. (長途旅行後赤腳走在軟地毯上感到很舒服。)
 bare (adj) (2.僅最基本的) ^ The room contains bare necessities like a bed, blanket, and lamp. (房間裡包含像床、毯子和檯燈這樣僅最基本的必需品。)
 feature (v) (以…為特色) ^ Sleek designs feature built-in charging terminals and ambient lights. (時尚的設計以內建充電終端與氛圍燈為特色。)
@@ -3710,15 +3997,17 @@ think twice (phr) (三思、慎重考慮) ^ People uneasy with tight enclosures 
 make a reservation (phr) (預約、預訂) ^ Travelers must make a reservation early during busy holiday peak seasons. (旅客在熱門假日旺季期間必須提早預訂。)
 in response to… (phr) (回應…、因應…) ^ Modern services developed in response to rising city travel demands. (現代服務因應日益增長的城市旅遊需求而發展。)
 rising demands (n) (日益增長的需求) ^ Hotels adapt quickly to meet rising demands for solo travel spaces. (飯店快速調整以滿足對單人住宿空間日益增長的需求。)
-embrace (v) (1.擁抱、接受) ^ International cities embrace new forms of efficient budget housing. (國際城市接受新型態的高效平價住宿。)
-embrace (v) (2.包含、涵蓋) ^ Modern pods embrace digital controls, compact storage, and comfort. (現代膠囊艙涵蓋了數位控制、緊湊收納與舒適性。)
+embrace (v) (1.擁抱 = hug   2.欣然接受) ^ International cities embrace new forms of efficient budget housing. (國際城市欣然接受新型態的平價住宿。)
+embrace (v) (3.包含、涵蓋 = include) ^ This course embraces several different aspects of psychology. (本課程涵蓋心理學的多個不同面向。)
 a wave of… (phr) (一陣/浪…（趨勢、風潮）) ^ A new wave of boutique pod hotels is sweeping global urban hubs. (新一浪的精品膠囊旅館風潮正席捲全球城市中心。)
 innovation (n) (創新、革新) ^ Smart space arrangement is a major innovation in micro-lodging. (智慧空間佈局是微型住宿中的重大創新。)
 transmit (v) (傳遞、傳播（聲音、光線等）) ^ Thin uninsulated partitions may transmit light and soft noises easily. (薄且未隔音的隔板可能容易傳送光線與微弱聲音。)
 snore (v / n) (打鼾、打呼；打鼾聲) ^ Earplugs protect guest sleep if someone nearby begins to snore. (如果附近有人開始打呼，耳塞能保護客人的睡眠。)
 neighboring (adj) (鄰近的、隔壁的) ^ Keep noise down out of respect for travelers in neighboring pods. (出於對鄰近膠囊艙旅客的尊重，請降低噪音。)
-chamber (n) (房間、腔室、膠囊室) ^ Each sleeping chamber offers personal space and power connections. (每個睡眠腔室都提供個人空間與電源插座。)
-stack (v) (堆疊、疊放) ^ Operators stack sleeping units two levels high to save floor space. (業者將睡眠單元堆疊兩層高以節省地板空間。)
+chamber (n) (1.房間) ^ The second book in the Harry Potter series is called "Harry Potter and the Chamber of Secrets." (哈利波特系列小說的第二集叫做《哈利波特與消失的密室》。)
+chamber (n) (2.（機器、動植物的）腔室) ^ The human heart has four chambers. (人的心臟有四個腔室——左右心房及左右心室。)
+stack (n) (（排放整齊的）堆，疊) ^ There is a stack of books on her desk. (她的桌子上堆著一疊書。)
+stack (v) (堆疊) ^ The part-time workers stacked the chairs up after the event. (活動結束後，工讀生將椅子疊起來。)
 upper (adj) (較高的、上層的) ^ Access the upper row using small integrated step ladders carefully. (使用內建的小步梯小心登上較高的上層。)
 ladder (n) (梯子) ^ Use the sturdy metal ladder to climb safely to upper units. (使用堅固的金屬梯子安全地爬到上層單元。)
 overnight (adj) (過夜的、整夜的) ^ Capsule hotels provide convenient choices for an overnight stay. (膠囊旅館為過夜住宿提供了方便的選擇。)
@@ -3726,7 +4015,7 @@ lodging (n) (住宿、寄宿) ^ Compact micro lodging is gaining popularity acro
 commerce (n) (商業、貿易) ^ Dense areas of international commerce generate strong demand for short stays. (國際商業發達的區域產生了對短暫停留的強烈需求。)
 
 
-◎Day 4: 閱測一二
+◎Day 4: 閱測一
 intersection (n) (交叉路口 vs. crossroads十字路口) ^ Drive slowly when approaching a busy intersection. (靠近繁忙的十字路口時請減速慢行。)
 be at a crossroads (phr) (面臨重要的轉折點、需要做重大決定的時刻) ^ The teacher is at a crossroads in her career. She is thinking about quitting her job. (這個老師的職涯正處於一個關鍵抉擇點。她正在考慮是否辭職。)
 invent (v) (發明、創造) ^ Alexander Graham Bell helped invent the electric telephone. (亞歷山大·格拉漢姆·貝爾協助發明了電話。)
@@ -3809,6 +4098,7 @@ manage (v) (管理、經營) ^ She knows how to manage a team under high pressur
 manager (n) (經理、管理者) ^ The general manager signed the important contract yesterday. (總經理昨天簽署了這份重要的合約。)
 management (n) (管理、管理層) ^ Effective time management is essential for busy students. (有效的時間管理對忙碌的學生來說至關重要。)
 
+◎Day 4: 閱測二
 horror movie (n) (恐怖電影) ^ Watching a creepy horror movie late at night can be thrilling. (在深夜看一部令人毛骨悚然的恐怖電影可以很刺激。)
 typically (adv) (典型地、通常) ^ Tropical regions typically experience hot and humid weather year-round. (熱帶地區通常全年氣候炎熱潮濕。)
 zombie (n) (喪屍、殭屍) ^ Stories about a zombie outbreak are popular in horror fiction. (關於喪屍爆發的故事在恐怖小說中很受歡迎。)
@@ -3882,7 +4172,7 @@ pattern (n) (2.（事情發生或進行的）規律、模式) ^ Scientists obser
 sentence pattern (n) (句型) ^ Practice this English sentence pattern to improve your writing skills. (練習這個英文句型以提升你的寫作技巧。)
 residual (adj) (殘留的、剩餘的) ^ Residual chemicals must be washed off completely from vegetables. (殘留的化學物質必須從蔬菜上完全洗淨。)
 evoke (v) (喚起、引起) ^ The old photo album managed to evoke sweet childhood memories. (這本舊相簿成功喚起了甜蜜的童年回憶。)
-lead to… (phr) (導致、引致 = cause) ^ Poor planning can lead to serious project failure down the line. (不良的規劃後續可能會導致嚴重的專案失敗。)
+lead to… (phr) (導致、引致 = cause) ^ Poor planning can lead to serious project failure down the line. (不良的規劃後續可能會導致嚴重的專案失敗。)|「導致、造成、引發…」(因果關係) 統整 <br> 片語: lead to…, result in…, give rise to…, contribute to…, bring about…<br>單字: cause, trigger, spark, prompt
 fatigue (n) (疲勞、勞累 = exhaustion > tiredness) ^ Driver fatigue is a major cause of highway traffic accidents. (駕駛疲勞是高速公路交通事故的主要原因。)
 irritable (adj) (易怒的、暴躁的) ^ Lack of sleep makes people feel tired and irritable during daytime. (缺乏睡眠讓人們在白天感到疲倦且易怒。)
 irritability (n) (易怒) ^ Continuous noise can cause extreme mental irritability. (持續的噪音會造成極度的精神易怒。)
@@ -3902,7 +4192,7 @@ aggression (n) (攻擊性、侵略行為) ^ Animals show aggression when they fe
 aggressive (adj) (1.好鬥的、富攻擊性的) ^ The stray dog showed aggressive behavior when approached. (這隻流浪狗被靠近時展現出好鬥的行為。)
 aggressive (adj) (2.積極進取的、野心勃勃的) ^ The ambitious company adopted an aggressive marketing strategy. (這家野心勃勃的公司採取了積極進取的行銷策略。)
 
-◎Day 5: 閱測三、混合
+◎Day 5: 閱測三
 Russia (n) (俄羅斯) ^ Russia is the largest country in the world by land area. (俄羅斯是世界上陸地面積最大的國家。)
 Russian (adj / n) (俄羅斯的；俄羅斯人、俄語) ^ Russian literature is world-famous for its deep philosophical themes. (俄羅斯文學以其深刻的哲學主題而聞名世界。)
 portray (v) (描繪) ^ The movie portrays the main hero as a wise and brave leader. (這部電影將主角描繪成一位明智而英勇的領袖。)
@@ -3991,7 +4281,8 @@ first place (n) (第一名、首位) ^ The young runner worked hard to capture f
 when it comes to (+ N / V-ing) (phr) (當提到…、談及…) ^ When it comes to cooking pasta, fresh garlic makes a difference. (當提到煮義大利麵時，新鮮大蒜會帶來很大的不同。)
 per capita (adj / adv) (人均的；按人口平均計算地) ^ The country boasts a high GDP per capita due to thriving tech industries. (由於繁榮的科技產業，該國擁有很高的人均國內生產總值。)
 
-captivity (n) (囚禁、圈養) ^ Animals raised in captivity may lack natural wild survival skills. (在圈養環境下長大的動物可能缺乏天然的野生生存技能。)
+◎Day 5: 混合題
+captivity (n) (囚禁、圈養) ^ Animals raised *in captivity* may lack natural wild survival skills. (在圈養環境下長大的動物可能缺乏天然的野生生存技能。)
 display (v / n) (1.陳列、展覽) ^ Antique artifacts are on display in the museum's main hall. (古董文物正在博物館的大廳展出。)
 display (v / n) (2.顯示、表現) ^ The screen will display live navigation maps clearly while driving. (螢幕會在駕駛時清晰顯示實時導航地圖。)
 on display (phr) (展出中、陳列著) ^ Beautiful modern paintings were on display throughout the gallery. (美麗的現代畫作在整個畫廊中展出。)
@@ -4201,7 +4492,7 @@ live on… (phr) (靠...過活、以...為主食) ^ Pandas are distinct creature
 a great deal of… (phr) (大量的... +不可數) ^ This library provides a great deal of information about ancient Rome. (這座圖書館提供了關於古羅馬的大量資訊。)
 a wealth of… (phr) (大量的…，比較: wealth = 財富) ^ This library provides a wealth of information about ancient Rome. (這座圖書館提供了關於古羅馬的大量資訊。)
 spring up (phr) (如雨後春筍般湧現、突然出現) ^ Many fast food dining options have sprung up around the train station recently. (最近火車站周圍如雨後春筍般湧現了許多速食餐飲選擇。)
-bring about… (phr) (導致...、帶來（改變等）= lead to…) ^ Modern technology has brought about massive changes in our daily communication. (現代科技給我們的日常溝通帶來了巨大的改變。)
+bring about… (phr) (導致...、帶來（改變等）= lead to…) ^ Modern technology has brought about massive changes in our daily communication. (現代科技給我們的日常溝通帶來了巨大的改變。)|「導致、造成、引發…」(因果關係) 統整 <br> 片語: lead to…, result in…, give rise to…, contribute to…, bring about…<br>單字: cause, trigger, spark, prompt
 (every) now and then (phr) (偶爾、時常) ^ Even though they are busy, they still meet up for a bite now and then. (儘管他們很忙，他們偶爾還是會見面吃點東西。)
 by means of… (phr) (藉由...的方法/手段) ^ The blind student managed to accomplish the assignment by means of a special tool. (那位盲人學生藉由特殊工具的方法成功完成了這項作業。)
 in a word (phr) (總而言之、一言以蔽之) ^ In a word, his performance was highly impressive and perfect. (總而言之，他的表現令人印象深刻且完美極了。)
@@ -4791,7 +5082,7 @@ set aside (phr) (留出、撥出) ^ Set aside thirty minutes every day to read b
 turn down (1.把（音量等）轉小 < > turn up) ^ Please turn down the radio; it is too loud. (請把收音機音量轉小，太吵了。)
 turn down (2.拒絕（提議、請求、邀請等）) ^ He had to turn down the invitation because he was sick. (因為生病了，他不得不拒絕這個邀請。)
 make (good) use of… (phr) (（好好）利用…) ^ You should make good use of your free time to practice English. (你應該好好利用空閒時間來練習英文。)
-contribute to… (phr) (導致… = lead to…，補充: contribute $ to… = 捐錢給…) ^ Eating too much sugar can contribute to tooth problems. (吃太多糖會導致牙齒問題。)
+contribute to… (phr) (導致… = lead to…) ^ Eating too much sugar can contribute to tooth problems. (吃太多糖會導致牙齒問題。) | contribute/donate $ to… = 捐錢給…<br>The generous person contributed (= donated) $1 million to charity. <br>這位慷慨的人捐了100萬給慈善機構。
 come to a halt (phr) (停止、停擺 = come to a stop) ^ The train came to a halt at the station. (火車在車站停了下來。)
 conform to… (phr) (符合…、遵從…) ^ All students must conform to the school rules. (所有學生都必須遵從學校規定。)
 a world of difference (phr) (天壤之別、極大的差異) ^ There is a world of difference between a cat and a dog. (貓和狗之間存在著天壤之別。)
@@ -5011,71 +5302,111 @@ let showEnglishTimeout = null;  // ADD THIS LINE - track the timeout
             }
         }
 
-        // Get English voice
-        function getEnglishVoice() {
-            if (!voices.length) loadVoices();
-            let voice = voices.find(v => v.name.includes('Samantha')) || 
-                       voices.find(v => v.lang === 'en-US');
-            return voice || null;
-        }
+// 取得日文語音 (朗讀單字與例句)
+function getJapaneseVoice() {
+    if (!voices.length) loadVoices();
+    // 尋找日文語音 (Google 日本語 或 系統內建日文)
+    let voice = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja_JP') || 
+                voices.find(v => v.name.includes('Kyoko')) || 
+                voices.find(v => v.name.includes('Google 日本語'));
+    return voice || null;
+}
 
-        // Clean text for TTS
-        function cleanTextForTTS(text) {
-            return text.replace(/\*/g, '')
-                      .replace(/\//g, '')
-                      .replace(/\([^)]*\)/g, '')
-                      .replace(/\[[^\]]*\]/g, '')
-                      .replace(/\s+/g, ' ')
-                      .trim();
-        }
+// 取得英文語音 (保留給 Correct / Wrong 使用)
+function getEnglishFeedbackVoice() {
+    if (!voices.length) loadVoices();
+    let voice = voices.find(v => v.name.includes('Samantha') || v.lang === 'en-US');
+    return voice || null;
+}
+
+// 專門用於測驗答對/答錯的英文回饋
+function speakFeedback(text) {
+    stopSpeech();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 1.0;
+    const voice = getEnglishFeedbackVoice();
+    if (voice) utterance.voice = voice;
+    speechSynthesis.speak(utterance);
+}
+
+// Clean text for TTS
+function cleanTextForTTS(text) {
+    return text.replace(/<[^>]*>/g, '') // 🎯 新增：過濾所有 HTML 標籤 (防止 TTS 唸出換行與字體縮小的程式碼)
+               .replace(/\*/g, '')
+               .replace(/\//g, '')
+               .replace(/\([^)]*\)/g, '')
+               .replace(/\[[^\]]*\]/g, '') // 🎯 確保 [] 內的補充內容也不會被 TTS 唸出來干擾聽力
+               .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '')
+               .replace(/\s+/g, ' ')
+               .trim();
+}
 
 // Get random emoji
 function getRandomEmoji() {
     return studyEmojis[Math.floor(Math.random() * studyEmojis.length)];
 }
 
-// ================= 替換起點 1 (加入重置按鈕輔助函數與語音控制) =================
-// 🎯 輔助函數：將 Example 按鈕恢復為預設的黃色播放狀態
-function resetListenExampleBtn() {
+// ================= 替換起點 2-1 =================
+// 🎯 智慧單一 Toggle 語音播放系統
+function toggleSpeech(text, btnElement) {
+    if (btnElement && btnElement.classList.contains('playing')) {
+        stopSpeech();
+        return;
+    }
+    stopSpeech(); // 確保停止其他正在播放的聲音
+    if (btnElement) {
+        btnElement.classList.add('playing');
+        btnElement.innerHTML = '🔇'; // 播放中顯示暫停符號
+    }
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = 'ja-JP';
+    utterance.rate = speechRate;
+    const voice = getJapaneseVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onend = () => { resetAllAudioButtons(); };
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+
+function resetAllAudioButtons() {
+    document.querySelectorAll('.audio-toggle-btn').forEach(b => {
+        b.classList.remove('playing');
+        b.innerHTML = '🔊';
+    });
     const btn = document.getElementById('listenExampleBtn');
     if (btn && btn.innerHTML.includes('Stop')) {
         btn.innerHTML = '🔊 Example';
         btn.style.backgroundColor = '#ffc107';
         btn.style.color = '#000';
     }
+    currentSpeech = null;
 }
 
-// Speak text
-function speakText(text) {
-    stopSpeech();
-    const cleaned = cleanTextForTTS(text);
-    if (!cleaned) return;
-
-    const utterance = new SpeechSynthesisUtterance(cleaned);
-    utterance.lang = 'en-US';
-    utterance.rate = speechRate;
-
-    const voice = getEnglishVoice();
-    if (voice) utterance.voice = voice;
-
-    utterance.onend = () => {
-        currentSpeech = null;
-        resetListenExampleBtn(); // 🎯 語音自然結束時，恢復按鈕狀態
-    };
-
-    currentSpeech = utterance;
-    speechSynthesis.speak(utterance);
-}
-
-// Stop speech
 function stopSpeech() {
     if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
     }
-    currentSpeech = null;
-    resetListenExampleBtn(); // 🎯 語音被強制停止時，立刻恢復按鈕狀態
+    resetAllAudioButtons();
 }
-// ================= 替換終點 1 =================
+
+function speakText(text) {
+    // 保留給舊的 Listening Quiz 與 Translation Quiz 使用
+    stopSpeech();
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = 'ja-JP';
+    utterance.rate = speechRate;
+    const voice = getJapaneseVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onend = () => { resetAllAudioButtons(); };
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+// ================= 替換終點 2-1 =================
 
             // Update Bottom Sticky Progress Bar (修復邏輯：看到表格才顯示，看到底端按鈕就隱藏)
         function updateLearningProgress() {
@@ -5201,7 +5532,7 @@ async function loadVocabulary(lessonKey) {
     document.getElementById('sectionSelectModal').style.display = 'block';
 }
 
-// ================= 替換起點 3 =================
+// ================= 替換起點 1 =================
 function openLearningContent(lessonKey, savedCheckedWords) {
     document.getElementById('sectionSelectModal').style.display = 'none';
     let titles = currentSelectedSectionIndices.map(idx => currentLessonData[idx].section);
@@ -5210,37 +5541,72 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
     const tableBody = document.getElementById('vocabTableBody');
     let html = '';
-    let totalCheckedWords = 0; // 新增：用來計算打勾的總字數
+    let totalCheckedWords = 0; // 用來計算打勾的總字數
 
     currentSelectedSectionIndices.forEach(sectionIndex => {
         const sectionData = currentLessonData[sectionIndex];
         html += `<tr style="background-color: #ecf0f1;"><td colspan="2" style="padding: 10px; font-weight: bold; text-align: center; color: #2c3e50;">${sectionData.section}</td></tr>`;
 
-// ================= 替換起點 3 =================
+        // 🎯 這裡補回被誤刪的單字迴圈
         sectionData.words.forEach((item, wordIndex) => {
             if (getWordState(savedCheckedWords, sectionIndex, wordIndex).checked) {
                 totalCheckedWords++;
-                const fullText = `${item.word}. ${item.example.replace(/\^/g, '.')}`; // 🎯 發音時把 ^ 換成句號停頓
-                const displayWord = item.word.replace(/\s*\(([^)]+)\):?\s*$/, '<br><span style="font-size: 0.8em;">$1</span>');
                 
-                // 🎯 處理例句顯示，並把多個例句的 ^ 換成分隔線
-                let displayExample = item.example.replace(/\s*\(([^)]+)\)\s*/g, '<br><span style="font-size: 0.8em; color: #7f8c8d;">$1</span><br>');
-                displayExample = displayExample.replace(/\s*\^\s*/g, '<hr style="border: 0; border-top: 1px dashed #bdc3c7; margin: 8px 0;">');
-                displayExample = displayExample.replace(/(<br>)+$/, '');
+                const engWord = extractEnglishWordOnly(item.word);
+                const chiWord = extractChineseTranslation(item.word);
+                const safeWordSpeech = engWord.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                
+                let displayExampleHtml = '';
+                const parsedEx = parseExamples(item.example);
+                
+                parsedEx.forEach((p, idx) => {
+                    if (p.type === 'example') {
+                        let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+                        let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+                        const safeSpeech = p.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        displayExampleHtml += `
+                            <div style="margin-bottom: ${idx === parsedEx.length - 1 ? '0' : '15px'};">
+                                <div style="font-size: 1.3em; color: #444; line-height: 1.5; display: flex; align-items: flex-start;">
+                                    <button class="audio-toggle-btn" onclick="toggleSpeech('${safeSpeech}', this)">🔊</button>
+                                    <div style="flex: 1;">${engHtml}</div>
+                                </div>
+                                ${chiHtml ? `<div style="font-size: 1.1em; color: #7f8c8d; margin-top: 4px; padding-left: 42px;">${chiHtml}</div>` : ''}
+                            </div>
+                        `;
+                    } else if (p.type === 'supplement') {
+                        let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+                        displayExampleHtml += `
+                            <div style="margin-bottom: ${idx === parsedEx.length - 1 ? '0' : '15px'}; padding-left: 42px;">
+                                <div style="font-size: 1.1em; color: #2c3e50; background-color: #fdf2e9; padding: 10px 15px; border-left: 4px solid #e67e22; border-radius: 6px;">
+                                    💡 ${suppText}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
 
+                // 🎯 合併為單一欄位，視覺更俐落
                 html += `<tr class="vocab-row" data-section="${sectionIndex}">
-                    <td class="audio-controls">
-                        <button class="audio-btn play-btn" onclick="speakText('${fullText.replace(/'/g, "\\'")}')">🔊</button>
-                        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-                    </td>
-                    <td class="content-cell">
-                        <div class="vocab-word">${displayWord}</div>
-                        <div class="example-sentence">${displayExample}</div>
+                    <td style="padding: 20px;">
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 1.8em; font-weight: bold; color: #2c3e50; display: flex; align-items: center;">
+                                <button class="audio-toggle-btn" style="width: 36px; height: 36px; font-size: 18px;" onclick="toggleSpeech('${safeWordSpeech}', this)">🔊</button>
+                                <span>${engWord}</span>
+                            </div>
+                            <!-- 🎯 1. 中文翻譯改回與單字同色 (#2c3e50) -->
+                            <div style="font-size: 1.3em; color: #2c3e50; font-weight: bold; margin-top: 5px; padding-left: 46px;">
+                                ${chiWord}
+                            </div>
+                        </div>
+                        <!-- 🎯 2. 移除虛線 (border-top) 與多餘的 padding -->
+                        <div class="example-container">
+                            ${displayExampleHtml}
+                        </div>
                     </td>
                 </tr>`;
             }
         });
-// ================= 替換終點 3 =================
     });
 
     // 動態顯示「分批學習」按鈕
@@ -5254,7 +5620,7 @@ function openLearningContent(lessonKey, savedCheckedWords) {
     document.getElementById('learningScrollArea').scrollTop = 0;
     updateLearningProgress();
 }
-// ================= 替換終點 3 =================
+// ================= 替換終點 1 =================
 // ================= 替換終點 =================
 
         // ================= 替換起點 5-1 =================
@@ -5300,40 +5666,57 @@ function openLearningContent(lessonKey, savedCheckedWords) {
 
 // ============ EXTRACT FUNCTIONS ============
 
-// Extract English word without Chinese translation
-function extractEnglishWordOnly(wordString) {
-    return wordString.replace(/\s*\(([^)]+)\):?\s*$/, '').trim();
+// 🎯 解析器大升級：將字串拆分為「英文例句」與「中文補充」
+function parseExamples(exampleStr) {
+    let result = [];
+    let str = exampleStr.trim();
+    if (!str.startsWith('^') && !str.startsWith('|')) str = '^ ' + str; 
+    const tokens = str.split(/(?=[\^\|])/g);
+    
+    tokens.forEach(token => {
+        let t = token.trim();
+        if (t.startsWith('^')) {
+            let content = t.substring(1).trim();
+            if (!content) return;
+            let chiMatch = content.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
+            let chi = chiMatch ? chiMatch.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+            let eng = content.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, ' ').trim();
+            result.push({ type: 'example', eng: eng, chi: chi });
+        } else if (t.startsWith('|')) {
+            let content = t.substring(1).trim();
+            if (content) result.push({ type: 'supplement', text: content });
+        }
+    });
+    return result;
 }
 
-// Extract Chinese translation from word
+// 萃取函數：支援測驗系統 (自動過濾掉 `|` 補充資料)
+function extractEnglishWordOnly(wordString) { return wordString.replace(/\s*\(([^)]+)\):?\s*$/, '').trim(); }
 function extractChineseTranslation(wordString) {
     const match = wordString.match(/\(([^)]+)\):?\s*$/);
-    return match ? match[1] : wordString; // 若無匹配則回傳原字串以防出錯
+    return match ? match[1] : wordString;
 }
-
-// ================= 替換起點 1 =================
-// Extract English example without Chinese translation (支援多句換行與指定只抓第一句)
-function extractEnglishExampleOnly(exampleString, firstOnly = false) {
-    let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
-    // 🎯 把中文括號移除後，改用單一空格取代，不再產生多餘換行
-    let eng = exStr.replace(/\s*\([^)]*[\u4e00-\u9fa5]+[^)]*\)\s*/g, ' ');
-    // 🎯 多例句之間的 ^ 改為單一換行即可
-    eng = eng.replace(/\s*\^\s*/g, '<br>'); 
-    return eng.trim();
+function extractEnglishExampleOnly(exampleString, firstOnly = false, hideBrackets = false) {
+    const parsed = parseExamples(exampleString);
+    const examples = parsed.filter(p => p.type === 'example');
+    if (examples.length === 0) return '';
+    let engs = firstOnly ? [examples[0].eng] : examples.map(e => e.eng);
+    let text = engs.join('<br>');
+    if (hideBrackets) return text.replace(/\s*\[.*?\]/g, '').trim();
+    // 🎯 [] 升級：字體顏色不變、加上藍色底色、去除括號並加上📌
+    return text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
 }
-
-// Extract Chinese translation from example (支援多句換行與指定只抓第一句)
-function extractChineseExample(exampleString, firstOnly = false) {
-    let exStr = firstOnly ? exampleString.split('^')[0] : exampleString;
-    const matches = exStr.match(/\([^)]*[\u4e00-\u9fa5]+[^)]*\)/g);
-    // 🎯 抓出中文後，改用單一換行連接，避免空太多行
-    return matches ? matches.map(m => m.replace(/[()]/g, '')).join('<br>') : '';
+function extractChineseExample(exampleString, firstOnly = false, hideBrackets = false) {
+    const parsed = parseExamples(exampleString);
+    const examples = parsed.filter(p => p.type === 'example');
+    if (examples.length === 0) return '';
+    let chis = firstOnly ? [examples[0].chi] : examples.map(e => e.chi);
+    let text = chis.join('<br><br>');
+    if (hideBrackets) return text.replace(/\s*\[.*?\]/g, '').trim();
+    return text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
 }
-
-// 為了相容 Listening Quiz 舊有命名，加入 firstOnly 參數傳遞
 function extractEnglishWord(wordString) { return extractEnglishWordOnly(wordString); }
-function extractExampleOnly(exampleString, firstOnly = false) { return extractEnglishExampleOnly(exampleString, firstOnly); }
-// ================= 替換終點 1 =================
+function extractExampleOnly(exampleString, firstOnly = false, hideBrackets = false) { return extractEnglishExampleOnly(exampleString, firstOnly, hideBrackets); }
 
 // ================= 替換起點 5-2 =================
 window.allQuizWordsPool = [];
@@ -5456,7 +5839,7 @@ function loadQuizQuestion() {
 
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
-        toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
+        toggleBtn.textContent = showEnglishInQuiz ? 'Hide Japanese' : 'Show Japanese';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
 
@@ -5491,7 +5874,7 @@ function handleChoiceClick(selectedChoice, btn) {
         document.getElementById('timerFeedback').textContent = '✓ Correct!';
         document.getElementById('timerFeedback').className = 'timer-feedback correct';
         quizScore++;
-        setTimeout(() => speakText('Correct!'), 0);
+        setTimeout(() => speakFeedback('Correct!'), 0);
     } else {
         btn.classList.add('incorrect');
         document.getElementById('timerFeedback').textContent = '✗ Wrong! The answer is ' + correctChinese;
@@ -5499,12 +5882,12 @@ function handleChoiceClick(selectedChoice, btn) {
         allChoices.forEach(choiceBtn => {
             if (choiceBtn.textContent === correctChinese) choiceBtn.classList.add('correct');
         });
-        setTimeout(() => speakText('Wrong!'), 0);
+        setTimeout(() => speakFeedback('Wrong!'), 0);
     }
 
     allChoices.forEach(choiceBtn => { choiceBtn.disabled = true; });
     const englishWord = extractEnglishWord(correctAnswer.word);
-    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+    const exampleOnly = extractExampleOnly(correctAnswer.example, true, true);
     
     // 🎯 規則 3：答題後單字在上，例句在下，且例句預設隱藏 (display: none)
     document.getElementById('listenAnswerDisplay').innerHTML = 
@@ -5527,7 +5910,7 @@ function playQuizAudio() {
             // 🎯 規則 2：延遲改成 1 秒
             showEnglishTimeout = setTimeout(() => {
                 if (!hasAnswered && correctAnswer === quizWords[currentQuizIndex]) {
-                    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+                    const exampleOnly = extractExampleOnly(correctAnswer.example, true, true);
                     // 🎯 規則 3：單字在上，例句在下，且例句預設隱藏 (display: none 不留白)
                     document.getElementById('listenAnswerDisplay').innerHTML = 
                         `<strong style="font-size: 1.2em;">${englishWord}</strong><div id="lq-example-part" style="display:none; font-size: 18px; margin-top: 8px; font-weight: normal; color: #555;">${exampleOnly}</div>`;
@@ -5544,7 +5927,7 @@ function toggleEnglishDisplay() {
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
         // 復原為文字顯示
-        toggleBtn.textContent = showEnglishInQuiz ? 'Hide English' : 'Show English';
+        toggleBtn.textContent = showEnglishInQuiz ? 'Hide Japanese' : 'Show Japanese';
         toggleBtn.style.backgroundColor = showEnglishInQuiz ? '#28a745' : '#6c757d';
     }
     if (!showEnglishInQuiz && !hasAnswered) {
@@ -5650,7 +6033,7 @@ function closeQuizModal() {
     
     const toggleBtn = document.getElementById('toggleEnglishBtn');
     if (toggleBtn) {
-        toggleBtn.textContent = 'Show English'; // 恢復成預設文字
+        toggleBtn.textContent = 'Show Japanese'; // 恢復成預設文字
         toggleBtn.style.backgroundColor = '#6c757d';
     }
     document.getElementById('sectionSelectModal').style.display = 'block';
@@ -5795,7 +6178,7 @@ function handleTransChoiceClick(selectedChoice, btn) {
 
 // 🎯 智慧挖空 Hint 系統
 document.getElementById('transHintBtn').addEventListener('click', () => {
-    let engEx = extractEnglishExampleOnly(correctTransAnswer.example, true);
+    let engEx = extractEnglishExampleOnly(correctTransAnswer.example, true, true);
     let baseWord = extractEnglishWordOnly(correctTransAnswer.word).replace(/^to\s+/i, ''); 
     
     let regex = new RegExp(baseWord, 'gi');
@@ -6128,54 +6511,80 @@ function updateStudySession() {
     if (avatarElement) avatarElement.textContent = currentEmoji;
 
 // ================= 替換起點 =================
+// ================= 替換起點 3-3 =================
+    const parsedEx = parseExamples(currentItem.example);
+    const firstEx = parsedEx.find(p => p.type === 'example') || {eng:'', chi:''};
+
     const englishWord = extractEnglishWordOnly(currentItem.word);
-    const englishExample = extractEnglishExampleOnly(currentItem.example, true); // 🎯 加入 true，只抓第一句英文
     const chineseWord = extractChineseTranslation(currentItem.word);
-    const chineseExample = extractChineseExample(currentItem.example, true); // 🎯 加入 true，只抓第一句中文
+    let englishExample = firstEx.eng.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+    let chineseExample = firstEx.chi.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
 
     const questionPrompt = document.getElementById('questionPrompt');
-    if (questionPrompt) {
-        questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
-    }
+    if (questionPrompt) questionPrompt.textContent = translationShown ? 'Did you get it right?' : 'What does it mean?';
 
-    document.getElementById('currentWord').innerHTML = englishWord;
-    document.getElementById('currentExample').innerHTML = englishExample;
+    const safeWordSpeech = englishWord.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    document.getElementById('currentWord').innerHTML = `
+        <!-- 🎯 改用 Grid 排版，確保真正的單字永遠在正中央 -->
+        <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+            <div style="text-align: right; padding-right: 12px;">
+                <button class="audio-toggle-btn" style="margin: 0; width: 40px; height: 40px; font-size: 20px;" onclick="toggleSpeech('${safeWordSpeech}', this)">🔊</button>
+            </div>
+            <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center; word-wrap: break-word;">
+                ${englishWord}
+            </div>
+            <div></div> <!-- 隱形的右邊界，負責平衡排版 -->
+        </div>
+    `;
+
+    if (englishExample) {
+        const safeExSpeech = firstEx.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        document.getElementById('currentExample').innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: flex-start; gap: 10px; margin-top: 20px;">
+                <button class="audio-toggle-btn" style="margin-top: 2px;" onclick="toggleSpeech('${safeExSpeech}', this)">🔊</button>
+                <div style="font-size: 23px; color: #555; text-align: left; flex: 1;">${englishExample}</div>
+            </div>
+        `;
+    } else {
+        document.getElementById('currentExample').innerHTML = '';
+    }
 
     const translationDiv = document.getElementById('translationText');
     const translateBtn = document.getElementById('showTranslationBtn');
     
     if (translationDiv) {
-        if (translationShown) {
-            translationDiv.classList.add('show');
-        } else {
-            translationDiv.classList.remove('show');
-        }
+        if (translationShown) { translationDiv.classList.add('show'); } 
+        else { translationDiv.classList.remove('show'); }
+        
         translationDiv.innerHTML = `
-            <div class="translation-label">🌐 中文翻譯：</div>
-            <div><strong>${chineseWord}</strong></div>
-            <div style="margin-top: 5px;">${chineseExample}</div>
+            <div class="translation-label" style="font-size: 16px;">🌐 中文翻譯：</div>
+            <div style="font-size: 19px; font-weight: bold; color: #856404; margin-top: 5px;">${chineseWord}</div>
+            <div style="font-size: 19px; color: #856404; margin-top: 8px;">${chineseExample}</div>
         `;
     }
     
     if (translateBtn) {
         translateBtn.disabled = translationShown;
+        translateBtn.style.opacity = translationShown ? '0.5' : '1';
         translateBtn.style.cursor = translationShown ? 'not-allowed' : 'pointer';
     }
 
-    // 🎯 進度顯示更新: 移除多餘的◎，因為 sectionTitle 已經有自帶 ◎ 了
-    const wordsInSection = flatWordsList.filter(item => item.sectionIndex === currentItem.sectionIndex);
-    const indexInSection = wordsInSection.findIndex(item => item.wordIndex === currentItem.wordIndex) + 1;
-    const totalInSection = wordsInSection.length;
+    const totalWalkWords = flatWordsList.length;
+    const currentWalkIndex = currentWordIndex + 1;
+    const walkPercentage = totalWalkWords > 0 ? Math.round((currentWalkIndex / totalWalkWords) * 100) : 0;
     
-    document.getElementById('progressInfo').textContent = `${currentItem.sectionTitle}: ${indexInSection} / ${totalInSection}`;
+    const walkProgressText = document.getElementById('walkProgressText');
+    const walkProgressFill = document.getElementById('walkProgressFill');
+    if (walkProgressText) walkProgressText.textContent = `${currentWalkIndex} / ${totalWalkWords} (${walkPercentage}%)`;
+    if (walkProgressFill) walkProgressFill.style.width = `${walkPercentage}%`;
 
-    // 更新導覽按鈕
     const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
     if (backBtn) backBtn.disabled = false;
     if (nextBtn) nextBtn.disabled = false;
 }
-
+// ================= 替換終點 3-3 =================
+// ================= 替換終點 2 =================
 // 獨立出來的發音函數：精準唸出過濾後的英文
 function handleSpeakCurrent() {
     const currentItem = flatWordsList[currentWordIndex];
@@ -6513,41 +6922,59 @@ function renderBatchCard() {
     });
     
 // ================= 替換起點 2 =================
+// ================= 替換起點 3-2 =================
     const engWord = extractEnglishWordOnly(wordData.word);
     const chiWord = extractChineseTranslation(wordData.word);
-    
-    // 🎯 將多個例句切開，讓中文翻譯緊跟在相對應的英文底下
-    const exParts = wordData.example.split('^');
+    const safeWordSpeech = engWord.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+    const parsedEx = parseExamples(wordData.example);
     let interleavedExHtml = '';
-    let fullSpeechExText = '';
     
-    exParts.forEach(part => {
-        const engPart = extractEnglishExampleOnly(part, true); // 只抓當前切塊的英文
-        const chiPart = extractChineseExample(part, true);     // 只抓當前切塊的中文
-        
-        interleavedExHtml += `
-            <div style="margin-bottom: 15px;">
-                <div style="font-size: 23px; color: #555; text-align: center;">${engPart}</div>
-                ${chiPart ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 2px; text-align: center;">${chiPart}</div>` : ''}
-            </div>
-        `;
-        fullSpeechExText += engPart + '. '; // 收集給發音引擎唸的純英文句子
+    parsedEx.forEach(p => {
+        if (p.type === 'example') {
+            let engHtml = p.eng.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+            let chiHtml = p.chi.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+            const safeSpeech = p.eng.replace(/<[^>]*>/g, '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            
+            interleavedExHtml += `
+                <div style="margin-bottom: 20px; text-align: left; padding-left: 10px;">
+                    <div style="font-size: 23px; color: #555; line-height: 1.5; display: flex; align-items: flex-start;">
+                        <button class="audio-toggle-btn" style="margin-top: 2px;" onclick="toggleSpeech('${safeSpeech}', this)">🔊</button>
+                        <div style="flex: 1;">${engHtml}</div>
+                    </div>
+                    ${chiHtml ? `<div style="font-size: 19px; color: #7f8c8d; margin-top: 6px; padding-left: 42px;">${chiHtml}</div>` : ''}
+                </div>
+            `;
+        } else if (p.type === 'supplement') {
+            let suppText = p.text.replace(/\s*\[(.*?)\]/g, '<div style="display: block; font-size: inherit; color: inherit; background-color: #e8f4f8; padding: 10px 15px; border-left: 4px solid #3498db; border-radius: 6px; margin-top: 8px;">📌 $1</div>');
+            interleavedExHtml += `
+                <div style="margin-bottom: 20px; padding-left: 52px; text-align: left;">
+                    <div style="font-size: 19px; color: #2c3e50; background-color: #fdf2e9; padding: 12px 18px; border-left: 4px solid #e67e22; border-radius: 6px;">
+                        💡 ${suppText}
+                    </div>
+                </div>
+            `;
+        }
     });
 
     document.getElementById('batchWordArea').innerHTML = `
-        <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center;">${engWord}</div>
-        <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 5px; text-align: center;">${chiWord}</div>
+        <!-- 🎯 改用 Grid 排版，確保真正的單字永遠在正中央 -->
+        <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+            <div style="text-align: right; padding-right: 12px;">
+                <button class="audio-toggle-btn" style="margin: 0; width: 40px; height: 40px; font-size: 20px;" onclick="toggleSpeech('${safeWordSpeech}', this)">🔊</button>
+            </div>
+            <div style="font-size: 28px; font-weight: bold; color: #2c3e50; text-align: center; word-wrap: break-word;">
+                ${engWord}
+            </div>
+            <div></div> <!-- 隱形的右邊界，負責平衡排版 -->
+        </div>
+        <div style="font-size: 24px; font-weight: bold; color: #000; margin-top: 8px; text-align: center;">${chiWord}</div>
     `;
     
-    // 🎯 放入交錯排版好的例句 HTML
     document.getElementById('batchExampleArea').innerHTML = interleavedExHtml;
-    
-    // 🎯 語音朗讀時，只唸乾淨的英文句子
-    const fullSpeechText = `${engWord}. ${fullSpeechExText}`;
-    document.getElementById('batchAudioArea').innerHTML = `
-        <button class="audio-btn play-btn" onclick="speakText('${fullSpeechText.replace(/'/g, "\\'")}')">🔊</button>
-        <button class="audio-btn stop-btn" onclick="stopSpeech()">🔇</button>
-    `;
+    document.getElementById('batchAudioArea').innerHTML = ''; // 隱藏底部音效
+// ================= 替換終點 3-2 =================
+// ================= 替換終點 1 =================
 // ================= 替換終點 2 =================
 
     document.getElementById('batchBackBtn').disabled = (currentCardIdx === 0);
@@ -6637,7 +7064,7 @@ function resetQuizToggles() {
     btnChi.textContent = "Quiz #1: Hide Chinese";
     btnChi.classList.remove('blinking-text', 'disabled-btn');
     
-    btnEng.textContent = "Quiz #2: Hide English";
+    btnEng.textContent = "Quiz #2: Hide Japanese";
     btnEng.classList.remove('blinking-text', 'disabled-btn');
     
     btnRandomTop.classList.remove('disabled-btn');
@@ -6722,7 +7149,7 @@ function resetUIFromReveal() {
     
     btnChi.textContent = "Quiz #1: Hide Chinese";
     btnChi.classList.remove('blinking-text', 'disabled-btn');
-    btnEng.textContent = "Quiz #2: Hide English";
+    btnEng.textContent = "Quiz #2: Hide Japanese";
     btnEng.classList.remove('blinking-text', 'disabled-btn');
     btnRandomTop.classList.remove('disabled-btn');
     
@@ -6792,7 +7219,7 @@ document.getElementById('btnHideEng').onclick = function() {
         // 洗牌 (僅打亂目前的 10 個字)
         currentQuizWords = shuffleArray([...currentQuizWords]);
     } else {
-        this.textContent = "Quiz #2: Hide English";
+        this.textContent = "Quiz #2: Hide Japanese";
         this.classList.remove('blinking-text');
         btnChi.classList.remove('disabled-btn');
         btnRandomTop.classList.remove('disabled-btn');
@@ -7083,7 +7510,7 @@ document.getElementById('listenExampleBtn').addEventListener('click', function()
         return;
     }
 
-    const exampleOnly = extractExampleOnly(correctAnswer.example, true);
+    const exampleOnly = extractExampleOnly(correctAnswer.example, true, true);
     
     // 解除例句隱藏
     const exampleDiv = document.getElementById('lq-example-part');
@@ -7127,12 +7554,13 @@ document.getElementById('closeStudyModal').addEventListener('click', () => {
             document.getElementById('nextBtn').addEventListener('click', nextWord);
             document.getElementById('backBtn').addEventListener('click', previousWord);
 
-            // TTS & Translate buttons (明確綁定，避免找不到函數的錯誤)
-            document.getElementById('speakCurrentBtn').addEventListener('click', handleSpeakCurrent);
-            document.getElementById('stopCurrentBtn').addEventListener('click', stopSpeech);
-            document.getElementById('showTranslationBtn').addEventListener('click', toggleTranslation);
-
-            // Welcome modal removed
+            // ================= 替換起點 2 =================
+            // TTS & Translate buttons (移除已作廢的舊發音按鈕，安全綁定翻譯按鈕)
+            const showTransBtn = document.getElementById('showTranslationBtn');
+            if (showTransBtn) {
+                showTransBtn.addEventListener('click', toggleTranslation);
+            }
+// ================= 替換終點 2 =================
             
 // Overall Vocabulary button
 document.getElementById('overallVocabBtn').addEventListener('click', openOverallVocabModal);
