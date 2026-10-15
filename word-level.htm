@@ -190,10 +190,12 @@
         .hl-app { background-color: var(--lvlapp-color); color: #000; border-radius: 3px; padding: 0 2px; }
         .hl-unc { background-color: transparent; color: #000; } 
     </style>
+<!-- 引入 html2pdf.js 套件，用來將網頁轉成 PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Word Level Checker <br>(v2.02)</h1>
+        <h1>Word Level Checker <br>(v2.04)</h1>
         
         <p>Find the level of a word:</p>
         <input type="text" id="wordInput" placeholder="Enter a word" autocomplete="off">
@@ -215,14 +217,21 @@
         <button class="secondary-btn" onclick="clearArticle()">Clear Article</button>
     </div>
 
-    <!-- 彈出視窗 -->
+    <!-- 彈出視窗 (Modal) -->
     <div id="articleModal" class="modal-overlay" onclick="closeModalOutside(event)">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 style="color: #a0464b; margin-top: 0;">Article Analysis Result</h2>
-            <div id="statsContainer" class="stats-grid"></div>
-            <h3 style="color: #6e6259; margin-bottom: 10px;">Text Highlights:</h3>
-            <div id="highlightedArticle" class="article-result"></div>
+            
+            <!-- 新增：匯出 PDF 按鈕 -->
+            <button class="secondary-btn" style="width: auto; margin-bottom: 20px; padding: 8px 15px;" onclick="exportPDF()">📥 Export as PDF</button>
+
+            <!-- 新增：用 pdfArea 將要匯出的內容包裝起來 -->
+            <div id="pdfArea" style="padding: 10px 0;">
+                <div id="statsContainer" class="stats-grid"></div>
+                <h3 style="color: #6e6259; margin-bottom: 10px;">Text Highlights:</h3>
+                <div id="highlightedArticle" class="article-result"></div>
+            </div>
         </div>
     </div>
 
@@ -242,7 +251,7 @@
                 "January", "Jan.", "February", "Feb.", "March", "Mar.", "April", "Apr.", "May", "June", "Jun.", "July", "Jul.", "August", "Aug.", "September", "Sep.", "October", "Oct.", "November", "Nov.", "December", "Dec.",
                 "spring", "summer", "autumn", "fall", "winter",
                 
-// ==========================================
+                // ==========================================
                 // 🌍 國家、地區及對應的國民/形容詞 (依洲別分類)
                 // ==========================================
                 
@@ -335,11 +344,10 @@
                 "America", "American",
                 "Oceania", "Oceanian",
                 "Middle East", "Middle Eastern",
-
+                
                 "Arctic Ocean", "Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Atlantic", "Pacific",
-
                 "Buddhism", "Buddhist", "Catholicism", "Catholic", "Christianity", "Christian", "Eastern Orthodoxy", "Eastern Orthodox", "Hinduism", "Hindu", "Islam", "Islamic", "Muslim", "Judaism", "Jewish", "Jew", "Taoism", "Taoist", 
-                "adjective", "adj.", "adverb", "adv.", "art.", "auxiliary", "aux.", "conjunction", "conj.", "noun", "n.", "preposition", "prep.", "pronoun", "pron.", "verb", "v.", "etc."
+                "adjective", "adj.", "adverb", "adv.", "article", "art.", "auxiliary", "aux.", "conjunction", "conj.", "noun", "n.", "preposition", "prep.", "pronoun", "pron.", "verb", "v.", "etc."
             ]
         };
 
@@ -542,7 +550,6 @@
                 "many": ["more", "most"]
             };
 
-            // 先掃描所有官方資料庫內的字，記錄它們的「真實等級」
             const exactBaseWords = new Map();
             for (let lvl in levels) {
                 levels[lvl].forEach(w => exactBaseWords.set(w.toLowerCase(), String(lvl)));
@@ -577,7 +584,9 @@
                     }
 
                     // 3. 名詞複數、動詞第三人稱單數 (-s, -es, -ies)
-                    if (lowerWord.match(/[sxz]$/) || lowerWord.match(/[cs]h$/)) { addVariant(level, lowerWord + 'es', makeDisplay(lowerWord + 'es')); } else if (lowerWord.endsWith('y') && !lowerWord.match(/[aeiou]y$/)) {
+                    if (lowerWord.match(/[sxz]$/) || lowerWord.match(/[cs]h$/)) {                         
+                        addVariant(level, lowerWord + 'es', makeDisplay(lowerWord + 'es'));                     
+                    } else if (lowerWord.endsWith('y') && !lowerWord.match(/[aeiou]y$/)) {
                         addVariant(level, lowerWord.slice(0, -1) + 'ies', makeDisplay(lowerWord.slice(0, -1) + 'ies'));
                     } else {
                         addVariant(level, lowerWord + 's', makeDisplay(lowerWord + 's'));
@@ -585,7 +594,11 @@
 
                     // 4. 動詞過去式 (-ed)、進行式 (-ing) 與 動名詞複數 (-ings)
                     let edForms = [], ingForms = [];
-                    if (lowerWord.endsWith('e')) {
+                    // 【修正關鍵一】例外處理：ee, oe, ye 結尾不應去 e (例如: agree -> agreeing, see -> seeing)
+                    if (lowerWord.match(/[eoy]e$/)) {
+                        edForms.push(lowerWord + 'd');
+                        ingForms.push(lowerWord + 'ing');
+                    } else if (lowerWord.endsWith('e')) {
                         edForms.push(lowerWord + 'd');
                         ingForms.push(lowerWord.slice(0, -1) + 'ing');
                     } else if (lowerWord.endsWith('y') && !lowerWord.match(/[aeiou]y$/)) {
@@ -594,7 +607,6 @@
                     } else {
                         edForms.push(lowerWord + 'ed');
                         ingForms.push(lowerWord + 'ing');
-                        // 【修正關鍵】加入 `|qu` 讓程式把 qu 視為子音處理
                         if (lowerWord.match(/(?:[^aeiou]|qu)[aeiou][^aeiouwxy]$/)) {
                             let lastC = lowerWord.slice(-1);
                             edForms.push(lowerWord + lastC + 'ed');
@@ -622,7 +634,10 @@
 
                     // 6. 加上字尾 -able
                     let ableForms = [];
-                    if (lowerWord.endsWith('e')) {
+                    // 【修正關鍵二】例外處理：ee 結尾不應去 e (例如: agree -> agreeable)
+                    if (lowerWord.endsWith('ee')) {
+                        ableForms.push(lowerWord + 'able');
+                    } else if (lowerWord.endsWith('e')) {
                         ableForms.push(lowerWord.slice(0, -1) + 'able');
                         if (lowerWord.endsWith('ce') || lowerWord.endsWith('ge')) {
                             ableForms.push(lowerWord + 'able');
@@ -631,7 +646,6 @@
                         ableForms.push(lowerWord.slice(0, -1) + 'iable');
                     } else {
                         ableForms.push(lowerWord + 'able');
-                        // 【修正關鍵】同上，修正 qu 特例
                         if (lowerWord.match(/(?:[^aeiou]|qu)[aeiou][^aeiouwxy]$/)) {
                             ableForms.push(lowerWord + lowerWord.slice(-1) + 'able');
                         }
@@ -649,7 +663,6 @@
                     } else {
                         erForms.push(lowerWord + 'er');
                         estForms.push(lowerWord + 'est');
-                        // 【修正關鍵】同上，修正 qu 特例
                         if (lowerWord.match(/(?:[^aeiou]|qu)[aeiou][^aeiouwxy]$/)) {
                             let lastC = lowerWord.slice(-1);
                             erForms.push(lowerWord + lastC + 'er');
@@ -714,7 +727,6 @@
             if (result) return [{ text: wordToTest, level: result.level }];
 
             // 2. 字首安全剝離 (Prefixes)
-            // 👉 以後想加字首，直接加在這個陣列裡即可！
             const prefixes = ['un', 'in', 'im', 'ir', 'il', 'dis', 're', 'over', 'under', 'pre', 'anti', 'post', 'multi', 'super', 'sub', 'inter', 'co', 'non', 'mis'];
             for (let pref of prefixes) {
                 if (lower.startsWith(pref)) {
@@ -730,7 +742,6 @@
             }
 
             // 3. 字尾安全剝離 (Suffixes)
-            // 👉 以後想加字尾，直接加在這個陣列裡！
             const suffixes = ['ness', 'ment', 'less', 'ship', 'hood', 'ful', 'ish', 'en', 'esque', 'ation', 'tion', 'or', 'er', 'al', 'ive', 'ous', 'ize', 'ise', 'ify'];
             for (let suf of suffixes) {
                 if (lower.endsWith(suf)) {
@@ -743,13 +754,19 @@
                     }
                     
                     // 【拼寫變化規則 B】：處理去 e 加字尾 (utilization -> utilize, illustrator -> illustrate)
-                    // 如果字尾是這些，且找不到原字，嘗試加個 'e' 找找看
-                    if (!rootMatch && ['ation', 'tion', 'or', 'er', 'ive', 'ous', 'al'].includes(suf)) {
-                        rootMatch = exactMatch(root + 'e');
+                    // 【拼寫變化規則 B-2 (新增)】：處理 -ic 加字尾變 -ick (picnicked -> picnic)
+                    if (!rootMatch) {
+                        if (['ation', 'tion', 'or', 'er', 'ive', 'ous', 'al'].includes(suf)) {
+                            rootMatch = exactMatch(root + 'e');
+                        } else if (root.endsWith('k') && ['ed', 'ing', 'er'].includes(suf)) {
+                            // 若是 k 結尾被拔掉，檢查前面是不是 ic
+                            if (root.endsWith('ick')) {
+                                rootMatch = exactMatch(root.slice(0, -1)); // 拔掉 k 去查 (如 picnicking -> picnic)
+                            }
+                        }
                     }
                     
                     // 【拼寫變化規則 C】：處理雙寫子音 (shopper -> shop)
-                    // 如果結尾是兩個一樣的子音 (如 pp, tt)，拔掉一個找找看
                     if (!rootMatch && root.match(/([^aeiou])\1$/)) {
                         rootMatch = exactMatch(root.slice(0, -1));
                     }
@@ -764,8 +781,6 @@
             }
 
             // 4. 嚴格複合字拆解 (Strict Compound Splitting) -> 只允許左右大於等於3字
-            // 【新增保護機制】：如果首字母是大寫 (專有名詞特徵)，絕對不進行複合字拆解！
-            // 這能完美避開 Oddsson, Newton, Goodman 被誤認為複合字的問題。
             const isCapitalized = /^[A-Z]/.test(wordToTest);
             if (lower.length >= 6 && !isCapitalized) {
                 for (let i = 3; i <= lower.length - 3; i++) {
@@ -1020,6 +1035,34 @@
         document.getElementById("levelInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") generateRandomWords();
         });
+// ==========================================
+        //  匯出 PDF 功能區塊
+        // ==========================================
+        function exportPDF() {
+            // 找到我們要匯出的區塊
+            const element = document.getElementById('pdfArea');
+            
+            // 設定 PDF 的格式與品質
+            const opt = {
+                margin:       0.5, // 邊距設定
+                filename:     'Article_Level_Analysis.pdf', // 下載的預設檔名
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true }, // scale: 2 讓輸出的字體更清晰
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } // A4 直式
+            };
+
+            // 更改按鈕文字提示使用者正在處理
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Generating PDF...";
+            btn.disabled = true;
+
+            // 執行匯出，完成後將按鈕恢復原狀
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            });
+        }
     </script>
 </body>
 </html>
