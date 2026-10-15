@@ -189,13 +189,56 @@
         .hl-6 { background-color: var(--lvl6-color); color: #000; border-radius: 3px; padding: 0 2px; font-weight: 500; }
         .hl-app { background-color: var(--lvlapp-color); color: #000; border-radius: 3px; padding: 0 2px; }
         .hl-unc { background-color: transparent; color: #000; } 
+/* =========================================
+           🖨️ PDF 匯出最佳化設定 (完美換頁不切字)
+           ========================================= */
+        @media print {
+            body {
+                background: #ffffff; /* 白底省墨 */
+                margin: 0;
+                padding: 0;
+            }
+            /* 隱藏主畫面，只印出彈出視窗的內容 */
+            .container {
+                display: none !important;
+            }
+            /* 展開彈出視窗，解除所有高度與捲軸限制 */
+            .modal-overlay {
+                position: static !important;
+                background: transparent !important;
+                display: block !important;
+            }
+            .modal-content {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                max-height: none !important;
+                background: #fff8e8 !important; /* 保留復古底色 */
+            }
+            /* 隱藏右上角的 X 與匯出按鈕本身 */
+            .close-btn, button[onclick="exportPDF()"] {
+                display: none !important;
+            }
+            /* 強制瀏覽器印出單字的高亮背景色 (非常重要) */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            /* 確保統計區塊不會被切成兩半 */
+            .stats-group {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
     </style>
-<!-- 引入 html2pdf.js 套件，用來將網頁轉成 PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </head>
 <body>
     <div class="container">
-        <h1>Word Level Checker <br>(v2.04)</h1>
+        <h1>Word Level Checker <br>(v2.05)</h1>
         
         <p>Find the level of a word:</p>
         <input type="text" id="wordInput" placeholder="Enter a word" autocomplete="off">
@@ -1036,32 +1079,12 @@
             if (event.key === "Enter") generateRandomWords();
         });
 // ==========================================
-        //  匯出 PDF 功能區塊
+        //  匯出 PDF 功能區塊 (Native Print)
         // ==========================================
         function exportPDF() {
-            // 找到我們要匯出的區塊
-            const element = document.getElementById('pdfArea');
-            
-            // 設定 PDF 的格式與品質
-            const opt = {
-                margin:       0.5, // 邊距設定
-                filename:     'Article_Level_Analysis.pdf', // 下載的預設檔名
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true }, // scale: 2 讓輸出的字體更清晰
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } // A4 直式
-            };
-
-            // 更改按鈕文字提示使用者正在處理
-            const btn = event.target;
-            const originalText = btn.innerText;
-            btn.innerText = "⏳ Generating PDF...";
-            btn.disabled = true;
-
-            // 執行匯出，完成後將按鈕恢復原狀
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            });
+            // 呼叫瀏覽器原生列印引擎
+            // 請在跳出的視窗中，將目的地選擇為「另存為 PDF (Save as PDF)」
+            window.print();
         }
     </script>
 </body>
