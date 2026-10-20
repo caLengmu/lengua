@@ -1617,7 +1617,7 @@
         <h1 style="line-height: 1.3;">
             <span style="font-size: 1em;">Vocabulary List</span><br>
             <span style="font-size: 0.8em;">for Grade 12</span><br>
-            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.74)</span>
+            <span style="display: block; font-size: 0.6em; margin-top: -5px; color: #7f8c8d;">(v8.75)</span>
         </h1>
 
         <div class="button-categories">
@@ -1799,7 +1799,7 @@
                     <p style="margin-bottom: 0; padding-left: 1.4em; text-indent: -1.4em;">
                     4. 教材更新: <br>
                     <span style="display: inline-block; margin-left: 1.4em;">📚 課本: L1單, L1文, L2單</span><br>
-                    <span style="display: inline-block; margin-left: 1.4em;">✍ 歷屆試題: 115, 114, 113(詞彙, 綜合)</span><br>
+                    <span style="display: inline-block; margin-left: 1.4em;">✍ 歷屆試題: 115, 114, 113(詞彙、綜合、文意)</span><br>
                     <span style="display: inline-block; margin-left: 1.4em;">📒 好好學: U1, U2, U3, U4, U5, U6</span>
                     </p>
                 </div>
@@ -2450,8 +2450,8 @@ function parseSimplifiedDatabase(text) {
     const sections = [];
     const lines = text.trim().split('\n');
     let currentSection = null;
+    let lastWord = null; // 🎯 新增：用來記憶「上一個被處理的單字」，以支援跨行補充
 
-// ================= 替換起點 2 =================
     for (let line of lines) {
         line = line.trim();
         if (!line) continue;
@@ -2466,19 +2466,23 @@ function parseSimplifiedDatabase(text) {
                 section: line,
                 words: []
             };
+            lastWord = null; // 換新標題時重置記憶
         } else if (line.includes('^') && currentSection) {
-// ================= 替換終點 2 =================
-            // 🎯 階段一升級：支援多個 ^ 符號，第一個為單字，其餘全為例句
+            // 有 ^ 符號，代表這是一個全新的單字項目
             const parts = line.split('^').map(s => s.trim());
             const wordPart = parts.shift(); // 取出單字部分
-            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來保留給後續函數處理
+            const examplePart = parts.join(' ^ '); // 把剩餘的例句用 ^ 組合起來
             
-            currentSection.words.push({
+            lastWord = {
                 word: wordPart + ':',
                 example: examplePart
-            });
+            };
+            currentSection.words.push(lastWord);
+        } else if (lastWord && currentSection) {
+            // 🎯 最強升級：如果這一行沒有 ^ 符號，且前面已經有單字了
+            // 系統會把這行當作「換行補充」，自動加上 <br> 並接在上一行的後面！
+            lastWord.example += '<br>' + line;
         }
-// ================= 替換終點 1 =================
     }
 
     if (currentSection) {
@@ -4371,13 +4375,13 @@ float (v) (漂浮、浮動) ^ Empty plastic bottles float easily on the clear ri
 apt (adj) (恰當的、合適的) ^ The teacher gave an apt example to help the students remember this word. (老師舉了一個恰當的例子，幫助學生記住這個字。)
 
 be apt to V (易於…的) ^ Careless workers are apt to make small mistakes under intense stress. (粗心的工人在高壓下易於犯下小錯誤。)
-due (adj) (1.（某事）預計發生的、（公車等）預計抵達的) ^ The next public bus is due in five minutes. (下一班公車預計在五分鐘內抵達。)
+due (adj) (1.（某事）預計發生的、（公車等）預計抵達的) ^ The next bus is due in five minutes. (下一班公車預計在五分鐘後抵達。)
 due (adj) (2.（帳單等）應支付的) ^ The monthly electricity bill is due by the end of this week. (每月的電費應在送達本週結束前支付。)
 due date (n) (到期日、截止日、預產期) ^ The due date for this homework assignment is next Monday morning. (作業截止日是下個星期一早上。)
 bind–bound–bound (v) (綁、綁定、約束) ^ Use a strong rope to bind the wooden boxes together safely. (使用堅固的繩子把木箱安全地綁在一起。)
 be bound to V (phr) (必定會…、極有可能會… = will surely…; are very likely to…) ^ If you practice every day, you are bound to succeed. (如果你每天練習，你必定會成功。)
 be bound for N (phr) (注定走向…、必然獲得…) ^ His continuous hard work means he is bound for success. (他持續的努力意味著他注定走向成功。)
-(bus/ train/ airplane…) be bound for (a place) (phr) (前往（某地）、開往…) ^ This plane is bound for Tokyo, Japan. (這架飛機是開往日本東京的。)
+be bound for (a place) (phr) (（交通工具）開往（某地）) ^ This plane is bound for Tokyo, Japan. (這架飛機是開往日本東京的。)
 dock (n) (碼頭、船塢) ^ Fishermen tied their small wooden boats to the wooden dock. (漁夫們把他們的小木船繫在木製碼頭上。)
 dock (v) (靠岸、停靠碼頭) ^ The giant cruise ship will dock at the harbor tomorrow morning. (大型郵輪將於明天早上停靠港口。)
 roast (v) (烤、烘烤) ^ The family gathered outside to roast chicken over an open fire. (家人聚集在戶外用明火烤雞。)
@@ -4558,7 +4562,75 @@ match (v) (1.和…相配) ^ Make sure your shoes match the color of your suit c
 match (v) (2.比得上、敵得過) ^ No local bakery can match the quality of her fresh bread. (沒有在地麵包店比得上她新鮮麵包的品質。)
 regret (v / n) (後悔、遺憾) ^ He expressed deep regret for not taking his doctor's health advice. (他對沒有聽取生醫的健康建議表達了深刻的後悔。)
 
+◎Day 3: 文意選填
 
+pass (information/ a message…) on (to someone) (phr) (轉達/傳遞（資訊/訊息）給某人) ^ Please pass this message on to your teacher tomorrow morning. (請在明天早上把這則訊息轉達給你的老師。)
+pass (a disease) on (to someone) (phr) (把（疾病）傳染給某人) ^ Washing your hands can prevent passing the cold on to others. (洗手可以防止把感冒傳染給其他人。)
+sorrow (n) (悲傷、痛苦 = great sadness) ^ She felt deep sorrow when her grandmother passed away. (當她的祖母過世時，她感到深深的悲傷。)
+sorrowful (adj) (悲傷的、傷感的 = very sad) ^ The sorrowful music made everyone in the room feel quiet. (這首傷感的音樂讓房間裡的每個人都安靜了下來。)
+depart (v) (離開、出發 = leave) ^ The train will depart from the station at eight o'clock sharp. (列車將於八點整從車站出發。)
+depart this life (phr) (離世、去世 = pass away) ^ The old king departed this life after living a long, peaceful life. (老國王在度過長壽且平靜的一生後離世了。)
+departed (adj) (逝世的、過去的) ^ We placed fresh flowers on the ground to remember our departed friends. (我們在地上獻上鮮花，以懷念我們逝世的朋友。) |委婉表達死去的說法：
+die (v) = pass away; depart this life
+dead (adj) = departed; deceased 
+
+mechanism (n) (機制、結構裝置) ^ Scientists studied how the body's natural defense mechanism works. (科學家研究了身體的自然防禦機制是如何運作的。)
+house (v) (1.給…提供住所、收容 = accommodate) ^ The new building will house twenty family members comfortably. (這棟新建築將能舒適地給二十名家庭成員提供住所。)
+house (v) (2.安置、收藏、存放) ^ This city museum houses many historical tools from the past. (這座城市博物館收藏了許多來自過去的歷史工具。)
+manageable (adj) (可處理的、易控制的) ^ Dividing the large task into small parts made it manageable. (把大任務分成小部分使其變得容易處理。)
+fate (n) (命運、宿命) ^ They believed that meeting each other was their special fate. (他們相信彼此相遇是他們特別的命運。)
+fateful (adj) (決定性的、攸關命運的) ^ Making that fateful choice changed his life completely. (做出那個決定性的選擇完全改變了人生。)
+bring something forth (phr) (產生某物、使某事發生) ^ Scientific research can bring forth new discoveries. (科學研究能帶來新的發現。)
+
+overlook (v) (1.俯視、眺望) ^ The balcony of our hotel room overlooks a nice swimming pool. (我們飯店房間的陽台俯視著一個漂亮游泳池。)
+overlook (v) (2.忽略、沒注意到 = fail to notice; miss) ^ Be careful not to overlook any important spelling mistakes in your test. (小心不要在測驗中忽略任何重要的拼寫錯誤。) | 比較：overlook表示「沒注意到」，而ignore表示「刻意無視、不理會」
+I saw his message but chose to ignore it. 
+我看到他的訊息，但選擇忽視它。
+I overlooked his message because I received too many messages at the same time. 
+我沒注意到他的訊息，因為我同時收到太多訊息了。
+
+tsunami (n) (海嘯) ^ A giant tsunami hit the island after the strong earthquake. (強烈地震過後，一場巨型海嘯襲擊了這座島嶼。) | 源自日文「津波（つなみ）」的羅馬拼音，津 = 港口，波 = 海浪
+booth (n) (1.小亭  2.（市集、展覽會等的）小棚子、小隔間) ^ She stopped at a crafts booth to buy a pair of earrings. (她在一個手工藝品攤位停下來買了一副耳環。)
+a phone booth (n) (電話亭) ^ He stepped inside the public phone booth to make a quick call. (他走進公用電話亭打了一通簡短的電話。)
+a voting booth (n) (投票亭) ^ Citizens walked into the voting booth to choose their local leaders. (公民走進投票隔間選擇他們的在地領袖。)
+someone’s loved one(s) (n) (親人、家人) ^ Holidays are a wonderful time to spend with your loved ones. (節日是與你的親人共度時光的美好時刻。)
+claim (v) (1.宣稱) ^ The student claimed that he had finished all his homework early. (這名學生宣稱他提早完成了所有的作業。)
+claim (v) (2.主張所有權、認領) ^ You can claim your lost bag at the train station office. (你可以在火車站辦公室認領你遺失的包包。)
+claim someone’s life (phr) (奪走某人的生命) ^ The dangerous traffic accident claimed the life of a young driver. (這起危險的交通事故奪走了一位年輕駕駛的生命。)
+grieve (v) (悲傷、哀悼 + over/for…) ^ They needed time to grieve over the death of their loved one. (他們需要時間來哀悼逝去的家人。)
+private (adj) (私人的、私密的) ^ Please keep your private password safe and do not share it. (請妥善保管你的私人密碼，不要分享給別人。)
+navigate (v) (1.導航、確定方向) ^ Drivers can use a smartphone map to navigate through the city. (駕駛可以使用智慧型手機地圖在城市裡導航。)
+navigate (v) (2.瀏覽（網站）) ^ It is very easy to navigate this website and find useful information. (瀏覽這個網站並找到實用的資訊非常容易。)
+navigate (v) (3.理解或處理（複雜的事情）) ^ The police are trying to navigate through a large amount of new evidence about this case. (警方正在努力梳理大量有關這起案件的新證據。)
+position (v) (放置、安放、使處於…位置) ^ You should position the desk near the window to get more light. (你應該把書桌安放在窗戶附近以獲得更多光線。)
+relative (n) (親戚) ^ Many of my relatives came to our house for New Year's dinner. (我的許多親戚來到我們家吃年夜飯。)
+relative (adj) (相對的、相比較而言的) ^ Living in a small town offers relative peace compared to the big city. (與大城市相比，生活在小鎮提供了相對的平靜。)
+dial (v) (撥號、按鍵) ^ You need to dial the correct number to reach the hospital. (你需要撥打正確的號碼才能聯絡到醫院。)
+a dial phone (n) (轉盤式電話) ^ My grandmother still keeps an old black dial phone in her room. (我奶奶房間裡依然保留著一部老舊的黑色轉盤式電話。)
+disconnect (v) (切斷（電話/網路等）、使分離) ^ Strong rainstorms caused the internet to disconnect for an hour. (強烈的暴風雨導致網路斷線了一個小時。)
+step into… (phr) (踏入…、步入…) ^ Please take off your shoes before you step into the living room. (在你踏入客廳之前，請先脫鞋。)
+state (v) (陳述、說明、聲明) ^ The sign clearly states that visitors must wear a mask. (告示明確地說明訪客必須戴口罩。)
+regular (adj) (1.頻繁的、經常發生的) ^ This famous basketball player makes regular appearances on TV. (這個有名的籃球員經常在電視上亮相。) | 常用搭配詞：
+a regular customer = 常客、老顧客
+a regular reader = 固定的讀者
+a regular user = 老用戶
+
+regular (adj) (2.規律的、定時的) ^ Having a regular bedtime is essential for good daily health. (擁有規律的睡覺時間對於日常健康至關重要。)
+regular (adj) (3.普通的、一般的 = usual; ordinary) ^ I prefer buying regular milk instead of flavored drinks. (比起調味飲料，我更喜歡買普通的牛奶。)
+hence (adv) (因此 = therefore; thus) ^ The weather was very rainy; hence, we decided to stay at home. (天氣非常多雨；因此，我們決定留在家裡。)
+one-way (adj) (單向的、單程的) ^ Be careful not to drive the wrong way down a one-way street. (小心不要在單向街道上逆向行駛。)
+two-way (adj) (雙向的) ^ Good communication between parents and children is a two-way street. (父母與孩子之間良好的溝通是雙向的。)
+soulful (adj) (充滿深情的、深情的) ^ The singer sang a soulful song that touched everyone's heart. (歌手演唱了一首打動了每個人的心的深情歌曲。)
+render (v) (使變得…; 使處於某種狀態) ^ The unexpected power outage rendered the elevator completely useless. (突如其來的停電使電梯完全無法使用。) | render + 受詞 + adj. 
+= make + 受詞 + adj.
+devastating (adj) (毀滅性的、破壞性極大的) ^ The flood caused devastating damage to the small local village. (洪水對在地的小村莊造成了毀滅性的破壞。)
+a bridge between A and B (n) (A 與 B 之間的橋樑) ^ Music can act as a wonderful bridge between different cultures. (音樂可以作為不同文化之間美好的橋樑。)
+resemble (v) (像、與…相似) ^ The little boy looks cute and strongly resembles his father. (這個小男孩看起來很可愛，而且長得很像他父親。)
+set up (phr) (設立、建立、安裝) ^ Volunteers helped set up small tents for the outdoor party. (志工們協助為戶外派對搭設小帳篷。)
+cope with… (phr) (應付…、對付… = deal with…) ^ She learned simple ways to cope with her study stress before exams. (她學會了在考試前應付學習壓力的簡單方法。) | 「應付、處理」問題 
+= <b>deal with/ cope with/ handle/ address</b> the problem 
+
+the deceased (n) (死者、逝者 [集合名詞] = the dead ↔️ the living) ^ People stood silently to honor and remember the deceased. (人們靜靜地站著以緬懷並紀念逝者。)
 
 
 
