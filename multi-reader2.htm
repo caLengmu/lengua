@@ -9,7 +9,7 @@
 
   html, body { height: 100%; }
 
-  body {
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f1f8fc;
     color: #444;
@@ -25,6 +25,8 @@
   .app {
     width: 100%;
     max-width: 720px;
+    max-height: 95vh; /* 確保 APP 不會超過螢幕高度 */
+    overflow-y: auto; /* 超過時允許滾動 */
     background: #ffffff;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
@@ -420,7 +422,10 @@
     font-size: 14px;
     padding: 9px 10px;
   }
-  .slot-btn:hover { background-color: #fff2da; }
+  .slot-btn:hover:not(:disabled) { background-color: #fff2da; }
+  /* 按下時維持黃色調，不變成深藍色 */
+  .slot-btn:active:not(:disabled) { background-color: #d99a2a !important; color: #fff; }
+  
   .slot-btn.active-slot {
     background-color: #f3b23c;
     color: #fff;
@@ -2130,7 +2135,7 @@ resource efficiency = 資源利用效率
         vocabSection.style.display = 'none';
       }
 
-      // 處理文法
+// 處理文法
       if (grammarText) {
         grammarSection.style.display = 'block';
         grammarContainer.innerHTML = grammarText; // 允許解析 HTML 標籤
@@ -2138,6 +2143,9 @@ resource efficiency = 資源利用效率
         grammarSection.style.display = 'none';
       }
     }
+    
+    // 強制將視窗滾動軸拉回最上面，不受前次觀看影響
+    document.querySelector('.modal-body').scrollTop = 0;
     
     hintModal.classList.add('active');
   });
