@@ -8547,16 +8547,16 @@ initDB().catch(error => {
                 dateEl.innerHTML = `🗓️ <strong>${formattedDate}</strong>`;
             }
 
-            // 2. Midterm Exam Countdown (October 14, 2026)
-            const examTarget = new Date(2026, 9, 14); // 9 is October (0-indexed)
+            // 2. Midterm Exam Countdown (November 30, 2026)
+            const examTarget = new Date(2026, 10, 30); // 10 is November (0-indexed)
             examTarget.setHours(0, 0, 0, 0);
             const examDiffTime = examTarget - today;
             const examDiffDays = Math.ceil(examDiffTime / (1000 * 60 * 60 * 24));
             const examEl = document.getElementById('examCountdownDisplay');
             if (examEl) {
                 const examText = examDiffDays >= 0 
-                    ? `⏰ <span class="countdown-highlight">${examDiffDays}</span> days until 一段 (10/14)`
-                    : `⏰ 一段已結束`;
+                    ? `⏰ <span class="countdown-highlight">${examDiffDays}</span> days until 二段 (11/30)`
+                    : `⏰ 二段已結束`;
                 examEl.innerHTML = examText;
             }
 
