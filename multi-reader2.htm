@@ -422,13 +422,14 @@ body {
     font-size: 14px;
     padding: 9px 10px;
   }
-  .slot-btn:hover:not(:disabled) { background-color: #fff2da; }
-  /* 按下時維持黃色調，不變成深藍色 */
-  .slot-btn:active:not(:disabled) { background-color: #d99a2a !important; color: #fff; }
+.slot-btn:hover:not(:disabled) { background-color: #fff2da; }
   
-  .slot-btn.active-slot {
-    background-color: #f3b23c;
-    color: #fff;
+  /* 徹底覆蓋全域 button 的深藍色設定，無論按下還是選中，都鎖定在 #f3b23c */
+  button.slot-btn:active:not(:disabled),
+  button.slot-btn.active-slot {
+    background-color: #f3b23c !important;
+    color: #fff !important;
+    border-color: #f3b23c !important;
   }
 
   /* 錄音按鈕閃爍 */
@@ -442,14 +443,12 @@ body {
     100% { box-shadow: 0 0 0 0 rgba(214, 69, 69, 0); }
   }
 
-  /* 播放錄音按鈕閃爍 (保持原本的按鈕背景顏色，加入藍色光暈) */
+/* 播放錄音按鈕閃爍 (改為和 Record 一樣的紅色背景與紅色光暈) */
   #btn-play-pause.pulsing-play {
-    animation: pulse-blue 1.1s infinite;
-  }
-  @keyframes pulse-blue {
-    0% { box-shadow: 0 0 0 0 rgba(42, 98, 143, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(42, 98, 143, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(42, 98, 143, 0); }
+    background-color: #d64545 !important;
+    color: #fff !important;
+    border-color: #d64545 !important;
+    animation: pulse 1.1s infinite; /* 直接共用上方錄音按鈕的紅色 pulse 動畫 */
   }
 
   .record-status {
@@ -2136,7 +2135,7 @@ resource efficiency = 資源利用效率
       }
 
 // 處理文法
-      if (grammarText) {
+if (grammarText) {
         grammarSection.style.display = 'block';
         grammarContainer.innerHTML = grammarText; // 允許解析 HTML 標籤
       } else {
@@ -2144,10 +2143,13 @@ resource efficiency = 資源利用效率
       }
     }
     
-    // 強制將視窗滾動軸拉回最上面，不受前次觀看影響
-    document.querySelector('.modal-body').scrollTop = 0;
-    
+    // 1. 先顯示視窗，讓元素具備高度
     hintModal.classList.add('active');
+    
+    // 2. 延遲幾毫秒等待 DOM 渲染完成後，強制置頂才會有作用
+    setTimeout(() => {
+      document.querySelector('.modal-body').scrollTop = 0;
+    }, 10);
   });
 
   btnCloseHint.addEventListener('click', () => {
