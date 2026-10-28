@@ -2707,10 +2707,17 @@ if (grammarText) {
     });
   }
 
-  function updateRecordButtons() {
+function updateRecordButtons() {
     const hasRecording = !!getCurrentSlotRecording();
     btnRecordToggle.textContent = hasRecording ? '🎤 Re-record' : '🎤 Record';
     btnRecordToggle.classList.remove('recording');
+    
+    // --- 新增：動態視覺焦點 (CTA) 切換 ---
+    // 當有錄音內容時，Record 變為淡藍色 (secondary)，Play 變為深藍色 (主按鈕)
+    btnRecordToggle.classList.toggle('secondary', hasRecording);
+    btnPlayPause.classList.toggle('secondary', !hasRecording);
+    // -------------------------------------
+
     btnPlayPause.disabled = !hasRecording;
     btnDeleteRecording.disabled = !hasRecording;
     recordStatus.textContent = '';
@@ -2843,6 +2850,9 @@ if (grammarText) {
     setControlsDisabledForRecording(true);
     btnRecordToggle.disabled = false;
     btnRecordToggle.textContent = '⏹️ Stop';
+    
+    // 確保錄音中 (Stop) 的狀態不會被淡藍色樣式干擾，維持紅底白字
+    btnRecordToggle.classList.remove('secondary'); 
     btnRecordToggle.classList.add('recording');
 
     recordTimerInterval = setInterval(() => {
