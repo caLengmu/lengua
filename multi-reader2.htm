@@ -484,6 +484,20 @@ body {
 
   .hint { font-size: 12px; color: #9db6c6; margin-top: 10px; }
 
+/* 刮刮樂測驗的遮罩特效與熟悉度燈號 */
+  .hidden-cell { color: transparent !important; background-color: #e9ecef !important; user-select: none; transition: background-color 0.3s; cursor: pointer; }
+  .flash-reveal { animation: fade-flash 0.6s ease-out; }
+  @keyframes fade-flash { 0% { opacity: 0; background-color: #f1c40f; } 100% { opacity: 1; background-color: transparent; } }
+  .blinking-text { animation: slow-blink 1s infinite ease-in-out; }
+  @keyframes slow-blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; color: #ffeb3b; transform: scale(0.98); } }
+  .disabled-btn { opacity: 0.5 !important; pointer-events: none !important; cursor: not-allowed !important; }
+  
+  .fam-btn { background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 8px; flex-shrink: 0; outline: none; transition: transform 0.2s; }
+  .fam-btn:hover { transform: scale(1.1); }
+  .fam-level-0::before { content: '🔴🔴'; }
+  .fam-level-1::before { content: '🔴⚪'; }
+  .fam-level-2::before { content: '⚪⚪'; }
+
   /* ---------- HINT MODAL (學習筆記) ---------- */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -675,7 +689,13 @@ body {
         <h3>💡 學習筆記</h3>
         <button id="btn-close-hint" class="icon-btn">✕</button>
       </div>
-      <div class="modal-body">
+<div class="modal-body">
+        <!-- 新增：全文字彙管理與測驗的並列按鈕 -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <button id="btn-open-full-manage" class="secondary" style="flex: 1; padding: 10px; font-weight: bold; background-color: #17a2b8; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🗃️ 全文字彙管理</button>
+          <button id="btn-open-full-quiz" class="secondary" style="flex: 1; padding: 10px; font-weight: bold; background-color: #e74c3c; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🧩 全文字彙測驗</button>
+        </div>
+
         <div id="hint-empty" style="display:none; color: #888; text-align: center; padding: 30px 10px;">
           這句很簡單，沒有特別的單字或文法筆記喔！😊
         </div>
@@ -689,6 +709,48 @@ body {
           <h4>📐 文法 & 句型</h4>
           <div id="grammar-container" class="grammar-content"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FULL VOCAB MANAGE MODAL ============ -->
+  <div id="full-manage-modal" class="modal-overlay" style="z-index: 1050;">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>🗃️ 全文字彙管理</h3>
+        <button class="icon-btn" onclick="document.getElementById('full-manage-modal').classList.remove('active')">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 60vh;">
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 20px; font-size: 15px; font-weight: bold;">
+            <div style="color: #e74c3c; margin-bottom: 8px;">請依指示設定單字的熟悉度：</div>
+            <div>1. 🔴🔴: 很不熟 (預設)</div>
+            <div>2. 🔴⚪: 有點熟</div>
+            <div>3. ⚪⚪: 很熟</div>
+            <div>4. ⬜ (取消勾選): 熟到不用再複習</div>
+        </div>
+        <div id="full-manage-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FULL VOCAB QUIZ MODAL ============ -->
+  <div id="full-quiz-modal" class="modal-overlay" style="z-index: 1050;">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>🧩 全文字彙測驗</h3>
+        <button class="icon-btn" onclick="document.getElementById('full-quiz-modal').classList.remove('active')">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 70vh;">
+        <div style="background-color: #fdf2e9; color: #d35400; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 15px; font-weight: bold; line-height: 1.6;">
+            ⚠️ 提醒：<br>此為快速驗收功能。建議先逐句閱讀文章，從情境中學習單字&片語的意思，避免直接進來死背中英翻譯喔！
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button id="btn-full-hide-chi" style="flex:1; padding: 10px; font-size: 16px; background-color: #3498db; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Quiz #1: Hide Chinese</button>
+            <button id="btn-full-hide-eng" style="flex:1; padding: 10px; font-size: 16px; background-color: #e67e22; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Quiz #2: Hide English</button>
+        </div>
+        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; border: 2px solid #bdc3c7; border-radius: 8px; overflow: hidden; display: block;">
+            <tbody id="full-quiz-tbody" style="display: table; width: 100%;"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -2086,50 +2148,92 @@ resource efficiency = 資源利用效率
     } else {
       hintEmpty.style.display = 'none';
 
-      // 處理單字
+      // 處理單字 (改版為雙欄刮刮樂測驗)
       if (vocabText) {
         vocabSection.style.display = 'block';
-        vocabContainer.innerHTML = '';
         
+        let tableHtml = `
+          <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
+            <button id="btn-hint-hide-chi" style="flex:1; padding: 10px; font-size: 15px; font-weight: bold; background-color: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer;">Quiz #1: Hide Chinese</button>
+            <button id="btn-hint-hide-eng" style="flex:1; padding: 10px; font-size: 15px; font-weight: bold; background-color: #e67e22; color: white; border: none; border-radius: 8px; cursor: pointer;">Quiz #2: Hide English</button>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; border: 2px solid #c5dfee; border-radius: 8px; overflow: hidden; display: block;">
+            <tbody style="display: table; width: 100%;">
+        `;
+
         const lines = vocabText.split('\n').filter(l => l.trim().length > 0);
-        lines.forEach(line => {
+        lines.forEach((line, idx) => {
           let enPart = line;
           let zhPart = '';
-          
           if (line.includes('=')) {
             const parts = line.split('=');
             enPart = parts[0].trim();
             zhPart = parts.slice(1).join('=').trim();
           }
-
-          const row = document.createElement('div');
-          row.className = 'vocab-row';
+          const safeSpeak = enPart.replace(/'/g, "\\'").replace(/"/g, "&quot;");
           
-          const btn = document.createElement('button');
-          btn.className = 'vocab-btn';
-          btn.innerHTML = '🔊';
-          btn.title = 'Listen';
-          btn.onclick = () => speakVocab(enPart);
-          
-          const textWrap = document.createElement('div');
-          textWrap.className = 'vocab-text-wrap';
-          
-          const enDiv = document.createElement('div');
-          enDiv.className = 'vocab-en';
-          enDiv.textContent = enPart;
-          textWrap.appendChild(enDiv);
-          
-          if (zhPart) {
-            const zhDiv = document.createElement('div');
-            zhDiv.className = 'vocab-zh';
-            zhDiv.textContent = zhPart;
-            textWrap.appendChild(zhDiv);
-          }
-
-          row.appendChild(btn);
-          row.appendChild(textWrap);
-          vocabContainer.appendChild(row);
+          tableHtml += `
+            <tr style="border-bottom: 1px solid #c5dfee; background-color: ${idx % 2 === 0 ? '#fbfdff' : '#f1f8fc'};">
+              <td style="padding: 12px; width: 50%; border-right: 1px solid #c5dfee; font-size: 16px; font-weight: bold; color: #0f4c81; cursor: pointer;" onclick="if(this.querySelector('.hint-eng').classList.contains('hidden-cell')){ this.querySelector('.hint-eng').classList.remove('hidden-cell'); this.querySelector('.hint-eng').classList.add('flash-reveal'); }">
+                <div class="hint-eng" style="display: flex; align-items: center; gap: 8px; width: 100%; height: 100%;">
+                  <button class="vocab-btn" style="margin:0; min-width:32px; height:32px; font-size:16px; padding:0; background:none; border:none; cursor:pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${safeSpeak}')">🔊</button>
+                  <span>${enPart}</span>
+                </div>
+              </td>
+              <td style="padding: 12px; width: 50%; font-size: 15px; color: #555; cursor: pointer;" onclick="if(this.querySelector('.hint-chi').classList.contains('hidden-cell')){ this.querySelector('.hint-chi').classList.remove('hidden-cell'); this.querySelector('.hint-chi').classList.add('flash-reveal'); }">
+                <div class="hint-chi" style="width: 100%; height: 100%;">${zhPart}</div>
+              </td>
+            </tr>
+          `;
         });
+        
+        tableHtml += `</tbody></table>`;
+        vocabContainer.innerHTML = tableHtml;
+
+        // 綁定隱藏按鈕事件
+        let isHintEngHidden = false;
+        let isHintChiHidden = false;
+        
+        document.getElementById('btn-hint-hide-chi').onclick = function() {
+            isHintChiHidden = !isHintChiHidden;
+            isHintEngHidden = false;
+            document.querySelectorAll('.hint-chi').forEach(el => {
+                if (isHintChiHidden) { el.classList.add('hidden-cell'); el.classList.remove('flash-reveal'); }
+                else { el.classList.remove('hidden-cell'); }
+            });
+            document.querySelectorAll('.hint-eng').forEach(el => el.classList.remove('hidden-cell'));
+            
+            this.textContent = isHintChiHidden ? "Check Answers" : "Quiz #1: Hide Chinese";
+            this.style.backgroundColor = isHintChiHidden ? "#e74c3c" : "#3498db";
+            this.classList.toggle('blinking-text', isHintChiHidden);
+            
+            const btnEng = document.getElementById('btn-hint-hide-eng');
+            btnEng.textContent = "Quiz #2: Hide English";
+            btnEng.style.backgroundColor = "#e67e22";
+            btnEng.classList.remove('blinking-text');
+            btnEng.classList.toggle('disabled-btn', isHintChiHidden);
+        };
+
+        document.getElementById('btn-hint-hide-eng').onclick = function() {
+            isHintEngHidden = !isHintEngHidden;
+            isHintChiHidden = false;
+            document.querySelectorAll('.hint-eng').forEach(el => {
+                if (isHintEngHidden) { el.classList.add('hidden-cell'); el.classList.remove('flash-reveal'); }
+                else { el.classList.remove('hidden-cell'); }
+            });
+            document.querySelectorAll('.hint-chi').forEach(el => el.classList.remove('hidden-cell'));
+            
+            this.textContent = isHintEngHidden ? "Check Answers" : "Quiz #2: Hide English";
+            this.style.backgroundColor = isHintEngHidden ? "#e74c3c" : "#e67e22";
+            this.classList.toggle('blinking-text', isHintEngHidden);
+            
+            const btnChi = document.getElementById('btn-hint-hide-chi');
+            btnChi.textContent = "Quiz #1: Hide Chinese";
+            btnChi.style.backgroundColor = "#3498db";
+            btnChi.classList.remove('blinking-text');
+            btnChi.classList.toggle('disabled-btn', isHintEngHidden);
+        };
+
       } else {
         vocabSection.style.display = 'none';
       }
@@ -2328,7 +2432,13 @@ if (grammarText) {
     translationVisible = false;
     showView('playback-view');
     renderPlaybackWindow();   
-    updatePlaybackButtons();  
+    updatePlaybackButtons();
+    
+    // 🎯 新增：讀取文章後，自動建立全文字彙庫
+    if (typeof generateFullVocabState === 'function') {
+        generateFullVocabState();
+    }
+    
     return true;
   }
 
@@ -2390,6 +2500,10 @@ if (grammarText) {
       }
       if (enterReaderWithText(project.text, project.language)) {
         restoreRecordingsFromProject(project.recordings);
+        // 🎯 讀檔時，如果存檔中有單字熟悉度的紀錄，就直接覆蓋套用
+        if (project.vocabState && typeof fullVocabState !== 'undefined') {
+            fullVocabState = project.vocabState;
+        }
       }
     };
   }
@@ -2482,7 +2596,8 @@ if (grammarText) {
       text: activeFullText,
       language: activeLanguage,
       savedAt: Date.now(),
-      recordings: recordingsPlain
+      recordings: recordingsPlain,
+      vocabState: typeof fullVocabState !== 'undefined' ? fullVocabState : [] // 🎯 存檔時，一併把當前單字的熟悉度狀態存起來
     };
     try {
       await dbPutProject(project);
@@ -2904,6 +3019,7 @@ function updateRecordButtons() {
     URL.revokeObjectURL(rec.url);
     delete sentenceRecordings[currentSentenceIndex][currentRecSlot];
     
+    // 如果正在刪除的是正在播放的音源，清空播放器
     if (myRecordingAudio.src === rec.url) {
       myRecordingAudio.removeAttribute('src');
       myRecordingAudio.load();
@@ -2911,6 +3027,191 @@ function updateRecordButtons() {
     
     resetPlaybackState();
     updateRecordButtons();
+  });
+
+  // ============ FULL TEXT VOCAB MANAGEMENT & QUIZ ============
+  let fullVocabState = [];
+
+  // 自動收集全篇所有的單字並建檔
+  function generateFullVocabState() {
+      fullVocabState = [];
+      let seenWords = new Set();
+      
+      sentenceVocabs.forEach(vocabBlock => {
+          if (!vocabBlock) return;
+          const lines = vocabBlock.split('\n').filter(l => l.trim().length > 0);
+          lines.forEach(line => {
+              let enPart = line;
+              let zhPart = '';
+              if (line.includes('=')) {
+                  const parts = line.split('=');
+                  enPart = parts[0].trim();
+                  zhPart = parts.slice(1).join('=').trim();
+              }
+              // 利用 Set 避免重複抓取同一個單字
+              if (!seenWords.has(enPart)) {
+                  seenWords.add(enPart);
+                  const safeSpeech = enPart.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                  fullVocabState.push({
+                      eng: enPart,
+                      chi: zhPart,
+                      level: 0,
+                      checked: true,
+                      safeSpeech: safeSpeech
+                  });
+              }
+          });
+      });
+  }
+
+  // 打開全文字彙管理
+  document.getElementById('btn-open-full-manage').addEventListener('click', () => {
+      const listContainer = document.getElementById('full-manage-list');
+      listContainer.innerHTML = '';
+      
+      fullVocabState.forEach((item, index) => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.padding = '10px';
+          row.style.backgroundColor = index % 2 === 0 ? '#fff' : '#f8f9fa';
+          row.style.border = '1px solid #dee2e6';
+          row.style.borderRadius = '5px';
+          
+          row.innerHTML = `
+              <input type="checkbox" class="full-vocab-cb" data-idx="${index}" ${item.checked ? 'checked' : ''} style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+              <button class="fam-btn fam-level-${item.level}" data-idx="${index}"></button>
+              <div style="font-size: 16px; font-weight: bold; color: #2c3e50; flex: 1;">${item.eng}</div>
+          `;
+          listContainer.appendChild(row);
+      });
+      
+      // 綁定事件：打勾與燈號互相連動
+      document.querySelectorAll('.full-vocab-cb').forEach(cb => {
+          cb.addEventListener('change', function() {
+              const idx = this.getAttribute('data-idx');
+              fullVocabState[idx].checked = this.checked;
+              
+              const famBtn = document.querySelector('.fam-btn[data-idx="' + idx + '"]');
+              if (famBtn) {
+                  const newLevel = this.checked ? 0 : 2;
+                  fullVocabState[idx].level = newLevel;
+                  famBtn.className = 'fam-btn fam-level-' + newLevel;
+              }
+          });
+      });
+      
+      document.querySelectorAll('.fam-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+              const idx = this.getAttribute('data-idx');
+              let lvl = fullVocabState[idx].level;
+              lvl = (lvl + 1) % 3; // 0 -> 1 -> 2 -> 0
+              fullVocabState[idx].level = lvl;
+              this.className = 'fam-btn fam-level-' + lvl;
+              
+              const cb = document.querySelector('.full-vocab-cb[data-idx="' + idx + '"]');
+              if (cb && !cb.checked) {
+                  cb.checked = true;
+                  fullVocabState[idx].checked = true;
+              }
+          });
+      });
+
+      document.getElementById('hint-modal').classList.remove('active');
+      document.getElementById('full-manage-modal').classList.add('active');
+  });
+
+  // 打開全文字彙測驗 (Scratch-off)
+  document.getElementById('btn-open-full-quiz').addEventListener('click', () => {
+      const tbody = document.getElementById('full-quiz-tbody');
+      tbody.innerHTML = '';
+      
+      // 測驗只抓取「有打勾」的單字
+      const quizWords = fullVocabState.filter(item => item.checked);
+      
+      if (quizWords.length === 0) {
+          alert("您沒有勾選任何單字！請先至「全文字彙管理」中勾選單字。");
+          return;
+      }
+      
+      // 隨機打亂出題順序
+      for (let i = quizWords.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [quizWords[i], quizWords[j]] = [quizWords[j], quizWords[i]];
+      }
+
+      quizWords.forEach((item, idx) => {
+          const bgColor = idx % 2 === 0 ? '#fbfdff' : '#f1f8fc';
+          tbody.innerHTML += `
+            <tr style="border-bottom: 1px solid #c5dfee; background-color: ${bgColor};">
+              <td style="padding: 12px; width: 50%; border-right: 1px solid #c5dfee; font-size: 16px; font-weight: bold; color: #0f4c81; cursor: pointer;" onclick="if(this.querySelector('.full-quiz-eng').classList.contains('hidden-cell')){ this.querySelector('.full-quiz-eng').classList.remove('hidden-cell'); this.querySelector('.full-quiz-eng').classList.add('flash-reveal'); }">
+                <div class="full-quiz-eng" style="display: flex; align-items: center; gap: 8px; width: 100%; height: 100%;">
+                  <button class="vocab-btn" style="margin:0; min-width:32px; height:32px; font-size:16px; padding:0; background:none; border:none; cursor:pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${item.safeSpeech}')">🔊</button>
+                  <span>${item.eng}</span>
+                </div>
+              </td>
+              <td style="padding: 12px; width: 50%; font-size: 15px; color: #555; cursor: pointer;" onclick="if(this.querySelector('.full-quiz-chi').classList.contains('hidden-cell')){ this.querySelector('.full-quiz-chi').classList.remove('hidden-cell'); this.querySelector('.full-quiz-chi').classList.add('flash-reveal'); }">
+                <div class="full-quiz-chi" style="width: 100%; height: 100%;">${item.chi}</div>
+              </td>
+            </tr>
+          `;
+      });
+      
+      // 綁定測驗隱藏按鈕事件
+      let isFullEngHidden = false;
+      let isFullChiHidden = false;
+      
+      document.getElementById('btn-full-hide-chi').onclick = function() {
+          isFullChiHidden = !isFullChiHidden;
+          isFullEngHidden = false;
+          document.querySelectorAll('.full-quiz-chi').forEach(el => {
+              if (isFullChiHidden) { el.classList.add('hidden-cell'); el.classList.remove('flash-reveal'); }
+              else { el.classList.remove('hidden-cell'); }
+          });
+          document.querySelectorAll('.full-quiz-eng').forEach(el => el.classList.remove('hidden-cell'));
+          
+          this.textContent = isFullChiHidden ? "Check Answers" : "Quiz #1: Hide Chinese";
+          this.style.backgroundColor = isFullChiHidden ? "#e74c3c" : "#3498db";
+          this.classList.toggle('blinking-text', isFullChiHidden);
+          
+          const btnEng = document.getElementById('btn-full-hide-eng');
+          btnEng.textContent = "Quiz #2: Hide English";
+          btnEng.style.backgroundColor = "#e67e22";
+          btnEng.classList.remove('blinking-text');
+          btnEng.classList.toggle('disabled-btn', isFullChiHidden);
+      };
+
+      document.getElementById('btn-full-hide-eng').onclick = function() {
+          isFullEngHidden = !isFullEngHidden;
+          isFullChiHidden = false;
+          document.querySelectorAll('.full-quiz-eng').forEach(el => {
+              if (isFullEngHidden) { el.classList.add('hidden-cell'); el.classList.remove('flash-reveal'); }
+              else { el.classList.remove('hidden-cell'); }
+          });
+          document.querySelectorAll('.full-quiz-chi').forEach(el => el.classList.remove('hidden-cell'));
+          
+          this.textContent = isFullEngHidden ? "Check Answers" : "Quiz #2: Hide English";
+          this.style.backgroundColor = isFullEngHidden ? "#e74c3c" : "#e67e22";
+          this.classList.toggle('blinking-text', isFullEngHidden);
+          
+          const btnChi = document.getElementById('btn-full-hide-chi');
+          btnChi.textContent = "Quiz #1: Hide Chinese";
+          btnChi.style.backgroundColor = "#3498db";
+          btnChi.classList.remove('blinking-text');
+          btnChi.classList.toggle('disabled-btn', isFullEngHidden);
+      };
+
+      // 每次開啟時重置按鈕狀態
+      document.getElementById('btn-full-hide-chi').textContent = "Quiz #1: Hide Chinese";
+      document.getElementById('btn-full-hide-chi').style.backgroundColor = "#3498db";
+      document.getElementById('btn-full-hide-chi').classList.remove('blinking-text', 'disabled-btn');
+      
+      document.getElementById('btn-full-hide-eng').textContent = "Quiz #2: Hide English";
+      document.getElementById('btn-full-hide-eng').style.backgroundColor = "#e67e22";
+      document.getElementById('btn-full-hide-eng').classList.remove('blinking-text', 'disabled-btn');
+
+      document.getElementById('hint-modal').classList.remove('active');
+      document.getElementById('full-quiz-modal').classList.add('active');
   });
 </script>
 </body>
