@@ -780,6 +780,11 @@ body {
       <div class="modal-body" id="full-quiz-body" style="max-height: 70vh; overflow-y: auto;">
         <div id="full-quiz-subtitle" style="color: #555; margin-bottom: 15px; font-size: 18px; font-weight: bold; text-align: center;">Check ✅ the boxes below when finished.</div>
         
+        <!-- 🎯 Random Review 按鈕移到表格上方，方便操作 -->
+        <button id="btn-full-quiz-random-review" style="padding: 12px 25px; font-size: 18px; font-weight: bold; margin: 0 auto 15px auto; background-color: #9b59b6; color: white; width: auto; display: none; border: none; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;">
+            🔄 Random Review
+        </button>
+
         <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 20px;">
             <thead>
                 <tr>
@@ -796,10 +801,6 @@ body {
             </thead>
             <tbody id="full-quiz-tbody"></tbody>
         </table>
-
-        <button id="btn-full-quiz-random-review" style="padding: 12px 25px; font-size: 18px; font-weight: bold; margin: 0 auto 20px auto; background-color: #9b59b6; color: white; width: auto; display: none; border: none; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; display: block; margin-left: auto; margin-right: auto;">
-            🔄 Random Review
-        </button>
 
         <div id="full-quiz-controls" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #ecf0f1; margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px; align-items: center;">
             <div style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
@@ -2340,10 +2341,11 @@ resource efficiency = 資源利用效率
   btnCloseHint.addEventListener('click', () => { hintModal.classList.remove('active'); });
   hintModal.addEventListener('click', (e) => { if (e.target === hintModal) hintModal.classList.remove('active'); });
 
+  /* ================= 替換起點 1 ================= */
   function speakVocab(text) {
     if (synth.speaking) synth.cancel();
-    // 🎯 完美修復：刪除所有圓括號與方括號內的內容，以及點點點與波浪號
-    let cleanText = text.replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '').replace(/\.\.\./g, '').replace(/~/g, '').trim();
+    // 🎯 完美修復：刪除所有「半形與全形」的圓括號與方括號內容，以及點點點與波浪號
+    let cleanText = text.replace(/[\(（][^)）]*[\)）]/g, '').replace(/[\[【][^\]】]*[\]】]/g, '').replace(/\.\.\./g, '').replace(/~/g, '').trim();
     let u = new SpeechSynthesisUtterance(cleanText);
     u.lang = activeLanguage;
     u.rate = SPEED_LEVELS[currentSpeedIndex]; 
@@ -2351,6 +2353,7 @@ resource efficiency = 資源利用效率
     if (preferredVoice) u.voice = preferredVoice;
     synth.speak(u);
   }
+/* ================= 替換終點 1 ================= */
 
   function renderPlaybackWindow() {
     playbackDisplay.innerHTML = '';
@@ -3096,6 +3099,7 @@ function updateRecordButtons() {
     updateRecordButtons();
   });
 
+/* ================= 替換起點 2 ================= */
 // ============ FULL TEXT VOCAB MANAGEMENT & QUIZ 引擎 ============
   let fullVocabState = [];
 
@@ -3142,8 +3146,10 @@ function updateRecordButtons() {
       
       fullVocabState.forEach((item, index) => {
           const row = document.createElement('div');
-          row.style.display = 'flex';
-          row.style.alignItems = 'center';
+          // 🎯 改用 CSS Grid 確保對齊，並極大化右側文字空間
+          row.style.display = 'grid';
+          row.style.gridTemplateColumns = 'auto auto 1fr';
+          row.style.alignItems = 'start';
           row.style.gap = '8px';
           row.style.padding = '12px 10px';
           row.style.backgroundColor = index % 2 === 0 ? '#fff' : '#f8f9fa';
@@ -3151,9 +3157,13 @@ function updateRecordButtons() {
           row.style.borderRadius = '5px';
           
           row.innerHTML = `
-              <input type="checkbox" class="full-vocab-cb" data-idx="${index}" ${item.checked ? 'checked' : ''} style="width: 22px; height: 22px; margin: 0; flex-shrink: 0; cursor: pointer;">
-              <button class="fam-btn fam-level-${item.level}" data-idx="${index}" style="margin: 0; font-size: 24px;"></button>
-              <div class="text-lg" style="color: #2c3e50; flex: 1; word-break: break-word;"><strong>${item.eng}</strong> = ${item.chi}</div>
+              <input type="checkbox" class="full-vocab-cb" data-idx="${index}" ${item.checked ? 'checked' : ''} style="width: 20px; height: 20px; margin-top: 4px; cursor: pointer;">
+              <button class="fam-btn fam-level-${item.level}" data-idx="${index}" style="margin: 0 !important; font-size: 20px; padding: 0 !important; min-width: auto !important; margin-top: 2px !important;"></button>
+              <div class="text-lg" style="word-break: break-word; line-height: 1.4;">
+                  <span style="font-weight: bold; color: #0f4c81;">${item.eng}</span>
+                  <span style="color: #999; margin: 0 4px;">=</span>
+                  <span style="color: #333;">${item.chi}</span>
+              </div>
           `;
           listContainer.appendChild(row);
       });
@@ -3193,6 +3203,16 @@ function updateRecordButtons() {
 
       document.getElementById('hint-modal').classList.remove('active');
       document.getElementById('full-manage-modal').classList.add('active');
+  });
+
+  document.getElementById('btn-save-full-manage').addEventListener('click', () => {
+      alert('儲存成功！單字設定已連動至學習筆記與測驗。');
+      document.getElementById('full-manage-modal').classList.remove('active');
+      document.getElementById('btn-lightbulb').click();
+  });
+
+  document.getElementById('btn-manage-top').addEventListener('click', () => {
+      document.getElementById('full-manage-body').scrollTop = 0;
   });
 
   // 全文字彙測驗
@@ -3261,33 +3281,52 @@ function updateRecordButtons() {
           isFullChiHidden = false;
           
           if (isFullQuizReviewMode) {
-              document.getElementById('full-quiz-title').textContent = 'Congrats on finishing all rounds! 🎉';
+              document.getElementById('full-quiz-title').textContent = 'Congrats! 🎉 Overall Review 🔎';
               document.getElementById('full-quiz-subtitle').style.display = 'none';
-              document.getElementById('btn-full-quiz-random-review').style.display = 'block';
-              document.getElementById('full-quiz-controls').style.display = 'none';
-              document.getElementById('full-quiz-next-container').innerHTML = '';
+              document.getElementById('btn-full-quiz-random-review').style.display = 'block'; 
+              document.getElementById('full-quiz-controls').style.display = 'flex';
+              
+              document.getElementById('chk-full-chi-done').style.display = 'none';
+              document.getElementById('chk-full-eng-done').style.display = 'none';
+              
+              const btnChi = document.getElementById('btn-full-hide-chi');
+              btnChi.textContent = "Quiz #1: Hide Chinese";
+              btnChi.style.backgroundColor = "#3498db";
+              btnChi.classList.remove('blinking-text', 'disabled-btn');
+              
+              const btnEng = document.getElementById('btn-full-hide-eng');
+              btnEng.textContent = "Quiz #2: Hide English";
+              btnEng.style.backgroundColor = "#e67e22";
+              btnEng.classList.remove('blinking-text', 'disabled-btn');
+              
+              document.getElementById('full-quiz-auto-tts-container').style.display = 'none';
+              document.getElementById('full-quiz-next-container').innerHTML = ''; 
           } else {
               document.getElementById('full-quiz-title').textContent = 'Quick Review: Round ' + (currentFullQuizChunkIdx + 1) + ' / ' + fullQuizChunks.length;
               document.getElementById('full-quiz-subtitle').style.display = 'block';
               document.getElementById('btn-full-quiz-random-review').style.display = 'none';
               document.getElementById('full-quiz-controls').style.display = 'flex';
               
+              document.getElementById('chk-full-chi-done').style.display = 'block';
+              document.getElementById('chk-full-chi-done').checked = false;
+              document.getElementById('chk-full-chi-done').disabled = false;
+              
+              document.getElementById('chk-full-eng-done').style.display = 'block';
+              document.getElementById('chk-full-eng-done').checked = false;
+              document.getElementById('chk-full-eng-done').disabled = false;
+              
               const btnChi = document.getElementById('btn-full-hide-chi');
               btnChi.textContent = "Quiz #1: Hide Chinese";
               btnChi.style.backgroundColor = "#3498db";
               btnChi.classList.remove('blinking-text', 'disabled-btn');
-              document.getElementById('chk-full-chi-done').checked = false;
-              document.getElementById('chk-full-chi-done').disabled = false;
               
               const btnEng = document.getElementById('btn-full-hide-eng');
               btnEng.textContent = "Quiz #2: Hide English";
               btnEng.style.backgroundColor = "#e67e22";
               btnEng.classList.remove('blinking-text', 'disabled-btn');
-              document.getElementById('chk-full-eng-done').checked = false;
-              document.getElementById('chk-full-eng-done').disabled = false;
               
               document.getElementById('full-quiz-auto-tts-container').style.display = 'none';
-              updateFullQuizFooter();
+              updateFullQuizFooter(); 
           }
       }
 
@@ -3385,14 +3424,9 @@ function updateRecordButtons() {
       }
   };
 
-  window.showOverallReviewPage = function() {
-      isFullQuizReviewMode = true;
-      fullQuizChunks = [[]]; // 清空表格，只顯示恭喜畫面與按鈕
-      currentFullQuizChunkIdx = 0;
-      renderFullQuizTable();
-  };
-
   function updateFullQuizFooter() {
+      if (isFullQuizReviewMode) return; 
+
       const footer = document.getElementById('full-quiz-next-container');
       const engDone = document.getElementById('chk-full-eng-done').checked;
       const chiDone = document.getElementById('chk-full-chi-done').checked;
@@ -3401,7 +3435,6 @@ function updateRecordButtons() {
           if (currentFullQuizChunkIdx < fullQuizChunks.length - 1) {
               footer.innerHTML = '<button style="background-color: #27ae60; color: white; border: none; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer;" onclick="currentFullQuizChunkIdx++; renderFullQuizTable();">Next Round ➡️</button>';
           } else {
-              // 🎯 修正：呼叫 showOverallReviewPage 來顯示重抽按鈕
               footer.innerHTML = '<button style="background-color: #27ae60; color: white; border: none; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer;" onclick="showOverallReviewPage();">Overall Review 🔎</button>';
           }
           setTimeout(() => {
@@ -3416,14 +3449,18 @@ function updateRecordButtons() {
   document.getElementById('chk-full-chi-done').addEventListener('change', updateFullQuizFooter);
   document.getElementById('chk-full-eng-done').addEventListener('change', updateFullQuizFooter);
 
-  // 🎯 完美修復 Random Review (按優先度重抽 10 題並立刻開始新測驗)
-  document.getElementById('btn-full-quiz-random-review').addEventListener('click', () => {
+  // 🎯 獨立出來的隨機抽題引擎 (加入防呆機制)
+  function generateRandomReviewWords() {
       const pool = fullVocabState.filter(item => item.checked);
-      if(pool.length === 0) return;
+      if(pool.length === 0) {
+          alert("沒有勾選任何單字！");
+          return false;
+      }
       
       const REVIEW_WEIGHTS = { 0: 2.0, 1: 1.5, 2: 1.0 };
       let tempPool = [...pool];
       let result = [];
+      // 抽取最多 10 題
       for (let i = 0; i < 10 && tempPool.length > 0; i++) {
           let totalWeight = tempPool.reduce((sum, w) => sum + (REVIEW_WEIGHTS[w.level] || 1.0), 0);
           let random = Math.random() * totalWeight;
@@ -3439,8 +3476,21 @@ function updateRecordButtons() {
       }
       fullQuizChunks = [result];
       currentFullQuizChunkIdx = 0;
-      isFullQuizReviewMode = false; // 回歸正常測驗模式
-      renderFullQuizTable();
+      return true;
+  }
+
+  window.showOverallReviewPage = function() {
+      isFullQuizReviewMode = true;
+      if (generateRandomReviewWords()) {
+          renderFullQuizTable();
+      }
+  };
+
+  document.getElementById('btn-full-quiz-random-review').addEventListener('click', () => {
+      isFullQuizReviewMode = true; 
+      if (generateRandomReviewWords()) {
+          renderFullQuizTable();
+      }
   });
 
   document.getElementById('btn-full-quiz-back-hint').addEventListener('click', () => {
@@ -3451,6 +3501,7 @@ function updateRecordButtons() {
   document.getElementById('btn-full-quiz-back-read').addEventListener('click', () => {
       document.getElementById('full-quiz-modal').classList.remove('active');
   });
+/* ================= 替換終點 2 ================= */
 </script>
 </body>
 </html>
