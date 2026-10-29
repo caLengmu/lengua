@@ -484,8 +484,7 @@ body {
 
   .hint { font-size: 12px; color: #9db6c6; margin-top: 10px; }
 
-/* ================= 替換起點 1 ================= */
-  /* 刮刮樂測驗的遮罩特效與熟悉度燈號 */
+/* 刮刮樂測驗的遮罩特效與熟悉度燈號 */
   .hidden-cell { color: transparent !important; background-color: #e9ecef !important; user-select: none; transition: background-color 0.3s; cursor: pointer; }
   .flash-reveal { animation: fade-flash 0.6s ease-out; }
   @keyframes fade-flash { 0% { opacity: 0; background-color: #f1c40f; } 100% { opacity: 1; background-color: transparent; } }
@@ -499,6 +498,18 @@ body {
   .fam-level-0::before { content: '🔴🔴'; }
   .fam-level-1::before { content: '🔴⚪'; }
   .fam-level-2::before { content: '⚪⚪'; }
+
+  /* 🎯 新增：大字體與響應式雙欄排版設定 */
+  .text-lg { font-size: 19.2px !important; line-height: 1.4; }
+  .text-md { font-size: 18px !important; line-height: 1.4; }
+  .table-cell-center { text-align: center; vertical-align: middle; }
+  .manage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+  
+  @media (max-width: 768px) {
+      .text-lg { font-size: 17px !important; }
+      .text-md { font-size: 16px !important; }
+      .manage-grid { grid-template-columns: 1fr; gap: 8px; }
+  }
 
   /* ---------- HINT MODAL (學習筆記) ---------- */
   .modal-overlay {
@@ -552,8 +563,9 @@ body {
     background: #eef8f0; padding: 16px; 
     border-radius: 10px; border: 1px solid #7fbf9a;
     color: #2f6b47; line-height: 1.7; 
-    white-space: pre-wrap; /* 重要：保留換行 */
-    word-break: break-word; font-size: 16px;
+    white-space: pre-wrap; 
+    word-break: break-word; 
+    font-size: 19.2px; /* 🎯 放大 1.2倍 */
   }
 
   @media (max-width: 400px) {
@@ -716,27 +728,26 @@ body {
     </div>
   </div>
 
- 
   <!-- ============ FULL VOCAB MANAGE MODAL ============ -->
   <div id="full-manage-modal" class="modal-overlay" style="z-index: 1050;">
-    <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-content" style="max-width: 1000px; width: 95%;">
       <div class="modal-header">
-        <h3>🗃️ 全文字彙管理</h3>
+        <h3>🗃️ 全文字彙管理 <span id="full-manage-count" style="color: #e74c3c; font-size: 0.8em; margin-left: 10px;"></span></h3>
         <div style="display: flex; gap: 10px;">
             <button id="btn-save-full-manage" style="background-color: #28a745; color: white; padding: 6px 12px; border-radius: 6px; font-size: 14px; border: none; font-weight: bold; cursor: pointer; min-width: 70px;">💾 Save</button>
             <button class="icon-btn" onclick="document.getElementById('full-manage-modal').classList.remove('active'); document.getElementById('hint-modal').classList.add('active');">✕</button>
         </div>
       </div>
-      <div class="modal-body" id="full-manage-body" style="max-height: 60vh; overflow-y: auto;">
-        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 20px; font-size: 15px; font-weight: bold;">
+      <div class="modal-body" id="full-manage-body" style="max-height: 70vh; overflow-y: auto;">
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 20px; font-size: 16px; font-weight: bold;">
             <div style="color: #e74c3c; margin-bottom: 8px;">點選圓點設定熟悉度，取消勾選則不會出現在測驗中：</div>
             <div>1. 🔴🔴: 很不熟 (預設)</div>
             <div>2. 🔴⚪: 有點熟</div>
             <div>3. ⚪⚪: 很熟</div>
         </div>
-        <div id="full-manage-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
-        <div style="text-align: center; margin-top: 20px; padding-bottom: 10px;">
-            <button id="btn-manage-top" style="background-color: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-size: 16px; font-weight: bold; cursor: pointer;">⬆️ Back to Top</button>
+        <div id="full-manage-list" class="manage-grid"></div>
+        <div style="text-align: center; margin-top: 25px; padding-bottom: 10px;">
+            <button id="btn-manage-top" style="background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">⬆️ Back to Top</button>
         </div>
       </div>
     </div>
@@ -750,7 +761,7 @@ body {
         <button class="icon-btn" style="position: absolute; right: 0;" onclick="document.getElementById('full-quiz-mode-modal').classList.remove('active'); document.getElementById('hint-modal').classList.add('active');">✕</button>
       </div>
       <div class="modal-body">
-        <div style="background-color: #fdf2e9; color: #d35400; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 15px; font-weight: bold; line-height: 1.6; text-align: left;">
+        <div style="background-color: #fdf2e9; color: #d35400; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 16px; font-weight: bold; line-height: 1.6; text-align: left;">
             ⚠️ 提醒：<br>此為快速驗收功能。建議先逐句閱讀文章，從情境中學習單字&片語的意思，避免直接進來死背中英翻譯喔！
         </div>
         <button id="btn-full-quiz-inorder" style="background-color: #3498db; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 18px; margin: 10px 0; width: 100%; cursor: pointer; font-weight: bold;">In order (照順序)</button>
@@ -761,42 +772,42 @@ body {
 
   <!-- ============ FULL VOCAB QUIZ MODAL ============ -->
   <div id="full-quiz-modal" class="modal-overlay" style="z-index: 1050;">
-    <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-content" style="max-width: 800px; width: 95%;">
       <div class="modal-header">
         <h3 id="full-quiz-title">🧩 全文字彙測驗</h3>
         <button class="icon-btn" onclick="document.getElementById('full-quiz-modal').classList.remove('active'); document.getElementById('hint-modal').classList.add('active');">✕</button>
       </div>
       <div class="modal-body" id="full-quiz-body" style="max-height: 70vh; overflow-y: auto;">
-        <div id="full-quiz-subtitle" style="color: #555; margin-bottom: 15px; font-size: 16px; font-weight: bold; text-align: center;">Check ✅ the boxes below when finished.</div>
+        <div id="full-quiz-subtitle" style="color: #555; margin-bottom: 15px; font-size: 18px; font-weight: bold; text-align: center;">Check ✅ the boxes below when finished.</div>
         
         <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 20px;">
             <thead>
                 <tr>
-                    <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50; font-size: 16px;">
+                    <th class="table-cell-center text-lg" style="width: 50%; border: 1px solid #bdc3c7; padding: 15px; background: #ecf0f1; color: #2c3e50;">
                         English
-                        <div id="full-quiz-auto-tts-container" style="display: none; align-items: center; justify-content: center; margin-top: 6px; font-size: 13px; font-weight: normal; color: #555;">
-                            <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: #fff; padding: 2px 8px; border-radius: 12px; border: 1px solid #ccc;">
-                                🔊 Auto-play <input type="checkbox" id="full-quiz-auto-tts" checked style="cursor: pointer; width: 14px; height: 14px; margin: 0;">
+                        <div id="full-quiz-auto-tts-container" style="display: none; align-items: center; justify-content: center; margin-top: 8px; font-size: 14px; font-weight: normal; color: #555;">
+                            <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: #fff; padding: 4px 10px; border-radius: 12px; border: 1px solid #ccc;">
+                                🔊 Auto-play <input type="checkbox" id="full-quiz-auto-tts" checked style="cursor: pointer; width: 16px; height: 16px; margin: 0;">
                             </label>
                         </div>
                     </th>
-                    <th style="width: 50%; border: 1px solid #bdc3c7; padding: 10px; background: #ecf0f1; color: #2c3e50; font-size: 16px;">Chinese</th>
+                    <th class="table-cell-center text-lg" style="width: 50%; border: 1px solid #bdc3c7; padding: 15px; background: #ecf0f1; color: #2c3e50;">Chinese</th>
                 </tr>
             </thead>
             <tbody id="full-quiz-tbody"></tbody>
         </table>
 
-        <button id="btn-full-quiz-random-review" style="padding: 10px 20px; font-size: 16px; font-weight: bold; margin: 0 auto 20px auto; background-color: #9b59b6; color: white; width: auto; display: none; border: none; border-radius: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); cursor: pointer; display: block; margin-left: auto; margin-right: auto;">
+        <button id="btn-full-quiz-random-review" style="padding: 12px 25px; font-size: 18px; font-weight: bold; margin: 0 auto 20px auto; background-color: #9b59b6; color: white; width: auto; display: none; border: none; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; display: block; margin-left: auto; margin-right: auto;">
             🔄 Random Review
         </button>
 
         <div id="full-quiz-controls" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border: 2px solid #ecf0f1; margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px; align-items: center;">
             <div style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
-                <button id="btn-full-hide-chi" style="padding: 10px; font-size: 16px; width: 220px; background-color: #3498db; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Quiz #1: Hide Chinese</button>
+                <button id="btn-full-hide-chi" style="padding: 12px; font-size: 18px; width: 260px; background-color: #3498db; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Quiz #1: Hide Chinese</button>
                 <input type="checkbox" id="chk-full-chi-done" style="width: 25px; height: 25px; cursor: pointer;">
             </div>
             <div style="display: flex; align-items: center; gap: 10px; justify-content: center; width: 100%;">
-                <button id="btn-full-hide-eng" style="padding: 10px; font-size: 16px; width: 220px; background-color: #e67e22; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Quiz #2: Hide English</button>
+                <button id="btn-full-hide-eng" style="padding: 12px; font-size: 18px; width: 260px; background-color: #e67e22; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Quiz #2: Hide English</button>
                 <input type="checkbox" id="chk-full-eng-done" style="width: 25px; height: 25px; cursor: pointer;">
             </div>
         </div>
@@ -804,8 +815,8 @@ body {
         <div id="full-quiz-next-container" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
 
         <div style="display: flex; justify-content: space-between; gap: 10px;">
-            <button id="btn-full-quiz-back-hint" class="secondary" style="flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px;">回 💡 單字筆記</button>
-            <button id="btn-full-quiz-back-read" class="secondary" style="flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px;">回 📖 閱讀區</button>
+            <button id="btn-full-quiz-back-hint" class="secondary" style="flex: 1; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px;">回 💡 單字筆記</button>
+            <button id="btn-full-quiz-back-read" class="secondary" style="flex: 1; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px;">回 📖 閱讀區</button>
         </div>
       </div>
     </div>
@@ -2240,16 +2251,17 @@ resource efficiency = 資源利用效率
               const safeSpeak = enPart.replace(/'/g, "\\'").replace(/"/g, "&quot;");
               const bgColor = idx % 2 === 0 ? '#fbfdff' : '#f1f8fc';
               
+              // 🎯 修改：套用 text-lg, text-md, table-cell-center 達成置中與字體加大
               tableHtml += `
                 <tr style="border-bottom: 1px solid #c5dfee; background-color: ${bgColor};">
-                  <td style="padding: 12px; width: 50%; border-right: 1px solid #c5dfee; font-size: 16px; font-weight: bold; color: #0f4c81; cursor: pointer;" onclick="if(this.querySelector('.hint-eng').classList.contains('hidden-cell')){ this.querySelector('.hint-eng').classList.remove('hidden-cell'); this.querySelector('.hint-eng').classList.add('flash-reveal'); if(document.getElementById('btn-hint-hide-eng').classList.contains('blinking-text')){ speakVocab('${safeSpeak}'); } checkHintAllRevealed(); }">
-                    <div class="hint-eng" style="display: flex; align-items: center; gap: 8px; width: 100%; height: 100%;">
-                      <button class="vocab-btn" style="margin:0; min-width:32px; height:32px; font-size:16px; padding:0; background:none; border:none; cursor:pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${safeSpeak}')">🔊</button>
-                      <span>${enPart}</span>
+                  <td class="table-cell-center" style="padding: 15px; width: 50%; border-right: 1px solid #c5dfee; font-weight: bold; color: #0f4c81; cursor: pointer;" onclick="if(this.querySelector('.hint-eng').classList.contains('hidden-cell')){ this.querySelector('.hint-eng').classList.remove('hidden-cell'); this.querySelector('.hint-eng').classList.add('flash-reveal'); if(document.getElementById('btn-hint-hide-eng').classList.contains('blinking-text')){ speakVocab('${safeSpeak}'); } checkHintAllRevealed(); }">
+                    <div class="hint-eng" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 100%;">
+                      <button class="vocab-btn" style="margin:0; min-width:36px; height:36px; font-size:20px; padding:0; background:none; border:none; cursor:pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${safeSpeak}')">🔊</button>
+                      <span class="text-lg">${enPart}</span>
                     </div>
                   </td>
-                  <td style="padding: 12px; width: 50%; font-size: 15px; color: #555; cursor: pointer;" onclick="if(this.querySelector('.hint-chi').classList.contains('hidden-cell')){ this.querySelector('.hint-chi').classList.remove('hidden-cell'); this.querySelector('.hint-chi').classList.add('flash-reveal'); checkHintAllRevealed(); }">
-                    <div class="hint-chi" style="width: 100%; height: 100%;">${zhPart}</div>
+                  <td class="table-cell-center" style="padding: 15px; width: 50%; color: #555; cursor: pointer;" onclick="if(this.querySelector('.hint-chi').classList.contains('hidden-cell')){ this.querySelector('.hint-chi').classList.remove('hidden-cell'); this.querySelector('.hint-chi').classList.add('flash-reveal'); checkHintAllRevealed(); }">
+                    <div class="hint-chi text-md" style="width: 100%; height: 100%;">${zhPart}</div>
                   </td>
                 </tr>
               `;
@@ -2330,7 +2342,8 @@ resource efficiency = 資源利用效率
 
   function speakVocab(text) {
     if (synth.speaking) synth.cancel();
-    let cleanText = text.replace(/\.\.\./g, '').replace(/~/g, '').replace(/[()\[\]]/g, '').trim();
+    // 🎯 完美修復：刪除所有圓括號與方括號內的內容，以及點點點與波浪號
+    let cleanText = text.replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '').replace(/\.\.\./g, '').replace(/~/g, '').trim();
     let u = new SpeechSynthesisUtterance(cleanText);
     u.lang = activeLanguage;
     u.rate = SPEED_LEVELS[currentSpeedIndex]; 
@@ -2542,7 +2555,6 @@ resource efficiency = 資源利用效率
     });
   }
 
-/* ================= 替換起點 1 ================= */
   function projectButtonHandler(id) {
     return async () => {
       let project;
@@ -3117,6 +3129,11 @@ function updateRecordButtons() {
       });
   }
 
+  function updateFullManageCount() {
+      const checkedCount = fullVocabState.filter(item => item.checked).length;
+      const countEl = document.getElementById('full-manage-count');
+      if (countEl) countEl.textContent = `(${checkedCount} items checked)`;
+  }
 
   // 全文字彙管理 
   document.getElementById('btn-open-full-manage').addEventListener('click', () => {
@@ -3127,23 +3144,21 @@ function updateRecordButtons() {
           const row = document.createElement('div');
           row.style.display = 'flex';
           row.style.alignItems = 'center';
-          // 🎯 新增 gap 屬性，將核取方塊、燈號與文字之間的空隙壓縮到 6px
-          row.style.gap = '6px';
-          row.style.padding = '10px 8px'; // 稍微縮減左右的 padding，爭取更多文字空間
+          row.style.gap = '8px';
+          row.style.padding = '12px 10px';
           row.style.backgroundColor = index % 2 === 0 ? '#fff' : '#f8f9fa';
           row.style.border = '1px solid #dee2e6';
           row.style.borderRadius = '5px';
           
           row.innerHTML = `
-              <!-- 將 margin 歸零，並把寬高微調至 18px，讓版面更緊湊 -->
-              <input type="checkbox" class="full-vocab-cb" data-idx="${index}" ${item.checked ? 'checked' : ''} style="width: 18px; height: 18px; margin: 0; flex-shrink: 0; cursor: pointer;">
-              <!-- 加上 style="margin: 0;" 強制蓋過原本 CSS 設定的 margin-right -->
-              <button class="fam-btn fam-level-${item.level}" data-idx="${index}" style="margin: 0; font-size: 16px;"></button>
-              <!-- 增加 line-height: 1.3 讓文字太長換行時依然排版整齊 -->
-              <div style="font-size: 16px; color: #2c3e50; flex: 1; word-break: break-word; line-height: 1.3;"><strong>${item.eng}</strong> = ${item.chi}</div>
+              <input type="checkbox" class="full-vocab-cb" data-idx="${index}" ${item.checked ? 'checked' : ''} style="width: 22px; height: 22px; margin: 0; flex-shrink: 0; cursor: pointer;">
+              <button class="fam-btn fam-level-${item.level}" data-idx="${index}" style="margin: 0; font-size: 24px;"></button>
+              <div class="text-lg" style="color: #2c3e50; flex: 1; word-break: break-word;"><strong>${item.eng}</strong> = ${item.chi}</div>
           `;
           listContainer.appendChild(row);
       });
+      
+      updateFullManageCount();
       
       document.querySelectorAll('.full-vocab-cb').forEach(cb => {
           cb.addEventListener('change', function() {
@@ -3155,6 +3170,7 @@ function updateRecordButtons() {
                   fullVocabState[idx].level = newLevel;
                   famBtn.className = 'fam-btn fam-level-' + newLevel;
               }
+              updateFullManageCount();
           });
       });
       
@@ -3171,6 +3187,7 @@ function updateRecordButtons() {
                   cb.checked = true;
                   fullVocabState[idx].checked = true;
               }
+              updateFullManageCount();
           });
       });
 
@@ -3178,23 +3195,11 @@ function updateRecordButtons() {
       document.getElementById('full-manage-modal').classList.add('active');
   });
 
-  document.getElementById('btn-save-full-manage').addEventListener('click', () => {
-      alert('儲存成功！單字設定已連動至學習筆記與測驗。');
-      document.getElementById('full-manage-modal').classList.remove('active');
-      // 強制刷新 Hint Modal
-      document.getElementById('btn-lightbulb').click();
-  });
-
-  document.getElementById('btn-manage-top').addEventListener('click', () => {
-      document.getElementById('full-manage-body').scrollTop = 0;
-  });
-
-  // 全文字彙測驗 (Scratch-off 刮刮樂邏輯)
+  // 全文字彙測驗
   let fullQuizChunks = [];
   let currentFullQuizChunkIdx = 0;
   let isFullQuizReviewMode = false;
   
-  // 建立全域狀態，避免點擊事件重置
   let isFullEngHidden = false;
   let isFullChiHidden = false;
 
@@ -3246,11 +3251,10 @@ function updateRecordButtons() {
       document.getElementById('full-quiz-modal').classList.add('active');
   }
 
-  // 加入 isShuffle 參數，確保洗牌時不會重置使用者的按鈕狀態
   function renderFullQuizTable(isShuffle = false) {
       const tbody = document.getElementById('full-quiz-tbody');
       tbody.innerHTML = '';
-      const wordsToQuiz = fullQuizChunks[currentFullQuizChunkIdx];
+      const wordsToQuiz = fullQuizChunks[currentFullQuizChunkIdx] || [];
       
       if (!isShuffle) {
           isFullEngHidden = false;
@@ -3294,14 +3298,14 @@ function updateRecordButtons() {
           
           tbody.innerHTML += `
             <tr style="border-bottom: 1px solid #c5dfee; background-color: ${bgColor};">
-              <td style="padding: 12px; width: 50%; border-right: 1px solid #c5dfee; font-size: 16px; font-weight: bold; color: #0f4c81; cursor: pointer;" onclick="if(this.querySelector('.full-quiz-eng').classList.contains('hidden-cell')){ this.querySelector('.full-quiz-eng').classList.remove('hidden-cell'); this.querySelector('.full-quiz-eng').classList.add('flash-reveal'); const speaker = this.querySelector('.vocab-btn'); if(speaker && document.getElementById('full-quiz-auto-tts').checked) { speaker.click(); } checkFullQuizRevealed(); }">
-                <div class="full-quiz-eng ${engClass}" style="display: flex; align-items: center; gap: 8px; width: 100%; height: 100%;">
-                  <button class="vocab-btn" style="margin:0; min-width:32px; height:32px; font-size:16px; padding:0; background:none; border:none; cursor:pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${item.safeSpeech}')">🔊</button>
-                  <span>${item.eng}</span>
+              <td class="table-cell-center" style="padding: 15px; width: 50%; border-right: 1px solid #c5dfee; font-weight: bold; color: #0f4c81; cursor: pointer;" onclick="if(this.querySelector('.full-quiz-eng').classList.contains('hidden-cell')){ this.querySelector('.full-quiz-eng').classList.remove('hidden-cell'); this.querySelector('.full-quiz-eng').classList.add('flash-reveal'); const speaker = this.querySelector('.vocab-btn'); if(speaker && document.getElementById('full-quiz-auto-tts').checked) { speaker.click(); } checkFullQuizRevealed(); }">
+                <div class="full-quiz-eng ${engClass}" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 100%;">
+                  <button class="vocab-btn" style="margin:0; min-width:36px; height:36px; font-size:20px; padding:0; background:none; border:none; cursor:pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${item.safeSpeech}')">🔊</button>
+                  <span class="text-lg">${item.eng}</span>
                 </div>
               </td>
-              <td style="padding: 12px; width: 50%; font-size: 15px; color: #555; cursor: pointer;" onclick="if(this.querySelector('.full-quiz-chi').classList.contains('hidden-cell')){ this.querySelector('.full-quiz-chi').classList.remove('hidden-cell'); this.querySelector('.full-quiz-chi').classList.add('flash-reveal'); checkFullQuizRevealed(); }">
-                <div class="full-quiz-chi ${chiClass}" style="width: 100%; height: 100%;">${item.chi}</div>
+              <td class="table-cell-center" style="padding: 15px; width: 50%; color: #555; cursor: pointer;" onclick="if(this.querySelector('.full-quiz-chi').classList.contains('hidden-cell')){ this.querySelector('.full-quiz-chi').classList.remove('hidden-cell'); this.querySelector('.full-quiz-chi').classList.add('flash-reveal'); checkFullQuizRevealed(); }">
+                <div class="full-quiz-chi text-md ${chiClass}" style="width: 100%; height: 100%;">${item.chi}</div>
               </td>
             </tr>
           `;
@@ -3381,6 +3385,13 @@ function updateRecordButtons() {
       }
   };
 
+  window.showOverallReviewPage = function() {
+      isFullQuizReviewMode = true;
+      fullQuizChunks = [[]]; // 清空表格，只顯示恭喜畫面與按鈕
+      currentFullQuizChunkIdx = 0;
+      renderFullQuizTable();
+  };
+
   function updateFullQuizFooter() {
       const footer = document.getElementById('full-quiz-next-container');
       const engDone = document.getElementById('chk-full-eng-done').checked;
@@ -3390,7 +3401,8 @@ function updateRecordButtons() {
           if (currentFullQuizChunkIdx < fullQuizChunks.length - 1) {
               footer.innerHTML = '<button style="background-color: #27ae60; color: white; border: none; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer;" onclick="currentFullQuizChunkIdx++; renderFullQuizTable();">Next Round ➡️</button>';
           } else {
-              footer.innerHTML = '<button style="background-color: #27ae60; color: white; border: none; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer;" onclick="isFullQuizReviewMode = true; renderFullQuizTable();">Overall Review 🔎</button>';
+              // 🎯 修正：呼叫 showOverallReviewPage 來顯示重抽按鈕
+              footer.innerHTML = '<button style="background-color: #27ae60; color: white; border: none; padding: 12px; font-size: 18px; font-weight: bold; border-radius: 8px; width: 100%; cursor: pointer;" onclick="showOverallReviewPage();">Overall Review 🔎</button>';
           }
           setTimeout(() => {
               const modalBody = document.getElementById('full-quiz-body');
@@ -3404,6 +3416,7 @@ function updateRecordButtons() {
   document.getElementById('chk-full-chi-done').addEventListener('change', updateFullQuizFooter);
   document.getElementById('chk-full-eng-done').addEventListener('change', updateFullQuizFooter);
 
+  // 🎯 完美修復 Random Review (按優先度重抽 10 題並立刻開始新測驗)
   document.getElementById('btn-full-quiz-random-review').addEventListener('click', () => {
       const pool = fullVocabState.filter(item => item.checked);
       if(pool.length === 0) return;
@@ -3426,7 +3439,7 @@ function updateRecordButtons() {
       }
       fullQuizChunks = [result];
       currentFullQuizChunkIdx = 0;
-      isFullQuizReviewMode = false;
+      isFullQuizReviewMode = false; // 回歸正常測驗模式
       renderFullQuizTable();
   });
 
