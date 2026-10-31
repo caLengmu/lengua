@@ -2312,13 +2312,46 @@ resource efficiency = 資源利用效率
         } else {
             vocabSection.style.display = 'none';
         }
+
       } else {
         vocabSection.style.display = 'none';
       }
 
       if (grammarText) {
         grammarSection.style.display = 'block';
-        grammarContainer.innerHTML = grammarText;
+        
+        // 🎯 自動偵測「例：」或「例句：」，並為下方的英文例句加上 🔊 發音按鈕與過濾 HTML 標籤
+        const processedGrammar = grammarText.split('\n').map((line, idx, arr) => {
+            let isExample = false;
+            // 往上找 5 行，看看是否在例句區塊內 (如果遇到 📌 代表進入下一個重點，離開例句區)
+            for (let i = idx; i >= 0 && i >= idx - 5; i--) {
+                if (arr[i].includes('📌')) break; 
+                if (arr[i].includes('例:') || arr[i].includes('例：') || arr[i].includes('例句:') || arr[i].includes('例句：')) {
+                    isExample = true;
+                    break;
+                }
+            }
+            
+            // 如果是在例句區塊，且這行包含英文字母，且本身不是「例：」這一行
+            if (isExample && /[a-zA-Z]/.test(line) && !line.includes('例:') && !line.includes('例：') && !line.includes('例句')) {
+                // 清理要餵給 TTS 的字串 (移除 HTML、括號、箭頭等符號，並處理跳脫字元防崩潰)
+                let safeSpeech = line.replace(/<[^>]*>/g, '') // 🎯 完全移除任何 <...> 標籤
+                                     .replace(/[\(（][^)）]*[\)）]/g, '') // 移除括號內容
+                                     .replace(/[\[【][^\]】]*[\]】]/g, '') // 移除方括號內容
+                                     .replace(/[→_]/g, '') // 移除箭頭與底線
+                                     .replace(/'/g, "\\'")
+                                     .replace(/"/g, "&quot;")
+                                     .trim();
+                
+                if (safeSpeech) {
+                    // 自動加上排版好的 🔊 按鈕，與單字區的風格一致
+                    return `<div style="display: flex; align-items: flex-start; gap: 8px;"><button class="vocab-btn" style="margin: 2px 0 0 0; min-width: 32px; height: 32px; font-size: 20px; padding: 0; background: none; border: none; cursor: pointer; color: #2a628f; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="event.stopPropagation(); speakVocab('${safeSpeech}')">🔊</button><div style="flex: 1;">${line}</div></div>`;
+                }
+            }
+            return line;
+        }).join('\n');
+
+        grammarContainer.innerHTML = processedGrammar;
       } else {
         grammarSection.style.display = 'none';
       }
