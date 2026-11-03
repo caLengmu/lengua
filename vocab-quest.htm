@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VocabQuest - 單字探險島 (A2 Level)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti for celebratory particle effects -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card-flip {
+      perspective: 1000px;
+    }
+    .card-inner {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+      50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.8); }
+    }
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+  <!-- 頂部狀態列 (Top Navigation & Stats) -->
+  <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/60 sticky top-0 z-30 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white font-extrabold text-lg">
+          VQ
+        </div>
+        <div>
+          <h1 class="text-sm md:text-base font-bold text-white flex items-center gap-2">
+            VocabQuest <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-normal border border-indigo-500/30">A2 冒險</span>
+          </h1>
+          <p id="stage-indicator" class="text-xs text-slate-400">關卡 1 / 4：單字卡片探索</p>
+        </div>
+      </div>
+
+      <!-- 積分與連勝 -->
+      <div class="flex items-center gap-3 text-sm">
+        <div class="flex items-center gap-1.5 bg-slate-700/60 px-3 py-1.5 rounded-full border border-slate-600/50">
+          <i class="fa-solid fa-fire text-amber-400"></i>
+          <span class="text-xs font-bold text-amber-200" id="streak-counter">0 連勝</span>
+        </div>
+        <div class="flex items-center gap-1.5 bg-slate-700/60 px-3 py-1.5 rounded-full border border-slate-600/50">
+          <i class="fa-solid fa-gem text-indigo-400"></i>
+          <span class="text-xs font-bold text-indigo-200" id="score-counter">0 分</span>
+        </div>
+        <button id="sound-toggle-btn" class="text-slate-400 hover:text-white p-1.5 rounded-lg transition" title="開關音效">
+          <i class="fa-solid fa-volume-high text-base"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 關卡進度條 -->
+    <div class="max-w-4xl mx-auto mt-2.5">
+      <div class="w-full bg-slate-700/70 h-2 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full w-1/4 transition-all duration-500"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主遊戲舞台 (Main Game Container) -->
+  <main class="max-w-4xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
+
+    <!-- STAGE 1: 單字卡片探索 (Flashcards) -->
+    <section id="stage-1" class="space-y-6">
+      <div class="text-center space-y-1">
+        <h2 class="text-xl md:text-2xl font-bold text-white flex items-center justify-center gap-2">
+          <i class="fa-solid fa-map-location-dot text-indigo-400"></i> 第一關：單字探索 (Flashcards)
+        </h2>
+        <p class="text-sm text-slate-400">點擊卡片翻面看例句與中文，點擊喇叭聽真人發音！看完全部 12 個即可過關。</p>
+      </div>
+
+      <div class="card-flip max-w-md mx-auto h-80 cursor-pointer" id="flashcard-container" onclick="flipCurrentCard()">
+        <div id="flashcard-inner" class="card-inner relative w-full h-full">
+          <!-- 正面 -->
+          <div class="card-front absolute inset-0 bg-slate-800 border-2 border-indigo-500/50 rounded-2xl p-5 flex flex-col justify-between items-center text-center shadow-2xl">
+            <div class="w-full flex justify-between items-center text-xs text-slate-400">
+              <span id="fc-index" class="bg-slate-700/50 px-2 py-0.5 rounded">1 / 12</span>
+              <button onclick="event.stopPropagation(); speakWord()" class="p-2 text-indigo-400 hover:text-indigo-300 rounded-full hover:bg-slate-700/50 text-base" title="發音">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            
+            <!-- 插圖展示區 (Illustration) -->
+            <div id="fc-illustration" class="w-24 h-24 my-auto flex items-center justify-center p-2 rounded-2xl bg-slate-900/50 border border-slate-700/50 shadow-inner">
+              <!-- 動態載入 SVG 插圖 -->
+            </div>
+
+            <div>
+              <h3 id="fc-word" class="text-2xl md:text-3xl font-extrabold text-white tracking-wide mb-1">companion</h3>
+              <p id="fc-pos" class="text-xs md:text-sm text-indigo-400 italic mb-1.5">noun [C]</p>
+              <div class="inline-block bg-slate-700/40 text-slate-300 px-3 py-0.5 rounded-full text-xs border border-slate-600/40">
+                點擊翻面看釋義與例句
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500">Tap to flip <i class="fa-solid fa-rotate ml-1"></i></p>
+          </div>
+
+          <!-- 背面 -->
+          <div class="card-back absolute inset-0 bg-gradient-to-b from-slate-800 to-indigo-950/60 border-2 border-indigo-400/80 rounded-2xl p-6 flex flex-col justify-between items-center text-center shadow-2xl">
+            <div class="w-full flex justify-between items-center text-xs text-slate-400">
+              <span class="text-indigo-300 font-semibold" id="fc-back-word">companion</span>
+              <button onclick="event.stopPropagation(); speakWord()" class="p-2 text-indigo-400 hover:text-indigo-300 rounded-full hover:bg-slate-700/50 text-base" title="發音">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <span class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-2 py-0.5 rounded">中文釋義</span>
+                <p id="fc-meaning" class="text-xl font-bold text-emerald-400 mt-1">伴侶、同伴</p>
+              </div>
+              <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/60 text-left">
+                <p class="text-xs text-slate-400 mb-1">A2 實用例句：</p>
+                <p id="fc-sentence" class="text-sm font-medium text-slate-200">A dog can be a wonderful companion for older people.</p>
+                <p id="fc-sentence-zh" class="text-xs text-slate-400 mt-1">狗可以成為長輩極佳的同伴。</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500">Tap to flip back <i class="fa-solid fa-rotate ml-1"></i></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 控制按鈕 -->
+      <div class="flex justify-center items-center gap-4 max-w-md mx-auto">
+        <button id="fc-prev-btn" onclick="prevCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold border border-slate-700 flex items-center gap-2 transition disabled:opacity-30 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-chevron-left"></i> 上一個
+        </button>
+        <button id="fc-next-btn" onclick="nextCard()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition">
+          下一個 <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- STAGE 2: 點擊連連看 / 配對遊戲 (Matching Pairs) -->
+    <section id="stage-2" class="space-y-6 hidden">
+      <div class="text-center space-y-1">
+        <h2 class="text-xl md:text-2xl font-bold text-white flex items-center justify-center gap-2">
+          <i class="fa-solid fa-puzzle-piece text-amber-400"></i> 第二關：記憶配對 (Pair Matching)
+        </h2>
+        <p class="text-sm text-slate-400">點選左側英文單字，再點選右側正確的中文定義完成配對！</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 md:gap-4 max-w-xl mx-auto" id="match-board">
+        <!-- JS 動態生成配對卡 -->
+      </div>
+    </section>
+
+    <!-- STAGE 3: 情境克漏字選詞 (Sentence Fill-in) -->
+    <section id="stage-3" class="space-y-6 hidden">
+      <div class="text-center space-y-1">
+        <h2 class="text-xl md:text-2xl font-bold text-white flex items-center justify-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 第三關：情境挑戰 (Context Fill-in)
+        </h2>
+        <p class="text-sm text-slate-400">根據日常句子語境，選出最恰當的單字填入空格中。</p>
+      </div>
+
+      <div class="max-w-xl mx-auto bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 shadow-xl space-y-6">
+        <div class="flex justify-between items-center text-xs text-slate-400">
+          <span id="quiz-progress-text">題號：1 / 6</span>
+          <span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">情境題</span>
+        </div>
+
+        <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700/70 text-center">
+          <p id="quiz-question" class="text-lg md:text-xl font-semibold text-slate-100 leading-relaxed">
+            Loading question...
+          </p>
+          <p id="quiz-question-hint" class="text-xs text-slate-400 mt-2 font-light">
+            (中文提示將在此處顯示)
+          </p>
+        </div>
+
+        <!-- 4 個選項按鈕 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="quiz-options-container">
+          <!-- 動態載入選項 -->
+        </div>
+
+        <div id="quiz-feedback" class="text-center text-sm font-semibold min-h-[24px]"></div>
+      </div>
+    </section>
+
+    <!-- STAGE 4: 大魔王計時試煉 (Word Boss Speed Challenge) -->
+    <section id="stage-4" class="space-y-6 hidden">
+      <div class="text-center space-y-1">
+        <h2 class="text-xl md:text-2xl font-bold text-rose-400 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-dragon"></i> 最終決戰：魔王計時考驗
+        </h2>
+        <p class="text-sm text-slate-400">每題限時 10 秒！考驗你的即時反應與理解力，通關即解鎖大師勳章！</p>
+      </div>
+
+      <div class="max-w-md mx-auto bg-slate-800 border-2 border-rose-500/40 rounded-2xl p-6 shadow-2xl space-y-5 relative overflow-hidden">
+        <!-- 倒數時間條 -->
+        <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
+          <div id="timer-bar" class="bg-rose-500 h-full w-full transition-all duration-1000 linear"></div>
+        </div>
+
+        <div class="flex justify-between items-center text-sm">
+          <span id="boss-round" class="text-slate-400 text-xs">魔王第 1 / 6 回合</span>
+          <span id="boss-timer" class="font-bold text-rose-400 text-base flex items-center gap-1">
+            <i class="fa-regular fa-clock"></i> 10s
+          </span>
+        </div>
+
+        <div class="text-center py-4 bg-slate-900/70 rounded-xl border border-slate-700">
+          <span class="text-xs text-slate-400 block mb-1">請找出正確對應的單字：</span>
+          <h3 id="boss-prompt" class="text-xl font-bold text-amber-300">"做出有創新且新穎的東西"</h3>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3" id="boss-options">
+          <!-- 動態選項 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 終點結算與獎牌畫面 (Victory & Recap Modal) -->
+    <section id="stage-summary" class="space-y-6 hidden max-w-2xl mx-auto text-center py-4">
+      <div class="inline-block p-4 rounded-3xl bg-indigo-500/10 border border-indigo-500/30 mb-2">
+        <i class="fa-solid fa-trophy text-5xl text-amber-400 animate-bounce"></i>
+      </div>
+      <h2 class="text-3xl font-extrabold text-white">恭喜完成單字探險！</h2>
+      <p class="text-slate-300 text-sm max-w-md mx-auto">
+        你已經徹底掌握了 12 個關鍵 A2 單字，成功建立了堅實的字彙基礎！
+      </p>
+
+      <!-- 成績卡片 -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left">
+        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+          <p class="text-xs text-slate-400">最終得分</p>
+          <p id="final-score" class="text-2xl font-extrabold text-indigo-400 mt-1">0</p>
+        </div>
+        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+          <p class="text-xs text-slate-400">最高連勝</p>
+          <p id="final-streak" class="text-2xl font-extrabold text-amber-400 mt-1">0</p>
+        </div>
+        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 col-span-2 sm:col-span-1">
+          <p class="text-xs text-slate-400">榮獲勳章</p>
+          <p class="text-base font-bold text-emerald-400 mt-1 flex items-center gap-1">
+            <i class="fa-solid fa-medal"></i> A2 單字大師
+          </p>
+        </div>
+      </div>
+
+      <!-- 12 單字複習清單 (Recap Accordion / List) -->
+      <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-5 text-left">
+        <h3 class="font-bold text-white mb-3 text-sm flex items-center justify-between">
+          <span><i class="fa-solid fa-book-open text-indigo-400 mr-2"></i>本次闖關 12 單字速記表</span>
+          <span class="text-xs text-slate-400 font-normal">點擊喇叭可複習發音</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto pr-1 text-xs" id="recap-list">
+          <!-- 動態載入單字清單 -->
+        </div>
+      </div>
+
+      <div class="pt-4 flex justify-center gap-4">
+        <button onclick="restartGame()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition">
+          <i class="fa-solid fa-arrow-rotate-right"></i> 再玩一次
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部版權 -->
+  <footer class="py-3 text-center text-xs text-slate-500 border-t border-slate-800">
+    VocabQuest A2 英文單字互動系統 &bull; 掌握生活高頻詞彙
+  </footer>
+
+  <script>
+    /* =========================================================
+       1. 單字資料庫 (A2 Level Vocabulary Dataset)
+       ========================================================= */
+    const VOCAB_DATA = [
+      {
+        word: "companion",
+        pos: "noun [C]",
+        zh: "同伴、伴侶",
+        definition: "A person or animal that travels or lives with you.",
+        sentence: "The friendly dog was a loyal companion to the old man.",
+        sentenceZh: "這隻友善的狗是老先生忠實的同伴。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Person & Dog (Companions) -->
+          <circle cx="38" cy="32" r="12" fill="#FCD34D"/>
+          <path d="M22 68 C22 48 54 48 54 68 Z" fill="#6366F1"/>
+          <!-- Dog -->
+          <ellipse cx="68" cy="62" rx="14" ry="11" fill="#F97316"/>
+          <circle cx="78" cy="50" r="9" fill="#EA580C"/>
+          <ellipse cx="73" cy="44" rx="3" ry="7" fill="#C2410C" transform="rotate(-15 73 44)"/>
+          <ellipse cx="84" cy="52" rx="2" ry="2" fill="#1E293B"/>
+          <path d="M56 60 Q50 55 52 48" stroke="#F97316" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- Heart indicator -->
+          <path d="M49 22 C49 17 55 15 57 19 C59 15 65 17 65 22 C65 27 57 32 57 32 C57 32 49 27 49 22 Z" fill="#F43F5E"/>
+        </svg>`
+      },
+      {
+        word: "blend",
+        pos: "verb",
+        zh: "混合、融入",
+        definition: "To mix two or more things together smoothly.",
+        sentence: "Blend the milk and bananas together to make a smoothie.",
+        sentenceZh: "把牛奶與香蕉混合在一起做成果昔。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Blender with swirling liquids -->
+          <rect x="35" y="72" width="30" height="14" rx="4" fill="#64748B"/>
+          <circle cx="50" cy="79" r="3" fill="#38BDF8"/>
+          <!-- Glass Jar -->
+          <path d="M32 24 L68 24 L62 68 L38 68 Z" fill="#38BDF8" fill-opacity="0.25" stroke="#38BDF8" stroke-width="3"/>
+          <rect x="30" y="18" width="40" height="7" rx="3" fill="#0284C7"/>
+          <!-- Swirling fluids -->
+          <path d="M40 58 Q50 48 60 58 Q50 68 40 58" fill="#EC4899"/>
+          <circle cx="45" cy="42" r="5" fill="#FBBF24"/>
+          <circle cx="56" cy="36" r="4" fill="#34D399"/>
+          <path d="M45 48 Q55 35 48 28" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>`
+      },
+      {
+        word: "accommodate",
+        pos: "verb",
+        zh: "容納、提供住宿",
+        definition: "To provide a place to stay or have enough space for.",
+        sentence: "This small hotel can accommodate up to fifty guests.",
+        sentenceZh: "這家小旅館最多能容納五十位房客。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Cozy welcoming hotel/house -->
+          <path d="M18 48 L50 20 L82 48" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <rect x="25" y="44" width="50" height="42" rx="4" fill="#1E293B" stroke="#64748B" stroke-width="2"/>
+          <!-- Open Warm Door -->
+          <rect x="42" y="58" width="16" height="28" fill="#F59E0B"/>
+          <rect x="44" y="60" width="12" height="24" fill="#FEF08A"/>
+          <!-- Bed icon inside / Windows -->
+          <rect x="30" y="50" width="10" height="10" rx="2" fill="#38BDF8"/>
+          <rect x="60" y="50" width="10" height="10" rx="2" fill="#38BDF8"/>
+          <circle cx="50" cy="33" r="4" fill="#FCD34D"/>
+        </svg>`
+      },
+      {
+        word: "emerge",
+        pos: "verb",
+        zh: "出現、浮現",
+        definition: "To appear or come out from somewhere.",
+        sentence: "The sun began to emerge from behind the dark clouds.",
+        sentenceZh: "太陽開始從烏雲後方浮現出來。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Sun emerging from cloud -->
+          <circle cx="58" cy="42" r="20" fill="#FBBF24"/>
+          <!-- Sun rays -->
+          <path d="M58 14 L58 8 M78 22 L83 17 M86 42 L92 42" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Dark Cloud in front -->
+          <path d="M22 72 L66 72 C74 72 78 66 76 60 C76 53 70 48 62 48 C60 41 52 38 45 42 C40 37 30 38 27 45 C20 46 16 52 18 59 C16 66 20 72 22 72 Z" fill="#64748B"/>
+          <path d="M48 66 L55 58 L62 66" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>`
+      },
+      {
+        word: "reject",
+        pos: "verb",
+        zh: "拒絕、駁回",
+        definition: "To say no to an offer, idea, or request.",
+        sentence: "He had to reject the job offer because the commute was too far.",
+        sentenceZh: "他不得不拒絕那份工作邀約，因為通勤實在太遠了。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Document with big glowing red X (Rejected) -->
+          <rect x="25" y="18" width="50" height="64" rx="6" fill="#334155" stroke="#64748B" stroke-width="3"/>
+          <line x1="34" y1="32" x2="52" y2="32" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+          <line x1="34" y1="44" x2="66" y2="44" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+          <line x1="34" y1="56" x2="60" y2="56" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+          <!-- Red stamp circle & cross -->
+          <circle cx="50" cy="50" r="24" fill="#BE123C" fill-opacity="0.3" stroke="#F43F5E" stroke-width="4"/>
+          <line x1="37" y1="37" x2="63" y2="63" stroke="#F43F5E" stroke-width="5" stroke-linecap="round"/>
+          <line x1="63" y1="37" x2="37" y2="63" stroke="#F43F5E" stroke-width="5" stroke-linecap="round"/>
+        </svg>`
+      },
+      {
+        word: "assume",
+        pos: "verb",
+        zh: "以為、假定",
+        definition: "To think that something is true without proof.",
+        sentence: "Don't assume he is angry; maybe he is just tired.",
+        sentenceZh: "不要以為他在生氣，他也許只是累了。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Thinking head with glowing question mark -->
+          <circle cx="42" cy="54" r="18" fill="#FCD34D"/>
+          <path d="M24 86 C24 70 60 70 60 86 Z" fill="#6366F1"/>
+          <!-- Thought bubble -->
+          <circle cx="62" cy="38" r="4" fill="#94A3B8"/>
+          <circle cx="70" cy="30" r="6" fill="#94A3B8"/>
+          <rect x="58" y="10" width="30" height="24" rx="8" fill="#818CF8"/>
+          <text x="73" y="27" font-family="sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF" text-anchor="middle">?</text>
+        </svg>`
+      },
+      {
+        word: "civil",
+        pos: "adj.",
+        zh: "公民的、有禮貌的",
+        definition: "Related to citizens, or polite and well-mannered.",
+        sentence: "Even when people disagree, they should remain civil.",
+        sentenceZh: "即使人們意見不合，仍應保持有禮與客氣。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Polite Handshake agreement -->
+          <circle cx="50" cy="50" r="38" fill="#0F172A" stroke="#38BDF8" stroke-width="2.5"/>
+          <!-- Left Arm & Hand -->
+          <path d="M22 62 L38 46 L48 54 L32 68 Z" fill="#3B82F6"/>
+          <path d="M38 46 L54 54 L48 60 L36 52 Z" fill="#FCD34D"/>
+          <!-- Right Arm & Hand -->
+          <path d="M78 62 L62 46 L52 54 L68 68 Z" fill="#10B981"/>
+          <path d="M62 46 L46 54 L52 60 L64 52 Z" fill="#FCD34D"/>
+          <!-- Sparkles -->
+          <path d="M50 26 L52 32 L58 34 L52 36 L50 42 L48 36 L42 34 L48 32 Z" fill="#FBBF24"/>
+        </svg>`
+      },
+      {
+        word: "separate",
+        pos: "adj. / verb",
+        zh: "分開的、隔開",
+        definition: "Not joined together; kept apart.",
+        sentence: "The two brothers sleep in separate rooms.",
+        sentenceZh: "這對兄弟睡在各自獨立分開的房間。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Dividing line with two arrows pointing away -->
+          <line x1="50" y1="18" x2="50" y2="82" stroke="#64748B" stroke-width="3" stroke-dasharray="5 5"/>
+          <!-- Left box & Arrow -->
+          <rect x="15" y="36" width="24" height="28" rx="6" fill="#3B82F6"/>
+          <path d="M20 50 L10 50 M14 45 L9 50 L14 55" stroke="#60A5FA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- Right box & Arrow -->
+          <rect x="61" y="36" width="24" height="28" rx="6" fill="#EC4899"/>
+          <path d="M80 50 L90 50 M86 45 L91 50 L86 55" stroke="#F472B6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>`
+      },
+      {
+        word: "innovative",
+        pos: "adj.",
+        zh: "創新的、新穎的",
+        definition: "Using new ideas and creative methods.",
+        sentence: "The company designed an innovative electric bicycle.",
+        sentenceZh: "這家公司設計了一款創新實用的電動自行車。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Glowing Idea lightbulb with gear inside -->
+          <path d="M35 45 C35 32 42 22 50 22 C58 22 65 32 65 45 C65 52 60 58 58 64 L42 64 C40 58 35 52 35 45 Z" fill="#FBBF24" stroke="#F59E0B" stroke-width="3"/>
+          <rect x="42" y="66" width="16" height="5" rx="2" fill="#94A3B8"/>
+          <rect x="45" y="73" width="10" height="4" rx="2" fill="#64748B"/>
+          <!-- Inner Gear icon -->
+          <circle cx="50" cy="44" r="6" fill="#D97706"/>
+          <!-- Light Rays -->
+          <line x1="50" y1="12" x2="50" y2="6" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="24" y1="26" x2="19" y2="21" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="76" y1="26" x2="81" y2="21" stroke="#FBBF24" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>`
+      },
+      {
+        word: "creature",
+        pos: "noun [C]",
+        zh: "生物、動物",
+        definition: "Any living thing that can move, especially an animal.",
+        sentence: "Deep ocean creatures often look very strange.",
+        sentenceZh: "深海生物的外表常常非常奇特。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Cute friendly alien creature -->
+          <rect x="25" y="32" width="50" height="46" rx="24" fill="#A855F7"/>
+          <!-- Big Eye -->
+          <circle cx="50" cy="46" r="14" fill="#FFFFFF"/>
+          <circle cx="52" cy="46" r="7" fill="#1E1B4B"/>
+          <circle cx="54" cy="43" r="2.5" fill="#FFFFFF"/>
+          <!-- Cute Horns/Antennae -->
+          <circle cx="34" cy="20" r="5" fill="#C084FC"/>
+          <path d="M34 25 L38 34" stroke="#C084FC" stroke-width="3"/>
+          <circle cx="66" cy="20" r="5" fill="#C084FC"/>
+          <path d="M66 25 L62 34" stroke="#C084FC" stroke-width="3"/>
+          <!-- Happy mouth -->
+          <path d="M43 65 Q50 71 57 65" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <!-- Feet -->
+          <ellipse cx="36" cy="80" rx="7" ry="4" fill="#9333EA"/>
+          <ellipse cx="64" cy="80" rx="7" ry="4" fill="#9333EA"/>
+        </svg>`
+      },
+      {
+        word: "reliable",
+        pos: "adj.",
+        zh: "可靠的、值得信賴的",
+        definition: "Able to be trusted or believed; dependable.",
+        sentence: "My old car is very reliable and never breaks down.",
+        sentenceZh: "我的老車非常可靠，從來不拋錨故障。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Sturdy checkmark shield -->
+          <path d="M50 16 L76 26 C76 56 50 78 50 84 C50 78 24 56 24 26 Z" fill="#10B981" stroke="#059669" stroke-width="3"/>
+          <!-- Inner checkmark -->
+          <path d="M38 48 L46 56 L64 36" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>`
+      },
+      {
+        word: "practical",
+        pos: "adj.",
+        zh: "實用的、講求實際的",
+        definition: "Useful, realistic, and suitable for everyday life.",
+        sentence: "A warm waterproof jacket is very practical in rainy winter.",
+        sentenceZh: "在多雨的冬天，一件保暖防潑水的外套非常實用。",
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <!-- Useful tools: Wrench & Hammer -->
+          <circle cx="50" cy="50" r="38" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+          <!-- Wrench -->
+          <line x1="28" y1="72" x2="68" y2="32" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="70" cy="30" r="9" fill="none" stroke="#94A3B8" stroke-width="5"/>
+          <!-- Hammer -->
+          <line x1="72" y1="72" x2="36" y2="36" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+          <rect x="24" y="24" width="22" height="12" rx="2" fill="#E2E8F0" transform="rotate(-45 35 30)"/>
+        </svg>`
+      }
+    ];
+
+    /* =========================================================
+       2. 遊戲狀態 (State Management)
+       ========================================================= */
+    let currentStage = 1;
+    let score = 0;
+    let streak = 0;
+    let maxStreak = 0;
+    let soundEnabled = true;
+
+    // Stage 1 State
+    let cardIdx = 0;
+    let isFlipped = false;
+    let viewedCards = new Set([0]);
+
+    // Stage 2 State (Matching)
+    let selectedLeft = null;
+    let selectedRight = null;
+    let matchedCount = 0;
+    let stage2Pairs = [];
+
+    // Stage 3 State (Fill in blank)
+    let quizIdx = 0;
+    let quizList = [];
+
+    // Stage 4 State (Boss battle)
+    let bossIdx = 0;
+    let bossTimer = null;
+    let timeLeft = 10;
+    let bossList = [];
+
+    /* =========================================================
+       3. 簡易 Web Audio API 聲效合成器 (無外部音檔依賴)
+       ========================================================= */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(type) {
+      if (!soundEnabled) return;
+      try {
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'success') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'error') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(110, now + 0.2);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'celebrate') {
+          osc.type = 'sine';
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0.15, now + i * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.25);
+            o.start(now + i * 0.1);
+            o.stop(now + i * 0.1 + 0.25);
+          });
+        }
+      } catch (e) {
+        // AudioContext disabled or error
+      }
+    }
+
+    // 發音朗讀 (Web Speech Synthesis)
+    function speakWord(customText) {
+      if (!('speechSynthesis' in window)) return;
+      const textToSpeak = customText || VOCAB_DATA[cardIdx].word;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85; // A2 速度稍放慢更清晰
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /* =========================================================
+       4. 關卡進度與統計更新 (Progress & Score)
+       ========================================================= */
+    function addScore(points) {
+      score += points;
+      streak++;
+      if (streak > maxStreak) maxStreak = streak;
+      updateUIStats();
+    }
+
+    function resetStreak() {
+      streak = 0;
+      updateUIStats();
+    }
+
+    function updateUIStats() {
+      document.getElementById('score-counter').textContent = `${score} 分`;
+      document.getElementById('streak-counter').textContent = `${streak} 連勝`;
+    }
+
+    function updateStageProgress(stageNum) {
+      currentStage = stageNum;
+      const progressPercent = (stageNum / 4) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+      const stageNames = [
+        "第一關：單字卡片探索",
+        "第二關：中英配對連線",
+        "第三關：情境克漏字選詞",
+        "第四關：魔王限時決鬥"
+      ];
+      document.getElementById('stage-indicator').textContent = `關卡 ${stageNum} / 4：${stageNames[stageNum - 1]}`;
+    }
+
+    /* =========================================================
+       STAGE 1: 單字卡片探索 (Flashcards Logic)
+       ========================================================= */
+    function renderFlashcard() {
+      const data = VOCAB_DATA[cardIdx];
+      const inner = document.getElementById('flashcard-inner');
+      inner.classList.remove('flipped');
+      isFlipped = false;
+
+      // Update Front
+      document.getElementById('fc-index').textContent = `${cardIdx + 1} / ${VOCAB_DATA.length}`;
+      document.getElementById('fc-word').textContent = data.word;
+      document.getElementById('fc-pos').textContent = data.pos;
+      document.getElementById('fc-illustration').innerHTML = data.svg;
+
+      // Update Back
+      document.getElementById('fc-back-word').textContent = data.word;
+      document.getElementById('fc-meaning').textContent = data.zh;
+      document.getElementById('fc-sentence').textContent = data.sentence;
+      document.getElementById('fc-sentence-zh').textContent = data.sentenceZh;
+
+      document.getElementById('fc-prev-btn').disabled = cardIdx === 0;
+
+      // 更新下一頁按鈕文字
+      const nextBtn = document.getElementById('fc-next-btn');
+      if (cardIdx === VOCAB_DATA.length - 1) {
+        nextBtn.innerHTML = '進入下一關 <i class="fa-solid fa-flag-checkered"></i>';
+        nextBtn.classList.replace('bg-indigo-600', 'bg-emerald-600');
+        nextBtn.classList.replace('hover:bg-indigo-500', 'hover:bg-emerald-500');
+      } else {
+        nextBtn.innerHTML = '下一個 <i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.classList.replace('bg-emerald-600', 'bg-indigo-600');
+        nextBtn.classList.replace('hover:bg-emerald-500', 'hover:bg-indigo-500');
+      }
+    }
+
+    function flipCurrentCard() {
+      playTone('click');
+      const inner = document.getElementById('flashcard-inner');
+      isFlipped = !isFlipped;
+      if (isFlipped) {
+        inner.classList.add('flipped');
+      } else {
+        inner.classList.remove('flipped');
+      }
+    }
+
+    function nextCard() {
+      playTone('click');
+      if (cardIdx < VOCAB_DATA.length - 1) {
+        cardIdx++;
+        viewedCards.add(cardIdx);
+        renderFlashcard();
+      } else {
+        // 完成 Stage 1
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+        playTone('success');
+        addScore(100);
+        goToStage2();
+      }
+    }
+
+    function prevCard() {
+      if (cardIdx > 0) {
+        playTone('click');
+        cardIdx--;
+        renderFlashcard();
+      }
+    }
+
+    /* =========================================================
+       STAGE 2: 中英配對 (Matching Pairs Logic)
+       ========================================================= */
+    function goToStage2() {
+      document.getElementById('stage-1').classList.add('hidden');
+      document.getElementById('stage-2').classList.remove('hidden');
+      updateStageProgress(2);
+
+      // 選取 6 個單字做配對
+      const shuffled = [...VOCAB_DATA].sort(() => 0.5 - Math.random());
+      stage2Pairs = shuffled.slice(0, 6);
+      matchedCount = 0;
+      selectedLeft = null;
+      selectedRight = null;
+
+      const leftItems = stage2Pairs.map((item, idx) => ({ type: 'en', id: item.word, text: item.word }));
+      const rightItems = stage2Pairs.map((item, idx) => ({ type: 'zh', id: item.word, text: item.zh }));
+
+      // 打散右側
+      rightItems.sort(() => 0.5 - Math.random());
+
+      const board = document.getElementById('match-board');
+      board.innerHTML = '';
+
+      // 左側欄
+      const leftCol = document.createElement('div');
+      leftCol.className = 'flex flex-col gap-2.5';
+      leftItems.forEach(item => {
+        const btn = document.createElement('button');
+        btn.id = `pair-en-${item.id}`;
+        btn.className = 'w-full py-3 px-3.5 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-sm font-bold text-slate-200 transition text-left flex items-center justify-between shadow-sm';
+        btn.innerHTML = `<span>${item.text}</span><i class="fa-solid fa-volume-high text-xs text-slate-400 hover:text-white" onclick="event.stopPropagation(); speakWord('${item.text}')"></i>`;
+        btn.onclick = () => selectPairItem('en', item.id, btn);
+        leftCol.appendChild(btn);
+      });
+
+      // 右側欄
+      const rightCol = document.createElement('div');
+      rightCol.className = 'flex flex-col gap-2.5';
+      rightItems.forEach(item => {
+        const btn = document.createElement('button');
+        btn.id = `pair-zh-${item.id}`;
+        btn.className = 'w-full py-3 px-3.5 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-sm font-semibold text-slate-200 transition text-center shadow-sm';
+        btn.textContent = item.text;
+        btn.onclick = () => selectPairItem('zh', item.id, btn);
+        rightCol.appendChild(btn);
+      });
+
+      board.appendChild(leftCol);
+      board.appendChild(rightCol);
+    }
+
+    function selectPairItem(type, id, btnElement) {
+      playTone('click');
+
+      if (type === 'en') {
+        if (selectedLeft) {
+          selectedLeft.element.classList.remove('ring-2', 'ring-indigo-400', 'bg-indigo-900/40');
+        }
+        selectedLeft = { id, element: btnElement };
+        btnElement.classList.add('ring-2', 'ring-indigo-400', 'bg-indigo-900/40');
+      } else {
+        if (selectedRight) {
+          selectedRight.element.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-900/40');
+        }
+        selectedRight = { id, element: btnElement };
+        btnElement.classList.add('ring-2', 'ring-amber-400', 'bg-amber-900/40');
+      }
+
+      // 如果兩邊都選取，驗證是否配對成功
+      if (selectedLeft && selectedRight) {
+        if (selectedLeft.id === selectedRight.id) {
+          // 配對成功！
+          playTone('success');
+          addScore(30);
+
+          selectedLeft.element.className = 'w-full py-3 px-3.5 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-sm font-bold text-emerald-200 transition opacity-60 cursor-not-allowed flex items-center justify-between';
+          selectedLeft.element.disabled = true;
+
+          selectedRight.element.className = 'w-full py-3 px-3.5 bg-emerald-900/50 border border-emerald-500/50 rounded-xl text-sm font-bold text-emerald-200 transition opacity-60 cursor-not-allowed text-center';
+          selectedRight.element.disabled = true;
+
+          matchedCount++;
+          selectedLeft = null;
+          selectedRight = null;
+
+          if (matchedCount === stage2Pairs.length) {
+            setTimeout(() => {
+              confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+              addScore(100);
+              goToStage3();
+            }, 600);
+          }
+        } else {
+          // 配對錯誤
+          playTone('error');
+          resetStreak();
+          const elL = selectedLeft.element;
+          const elR = selectedRight.element;
+          elL.classList.add('shake', 'border-rose-500');
+          elR.classList.add('shake', 'border-rose-500');
+
+          setTimeout(() => {
+            elL.classList.remove('ring-2', 'ring-indigo-400', 'bg-indigo-900/40', 'shake', 'border-rose-500');
+            elR.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-900/40', 'shake', 'border-rose-500');
+            selectedLeft = null;
+            selectedRight = null;
+          }, 500);
+        }
+      }
+    }
+
+    /* =========================================================
+       STAGE 3: 情境克漏字選詞 (Fill in Blank)
+       ========================================================= */
+    const STAGE3_QUESTIONS = [
+      {
+        question: "Don't _____ that everyone likes the same music. Always ask their opinion.",
+        hint: "提示：不要『未經證實就認定/假定』大家喜歡相同的音樂。",
+        answer: "assume",
+        distractors: ["blend", "reject", "emerge"]
+      },
+      {
+        question: "This large meeting room can easily _____ up to one hundred people.",
+        hint: "提示：這間大會議室能輕鬆『容納/提供空間給』一百人。",
+        answer: "accommodate",
+        distractors: ["companion", "civil", "practical"]
+      },
+      {
+        question: "It is good to keep your work email and personal email _____ .",
+        hint: "提示：將工作信箱與私人信箱保持『分開的/獨立的』是好習慣。",
+        answer: "separate",
+        distractors: ["reliable", "blend", "creature"]
+      },
+      {
+        question: "The scientist proposed an _____ idea that saved energy and money.",
+        hint: "提示：科學家提出了一個『新穎創新的』想法，既省電又省錢。",
+        answer: "innovative",
+        distractors: ["civil", "separate", "assume"]
+      },
+      {
+        question: "A true friend is always _____ and helps you during difficult times.",
+        hint: "提示：真正的朋友總是很『值得信賴/可靠的』，在逆境中會伸出援手。",
+        answer: "reliable",
+        distractors: ["reject", "creature", "blend"]
+      },
+      {
+        question: "Buying durable shoes for walking is very _____ for travelers.",
+        hint: "提示：買雙耐走的鞋子對旅人來說非常『實用』。",
+        answer: "practical",
+        distractors: ["accommodate", "emerge", "assume"]
+      }
+    ];
+
+    function goToStage3() {
+      document.getElementById('stage-2').classList.add('hidden');
+      document.getElementById('stage-3').classList.remove('hidden');
+      updateStageProgress(3);
+
+      quizIdx = 0;
+      quizList = [...STAGE3_QUESTIONS].sort(() => 0.5 - Math.random());
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const q = quizList[quizIdx];
+      document.getElementById('quiz-progress-text').textContent = `題號：${quizIdx + 1} / ${quizList.length}`;
+      document.getElementById('quiz-question').innerHTML = q.question.replace('_____', '<span class="text-amber-400 font-bold border-b-2 border-amber-400 px-3 py-0.5">_____</span>');
+      document.getElementById('quiz-question-hint').textContent = q.hint;
+      document.getElementById('quiz-feedback').textContent = '';
+
+      const options = [q.answer, ...q.distractors].sort(() => 0.5 - Math.random());
+      const container = document.getElementById('quiz-options-container');
+      container.innerHTML = '';
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full py-3.5 px-4 bg-slate-700/60 hover:bg-slate-700 border border-slate-600 rounded-xl text-base font-bold text-slate-100 transition shadow-sm hover:border-indigo-400 flex items-center justify-center gap-2';
+        btn.textContent = opt;
+        btn.onclick = () => handleQuizAnswer(opt, q.answer, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function handleQuizAnswer(chosen, correct, btn) {
+      const container = document.getElementById('quiz-options-container');
+      const allBtns = container.querySelectorAll('button');
+      allBtns.forEach(b => b.disabled = true);
+
+      const feedback = document.getElementById('quiz-feedback');
+
+      if (chosen === correct) {
+        playTone('success');
+        addScore(40);
+        btn.classList.add('bg-emerald-600', 'border-emerald-400', 'text-white');
+        feedback.className = 'text-center text-sm font-semibold text-emerald-400';
+        feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> 太棒了！回答正確！';
+      } else {
+        playTone('error');
+        resetStreak();
+        btn.classList.add('bg-rose-600', 'border-rose-400', 'text-white', 'shake');
+        feedback.className = 'text-center text-sm font-semibold text-rose-400';
+        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 答錯了！正確答案是：<strong>${correct}</strong>`;
+
+        allBtns.forEach(b => {
+          if (b.textContent === correct) {
+            b.classList.add('bg-emerald-700/80', 'border-emerald-400');
+          }
+        });
+      }
+
+      setTimeout(() => {
+        if (quizIdx < quizList.length - 1) {
+          quizIdx++;
+          renderQuizQuestion();
+        } else {
+          confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
+          addScore(150);
+          goToStage4();
+        }
+      }, 1200);
+    }
+
+    /* =========================================================
+       STAGE 4: 大魔王計時試煉 (Boss Battle)
+       ========================================================= */
+    const BOSS_QUESTIONS = [
+      {
+        prompt: "哪個單字意思是『拒絕、不接受』？",
+        answer: "reject",
+        distractors: ["emerge", "assume", "blend"]
+      },
+      {
+        prompt: "任何能移動的有生命『生物、動物』？",
+        answer: "creature",
+        distractors: ["companion", "civil", "reliable"]
+      },
+      {
+        prompt: "將兩種或多種食材『均勻混合』？",
+        answer: "blend",
+        distractors: ["separate", "reject", "accommodate"]
+      },
+      {
+        prompt: "從某處隱密處『浮現、出現』？",
+        answer: "emerge",
+        distractors: ["assume", "practical", "civil"]
+      },
+      {
+        prompt: "與公民有關，或待人『有禮貌的』？",
+        answer: "civil",
+        distractors: ["reliable", "innovative", "separate"]
+      },
+      {
+        prompt: "陪伴在身邊的『同伴、伴侶』？",
+        answer: "companion",
+        distractors: ["creature", "blend", "reject"]
+      }
+    ];
+
+    function goToStage4() {
+      document.getElementById('stage-3').classList.add('hidden');
+      document.getElementById('stage-4').classList.remove('hidden');
+      updateStageProgress(4);
+
+      bossIdx = 0;
+      bossList = [...BOSS_QUESTIONS].sort(() => 0.5 - Math.random());
+      renderBossQuestion();
+    }
+
+    function renderBossQuestion() {
+      clearInterval(bossTimer);
+      const q = bossList[bossIdx];
+      document.getElementById('boss-round').textContent = `魔王試煉：第 ${bossIdx + 1} / ${bossList.length} 題`;
+      document.getElementById('boss-prompt').textContent = `"${q.prompt}"`;
+
+      timeLeft = 10;
+      updateBossTimerDisplay();
+
+      const timerBar = document.getElementById('timer-bar');
+      timerBar.style.width = '100%';
+      timerBar.classList.remove('bg-amber-500');
+      timerBar.classList.add('bg-rose-500');
+
+      const options = [q.answer, ...q.distractors].sort(() => 0.5 - Math.random());
+      const container = document.getElementById('boss-options');
+      container.innerHTML = '';
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'py-3 px-3 bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-xl text-base font-bold text-slate-100 transition shadow hover:border-rose-400';
+        btn.textContent = opt;
+        btn.onclick = () => handleBossAnswer(opt, q.answer, btn);
+        container.appendChild(btn);
+      });
+
+      // 啟動倒數計時
+      bossTimer = setInterval(() => {
+        timeLeft--;
+        updateBossTimerDisplay();
+        const percent = (timeLeft / 10) * 100;
+        timerBar.style.width = `${percent}%`;
+
+        if (timeLeft <= 3) {
+          timerBar.classList.replace('bg-rose-500', 'bg-amber-500');
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(bossTimer);
+          handleBossTimeout(q.answer);
+        }
+      }, 1000);
+    }
+
+    function updateBossTimerDisplay() {
+      document.getElementById('boss-timer').innerHTML = `<i class="fa-regular fa-clock"></i> ${timeLeft}s`;
+    }
+
+    function handleBossTimeout(correct) {
+      playTone('error');
+      resetStreak();
+      const container = document.getElementById('boss-options');
+      const allBtns = container.querySelectorAll('button');
+      allBtns.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === correct) {
+          b.classList.add('bg-emerald-600', 'border-emerald-400');
+        }
+      });
+
+      setTimeout(proceedNextBossQuestion, 1200);
+    }
+
+    function handleBossAnswer(chosen, correct, btn) {
+      clearInterval(bossTimer);
+      const container = document.getElementById('boss-options');
+      const allBtns = container.querySelectorAll('button');
+      allBtns.forEach(b => b.disabled = true);
+
+      if (chosen === correct) {
+        playTone('success');
+        addScore(50 + timeLeft * 5); // 剩餘時間越多加分越多
+        btn.classList.add('bg-emerald-600', 'border-emerald-400');
+      } else {
+        playTone('error');
+        resetStreak();
+        btn.classList.add('bg-rose-600', 'border-rose-400', 'shake');
+        allBtns.forEach(b => {
+          if (b.textContent === correct) {
+            b.classList.add('bg-emerald-600', 'border-emerald-400');
+          }
+        });
+      }
+
+      setTimeout(proceedNextBossQuestion, 1000);
+    }
+
+    function proceedNextBossQuestion() {
+      if (bossIdx < bossList.length - 1) {
+        bossIdx++;
+        renderBossQuestion();
+      } else {
+        finishQuest();
+      }
+    }
+
+    /* =========================================================
+       通關結算 (Victory & Recap)
+       ========================================================= */
+    function finishQuest() {
+      clearInterval(bossTimer);
+      playTone('celebrate');
+
+      confetti({
+        particleCount: 120,
+        spread: 100,
+        origin: { y: 0.5 }
+      });
+
+      document.getElementById('stage-4').classList.add('hidden');
+      document.getElementById('stage-summary').classList.remove('hidden');
+
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('final-streak').textContent = `${maxStreak} 連勝`;
+
+      // 渲染複習清單
+      const recapList = document.getElementById('recap-list');
+      recapList.innerHTML = '';
+      VOCAB_DATA.forEach(v => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/60 flex items-center justify-between';
+        item.innerHTML = `
+          <div>
+            <span class="font-bold text-slate-200 text-sm">${v.word}</span>
+            <span class="text-indigo-400 ml-1.5">${v.zh}</span>
+            <p class="text-[11px] text-slate-400 mt-0.5">${v.pos}</p>
+          </div>
+          <button onclick="speakWord('${v.word}')" class="p-1.5 text-slate-400 hover:text-indigo-300 rounded hover:bg-slate-800" title="發音">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        `;
+        recapList.appendChild(item);
+      });
+    }
+
+    function restartGame() {
+      playTone('click');
+      score = 0;
+      streak = 0;
+      maxStreak = 0;
+      cardIdx = 0;
+      updateUIStats();
+
+      document.getElementById('stage-summary').classList.add('hidden');
+      document.getElementById('stage-1').classList.remove('hidden');
+      updateStageProgress(1);
+      renderFlashcard();
+    }
+
+    /* =========================================================
+       音效切換
+       ========================================================= */
+    document.getElementById('sound-toggle-btn').addEventListener('click', function() {
+      soundEnabled = !soundEnabled;
+      const icon = this.querySelector('i');
+      if (soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-base';
+        this.classList.remove('text-rose-400');
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-base';
+        this.classList.add('text-rose-400');
+      }
+    });
+
+    // 初始化啟動
+    window.onload = function() {
+      updateUIStats();
+      updateStageProgress(1);
+      renderFlashcard();
+    };
+  </script>
+</body>
+</html>
