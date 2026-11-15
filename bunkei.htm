@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>台灣英文學測｜A2 衝刺 Upper B1 核心句型互動學習系統</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Sentence Deconstruction Visual Tokens */
+    .pattern-hl {
+      background-color: #fef3c7;
+      color: #b45309;
+      font-weight: 700;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.375rem;
+      border-bottom: 2px solid #f59e0b;
+    }
+    .clause-bracket {
+      background-color: #e0e7ff;
+      color: #3730a3;
+      font-weight: 600;
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.375rem;
+      border: 1px dashed #6366f1;
+    }
+    .sv-main {
+      text-decoration: underline;
+      text-decoration-color: #10b981;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 5px;
+      font-weight: 600;
+    }
+    .trap-strike {
+      text-decoration: line-through;
+      color: #ef4444;
+      background: #fee2e2;
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.25rem;
+    }
+
+    /* Speaking Pulse Animation */
+    @keyframes soundWave {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1.1); }
+    }
+    .wave-bar {
+      display: inline-block;
+      width: 3px;
+      height: 12px;
+      margin: 0 1px;
+      background-color: currentColor;
+      border-radius: 2px;
+      animation: soundWave 0.7s infinite ease-in-out;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+
+    /* Hide scrollbar for mobile horizontal pills */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Toast Notification Container (No alert() used) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- Top Sticky Navigation & TTS Bar -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      
+      <!-- Left: Brand & Mobile Drawer Trigger -->
+      <div class="flex items-center gap-2.5">
+        <button id="mobile-menu-btn" onclick="toggleMobileDrawer()" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 active:bg-slate-200 transition" aria-label="開啟單元選單">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-600 to-indigo-800 flex items-center justify-center text-white font-bold shadow-sm">
+            B1+
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">學測英文核心句型系統</h1>
+              <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full">A2 ➔ Upper B1 衝刺</span>
+            </div>
+            <p class="text-xs text-slate-500 hidden md:block">點選例句喇叭即可聽發音・開啟「結構拆解」秒懂長難句主幹</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Main Mode Switcher Tabs -->
+      <nav class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 order-3 sm:order-2 w-full sm:w-auto justify-around sm:justify-start">
+        <button onclick="switchMainTab('learn')" id="tab-btn-learn" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 bg-white text-brand-700 shadow-sm">
+          <i class="fa-solid fa-book-open"></i>
+          <span>教材與拆解</span>
+        </button>
+        <button onclick="switchMainTab('quiz')" id="tab-btn-quiz" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>隨堂測驗</span>
+          <span id="quiz-count-badge" class="px-1.5 py-0.2 bg-brand-100 text-brand-700 rounded-full text-[11px]">10</span>
+        </button>
+        <button onclick="switchMainTab('expand')" id="tab-btn-expand" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900">
+          <i class="fa-solid fa-sliders"></i>
+          <span>擴充題庫</span>
+        </button>
+      </nav>
+
+      <!-- Right: TTS Controls & Global Deconstruction Toggle -->
+      <div class="flex items-center gap-2 order-2 sm:order-3">
+        <!-- Speed Control -->
+        <div class="flex items-center bg-slate-100 rounded-xl p-0.5 border border-slate-200" title="調整英語發音語速">
+          <button onclick="setSpeechRate(0.75)" id="rate-075" class="px-2 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition">0.75x</button>
+          <button onclick="setSpeechRate(0.9)" id="rate-09" class="px-2 py-1 text-xs font-semibold rounded-lg bg-white text-brand-700 shadow-sm transition">0.9x</button>
+          <button onclick="setSpeechRate(1.0)" id="rate-10" class="px-2 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition">1.0x</button>
+        </div>
+
+        <!-- Voice Selector (Desktop / Tablet) -->
+        <select id="voice-select" onchange="changeSelectedVoice(this.value)" class="hidden xl:block text-xs bg-slate-100 border border-slate-200 rounded-xl px-2.5 py-1.5 text-slate-700 max-w-[160px] truncate focus:outline-none focus:ring-2 focus:ring-brand-500" title="選擇英語發音語音">
+          <option value="">自動最佳英語發音</option>
+        </select>
+
+        <!-- Global Structure Breakdown Switch -->
+        <button onclick="toggleGlobalDeconstruct()" id="global-deconstruct-btn" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 bg-indigo-50 text-brand-700 border-indigo-200 hover:bg-indigo-100" title="一鍵切換所有例句的括號結構拆解">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span class="hidden md:inline">結構拆解：</span>
+          <span id="global-deconstruct-status">開啟</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Horizontal Module Quick Bar -->
+    <div id="mobile-module-pills" class="lg:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar px-3 py-2 bg-slate-50 border-t border-slate-200/80">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </header>
+
+  <!-- Mobile Slide-Over Drawer Navigation -->
+  <div id="mobile-drawer-backdrop" onclick="toggleMobileDrawer()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"></div>
+  <aside id="mobile-drawer" class="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-white z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col lg:hidden">
+    <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">B1+</span>
+        <span class="font-bold text-slate-800 text-sm">五大模組與單元導覽</span>
+      </div>
+      <button onclick="toggleMobileDrawer()" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    <!-- Mobile Voice Selector inside Drawer -->
+    <div class="px-4 py-2.5 bg-indigo-50/60 border-b border-indigo-100 flex items-center justify-between gap-2">
+      <span class="text-xs font-medium text-slate-600"><i class="fa-solid fa-volume-high text-brand-600 mr-1"></i>發音語音：</span>
+      <select id="voice-select-mobile" onchange="changeSelectedVoice(this.value)" class="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-700 flex-1 truncate">
+        <option value="">自動最佳英語發音</option>
+      </select>
+    </div>
+    <div id="mobile-sidebar-content" class="flex-1 overflow-y-auto p-3 space-y-4">
+      <!-- Populated by JS -->
+    </div>
+  </aside>
+
+  <!-- Main Workspace Container -->
+  <div class="flex-1 max-w-7xl w-full mx-auto flex gap-6 px-3 sm:px-6 py-4 sm:py-6">
+
+    <!-- Desktop Left Sidebar (Modules & Units + Progress) -->
+    <aside id="desktop-sidebar" class="hidden lg:flex flex-col w-72 shrink-0">
+      <div class="sticky top-20 bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden flex flex-col max-h-[calc(100vh-6.5rem)]">
+        <!-- Progress Header -->
+        <div class="p-4 bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-medium text-indigo-200">學測句型掌握進度</span>
+            <span id="progress-text" class="text-xs font-bold text-amber-300">0 / 17 單元</span>
+          </div>
+          <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <!-- Search Input -->
+          <div class="mt-3 relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input id="unit-search-input" type="text" oninput="handleSearch(this.value)" placeholder="搜尋句型、關代、分詞、單字..." class="w-full pl-8 pr-7 py-1.5 bg-slate-800/90 text-white placeholder-slate-400 text-xs rounded-xl border border-slate-700 focus:outline-none focus:border-indigo-400" />
+            <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Module Tree List -->
+        <div id="desktop-sidebar-content" class="flex-1 overflow-y-auto p-3 space-y-4">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 min-w-0">
+
+      <!-- TAB 1: LEARN (教材與句型拆解) -->
+      <section id="view-learn" class="space-y-6">
+        
+        <!-- Quick Legend & Strategy Banner -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-xs">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg mb-1.5">
+                <i class="fa-solid fa-compass"></i> 結構拆解標記圖例（閱讀測驗搶分視覺法）
+              </div>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900">先抓「主詞＋動詞主幹」，再把修飾語括號起來！</h2>
+            </div>
+            <!-- Level Filter Buttons -->
+            <div class="flex items-center gap-1.5 self-start md:self-auto bg-slate-100 p-1 rounded-xl border border-slate-200">
+              <button onclick="setLevelFilter('all')" id="lvl-all" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-xs transition">全部顯示</button>
+              <button onclick="setLevelFilter('A2')" id="lvl-a2" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition">只看 A2 基礎</button>
+              <button onclick="setLevelFilter('B1+')" id="lvl-b1" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition">只看 B1+ 學測</button>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <div class="flex items-center gap-2 bg-amber-50/70 border border-amber-200/70 rounded-xl px-3 py-2">
+              <span class="pattern-hl shrink-0">核心句型</span>
+              <span class="text-slate-600">學測克漏字、中譯英必背的句型骨架</span>
+            </div>
+            <div class="flex items-center gap-2 bg-indigo-50/70 border border-indigo-200/70 rounded-xl px-3 py-2">
+              <span class="clause-bracket shrink-0">[ 子句 / 分詞修飾 ]</span>
+              <span class="text-slate-600">閱讀時先括號跳過，不影響句子主幹</span>
+            </div>
+            <div class="flex items-center gap-2 bg-emerald-50/70 border border-emerald-200/70 rounded-xl px-3 py-2">
+              <span class="sv-main shrink-0 text-slate-900">主詞 + 動詞主幹</span>
+              <span class="text-slate-600">真正決定整句話核心意思的 S + V</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Curriculum Modules Container -->
+        <div id="curriculum-container" class="space-y-8">
+          <!-- Rendered by JS from GRAMMAR_DATA -->
+        </div>
+
+      </section>
+
+      <!-- TAB 2: QUIZ (學測實戰隨堂測驗) -->
+      <section id="view-quiz" class="hidden space-y-6">
+        <div class="bg-gradient-to-br from-indigo-900 via-brand-800 to-slate-900 rounded-2xl p-5 sm:p-6 text-white shadow-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 bg-white/15 rounded-full text-amber-300">GSAT Intensive Drill</span>
+              <h2 class="text-xl sm:text-2xl font-bold mt-2">學測核心句型・克漏字與句型轉換實戰特訓</h2>
+              <p class="text-xs sm:text-sm text-indigo-100 mt-1">針對「which vs. where」、「介系詞 + which」、「逗號 + some of whom」、「獨立/完成式分詞構句」進行陷阱題檢測。</p>
+            </div>
+            <div class="flex items-center gap-3 bg-white/10 backdrop-blur px-4 py-3 rounded-2xl border border-white/15 self-start sm:self-auto">
+              <div class="text-center">
+                <div class="text-xs text-indigo-200">答對題數</div>
+                <div id="quiz-score-display" class="text-xl font-extrabold text-amber-300">0 / 10</div>
+              </div>
+              <button onclick="resetQuiz()" class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-xl text-xs font-semibold transition">
+                <i class="fa-solid fa-rotate-right mr-1"></i>重測
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Filter by Module -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button onclick="filterQuiz('all')" id="qfilter-all" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-xs shrink-0">全部題目</button>
+          <button onclick="filterQuiz('mod1_2')" id="qfilter-mod1_2" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 shrink-0">虛字 It 與介系詞 V-ing</button>
+          <button onclick="filterQuiz('mod3_4')" id="qfilter-mod3_4" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 shrink-0">分詞構句與名詞子句</button>
+          <button onclick="filterQuiz('mod5')" id="qfilter-mod5" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 shrink-0">形容詞子句大魔王</button>
+        </div>
+
+        <div id="quiz-questions-container" class="space-y-4">
+          <!-- Rendered by JS from QUIZ_DATA -->
+        </div>
+      </section>
+
+      <!-- TAB 3: EXPAND (擴充與題庫管理) -->
+      <section id="view-expand" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xs">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                <i class="fa-solid fa-database mr-1"></i>模組化可擴充架構 (LocalStorage + JSON)
+              </span>
+              <h2 class="text-xl font-bold text-slate-900 mt-2">新增自訂例句、學測筆記或匯入/匯出擴充包</h2>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                本系統採用資料與介面分離設計（<code class="px-1.5 py-0.5 bg-slate-100 rounded text-brand-700 font-mono">GRAMMAR_DATA</code> 與 <code class="px-1.5 py-0.5 bg-slate-100 rounded text-brand-700 font-mono">QUIZ_DATA</code>）。你可以直接在下方表單把模考遇到的好句加進對應單元，所有新增句子都會自動支援 TTS 發音與結構拆解！
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 pt-6 border-t border-slate-100">
+            <!-- Form 1: Add New Example Sentence to Any Unit -->
+            <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200/80 space-y-4">
+              <h3 class="font-bold text-slate-900 flex items-center gap-2 text-base">
+                <i class="fa-solid fa-circle-plus text-brand-600"></i>
+                新增例句到現有句型單元
+              </h3>
+
+              <div class="space-y-3 text-xs sm:text-sm">
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">選擇目標單元</label>
+                  <select id="custom-unit-select" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">難度分級</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-2 cursor-pointer">
+                      <input type="radio" name="custom-level" value="A2" class="text-brand-600" />
+                      <span>🌱 A2 基礎暖身句</span>
+                    </label>
+                    <label class="flex items-center gap-2 bg-white border border-slate-300 rounded-xl px-3 py-2 cursor-pointer">
+                      <input type="radio" name="custom-level" value="B1+" checked class="text-brand-600" />
+                      <span>🔥 Upper B1 學測實戰句</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">英文完整句子 (供 TTS 朗讀使用) *</label>
+                  <textarea id="custom-en" rows="2" placeholder="例：Located in the center of the city, the library attracts thousands of visitors every day." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">中文翻譯 *</label>
+                  <input id="custom-zh" type="text" placeholder="例：位於市中心，這座圖書館每天吸引數千名訪客。" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">
+                    結構拆解標記 (選填：用 <code class="text-indigo-700">[括號]</code> 標示子句，用 <code class="text-amber-700">*星號*</code> 標示句型)
+                  </label>
+                  <textarea id="custom-markup" rows="2" placeholder="例：[*Located* in the center of the city], the library attracts thousands of visitors every day." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">句型解析與單字補充 (選填)</label>
+                  <input id="custom-note" type="text" placeholder="例：省略 Being 的被動分詞構句（原句：Because it is located...）" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+
+                <button onclick="addCustomSentence()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-xs transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-plus"></i> 儲存並加入教材（立即支援 TTS 發音）
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel 2: Export / Import JSON & Custom Items List -->
+            <div class="space-y-4 flex flex-col justify-between">
+              <div class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200/80 space-y-3">
+                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-base">
+                  <i class="fa-solid fa-file-code text-indigo-600"></i>
+                  資料備份與未來擴充介面
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  你可以將目前所有的教材與自訂例句匯出為 JSON，或貼上擴充 JSON 資料包。未來若請 AI 繼續擴充更多「學測克漏字題組」、「中譯英題庫」或「寫作萬用句」，皆可直接無縫載入。
+                </p>
+
+                <div class="flex flex-wrap gap-2 pt-1">
+                  <button onclick="exportDataJson()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-download"></i> 匯出完整教材 JSON
+                  </button>
+                  <button onclick="copyCustomDataToClipboard()" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                    <i class="fa-regular fa-copy"></i> 複製自訂擴充資料
+                  </button>
+                  <button onclick="clearAllCustomData()" class="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash-can"></i> 重設自訂例句
+                  </button>
+                </div>
+
+                <!-- Custom Added List -->
+                <div class="pt-3 border-t border-slate-200/80">
+                  <div class="text-xs font-bold text-slate-700 mb-2">目前已新增的自訂例句 (<span id="custom-count-label">0</span> 筆)：</div>
+                  <div id="custom-sentences-list" class="max-h-56 overflow-y-auto space-y-2 text-xs">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Architecture Tip Box -->
+              <div class="bg-indigo-950 text-indigo-100 rounded-2xl p-4 text-xs space-y-1.5">
+                <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                  <i class="fa-solid fa-lightbulb"></i> 下一步可請 AI 協助擴充的方向：
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-indigo-200">
+                  <li>加入「中譯英逐步提示打字練習模式（含字首提示與自我批改）」</li>
+                  <li>擴充更多學測常考句型（如：<code class="text-white">否定副詞 Only / Never 倒裝句</code>、<code class="text-white">與過去事實相反之假設語氣</code>、<code class="text-white">強調句 It is ... that</code>）</li>
+                  <li>新增「60 天每日打卡任務清單與單字閃卡模式」</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION DATA & LOGIC (MODULAR & EXTENSIBLE)                       -->
+  <!-- ===================================================================== -->
+  <script>
+    /**
+     * 1. CORE CURRICULUM DATA (GRAMMAR_DATA)
+     * 完整涵蓋五大模組、17 個細分階段（特別強化分詞構句全系列與形容詞子句 8 大階段）
+     */
+    const GRAMMAR_DATA = [
+      {
+        moduleId: 'mod-1',
+        moduleNumber: '模組一',
+        moduleTitle: '虛字與句型框架 (Dummy It)',
+        moduleSubtitle: '把長長的真正主詞或受詞 (to V) 往後丟，學測寫作與翻譯最好拿分的黃金骨架',
+        badgeColor: 'indigo',
+        units: [
+          {
+            unitId: '1-1',
+            title: 'It is + AdjP / NP + (for sb) + to V',
+            subtitle: '做某事（對某人來說）是...的',
+            formula: 'It (虛主詞) + be + 形容詞/名詞 + (for 某人) + to V (真主詞)',
+            coreConcept: '英文不喜歡「頭重腳輕」。當主詞是一個動作（To V...）時，習慣先放虛主詞 It 在句首佔位，再把真正的動作（to V）丟到後面。',
+            examTrap: '學測寫作常犯錯誤：誤寫成 *Develop critical thinking is crucial.*（❌ 原形動詞不可直接當主詞！必須改為 To develop... 或用 It is crucial to develop...）。',
+            examples: [
+              {
+                id: 'ex-1-1-a1',
+                level: 'A2',
+                en: 'It is hard for me to get up early.',
+                zh: '對我來說早起是很困難的。',
+                deconstructedHtml: '<span class="pattern-hl">It is hard for</span> me <span class="pattern-hl">to get up</span> early.',
+                analysis: 'It 是形式上的假主詞，真正困難的事情是後面的「to get up early (早起)」。',
+                vocab: ['get up (phr.) 起床']
+              },
+              {
+                id: 'ex-1-1-a2',
+                level: 'A2',
+                en: 'It is a good idea to drink more water every day.',
+                zh: '每天多喝水是個好主意。',
+                deconstructedHtml: '<span class="pattern-hl">It is a good idea to</span> drink more water every day.',
+                analysis: '除了接形容詞 (hard/important)，也可以接名詞片語 (a good idea / our duty / a waste of time)。',
+                vocab: ['a good idea (n.) 好主意']
+              },
+              {
+                id: 'ex-1-1-b1',
+                level: 'B1+',
+                en: 'It is crucial for modern citizens to develop critical thinking skills.',
+                zh: '對現代公民而言，培養批判性思考能力是至關重要的。',
+                deconstructedHtml: '<span class="pattern-hl">It is crucial for</span> modern citizens <span class="pattern-hl">to develop</span> critical thinking skills.',
+                analysis: '學測作文第一段破題或最後一段總結萬用句！把國中字 important 升級為 B1+ 核心字 crucial / essential / vital。',
+                vocab: ['crucial (adj.) 至關重要的', 'citizen (n.) 公民', 'critical thinking (n.) 批判性思考']
+              }
+            ]
+          },
+          {
+            unitId: '1-2',
+            title: 'make / find it + Adj / NP + (for sb) + to V',
+            subtitle: '使／覺得做某事變得...',
+            formula: 'S + make / find + it (虛受詞) + Adj / NP + (for sb) + to V (真受詞)',
+            coreConcept: '當受詞是一長串動作（to V），後面又有受詞補語（形容詞）時，必須用「虛受詞 it」先卡在 make/find 後面，把真正的動作 to V 移到最後面。',
+            examTrap: '克漏字與中譯英極常漏掉 it！切記：看到 make / find 後面接形容詞 + to V，中間一定要有 it（❌ made impossible to reach ➔ ⭕ made it impossible to reach）。',
+            examples: [
+              {
+                id: 'ex-1-2-a1',
+                level: 'A2',
+                en: 'Smartphones make it easy to talk to friends.',
+                zh: '智慧型手機讓跟朋友聊天變得很容易。',
+                deconstructedHtml: '<span class="sv-main">Smartphones</span> <span class="pattern-hl">make it easy to</span> talk to friends.',
+                analysis: 'it 代替後面的「to talk to friends」，easy 是用來補充說明這件事很簡單（受詞補語）。',
+                vocab: ['smartphone (n.) 智慧型手機']
+              },
+              {
+                id: 'ex-1-2-b1',
+                level: 'B1+',
+                en: 'The heavy rain made it impossible for the rescue team to reach the isolated village.',
+                zh: '這場豪雨使得搜救隊不可能抵達那個與世隔絕的村莊。',
+                deconstructedHtml: '<span class="sv-main">The heavy rain</span> <span class="pattern-hl">made it impossible for</span> the rescue team <span class="pattern-hl">to reach</span> the isolated village.',
+                analysis: '閱讀測驗遇到「made it + Adj + for A + to V」，直接翻譯為「讓 A 能夠/無法做 V」。',
+                vocab: ['rescue team (n.) 搜救隊', 'reach (v.) 抵達（及物動詞，不加 to）', 'isolated (adj.) 孤立的；與世隔絕的']
+              },
+              {
+                id: 'ex-1-2-b2',
+                level: 'B1+',
+                en: 'Many freshmen find it challenging to strike a balance between study and club activities.',
+                zh: '許多大一新生覺得要在課業與社團活動之間取得平衡很有挑戰性。',
+                deconstructedHtml: '<span class="sv-main">Many freshmen</span> <span class="pattern-hl">find it challenging to</span> strike a balance [between study and club activities].',
+                analysis: 'find 在此不是「找到」，而是「發覺、覺得（某事處於某狀態）」。',
+                vocab: ['freshman (n.) 新生', 'challenging (adj.) 具挑戰性的', 'strike a balance (phr.) 取得平衡']
+              }
+            ]
+          }
+        ]
+      },
+      {
+        moduleId: 'mod-2',
+        moduleNumber: '模組二',
+        moduleTitle: '方法、條件與伴隨狀態 (介系詞 + V-ing)',
+        moduleSubtitle: '表達「透過什麼手段」或「在沒有...的情況下」，讓因果與方法邏輯緊密相連',
+        badgeColor: 'emerald',
+        units: [
+          {
+            unitId: '2-1',
+            title: 'by + V-ing',
+            subtitle: '藉由...／透過...（表方法與手段）',
+            formula: 'By + V-ing..., S + V  或  S + V + by + V-ing...',
+            coreConcept: 'by 是介系詞，後面遇到動詞一律改成動名詞 (V-ing)，用來說明達成某個結果的具體做法。放在句首並加上逗號時，具有強調手段的效果。',
+            examTrap: '克漏字常把 By + V-ing 放在句首考你動詞形態，千萬別跟祈使句（原形動詞開頭）搞混：看後面有沒有「逗號 + 完整主詞動詞 (S+V)」！',
+            examples: [
+              {
+                id: 'ex-2-1-a1',
+                level: 'A2',
+                en: 'You can get good grades by studying hard.',
+                zh: '你可以藉由努力讀書來獲得好成績。',
+                deconstructedHtml: '<span class="sv-main">You can get</span> good grades [<span class="pattern-hl">by studying</span> hard].',
+                analysis: '主幹是 You can get good grades，後面的 by studying hard 說明方法。',
+                vocab: ['grade (n.) 成績；分數']
+              },
+              {
+                id: 'ex-2-1-b1',
+                level: 'B1+',
+                en: 'By adopting eco-friendly policies, the company successfully reduced its carbon footprint.',
+                zh: '藉由採取環保政策，這家公司成功減少了它的碳足跡。',
+                deconstructedHtml: '[<span class="pattern-hl">By adopting</span> eco-friendly policies], <span class="sv-main">the company successfully reduced</span> its carbon footprint.',
+                analysis: '學測環境與永續議題超高頻句！句首 By adopting... 為方法修飾語，逗號後才是真正主詞 the company 與動詞 reduced。',
+                vocab: ['adopt (v.) 採取；採納（注意拼寫非 adapt）', 'eco-friendly (adj.) 環保的', 'carbon footprint (n.) 碳足跡']
+              }
+            ]
+          },
+          {
+            unitId: '2-2',
+            title: 'without + V-ing',
+            subtitle: '沒有...／在不...的情況下',
+            formula: 'S + V ... + without + V-ing / N',
+            coreConcept: 'without 同樣是介系詞，後面接 V-ing，用來描述「某個理應發生或伴隨的動作並沒有發生」。',
+            examTrap: '中譯英遇到「沒有多想就... (without thinking twice)」、「沒有意識到... (without realizing...)」時，用 without + V-ing 遠比寫成 and did not... 更道地高分！',
+            examples: [
+              {
+                id: 'ex-2-2-a1',
+                level: 'A2',
+                en: 'He left the room without saying goodbye.',
+                zh: '他沒有說再見就離開了房間。',
+                deconstructedHtml: '<span class="sv-main">He left</span> the room [<span class="pattern-hl">without saying</span> goodbye].',
+                analysis: 'without 後面接動名詞 saying，精簡表達「離開時沒有伴隨說再見的動作」。',
+                vocab: ['leave / left (v.) 離開']
+              },
+              {
+                id: 'ex-2-2-b1',
+                level: 'B1+',
+                en: 'Many teenagers scroll through social media for hours without realizing how much time has passed.',
+                zh: '許多青少年滑社群媒體好幾個小時，卻沒有意識到已經過了多少時間。',
+                deconstructedHtml: '<span class="sv-main">Many teenagers scroll through</span> social media for hours [<span class="pattern-hl">without realizing</span> how much time has passed].',
+                analysis: '結合了 without + V-ing 以及名詞子句（how much time has passed 當 realizing 的受詞）。',
+                vocab: ['scroll through (phr.) 滑動瀏覽（手機螢幕）', 'social media (n.) 社群媒體', 'realize (v.) 意識到；察覺']
+              }
+            ]
+          }
+        ]
+      },
+      {
+        moduleId: 'mod-3',
+        moduleNumber: '模組三',
+        moduleTitle: '伴隨狀態與分詞構句（完整進階篇）',
+        moduleSubtitle: '從 A2 跨越到 B1+ 的核心關鍵：學會「殺連、殺主、動詞變」與 5 種必考變體',
+        badgeColor: 'amber',
+        units: [
+          {
+            unitId: '3-1',
+            title: 'with + O + OC (V-ing / V-ed / Adj / PrepP)',
+            subtitle: '隨著...／在...處於某狀態下（附帶狀況）',
+            formula: 'with + 受詞 (O) + 受詞補語 (OC：主動 V-ing / 被動 V-ed / 形容詞 / 介系詞片語)',
+            coreConcept: '用來描寫「伴隨發生的畫面」或「隨著某個背景趨勢」。判斷 OC 用 V-ing 還是 V-ed 的唯一標準：看「受詞 (O)」跟該動作是【主動進行 (V-ing)】還是【被動完成 (V-ed / p.p.)】！',
+            examTrap: '身體部位常考被動 p.p.：眼睛閉著 (with eyes closed)、雙臂交叉 (with arms crossed)、雙腿交疊 (with legs crossed)，因為身體部位是「被大腦控制做出動作」的！',
+            comparisonBox: {
+              title: '秒殺判斷：with + O + 受詞補語 (OC) 的四種形態',
+              items: [
+                '① O + 形容詞 / 介系詞：with the window open (窗戶開著) / with a book in his hand (手裡拿著書)',
+                '② O + V-ing (主動進行)：with technology advancing rapidly (隨著科技快速進步——科技自己進步)',
+                '③ O + V-ed (被動狀態)：with his arms crossed (雙臂交叉著——手臂被交叉)',
+                '④ O + to V (尚未發生)：with so much homework to do (還有這麼多功課要做)'
+              ]
+            },
+            examples: [
+              {
+                id: 'ex-3-1-a1',
+                level: 'A2',
+                en: 'She sleeps with the window open.',
+                zh: '她開著窗戶睡覺。',
+                deconstructedHtml: '<span class="sv-main">She sleeps</span> [<span class="pattern-hl">with the window open</span>].',
+                analysis: 'open 在這裡是形容詞（開著的狀態），說明睡覺時的伴隨環境。',
+                vocab: ['open (adj.) 開著的']
+              },
+              {
+                id: 'ex-3-1-a2',
+                level: 'A2',
+                en: 'The coach stood on the field with his arms crossed.',
+                zh: '教練雙臂交叉站在球場上。',
+                deconstructedHtml: '<span class="sv-main">The coach stood</span> on the field [<span class="pattern-hl">with his arms crossed</span>].',
+                analysis: 'his arms（他的手臂）是「被交叉」的，因此受詞補語必須用過去分詞 crossed！',
+                vocab: ['coach (n.) 教練', 'cross (v.) 交叉']
+              },
+              {
+                id: 'ex-3-1-b1',
+                level: 'B1+',
+                en: 'With technology advancing rapidly, AI has become an essential part of our daily lives.',
+                zh: '隨著科技快速進步，人工智慧已成為我們日常生活中不可或缺的一部分。',
+                deconstructedHtml: '[<span class="pattern-hl">With technology advancing</span> rapidly], <span class="sv-main">AI has become</span> an essential part of our daily lives.',
+                analysis: '學測作文「背景破題」第一名神句！technology 與 advance 是主動關係，故用 advancing。',
+                vocab: ['advance (v.) 進步；推進', 'rapidly (adv.) 快速地', 'essential (adj.) 必要的；不可或缺的']
+              }
+            ]
+          },
+          {
+            unitId: '3-2',
+            title: '主動分詞構句 (V-ing..., S + V)',
+            subtitle: '口訣：殺連接詞、殺相同主詞、主動動詞變 V-ing',
+            formula: '(Because / When / As + S1 + V1...), S1 + V2... ➔ V1-ing..., S1 + V2...',
+            coreConcept: '當副詞子句（Because/When/While...）的主詞跟後面主要子句的主詞「是同一個人/物」時，為了精簡句子，可以把連接詞和重複的主詞刪掉，並將主動動詞改為 V-ing。',
+            examTrap: '閱讀測驗看到句首是 V-ing..., S + V，立刻把逗號後面的主詞 S 抓到前面當動作發起人！若做克漏字，也要檢查逗號後的主詞是不是「主動做出這個動作」。',
+            examples: [
+              {
+                id: 'ex-3-2-a1',
+                level: 'A2',
+                en: 'Feeling tired, I went to bed early.',
+                zh: '因為感到疲倦，我提早上床睡覺了。',
+                deconstructedHtml: '[<span class="pattern-hl">Feeling</span> tired], <span class="sv-main">I went</span> to bed early.',
+                analysis: '原句為 Because I felt tired, I went to bed early。刪掉 Because 與 I，主動動詞 felt 改為 Feeling。',
+                vocab: ['feel / felt (v.) 感覺；覺得']
+              },
+              {
+                id: 'ex-3-2-b1',
+                level: 'B1+',
+                en: 'Realizing the potential danger of the disease, the government immediately issued a travel warning.',
+                zh: '意識到該疾病的潛在危險，政府立即發布了旅遊警示。',
+                deconstructedHtml: '[<span class="pattern-hl">Realizing</span> the potential danger of the disease], <span class="sv-main">the government immediately issued</span> a travel warning.',
+                analysis: '誰意識到危險？是逗號後面的「the government (政府)」主動意識到，所以句首用 Realizing。',
+                vocab: ['potential (adj.) 潛在的', 'issue (v.) 發布；公布', 'travel warning (n.) 旅遊警示']
+              }
+            ]
+          },
+          {
+            unitId: '3-3',
+            title: '被動分詞構句 (V-ed / p.p...., S + V)',
+            subtitle: '省略 Being 後，直接以過去分詞 (p.p.) 開頭',
+            formula: '(Because / When + S1 + be + p.p....), S1 + V2... ➔ (Being) + p.p...., S1 + V2...',
+            coreConcept: '當被省略的主詞（也就是逗號後的主詞 S1）是「被動承受」前面的動作時，原本會變成 Being + p.p.，而英文習慣再把 Being 省略，因此句首直接剩下過去分詞 (V-ed / p.p.)！',
+            examTrap: '這是學測克漏字前 5 題最常考的題型！句首挖空 `______ in 1920, the building...`，先看逗號後的主詞（建築物），建築物是「被建造 (Founded / Built)」，秒選 p.p.！',
+            examples: [
+              {
+                id: 'ex-3-3-a1',
+                level: 'A2',
+                en: 'Exhausted from the long trip, John fell asleep on the sofa.',
+                zh: '因為長途旅行而筋疲力盡，約翰在沙發上睡著了。',
+                deconstructedHtml: '[<span class="pattern-hl">Exhausted</span> from the long trip], <span class="sv-main">John fell</span> asleep on the sofa.',
+                analysis: '原句為 Because John was exhausted...，省略 Because John was，直接留過去分詞 Exhausted。',
+                vocab: ['exhausted (adj./p.p.) 筋疲力盡的', 'fall asleep (phr.) 睡著']
+              },
+              {
+                id: 'ex-3-3-b1',
+                level: 'B1+',
+                en: 'Encouraged by his teacher, the student finally joined the national competition.',
+                zh: '受到老師的鼓勵，這位學生終於參加了全國比賽。',
+                deconstructedHtml: '[<span class="pattern-hl">Encouraged</span> by his teacher], <span class="sv-main">the student finally joined</span> the national competition.',
+                analysis: '逗號後的主詞 the student 是「被鼓勵 (was encouraged)」，因此句首用過去分詞 Encouraged。',
+                vocab: ['encourage (v.) 鼓勵', 'competition (n.) 比賽；競賽']
+              }
+            ]
+          },
+          {
+            unitId: '3-4',
+            title: '獨立分詞構句 (S1 + V-ing / V-ed, S2 + V)',
+            subtitle: '前後兩個句子的主詞「不同人/物」時，前面的主詞絕對不可刪！',
+            formula: '(連接詞) + S1 + V1, S2 + V2 (S1 ≠ S2) ➔ S1 + V1-ing / p.p., S2 + V2',
+            coreConcept: '一般分詞構句之所以能刪主詞，是因為前後主詞相同。如果前後主詞不同（例如前面是「天氣/時間」，後面是「我們」），就必須把前面的主詞 S1 保留下來，只把動詞變成 V-ing 或 p.p.，稱為「獨立分詞構句」。',
+            examTrap: '學測必背兩大慣用獨立分詞構句：① Time permitting / Weather permitting (時間／天氣允許的話) ② All things considered (綜合考量所有情況，things 是被考量故用 considered)。',
+            examples: [
+              {
+                id: 'ex-3-4-a1',
+                level: 'A2',
+                en: 'The weather being fine, we went on a picnic.',
+                zh: '因為天氣很好，我們去野餐了。',
+                deconstructedHtml: '[<span class="pattern-hl">The weather being</span> fine], <span class="sv-main">we went</span> on a picnic.',
+                analysis: '原句：Because the weather was fine, we went on a picnic。前後主詞 (The weather vs. we) 不同，所以 The weather 必須保留，was 變成 being！',
+                vocab: ['go on a picnic (phr.) 去野餐']
+              },
+              {
+                id: 'ex-3-4-b1',
+                level: 'B1+',
+                en: 'Time permitting, we will visit the famous night market tonight.',
+                zh: '如果時間允許的話，我們今晚會去造訪著名的夜市。',
+                deconstructedHtml: '[<span class="pattern-hl">Time permitting</span>], <span class="sv-main">we will visit</span> the famous night market tonight.',
+                analysis: '原句：If time permits, we will visit...。刪掉連接詞 If，保留不同主詞 Time，主動動詞 permits 改為 permitting。',
+                vocab: ['permit (v.) 允許；許可']
+              },
+              {
+                id: 'ex-3-4-b2',
+                level: 'B1+',
+                en: 'All things considered, this plan seems to be the most practical solution.',
+                zh: '將所有事情納入考量後，這項計畫似乎是最務實的解決方案。',
+                deconstructedHtml: '[<span class="pattern-hl">All things considered</span>], <span class="sv-main">this plan seems</span> to be the most practical solution.',
+                analysis: '所有事情 (All things) 是「被考量 (are considered)」，保留主詞 All things 並接過去分詞 considered。寫作結尾段極好用！',
+                vocab: ['practical (adj.) 實際的；務實的', 'solution (n.) 解決方案']
+              }
+            ]
+          },
+          {
+            unitId: '3-5',
+            title: '完成式分詞構句 (Having + p.p. / Having been + p.p.)',
+            subtitle: '強調分詞的動作「明顯發生在主要子句動作之前」',
+            formula: '主動先發生：Having + p.p., S + V  ｜  被動先發生：Having been + p.p., S + V',
+            coreConcept: '當我們想特別強調「已經先做完某事之後，才做下一件事」，或者原句是過去完成式 (had + p.p.) / 現在完成式 (have + p.p.) 時，分詞構句會改用 Having + p.p.。若是被動，則為 Having been + p.p.。',
+            examTrap: '區分 Having + p.p.（主動已經做完...）與 Having been + p.p.（已經被...）！看逗號後面的主詞是主動還是被動即可秒殺。',
+            examples: [
+              {
+                id: 'ex-3-5-a1',
+                level: 'A2',
+                en: 'Having finished her homework, she started to play video games.',
+                zh: '已經完成作業之後，她開始打電動。',
+                deconstructedHtml: '[<span class="pattern-hl">Having finished</span> her homework], <span class="sv-main">she started</span> to play video games.',
+                analysis: '原句：After she had finished her homework, she started...。「寫完作業」發生在「開始打電動」之前，用 Having finished 強調先後順序。',
+                vocab: ['video game (n.) 電玩遊戲']
+              },
+              {
+                id: 'ex-3-5-b1',
+                level: 'B1+',
+                en: 'Having been told the bad news, he burst into tears and could not say a word.',
+                zh: '在被告知那個壞消息之後，他突然大哭起來且一句話也說不出來。',
+                deconstructedHtml: '[<span class="pattern-hl">Having been told</span> the bad news], <span class="sv-main">he burst</span> into tears and <span class="sv-main">could not say</span> a word.',
+                analysis: '原句：After he had been told the bad news...。「他是被告知 (been told)」而且「發生在大哭之前 (Having)」，結合為 Having been told！',
+                vocab: ['burst into tears (phr.) 突然大哭起來']
+              }
+            ]
+          }
+        ]
+      },
+      {
+        moduleId: 'mod-4',
+        moduleNumber: '模組四',
+        moduleTitle: '名詞子句 (Noun Clauses)',
+        moduleSubtitle: '把一整句話打包成一個「大名詞」，當作句子的主詞、受詞或補語',
+        badgeColor: 'purple',
+        units: [
+          {
+            unitId: '4-1',
+            title: '當「受詞」的名詞子句 (that / wh- / whether + S + V)',
+            subtitle: '放在及物動詞或介系詞後面的一整包句子',
+            formula: 'S + V + [ that / 疑問詞 (what, how, why...) / whether + S + V ]',
+            coreConcept: '名詞子句有三種開頭：① that + 完整句（表「...這件事」，當受詞時 that 常省略） ② 疑問詞 (what/where/how/why) + S + V（注意：不可倒裝！） ③ whether/if + S + V（表「是否...」）。',
+            examTrap: '間接問句語序陷阱：I don\'t know what does he want (❌) ➔ I don\'t know what he wants (⭕ 名詞子句內必須是 S + V 肯定句語序！)。',
+            examples: [
+              {
+                id: 'ex-4-1-a1',
+                level: 'A2',
+                en: 'I do not know what he wants.',
+                zh: '我不知道他想要什麼。',
+                deconstructedHtml: '<span class="sv-main">I do not know</span> [<span class="pattern-hl">what he wants</span>].',
+                analysis: 'what he wants 整包當作 know 的受詞。注意語序是 he wants，不是 does he want。',
+                vocab: []
+              },
+              {
+                id: 'ex-4-1-b1',
+                level: 'B1+',
+                en: 'Scientists are still debating whether artificial intelligence will replace human workers.',
+                zh: '科學家仍在爭論人工智慧是否會取代人類勞工。',
+                deconstructedHtml: '<span class="sv-main">Scientists are still debating</span> [<span class="pattern-hl">whether</span> artificial intelligence will replace human workers].',
+                analysis: '表達「是否...」時，在學測閱讀與寫作中強烈建議優先用 whether（因為 whether 可放句首、可接在介系詞後、可接 or not，比 if 萬用得多）。',
+                vocab: ['debate (v./n.) 爭論；辯論', 'artificial intelligence (n.) 人工智慧 (AI)', 'replace (v.) 取代']
+              }
+            ]
+          },
+          {
+            unitId: '4-2',
+            title: '當「主詞與補語」的名詞子句 (What S + V is that...)',
+            subtitle: '學測閱讀最愛考的強調結構：「...的事情是...」',
+            formula: '[ What + (S) + V ] (視為單數主詞) + is / was + [ (that) + S + V ]',
+            coreConcept: '關係代名詞 What 等於「the thing(s) which（所...的事物）」。當 What 引導的名詞子句放在句首當主詞時，要將整包視為「單數件事情」，往後找到第二個動詞（通常是 is / was / makes）才是全句真正的主動詞！',
+            examTrap: '切記區分 That 與 What 當句首名詞子句：That + 完整句（不缺受詞）；What + 不完整句（缺主詞或受詞）。',
+            examples: [
+              {
+                id: 'ex-4-2-a1',
+                level: 'A2',
+                en: 'What you said is true.',
+                zh: '你所說的話是真的。',
+                deconstructedHtml: '[<span class="pattern-hl">What you said</span>] <span class="sv-main">is</span> true.',
+                analysis: 'What you said = The thing which you said（你所說的事情），整包當主詞，配單數動詞 is。',
+                vocab: []
+              },
+              {
+                id: 'ex-4-2-b1',
+                level: 'B1+',
+                en: 'What researchers found surprising was that the new medicine had almost no side effects.',
+                zh: '研究人員覺得驚訝的事情是，這款新藥幾乎沒有副作用。',
+                deconstructedHtml: '[<span class="pattern-hl">What researchers found surprising</span>] <span class="sv-main">was</span> [<span class="pattern-hl">that</span> the new medicine had almost no side effects].',
+                analysis: '這句話一頭一尾各一個名詞子句！主詞是「What researchers found surprising」，動詞是「was」，主詞補語是「that the new medicine...」。',
+                vocab: ['researcher (n.) 研究人員', 'side effect (n.) 副作用']
+              }
+            ]
+          }
+        ]
+      },
+      {
+        moduleId: 'mod-5',
+        moduleNumber: '模組五',
+        moduleTitle: '形容詞子句與簡化（8 大階段詳盡特訓）',
+        moduleSubtitle: '徹底攻克學測長難句與克漏字大魔王：從基礎關代、介系詞前移、which vs. where、非限定逗號、of which 到分詞簡化',
+        badgeColor: 'rose',
+        units: [
+          {
+            unitId: '5-1',
+            title: '階段一：關代當「主詞」 (who / which / that + V)',
+            subtitle: '關代緊貼在先行詞（名詞）後面，且後面直接跟動詞',
+            formula: '先行詞 (人/物) + [ who / which / that + V... ]',
+            coreConcept: '形容詞子句唯一的任務就是「修飾它前面的那個名詞（先行詞）」。當關代在子句裡當主詞時，後面會直接接動詞，而且這個動詞的單複數由前面的「先行詞」決定！',
+            examTrap: '閱讀長句技巧：看到名詞後面出現 who / which / that，立刻用括號 `[` 標記，一路往後讀到「第二個動詞」之前畫上 `]`。括號拿掉就是句子主幹！',
+            examples: [
+              {
+                id: 'ex-5-1-a1',
+                level: 'A2',
+                en: 'The boy who wears a red shirt is my brother.',
+                zh: '穿紅襯衫的那個男孩是我弟弟。',
+                deconstructedHtml: '<span class="sv-main">The boy</span> [<span class="pattern-hl">who wears</span> a red shirt] <span class="sv-main">is</span> my brother.',
+                analysis: '把 [who wears a red shirt] 括號起來，主幹超簡單：The boy is my brother。因為 The boy 是單數，所以子句裡用 wears。',
+                vocab: ['shirt (n.) 襯衫']
+              },
+              {
+                id: 'ex-5-1-b1',
+                level: 'B1+',
+                en: 'Students who lack motivation tend to perform poorly in academic subjects.',
+                zh: '缺乏動力的學生往往在學科上表現不佳。',
+                deconstructedHtml: '<span class="sv-main">Students</span> [<span class="pattern-hl">who lack</span> motivation] <span class="sv-main">tend to perform</span> poorly in academic subjects.',
+                analysis: '第一個動詞 lack 屬於形容詞子句，第二個動詞 tend to perform 才是全句主詞 Students 的真正動詞！',
+                vocab: ['lack (v./n.) 缺乏', 'motivation (n.) 動力；動機', 'tend to (phr.) 傾向於；往往會', 'academic (adj.) 學術的；學業的']
+              }
+            ]
+          },
+          {
+            unitId: '5-2',
+            title: '階段二：關代當「受詞」 ((whom / which / that) + S + V)',
+            subtitle: '關代後面跟著「另一個主詞 + 動詞」，且關代極常被省略！',
+            formula: '先行詞 + [ (whom / which / that) + S + V (缺受詞) ]',
+            coreConcept: '當關代在子句裡當受詞時，它可以被省略！因此在學測閱讀中，只要看到「名詞 A + 名詞 B（或代名詞 we/they/I）+ 動詞」直接撞在一起，中間 100% 省略了關代 that/which！',
+            examTrap: '閱讀時若沒看出「省略關代」，就會找不到真正的動詞。記住口訣：「兩名詞相撞，第二個名詞起括號」！',
+            examples: [
+              {
+                id: 'ex-5-2-a1',
+                level: 'A2',
+                en: 'The book which I bought yesterday is very interesting.',
+                zh: '我昨天買的那本書非常有趣。',
+                deconstructedHtml: '<span class="sv-main">The book</span> [<span class="pattern-hl">which</span> I bought yesterday] <span class="sv-main">is</span> very interesting.',
+                analysis: 'bought 後面原本的受詞就是 the book（被 which 取代並搬到前面）。這裡的 which 可以直接省略變成 The book I bought yesterday is...。',
+                vocab: []
+              },
+              {
+                id: 'ex-5-2-b1',
+                level: 'B1+',
+                en: 'The environmental issues we are facing today require global cooperation.',
+                zh: '我們今日所面臨的環境議題需要全球合作。',
+                deconstructedHtml: '<span class="sv-main">The environmental issues</span> [<span class="pattern-hl">(that) we are facing</span> today] <span class="sv-main">require</span> global cooperation.',
+                analysis: 'issues（名詞）跟 we（代名詞）撞在一起！中間省略了關代 that/which。括號 [we are facing today] 後，主幹是 The issues require cooperation。',
+                vocab: ['environmental issue (n.) 環境議題', 'require (v.) 需要', 'cooperation (n.) 合作']
+              }
+            ]
+          },
+          {
+            unitId: '5-3',
+            title: '階段三：介系詞 + which / whom (介系詞前移)',
+            subtitle: '正式英文最愛把子句尾巴的介系詞搬到 which 或 whom 前面',
+            formula: '先行詞 + [ 介系詞 (in / on / to / with / for...) + which (物) / whom (人) + S + V ]',
+            coreConcept: '原本在子句尾端的介系詞（例如 focus on、depend on、contribute to、talk with），為了讓句子更正式嚴謹，會搬到關代前面變成「on which / to which / with whom」。',
+            examTrap: '兩大克漏字鐵律：① 介系詞後面絕對不可以用 that 或 who（人必須用 whom，物必須用 which）！ ② 選哪個介系詞，要把「先行詞」塞回子句尾巴看搭配（如 focus on the issue ➔ on which）。',
+            comparisonBox: {
+              title: '學測常考「動詞/形容詞搭配 + 介系詞 + which」清單',
+              items: [
+                'focus on / depend on / rely on ➔ on which (我們專注／依賴的那個...)',
+                'contribute to / lead to / adapt to ➔ to which (促成／適應的那個...)',
+                'be famous for / be responsible for ➔ for which (因...而聞名／負責的那個...)',
+                'deal with / communicate with ➔ with which / with whom (處理／溝通的對象)'
+              ]
+            },
+            examples: [
+              {
+                id: 'ex-5-3-a1',
+                level: 'A2',
+                en: 'This is the problem which we need to focus on.',
+                zh: '這就是我們需要專注解決的問題。（口語：介系詞在後）',
+                deconstructedHtml: '<span class="sv-main">This is</span> the problem [<span class="pattern-hl">which</span> we need to focus <span class="pattern-hl">on</span>].',
+                analysis: '因為片語是 focus on the problem，口語中可以把 on 留在句尾；若把 on 搬到 which 前面，就變成正式寫作的 on which we need to focus。',
+                vocab: ['focus on (phr.) 專注於']
+              },
+              {
+                id: 'ex-5-3-b1',
+                level: 'B1+',
+                en: 'Global warming is a critical issue on which we must focus our attention.',
+                zh: '全球暖化是一個我們必須集中關注的重大議題。（正式：介系詞前移）',
+                deconstructedHtml: '<span class="sv-main">Global warming is</span> a critical issue [<span class="pattern-hl">on which</span> we must focus our attention].',
+                analysis: '還原子句：we must focus our attention ON the critical issue。把 on 移到 which 前面，就是學測最愛考的 on which！',
+                vocab: ['global warming (n.) 全球暖化', 'critical (adj.) 重大的；關鍵的']
+              },
+              {
+                id: 'ex-5-3-b2',
+                level: 'B1+',
+                en: 'Language is an important tool through which people express their emotions and ideas.',
+                zh: '語言是一項人們藉以表達情感與想法的重要工具。',
+                deconstructedHtml: '<span class="sv-main">Language is</span> an important tool [<span class="pattern-hl">through which</span> people express their emotions and ideas].',
+                analysis: '人們「透過這項工具 (through the tool)」表達想法，因此介系詞用 through + which。',
+                vocab: ['through (prep.) 透過；藉由', 'express (v.) 表達', 'emotion (n.) 情感；情緒']
+              }
+            ]
+          },
+          {
+            unitId: '5-4',
+            title: '階段四：which vs. where / when (關係代名詞 vs. 關係副詞)',
+            subtitle: '看到地點千萬別無腦選 where！檢查後面的子句「缺不缺主詞或受詞」',
+            formula: '先行詞 (地點/抽象空間) + which (後接不完整句)  vs.  where (= in/on/at which，後接完整句)',
+            coreConcept: 'which 是「代名詞」，代表子句裡少了一個名詞（主詞或及物動詞的受詞）；where 是「副詞 (= in/on/at which)」，代表子句本身的 S + V (+ O) 已經完全不缺名詞了！',
+            examTrap: '學測還會考「抽象空間」用 where：如 a situation (情況)、a stage (階段)、a society (社會)、a virtual world (虛擬世界)，只要後面是完整句且表「在那個情況/世界裡 (in which)」，一樣選 where！',
+            comparisonBox: {
+              title: '一秒破解 which vs. where 終極對照',
+              items: [
+                'This is the museum [ which I visited yesterday ]. ➔ visited 是及物動詞，後面缺受詞（參觀博物館），選 which！',
+                'This is the museum [ where I work ]. ➔ work 是不及物動詞，句子不缺受詞（在博物館裡工作 = in which I work），選 where！'
+              ]
+            },
+            examples: [
+              {
+                id: 'ex-5-4-a1',
+                level: 'A2',
+                en: 'This is the museum which I visited yesterday.',
+                zh: '這是我昨天參觀的那間博物館。（缺受詞 ➔ 用 which）',
+                deconstructedHtml: '<span class="sv-main">This is</span> the museum [<span class="pattern-hl">which</span> I visited yesterday].',
+                analysis: 'visited（參觀）後面直接接了時間 yesterday，缺少了「參觀什麼」的受詞，所以必須用關係代名詞 which。',
+                vocab: ['museum (n.) 博物館']
+              },
+              {
+                id: 'ex-5-4-a2',
+                level: 'A2',
+                en: 'This is the museum where I work.',
+                zh: '這是我工作的那間博物館。（句子完整 ➔ 用 where = in which）',
+                deconstructedHtml: '<span class="sv-main">This is</span> the museum [<span class="pattern-hl">where</span> I work].',
+                analysis: '原意是 I work IN the museum。把介系詞連同受詞 (in the museum) 一起換成關係副詞 where (= in which)。',
+                vocab: []
+              },
+              {
+                id: 'ex-5-4-b1',
+                level: 'B1+',
+                en: 'The internet has created a virtual world where people can interact regardless of distance.',
+                zh: '網際網路創造了一個不論距離遠近人們都能互動的虛擬世界。',
+                deconstructedHtml: '<span class="sv-main">The internet has created</span> a virtual world [<span class="pattern-hl">where</span> people can interact regardless of distance].',
+                analysis: 'people can interact（人們可以互動）結構已完整，表示「在這個虛擬世界裡 (in which)」，因此選關係副詞 where！',
+                vocab: ['virtual (adj.) 虛擬的', 'interact (v.) 互動', 'regardless of (phr.) 不管；不顧']
+              }
+            ]
+          },
+          {
+            unitId: '5-5',
+            title: '階段五：限定用法 (無逗號) vs. 非限定用法 (有逗號)',
+            subtitle: '逗號代表「順帶一提的補充說明」，且 `, which` 可以直接代表前面整句話！',
+            formula: '專有名詞 / 獨一無二名詞 / 整句話 + , who / , which ... (❌ 逗號後絕對禁用 that)',
+            coreConcept: '① 無逗號（限定）：用來縮小範圍分類（例如：我那個當醫生的哥哥）。 ② 有逗號（非限定）：前面的先行詞已經非常明確（如 Taipei 101, my father），或者用「, which」來指代「前面發生的一整件事」！',
+            examTrap: '克漏字秒殺口訣：「看到逗號，先殺 that！」此外，若逗號前面是一整句話（例如他遲到了），後面寫 `, which made the boss angry`，這時單數動詞 made 是因為 which 代表「他遲到這整件事」。',
+            comparisonBox: {
+              title: '限定（無逗號）vs. 非限定（有逗號）語意差異',
+              items: [
+                '無逗號：He has a brother who is a doctor. (他有一個當醫生的哥哥——暗示可能還有別的哥哥)',
+                '有逗號：His father, who is a doctor, works very hard. (他爸爸，順帶一提是個醫生，工作很認真——爸爸只有一個)',
+                '修飾整句：He forgot my birthday, which made me angry. (which = 他忘記我生日這整件事)'
+              ]
+            },
+            examples: [
+              {
+                id: 'ex-5-5-a1',
+                level: 'A2',
+                en: 'His father, who is a doctor, works very hard.',
+                zh: '他的父親（順帶一提是一位醫生）工作非常努力。',
+                deconstructedHtml: '<span class="sv-main">His father</span>, [<span class="pattern-hl">who is</span> a doctor], <span class="sv-main">works</span> very hard.',
+                analysis: '因為 His father 是獨一無二的特定對象，前後加上逗號作為補充說明，閱讀時可先跳過兩個逗號中間的內容，直接讀 His father works very hard。',
+                vocab: []
+              },
+              {
+                id: 'ex-5-5-b1',
+                level: 'B1+',
+                en: 'He forgot my birthday again, which made me extremely disappointed.',
+                zh: '他又忘記我的生日了，這件事讓我感到非常失望。',
+                deconstructedHtml: '<span class="sv-main">He forgot</span> my birthday again, [<span class="pattern-hl">which made</span> me extremely disappointed].',
+                analysis: '學測作文超級加分句型！在完整句子後加上「, which + V...」，用來表達「前面這件事造成了什麼結果或心情」。',
+                vocab: ['extremely (adv.) 極度地；非常', 'disappointed (adj.) 感到失望的']
+              }
+            ]
+          },
+          {
+            unitId: '5-6',
+            title: '階段六：數量詞 / 代名詞 + of which / of whom',
+            subtitle: '合併兩個句子並表達「其中有...」，徹底避開逗號連接兩句 (Comma Splice) 的致命錯誤',
+            formula: 'S + V + 先行詞, + [ some / many / all / most / both / one + of + whom (人) / which (物) + V... ]',
+            coreConcept: '英文絕對不能只用一個逗號把兩個獨立句子接在一起（❌ I have three friends, some of them speak Chinese.）。如果沒有連接詞 and，就必須把 them 換成具有連接詞功能的關代 whom（物則換成 which）！',
+            examTrap: '克漏字判斷公式：看逗號後面有沒有連接詞 (and / but)？ ① 有 and ➔ 選代名詞 (and some of them) ② 沒有 and（只有逗號）➔ 必選關代 (some of whom / all of which)！',
+            comparisonBox: {
+              title: '學測必考陷阱：them vs. whom / which',
+              items: [
+                '❌ 錯誤 (Comma Splice)：The company released five products, all of them were successful.',
+                '⭕ 解法一 (加連接詞 and)：The company released five products, and all of them were successful.',
+                '⭕ 解法二 (用關代 which)：The company released five products, all of which were successful.'
+              ]
+            },
+            examples: [
+              {
+                id: 'ex-5-6-a1',
+                level: 'A2',
+                en: 'I have three foreign friends, some of whom can speak Chinese.',
+                zh: '我有三個外國朋友，其中有一些人會說中文。',
+                deconstructedHtml: '<span class="sv-main">I have</span> three foreign friends, [<span class="pattern-hl">some of whom</span> can speak Chinese].',
+                analysis: '逗號後面沒有連接詞 and，先行詞 friends 是人，且接在介系詞 of 後面，因此必須用受格關代 whom。',
+                vocab: ['foreign (adj.) 外國的']
+              },
+              {
+                id: 'ex-5-6-b1',
+                level: 'B1+',
+                en: 'The tech giant released several new products last year, all of which were highly successful.',
+                zh: '這家科技巨頭去年發表了數款新產品，全部都非常成功。',
+                deconstructedHtml: '<span class="sv-main">The tech giant released</span> several new products last year, [<span class="pattern-hl">all of which</span> were highly successful].',
+                analysis: '先行詞是 several new products（物），逗號後無連接詞，故用 all of which 引導非限定形容詞子句。',
+                vocab: ['tech giant (n.) 科技巨頭（大企業）', 'release (v.) 發表；釋出', 'highly (adv.) 高度地；非常']
+              }
+            ]
+          },
+          {
+            unitId: '5-7',
+            title: '階段七：形容詞子句簡化 —— 主動分詞片語 (N + V-ing...)',
+            subtitle: '刪除「who / which / that (+ be)」，主動動詞直接變成 V-ing 修飾前面的名詞',
+            formula: '名詞 + [ who / which / that + V (主動) ] ➔ 名詞 + [ V-ing... ]',
+            coreConcept: '這是學測閱讀文章出現密度最高、也最容易讓 A2 學習者混淆的結構！當名詞後面的形容詞子句是「主動動作」時，可以把關代刪掉，動詞改為 V-ing（現在分詞片語）。',
+            examTrap: '看到「名詞 + V-ing」，千萬別以為 V-ing 是全句的動詞（V-ing 不能單獨當動詞）！把 `[V-ing...]` 括號起來翻譯成「正在做...的（名詞）」，往後找真正的動詞。',
+            examples: [
+              {
+                id: 'ex-5-7-a1',
+                level: 'A2',
+                en: 'The girl standing over there is my sister.',
+                zh: '站在那邊的那個女孩是我姊姊。',
+                deconstructedHtml: '<span class="sv-main">The girl</span> [<span class="pattern-hl">standing</span> over there] <span class="sv-main">is</span> my sister.',
+                analysis: '原句：The girl [who is standing over there] is my sister。刪掉 who is，留下 standing over there 修飾 The girl。',
+                vocab: ['over there (phr.) 在那邊']
+              },
+              {
+                id: 'ex-5-7-b1',
+                level: 'B1+',
+                en: 'Companies ignoring customer complaints will eventually lose their market share.',
+                zh: '忽視顧客投訴的公司最終將會失去它們的市佔率。',
+                deconstructedHtml: '<span class="sv-main">Companies</span> [<span class="pattern-hl">ignoring</span> customer complaints] <span class="sv-main">will eventually lose</span> their market share.',
+                analysis: '原句：Companies [which ignore customer complaints] will eventually lose...。刪掉 which，主動動詞 ignore 改為 ignoring。全句主幹是 Companies will lose their market share。',
+                vocab: ['ignore (v.) 忽視；不理會', 'complaint (n.) 抱怨；投訴', 'eventually (adv.) 最終', 'market share (n.) 市場佔有率']
+              }
+            ]
+          },
+          {
+            unitId: '5-8',
+            title: '階段八：形容詞子句簡化 —— 被動分詞片語 (N + p.p....)',
+            subtitle: '刪除「who / which / that + be」，留下過去分詞 (p.p.) 修飾前面的名詞',
+            formula: '名詞 + [ who / which / that + be + p.p. (被動) ] ➔ 名詞 + [ p.p.... ]',
+            coreConcept: '當形容詞子句是「被動語態 (who/which + be + p.p.)」時，直接把「關代 + be 動詞」一起刪掉，只留下過去分詞 (V-ed / p.p.) 接在名詞後面，翻譯為「被...的（名詞）」。',
+            examTrap: '最大的閱讀陷阱：因為規則動詞的「過去式 (V-ed)」跟「過去分詞 (p.p.)」長得一模一樣！看到名詞後面有 V-ed，如果它後面又出現了另一個 by + 人/組織，而且再往後還有真正的動詞，那第一個 V-ed 就是「被動分詞片語（被...的）」！',
+            examples: [
+              {
+                id: 'ex-5-8-a1',
+                level: 'A2',
+                en: 'The car repaired yesterday looks brand new.',
+                zh: '昨天被修好的那輛車看起來像全新的一樣。',
+                deconstructedHtml: '<span class="sv-main">The car</span> [<span class="pattern-hl">repaired</span> yesterday] <span class="sv-main">looks</span> brand new.',
+                analysis: '原句：The car [which was repaired yesterday] looks brand new。repaired 在此不是過去式動詞，而是「被修理的」，真正的動詞是後面的 looks！',
+                vocab: ['repair (v.) 修理', 'brand new (adj.) 全新的']
+              },
+              {
+                id: 'ex-5-8-b1',
+                level: 'B1+',
+                en: 'The policies implemented by the government aim to boost the local economy.',
+                zh: '由政府所實施的這些政策旨在振興當地經濟。',
+                deconstructedHtml: '<span class="sv-main">The policies</span> [<span class="pattern-hl">implemented</span> by the government] <span class="sv-main">aim to boost</span> the local economy.',
+                analysis: '原句：The policies [which were implemented by the government] aim to boost...。把 [implemented by the government] 括號起來，主幹是 The policies aim to boost the local economy。',
+                vocab: ['policy (n.) 政策', 'implement (v.) 實施；執行', 'aim to (phr.) 旨在；目標是', 'boost (v.) 促進；振興']
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    /**
+     * 2. PRACTICE QUIZ DATA (QUIZ_DATA)
+     * 涵蓋所有用戶指定重點與學測高頻陷阱
+     */
+    const QUIZ_DATA = [
+      {
+        id: 'q1',
+        category: 'mod1_2',
+        unitRef: '1-2 make it + Adj + to V',
+        question: 'The rapid development of high-speed rail has made ______ possible for people to travel across the island within hours.',
+        options: ['that', 'this', 'it', 'what'],
+        answerIndex: 2,
+        fullSentence: 'The rapid development of high-speed rail has made it possible for people to travel across the island within hours.',
+        zh: '高鐵的快速發展使得人們能夠在幾小時內穿越全島。',
+        explanation: '考點為「make + it (虛受詞) + Adj (possible) + for sb + to V (真受詞)」。當後面接形容詞與不定詞片語 to travel 時，必須使用虛受詞 it 佔位。'
+      },
+      {
+        id: 'q2',
+        category: 'mod1_2',
+        unitRef: '2-2 without + V-ing',
+        question: 'Many consumers sign online agreements ______ reading the terms and conditions carefully.',
+        options: ['without', 'unless', 'besides', 'despite of'],
+        answerIndex: 0,
+        fullSentence: 'Many consumers sign online agreements without reading the terms and conditions carefully.',
+        zh: '許多消費者在沒有仔細閱讀條款與細則的情況下，就簽署了線上協議。',
+        explanation: '空格後接動名詞 reading，且語意為「在沒有...的情況下」，故選介系詞 without（unless 是連接詞需接子句；despite 不加 of）。'
+      },
+      {
+        id: 'q3',
+        category: 'mod3_4',
+        unitRef: '3-1 with + O + OC',
+        question: 'The nervous applicant sat quietly in the waiting room with his fingers ______ tightly.',
+        options: ['cross', 'crossing', 'crossed', 'to cross'],
+        answerIndex: 2,
+        fullSentence: 'The nervous applicant sat quietly in the waiting room with his fingers crossed tightly.',
+        zh: '那位緊張的應徵者雙手手指緊緊交叉（祈求好運），安靜地坐在等候室裡。',
+        explanation: '考點為「with + 受詞 (his fingers) + 受詞補語 (OC)」。身體部位（手指、手臂、眼睛）是被大腦控制做出動作，屬於被動狀態，故用過去分詞 crossed。'
+      },
+      {
+        id: 'q4',
+        category: 'mod3_4',
+        unitRef: '3-3 被動分詞構句',
+        question: '______ in the 17th century, this historic castle attracts millions of tourists from around the world every year.',
+        options: ['Building', 'Built', 'Having built', 'To build'],
+        answerIndex: 1,
+        fullSentence: 'Built in the 17th century, this historic castle attracts millions of tourists from around the world every year.',
+        zh: '這座歷史悠久的城堡建於 17 世紀，每年吸引來自世界各地數百萬名觀光客。',
+        explanation: '先看逗號後面的主詞「this historic castle（這座古堡）」。古堡是「被建造（was built）」，省略連接詞、主詞與 Being 後，直接以過去分詞 Built 開頭。'
+      },
+      {
+        id: 'q5',
+        category: 'mod3_4',
+        unitRef: '3-4 獨立分詞構句',
+        question: 'Weather ______, the outdoor music festival will be held on the riverside park this Saturday.',
+        options: ['permits', 'permitted', 'permitting', 'to permit'],
+        answerIndex: 2,
+        fullSentence: 'Weather permitting, the outdoor music festival will be held on the riverside park this Saturday.',
+        zh: '如果天氣允許的話，這場戶外音樂祭將於本週六在河濱公園舉行。',
+        explanation: '前後兩個子句主詞不同（Weather vs. the outdoor music festival），且沒有連接詞 If，屬於「獨立分詞構句」。天氣「主動允許」，故將 permits 改為現在分詞 permitting。'
+      },
+      {
+        id: 'q6',
+        category: 'mod3_4',
+        unitRef: '3-5 完成式被動分詞構句',
+        question: '______ by fraudsters several times, the elderly man is now very cautious about phone calls from strangers.',
+        options: ['Deceiving', 'Having deceived', 'Having been deceived', 'Being deceiving'],
+        answerIndex: 2,
+        fullSentence: 'Having been deceived by fraudsters several times, the elderly man is now very cautious about phone calls from strangers.',
+        zh: '在被詐騙集團欺騙過好幾次之後，這位老先生現在對陌生人的電話非常謹慎。',
+        explanation: '主詞 the elderly man 是「被欺騙 (be deceived)」，且「已經被騙過好幾次」發生在「現在很謹慎」之前，因此使用完成式被動分詞構句 Having been deceived。'
+      },
+      {
+        id: 'q7',
+        category: 'mod5',
+        unitRef: '5-3 介系詞 + which',
+        question: 'Trust is the foundation ______ a healthy and lasting friendship is built.',
+        options: ['which', 'on which', 'that', 'on that'],
+        answerIndex: 1,
+        fullSentence: 'Trust is the foundation on which a healthy and lasting friendship is built.',
+        zh: '信任是建立健康且長久友誼的基石。',
+        explanation: '將先行詞 the foundation 放回後面子句：a healthy friendship is built ON the foundation（建立在基石之上）。介系詞 on 必須一起前移變 on which（介系詞後禁用 that）。'
+      },
+      {
+        id: 'q8',
+        category: 'mod5',
+        unitRef: '5-4 which vs. where',
+        question: 'The national park ______ we visited last month is famous for its breathtaking mountain views.',
+        options: ['where', 'in which', 'which', 'what'],
+        answerIndex: 2,
+        fullSentence: 'The national park which we visited last month is famous for its breathtaking mountain views.',
+        zh: '我們上個月造訪的那座國家公園以其令人屏息的山景聞名。',
+        explanation: '經典陷阱！雖然先行詞是地點 (The national park)，但後面子句的動詞 visited 是及物動詞，缺少「參觀什麼」的受詞，因此必須選關係代名詞 which（而非關係副詞 where）。'
+      },
+      {
+        id: 'q9',
+        category: 'mod5',
+        unitRef: '5-6 數量詞 + of whom / which',
+        question: 'The rescue team searched twenty collapsed buildings, in none of ______ did they find any trapped residents.',
+        options: ['them', 'which', 'that', 'where'],
+        answerIndex: 1,
+        fullSentence: 'The rescue team searched twenty collapsed buildings, in none of which did they find any trapped residents.',
+        zh: '搜救隊搜索了二十棟倒塌的建築物，在其中任何一棟都沒有發現受困居民。',
+        explanation: '逗號後面沒有連接詞 (and)，不能選代名詞 them；先行詞是 buildings（物），且接在介系詞 of 後面，故必選關係代名詞 which。'
+      },
+      {
+        id: 'q10',
+        category: 'mod5',
+        unitRef: '5-7 & 5-8 分詞片語簡化',
+        question: 'Passengers ______ on international flights must arrive at the airport at least three hours before departure.',
+        options: ['travel', 'traveled', 'traveling', 'who traveling'],
+        answerIndex: 2,
+        fullSentence: 'Passengers traveling on international flights must arrive at the airport at least three hours before departure.',
+        zh: '搭乘國際線班機的旅客必須在起飛前至少三小時抵達機場。',
+        explanation: '全句已有真正的動詞 must arrive。空格為修飾 Passengers 的形容詞子句簡化（原為 who travel...），因旅客「主動搭乘」，刪掉關代 who 後改為現在分詞 traveling。'
+      }
+    ];
+
+    // =========================================================================
+    // 3. STATE MANAGEMENT & LOCAL STORAGE
+    // =========================================================================
+    const STORAGE_KEYS = {
+      COMPLETED_UNITS: 'gsat_completed_units_v1',
+      CUSTOM_EXAMPLES: 'gsat_custom_examples_v1',
+      SPEECH_RATE: 'gsat_speech_rate_v1'
+    };
+
+    let appState = {
+      activeTab: 'learn',
+      globalDeconstruct: true,
+      cardDeconstructOverrides: {}, // { exampleId: boolean }
+      levelFilter: 'all',           // 'all' | 'A2' | 'B1+'
+      searchQuery: '',
+      speechRate: 0.9,
+      selectedVoiceURI: '',
+      availableVoices: [],
+      currentlySpeakingId: null,
+      completedUnits: [],
+      customExamples: [],           // User-added examples
+      quizAnswers: {},              // { quizId: selectedIndex }
+      quizFilter: 'all'
+    };
+
+    // Load saved state
+    function loadSavedState() {
+      try {
+        const savedUnits = localStorage.getItem(STORAGE_KEYS.COMPLETED_UNITS);
+        if (savedUnits) appState.completedUnits = JSON.parse(savedUnits);
+
+        const savedCustom = localStorage.getItem(STORAGE_KEYS.CUSTOM_EXAMPLES);
+        if (savedCustom) appState.customExamples = JSON.parse(savedCustom);
+
+        const savedRate = localStorage.getItem(STORAGE_KEYS.SPEECH_RATE);
+        if (savedRate) appState.speechRate = parseFloat(savedRate);
+      } catch (err) {
+        console.warn('LocalStorage 載入略過:', err);
+      }
+    }
+
+    // =========================================================================
+    // 4. WEB SPEECH API (TTS 真人發音控制系統)
+    // =========================================================================
+    function initTTS() {
+      if (!('speechSynthesis' in window)) {
+        showToast('您的瀏覽器不支援 Web Speech API 語音朗讀功能', 'warning');
+        return;
+      }
+
+      function populateVoices() {
+        const voices = window.speechSynthesis.getVoices();
+        // Filter for English voices
+        const englishVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+        
+        // Sort to prioritize natural / Google / Microsoft / Apple premium English voices
+        englishVoices.sort((a, b) => {
+          const score = (v) => {
+            let s = 0;
+            const name = v.name.toLowerCase();
+            if (name.includes('natural') || name.includes('neural') || name.includes('online')) s += 5;
+            if (name.includes('google us english') || name.includes('samantha') || name.includes('aria') || name.includes('guy')) s += 4;
+            if (v.lang === 'en-US' || v.lang === 'en-GB') s += 2;
+            return s;
+          };
+          return score(b) - score(a);
+        });
+
+        appState.availableVoices = englishVoices;
+
+        const desktopSelect = document.getElementById('voice-select');
+        const mobileSelect = document.getElementById('voice-select-mobile');
+
+        const optionsHtml = [
+          '<option value="">🌟 自動最佳英語發音</option>',
+          ...englishVoices.map(v => `<option value="${escapeHtml(v.voiceURI)}">${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`)
+        ].join('');
+
+        if (desktopSelect) desktopSelect.innerHTML = optionsHtml;
+        if (mobileSelect) mobileSelect.innerHTML = optionsHtml;
+      }
+
+      populateVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+      }
+
+      updateSpeechRateButtonsUI();
+    }
+
+    function speakText(text, btnId, customRate = null) {
+      if (!('speechSynthesis' in window)) {
+        showToast('此裝置不支援語音合成功能', 'error');
+        return;
+      }
+
+      // If clicking the exact same button that is currently speaking, stop it
+      if (appState.currentlySpeakingId === btnId && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        setSpeakingButtonState(null);
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = customRate !== null ? customRate : appState.speechRate;
+
+      // Pick selected voice or best English voice
+      if (appState.selectedVoiceURI) {
+        const matched = appState.availableVoices.find(v => v.voiceURI === appState.selectedVoiceURI);
+        if (matched) utterance.voice = matched;
+      } else if (appState.availableVoices.length > 0) {
+        utterance.voice = appState.availableVoices[0];
+      }
+
+      utterance.onstart = () => {
+        setSpeakingButtonState(btnId);
+      };
+
+      utterance.onend = () => {
+        if (appState.currentlySpeakingId === btnId) {
+          setSpeakingButtonState(null);
+        }
+      };
+
+      utterance.onerror = () => {
+        setSpeakingButtonState(null);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function setSpeakingButtonState(activeBtnId) {
+      // Reset previously active button
+      if (appState.currentlySpeakingId) {
+        const prevBtn = document.getElementById(appState.currentlySpeakingId);
+        if (prevBtn) {
+          prevBtn.classList.remove('bg-brand-600', 'text-white', 'ring-2', 'ring-brand-300');
+          const iconSpan = prevBtn.querySelector('.tts-icon-slot');
+          if (iconSpan) iconSpan.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+        }
+      }
+
+      appState.currentlySpeakingId = activeBtnId;
+
+      if (activeBtnId) {
+        const currBtn = document.getElementById(activeBtnId);
+        if (currBtn) {
+          currBtn.classList.add('bg-brand-600', 'text-white', 'ring-2', 'ring-brand-300');
+          const iconSpan = currBtn.querySelector('.tts-icon-slot');
+          if (iconSpan) {
+            iconSpan.innerHTML = '<span class="inline-flex items-center h-3"><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span></span>';
+          }
+        }
+      }
+    }
+
+    function setSpeechRate(rate) {
+      appState.speechRate = rate;
+      try {
+        localStorage.setItem(STORAGE_KEYS.SPEECH_RATE, String(rate));
+      } catch (e) {}
+      updateSpeechRateButtonsUI();
+      showToast(`發音語速已設為 ${rate}x`, 'info');
+    }
+
+    function updateSpeechRateButtonsUI() {
+      const rates = [
+        { id: 'rate-075', val: 0.75 },
+        { id: 'rate-09', val: 0.9 },
+        { id: 'rate-10', val: 1.0 }
+      ];
+      rates.forEach(r => {
+        const el = document.getElementById(r.id);
+        if (!el) return;
+        if (Math.abs(appState.speechRate - r.val) < 0.01) {
+          el.className = 'px-2 py-1 text-xs font-semibold rounded-lg bg-white text-brand-700 shadow-sm transition';
+        } else {
+          el.className = 'px-2 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition';
+        }
+      });
+    }
+
+    function changeSelectedVoice(voiceURI) {
+      appState.selectedVoiceURI = voiceURI;
+      const d = document.getElementById('voice-select');
+      const m = document.getElementById('voice-select-mobile');
+      if (d && d.value !== voiceURI) d.value = voiceURI;
+      if (m && m.value !== voiceURI) m.value = voiceURI;
+      showToast('已切換英語發音語音', 'info');
+    }
+
+    // =========================================================================
+    // 5. RENDERING NAVIGATION, CURRICULUM & EXAMPLES
+    // =========================================================================
+    function getAllExamplesForUnit(unit) {
+      const customForUnit = appState.customExamples.filter(c => c.unitId === unit.unitId);
+      return [...unit.examples, ...customForUnit];
+    }
+
+    function renderNavigation() {
+      const totalUnits = GRAMMAR_DATA.reduce((acc, m) => acc + m.units.length, 0);
+      const doneCount = appState.completedUnits.length;
+      const pct = Math.min(100, Math.round((doneCount / totalUnits) * 100));
+
+      const progText = document.getElementById('progress-text');
+      const progBar = document.getElementById('progress-bar');
+      if (progText) progText.textContent = `${doneCount} / ${totalUnits} 單元 (${pct}%)`;
+      if (progBar) progBar.style.width = `${pct}%`;
+
+      // Sidebar Tree HTML
+      const treeHtml = GRAMMAR_DATA.map(mod => {
+        const unitsHtml = mod.units.map(u => {
+          const isDone = appState.completedUnits.includes(u.unitId);
+          return `
+            <div class="flex items-center justify-between gap-1.5 group rounded-xl px-2.5 py-1.5 hover:bg-slate-100 transition">
+              <button onclick="scrollToUnit('${u.unitId}')" class="text-left flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] font-bold px-1.5 py-0.5 rounded bg-slate-200/80 text-slate-700 group-hover:bg-brand-100 group-hover:text-brand-700 transition">${u.unitId}</span>
+                  <span class="text-xs font-medium text-slate-700 group-hover:text-slate-950 truncate">${escapeHtml(u.title)}</span>
+                </div>
+              </button>
+              <button onclick="toggleUnitComplete('${u.unitId}', event)" title="標記為已熟練" class="w-5 h-5 rounded-md flex items-center justify-center transition ${isDone ? 'bg-emerald-500 text-white' : 'border border-slate-300 text-transparent hover:border-brand-400'}">
+                <i class="fa-solid fa-check text-[10px]"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="space-y-1">
+            <button onclick="scrollToModule('${mod.moduleId}')" class="w-full text-left px-2 py-1 flex items-center justify-between text-xs font-bold text-slate-900 hover:text-brand-600 transition">
+              <span>${mod.moduleNumber}｜${mod.moduleTitle.split(' ')[0]}</span>
+              <span class="text-[11px] font-normal text-slate-400">${mod.units.length} 單元</span>
+            </button>
+            <div class="space-y-0.5 pl-1 border-l-2 border-slate-100">
+              ${unitsHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const desktopSide = document.getElementById('desktop-sidebar-content');
+      const mobileSide = document.getElementById('mobile-sidebar-content');
+      if (desktopSide) desktopSide.innerHTML = treeHtml;
+      if (mobileSide) mobileSide.innerHTML = treeHtml;
+
+      // Mobile Horizontal Pills
+      const pillsEl = document.getElementById('mobile-module-pills');
+      if (pillsEl) {
+        pillsEl.innerHTML = GRAMMAR_DATA.map(mod => `
+          <button onclick="scrollToModule('${mod.moduleId}')" class="shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:border-brand-400 hover:text-brand-700 shadow-2xs transition">
+            ${mod.moduleNumber}：${mod.moduleTitle.split(' ')[0]}
+          </button>
+        `).join('');
+      }
+
+      // Populate Unit Select in Expand Tab
+      const unitSelect = document.getElementById('custom-unit-select');
+      if (unitSelect) {
+        unitSelect.innerHTML = GRAMMAR_DATA.map(mod => `
+          <optgroup label="${mod.moduleNumber}：${mod.moduleTitle}">
+            ${mod.units.map(u => `<option value="${u.unitId}">[${u.unitId}] ${escapeHtml(u.title)} (${escapeHtml(u.subtitle)})</option>`).join('')}
+          </optgroup>
+        `).join('');
+      }
+    }
+
+    function renderCurriculum() {
+      const container = document.getElementById('curriculum-container');
+      if (!container) return;
+
+      const query = appState.searchQuery.trim().toLowerCase();
+
+      const modulesHtml = GRAMMAR_DATA.map(mod => {
+        // Filter units if search query exists
+        const filteredUnits = mod.units.filter(unit => {
+          if (!query) return true;
+          const allEx = getAllExamplesForUnit(unit);
+          const matchUnitText = [unit.unitId, unit.title, unit.subtitle, unit.formula, unit.coreConcept, unit.examTrap]
+            .join(' ').toLowerCase().includes(query);
+          const matchExamples = allEx.some(ex =>
+            ex.en.toLowerCase().includes(query) ||
+            ex.zh.toLowerCase().includes(query) ||
+            (ex.analysis && ex.analysis.toLowerCase().includes(query)) ||
+            (ex.vocab && ex.vocab.join(' ').toLowerCase().includes(query))
+          );
+          return matchUnitText || matchExamples;
+        });
+
+        if (filteredUnits.length === 0) return '';
+
+        const unitsCardsHtml = filteredUnits.map(unit => renderUnitCard(unit)).join('');
+
+        return `
+          <div id="${mod.moduleId}" class="scroll-mt-28 space-y-4">
+            <!-- Module Header Banner -->
+            <div class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <div class="inline-flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950">${mod.moduleNumber}</span>
+                  <h2 class="text-lg sm:text-xl font-extrabold tracking-tight">${escapeHtml(mod.moduleTitle)}</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1">${escapeHtml(mod.moduleSubtitle)}</p>
+              </div>
+              <div class="text-xs text-slate-400 shrink-0">共 ${filteredUnits.length} 個核心子單元</div>
+            </div>
+
+            <!-- Sub-units Stack -->
+            <div class="space-y-5">
+              ${unitsCardsHtml}
+            </div>
+          </div>
+        `;
+      }).filter(Boolean).join('');
+
+      if (!modulesHtml) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-10 text-center border border-slate-200">
+            <i class="fa-solid fa-magnifying-glass text-3xl text-slate-300 mb-3"></i>
+            <p class="text-base font-bold text-slate-700">找不到符合「${escapeHtml(appState.searchQuery)}」的句型或例句</p>
+            <button onclick="clearSearch()" class="mt-3 px-4 py-2 bg-brand-600 text-white text-xs font-semibold rounded-xl">清除搜尋條件</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = modulesHtml;
+    }
+
+    function renderUnitCard(unit) {
+      const isDone = appState.completedUnits.includes(unit.unitId);
+      const allExamples = getAllExamplesForUnit(unit).filter(ex => {
+        if (appState.levelFilter === 'all') return true;
+        return ex.level === appState.levelFilter;
+      });
+
+      const comparisonBoxHtml = unit.comparisonBox ? `
+        <div class="bg-indigo-950 text-indigo-50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm space-y-2 border border-indigo-800">
+          <div class="font-bold text-amber-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span>${escapeHtml(unit.comparisonBox.title)}</span>
+          </div>
+          <ul class="space-y-1.5 text-xs text-indigo-100 font-mono">
+            ${unit.comparisonBox.items.map(item => `<li class="leading-relaxed">• ${escapeHtml(item)}</li>`).join('')}
+          </ul>
+        </div>
+      ` : '';
+
+      const examplesHtml = allExamples.length > 0
+        ? allExamples.map(ex => renderExampleItem(ex)).join('')
+        : `<div class="text-xs text-slate-400 italic py-3">此篩選條件下無例句，請切換上方「全部顯示」按鈕。</div>`;
+
+      return `
+        <article id="unit-${unit.unitId}" class="scroll-mt-28 bg-white rounded-2xl border border-slate-200/95 shadow-xs overflow-hidden transition hover:border-slate-300">
+          <!-- Unit Top Bar -->
+          <div class="p-4 sm:p-5 bg-slate-50/70 border-b border-slate-200/80 flex flex-wrap items-start justify-between gap-3">
+            <div class="space-y-1 flex-1 min-w-[240px]">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-brand-600 text-white">Unit ${unit.unitId}</span>
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900">${escapeHtml(unit.title)}</h3>
+                <span class="text-xs sm:text-sm font-semibold text-brand-700">（${escapeHtml(unit.subtitle)}）</span>
+              </div>
+              <!-- Formula Pill -->
+              <div class="inline-flex items-center gap-1.5 text-xs font-mono bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1 rounded-lg mt-1">
+                <i class="fa-solid fa-code text-amber-600"></i>
+                <span>公式：${escapeHtml(unit.formula)}</span>
+              </div>
+            </div>
+
+            <!-- Mark Completed Button -->
+            <button onclick="toggleUnitComplete('${unit.unitId}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 ${isDone ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}">
+              <i class="fa-solid ${isDone ? 'fa-circle-check text-emerald-600' : 'fa-regular fa-circle'}"></i>
+              <span>${isDone ? '已熟練單元' : '標記已讀'}</span>
+            </button>
+          </div>
+
+          <!-- Unit Body: Explanation + Examples -->
+          <div class="p-4 sm:p-5 space-y-4">
+            <!-- Core Concept & Exam Trap Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/70">
+                <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-lightbulb text-amber-500"></i> 核心觀念與拆解邏輯
+                </div>
+                <p class="text-slate-600 leading-relaxed">${escapeHtml(unit.coreConcept)}</p>
+              </div>
+              <div class="bg-rose-50/60 rounded-xl p-3.5 border border-rose-200/70">
+                <div class="font-bold text-rose-800 mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> 學測克漏字／翻譯必考陷阱
+                </div>
+                <p class="text-rose-900/90 leading-relaxed">${escapeHtml(unit.examTrap)}</p>
+              </div>
+            </div>
+
+            ${comparisonBoxHtml}
+
+            <!-- Progressive Examples (A2 -> Upper B1) -->
+            <div class="space-y-3 pt-1">
+              <div class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+                <span>🎯 漸進式例句實戰（點選喇叭聽發音）</span>
+                <span>共 ${allExamples.length} 句</span>
+              </div>
+              <div class="grid grid-cols-1 gap-3">
+                ${examplesHtml}
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderExampleItem(ex) {
+      const isDeconstructed = appState.cardDeconstructOverrides[ex.id] !== undefined
+        ? appState.cardDeconstructOverrides[ex.id]
+        : appState.globalDeconstruct;
+
+      const isA2 = ex.level === 'A2';
+      const levelBadge = isA2
+        ? '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">🌱 A2 基礎暖身</span>'
+        : '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">🔥 Upper B1 學測實戰</span>';
+
+      const customBadge = ex.isCustom
+        ? '<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-100 text-amber-800">✨ 自訂擴充</span>'
+        : '';
+
+      const sentenceDisplayHtml = isDeconstructed && ex.deconstructedHtml
+        ? ex.deconstructedHtml
+        : escapeHtml(ex.en);
+
+      const vocabPillsHtml = (ex.vocab && ex.vocab.length > 0)
+        ? `<div class="flex flex-wrap items-center gap-1.5 pt-2">
+            <span class="text-[11px] font-semibold text-slate-400"><i class="fa-solid fa-tags mr-1"></i>高頻字彙：</span>
+            ${ex.vocab.map(v => `<span class="text-xs px-2 py-0.5 bg-white rounded-md border border-slate-200 text-slate-700 font-medium">${escapeHtml(v)}</span>`).join('')}
+          </div>`
+        : '';
+
+      const normalBtnId = `tts-norm-${ex.id}`;
+      const slowBtnId = `tts-slow-${ex.id}`;
+      const safeEnForJs = ex.en.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+
+      return `
+        <div class="rounded-xl border ${isA2 ? 'bg-emerald-50/25 border-emerald-200/80' : 'bg-indigo-50/25 border-indigo-200/80'} p-3.5 sm:p-4 transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              ${levelBadge}
+              ${customBadge}
+            </div>
+
+            <!-- Interactive TTS & Single-Card Deconstruct Buttons -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button id="${normalBtnId}" onclick="speakText('${safeEnForJs}', '${normalBtnId}')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white hover:bg-brand-50 text-brand-700 border border-brand-200 shadow-2xs transition flex items-center gap-1.5 active:scale-95">
+                <span class="tts-icon-slot"><i class="fa-solid fa-volume-high"></i></span>
+                <span>發音</span>
+              </button>
+              <button id="${slowBtnId}" onclick="speakText('${safeEnForJs}', '${slowBtnId}', 0.72)" class="px-2 py-1 rounded-lg text-xs font-medium bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition flex items-center gap-1 active:scale-95" title="用 0.72x 慢速仔細聽連音與結構">
+                <span class="tts-icon-slot"><i class="fa-solid fa-gauge-simple-low"></i></span>
+                <span>慢速</span>
+              </button>
+              <button onclick="toggleCardDeconstruct('${ex.id}')" class="px-2 py-1 rounded-lg text-xs font-medium border transition ${isDeconstructed ? 'bg-indigo-100/80 text-indigo-900 border-indigo-300' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}">
+                <i class="fa-solid fa-brackets-curly mr-0.5"></i>
+                <span>${isDeconstructed ? '隱藏拆解' : '拆解結構'}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- English Sentence -->
+          <p class="text-base sm:text-lg font-medium text-slate-900 leading-relaxed tracking-wide select-text">
+            ${sentenceDisplayHtml}
+          </p>
+
+          <!-- Chinese Translation -->
+          <p class="text-xs sm:text-sm text-slate-600 mt-1.5 font-medium">
+            ${escapeHtml(ex.zh)}
+          </p>
+
+          <!-- Detailed Structural Breakdown Box (Shown when deconstructed is ON) -->
+          ${isDeconstructed ? `
+            <div class="mt-3 pt-2.5 border-t border-slate-200/70 text-xs text-slate-700 space-y-1">
+              <div class="flex items-start gap-1.5">
+                <span class="font-bold text-brand-700 shrink-0"><i class="fa-solid fa-magnifying-glass-chart mr-1"></i>結構解析：</span>
+                <span class="leading-relaxed">${escapeHtml(ex.analysis || '觀察括號內的子句如何修飾主幹。')}</span>
+              </div>
+              ${vocabPillsHtml}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 6. QUIZ ENGINE
+    // =========================================================================
+    function renderQuiz() {
+      const container = document.getElementById('quiz-questions-container');
+      if (!container) return;
+
+      const filteredQuiz = QUIZ_DATA.filter(q => {
+        if (appState.quizFilter === 'all') return true;
+        return q.category === appState.quizFilter;
+      });
+
+      // Calculate score
+      let correctCount = 0;
+      QUIZ_DATA.forEach(q => {
+        if (appState.quizAnswers[q.id] === q.answerIndex) correctCount++;
+      });
+      const scoreEl = document.getElementById('quiz-score-display');
+      if (scoreEl) scoreEl.textContent = `${correctCount} / ${QUIZ_DATA.length}`;
+
+      container.innerHTML = filteredQuiz.map((q, idx) => {
+        const userAns = appState.quizAnswers[q.id];
+        const hasAnswered = userAns !== undefined;
+        const isCorrect = userAns === q.answerIndex;
+        const safeFullSentence = q.fullSentence.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        const qBtnId = `tts-quiz-${q.id}`;
+
+        const optionsHtml = q.options.map((opt, oIdx) => {
+          let btnStyle = 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200';
+          let iconHtml = `<span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center">${String.fromCharCode(65 + oIdx)}</span>`;
+
+          if (hasAnswered) {
+            if (oIdx === q.answerIndex) {
+              btnStyle = 'bg-emerald-50 border-emerald-400 text-emerald-900 font-bold ring-1 ring-emerald-400';
+              iconHtml = `<span class="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center"><i class="fa-solid fa-check"></i></span>`;
+            } else if (oIdx === userAns && userAns !== q.answerIndex) {
+              btnStyle = 'bg-rose-50 border-rose-300 text-rose-900 line-through';
+              iconHtml = `<span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center"><i class="fa-solid fa-xmark"></i></span>`;
+            } else {
+              btnStyle = 'bg-slate-50 text-slate-400 border-slate-200 opacity-70';
+            }
+          }
+
+          return `
+            <button onclick="selectQuizAnswer('${q.id}', ${oIdx})" class="w-full text-left p-3 rounded-xl border transition flex items-center gap-3 ${btnStyle}">
+              ${iconHtml}
+              <span class="text-sm font-medium">${escapeHtml(opt)}</span>
+            </button>
+          `;
+        }).join('');
+
+        return `
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs space-y-4">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <span class="text-xs font-bold px-2.5 py-1 bg-indigo-50 text-brand-700 rounded-lg border border-indigo-200">
+                第 ${idx + 1} 題｜對應考點：${escapeHtml(q.unitRef)}
+              </span>
+              ${hasAnswered ? `
+                <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                  ${isCorrect ? '🎉 答對了！' : '💡 再看一次解析'}
+                </span>
+              ` : ''}
+            </div>
+
+            <p class="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed">
+              ${escapeHtml(q.question)}
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              ${optionsHtml}
+            </div>
+
+            ${hasAnswered ? `
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs sm:text-sm">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                  <span class="font-bold text-slate-900"><i class="fa-solid fa-graduation-cap text-brand-600 mr-1"></i>完整正確句子與翻譯：</span>
+                  <button id="${qBtnId}" onclick="speakText('${safeFullSentence}', '${qBtnId}')" class="px-3 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white hover:bg-brand-700 transition flex items-center gap-1.5">
+                    <span class="tts-icon-slot"><i class="fa-solid fa-volume-high"></i></span>
+                    <span>聽完整句發音</span>
+                  </button>
+                </div>
+                <p class="text-slate-900 font-semibold">${escapeHtml(q.fullSentence)}</p>
+                <p class="text-slate-600">${escapeHtml(q.zh)}</p>
+                <div class="pt-2 border-t border-slate-200 text-slate-700 leading-relaxed">
+                  <strong class="text-brand-700">破題關鍵：</strong>${escapeHtml(q.explanation)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectQuizAnswer(quizId, optionIndex) {
+      appState.quizAnswers[quizId] = optionIndex;
+      renderQuiz();
+    }
+
+    function resetQuiz() {
+      appState.quizAnswers = {};
+      renderQuiz();
+      showToast('已重置隨堂測驗作答紀錄', 'info');
+    }
+
+    function filterQuiz(category) {
+      appState.quizFilter = category;
+      ['all', 'mod1_2', 'mod3_4', 'mod5'].forEach(c => {
+        const btn = document.getElementById(`qfilter-${c}`);
+        if (!btn) return;
+        if (c === category) {
+          btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-xs shrink-0';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 shrink-0';
+        }
+      });
+      renderQuiz();
+    }
+
+    // =========================================================================
+    // 7. CUSTOM EXPANSION & DATA MANAGEMENT
+    // =========================================================================
+    function convertSimpleMarkupToHtml(rawMarkup, fallbackEn) {
+      const source = (rawMarkup && rawMarkup.trim()) ? rawMarkup.trim() : fallbackEn;
+      let safe = escapeHtml(source);
+      // Convert *pattern* to <span class="pattern-hl">pattern</span>
+      safe = safe.replace(/\*([^*]+)\*/g, '<span class="pattern-hl">$1</span>');
+      // Convert [clause] to <span class="clause-bracket">[clause]</span>
+      safe = safe.replace(/\[([^\]]+)\]/g, '<span class="clause-bracket">[$1]</span>');
+      return safe;
+    }
+
+    function addCustomSentence() {
+      const unitId = document.getElementById('custom-unit-select').value;
+      const levelRadio = document.querySelector('input[name="custom-level"]:checked');
+      const level = levelRadio ? levelRadio.value : 'B1+';
+      const en = document.getElementById('custom-en').value.trim();
+      const zh = document.getElementById('custom-zh').value.trim();
+      const markup = document.getElementById('custom-markup').value.trim();
+      const note = document.getElementById('custom-note').value.trim();
+
+      if (!en || !zh) {
+        showToast('請填寫「英文完整句子」與「中文翻譯」', 'error');
+        return;
+      }
+
+      const newEx = {
+        id: 'custom-' + Date.now(),
+        unitId,
+        level,
+        en,
+        zh,
+        deconstructedHtml: convertSimpleMarkupToHtml(markup, en),
+        analysis: note || '自訂補充實戰例句',
+        vocab: [],
+        isCustom: true
+      };
+
+      appState.customExamples.push(newEx);
+      try {
+        localStorage.setItem(STORAGE_KEYS.CUSTOM_EXAMPLES, JSON.stringify(appState.customExamples));
+      } catch (e) {}
+
+      // Clear inputs
+      document.getElementById('custom-en').value = '';
+      document.getElementById('custom-zh').value = '';
+      document.getElementById('custom-markup').value = '';
+      document.getElementById('custom-note').value = '';
+
+      renderCurriculum();
+      renderCustomSentencesList();
+      showToast(`已成功將例句加入 Unit ${unitId}！`, 'success');
+    }
+
+    function deleteCustomSentence(id) {
+      appState.customExamples = appState.customExamples.filter(item => item.id !== id);
+      try {
+        localStorage.setItem(STORAGE_KEYS.CUSTOM_EXAMPLES, JSON.stringify(appState.customExamples));
+      } catch (e) {}
+      renderCurriculum();
+      renderCustomSentencesList();
+      showToast('已刪除該筆自訂例句', 'info');
+    }
+
+    function clearAllCustomData() {
+      appState.customExamples = [];
+      try {
+        localStorage.removeItem(STORAGE_KEYS.CUSTOM_EXAMPLES);
+      } catch (e) {}
+      renderCurriculum();
+      renderCustomSentencesList();
+      showToast('已清除所有自訂擴充例句', 'info');
+    }
+
+    function renderCustomSentencesList() {
+      const listEl = document.getElementById('custom-sentences-list');
+      const countEl = document.getElementById('custom-count-label');
+      if (countEl) countEl.textContent = String(appState.customExamples.length);
+      if (!listEl) return;
+
+      if (appState.customExamples.length === 0) {
+        listEl.innerHTML = `<div class="text-slate-400 italic py-2">目前尚未新增自訂例句。可由左側表單隨時新增！</div>`;
+        return;
+      }
+
+      listEl.innerHTML = appState.customExamples.map(item => `
+        <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="px-1.5 py-0.2 bg-brand-100 text-brand-700 font-bold rounded text-[10px]">Unit ${escapeHtml(item.unitId)}</span>
+              <span class="text-[10px] font-semibold text-slate-500">${escapeHtml(item.level)}</span>
+            </div>
+            <p class="font-semibold text-slate-800 truncate mt-0.5">${escapeHtml(item.en)}</p>
+            <p class="text-slate-500 truncate">${escapeHtml(item.zh)}</p>
+          </div>
+          <button onclick="deleteCustomSentence('${item.id}')" class="text-slate-400 hover:text-rose-600 p-1 shrink-0" title="刪除">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function exportDataJson() {
+      const exportPayload = {
+        exportedAt: new Date().toISOString(),
+        system: '台灣英文學測 A2 衝刺 Upper B1 核心句型互動學習系統',
+        completedUnits: appState.completedUnits,
+        customExamples: appState.customExamples,
+        grammarCurriculumCount: GRAMMAR_DATA.length
+      };
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'gsat_english_sentences_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('已匯出 JSON 備份檔案', 'success');
+    }
+
+    function copyCustomDataToClipboard() {
+      const text = JSON.stringify(appState.customExamples, null, 2);
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('已複製自訂擴充 JSON 到剪貼簿！', 'success');
+      } catch (err) {
+        showToast('複製失敗，請手動匯出檔案', 'error');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    // =========================================================================
+    // 8. UI INTERACTIONS & HELPERS
+    // =========================================================================
+    function switchMainTab(tabName) {
+      appState.activeTab = tabName;
+      ['learn', 'quiz', 'expand'].forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (view) {
+          view.classList.toggle('hidden', t !== tabName);
+        }
+        if (btn) {
+          if (t === tabName) {
+            btn.className = 'flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 bg-white text-brand-700 shadow-sm';
+          } else {
+            btn.className = 'flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900';
+          }
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleGlobalDeconstruct() {
+      appState.globalDeconstruct = !appState.globalDeconstruct;
+      appState.cardDeconstructOverrides = {}; // reset individual overrides
+      const statusEl = document.getElementById('global-deconstruct-status');
+      const btnEl = document.getElementById('global-deconstruct-btn');
+      if (statusEl) statusEl.textContent = appState.globalDeconstruct ? '開啟' : '關閉';
+      if (btnEl) {
+        btnEl.className = appState.globalDeconstruct
+          ? 'px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 bg-indigo-50 text-brand-700 border-indigo-200 hover:bg-indigo-100'
+          : 'px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 bg-white text-slate-600 border-slate-200 hover:bg-slate-100';
+      }
+      renderCurriculum();
+    }
+
+    function toggleCardDeconstruct(exampleId) {
+      const current = appState.cardDeconstructOverrides[exampleId] !== undefined
+        ? appState.cardDeconstructOverrides[exampleId]
+        : appState.globalDeconstruct;
+      appState.cardDeconstructOverrides[exampleId] = !current;
+      renderCurriculum();
+    }
+
+    function setLevelFilter(level) {
+      appState.levelFilter = level;
+      const map = { 'all': 'lvl-all', 'A2': 'lvl-a2', 'B1+': 'lvl-b1' };
+      Object.entries(map).forEach(([k, id]) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        if (k === level) {
+          btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-xs transition';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition';
+        }
+      });
+      renderCurriculum();
+    }
+
+    function handleSearch(val) {
+      appState.searchQuery = val;
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (clearBtn) clearBtn.classList.toggle('hidden', !val);
+      if (appState.activeTab !== 'learn') switchMainTab('learn');
+      renderCurriculum();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('unit-search-input');
+      if (input) input.value = '';
+      handleSearch('');
+    }
+
+    function toggleUnitComplete(unitId, ev) {
+      if (ev) ev.stopPropagation();
+      const idx = appState.completedUnits.indexOf(unitId);
+      if (idx >= 0) {
+        appState.completedUnits.splice(idx, 1);
+        showToast(`已取消 Unit ${unitId} 完成標記`, 'info');
+      } else {
+        appState.completedUnits.push(unitId);
+        showToast(`太棒了！已將 Unit ${unitId} 標記為熟練`, 'success');
+      }
+      try {
+        localStorage.setItem(STORAGE_KEYS.COMPLETED_UNITS, JSON.stringify(appState.completedUnits));
+      } catch (e) {}
+      renderNavigation();
+      renderCurriculum();
+    }
+
+    function scrollToModule(modId) {
+      if (appState.activeTab !== 'learn') switchMainTab('learn');
+      closeMobileDrawerIfOpen();
+      setTimeout(() => {
+        const el = document.getElementById(modId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    }
+
+    function scrollToUnit(unitId) {
+      if (appState.activeTab !== 'learn') switchMainTab('learn');
+      closeMobileDrawerIfOpen();
+      setTimeout(() => {
+        const el = document.getElementById(`unit-${unitId}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    }
+
+    function toggleMobileDrawer() {
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+      if (!drawer || !backdrop) return;
+      const isClosed = drawer.classList.contains('-translate-x-full');
+      if (isClosed) {
+        drawer.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        drawer.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function closeMobileDrawerIfOpen() {
+      const drawer = document.getElementById('mobile-drawer');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+      if (drawer && !drawer.classList.contains('-translate-x-full')) {
+        drawer.classList.add('-translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const colors = {
+        success: 'bg-emerald-900 text-white border-emerald-700',
+        error: 'bg-rose-900 text-white border-rose-700',
+        warning: 'bg-amber-900 text-white border-amber-700',
+        info: 'bg-slate-900 text-white border-slate-700'
+      };
+      const icons = {
+        success: 'fa-circle-check text-emerald-400',
+        error: 'fa-circle-exclamation text-rose-400',
+        warning: 'fa-triangle-exclamation text-amber-400',
+        info: 'fa-bell text-indigo-400'
+      };
+
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-lg text-xs sm:text-sm font-medium transition-all duration-300 ${colors[type] || colors.info}`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icons[type] || icons.info}"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2400);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Initialize Application on Load
+    window.onload = function () {
+      loadSavedState();
+      initTTS();
+      renderNavigation();
+      renderCurriculum();
+      renderQuiz();
+      renderCustomSentencesList();
+    };
+  </script>
+</body>
+</html>
