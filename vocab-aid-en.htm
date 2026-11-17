@@ -1,0 +1,2317 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AI 英文單字學習助理｜速記短句鷹架法</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Highlight style for target words inside memory phrases & stories */
+    .phrase-highlight b,
+    .story-highlight b {
+      color: #4338ca;
+      background-color: #e0e7ff;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.375rem;
+      font-weight: 700;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    /* Pulse animation for active TTS speaking */
+    @keyframes speakPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .speaking-active {
+      animation: speakPulse 1s infinite ease-in-out;
+      background-color: #4f46e5 !important;
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20 md:pb-8">
+
+  <!-- ================= TOP NAVBAR ================= -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+      <!-- Brand Title -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shrink-0">
+          <i class="fa-solid fa-bolt-lightning text-lg"></i>
+        </div>
+        <div class="truncate">
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">AI 單字速記助理</h1>
+          <p class="text-xs text-slate-500 hidden sm:block">速記短句鷹架 × 雙重編碼聽讀 × 個人詞庫</p>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation Tabs -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+        <button onclick="switchTab('generate')" id="nav-desk-generate" class="px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> 新增與生成
+        </button>
+        <button onclick="switchTab('bank')" id="nav-desk-bank" class="px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="fa-solid fa-book-bookmark"></i> 我的單字本
+          <span id="badge-desk-count" class="px-1.5 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-700 font-bold">0</span>
+        </button>
+        <button onclick="switchTab('story')" id="nav-desk-story" class="px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="fa-solid fa-book-open-reader"></i> 單字編故事
+        </button>
+        <button onclick="switchTab('quiz')" id="nav-desk-quiz" class="px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+          <i class="fa-solid fa-dumbbell"></i> 測驗中心
+        </button>
+      </nav>
+
+      <!-- Right Action Buttons: CEFR Level, Guide & API Settings -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="openGuideModal()" class="px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition flex items-center gap-1.5" title="如何免費取得 Gemini API Key">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="hidden sm:inline">免費 API 教學</span>
+        </button>
+
+        <button onclick="openSettingsModal()" id="api-status-btn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold border transition flex items-center gap-2 shadow-sm">
+          <span id="api-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          <span id="api-status-text">設定 API</span>
+          <span id="header-cefr-badge" class="hidden lg:inline-block px-1.5 py-0.5 text-[11px] bg-slate-800 text-white rounded font-bold">A2</span>
+          <i class="fa-solid fa-sliders text-xs opacity-75"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Top Quick Info Banner (Shows when API Key is not yet configured) -->
+    <div id="onboarding-banner" class="mb-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 rounded-2xl p-4 sm:p-5 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-white/20 rounded-md">體驗與設定指引</span>
+          <h2 class="font-bold text-base sm:text-lg">歡迎使用個人專屬 AI 英文單字助理！</h2>
+        </div>
+        <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+          系統已預載 <b>6 個示範單字與速記短句</b>，您現在即可直接點擊喇叭測試發音或進行單字測驗。設定您專屬的免費 Google Gemini API Key 後，即可無限生成新單字與專屬故事！
+        </p>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
+        <button onclick="openGuideModal()" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-semibold transition text-center">
+          申請免費 Key 教學
+        </button>
+        <button onclick="openSettingsModal()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 text-xs sm:text-sm font-bold shadow transition text-center">
+          填入 API Key
+        </button>
+      </div>
+    </div>
+
+    <!-- ===============================================================
+         TAB 1: 新增與生成「速記短句」 (GENERATE)
+    ================================================================ -->
+    <section id="tab-generate" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Column: Input Form & Scaffold Settings -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i>
+                批次輸入想學的單字
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">一次輸入一個或多個單字，AI 自動打造「速記短句」鷹架</p>
+            </div>
+            <button onclick="openManualAddModal()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 rounded-lg transition">
+              <i class="fa-solid fa-pen-to-square mr-1"></i>手動新增
+            </button>
+          </div>
+
+          <!-- Current Scaffold Level Indicator -->
+          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 flex items-center justify-between gap-2">
+            <div class="text-xs space-y-0.5">
+              <div class="text-slate-500 font-medium">目前學習者程度與鷹架難度 (i-1 原則)：</div>
+              <div id="gen-level-display" class="font-bold text-slate-800 text-sm">A2 基礎 → 使用 A0-A1 超基礎字彙造短句</div>
+            </div>
+            <button onclick="openSettingsModal()" class="text-xs text-indigo-600 font-semibold hover:underline shrink-0">修改程度</button>
+          </div>
+
+          <!-- Word Batch Input -->
+          <div>
+            <label for="word-input" class="block text-sm font-semibold text-slate-700 mb-1.5">
+              輸入英文單字 <span class="text-xs font-normal text-slate-400">（多個單字請用逗號或換行分隔，建議每次 1~8 個）</span>
+            </label>
+            <textarea
+              id="word-input"
+              rows="4"
+              placeholder="例如：&#10;tumble, wither, reluctant&#10;或是每行輸入一個單字..."
+              class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition placeholder:text-slate-400"
+            ></textarea>
+            <!-- Quick Demo Fill Pills -->
+            <div class="mt-2 flex flex-wrap items-center gap-1.5">
+              <span class="text-xs text-slate-400">快速帶入測試字：</span>
+              <button type="button" onclick="fillDemoInput('exhausted, obstacle, thrive')" class="text-xs px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition">exhausted, obstacle, thrive</button>
+              <button type="button" onclick="fillDemoInput('hesitate, glimpse, vivid')" class="text-xs px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition">hesitate, glimpse, vivid</button>
+            </div>
+          </div>
+
+          <!-- Memory Phrase Style Preference -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">速記短句風格偏好</label>
+            <select id="phrase-style-select" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="vivid">畫面感強的具體動作與生活情境（預設推薦，最易記憶）</option>
+              <option value="collocation">高頻必考介系詞與動詞搭配詞（適合大考準備）</option>
+              <option value="conversational">日常口語高頻反應短句（適合聽力與會話）</option>
+            </select>
+          </div>
+
+          <!-- Generate Button -->
+          <button
+            id="btn-generate-words"
+            onclick="handleGenerateWords()"
+            class="w-full py-3.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-md shadow-indigo-200 transition flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-bolt"></i>
+            <span>AI 生成 2 個速記短句並儲存</span>
+          </button>
+
+          <!-- Voice Speed Quick Bar -->
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span><i class="fa-solid fa-volume-high text-indigo-600 mr-1"></i>發音語速設定：</span>
+            <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+              <button onclick="setQuickSpeechRate(0.75)" id="rate-btn-0.75" class="px-2 py-1 rounded font-semibold transition">0.75x 慢速</button>
+              <button onclick="setQuickSpeechRate(0.9)" id="rate-btn-0.9" class="px-2 py-1 rounded font-semibold transition">0.9x 自然</button>
+              <button onclick="setQuickSpeechRate(1.0)" id="rate-btn-1" class="px-2 py-1 rounded font-semibold transition">1.0x 正常</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Latest Generated Cards / Recent Scaffold Cards -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 id="recent-section-title" class="text-base sm:text-lg font-bold text-slate-900">最新生成與精選速記短句卡</h3>
+              <p class="text-xs text-slate-500">點擊 <i class="fa-solid fa-volume-high text-indigo-600"></i> 即可聆聽單字與短句發音，強化「視覺＋聽覺」雙重編碼</p>
+            </div>
+            <button onclick="switchTab('bank')" class="text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+              查看全部單字庫 <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+
+          <!-- Generated / Recent Cards Container -->
+          <div id="recent-cards-container" class="grid grid-cols-1 gap-4">
+            <!-- Dynamically populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         TAB 2: 我的單字本 (VOCABULARY BANK)
+    ================================================================ -->
+    <section id="tab-bank" class="hidden space-y-6">
+      <!-- Top Filter & Action Toolbar -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <!-- Search & Filter -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+            <div class="relative flex-1">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+              <input
+                type="text"
+                id="bank-search-input"
+                oninput="renderVocabBank()"
+                placeholder="搜尋單字、中文語意或速記短句..."
+                class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <select id="bank-filter-select" onchange="renderVocabBank()" class="rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="all">全部單字</option>
+              <option value="selected">已勾選編故事</option>
+              <option value="learning">待加強 (0~2 星)</option>
+              <option value="mastered">已熟練 (3~5 星)</option>
+            </select>
+          </div>
+
+          <!-- Backup / Restore Buttons -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="exportVocabJSON()" class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-50 text-xs sm:text-sm font-semibold text-slate-700 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-download text-indigo-600"></i> 匯出備份
+            </button>
+            <label class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-50 text-xs sm:text-sm font-semibold text-slate-700 transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-upload text-emerald-600"></i> 匯入備份
+              <input type="file" id="import-json-input" accept=".json" onchange="importVocabJSON(event)" class="hidden" />
+            </label>
+            <button onclick="resetDemoWords()" class="px-3 py-2 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-xs sm:text-sm font-semibold text-indigo-700 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-rotate-right"></i> 補齊範例字
+            </button>
+          </div>
+        </div>
+
+        <!-- Story Selection Bar -->
+        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-600">
+            <span class="font-semibold text-slate-800">故事生成清單：</span>
+            <span>目前已勾選 <b id="selected-story-count" class="text-indigo-600">0</b> 個單字</span>
+            <button onclick="selectRandomForStory(4)" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition">
+              隨機勾選 4 字
+            </button>
+            <button onclick="clearStorySelection()" class="text-xs px-2 py-1 rounded-lg text-slate-500 hover:text-rose-600 transition">
+              清空勾選
+            </button>
+          </div>
+          <button onclick="switchTab('story')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-book-open-reader"></i> 前往用單字編故事
+          </button>
+        </div>
+      </div>
+
+      <!-- Vocabulary Cards Grid -->
+      <div id="bank-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         TAB 3: 單字編故事 (STORY GENERATOR & READER)
+    ================================================================ -->
+    <section id="tab-story" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Column: Story Controls & Word Selector -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-book-open-reader text-indigo-600"></i>
+              用單字編寫情境短篇故事
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">
+              結合多個目標單字與 <span id="story-cefr-hint" class="font-semibold text-indigo-600">i-1 簡易字彙鷹架</span>，強化閱讀語感與聽力編碼
+            </p>
+          </div>
+
+          <!-- Selected Words Chips -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-600">本次要編入故事的單字（建議 3~6 個）</label>
+              <button onclick="selectRandomForStory(4)" class="text-xs font-semibold text-indigo-600 hover:underline">
+                <i class="fa-solid fa-dice mr-1"></i>隨機換 4 個單字
+              </button>
+            </div>
+            <div id="story-word-chips" class="flex flex-wrap gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 min-h-[60px]">
+              <!-- Populated by JS -->
+            </div>
+            <p class="text-[11px] text-slate-400">點擊上方單字標籤即可切換勾選狀態，或至「我的單字本」自由勾選。</p>
+          </div>
+
+          <!-- Story Genre / Theme -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">選擇故事主題風格</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="setStoryTheme('日常溫馨與生活幽默')" id="theme-btn-0" class="story-theme-btn px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold text-left transition border-indigo-600 bg-indigo-50 text-indigo-700">
+                ☕ 日常生活與幽默
+              </button>
+              <button type="button" onclick="setStoryTheme('奇幻冒險與神祕探索')" id="theme-btn-1" class="story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition">
+                🧭 奇幻冒險與探索
+              </button>
+              <button type="button" onclick="setStoryTheme('校園生活與友情成長')" id="theme-btn-2" class="story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition">
+                🎒 校園與友情成長
+              </button>
+              <button type="button" onclick="setStoryTheme('偵探解謎與意外轉折')" id="theme-btn-3" class="story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition">
+                🔍 偵探解謎與轉折
+              </button>
+            </div>
+          </div>
+
+          <!-- Generate Story Button -->
+          <button
+            id="btn-generate-story"
+            onclick="handleGenerateStory()"
+            class="w-full py-3.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm sm:text-base shadow-md shadow-indigo-200 transition flex items-center justify-center gap-2"
+          >
+            <i class="fa-solid fa-feather-pointed"></i>
+            <span>AI 生成符合程度的短篇故事</span>
+          </button>
+
+          <!-- Saved Stories History List -->
+          <div class="pt-4 border-t border-slate-100 space-y-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">已儲存的故事紀錄</h3>
+            <div id="story-history-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Story Dual-Coding Audio Reader -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7 space-y-5">
+          <div id="story-reader-container">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===============================================================
+         TAB 4: 單字測驗中心 (LOCAL ZERO-TOKEN QUIZ ENGINE)
+    ================================================================ -->
+    <section id="tab-quiz" class="hidden space-y-6">
+      <div class="max-w-3xl mx-auto space-y-6">
+        
+        <!-- Quiz Mode Selector Header -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-dumbbell text-indigo-600"></i>
+                速記短句鷹架測驗中心
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">直接從您的本機單字庫動態抽題（0 API 消耗），答題後自動朗讀速記短句加深記憶！</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs font-bold">
+              <span class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                答對：<span id="quiz-score-correct">0</span>
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">
+                總題數：<span id="quiz-score-total">0</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- 3 Quiz Modes -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-4">
+            <button onclick="setQuizMode('en2zh')" id="qmode-en2zh" class="px-4 py-3 rounded-xl border text-left transition flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold shrink-0">A→中</div>
+              <div>
+                <div class="text-sm font-bold">英翻中選擇題</div>
+                <div class="text-[11px] opacity-75">看單字與速記短句選中譯</div>
+              </div>
+            </button>
+
+            <button onclick="setQuizMode('zh2en')" id="qmode-zh2en" class="px-4 py-3 rounded-xl border text-left transition flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center font-bold shrink-0">中→A</div>
+              <div>
+                <div class="text-sm font-bold">中翻英選擇題</div>
+                <div class="text-[11px] opacity-75">看中文語意回想目標單字</div>
+              </div>
+            </button>
+
+            <button onclick="setQuizMode('cloze')" id="qmode-cloze" class="px-4 py-3 rounded-xl border text-left transition flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold shrink-0">克漏</div>
+              <div>
+                <div class="text-sm font-bold">速記短句填空</div>
+                <div class="text-[11px] opacity-75">由搭配詞語境選出/拼出單字</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Quiz Card -->
+        <div id="quiz-stage-card" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 shadow-lg grid grid-cols-4 h-16">
+    <button onclick="switchTab('generate')" id="nav-mob-generate" class="flex flex-col items-center justify-center gap-1 text-xs font-semibold transition">
+      <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+      <span>新增短句</span>
+    </button>
+    <button onclick="switchTab('bank')" id="nav-mob-bank" class="relative flex flex-col items-center justify-center gap-1 text-xs font-semibold transition">
+      <i class="fa-solid fa-book-bookmark text-base"></i>
+      <span>單字本</span>
+      <span id="badge-mob-count" class="absolute top-1.5 right-5 px-1.5 py-0.2 text-[10px] rounded-full bg-indigo-600 text-white font-bold">0</span>
+    </button>
+    <button onclick="switchTab('story')" id="nav-mob-story" class="flex flex-col items-center justify-center gap-1 text-xs font-semibold transition">
+      <i class="fa-solid fa-book-open-reader text-base"></i>
+      <span>編故事</span>
+    </button>
+    <button onclick="switchTab('quiz')" id="nav-mob-quiz" class="flex flex-col items-center justify-center gap-1 text-xs font-semibold transition">
+      <i class="fa-solid fa-dumbbell text-base"></i>
+      <span>測驗中心</span>
+    </button>
+  </nav>
+
+  <!-- ===============================================================
+       MODAL 1: API KEY & LEARNING SETTINGS
+  ================================================================ -->
+  <div id="settings-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-5 my-8">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">個人 API 金鑰與學習程度設定</h3>
+            <p class="text-xs text-slate-500">BYOK 架構：每個人使用自己的免費金鑰，安全且零伺服器成本</p>
+          </div>
+        </div>
+        <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Gemini API Key Input -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="settings-api-key" class="text-sm font-bold text-slate-800">Google Gemini API Key</label>
+            <button onclick="closeSettingsModal(); openGuideModal();" class="text-xs font-semibold text-indigo-600 hover:underline">
+              <i class="fa-solid fa-key mr-1"></i>如何免費取得 API Key？
+            </button>
+          </div>
+          <div class="relative">
+            <input
+              type="password"
+              id="settings-api-key"
+              placeholder="貼上以 AIzaSy 開頭的個人 API Key..."
+              class="w-full rounded-xl border border-slate-300 pl-3.5 pr-10 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <i id="api-eye-icon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <p class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-2 mt-2 flex items-start gap-1.5">
+            <i class="fa-solid fa-shield-halved mt-0.5"></i>
+            <span>隱私保證：您的 API Key <b>只會儲存在您目前這台手機或電腦的瀏覽器 (localStorage) 中</b>，絕不會上傳給老師或其他人的裝置。</span>
+          </p>
+        </div>
+
+        <!-- Gemini Model Selection -->
+        <div>
+          <label for="settings-model" class="block text-sm font-bold text-slate-800 mb-1">AI 模型選擇</label>
+          <select id="settings-model" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="gemini-2.5-flash">gemini-2.5-flash（預設推薦：支援免費額度、語意最精準）</option>
+            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite（超輕量極速版：免費額度次數更高）</option>
+          </select>
+        </div>
+
+        <!-- Learner CEFR Level (i-1 Scaffolding) -->
+        <div>
+          <label for="settings-cefr" class="block text-sm font-bold text-slate-800 mb-1">
+            學習者目前英文程度 (CEFR 鷹架控制)
+          </label>
+          <select id="settings-cefr" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="A1">A1 初學者（使用最基礎 500 字造出極簡速記短句與故事）</option>
+            <option value="A2">A2 基礎級（國中/高一程度：使用 A0-A1 簡單單字作為搭配鷹架）</option>
+            <option value="B1">B1 中級（高中學測程度：使用 A1-A2 自然常用字造出短句與故事）</option>
+            <option value="B2">B2 中高級（多益藍色證書/大學程度：使用 B1 流暢語境搭配）</option>
+          </select>
+          <p class="text-xs text-slate-500 mt-1">
+            系統會自動採用 <b>i-1 學習鷹架原則</b>：除了您要學的目標單字外，速記短句與故事中的其他字彙都會自動降一級，避免為了看懂例句還要查更多生字！
+          </p>
+        </div>
+
+        <!-- TTS Voice Settings -->
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <div>
+            <label for="settings-voice-accent" class="block text-xs font-bold text-slate-700 mb-1">發音口音偏好</label>
+            <select id="settings-voice-accent" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
+              <option value="en-US">美式發音 (en-US)</option>
+              <option value="en-GB">英式發音 (en-GB)</option>
+            </select>
+          </div>
+          <div>
+            <label for="settings-voice-rate" class="block text-xs font-bold text-slate-700 mb-1">預設朗讀語速</label>
+            <select id="settings-voice-rate" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
+              <option value="0.75">0.75x (慢速清晰練聽力)</option>
+              <option value="0.9">0.90x (自然教學語速)</option>
+              <option value="1.0">1.00x (母語正常語速)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t border-slate-100 gap-3">
+        <button type="button" onclick="testApiKeyConnection()" id="btn-test-api" class="px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-bold transition">
+          <i class="fa-solid fa-plug-circle-check mr-1"></i>測試連線
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeSettingsModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs sm:text-sm font-semibold hover:bg-slate-50">
+            取消
+          </button>
+          <button type="button" onclick="saveSettings()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow">
+            儲存設定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================================================
+       MODAL 2: FREE GEMINI API GUIDE & BYOK EXPLANATION
+  ================================================================ -->
+  <div id="guide-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+            <i class="fa-solid fa-graduation-cap text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">1 分鐘免費申請 Google Gemini API Key 教學</h3>
+            <p class="text-xs text-slate-500">免綁信用卡、完全免費額度，打造個人專屬 AI 單字庫</p>
+          </div>
+        </div>
+        <button onclick="closeGuideModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+        <!-- Step 1 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+          <div class="font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold">1</span>
+            前往 Google AI Studio 官方網站
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 pl-8">
+            使用您的個人 Google 帳號（建議使用私人 `@gmail.com` 帳號，部分學校教育版帳號可能會由網管關閉 API 權限）登入：<br>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-indigo-600 font-bold hover:underline mt-1">
+              https://aistudio.google.com/app/apikey <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+          <div class="font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold">2</span>
+            點擊「Create API key」產生金鑰
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 pl-8">
+            進入頁面後，點擊右上角或畫面中央藍色的 <b>「Create API key」</b> 按鈕，選擇或建立一個預設專案，系統就會立刻產生一串以 <code>AIzaSy...</code> 開頭的金鑰，點擊「Copy」複製起來。
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+          <div class="font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold">3</span>
+            貼回本網頁的「設定 API」視窗即可使用！
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 pl-8">
+            點擊本網頁右上角的「設定 API」，將複製的金鑰貼上並儲存。之後您每次輸入單字或編寫故事，都會透過您自己的免費額度直接連線 Google AI。
+          </p>
+        </div>
+
+        <!-- Important Q&A for Teacher & Students -->
+        <div class="p-4 rounded-xl bg-indigo-50/80 border border-indigo-200 space-y-2">
+          <div class="font-bold text-indigo-950 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-indigo-600"></i>
+            為什麼老師可以把這個網頁放在網路上給全班用，卻不會爆流量？
+          </div>
+          <p class="text-xs sm:text-sm text-indigo-900">
+            因為本程式採用 <b>BYOK（Bring Your Own Key，自帶金鑰）</b> 設計！程式碼裡面<b>沒有寫死老師的 API Key</b>。每位同學打開網址後填入自己的免費 API Key，金鑰只存在同學自己的手機瀏覽器裡，各自使用各自的免費額度，因此全班 100 人同時使用也完全不會消耗老師的額度！
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeGuideModal(); openSettingsModal();" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow">
+          我已複製 Key，前往填入設定
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================================================
+       MODAL 3: MANUAL ADD / EDIT WORD MODAL
+  ================================================================ -->
+  <div id="manual-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 my-8">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="manual-modal-title" class="text-lg font-bold text-slate-900">手動新增 / 編輯單字與速記短句</h3>
+        <button onclick="closeManualModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="edit-word-id" value="" />
+
+      <div class="grid grid-cols-3 gap-3">
+        <div class="col-span-2">
+          <label class="block text-xs font-bold text-slate-700 mb-1">英文單字</label>
+          <input type="text" id="manual-word" placeholder="例如：tumble" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">詞性</label>
+          <input type="text" id="manual-pos" placeholder="v. / n. / adj." class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">核心中文語意</label>
+        <input type="text" id="manual-meaning" placeholder="例如：跌倒；滾落" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+        <div class="text-xs font-bold text-indigo-700">速記短句 1（可用 &lt;b&gt;單字&lt;/b&gt; 標示高亮）</div>
+        <input type="text" id="manual-p1-en" placeholder="例如：<b>tumble</b> down the stairs" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+        <input type="text" id="manual-p1-zh" placeholder="中文翻譯：滾下樓梯" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+        <div class="text-xs font-bold text-indigo-700">速記短句 2（可用 &lt;b&gt;單字&lt;/b&gt; 標示高亮）</div>
+        <input type="text" id="manual-p2-en" placeholder="例如：<b>tumble</b> to the ground" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+        <input type="text" id="manual-p2-zh" placeholder="中文翻譯：跌落到地上" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+      </div>
+
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeManualModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm font-semibold text-slate-600">取消</button>
+        <button onclick="saveManualWord()" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow">儲存單字卡</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toast-container" class="fixed bottom-20 md:bottom-6 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ================= APPLICATION JAVASCRIPT ================= -->
+  <script>
+    /********************************************************************
+     * 1. DEFAULT SAMPLE DATA (Pre-loaded so teacher & students can test immediately)
+     ********************************************************************/
+    const DEFAULT_SAMPLE_WORDS = [
+      {
+        id: 'sample-1',
+        word: 'tumble',
+        pos: 'v.',
+        meaning: '跌倒；滾落；摔下',
+        phrases: [
+          { en: '<b>tumble</b> down the stairs', zh: '從樓梯上滾落下來' },
+          { en: 'trip and <b>tumble</b> to the ground', zh: '絆倒並摔在地上' }
+        ],
+        mastery: 2,
+        selectedForStory: true,
+        createdAt: Date.now() - 600000
+      },
+      {
+        id: 'sample-2',
+        word: 'wither',
+        pos: 'v.',
+        meaning: '枯萎；凋謝；乾枯',
+        phrases: [
+          { en: 'flowers <b>wither</b> without water', zh: '花沒有水就會枯萎' },
+          { en: 'leaves <b>wither</b> in the hot sun', zh: '樹葉在烈日下乾枯' }
+        ],
+        mastery: 1,
+        selectedForStory: true,
+        createdAt: Date.now() - 500000
+      },
+      {
+        id: 'sample-3',
+        word: 'reluctant',
+        pos: 'adj.',
+        meaning: '不情願的；勉强的',
+        phrases: [
+          { en: '<b>reluctant</b> to wake up early', zh: '不情願早起' },
+          { en: 'give a <b>reluctant</b> smile', zh: '露出勉強的微笑' }
+        ],
+        mastery: 1,
+        selectedForStory: true,
+        createdAt: Date.now() - 400000
+      },
+      {
+        id: 'sample-4',
+        word: 'scatter',
+        pos: 'v.',
+        meaning: '散落；驅散；撒播',
+        phrases: [
+          { en: '<b>scatter</b> seeds on the farm', zh: '在農場上撒下種子' },
+          { en: 'wind <b>scatters</b> the dry leaves', zh: '風吹散了乾枯的落葉' }
+        ],
+        mastery: 2,
+        selectedForStory: true,
+        createdAt: Date.now() - 300000
+      },
+      {
+        id: 'sample-5',
+        word: 'cherish',
+        pos: 'v.',
+        meaning: '珍惜；珍愛；懷抱',
+        phrases: [
+          { en: '<b>cherish</b> every happy moment', zh: '珍惜每個快樂的時刻' },
+          { en: '<b>cherish</b> our warm friendship', zh: '珍惜我們溫暖的友誼' }
+        ],
+        mastery: 3,
+        selectedForStory: false,
+        createdAt: Date.now() - 200000
+      },
+      {
+        id: 'sample-6',
+        word: 'fragile',
+        pos: 'adj.',
+        meaning: '易碎的；脆弱的',
+        phrases: [
+          { en: 'be careful with <b>fragile</b> glass', zh: '小心對待易碎的玻璃' },
+          { en: 'a small and <b>fragile</b> bird', zh: '一隻瘦小脆弱的鳥' }
+        ],
+        mastery: 2,
+        selectedForStory: false,
+        createdAt: Date.now() - 100000
+      }
+    ];
+
+    const DEFAULT_SAMPLE_STORIES = [
+      {
+        id: 'story-sample-1',
+        title: 'The Little Garden on the Hill (山丘上的小花園)',
+        level: 'A2 (使用 A0-A1 鷹架字彙)',
+        theme: '日常溫馨與生活幽默',
+        words: ['tumble', 'wither', 'reluctant', 'scatter'],
+        sentences: [
+          {
+            en: 'On a cold morning, Leo was <b>reluctant</b> to leave his warm bed.',
+            zh: '在一個寒冷的早晨，Leo 不情願離開他溫暖的床。'
+          },
+          {
+            en: 'However, he knew his garden flowers would <b>wither</b> without water.',
+            zh: '然而，他知道花園裡的花如果沒有水就會枯萎。'
+          },
+          {
+            en: 'He ran out too fast and almost <b>tumbled</b> down the stairs.',
+            zh: '他跑出去太快，差一點從樓梯上滾落下來。'
+          },
+          {
+            en: 'Outside, the strong wind began to <b>scatter</b> dry leaves across the grass.',
+            zh: '在屋外，強風開始把乾枯的落葉吹散在草地上。'
+          },
+          {
+            en: 'After watering the plants, Leo smiled and felt proud of his little garden.',
+            zh: '澆完植物後，Leo 露出了微笑，為他的小花園感到驕傲。'
+          }
+        ],
+        notes: [
+          'reluctant to + V：不情願做某事（高頻搭配）',
+          'wither without water：沒有水而枯萎（畫面記憶）',
+          'tumble down the stairs：從樓梯滾下來（動作記憶）',
+          'scatter ... across ...：把…吹散/撒落在…各處'
+        ],
+        createdAt: Date.now() - 120000
+      }
+    ];
+
+    /********************************************************************
+     * 2. STATE & LOCAL STORAGE KEYS
+     ********************************************************************/
+    const STORAGE_KEYS = {
+      API_KEY: 'vocab_scaffold_api_key',
+      SETTINGS: 'vocab_scaffold_settings',
+      WORDS: 'vocab_scaffold_words_v1',
+      STORIES: 'vocab_scaffold_stories_v1'
+    };
+
+    let appState = {
+      currentTab: 'generate',
+      apiKey: '',
+      settings: {
+        model: 'gemini-2.5-flash',
+        cefr: 'A2',
+        voiceAccent: 'en-US',
+        voiceRate: 0.9
+      },
+      words: [],
+      stories: [],
+      activeStoryId: null,
+      storyTheme: '日常溫馨與生活幽默',
+      showStoryTranslation: true,
+      quiz: {
+        mode: 'en2zh', // 'en2zh' | 'zh2en' | 'cloze'
+        clozeInputMode: 'choice', // 'choice' | 'spell'
+        currentQuestion: null,
+        answered: false,
+        correctCount: 0,
+        totalCount: 0
+      }
+    };
+
+    /********************************************************************
+     * 3. INITIALIZATION
+     ********************************************************************/
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFromStorage();
+      updateHeaderStatusUI();
+      updateQuickRateUI();
+      switchTab('generate');
+      renderRecentCards();
+      renderVocabBank();
+      renderStorySection();
+      generateNextQuizQuestion();
+    });
+
+    function loadFromStorage() {
+      // Load API Key
+      const savedKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
+      if (savedKey) appState.apiKey = savedKey.trim();
+
+      // Load Settings
+      try {
+        const savedSettings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS));
+        if (savedSettings) {
+          appState.settings = { ...appState.settings, ...savedSettings };
+        }
+      } catch (e) {
+        console.warn('讀取設定失敗，使用預設值', e);
+      }
+
+      // Load Words (If empty on first visit, populate sample words)
+      try {
+        const savedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.WORDS));
+        if (Array.isArray(savedWords) && savedWords.length > 0) {
+          appState.words = savedWords;
+        } else {
+          appState.words = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_WORDS));
+          saveWordsToStorage();
+        }
+      } catch (e) {
+        appState.words = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_WORDS));
+      }
+
+      // Load Stories
+      try {
+        const savedStories = JSON.parse(localStorage.getItem(STORAGE_KEYS.STORIES));
+        if (Array.isArray(savedStories) && savedStories.length > 0) {
+          appState.stories = savedStories;
+        } else {
+          appState.stories = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_STORIES));
+          saveStoriesToStorage();
+        }
+      } catch (e) {
+        appState.stories = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_STORIES));
+      }
+
+      if (appState.stories.length > 0) {
+        appState.activeStoryId = appState.stories[0].id;
+      }
+    }
+
+    function saveWordsToStorage() {
+      localStorage.setItem(STORAGE_KEYS.WORDS, JSON.stringify(appState.words));
+      updateWordCountBadges();
+    }
+
+    function saveStoriesToStorage() {
+      localStorage.setItem(STORAGE_KEYS.STORIES, JSON.stringify(appState.stories));
+    }
+
+    /********************************************************************
+     * 4. NAVIGATION & UI HELPERS
+     ********************************************************************/
+    function switchTab(tabName) {
+      appState.currentTab = tabName;
+      const tabs = ['generate', 'bank', 'story', 'quiz'];
+
+      tabs.forEach(t => {
+        const section = document.getElementById(`tab-${t}`);
+        const deskBtn = document.getElementById(`nav-desk-${t}`);
+        const mobBtn = document.getElementById(`nav-mob-${t}`);
+
+        if (t === tabName) {
+          section.classList.remove('hidden');
+          if (deskBtn) deskBtn.className = 'px-3.5 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 bg-white text-indigo-700 shadow-sm';
+          if (mobBtn) mobBtn.className = 'relative flex flex-col items-center justify-center gap-1 text-xs font-bold text-indigo-600 transition';
+        } else {
+          section.classList.add('hidden');
+          if (deskBtn) deskBtn.className = 'px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-2';
+          if (mobBtn) mobBtn.className = 'relative flex flex-col items-center justify-center gap-1 text-xs font-semibold text-slate-400 hover:text-slate-700 transition';
+        }
+      });
+
+      if (tabName === 'bank') renderVocabBank();
+      if (tabName === 'story') renderStorySection();
+      if (tabName === 'quiz') generateNextQuizQuestion();
+    }
+
+    function getCefrScaffoldDescription(cefr) {
+      const map = {
+        'A1': 'A1 初學 → 使用最基礎 500 核心字彙造出極簡速記短句',
+        'A2': 'A2 基礎 → 使用 A0-A1 簡單字彙作為速記短句與故事鷹架',
+        'B1': 'B1 中級 → 使用 A1-A2 常見字彙造出自然搭配詞短句',
+        'B2': 'B2 中高級 → 使用 B1 流暢語境打造高頻搭配短句'
+      };
+      return map[cefr] || map['A2'];
+    }
+
+    function getCefrPromptRule(cefr) {
+      const rules = {
+        'A1': 'Learner is CEFR A1. Follow strict i-1 scaffolding: besides the target word itself, ALL surrounding words in the memory phrases and story MUST be ultra-simple A0-A1 basic vocabulary (top 500 everyday English words). Keep grammar very simple.',
+        'A2': 'Learner is CEFR A2. Follow strict i-1 scaffolding: besides the target word itself, ALL surrounding words in the memory phrases and story MUST be simple A0-A1 vocabulary so the learner never needs a dictionary to understand the context.',
+        'B1': 'Learner is CEFR B1. Follow i-1 scaffolding: besides the target word itself, use clear A1-A2 everyday vocabulary for surrounding words.',
+        'B2': 'Learner is CEFR B2. Follow i-1 scaffolding: besides the target word itself, use natural B1 vocabulary and idiomatic collocations.'
+      };
+      return rules[cefr] || rules['A2'];
+    }
+
+    function updateHeaderStatusUI() {
+      const dot = document.getElementById('api-status-dot');
+      const text = document.getElementById('api-status-text');
+      const btn = document.getElementById('api-status-btn');
+      const cefrBadge = document.getElementById('header-cefr-badge');
+      const banner = document.getElementById('onboarding-banner');
+      const genLevelDisplay = document.getElementById('gen-level-display');
+      const storyCefrHint = document.getElementById('story-cefr-hint');
+
+      cefrBadge.textContent = appState.settings.cefr;
+      genLevelDisplay.textContent = getCefrScaffoldDescription(appState.settings.cefr);
+      if (storyCefrHint) storyCefrHint.textContent = `${appState.settings.cefr} (i-1 簡易字彙鷹架)`;
+
+      if (appState.apiKey && appState.apiKey.startsWith('AIza')) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+        text.textContent = 'API 已連結';
+        btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold border border-emerald-200 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-100 transition flex items-center gap-2 shadow-sm';
+        if (banner) banner.classList.add('hidden');
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse';
+        text.textContent = '設定 API Key';
+        btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 transition flex items-center gap-2 shadow-sm';
+        if (banner) banner.classList.remove('hidden');
+      }
+
+      updateWordCountBadges();
+    }
+
+    function updateWordCountBadges() {
+      const count = appState.words.length;
+      const d = document.getElementById('badge-desk-count');
+      const m = document.getElementById('badge-mob-count');
+      if (d) d.textContent = count;
+      if (m) m.textContent = count;
+
+      const selectedCount = appState.words.filter(w => w.selectedForStory).length;
+      const s = document.getElementById('selected-story-count');
+      if (s) s.textContent = selectedCount;
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const colorMap = {
+        success: 'bg-emerald-600 text-white',
+        error: 'bg-rose-600 text-white',
+        info: 'bg-slate-900 text-white'
+      };
+      const iconMap = {
+        success: 'fa-circle-check',
+        error: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+      };
+      toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-lg text-xs sm:text-sm font-semibold flex items-center gap-2.5 transition-all duration-300 ${colorMap[type] || colorMap.info}`;
+      toast.innerHTML = `<i class="fa-solid ${iconMap[type] || iconMap.info}"></i><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Safely format phrase or sentence keeping only <b>...</b> tags
+    function formatSafeHighlight(str, targetWord = '') {
+      if (!str) return '';
+      // Temporarily replace <b> and </b> with placeholders
+      let cleaned = String(str)
+        .replace(/<\s*b\s*>/gi, '[[BOLD_START]]')
+        .replace(/<\s*\/\s*b\s*>/gi, '[[BOLD_END]]')
+        .replace(/<\s*strong\s*>/gi, '[[BOLD_START]]')
+        .replace(/<\s*\/\s*strong\s*>/gi, '[[BOLD_END]]');
+
+      cleaned = escapeHtml(cleaned);
+
+      // If AI forgot to wrap <b> around targetWord, wrap it automatically
+      if (targetWord && !cleaned.includes('[[BOLD_START]]')) {
+        const regex = new RegExp(`(\\b${escapeRegExp(targetWord)}\\w*\\b)`, 'gi');
+        cleaned = cleaned.replace(regex, '[[BOLD_START]]$1[[BOLD_END]]');
+      }
+
+      return cleaned
+        .replace(/\[\[BOLD_START\]\]/g, '<b>')
+        .replace(/\[\[BOLD_END\]\]/g, '</b>');
+    }
+
+    function stripHtmlTags(str) {
+      if (!str) return '';
+      return String(str).replace(/<[^>]*>/g, '');
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    /********************************************************************
+     * 5. WEB SPEECH API (TEXT-TO-SPEECH DUAL CODING)
+     ********************************************************************/
+    function speakText(rawText, btnElement = null) {
+      if (!('speechSynthesis' in window)) {
+        showToast('您的瀏覽器不支援語音合成功能', 'error');
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      document.querySelectorAll('.speaking-active').forEach(el => el.classList.remove('speaking-active'));
+
+      const cleanText = stripHtmlTags(rawText);
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = appState.settings.voiceAccent || 'en-US';
+      utterance.rate = Number(appState.settings.voiceRate) || 0.9;
+
+      // Try to pick a natural matching voice
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v => v.lang === utterance.lang && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Siri') || v.name.includes('Samantha')))
+        || voices.find(v => v.lang.startsWith(utterance.lang.slice(0, 2)));
+      if (preferredVoice) utterance.voice = preferredVoice;
+
+      if (btnElement) {
+        btnElement.classList.add('speaking-active');
+        utterance.onend = () => btnElement.classList.remove('speaking-active');
+        utterance.onerror = () => btnElement.classList.remove('speaking-active');
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      document.querySelectorAll('.speaking-active').forEach(el => el.classList.remove('speaking-active'));
+    }
+
+    function setQuickSpeechRate(rate) {
+      appState.settings.voiceRate = Number(rate);
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(appState.settings));
+      updateQuickRateUI();
+      showToast(`發音語速已切換為 ${rate}x`, 'info');
+    }
+
+    function updateQuickRateUI() {
+      const rates = [0.75, 0.9, 1.0];
+      rates.forEach(r => {
+        const btn = document.getElementById(`rate-btn-${r}`);
+        if (!btn) return;
+        if (Number(appState.settings.voiceRate) === r) {
+          btn.className = 'px-2 py-1 rounded font-bold bg-indigo-600 text-white shadow-sm transition';
+        } else {
+          btn.className = 'px-2 py-1 rounded font-semibold text-slate-600 hover:text-slate-900 transition';
+        }
+      });
+    }
+
+    /********************************************************************
+     * 6. SETTINGS & GUIDE MODALS
+     ********************************************************************/
+    function openSettingsModal() {
+      document.getElementById('settings-api-key').value = appState.apiKey || '';
+      document.getElementById('settings-model').value = appState.settings.model || 'gemini-2.5-flash';
+      document.getElementById('settings-cefr').value = appState.settings.cefr || 'A2';
+      document.getElementById('settings-voice-accent').value = appState.settings.voiceAccent || 'en-US';
+      document.getElementById('settings-voice-rate').value = String(appState.settings.voiceRate || 0.9);
+      document.getElementById('settings-modal').classList.remove('hidden');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+
+    function openGuideModal() {
+      document.getElementById('guide-modal').classList.remove('hidden');
+    }
+
+    function closeGuideModal() {
+      document.getElementById('guide-modal').classList.add('hidden');
+    }
+
+    function toggleApiKeyVisibility() {
+      const input = document.getElementById('settings-api-key');
+      const icon = document.getElementById('api-eye-icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-solid fa-eye';
+      }
+    }
+
+    function saveSettings() {
+      const key = document.getElementById('settings-api-key').value.trim();
+      const model = document.getElementById('settings-model').value;
+      const cefr = document.getElementById('settings-cefr').value;
+      const voiceAccent = document.getElementById('settings-voice-accent').value;
+      const voiceRate = Number(document.getElementById('settings-voice-rate').value);
+
+      appState.apiKey = key;
+      appState.settings = { model, cefr, voiceAccent, voiceRate };
+
+      localStorage.setItem(STORAGE_KEYS.API_KEY, key);
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(appState.settings));
+
+      updateHeaderStatusUI();
+      updateQuickRateUI();
+      closeSettingsModal();
+      showToast('個人設定與 API Key 已儲存至本機瀏覽器！', 'success');
+    }
+
+    async function testApiKeyConnection() {
+      const key = document.getElementById('settings-api-key').value.trim();
+      const model = document.getElementById('settings-model').value;
+      const btn = document.getElementById('btn-test-api');
+
+      if (!key) {
+        showToast('請先貼上您的 Gemini API Key', 'error');
+        return;
+      }
+
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>連線測試中...';
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'Reply with JSON: {"status": "ok"}' }] }],
+            generationConfig: { responseMimeType: 'application/json' }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+        }
+
+        showToast('連線成功！您的 Gemini API Key 可正常使用', 'success');
+      } catch (err) {
+        showToast(`連線失敗：${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+
+    /********************************************************************
+     * 7. GEMINI API CALL: BATCH GENERATE RAPID MEMORY PHRASES
+     ********************************************************************/
+    function fillDemoInput(text) {
+      document.getElementById('word-input').value = text;
+    }
+
+    async function handleGenerateWords() {
+      const rawInput = document.getElementById('word-input').value.trim();
+      if (!rawInput) {
+        showToast('請先輸入至少一個想學的英文單字！', 'error');
+        return;
+      }
+
+      // Parse words separated by comma, semicolon, or newline
+      const wordList = [...new Set(
+        rawInput
+          .split(/[\n,;，；]+/)
+          .map(w => w.trim())
+          .filter(Boolean)
+      )].slice(0, 10);
+
+      if (wordList.length === 0) {
+        showToast('請輸入有效的英文單字', 'error');
+        return;
+      }
+
+      if (!appState.apiKey) {
+        showToast('請先設定您的免費 Google Gemini API Key！', 'error');
+        openSettingsModal();
+        return;
+      }
+
+      const stylePref = document.getElementById('phrase-style-select').value;
+      const styleInstructions = {
+        vivid: 'Create vivid, concrete action or visual image phrases (e.g., "<b>tumble</b> down the stairs", "flowers <b>wither</b> without water") that immediately form a mental picture.',
+        collocation: 'Create high-frequency exam collocations showing natural prepositions or verb-noun pairings (e.g., "<b>reluctant</b> to accept the truth").',
+        conversational: 'Create short, natural everyday spoken chunks (3-6 words) useful in daily conversation.'
+      };
+
+      const btn = document.getElementById('btn-generate-words');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>正在為 ${wordList.length} 個單字打造速記短句鷹架...</span>`;
+
+      const prompt = `
+You are an expert EFL vocabulary teacher specializing in the "Rapid Memory Phrase Scaffolding Method" (速記短句學習鷹架法).
+${getCefrPromptRule(appState.settings.cefr)}
+
+Style requirement: ${styleInstructions[stylePref] || styleInstructions.vivid}
+
+For each of the following target English words: ${JSON.stringify(wordList)}
+Generate a JSON array of objects. Each object MUST strictly follow this structure:
+{
+  "word": "base form of the target word in lowercase",
+  "pos": "part of speech abbreviation (e.g., v., n., adj., adv.)",
+  "meaning": "concise core Traditional Chinese meaning (繁體中文核心語意，例如：跌倒；滾落)",
+  "phrases": [
+    {
+      "en": "A short 3 to 6 word rapid memory phrase (速記短句) wrapping the target word in <b>...</b> tags, e.g., '<b>tumble</b> down the stairs'",
+      "zh": "Natural Traditional Chinese translation of the phrase (繁體中文翻譯)"
+    },
+    {
+      "en": "A second distinct 3 to 6 word rapid memory phrase wrapping the target word in <b>...</b> tags, e.g., 'flowers <b>wither</b> without water'",
+      "zh": "Natural Traditional Chinese translation of the second phrase"
+    }
+  ]
+}
+Return ONLY valid JSON array.
+      `.trim();
+
+      try {
+        const model = appState.settings.model || 'gemini-2.5-flash';
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(appState.apiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              temperature: 0.4
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `API 請求失敗 (${response.status})`);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawText) throw new Error('AI 未回傳有效內容');
+
+        const parsedItems = JSON.parse(rawText);
+        if (!Array.isArray(parsedItems) || parsedItems.length === 0) {
+          throw new Error('回傳格式非單字陣列');
+        }
+
+        let addedCount = 0;
+        parsedItems.reverse().forEach(item => {
+          if (!item.word || !Array.isArray(item.phrases)) return;
+          const cleanWord = String(item.word).trim();
+          // Check if word already exists; if so, update it and move to top
+          const existingIdx = appState.words.findIndex(w => w.word.toLowerCase() === cleanWord.toLowerCase());
+          const wordObj = {
+            id: existingIdx >= 0 ? appState.words[existingIdx].id : ('w-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6)),
+            word: cleanWord,
+            pos: item.pos || 'v./n.',
+            meaning: item.meaning || '',
+            phrases: item.phrases.slice(0, 2).map(p => ({
+              en: p.en || cleanWord,
+              zh: p.zh || ''
+            })),
+            mastery: existingIdx >= 0 ? appState.words[existingIdx].mastery : 1,
+            selectedForStory: true,
+            createdAt: Date.now()
+          };
+
+          if (existingIdx >= 0) {
+            appState.words.splice(existingIdx, 1);
+          }
+          appState.words.unshift(wordObj);
+          addedCount++;
+        });
+
+        saveWordsToStorage();
+        renderRecentCards();
+        renderVocabBank();
+        document.getElementById('word-input').value = '';
+        showToast(`成功生成並儲存 ${addedCount} 個單字的速記短句！`, 'success');
+      } catch (err) {
+        console.error(err);
+        showToast(`生成失敗：${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+
+    /********************************************************************
+     * 8. RENDER WORD CARDS (RECENT & VOCABULARY BANK)
+     ********************************************************************/
+    function createWordCardHTML(item) {
+      const starsHtml = [1, 2, 3, 4, 5].map(star => `
+        <button onclick="setWordMastery('${item.id}', ${star})" title="設定熟練度 ${star} 星" class="text-xs transition ${star <= (item.mastery || 0) ? 'text-amber-400' : 'text-slate-200 hover:text-amber-300'}">
+          <i class="fa-solid fa-star"></i>
+        </button>
+      `).join('');
+
+      const phrasesHtml = (item.phrases || []).map((p, idx) => {
+        const safeEn = formatSafeHighlight(p.en, item.word);
+        const safePlainEn = stripHtmlTags(p.en).replace(/'/g, "\\'");
+        return `
+          <div class="group p-3 rounded-xl bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 transition flex items-start justify-between gap-3">
+            <div class="space-y-0.5 min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.2 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded">短句 ${idx + 1}</span>
+                <p class="phrase-highlight text-sm sm:text-base font-medium text-slate-800 break-words">${safeEn}</p>
+              </div>
+              <p class="text-xs text-slate-500 pl-11">${escapeHtml(p.zh)}</p>
+            </div>
+            <button
+              onclick="speakText('${safePlainEn}', this)"
+              class="w-9 h-9 rounded-xl bg-white hover:bg-indigo-600 text-indigo-600 hover:text-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0 transition"
+              title="朗讀此速記短句"
+            >
+              <i class="fa-solid fa-volume-high text-sm"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const safeWordPlain = stripHtmlTags(item.word).replace(/'/g, "\\'");
+
+      return `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition p-4 sm:p-5 flex flex-col justify-between gap-3.5">
+          <!-- Card Header -->
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <button
+                onclick="speakText('${safeWordPlain}', this)"
+                class="w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm flex items-center justify-center shrink-0 transition"
+                title="朗讀單字"
+              >
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+              <div class="min-w-0">
+                <div class="flex items-baseline gap-2 flex-wrap">
+                  <h4 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">${escapeHtml(item.word)}</h4>
+                  <span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-600">${escapeHtml(item.pos)}</span>
+                </div>
+                <p class="text-sm font-semibold text-indigo-700 mt-0.5">${escapeHtml(item.meaning)}</p>
+              </div>
+            </div>
+
+            <!-- Right Controls: Story Checkbox & Stars -->
+            <div class="flex flex-col items-end gap-1.5 shrink-0">
+              <label class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 cursor-pointer select-none bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-indigo-300">
+                <input
+                  type="checkbox"
+                  ${item.selectedForStory ? 'checked' : ''}
+                  onchange="toggleWordForStory('${item.id}')"
+                  class="rounded text-indigo-600 focus:ring-indigo-500"
+                />
+                <span>編故事</span>
+              </label>
+              <div class="flex items-center gap-0.5" title="單字熟練度">${starsHtml}</div>
+            </div>
+          </div>
+
+          <!-- Memory Phrases List -->
+          <div class="space-y-2">
+            ${phrasesHtml}
+          </div>
+
+          <!-- Card Footer Actions -->
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>速記短句鷹架卡</span>
+            <div class="flex items-center gap-3">
+              <button onclick="openEditWordModal('${item.id}')" class="hover:text-indigo-600 font-medium transition">
+                <i class="fa-solid fa-pen mr-1"></i>編輯短句
+              </button>
+              <button onclick="deleteWord('${item.id}')" class="hover:text-rose-600 font-medium transition">
+                <i class="fa-solid fa-trash-can mr-1"></i>刪除
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRecentCards() {
+      const container = document.getElementById('recent-cards-container');
+      if (!container) return;
+      const recent = appState.words.slice(0, 4);
+      if (recent.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl border border-dashed border-slate-300 p-8 text-center text-slate-500">
+            目前尚無單字，請由左側輸入單字或點擊「補齊範例字」！
+          </div>
+        `;
+        return;
+      }
+      container.innerHTML = recent.map(createWordCardHTML).join('');
+    }
+
+    function renderVocabBank() {
+      const container = document.getElementById('bank-cards-container');
+      if (!container) return;
+
+      const query = (document.getElementById('bank-search-input')?.value || '').trim().toLowerCase();
+      const filter = document.getElementById('bank-filter-select')?.value || 'all';
+
+      const filtered = appState.words.filter(item => {
+        const matchQuery = !query ||
+          item.word.toLowerCase().includes(query) ||
+          item.meaning.toLowerCase().includes(query) ||
+          (item.phrases || []).some(p => p.en.toLowerCase().includes(query) || p.zh.toLowerCase().includes(query));
+
+        if (!matchQuery) return false;
+        if (filter === 'selected') return !!item.selectedForStory;
+        if (filter === 'learning') return (item.mastery || 0) <= 2;
+        if (filter === 'mastered') return (item.mastery || 0) >= 3;
+        return true;
+      });
+
+      updateWordCountBadges();
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="md:col-span-2 bg-white rounded-2xl border border-dashed border-slate-300 p-10 text-center space-y-3">
+            <div class="text-slate-400 text-3xl"><i class="fa-solid fa-folder-open"></i></div>
+            <p class="text-slate-600 font-semibold">找不到符合條件的單字卡</p>
+            <button onclick="resetDemoWords()" class="px-4 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 transition">
+              載入預設範例單字
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(createWordCardHTML).join('');
+    }
+
+    /********************************************************************
+     * 9. VOCABULARY MANAGEMENT, MANUAL EDIT & JSON BACKUP
+     ********************************************************************/
+    function setWordMastery(id, stars) {
+      const word = appState.words.find(w => w.id === id);
+      if (!word) return;
+      word.mastery = stars;
+      saveWordsToStorage();
+      renderRecentCards();
+      renderVocabBank();
+    }
+
+    function toggleWordForStory(id) {
+      const word = appState.words.find(w => w.id === id);
+      if (!word) return;
+      word.selectedForStory = !word.selectedForStory;
+      saveWordsToStorage();
+      renderRecentCards();
+      renderVocabBank();
+      renderStoryWordChips();
+    }
+
+    function deleteWord(id) {
+      appState.words = appState.words.filter(w => w.id !== id);
+      saveWordsToStorage();
+      renderRecentCards();
+      renderVocabBank();
+      renderStoryWordChips();
+      showToast('已刪除該單字卡', 'info');
+    }
+
+    function openManualAddModal() {
+      document.getElementById('manual-modal-title').textContent = '手動新增單字與速記短句';
+      document.getElementById('edit-word-id').value = '';
+      document.getElementById('manual-word').value = '';
+      document.getElementById('manual-pos').value = 'v.';
+      document.getElementById('manual-meaning').value = '';
+      document.getElementById('manual-p1-en').value = '';
+      document.getElementById('manual-p1-zh').value = '';
+      document.getElementById('manual-p2-en').value = '';
+      document.getElementById('manual-p2-zh').value = '';
+      document.getElementById('manual-modal').classList.remove('hidden');
+    }
+
+    function openEditWordModal(id) {
+      const item = appState.words.find(w => w.id === id);
+      if (!item) return;
+      document.getElementById('manual-modal-title').textContent = `編輯「${item.word}」速記短句`;
+      document.getElementById('edit-word-id').value = item.id;
+      document.getElementById('manual-word').value = item.word;
+      document.getElementById('manual-pos').value = item.pos;
+      document.getElementById('manual-meaning').value = item.meaning;
+      document.getElementById('manual-p1-en').value = item.phrases?.[0]?.en || '';
+      document.getElementById('manual-p1-zh').value = item.phrases?.[0]?.zh || '';
+      document.getElementById('manual-p2-en').value = item.phrases?.[1]?.en || '';
+      document.getElementById('manual-p2-zh').value = item.phrases?.[1]?.zh || '';
+      document.getElementById('manual-modal').classList.remove('hidden');
+    }
+
+    function closeManualModal() {
+      document.getElementById('manual-modal').classList.add('hidden');
+    }
+
+    function saveManualWord() {
+      const id = document.getElementById('edit-word-id').value;
+      const word = document.getElementById('manual-word').value.trim();
+      const pos = document.getElementById('manual-pos').value.trim() || 'v.';
+      const meaning = document.getElementById('manual-meaning').value.trim();
+      const p1En = document.getElementById('manual-p1-en').value.trim();
+      const p1Zh = document.getElementById('manual-p1-zh').value.trim();
+      const p2En = document.getElementById('manual-p2-en').value.trim();
+      const p2Zh = document.getElementById('manual-p2-zh').value.trim();
+
+      if (!word || !meaning || !p1En) {
+        showToast('請至少填寫單字、中文語意與第一句速記短句', 'error');
+        return;
+      }
+
+      const phrases = [{ en: p1En, zh: p1Zh }];
+      if (p2En) phrases.push({ en: p2En, zh: p2Zh });
+
+      if (id) {
+        const existing = appState.words.find(w => w.id === id);
+        if (existing) {
+          existing.word = word;
+          existing.pos = pos;
+          existing.meaning = meaning;
+          existing.phrases = phrases;
+        }
+      } else {
+        appState.words.unshift({
+          id: 'manual-' + Date.now(),
+          word,
+          pos,
+          meaning,
+          phrases,
+          mastery: 1,
+          selectedForStory: true,
+          createdAt: Date.now()
+        });
+      }
+
+      saveWordsToStorage();
+      renderRecentCards();
+      renderVocabBank();
+      closeManualModal();
+      showToast(`已儲存單字「${word}」！`, 'success');
+    }
+
+    function resetDemoWords() {
+      DEFAULT_SAMPLE_WORDS.forEach(sample => {
+        const exists = appState.words.some(w => w.word.toLowerCase() === sample.word.toLowerCase());
+        if (!exists) {
+          appState.words.push(JSON.parse(JSON.stringify(sample)));
+        }
+      });
+      saveWordsToStorage();
+      renderRecentCards();
+      renderVocabBank();
+      renderStorySection();
+      showToast('已補齊預設範例單字與速記短句！', 'success');
+    }
+
+    function exportVocabJSON() {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        words: appState.words,
+        stories: appState.stories
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `my_vocab_scaffold_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('已匯出單字本與故事 JSON 備份檔！', 'success');
+    }
+
+    function importVocabJSON(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (Array.isArray(data.words)) {
+            appState.words = data.words;
+            saveWordsToStorage();
+          }
+          if (Array.isArray(data.stories)) {
+            appState.stories = data.stories;
+            saveStoriesToStorage();
+          }
+          renderRecentCards();
+          renderVocabBank();
+          renderStorySection();
+          showToast(`成功匯入 ${appState.words.length} 個單字！`, 'success');
+        } catch (err) {
+          showToast('JSON 備份檔案格式不正確', 'error');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    /********************************************************************
+     * 10. TAB 3: CONTEXTUAL STORY GENERATOR & DUAL-CODING READER
+     ********************************************************************/
+    function selectRandomForStory(count = 4) {
+      appState.words.forEach(w => w.selectedForStory = false);
+      const shuffled = [...appState.words].sort(() => Math.random() - 0.5);
+      shuffled.slice(0, count).forEach(w => {
+        const target = appState.words.find(item => item.id === w.id);
+        if (target) target.selectedForStory = true;
+      });
+      saveWordsToStorage();
+      renderVocabBank();
+      renderStoryWordChips();
+      showToast(`已隨機挑選 ${Math.min(count, appState.words.length)} 個單字準備編故事！`, 'info');
+    }
+
+    function clearStorySelection() {
+      appState.words.forEach(w => w.selectedForStory = false);
+      saveWordsToStorage();
+      renderVocabBank();
+      renderStoryWordChips();
+    }
+
+    function setStoryTheme(theme) {
+      appState.storyTheme = theme;
+      const themes = [
+        '日常溫馨與生活幽默',
+        '奇幻冒險與神祕探索',
+        '校園生活與友情成長',
+        '偵探解謎與意外轉折'
+      ];
+      themes.forEach((t, idx) => {
+        const btn = document.getElementById(`theme-btn-${idx}`);
+        if (!btn) return;
+        if (t === theme) {
+          btn.className = 'story-theme-btn px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-bold text-left transition border-indigo-600 bg-indigo-50 text-indigo-700';
+        } else {
+          btn.className = 'story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition';
+        }
+      });
+    }
+
+    function renderStoryWordChips() {
+      const container = document.getElementById('story-word-chips');
+      if (!container) return;
+
+      if (appState.words.length === 0) {
+        container.innerHTML = `<span class="text-xs text-slate-400">單字本目前為空，請先新增單字</span>`;
+        return;
+      }
+
+      container.innerHTML = appState.words.map(w => {
+        const active = !!w.selectedForStory;
+        return `
+          <button
+            type="button"
+            onclick="toggleWordForStory('${w.id}')"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
+              active
+                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
+            }"
+          >
+            <i class="fa-solid ${active ? 'fa-check' : 'fa-plus'} text-[10px]"></i>
+            <span>${escapeHtml(w.word)}</span>
+            <span class="opacity-75 font-normal">(${escapeHtml(w.meaning.slice(0, 6))})</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderStorySection() {
+      renderStoryWordChips();
+      renderStoryHistoryList();
+      renderActiveStoryReader();
+    }
+
+    function renderStoryHistoryList() {
+      const listEl = document.getElementById('story-history-list');
+      if (!listEl) return;
+
+      if (appState.stories.length === 0) {
+        listEl.innerHTML = `<p class="text-xs text-slate-400">尚無故事紀錄</p>`;
+        return;
+      }
+
+      listEl.innerHTML = appState.stories.map(st => {
+        const isActive = st.id === appState.activeStoryId;
+        return `
+          <div
+            onclick="selectStory('${st.id}')"
+            class="p-3 rounded-xl border cursor-pointer transition flex items-center justify-between gap-2 ${
+              isActive ? 'border-indigo-600 bg-indigo-50/70' : 'border-slate-200 hover:bg-slate-50'
+            }"
+          >
+            <div class="min-w-0">
+              <div class="text-xs sm:text-sm font-bold text-slate-800 truncate">${escapeHtml(st.title)}</div>
+              <div class="text-[11px] text-slate-500 truncate">包含單字：${escapeHtml((st.words || []).join(', '))}</div>
+            </div>
+            <button
+              onclick="event.stopPropagation(); deleteStory('${st.id}')"
+              class="text-slate-400 hover:text-rose-600 px-2 py-1 text-xs"
+              title="刪除此故事"
+            >
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectStory(id) {
+      stopSpeaking();
+      appState.activeStoryId = id;
+      renderStoryHistoryList();
+      renderActiveStoryReader();
+    }
+
+    function deleteStory(id) {
+      appState.stories = appState.stories.filter(s => s.id !== id);
+      if (appState.activeStoryId === id) {
+        appState.activeStoryId = appState.stories[0]?.id || null;
+      }
+      saveStoriesToStorage();
+      renderStorySection();
+    }
+
+    function toggleStoryTranslation() {
+      appState.showStoryTranslation = !appState.showStoryTranslation;
+      renderActiveStoryReader();
+    }
+
+    function speakFullStory(storyId, btnElement) {
+      const story = appState.stories.find(s => s.id === storyId);
+      if (!story) return;
+      const fullEnglish = (story.sentences || []).map(s => stripHtmlTags(s.en)).join(' ');
+      speakText(fullEnglish, btnElement);
+    }
+
+    function renderActiveStoryReader() {
+      const container = document.getElementById('story-reader-container');
+      if (!container) return;
+
+      const story = appState.stories.find(s => s.id === appState.activeStoryId) || appState.stories[0];
+      if (!story) {
+        container.innerHTML = `
+          <div class="p-10 text-center text-slate-400 space-y-2">
+            <i class="fa-solid fa-book-open text-3xl"></i>
+            <p class="font-semibold text-slate-600">請從左側勾選單字並點擊「AI 生成符合程度的短篇故事」</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sentencesHtml = (story.sentences || []).map((s, idx) => {
+        const safeEn = formatSafeHighlight(s.en);
+        const plainEn = stripHtmlTags(s.en).replace(/'/g, "\\'");
+        return `
+          <div
+            onclick="speakText('${plainEn}', this)"
+            class="group p-3.5 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/40 cursor-pointer transition space-y-1"
+            title="點擊朗讀此句"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <p class="story-highlight text-base sm:text-lg leading-relaxed text-slate-800 font-medium">${safeEn}</p>
+              <span class="w-7 h-7 rounded-lg bg-slate-100 group-hover:bg-indigo-600 text-slate-500 group-hover:text-white flex items-center justify-center shrink-0 text-xs transition">
+                <i class="fa-solid fa-volume-high"></i>
+              </span>
+            </div>
+            ${appState.showStoryTranslation ? `<p class="text-xs sm:text-sm text-slate-500">${escapeHtml(s.zh)}</p>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const notesHtml = (story.notes || []).map(n => `
+        <li class="text-xs sm:text-sm text-slate-700 flex items-start gap-2">
+          <i class="fa-solid fa-check text-indigo-600 mt-1 text-xs"></i>
+          <span>${escapeHtml(n)}</span>
+        </li>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="space-y-5">
+          <!-- Story Header & Audio Toolbar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-indigo-100 text-indigo-700">${escapeHtml(story.level || appState.settings.cefr)}</span>
+                <span class="text-xs text-slate-400">${escapeHtml(story.theme || '')}</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">${escapeHtml(story.title)}</h3>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                onclick="speakFullStory('${story.id}', this)"
+                class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-play"></i> 全文朗讀
+              </button>
+              <button
+                onclick="stopSpeaking()"
+                class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition"
+                title="停止朗讀"
+              >
+                <i class="fa-solid fa-stop"></i>
+              </button>
+              <button
+                onclick="toggleStoryTranslation()"
+                class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition"
+              >
+                ${appState.showStoryTranslation ? '隱藏中譯' : '顯示中譯'}
+              </button>
+            </div>
+          </div>
+
+          <div class="text-xs text-indigo-600 bg-indigo-50/70 border border-indigo-100 rounded-xl px-3.5 py-2 flex items-center gap-2">
+            <i class="fa-solid fa-headphones"></i>
+            <span>雙重編碼閱讀：點擊下方<b>任何一句英文</b>即可單獨發音跟讀！</span>
+          </div>
+
+          <!-- Interactive Sentences -->
+          <div class="space-y-2.5">
+            ${sentencesHtml}
+          </div>
+
+          <!-- Key Collocations Notes -->
+          ${notesHtml ? `
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">故事中的速記搭配詞重點</h4>
+              <ul class="space-y-1.5">${notesHtml}</ul>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    async function handleGenerateStory() {
+      const selectedWords = appState.words.filter(w => w.selectedForStory);
+      if (selectedWords.length === 0) {
+        showToast('請先勾選至少 2 個要編入故事的單字！', 'error');
+        return;
+      }
+
+      if (!appState.apiKey) {
+        showToast('請先設定您的免費 Google Gemini API Key！', 'error');
+        openSettingsModal();
+        return;
+      }
+
+      const btn = document.getElementById('btn-generate-story');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>AI 正在使用 ${selectedWords.length} 個單字編寫故事...</span>`;
+
+      const wordSummary = selectedWords.map(w => `${w.word} (${w.meaning})`).join(', ');
+      const prompt = `
+You are an expert EFL reading & vocabulary teacher.
+${getCefrPromptRule(appState.settings.cefr)}
+
+Write a short, engaging story (about 5 to 7 sentences, 70-120 words total) with the theme "${appState.storyTheme}".
+You MUST naturally include all of these target vocabulary words: ${wordSummary}.
+Whenever ANY of the target words appear in the English sentences, wrap the word in <b>...</b> tags (e.g., <b>tumbled</b>).
+
+Return ONLY a valid JSON object matching this exact structure:
+{
+  "title": "English Title (繁體中文標題)",
+  "sentences": [
+    {
+      "en": "English sentence with target word wrapped in <b>...</b>",
+      "zh": "Natural Traditional Chinese translation of this sentence"
+    }
+  ],
+  "notes": [
+    "target phrase in story：繁體中文片語解析"
+  ]
+}
+      `.trim();
+
+      try {
+        const model = appState.settings.model || 'gemini-2.5-flash';
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(appState.apiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              temperature: 0.6
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(rawText);
+
+        const newStory = {
+          id: 'st-' + Date.now(),
+          title: parsed.title || 'AI 單字短篇故事',
+          level: `${appState.settings.cefr} (使用 i-1 鷹架字彙)`,
+          theme: appState.storyTheme,
+          words: selectedWords.map(w => w.word),
+          sentences: Array.isArray(parsed.sentences) ? parsed.sentences : [],
+          notes: Array.isArray(parsed.notes) ? parsed.notes : [],
+          createdAt: Date.now()
+        };
+
+        appState.stories.unshift(newStory);
+        appState.activeStoryId = newStory.id;
+        saveStoriesToStorage();
+        renderStorySection();
+        showToast('短篇故事生成完畢！點擊句子即可聆聽發音', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast(`故事生成失敗：${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+
+    /********************************************************************
+     * 11. TAB 4: LOCAL ZERO-TOKEN QUIZ ENGINE (EN->ZH, ZH->EN, CLOZE)
+     ********************************************************************/
+    function setQuizMode(mode) {
+      appState.quiz.mode = mode;
+      updateQuizModeButtons();
+      generateNextQuizQuestion();
+    }
+
+    function toggleClozeInputMode(inputMode) {
+      appState.quiz.clozeInputMode = inputMode;
+      renderQuizStage();
+    }
+
+    function updateQuizModeButtons() {
+      const modes = ['en2zh', 'zh2en', 'cloze'];
+      modes.forEach(m => {
+        const btn = document.getElementById(`qmode-${m}`);
+        if (!btn) return;
+        if (m === appState.quiz.mode) {
+          btn.className = 'px-4 py-3 rounded-xl border-2 border-indigo-600 bg-indigo-50/70 text-indigo-950 text-left transition flex items-center gap-3 shadow-sm';
+        } else {
+          btn.className = 'px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-left transition flex items-center gap-3';
+        }
+      });
+    }
+
+    function generateNextQuizQuestion() {
+      updateQuizModeButtons();
+      const stage = document.getElementById('quiz-stage-card');
+      if (!stage) return;
+
+      if (appState.words.length < 2) {
+        stage.innerHTML = `
+          <div class="text-center py-8 space-y-3">
+            <p class="text-slate-600 font-semibold">單字庫至少需要 2 個以上的單字才能進行測驗！</p>
+            <button onclick="resetDemoWords()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">載入預設範例單字</button>
+          </div>
+        `;
+        return;
+      }
+
+      // Weight slightly towards lower mastery words
+      const pool = [...appState.words].sort((a, b) => (a.mastery || 0) - (b.mastery || 0) + (Math.random() * 2 - 1));
+      const target = pool[0];
+
+      // Pick 3 distractors
+      const others = appState.words.filter(w => w.id !== target.id).sort(() => Math.random() - 0.5).slice(0, 3);
+      const options = [target, ...others].sort(() => Math.random() - 0.5);
+
+      // Pick one memory phrase from target
+      const phraseObj = (target.phrases && target.phrases.length > 0)
+        ? target.phrases[Math.floor(Math.random() * target.phrases.length)]
+        : { en: `<b>${target.word}</b>`, zh: target.meaning };
+
+      // Build Cloze blanked sentence
+      const plainPhraseEn = stripHtmlTags(phraseObj.en);
+      const regex = new RegExp(`\\b${escapeRegExp(target.word)}\\w*\\b`, 'gi');
+      const maskedPhraseEn = plainPhraseEn.replace(regex, '______');
+
+      appState.quiz.currentQuestion = {
+        target,
+        options,
+        phraseObj,
+        plainPhraseEn,
+        maskedPhraseEn
+      };
+      appState.quiz.answered = false;
+
+      renderQuizStage();
+    }
+
+    function renderQuizStage() {
+      const stage = document.getElementById('quiz-stage-card');
+      const q = appState.quiz.currentQuestion;
+      if (!stage || !q) return;
+
+      const mode = appState.quiz.mode;
+      const safeWordAudio = stripHtmlTags(q.target.word).replace(/'/g, "\\'");
+      const safePhraseAudio = q.plainPhraseEn.replace(/'/g, "\\'");
+
+      let promptHtml = '';
+      let interactionHtml = '';
+
+      if (mode === 'en2zh') {
+        promptHtml = `
+          <div class="space-y-3 text-center">
+            <span class="px-2.5 py-1 text-xs font-bold bg-indigo-100 text-indigo-700 rounded-full">英翻中測驗</span>
+            <div class="flex items-center justify-center gap-3">
+              <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900">${escapeHtml(q.target.word)}</h3>
+              <span class="text-sm font-semibold text-slate-500">${escapeHtml(q.target.pos)}</span>
+              <button onclick="speakText('${safeWordAudio}', this)" class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition flex items-center justify-center">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-600">
+              <i class="fa-solid fa-lightbulb text-amber-500"></i>
+              <span>速記短句鷹架：<span class="phrase-highlight font-medium">${formatSafeHighlight(q.phraseObj.en, q.target.word)}</span></span>
+              <button onclick="speakText('${safePhraseAudio}', this)" class="text-indigo-600 hover:text-indigo-800 ml-1"><i class="fa-solid fa-volume-high"></i></button>
+            </div>
+          </div>
+        `;
+
+        interactionHtml = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+            ${q.options.map(opt => `
+              <button
+                onclick="submitQuizChoice('${opt.id}')"
+                id="qopt-${opt.id}"
+                class="quiz-opt-btn p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 text-left font-bold text-slate-800 transition flex items-center justify-between"
+              >
+                <span>${escapeHtml(opt.meaning)}</span>
+                <span class="text-xs text-slate-400">${escapeHtml(opt.pos)}</span>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      } else if (mode === 'zh2en') {
+        promptHtml = `
+          <div class="space-y-3 text-center">
+            <span class="px-2.5 py-1 text-xs font-bold bg-violet-100 text-violet-700 rounded-full">中翻英測驗</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900">${escapeHtml(q.target.meaning)} <span class="text-base font-medium text-slate-400">(${escapeHtml(q.target.pos)})</span></h3>
+            <p class="text-xs sm:text-sm text-slate-500">速記短句提示：${escapeHtml(q.phraseObj.zh)}</p>
+          </div>
+        `;
+
+        interactionHtml = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+            ${q.options.map(opt => `
+              <button
+                onclick="submitQuizChoice('${opt.id}')"
+                id="qopt-${opt.id}"
+                class="quiz-opt-btn p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 text-left font-bold text-slate-800 text-lg transition flex items-center justify-between"
+              >
+                <span>${escapeHtml(opt.word)}</span>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        // CLOZE MODE
+        promptHtml = `
+          <div class="space-y-3 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <span class="px-2.5 py-1 text-xs font-bold bg-amber-100 text-amber-800 rounded-full">速記短句克漏字</span>
+              <div class="inline-flex bg-slate-100 p-0.5 rounded-lg text-xs">
+                <button onclick="toggleClozeInputMode('choice')" class="px-2.5 py-1 rounded-md font-bold ${appState.quiz.clozeInputMode === 'choice' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}">四選一</button>
+                <button onclick="toggleClozeInputMode('spell')" class="px-2.5 py-1 rounded-md font-bold ${appState.quiz.clozeInputMode === 'spell' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}">拼字挑戰</button>
+              </div>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-wide bg-slate-50 py-4 px-4 rounded-2xl border border-slate-200">
+              ${escapeHtml(q.maskedPhraseEn)}
+            </h3>
+            <p class="text-sm font-semibold text-indigo-700">${escapeHtml(q.phraseObj.zh)} <span class="text-xs text-slate-400">(${escapeHtml(q.target.meaning)})</span></p>
+          </div>
+        `;
+
+        if (appState.quiz.clozeInputMode === 'spell') {
+          const hint = q.target.word[0] + '_'.repeat(Math.max(1, q.target.word.length - 1));
+          interactionHtml = `
+            <div class="mt-6 max-w-md mx-auto space-y-3">
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="cloze-spell-input"
+                  placeholder="輸入單字（首字母提示：${hint}）"
+                  onkeydown="if(event.key==='Enter') submitClozeSpelling()"
+                  class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-base font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <button onclick="submitClozeSpelling()" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm">送出</button>
+              </div>
+            </div>
+          `;
+        } else {
+          interactionHtml = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+              ${q.options.map(opt => `
+                <button
+                  onclick="submitQuizChoice('${opt.id}')"
+                  id="qopt-${opt.id}"
+                  class="quiz-opt-btn p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 text-left font-bold text-slate-800 text-lg transition flex items-center justify-between"
+                >
+                  <span>${escapeHtml(opt.word)}</span>
+                  <span class="text-xs font-normal text-slate-400">${escapeHtml(opt.pos)}</span>
+                </button>
+              `).join('')}
+            </div>
+          `;
+        }
+      }
+
+      stage.innerHTML = `
+        ${promptHtml}
+        ${interactionHtml}
+        <div id="quiz-feedback-box" class="hidden mt-6 p-4 rounded-2xl border"></div>
+      `;
+    }
+
+    function submitQuizChoice(selectedId) {
+      if (appState.quiz.answered) return;
+      const q = appState.quiz.currentQuestion;
+      const isCorrect = selectedId === q.target.id;
+      finalizeQuizAnswer(isCorrect, selectedId);
+    }
+
+    function submitClozeSpelling() {
+      if (appState.quiz.answered) return;
+      const input = document.getElementById('cloze-spell-input');
+      if (!input) return;
+      const val = input.value.trim().toLowerCase();
+      if (!val) return;
+      const q = appState.quiz.currentQuestion;
+      const isCorrect = val === q.target.word.toLowerCase();
+      finalizeQuizAnswer(isCorrect, null);
+    }
+
+    function finalizeQuizAnswer(isCorrect, selectedId) {
+      appState.quiz.answered = true;
+      appState.quiz.totalCount++;
+      if (isCorrect) appState.quiz.correctCount++;
+
+      document.getElementById('quiz-score-correct').textContent = appState.quiz.correctCount;
+      document.getElementById('quiz-score-total').textContent = appState.quiz.totalCount;
+
+      const q = appState.quiz.currentQuestion;
+
+      // Update word mastery
+      const wordInState = appState.words.find(w => w.id === q.target.id);
+      if (wordInState) {
+        wordInState.mastery = isCorrect
+          ? Math.min(5, (wordInState.mastery || 0) + 1)
+          : Math.max(0, (wordInState.mastery || 1) - 1);
+        saveWordsToStorage();
+      }
+
+      // Highlight option buttons
+      q.options.forEach(opt => {
+        const btn = document.getElementById(`qopt-${opt.id}`);
+        if (!btn) return;
+        btn.disabled = true;
+        if (opt.id === q.target.id) {
+          btn.className = 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-left font-bold transition flex items-center justify-between';
+        } else if (opt.id === selectedId && !isCorrect) {
+          btn.className = 'p-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 text-left font-bold transition flex items-center justify-between';
+        } else {
+          btn.classList.add('opacity-50');
+        }
+      });
+
+      // Speak the complete memory phrase automatically to reinforce auditory memory!
+      speakText(q.plainPhraseEn);
+
+      // Show feedback box & Next button
+      const fb = document.getElementById('quiz-feedback-box');
+      const safePhraseAudio = q.plainPhraseEn.replace(/'/g, "\\'");
+      fb.classList.remove('hidden');
+      fb.className = `mt-6 p-4 sm:p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+        isCorrect ? 'bg-emerald-50/90 border-emerald-200 text-emerald-950' : 'bg-rose-50/90 border-rose-200 text-rose-950'
+      }`;
+
+      fb.innerHTML = `
+        <div class="space-y-1">
+          <div class="font-extrabold text-sm sm:text-base flex items-center gap-2">
+            <i class="fa-solid ${isCorrect ? 'fa-circle-check text-emerald-600' : 'fa-circle-xmark text-rose-600'} text-lg"></i>
+            <span>${isCorrect ? '答對了！熟練度 +1 星' : `答錯了！正確答案是：${escapeHtml(q.target.word)} (${escapeHtml(q.target.meaning)})`}</span>
+          </div>
+          <div class="text-xs sm:text-sm flex items-center gap-2">
+            <span>🔊 速記短句：<span class="phrase-highlight font-semibold">${formatSafeHighlight(q.phraseObj.en, q.target.word)}</span> (${escapeHtml(q.phraseObj.zh)})</span>
+            <button onclick="speakText('${safePhraseAudio}', this)" class="px-2 py-0.5 rounded bg-white/80 text-indigo-700 font-bold text-xs border border-indigo-200">再聽一次</button>
+          </div>
+        </div>
+        <button
+          onclick="generateNextQuizQuestion()"
+          class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow shrink-0"
+        >
+          下一題 <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      `;
+    }
+  </script>
+</body>
+</html>
