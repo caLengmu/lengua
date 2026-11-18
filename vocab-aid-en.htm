@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AI 英文單字學習助理｜速記短句鷹架法</title>
+  <title>個人專屬 AI 英文單字學習助理 — 視覺化速記短句鷹架法</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Inter & Noto Sans TC -->
@@ -90,8 +90,8 @@
           <i class="fa-solid fa-bolt-lightning text-lg"></i>
         </div>
         <div class="truncate">
-          <h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">AI 單字速記助理</h1>
-          <p class="text-xs text-slate-500 hidden sm:block">速記短句鷹架 × 雙重編碼聽讀 × 個人詞庫</p>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 truncate">個人專屬 AI 英文單字學習助理</h1>
+          <p class="text-xs text-slate-500 hidden sm:block">視覺化速記短句鷹架 × 主題人物故事 × 雙重編碼聽讀</p>
         </div>
       </div>
 
@@ -119,7 +119,12 @@
           <span class="hidden sm:inline">免費 API 教學</span>
         </button>
 
-        <button onclick="openSettingsModal()" id="api-status-btn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold border transition flex items-center gap-2 shadow-sm">
+        <button onclick="openSettingsModal('prompt')" class="px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-violet-700 bg-violet-50 hover:bg-violet-100 border border-violet-200 transition flex items-center gap-1.5" title="檢視或修改 AI 教學指令 (Prompt)">
+          <i class="fa-solid fa-wand-magic"></i>
+          <span class="hidden lg:inline">自訂指令</span>
+        </button>
+
+        <button onclick="openSettingsModal('api')" id="api-status-btn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold border transition flex items-center gap-2 shadow-sm">
           <span id="api-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
           <span id="api-status-text">設定 API</span>
           <span id="header-model-badge" class="hidden xl:inline-block px-2 py-0.5 text-[11px] bg-indigo-100 text-indigo-700 rounded font-mono font-bold">gemini-3.5-flash-lite</span>
@@ -137,18 +142,18 @@
     <div id="onboarding-banner" class="mb-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 rounded-2xl p-4 sm:p-5 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1">
         <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-white/20 rounded-md">體驗與設定指引</span>
-          <h2 class="font-bold text-base sm:text-lg">歡迎使用個人專屬 AI 英文單字助理！</h2>
+          <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-white/20 rounded-md">視覺化鷹架升級版</span>
+          <h2 class="font-bold text-base sm:text-lg">歡迎使用個人專屬 AI 英文單字學習助理！</h2>
         </div>
         <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
-          系統已預載 <b>6 個示範單字與速記短句</b>，您現在即可直接點擊喇叭測試發音或進行單字測驗。設定您專屬的免費 Google Gemini API Key 後，即可無限生成新單字與專屬故事！
+          系統已預載 <b>6 個完整情境與 Emoji 視覺錨點的示範單字（含 slip 雙語意示範）與動漫偵探主題故事</b>，點擊喇叭即可體驗「自動略過 Emoji 純英文朗讀」。填入免費 Gemini API Key 後即可無限生成！
         </p>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
-        <button onclick="openGuideModal()" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-semibold transition text-center">
-          申請免費 Key 教學
+        <button onclick="openSettingsModal('prompt')" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-semibold transition text-center">
+          檢視內建指令
         </button>
-        <button onclick="openSettingsModal()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 text-xs sm:text-sm font-bold shadow transition text-center">
+        <button onclick="openSettingsModal('api')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white text-indigo-700 hover:bg-indigo-50 text-xs sm:text-sm font-bold shadow transition text-center">
           填入 API Key
         </button>
       </div>
@@ -168,53 +173,62 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i>
                 批次輸入想學的單字
               </h2>
-              <p class="text-xs text-slate-500 mt-0.5">一次輸入一個或多個單字，AI 自動打造「速記短句」鷹架</p>
+              <p class="text-xs text-slate-500 mt-0.5">支援「純單字」自動挑雙核心語意，或「指定詞性/語意」精準造句</p>
             </div>
             <button onclick="openManualAddModal()" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 rounded-lg transition">
               <i class="fa-solid fa-pen-to-square mr-1"></i>手動新增
             </button>
           </div>
 
-          <!-- Current Scaffold Level Indicator -->
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 flex items-center justify-between gap-2">
-            <div class="text-xs space-y-1">
-              <div class="text-slate-500 font-medium">目前學習者程度與鷹架難度 (i-1 原則)：</div>
-              <div id="gen-level-display" class="font-bold text-slate-800 text-sm">A2 基礎 → 使用 A0-A1 超基礎字彙造短句</div>
-              <div class="text-[11px] text-slate-500 flex items-center gap-1.5 pt-0.5">
-                <span>目前使用模型：</span>
+          <!-- Current Scaffold Level & Prompt Indicator -->
+          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <div class="text-xs space-y-0.5">
+                <div class="text-slate-500 font-medium">目前學習者程度與鷹架難度 (i-1 原則)：</div>
+                <div id="gen-level-display" class="font-bold text-slate-800 text-sm">A2 基礎 → 使用 A0~A1 超基礎字彙造短句</div>
+              </div>
+              <button onclick="openSettingsModal('api')" class="text-xs text-indigo-600 font-semibold hover:underline shrink-0">修改程度</button>
+            </div>
+            <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px] text-slate-500">
+              <div class="flex items-center gap-1.5">
+                <span>模型：</span>
                 <code id="gen-model-display" class="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 rounded font-mono font-bold">gemini-3.5-flash-lite</code>
               </div>
+              <button onclick="openSettingsModal('prompt')" class="text-violet-700 font-semibold hover:underline flex items-center gap-1">
+                <i class="fa-solid fa-sliders"></i> 編輯速記短句 Prompt
+              </button>
             </div>
-            <button onclick="openSettingsModal()" class="text-xs text-indigo-600 font-semibold hover:underline shrink-0">修改設定</button>
           </div>
 
-          <!-- Word Batch Input -->
+          <!-- Word Batch Input with Meaning Specification Support -->
           <div>
-            <label for="word-input" class="block text-sm font-semibold text-slate-700 mb-1.5">
-              輸入英文單字 <span class="text-xs font-normal text-slate-400">（多個單字請用逗號或換行分隔，建議每次 1~8 個）</span>
-            </label>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="word-input" class="block text-sm font-bold text-slate-800">
+                輸入英文單字 <span class="text-xs font-normal text-slate-500">（逗號或換行分隔，每次 1~8 個）</span>
+              </label>
+              <span class="px-2 py-0.5 text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 rounded-md">支援括號指定語意</span>
+            </div>
             <textarea
               id="word-input"
               rows="4"
-              placeholder="例如：&#10;tumble, wither, reluctant&#10;或是每行輸入一個單字..."
+              placeholder="範例 1（未指定，自動挑最常用 2 個核心語意）：&#10;slip, tumble, wither&#10;範例 2（括號指定語意或詞性）：&#10;slip (滑倒), present (n. 禮物), reluctant"
               class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition placeholder:text-slate-400"
             ></textarea>
             <!-- Quick Demo Fill Pills -->
-            <div class="mt-2 flex flex-wrap items-center gap-1.5">
-              <span class="text-xs text-slate-400">快速帶入測試字：</span>
-              <button type="button" onclick="fillDemoInput('exhausted, obstacle, thrive')" class="text-xs px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition">exhausted, obstacle, thrive</button>
-              <button type="button" onclick="fillDemoInput('hesitate, glimpse, vivid')" class="text-xs px-2 py-0.5 rounded-md bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition">hesitate, glimpse, vivid</button>
+            <div class="mt-2.5 space-y-1.5">
+              <div class="text-xs text-slate-400 font-medium">點擊快速帶入測試（體驗多義詞 vs 指定語意）：</div>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button type="button" onclick="fillDemoInput('slip, present (n. 禮物), exhausted')" class="text-xs px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium transition border border-indigo-200/60">
+                  slip, present (n. 禮物), exhausted
+                </button>
+                <button type="button" onclick="fillDemoInput('slip (滑倒), hesitate, vanish')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition">
+                  slip (滑倒), hesitate, vanish
+                </button>
+                <button type="button" onclick="fillDemoInput('spot (v. 看見), thrive, obstacle')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition">
+                  spot (v. 看見), thrive, obstacle
+                </button>
+              </div>
             </div>
-          </div>
-
-          <!-- Memory Phrase Style Preference -->
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">速記短句風格偏好</label>
-            <select id="phrase-style-select" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="vivid">畫面感強的具體動作與生活情境（預設推薦，最易記憶）</option>
-              <option value="collocation">高頻必考介系詞與動詞搭配詞（適合大考準備）</option>
-              <option value="conversational">日常口語高頻反應短句（適合聽力與會話）</option>
-            </select>
           </div>
 
           <!-- Generate Button -->
@@ -224,26 +238,33 @@
             class="w-full py-3.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-md shadow-indigo-200 transition flex items-center justify-center gap-2"
           >
             <i class="fa-solid fa-bolt"></i>
-            <span>AI 生成 2 個速記短句並儲存</span>
+            <span>AI 生成 2 個視覺化速記短句並儲存</span>
           </button>
 
-          <!-- Voice Speed Quick Bar -->
-          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span><i class="fa-solid fa-volume-high text-indigo-600 mr-1"></i>發音語速設定：</span>
-            <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
-              <button onclick="setQuickSpeechRate(0.75)" id="rate-btn-0.75" class="px-2 py-1 rounded font-semibold transition">0.75x 慢速</button>
-              <button onclick="setQuickSpeechRate(0.9)" id="rate-btn-0.9" class="px-2 py-1 rounded font-semibold transition">0.9x 自然</button>
-              <button onclick="setQuickSpeechRate(1.0)" id="rate-btn-1" class="px-2 py-1 rounded font-semibold transition">1.0x 正常</button>
+          <!-- Voice Speed Quick Bar & Emoji Skip Notice -->
+          <div class="pt-3 border-t border-slate-100 space-y-2">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span><i class="fa-solid fa-volume-high text-indigo-600 mr-1"></i>發音語速（自動略過 Emoji）：</span>
+              <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+                <button onclick="setQuickSpeechRate(0.75)" id="rate-btn-0.75" class="px-2 py-1 rounded font-semibold transition">0.75x 慢速</button>
+                <button onclick="setQuickSpeechRate(0.9)" id="rate-btn-0.9" class="px-2 py-1 rounded font-semibold transition">0.9x 自然</button>
+                <button onclick="setQuickSpeechRate(1.0)" id="rate-btn-1" class="px-2 py-1 rounded font-semibold transition">1.0x 正常</button>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Right Column: Latest Generated Cards / Recent Scaffold Cards -->
         <div class="lg:col-span-7 space-y-4">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between flex-wrap gap-2">
             <div>
-              <h3 id="recent-section-title" class="text-base sm:text-lg font-bold text-slate-900">最新生成與精選速記短句卡</h3>
-              <p class="text-xs text-slate-500">點擊 <i class="fa-solid fa-volume-high text-indigo-600"></i> 即可聆聽單字與短句發音，強化「視覺＋聽覺」雙重編碼</p>
+              <div class="flex items-center gap-2">
+                <h3 id="recent-section-title" class="text-base sm:text-lg font-bold text-slate-900">最新生成與精選速記短句卡</h3>
+                <span class="px-2 py-0.5 text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">
+                  🔊 語音自動略過 Emoji
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">每個短句均包含完整原因、方式或結果畫面細節，點擊喇叭即可純英文發音跟讀</p>
             </div>
             <button onclick="switchTab('bank')" class="text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
               查看全部單字庫 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -333,20 +354,25 @@
 
         <!-- Left Column: Story Controls & Word Selector -->
         <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
-          <div>
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-book-open-reader text-indigo-600"></i>
-              用單字編寫情境短篇故事
-            </h2>
-            <p class="text-xs text-slate-500 mt-1">
-              結合多個目標單字與 <span id="story-cefr-hint" class="font-semibold text-indigo-600">i-1 簡易字彙鷹架</span>，強化閱讀語感與聽力編碼
-            </p>
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-book-open-reader text-indigo-600"></i>
+                用單字編寫主題人物故事
+              </h2>
+              <p class="text-xs text-slate-500 mt-1">
+                結合指定語意與 <span id="story-cefr-hint" class="font-semibold text-indigo-600">A2 (i-1 簡易字彙鷹架)</span>，圍繞喜愛的角色展開劇情
+              </p>
+            </div>
+            <button onclick="openSettingsModal('prompt')" class="text-xs font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100 border border-violet-200 px-2.5 py-1.5 rounded-lg shrink-0 transition">
+              <i class="fa-solid fa-wand-magic mr-1"></i>故事指令
+            </button>
           </div>
 
-          <!-- Selected Words Chips -->
+          <!-- Selected Words Chips (with locked meanings) -->
           <div class="space-y-2">
             <div class="flex items-center justify-between">
-              <label class="text-xs font-bold uppercase tracking-wider text-slate-600">本次要編入故事的單字（建議 3~6 個）</label>
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-600">1. 勾選要編入故事的單字與語意（建議 3~6 個）</label>
               <button onclick="selectRandomForStory(4)" class="text-xs font-semibold text-indigo-600 hover:underline">
                 <i class="fa-solid fa-dice mr-1"></i>隨機換 4 個單字
               </button>
@@ -354,25 +380,55 @@
             <div id="story-word-chips" class="flex flex-wrap gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 min-h-[60px]">
               <!-- Populated by JS -->
             </div>
-            <p class="text-[11px] text-slate-400">點擊上方單字標籤即可切換勾選狀態，或至「我的單字本」自由勾選。</p>
+            <p class="text-[11px] text-slate-400">系統會將單字連同括號內的「指定中文語意」一併傳給 AI，確保故事用法與速記短句一致。</p>
           </div>
 
-          <!-- Story Genre / Theme -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">選擇故事主題風格</label>
-            <div class="grid grid-cols-2 gap-2">
-              <button type="button" onclick="setStoryTheme('日常溫馨與生活幽默')" id="theme-btn-0" class="story-theme-btn px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold text-left transition border-indigo-600 bg-indigo-50 text-indigo-700">
-                ☕ 日常生活與幽默
+          <!-- Custom Story Character / Interest Theme Input + Quick Chips -->
+          <div class="space-y-2.5">
+            <label for="story-theme-input" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
+              2. 🎭 設定故事主角 / 興趣主題（可自由輸入或點選下方標籤）
+            </label>
+            <div class="relative">
+              <input
+                type="text"
+                id="story-theme-input"
+                oninput="handleStoryThemeInput(this.value)"
+                value="🕵️ 動漫偵探與怪盜的午夜博物館對決"
+                placeholder="輸入喜歡的動漫角色、影歌星、運動員或情境（如：Taylor Swift、名偵探柯南、大谷翔平）..."
+                class="w-full rounded-xl border border-slate-300 pl-3.5 pr-9 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                type="button"
+                onclick="document.getElementById('story-theme-input').value=''; document.getElementById('story-theme-input').focus();"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                title="清空主題"
+              >
+                <i class="fa-solid fa-circle-xmark"></i>
               </button>
-              <button type="button" onclick="setStoryTheme('奇幻冒險與神祕探索')" id="theme-btn-1" class="story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition">
-                🧭 奇幻冒險與探索
-              </button>
-              <button type="button" onclick="setStoryTheme('校園生活與友情成長')" id="theme-btn-2" class="story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition">
-                🎒 校園與友情成長
-              </button>
-              <button type="button" onclick="setStoryTheme('偵探解謎與意外轉折')" id="theme-btn-3" class="story-theme-btn px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-left text-slate-700 hover:bg-slate-50 transition">
-                🔍 偵探解謎與轉折
-              </button>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="text-[11px] text-slate-400 font-medium">熱門共鳴主題快速套用：</div>
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" onclick="setStoryTheme('🕵️ 動漫偵探與怪盜的午夜博物館對決')" class="story-theme-chip px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-left text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition truncate">
+                  🕵️ 動漫偵探與怪盜對決
+                </button>
+                <button type="button" onclick="setStoryTheme('🎤 K-Pop 偶像世界巡迴演唱會後台驚魂')" class="story-theme-chip px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-left text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition truncate">
+                  🎤 K-Pop 偶像巡迴演唱會
+                </button>
+                <button type="button" onclick="setStoryTheme('🏀 高中籃球聯賽最後一秒逆轉決戰')" class="story-theme-chip px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-left text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition truncate">
+                  🏀 高中籃球最後一秒決戰
+                </button>
+                <button type="button" onclick="setStoryTheme('🧙‍♂️ 魔法學院的禁忌魔藥課意外')" class="story-theme-chip px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-left text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition truncate">
+                  🧙‍♂️ 魔法學院禁忌魔藥課
+                </button>
+                <button type="button" onclick="setStoryTheme('🏴‍☠️ 航海王魯夫與夥伴的神秘島尋寶冒險')" class="story-theme-chip px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-left text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition truncate">
+                  🏴‍☠️ 航海王魯夫尋寶冒險
+                </button>
+                <button type="button" onclick="setStoryTheme('🎸 搖滾樂團主唱的暴雨舞台奇蹟')" class="story-theme-chip px-2.5 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-left text-slate-700 hover:border-indigo-400 hover:bg-indigo-50/50 transition truncate">
+                  🎸 搖滾樂團主唱舞台意外
+                </button>
+              </div>
             </div>
           </div>
 
@@ -383,7 +439,7 @@
             class="w-full py-3.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm sm:text-base shadow-md shadow-indigo-200 transition flex items-center justify-center gap-2"
           >
             <i class="fa-solid fa-feather-pointed"></i>
-            <span>AI 生成符合程度的短篇故事</span>
+            <span>AI 圍繞主角與指定語意編寫故事</span>
           </button>
 
           <!-- Saved Stories History List -->
@@ -491,18 +547,19 @@
   </nav>
 
   <!-- ===============================================================
-       MODAL 1: API KEY & LEARNING SETTINGS
+       MODAL 1: API KEY, LEARNING SETTINGS & CUSTOM PROMPT EDITOR (2 TABS)
   ================================================================ -->
   <div id="settings-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-5 my-8">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl border border-slate-200 space-y-4 my-8 max-h-[92vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 shrink-0">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
             <i class="fa-solid fa-sliders"></i>
           </div>
           <div>
-            <h3 class="text-lg font-bold text-slate-900">個人 API 金鑰與學習程度設定</h3>
-            <p class="text-xs text-slate-500">BYOK 架構：每個人使用自己的免費金鑰，安全且零伺服器成本</p>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900">系統設定與 AI 教學指令 (Prompt) 編輯器</h3>
+            <p class="text-xs text-slate-500">所有設定與自訂指令皆自動儲存於您的本機瀏覽器中</p>
           </div>
         </div>
         <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center">
@@ -510,111 +567,175 @@
         </button>
       </div>
 
-      <div class="space-y-4">
-        <!-- Gemini API Key Input -->
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label for="settings-api-key" class="text-sm font-bold text-slate-800">Google Gemini API Key</label>
-            <button onclick="closeSettingsModal(); openGuideModal();" class="text-xs font-semibold text-indigo-600 hover:underline">
-              <i class="fa-solid fa-key mr-1"></i>如何免費取得 API Key？
-            </button>
-          </div>
-          <div class="relative">
-            <input
-              type="password"
-              id="settings-api-key"
-              placeholder="貼上以 AIzaSy 開頭的個人 API Key..."
-              class="w-full rounded-xl border border-slate-300 pl-3.5 pr-10 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-              <i id="api-eye-icon" class="fa-solid fa-eye"></i>
-            </button>
-          </div>
-          <p class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-2 mt-2 flex items-start gap-1.5">
-            <i class="fa-solid fa-shield-halved mt-0.5"></i>
-            <span>隱私保證：您的 API Key <b>只會儲存在您目前這台手機或電腦的瀏覽器 (localStorage) 中</b>，絕不會上傳給老師或其他人的裝置。</span>
-          </p>
-        </div>
-
-        <!-- Gemini Model Selection -->
-        <div class="space-y-2.5">
-          <div>
-            <label for="settings-model" class="block text-sm font-bold text-slate-800 mb-1">AI 模型選擇</label>
-            <select id="settings-model" onchange="handleModelSelectChange()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite（推薦預設：極速生成短句與故事、免費額度高）</option>
-              <option value="gemini-4-hydrogen">gemini-4-hydrogen（進階：最新一代模型，適合複雜故事與會話）</option>
-              <option value="custom">✨ 自訂模型代碼（手動輸入未來新模型）</option>
-            </select>
-          </div>
-
-          <!-- Custom Model Code Input Box -->
-          <div id="custom-model-wrapper" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 transition-all">
-            <div class="flex items-center justify-between">
-              <label for="customModelInput" class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                <i class="fa-solid fa-code text-indigo-600"></i>
-                <span>自訂模型代碼（選填，未來 Google 推出新模型時可直接輸入）</span>
-              </label>
-              <span id="custom-model-status" class="text-[11px] font-semibold text-slate-400">選單預設模式</span>
-            </div>
-            <input
-              type="text"
-              id="customModelInput"
-              oninput="handleCustomModelInput()"
-              placeholder="例如：gemini-3.5-flash-lite 或未來新模型代碼..."
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <p class="text-[11px] text-slate-500 leading-relaxed">
-              💡 <b>免改程式碼設計：</b>只要在此欄位輸入模型代碼（或上方選單切換為「自訂模型代碼」），系統就會優先使用您輸入的模型連線 API。留空則使用上方下拉選單的模型。
-            </p>
-          </div>
-        </div>
-
-        <!-- Learner CEFR Level (i-1 Scaffolding) -->
-        <div>
-          <label for="settings-cefr" class="block text-sm font-bold text-slate-800 mb-1">
-            學習者目前英文程度 (CEFR 鷹架控制)
-          </label>
-          <select id="settings-cefr" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="A1">A1 初學者（使用最基礎 500 字造出極簡速記短句與故事）</option>
-            <option value="A2">A2 基礎級（國中/高一程度：使用 A0-A1 簡單單字作為搭配鷹架）</option>
-            <option value="B1">B1 中級（高中學測程度：使用 A1-A2 自然常用字造出短句與故事）</option>
-            <option value="B2">B2 中高級（多益藍色證書/大學程度：使用 B1 流暢語境搭配）</option>
-          </select>
-          <p class="text-xs text-slate-500 mt-1">
-            系統會自動採用 <b>i-1 學習鷹架原則</b>：除了您要學的目標單字外，速記短句與故事中的其他字彙都會自動降一級，避免為了看懂例句還要查更多生字！
-          </p>
-        </div>
-
-        <!-- TTS Voice Settings -->
-        <div class="grid grid-cols-2 gap-3 pt-1">
-          <div>
-            <label for="settings-voice-accent" class="block text-xs font-bold text-slate-700 mb-1">發音口音偏好</label>
-            <select id="settings-voice-accent" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
-              <option value="en-US">美式發音 (en-US)</option>
-              <option value="en-GB">英式發音 (en-GB)</option>
-            </select>
-          </div>
-          <div>
-            <label for="settings-voice-rate" class="block text-xs font-bold text-slate-700 mb-1">預設朗讀語速</label>
-            <select id="settings-voice-rate" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
-              <option value="0.75">0.75x (慢速清晰練聽力)</option>
-              <option value="0.9">0.90x (自然教學語速)</option>
-              <option value="1.0">1.00x (母語正常語速)</option>
-            </select>
-          </div>
-        </div>
+      <!-- Modal Sub-Tabs Switcher -->
+      <div class="grid grid-cols-2 gap-1.5 bg-slate-100 p-1 rounded-xl shrink-0">
+        <button type="button" onclick="switchSettingsModalTab('api')" id="modal-tab-btn-api" class="py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 bg-white text-indigo-700 shadow-sm">
+          <i class="fa-solid fa-key"></i> 1. API 金鑰與程度設定
+        </button>
+        <button type="button" onclick="switchSettingsModalTab('prompt')" id="modal-tab-btn-prompt" class="py-2 px-3 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> 2. 自訂教學指令 (Prompt 編輯器)
+        </button>
       </div>
 
-      <div class="flex items-center justify-between pt-4 border-t border-slate-100 gap-3">
+      <!-- Scrollable Body -->
+      <div class="overflow-y-auto pr-1 space-y-4 flex-1">
+
+        <!-- SUB-TAB 1: API & LEARNING LEVEL SETTINGS -->
+        <div id="settings-panel-api" class="space-y-4">
+          <!-- Gemini API Key Input -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="settings-api-key" class="text-sm font-bold text-slate-800">Google Gemini API Key</label>
+              <button onclick="closeSettingsModal(); openGuideModal();" class="text-xs font-semibold text-indigo-600 hover:underline">
+                <i class="fa-solid fa-key mr-1"></i>如何免費取得 API Key？
+              </button>
+            </div>
+            <div class="relative">
+              <input
+                type="password"
+                id="settings-api-key"
+                placeholder="貼上以 AIzaSy 開頭的個人 API Key..."
+                class="w-full rounded-xl border border-slate-300 pl-3.5 pr-10 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <i id="api-eye-icon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            <p class="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-2 mt-2 flex items-start gap-1.5">
+              <i class="fa-solid fa-shield-halved mt-0.5"></i>
+              <span>隱私保證：您的 API Key <b>只會儲存在您目前這台手機或電腦的瀏覽器 (localStorage) 中</b>，絕不會上傳給老師或其他人的裝置。</span>
+            </p>
+          </div>
+
+          <!-- Gemini Model Selection -->
+          <div class="space-y-2.5">
+            <div>
+              <label for="settings-model" class="block text-sm font-bold text-slate-800 mb-1">AI 模型選擇</label>
+              <select id="settings-model" onchange="handleModelSelectChange()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite（推薦預設：極速生成短句與故事、免費額度高）</option>
+                <option value="gemini-4-hydrogen">gemini-4-hydrogen（進階：最新一代模型，適合複雜故事與會話）</option>
+                <option value="custom">✨ 自訂模型代碼（手動輸入未來新模型）</option>
+              </select>
+            </div>
+
+            <!-- Custom Model Code Input Box -->
+            <div id="custom-model-wrapper" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 transition-all">
+              <div class="flex items-center justify-between">
+                <label for="customModelInput" class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <i class="fa-solid fa-code text-indigo-600"></i>
+                  <span>自訂模型代碼（選填，未來 Google 推出新模型時可直接輸入）</span>
+                </label>
+                <span id="custom-model-status" class="text-[11px] font-semibold text-slate-400">選單預設模式</span>
+              </div>
+              <input
+                type="text"
+                id="customModelInput"
+                oninput="handleCustomModelInput()"
+                placeholder="例如：gemini-3.5-flash-lite 或未來新模型代碼..."
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs sm:text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <p class="text-[11px] text-slate-500 leading-relaxed">
+                💡 <b>免改程式碼設計：</b>只要在此欄位輸入模型代碼，系統就會優先使用您輸入的模型連線 API。留空則使用上方下拉選單的模型。
+              </p>
+            </div>
+          </div>
+
+          <!-- Learner CEFR Level (i-1 Scaffolding) -->
+          <div>
+            <label for="settings-cefr" class="block text-sm font-bold text-slate-800 mb-1">
+              學習者目前英文程度 (CEFR 鷹架控制)
+            </label>
+            <select id="settings-cefr" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="A1">A1 初學者 → 鷹架使用 A0 超基礎 500 字</option>
+              <option value="A2">A2 基礎級（國中/高一）→ 鷹架使用 A0~A1 簡單單字</option>
+              <option value="B1">B1 中級（高中學測）→ 鷹架使用 A1~A2 自然常用字</option>
+              <option value="B2">B2 中高級（多益藍證/大學）→ 鷹架使用 A2~B1 流暢搭配</option>
+            </select>
+          </div>
+
+          <!-- TTS Voice Settings -->
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <div>
+              <label for="settings-voice-accent" class="block text-xs font-bold text-slate-700 mb-1">發音口音偏好</label>
+              <select id="settings-voice-accent" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
+                <option value="en-US">美式發音 (en-US)</option>
+                <option value="en-GB">英式發音 (en-GB)</option>
+              </select>
+            </div>
+            <div>
+              <label for="settings-voice-rate" class="block text-xs font-bold text-slate-700 mb-1">預設朗讀語速</label>
+              <select id="settings-voice-rate" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm bg-white">
+                <option value="0.75">0.75x (慢速清晰練聽力)</option>
+                <option value="0.9">0.90x (自然教學語速)</option>
+                <option value="1.0">1.00x (母語正常語速)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 2: CUSTOM PROMPT EDITOR -->
+        <div id="settings-panel-prompt" class="hidden space-y-4">
+          <div class="p-3.5 rounded-xl bg-violet-50 border border-violet-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-violet-950 flex items-center gap-1.5">
+                <i class="fa-solid fa-lightbulb text-violet-600"></i>
+                可用動態變數說明（系統送出時會自動替換為實際內容）
+              </span>
+              <button
+                type="button"
+                onclick="restoreDefaultPrompts()"
+                class="px-2.5 py-1 rounded-lg bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 text-xs font-bold transition"
+              >
+                <i class="fa-solid fa-rotate-left mr-1"></i>恢復預設指令
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[11px]">
+              <span class="px-2 py-0.5 rounded bg-white border border-violet-200 font-mono text-violet-800"><b>{{WORDS}}</b>：輸入的單字清單</span>
+              <span class="px-2 py-0.5 rounded bg-white border border-violet-200 font-mono text-violet-800"><b>{{LEVEL}}</b>：學生程度 (如 A2)</span>
+              <span class="px-2 py-0.5 rounded bg-white border border-violet-200 font-mono text-violet-800"><b>{{SCAFFOLD_LEVEL}}</b>：i-1 鷹架程度 (如 A0~A1)</span>
+              <span class="px-2 py-0.5 rounded bg-white border border-violet-200 font-mono text-violet-800"><b>{{WORDS_WITH_MEANING}}</b>：故事單字與指定語意</span>
+              <span class="px-2 py-0.5 rounded bg-white border border-violet-200 font-mono text-violet-800"><b>{{STORY_THEME}}</b>：故事主角與主題</span>
+            </div>
+          </div>
+
+          <!-- Mnemonic Prompt Textarea -->
+          <div class="space-y-1.5">
+            <label for="settings-mnemonic-prompt" class="block text-xs sm:text-sm font-bold text-slate-800">
+              1. 速記短句生成指令 (Mnemonic Generation Prompt)
+            </label>
+            <textarea
+              id="settings-mnemonic-prompt"
+              rows="9"
+              class="w-full rounded-xl border border-slate-300 p-3 text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50"
+            ></textarea>
+          </div>
+
+          <!-- Story Prompt Textarea -->
+          <div class="space-y-1.5">
+            <label for="settings-story-prompt" class="block text-xs sm:text-sm font-bold text-slate-800">
+              2. 主題人物故事生成指令 (Story Generation Prompt)
+            </label>
+            <textarea
+              id="settings-story-prompt"
+              rows="9"
+              class="w-full rounded-xl border border-slate-300 p-3 text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50"
+            ></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 gap-3 shrink-0">
         <button type="button" onclick="testApiKeyConnection()" id="btn-test-api" class="px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-bold transition">
-          <i class="fa-solid fa-plug-circle-check mr-1"></i>測試連線
+          <i class="fa-solid fa-plug-circle-check mr-1"></i>測試 API 連線
         </button>
         <div class="flex items-center gap-2">
           <button type="button" onclick="closeSettingsModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs sm:text-sm font-semibold hover:bg-slate-50">
             取消
           </button>
           <button type="button" onclick="saveSettings()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow">
-            儲存設定
+            儲存所有設定
           </button>
         </div>
       </div>
@@ -715,7 +836,7 @@
       <div class="grid grid-cols-3 gap-3">
         <div class="col-span-2">
           <label class="block text-xs font-bold text-slate-700 mb-1">英文單字</label>
-          <input type="text" id="manual-word" placeholder="例如：tumble" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+          <input type="text" id="manual-word" placeholder="例如：slip" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">詞性</label>
@@ -724,20 +845,20 @@
       </div>
 
       <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">核心中文語意</label>
-        <input type="text" id="manual-meaning" placeholder="例如：跌倒；滾落" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+        <label class="block text-xs font-bold text-slate-700 mb-1">核心中文語意（若有多個語意可標示 1. / 2.）</label>
+        <input type="text" id="manual-meaning" placeholder="例如：1. 滑倒 / 2. 悄悄溜走" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
       </div>
 
       <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-        <div class="text-xs font-bold text-indigo-700">速記短句 1（可用 &lt;b&gt;單字&lt;/b&gt; 標示高亮）</div>
-        <input type="text" id="manual-p1-en" placeholder="例如：<b>tumble</b> down the stairs" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
-        <input type="text" id="manual-p1-zh" placeholder="中文翻譯：滾下樓梯" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+        <div class="text-xs font-bold text-indigo-700">速記短句 1（可加 Emoji 與 &lt;b&gt;單字&lt;/b&gt; 高亮，發音會自動略過 Emoji）</div>
+        <input type="text" id="manual-p1-en" placeholder="例如：🍌👟 <b>slip</b> on a yellow banana peel and fall down" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+        <input type="text" id="manual-p1-zh" placeholder="中文翻譯：踩到黃色香蕉皮滑倒並摔在地上" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
       </div>
 
       <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-        <div class="text-xs font-bold text-indigo-700">速記短句 2（可用 &lt;b&gt;單字&lt;/b&gt; 標示高亮）</div>
-        <input type="text" id="manual-p2-en" placeholder="例如：<b>tumble</b> to the ground" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
-        <input type="text" id="manual-p2-zh" placeholder="中文翻譯：跌落到地上" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+        <div class="text-xs font-bold text-indigo-700">速記短句 2（可加 Emoji 與 &lt;b&gt;單字&lt;/b&gt; 高亮）</div>
+        <input type="text" id="manual-p2-en" placeholder="例如：🚪🤫 <b>slip</b> quietly out of the room without making a sound" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
+        <input type="text" id="manual-p2-zh" placeholder="中文翻譯：安靜地溜出房間，沒有發出一點聲音" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm" />
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
@@ -753,17 +874,101 @@
   <!-- ================= APPLICATION JAVASCRIPT ================= -->
   <script>
     /********************************************************************
-     * 1. DEFAULT SAMPLE DATA (Pre-loaded so teacher & students can test immediately)
+     * 1. UPGRADED DEFAULT PROMPTS (Visualized Context Scaffolding + Character Story)
+     ********************************************************************/
+    const DEFAULT_MNEMONIC_PROMPT = `你是一位專精於「視覺化語境鷹架（Visualized Context Scaffolding）」與「道地搭配詞」的台灣英文名師。
+請為以下使用者輸入的英文單字清單生成學習資料：
+{{WORDS}}
+
+學生目前的英文程度為 CEFR {{LEVEL}}。請嚴格遵守以下 5 項核心教學規則：
+
+1. 【指定語意與多義詞處理（最優先規則）】：
+   - 若使用者輸入時已附帶詞性或中文語意（例如：「slip (v)」、「slip (滑倒)」或「present (禮物)」），請務必 100% 鎖定該指定語意與詞性來生成 2 個不同情境的速記短句。
+   - 若使用者僅輸入純單字（如「slip」），且該單字有多個常見意思，請挑選「最常用、最核心的 2 個不同語意」（例如語意一：滑倒；語意二：悄悄溜走），分別造出對應的 2 個速記短句，並在中文核心語意欄位清楚標示（如：「1. 滑倒 / 2. 悄悄溜走」）。
+
+2. 【完整畫面感與「防替換測試」（Can be Visualized）】：
+   - 每個速記短句長度控制在 6 到 12 個英文單字，必須包含能凸顯該單字獨特語意的「原因、方式或結果細節」，讓讀者在腦中能直接看見完整畫面。
+   - 嚴禁造出語意空洞、可隨意換成其他單字的萬用句！
+     ❌ 錯誤示範：slip out of the room（畫面不完整，無法判斷是如何離開房間，換成 storm 或 walk 也通）
+     ✅ 正確示範 1：🍌👟 <b>slip</b> on a yellow banana peel and fall down（踩到黃色香蕉皮滑倒並摔在地上）
+     ✅ 正確示範 2：🚪🤫 <b>slip</b> quietly out of the room without making a sound（安靜地溜出房間，沒有發出一點聲音）
+
+3. 【Emoji 視覺雙重編碼】：
+   - 每個速記短句開頭必須加上 2 到 3 個能代表該情境畫面的 Emojis（如 🍌👟、🚪🤫），幫助學生建立視覺錨點。
+
+4. 【嚴格 i-1 難度控制】：
+   - 除了目標單字本身之外，短句中使用的其他所有搭配字彙與文法，必須嚴格控制在 CEFR {{SCAFFOLD_LEVEL}} 或更基礎的程度，確保學生不需查其他單字就能瞬間秒懂畫面。
+
+5. 【自然時態與目標單字保留】：
+   - 短句內必須包含目標單字本身（可依自然語境使用原形或常見時態變化），並請用 <b>目標單字</b> 標籤包覆起來，且中文翻譯必須精準呈現整個短句的生動畫面。`;
+
+    const DEFAULT_STORY_PROMPT = `你是一位擅長結合「流行文化角色」與「語境記憶法」的英文故事作家。
+請使用以下指定單字與對應語意，編寫一篇能讓學習者產生強烈共鳴的英文短篇故事：
+目標單字與指定語意：{{WORDS_WITH_MEANING}}
+故事主角／主題設定：{{STORY_THEME}}
+
+請嚴格遵守以下 6 項核心規則：
+
+1. 【主角與主題共鳴】：
+   - 故事必須緊扣使用者指定的「{{STORY_THEME}}」展開（若為知名動漫角色、影歌星或特定情境，請自然融入該角色的招牌特色、性格或世界觀，提升閱讀樂趣與記憶連結）。
+
+2. 【語意與速記短句連動】：
+   - 故事中使用每個目標單字時，必須符合上述指定的中文語意，並盡可能呼應「具畫面感的動作或情境細節」，讓學生透過前後文線索（Context Clues）就能直接推敲並印證單字意思。
+
+3. 【嚴格 i-1 難度控制】：
+   - 學生英文程度為 CEFR {{LEVEL}}。整篇故事除了目標單字與專有名詞外，其餘所有單字與句型必須嚴格控制在 CEFR {{SCAFFOLD_LEVEL}} 程度以內，確保閱讀流暢無阻礙。
+
+4. 【篇幅與高潮結構】：
+   - 故事長度約 100 至 160 個英文單字，分成 5 到 7 個生動句子，具備清楚的「情境開場 → 突發狀況 → 結尾轉折」畫面感。
+
+5. 【目標單字高亮標記】：
+   - 在英文故事中，凡是出現目標單字（包含其時態變化或單複數變化），請務必用 <b>word</b> 粗體標籤標記起來，方便系統自動上色高亮。
+
+6. 【中譯與互動思考題】：
+   - 提供自然生動的繁體中文逐句翻譯，並根據故事與主角情節設計 1 題簡短有趣的英文閱讀理解／情境思考題（附繁體中文提示）。`;
+
+    /********************************************************************
+     * 2. DEFAULT SAMPLE DATA (Pre-loaded with Visualized Emojis & Rich Context)
      ********************************************************************/
     const DEFAULT_SAMPLE_WORDS = [
+      {
+        id: 'sample-slip',
+        word: 'slip',
+        pos: 'v.',
+        meaning: '1. 滑倒 / 2. 悄悄溜走',
+        userSpecifiedHint: '多義核心示範',
+        phrases: [
+          {
+            en: '🍌👟 <b>slip</b> on a yellow banana peel and fall down',
+            zh: '踩到黃色香蕉皮滑倒並摔在地上',
+            senseLabel: '語意 1：滑倒'
+          },
+          {
+            en: '🚪🤫 <b>slip</b> quietly out of the room without making a sound',
+            zh: '安靜地溜出房間，沒有發出一點聲音',
+            senseLabel: '語意 2：悄悄溜走'
+          }
+        ],
+        mastery: 2,
+        selectedForStory: true,
+        createdAt: Date.now() - 700000
+      },
       {
         id: 'sample-1',
         word: 'tumble',
         pos: 'v.',
-        meaning: '跌倒；滾落；暴跌',
+        meaning: '滾落；失去平衡跌倒',
         phrases: [
-          { en: '<b>tumble</b> down the stairs', zh: '從樓梯上滾落下來' },
-          { en: 'prices <b>tumble</b> sharply', zh: '價格急劇暴跌' }
+          {
+            en: '🪜🤕 lose balance and <b>tumble</b> all the way down the stairs',
+            zh: '失去平衡並一路從樓梯上滾落下來',
+            senseLabel: '滾落跌倒'
+          },
+          {
+            en: '🪨⛰️ big rocks <b>tumble</b> down the steep mountain after heavy rain',
+            zh: '大雨過後巨石從陡峭的山坡滾落下來',
+            senseLabel: '岩石滾落'
+          }
         ],
         mastery: 2,
         selectedForStory: true,
@@ -773,13 +978,21 @@
         id: 'sample-2',
         word: 'wither',
         pos: 'v.',
-        meaning: '枯萎；凋謝；乾枯',
+        meaning: '枯萎；乾枯凋謝',
         phrases: [
-          { en: 'flowers <b>wither</b> without water', zh: '花沒有水就會枯萎' },
-          { en: 'leaves <b>wither</b> in autumn', zh: '樹葉在秋天枯萎凋零' }
+          {
+            en: '🥀☀️ beautiful red roses <b>wither</b> and turn brown without water',
+            zh: '美麗的紅玫瑰因為缺水而枯萎變褐',
+            senseLabel: '缺水枯萎'
+          },
+          {
+            en: '🍂🥶 green garden plants <b>wither</b> quickly in the freezing winter wind',
+            zh: '綠色的花園植物在刺骨的冬風中迅速枯萎',
+            senseLabel: '寒風凋零'
+          }
         ],
         mastery: 1,
-        selectedForStory: true,
+        selectedForStory: false,
         createdAt: Date.now() - 500000
       },
       {
@@ -788,8 +1001,16 @@
         pos: 'adj.',
         meaning: '不情願的；勉强的',
         phrases: [
-          { en: '<b>reluctant</b> to wake up early', zh: '不情願早起' },
-          { en: 'give a <b>reluctant</b> smile', zh: '露出勉強的微笑' }
+          {
+            en: '🛌😴 <b>reluctant</b> to leave the warm bed on a cold morning',
+            zh: '在寒冷的早晨不情願離開溫暖的被窩',
+            senseLabel: '不情願做某事'
+          },
+          {
+            en: '🎤😰 shake his head and feel <b>reluctant</b> to sing in front of class',
+            zh: '搖搖頭感到很不情願在全班面前唱歌',
+            senseLabel: '害羞勉強'
+          }
         ],
         mastery: 1,
         selectedForStory: true,
@@ -799,10 +1020,18 @@
         id: 'sample-4',
         word: 'scatter',
         pos: 'v.',
-        meaning: '散落；驅散；撒播',
+        meaning: '四處散落；驚慌逃散',
         phrases: [
-          { en: '<b>scatter</b> seeds on the farm', zh: '在農場上撒下種子' },
-          { en: 'wind <b>scatters</b> the dry leaves', zh: '風吹散了乾枯的落葉' }
+          {
+            en: '💨📄 strong wind blows the window open and <b>scatters</b> papers everywhere',
+            zh: '強風吹開窗戶把紙張吹得四處散落',
+            senseLabel: '物品散落'
+          },
+          {
+            en: '🐦💥 loud thunder makes the little birds <b>scatter</b> into the sky',
+            zh: '巨大的雷聲嚇得小鳥四散飛入空中',
+            senseLabel: '驚慌四散'
+          }
         ],
         mastery: 2,
         selectedForStory: true,
@@ -810,83 +1039,82 @@
       },
       {
         id: 'sample-5',
-        word: 'emerge',
+        word: 'vanish',
         pos: 'v.',
-        meaning: '浮現；出現；顯露',
+        meaning: '突然消失無蹤',
         phrases: [
-          { en: 'the moon <b>emerges</b> from the clouds', zh: '月亮從雲層中浮現出來' },
-          { en: 'new ideas <b>emerge</b> in the meeting', zh: '會議中浮現出新點子' }
+          {
+            en: '🎩🐇 the white rabbit <b>vanishes</b> into thin air during the magic show',
+            zh: '白兔在魔術表演中憑空消失無蹤',
+            senseLabel: '憑空消失'
+          },
+          {
+            en: '🕵️‍♂️🌫️ the phantom thief smiles and <b>vanishes</b> into the dark night fog',
+            zh: '怪盜微笑著消失在漆黑的夜霧之中',
+            senseLabel: '隱入夜色'
+          }
         ],
         mastery: 2,
-        selectedForStory: false,
+        selectedForStory: true,
         createdAt: Date.now() - 200000
-      },
-      {
-        id: 'sample-6',
-        word: 'cherish',
-        pos: 'v.',
-        meaning: '珍惜；珍愛；懷抱',
-        phrases: [
-          { en: '<b>cherish</b> every happy moment', zh: '珍惜每個快樂的時刻' },
-          { en: '<b>cherish</b> our warm friendship', zh: '珍惜我們溫暖的友誼' }
-        ],
-        mastery: 3,
-        selectedForStory: false,
-        createdAt: Date.now() - 100000
       }
     ];
 
     const DEFAULT_SAMPLE_STORIES = [
       {
-        id: 'story-sample-1',
-        title: 'The Little Garden on the Hill (山丘上的小花園)',
-        level: 'A2 (使用 A0-A1 鷹架字彙)',
-        theme: '日常溫馨與生活幽默',
-        words: ['tumble', 'wither', 'reluctant', 'scatter'],
+        id: 'story-sample-detective',
+        title: 'Midnight Showdown at the Museum (博物館午夜的偵探與怪盜對決)',
+        level: 'A2 (使用 A0~A1 鷹架字彙)',
+        theme: '🕵️ 動漫偵探與怪盜的午夜博物館對決',
+        words: ['slip', 'tumble', 'reluctant', 'scatter', 'vanish'],
         sentences: [
           {
-            en: 'On a cold morning, Leo was <b>reluctant</b> to leave his warm bed.',
-            zh: '在一個寒冷的早晨，Leo 不情願離開他溫暖的床。'
+            en: 'At midnight, the young detective Conan was <b>reluctant</b> to blink his eyes while guarding the royal diamond.',
+            zh: '午夜時分，年輕的偵探柯南在守護皇家鑽石時，連眨眼都感到不情願。'
           },
           {
-            en: 'However, he knew his garden flowers would <b>wither</b> without water.',
-            zh: '然而，他知道花園裡的花如果沒有水就會枯萎。'
+            en: 'Suddenly, the lights went out, and Phantom Thief Kid tried to <b>slip</b> quietly out of the hall without making a sound.',
+            zh: '突然間燈光熄滅，怪盜基德試圖安靜地溜出大廳，不發出一點聲音。'
           },
           {
-            en: 'He ran out too fast and almost <b>tumbled</b> down the stairs.',
-            zh: '他跑出去太快，差一點從樓梯上滾落下來。'
+            en: 'However, a clumsy guard stepped on a wet floor, <b>slipped</b>, and <b>tumbled</b> all the way down the marble stairs!',
+            zh: '然而，一名笨拙的警衛踩到濕地板滑倒，一路從大理石樓梯上滾落下來！'
           },
           {
-            en: 'Outside, the strong wind began to <b>scatter</b> dry leaves across the grass.',
-            zh: '在屋外，強風開始把乾枯的落葉吹散在草地上。'
+            en: 'Kid opened his white cape, and a hundred white cards <b>scattered</b> everywhere in the air like snow.',
+            zh: '基德展開他的白色披風，上百張白色卡片像雪花一樣在空中四處散落。'
           },
           {
-            en: 'After watering the plants, Leo smiled and felt proud of his little garden.',
-            zh: '澆完植物後，Leo 露出了微笑，為他的小花園感到驕傲。'
+            en: 'Before Conan could shoot his soccer ball, the thief smiled under the moonlight and <b>vanished</b> into the night sky.',
+            zh: '在柯南踢出足球之前，怪盜在月光下微笑，隨即消失在夜空之中。'
           }
         ],
         notes: [
-          'reluctant to + V：不情願做某事（高頻搭配）',
-          'wither without water：沒有水而枯萎（畫面記憶）',
-          'tumble down the stairs：從樓梯滾下來（動作記憶）',
-          'scatter ... across ...：把…吹散/撒落在…各處'
+          'reluctant to blink：不情願眨眼（呼應 reluctant to + V 搭配）',
+          'slip quietly out of the hall：安靜地溜出大廳（呼應 slip 語意 2）',
+          'tumble all the way down the stairs：一路從樓梯滾落下來',
+          'scatter everywhere in the air：在空中四處散落',
+          'vanish into the night sky：消失在夜空中'
         ],
+        question: 'Why did the Phantom Thief scatter white cards in the air before he vanished? (為什麼怪盜在消失前要在空中撒出白色卡片？)',
         createdAt: Date.now() - 120000
       }
     ];
 
     /********************************************************************
-     * 2. STATE & LOCAL STORAGE KEYS
+     * 3. STATE & LOCAL STORAGE KEYS
      ********************************************************************/
     const STORAGE_KEYS = {
       API_KEY: 'vocab_scaffold_api_key',
       SETTINGS: 'vocab_scaffold_settings',
-      WORDS: 'vocab_scaffold_words_v1',
-      STORIES: 'vocab_scaffold_stories_v1'
+      PROMPTS: 'vocab_scaffold_custom_prompts_v1',
+      WORDS: 'vocab_scaffold_words_v2',
+      STORIES: 'vocab_scaffold_stories_v2'
     };
 
     let appState = {
       currentTab: 'generate',
+      settingsModalTab: 'api',
       apiKey: '',
       settings: {
         model: 'gemini-3.5-flash-lite',
@@ -895,10 +1123,14 @@
         voiceAccent: 'en-US',
         voiceRate: 0.9
       },
+      prompts: {
+        mnemonic: DEFAULT_MNEMONIC_PROMPT,
+        story: DEFAULT_STORY_PROMPT
+      },
       words: [],
       stories: [],
       activeStoryId: null,
-      storyTheme: '日常溫馨與生活幽默',
+      storyTheme: '🕵️ 動漫偵探與怪盜的午夜博物館對決',
       showStoryTranslation: true,
       quiz: {
         mode: 'en2zh', // 'en2zh' | 'zh2en' | 'cloze'
@@ -911,7 +1143,7 @@
     };
 
     /********************************************************************
-     * 3. INITIALIZATION
+     * 4. INITIALIZATION & STORAGE LOADING
      ********************************************************************/
     window.addEventListener('DOMContentLoaded', () => {
       loadFromStorage();
@@ -933,7 +1165,6 @@
       try {
         const savedSettings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS));
         if (savedSettings) {
-          // Automatically migrate deprecated gemini-2.5 models to gemini-3.5-flash-lite
           if (savedSettings.model && savedSettings.model.startsWith('gemini-2.5')) {
             savedSettings.model = 'gemini-3.5-flash-lite';
           }
@@ -944,7 +1175,17 @@
         console.warn('讀取設定失敗，使用預設值', e);
       }
 
-      // Load Words (If empty on first visit, populate sample words)
+      // Load Custom Prompts
+      try {
+        const savedPrompts = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROMPTS));
+        if (savedPrompts && savedPrompts.mnemonic && savedPrompts.story) {
+          appState.prompts = savedPrompts;
+        }
+      } catch (e) {
+        console.warn('讀取自訂 Prompt 失敗，使用內建預設指令', e);
+      }
+
+      // Load Words
       try {
         const savedWords = JSON.parse(localStorage.getItem(STORAGE_KEYS.WORDS));
         if (Array.isArray(savedWords) && savedWords.length > 0) {
@@ -985,7 +1226,7 @@
     }
 
     /********************************************************************
-     * 4. NAVIGATION & UI HELPERS
+     * 5. NAVIGATION & SCAFFOLD LEVEL HELPERS
      ********************************************************************/
     function switchTab(tabName) {
       appState.currentTab = tabName;
@@ -1012,33 +1253,29 @@
       if (tabName === 'quiz') generateNextQuizQuestion();
     }
 
+    function getScaffoldLevelCode(cefr) {
+      const map = {
+        'A1': 'A0 (最基礎 500 核心字)',
+        'A2': 'A0~A1',
+        'B1': 'A1~A2',
+        'B2': 'A2~B1'
+      };
+      return map[cefr] || 'A0~A1';
+    }
+
     function getCefrScaffoldDescription(cefr) {
       const map = {
-        'A1': 'A1 初學 → 使用最基礎 500 核心字彙造出極簡速記短句',
-        'A2': 'A2 基礎 → 使用 A0-A1 簡單字彙作為速記短句與故事鷹架',
-        'B1': 'B1 中級 → 使用 A1-A2 常見字彙造出自然搭配詞短句',
-        'B2': 'B2 中高級 → 使用 B1 流暢語境打造高頻搭配短句'
+        'A1': 'A1 初學 → 鷹架使用 A0 最基礎 500 核心字彙',
+        'A2': 'A2 基礎 → 鷹架使用 A0~A1 超簡單字彙造生動短句',
+        'B1': 'B1 中級 → 鷹架使用 A1~A2 常見字彙造自然短句',
+        'B2': 'B2 中高級 → 鷹架使用 A2~B1 流暢語境搭配'
       };
       return map[cefr] || map['A2'];
     }
 
-    function getCefrPromptRule(cefr) {
-      const rules = {
-        'A1': 'Learner is CEFR A1. Follow strict i-1 scaffolding: besides the target word itself, ALL surrounding words in the memory phrases and story MUST be ultra-simple A0-A1 basic vocabulary (top 500 everyday English words). Keep grammar very simple.',
-        'A2': 'Learner is CEFR A2. Follow strict i-1 scaffolding: besides the target word itself, ALL surrounding words in the memory phrases and story MUST be simple A0-A1 vocabulary so the learner never needs a dictionary to understand the context.',
-        'B1': 'Learner is CEFR B1. Follow i-1 scaffolding: besides the target word itself, use clear A1-A2 everyday vocabulary for surrounding words.',
-        'B2': 'Learner is CEFR B2. Follow i-1 scaffolding: besides the target word itself, use natural B1 vocabulary and idiomatic collocations.'
-      };
-      return rules[cefr] || rules['A2'];
-    }
-
-    // Resolve the currently active model name (prioritizing custom model if selected or entered)
     function getActiveModel() {
       const customTrimmed = (appState.settings.customModel || '').trim();
       if (appState.settings.model === 'custom' && customTrimmed) {
-        return customTrimmed;
-      }
-      if (customTrimmed && appState.settings.model === 'custom') {
         return customTrimmed;
       }
       if (appState.settings.model && appState.settings.model !== 'custom') {
@@ -1063,7 +1300,7 @@
       if (modelBadge) modelBadge.textContent = activeModel;
       if (genModelDisplay) genModelDisplay.textContent = activeModel;
       genLevelDisplay.textContent = getCefrScaffoldDescription(appState.settings.cefr);
-      if (storyCefrHint) storyCefrHint.textContent = `${appState.settings.cefr} (i-1 簡易字彙鷹架)`;
+      if (storyCefrHint) storyCefrHint.textContent = `${appState.settings.cefr} (使用 ${getScaffoldLevelCode(appState.settings.cefr)} 鷹架字彙)`;
 
       if (appState.apiKey && appState.apiKey.startsWith('AIza')) {
         dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
@@ -1124,11 +1361,11 @@
         .replace(/"/g, '&quot;');
     }
 
-    // Safely format phrase or sentence keeping only <b>...</b> tags
+    // Safely format phrase or sentence keeping only <b>...</b> or **...** tags
     function formatSafeHighlight(str, targetWord = '') {
       if (!str) return '';
-      // Temporarily replace <b> and </b> with placeholders
       let cleaned = String(str)
+        .replace(/\*\*([^*]+)\*\*/g, '[[BOLD_START]]$1[[BOLD_END]]')
         .replace(/<\s*b\s*>/gi, '[[BOLD_START]]')
         .replace(/<\s*\/\s*b\s*>/gi, '[[BOLD_END]]')
         .replace(/<\s*strong\s*>/gi, '[[BOLD_START]]')
@@ -1136,9 +1373,10 @@
 
       cleaned = escapeHtml(cleaned);
 
-      // If AI forgot to wrap <b> around targetWord, wrap it automatically
       if (targetWord && !cleaned.includes('[[BOLD_START]]')) {
-        const regex = new RegExp(`(\\b${escapeRegExp(targetWord)}\\w*\\b)`, 'gi');
+        const base = targetWord.trim();
+        const stem = base.length > 4 ? base.slice(0, -1) : base;
+        const regex = new RegExp(`(\\b${escapeRegExp(stem)}\\w*\\b)`, 'gi');
         cleaned = cleaned.replace(regex, '[[BOLD_START]]$1[[BOLD_END]]');
       }
 
@@ -1149,16 +1387,33 @@
 
     function stripHtmlTags(str) {
       if (!str) return '';
-      return String(str).replace(/<[^>]*>/g, '');
+      return String(str)
+        .replace(/<[^>]*>/g, '')
+        .replace(/\*\*([^*]+)\*\*/g, '$1');
     }
 
     function escapeRegExp(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return String(string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     /********************************************************************
-     * 5. WEB SPEECH API (TEXT-TO-SPEECH DUAL CODING)
+     * 6. EMOJI-STRIPPING WEB SPEECH API (TEXT-TO-SPEECH ENGINE)
      ********************************************************************/
+    // Comprehensive Emoji & Symbol Stripper so TTS ONLY reads English text
+    function cleanTextForTTS(rawText) {
+      if (!rawText) return '';
+      let text = stripHtmlTags(rawText);
+      try {
+        // Modern Unicode property escapes for all pictographs, emojis, modifiers & joiners
+        text = text.replace(/[\p{Extended_Pictographic}\p{Emoji_Presentation}\uFE0F\u200D]/gu, '');
+      } catch (e) {
+        // Fallback surrogate pair ranges
+        text = text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\uFE0F\u200D]/gu, '');
+      }
+      // Normalize whitespace
+      return text.replace(/\s+/g, ' ').trim();
+    }
+
     function speakText(rawText, btnElement = null) {
       if (!('speechSynthesis' in window)) {
         showToast('您的瀏覽器不支援語音合成功能', 'error');
@@ -1168,12 +1423,13 @@
       window.speechSynthesis.cancel();
       document.querySelectorAll('.speaking-active').forEach(el => el.classList.remove('speaking-active'));
 
-      const cleanText = stripHtmlTags(rawText);
-      const utterance = new SpeechSynthesisUtterance(cleanText);
+      const cleanEnglish = cleanTextForTTS(rawText);
+      if (!cleanEnglish) return;
+
+      const utterance = new SpeechSynthesisUtterance(cleanEnglish);
       utterance.lang = appState.settings.voiceAccent || 'en-US';
       utterance.rate = Number(appState.settings.voiceRate) || 0.9;
 
-      // Try to pick a natural matching voice
       const voices = window.speechSynthesis.getVoices();
       const preferredVoice = voices.find(v => v.lang === utterance.lang && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Siri') || v.name.includes('Samantha')))
         || voices.find(v => v.lang.startsWith(utterance.lang.slice(0, 2)));
@@ -1216,9 +1472,9 @@
     }
 
     /********************************************************************
-     * 6. SETTINGS & GUIDE MODALS
+     * 7. SETTINGS & CUSTOM PROMPT EDITOR MODAL
      ********************************************************************/
-    function openSettingsModal() {
+    function openSettingsModal(initialSubTab = 'api') {
       document.getElementById('settings-api-key').value = appState.apiKey || '';
       const savedModel = appState.settings.model || 'gemini-3.5-flash-lite';
       const selectEl = document.getElementById('settings-model');
@@ -1234,15 +1490,49 @@
       document.getElementById('settings-cefr').value = appState.settings.cefr || 'A2';
       document.getElementById('settings-voice-accent').value = appState.settings.voiceAccent || 'en-US';
       document.getElementById('settings-voice-rate').value = String(appState.settings.voiceRate || 0.9);
+
+      // Populate Custom Prompts
+      document.getElementById('settings-mnemonic-prompt').value = appState.prompts.mnemonic || DEFAULT_MNEMONIC_PROMPT;
+      document.getElementById('settings-story-prompt').value = appState.prompts.story || DEFAULT_STORY_PROMPT;
+
       updateCustomModelUIState();
+      switchSettingsModalTab(initialSubTab);
       document.getElementById('settings-modal').classList.remove('hidden');
+    }
+
+    function switchSettingsModalTab(subTab) {
+      appState.settingsModalTab = subTab;
+      const apiPanel = document.getElementById('settings-panel-api');
+      const promptPanel = document.getElementById('settings-panel-prompt');
+      const apiBtn = document.getElementById('modal-tab-btn-api');
+      const promptBtn = document.getElementById('modal-tab-btn-prompt');
+
+      if (subTab === 'prompt') {
+        apiPanel.classList.add('hidden');
+        promptPanel.classList.remove('hidden');
+        promptBtn.className = 'py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 bg-white text-violet-700 shadow-sm';
+        apiBtn.className = 'py-2 px-3 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5';
+      } else {
+        promptPanel.classList.add('hidden');
+        apiPanel.classList.remove('hidden');
+        apiBtn.className = 'py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 bg-white text-indigo-700 shadow-sm';
+        promptBtn.className = 'py-2 px-3 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5';
+      }
+    }
+
+    function restoreDefaultPrompts() {
+      document.getElementById('settings-mnemonic-prompt').value = DEFAULT_MNEMONIC_PROMPT;
+      document.getElementById('settings-story-prompt').value = DEFAULT_STORY_PROMPT;
+      appState.prompts.mnemonic = DEFAULT_MNEMONIC_PROMPT;
+      appState.prompts.story = DEFAULT_STORY_PROMPT;
+      localStorage.setItem(STORAGE_KEYS.PROMPTS, JSON.stringify(appState.prompts));
+      showToast('已恢復為內建預設的「視覺化速記短句」與「主題人物故事」指令！', 'success');
     }
 
     function handleModelSelectChange() {
       const selectEl = document.getElementById('settings-model');
       const customInputEl = document.getElementById('customModelInput');
       if (selectEl.value !== 'custom') {
-        // Clear custom input when user explicitly switches back to a preset model
         customInputEl.value = '';
       } else {
         customInputEl.focus();
@@ -1324,16 +1614,21 @@
       const voiceAccent = document.getElementById('settings-voice-accent').value;
       const voiceRate = Number(document.getElementById('settings-voice-rate').value);
 
+      const mnemonicPrompt = document.getElementById('settings-mnemonic-prompt').value.trim() || DEFAULT_MNEMONIC_PROMPT;
+      const storyPrompt = document.getElementById('settings-story-prompt').value.trim() || DEFAULT_STORY_PROMPT;
+
       appState.apiKey = key;
       appState.settings = { model, customModel, cefr, voiceAccent, voiceRate };
+      appState.prompts = { mnemonic: mnemonicPrompt, story: storyPrompt };
 
       localStorage.setItem(STORAGE_KEYS.API_KEY, key);
       localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(appState.settings));
+      localStorage.setItem(STORAGE_KEYS.PROMPTS, JSON.stringify(appState.prompts));
 
       updateHeaderStatusUI();
       updateQuickRateUI();
       closeSettingsModal();
-      showToast(`設定已儲存！目前使用模型：${activeModel}`, 'success');
+      showToast(`設定與教學指令已儲存！（目前模型：${activeModel}）`, 'success');
     }
 
     async function testApiKeyConnection() {
@@ -1342,7 +1637,8 @@
       const btn = document.getElementById('btn-test-api');
 
       if (!key) {
-        showToast('請先貼上您的 Gemini API Key', 'error');
+        showToast('請先在「API 金鑰與程度設定」分頁貼上您的 Gemini API Key', 'error');
+        switchSettingsModalTab('api');
         return;
       }
 
@@ -1375,10 +1671,28 @@
     }
 
     /********************************************************************
-     * 7. GEMINI API CALL: BATCH GENERATE RAPID MEMORY PHRASES
+     * 8. GEMINI API CALL: BATCH GENERATE VISUALIZED MEMORY PHRASES
      ********************************************************************/
     function fillDemoInput(text) {
       document.getElementById('word-input').value = text;
+    }
+
+    // Parse raw user entry like "slip (滑倒)" into { raw: "slip (滑倒)", headword: "slip", hint: "滑倒" }
+    function parseUserEntry(rawEntry) {
+      const trimmed = rawEntry.trim();
+      const match = trimmed.match(/^([a-zA-Z\s\-']+?)\s*[\(（]([^\)）]+)[\)）]$/);
+      if (match) {
+        return {
+          raw: trimmed,
+          headword: match[1].trim(),
+          hint: match[2].trim()
+        };
+      }
+      return {
+        raw: trimmed,
+        headword: trimmed,
+        hint: ''
+      };
     }
 
     async function handleGenerateWords() {
@@ -1388,62 +1702,63 @@
         return;
       }
 
-      // Parse words separated by comma, semicolon, or newline
-      const wordList = [...new Set(
+      // Split by newline, comma, or semicolon (preserving parentheses inside items)
+      const rawEntries = [...new Set(
         rawInput
           .split(/[\n,;，；]+/)
           .map(w => w.trim())
           .filter(Boolean)
-      )].slice(0, 10);
+      )].slice(0, 8);
 
-      if (wordList.length === 0) {
+      if (rawEntries.length === 0) {
         showToast('請輸入有效的英文單字', 'error');
         return;
       }
 
       if (!appState.apiKey) {
         showToast('請先設定您的免費 Google Gemini API Key！', 'error');
-        openSettingsModal();
+        openSettingsModal('api');
         return;
       }
-
-      const stylePref = document.getElementById('phrase-style-select').value;
-      const styleInstructions = {
-        vivid: 'Create vivid, concrete action or visual image phrases (e.g., "<b>tumble</b> down the stairs", "flowers <b>wither</b> without water") that immediately form a mental picture.',
-        collocation: 'Create high-frequency exam collocations showing natural prepositions or verb-noun pairings (e.g., "<b>reluctant</b> to accept the truth").',
-        conversational: 'Create short, natural everyday spoken chunks (3-6 words) useful in daily conversation.'
-      };
 
       const btn = document.getElementById('btn-generate-words');
       const originalHtml = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>正在為 ${wordList.length} 個單字打造速記短句鷹架...</span>`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>正在為 ${rawEntries.length} 個單字打造視覺化速記短句...</span>`;
 
-      const prompt = `
-You are an expert EFL vocabulary teacher specializing in the "Rapid Memory Phrase Scaffolding Method" (速記短句學習鷹架法).
-${getCefrPromptRule(appState.settings.cefr)}
+      const cefr = appState.settings.cefr || 'A2';
+      const scaffoldLevel = getScaffoldLevelCode(cefr);
 
-Style requirement: ${styleInstructions[stylePref] || styleInstructions.vivid}
+      // Build Prompt from active template (custom or default)
+      let userTemplate = appState.prompts.mnemonic || DEFAULT_MNEMONIC_PROMPT;
+      let compiledInstruction = userTemplate
+        .replace(/\{\{WORDS\}\}/g, rawEntries.join(', '))
+        .replace(/\{\{LEVEL\}\}/g, cefr)
+        .replace(/\{\{SCAFFOLD_LEVEL\}\}/g, scaffoldLevel);
 
-For each of the following target English words: ${JSON.stringify(wordList)}
-Generate a JSON array of objects. Each object MUST strictly follow this structure:
-{
-  "word": "base form of the target word in lowercase",
-  "pos": "part of speech abbreviation (e.g., v., n., adj., adv.)",
-  "meaning": "concise core Traditional Chinese meaning (繁體中文核心語意，例如：跌倒；滾落)",
-  "phrases": [
-    {
-      "en": "A short 3 to 6 word rapid memory phrase (速記短句) wrapping the target word in <b>...</b> tags, e.g., '<b>tumble</b> down the stairs'",
-      "zh": "Natural Traditional Chinese translation of the phrase (繁體中文翻譯)"
-    },
-    {
-      "en": "A second distinct 3 to 6 word rapid memory phrase wrapping the target word in <b>...</b> tags, e.g., 'flowers <b>wither</b> without water'",
-      "zh": "Natural Traditional Chinese translation of the second phrase"
-    }
-  ]
-}
-Return ONLY valid JSON array.
-      `.trim();
+      const fullPrompt = `${compiledInstruction}
+
+請務必嚴格回傳 JSON Array 格式（不要包含 Markdown code block），陣列中每個物件結構如下：
+[
+  {
+    "word": "純英文目標單字原形（不含括號與中文，例如 slip）",
+    "pos": "詞性縮寫（如 v., n., adj.）",
+    "meaning": "繁體中文核心語意（若使用者有指定語意則填該語意；若無指定且為多義詞，請標示如：1. 滑倒 / 2. 悄悄溜走）",
+    "userSpecifiedHint": "若使用者輸入時有指定詞性或語意請標註於此，無則填空字串",
+    "phrases": [
+      {
+        "en": "開頭帶 2~3 個情境 Emojis，接著 6~12 字具完整因果/方式畫面的英文速記短句，且目標單字用 <b>...</b> 包覆，例如：🍌👟 <b>slip</b> on a yellow banana peel and fall down",
+        "zh": "生動完整的繁體中文畫面翻譯，例如：踩到黃色香蕉皮滑倒並摔在地上",
+        "senseLabel": "此短句對應的語意標籤，例如：語意 1：滑倒"
+      },
+      {
+        "en": "第二個開頭帶 2~3 個情境 Emojis 的 6~12 字完整畫面速記短句，例如：🚪🤫 <b>slip</b> quietly out of the room without making a sound",
+        "zh": "第二個短句的繁體中文翻譯",
+        "senseLabel": "此短句對應的語意標籤，例如：語意 2：悄悄溜走"
+      }
+    ]
+  }
+]`;
 
       try {
         const model = getActiveModel();
@@ -1451,10 +1766,10 @@ Return ONLY valid JSON array.
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
+            contents: [{ parts: [{ text: fullPrompt }] }],
             generationConfig: {
               responseMimeType: 'application/json',
-              temperature: 0.4
+              temperature: 0.45
             }
           })
         });
@@ -1474,19 +1789,23 @@ Return ONLY valid JSON array.
         }
 
         let addedCount = 0;
-        parsedItems.reverse().forEach(item => {
+        parsedItems.reverse().forEach((item, idx) => {
           if (!item.word || !Array.isArray(item.phrases)) return;
-          const cleanWord = String(item.word).trim();
-          // Check if word already exists; if so, update it and move to top
+          // Ensure clean English headword without trailing parentheses
+          const parsedEntry = parseUserEntry(String(item.word));
+          const cleanWord = parsedEntry.headword;
+
           const existingIdx = appState.words.findIndex(w => w.word.toLowerCase() === cleanWord.toLowerCase());
           const wordObj = {
             id: existingIdx >= 0 ? appState.words[existingIdx].id : ('w-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6)),
             word: cleanWord,
             pos: item.pos || 'v./n.',
             meaning: item.meaning || '',
+            userSpecifiedHint: item.userSpecifiedHint || parsedEntry.hint || '',
             phrases: item.phrases.slice(0, 2).map(p => ({
               en: p.en || cleanWord,
-              zh: p.zh || ''
+              zh: p.zh || '',
+              senseLabel: p.senseLabel || ''
             })),
             mastery: existingIdx >= 0 ? appState.words[existingIdx].mastery : 1,
             selectedForStory: true,
@@ -1503,8 +1822,9 @@ Return ONLY valid JSON array.
         saveWordsToStorage();
         renderRecentCards();
         renderVocabBank();
+        renderStoryWordChips();
         document.getElementById('word-input').value = '';
-        showToast(`成功生成並儲存 ${addedCount} 個單字的速記短句！`, 'success');
+        showToast(`成功生成並儲存 ${addedCount} 個視覺化速記短句卡！`, 'success');
       } catch (err) {
         console.error(err);
         showToast(`生成失敗：${err.message}`, 'error');
@@ -1515,7 +1835,7 @@ Return ONLY valid JSON array.
     }
 
     /********************************************************************
-     * 8. RENDER WORD CARDS (RECENT & VOCABULARY BANK)
+     * 9. RENDER WORD CARDS (WITH EMOJIS, SENSE LABELS & EMOJI-FREE TTS)
      ********************************************************************/
     function createWordCardHTML(item) {
       const starsHtml = [1, 2, 3, 4, 5].map(star => `
@@ -1526,20 +1846,21 @@ Return ONLY valid JSON array.
 
       const phrasesHtml = (item.phrases || []).map((p, idx) => {
         const safeEn = formatSafeHighlight(p.en, item.word);
-        const safePlainEn = stripHtmlTags(p.en).replace(/'/g, "\\'");
+        const safePlainEn = cleanTextForTTS(p.en).replace(/'/g, "\\'");
+        const badgeLabel = p.senseLabel ? escapeHtml(p.senseLabel) : `短句 ${idx + 1}`;
         return `
-          <div class="group p-3 rounded-xl bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 transition flex items-start justify-between gap-3">
-            <div class="space-y-0.5 min-w-0">
-              <div class="flex items-center gap-1.5">
-                <span class="px-1.5 py-0.2 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded">短句 ${idx + 1}</span>
-                <p class="phrase-highlight text-sm sm:text-base font-medium text-slate-800 break-words">${safeEn}</p>
+          <div class="group p-3.5 rounded-xl bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 transition flex items-start justify-between gap-3">
+            <div class="space-y-1 min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-100 text-indigo-700 rounded-md shrink-0">${badgeLabel}</span>
               </div>
-              <p class="text-xs text-slate-500 pl-11">${escapeHtml(p.zh)}</p>
+              <p class="phrase-highlight text-sm sm:text-base font-semibold text-slate-900 leading-snug break-words">${safeEn}</p>
+              <p class="text-xs text-slate-600">= ${escapeHtml(p.zh)}</p>
             </div>
             <button
               onclick="speakText('${safePlainEn}', this)"
               class="w-9 h-9 rounded-xl bg-white hover:bg-indigo-600 text-indigo-600 hover:text-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0 transition"
-              title="朗讀此速記短句"
+              title="純英文發音（自動略過 Emoji）"
             >
               <i class="fa-solid fa-volume-high text-sm"></i>
             </button>
@@ -1547,7 +1868,10 @@ Return ONLY valid JSON array.
         `;
       }).join('');
 
-      const safeWordPlain = stripHtmlTags(item.word).replace(/'/g, "\\'");
+      const safeWordPlain = cleanTextForTTS(item.word).replace(/'/g, "\\'");
+      const hintBadge = item.userSpecifiedHint
+        ? `<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-amber-100 text-amber-800 border border-amber-200">${escapeHtml(item.userSpecifiedHint)}</span>`
+        : '';
 
       return `
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition p-4 sm:p-5 flex flex-col justify-between gap-3.5">
@@ -1562,11 +1886,12 @@ Return ONLY valid JSON array.
                 <i class="fa-solid fa-volume-high"></i>
               </button>
               <div class="min-w-0">
-                <div class="flex items-baseline gap-2 flex-wrap">
+                <div class="flex items-center gap-2 flex-wrap">
                   <h4 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">${escapeHtml(item.word)}</h4>
                   <span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-600">${escapeHtml(item.pos)}</span>
+                  ${hintBadge}
                 </div>
-                <p class="text-sm font-semibold text-indigo-700 mt-0.5">${escapeHtml(item.meaning)}</p>
+                <p class="text-sm font-bold text-indigo-700 mt-0.5">${escapeHtml(item.meaning)}</p>
               </div>
             </div>
 
@@ -1592,7 +1917,7 @@ Return ONLY valid JSON array.
 
           <!-- Card Footer Actions -->
           <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span>速記短句鷹架卡</span>
+            <span>視覺化速記鷹架卡</span>
             <div class="flex items-center gap-3">
               <button onclick="openEditWordModal('${item.id}')" class="hover:text-indigo-600 font-medium transition">
                 <i class="fa-solid fa-pen mr-1"></i>編輯短句
@@ -1660,7 +1985,348 @@ Return ONLY valid JSON array.
     }
 
     /********************************************************************
-     * 9. VOCABULARY MANAGEMENT, MANUAL EDIT & JSON BACKUP
+     * 10. TAB 3: CHARACTER/THEME STORY GENERATOR & DUAL-CODING READER
+     ********************************************************************/
+    function selectRandomForStory(count = 4) {
+      appState.words.forEach(w => w.selectedForStory = false);
+      const shuffled = [...appState.words].sort(() => Math.random() - 0.5);
+      shuffled.slice(0, count).forEach(w => {
+        const target = appState.words.find(item => item.id === w.id);
+        if (target) target.selectedForStory = true;
+      });
+      saveWordsToStorage();
+      renderVocabBank();
+      renderStoryWordChips();
+      showToast(`已隨機挑選 ${Math.min(count, appState.words.length)} 個單字準備編故事！`, 'info');
+    }
+
+    function clearStorySelection() {
+      appState.words.forEach(w => w.selectedForStory = false);
+      saveWordsToStorage();
+      renderVocabBank();
+      renderStoryWordChips();
+    }
+
+    function handleStoryThemeInput(val) {
+      appState.storyTheme = val.trim() || '日常溫馨與生活幽默';
+    }
+
+    function setStoryTheme(theme) {
+      appState.storyTheme = theme;
+      const inputEl = document.getElementById('story-theme-input');
+      if (inputEl) inputEl.value = theme;
+      showToast(`故事主題已設定為：${theme}`, 'info');
+    }
+
+    function renderStoryWordChips() {
+      const container = document.getElementById('story-word-chips');
+      if (!container) return;
+
+      if (appState.words.length === 0) {
+        container.innerHTML = `<span class="text-xs text-slate-400">單字本目前為空，請先新增單字</span>`;
+        return;
+      }
+
+      container.innerHTML = appState.words.map(w => {
+        const active = !!w.selectedForStory;
+        return `
+          <button
+            type="button"
+            onclick="toggleWordForStory('${w.id}')"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
+              active
+                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
+            }"
+          >
+            <i class="fa-solid ${active ? 'fa-check' : 'fa-plus'} text-[10px]"></i>
+            <span>${escapeHtml(w.word)}</span>
+            <span class="opacity-80 font-normal">(${escapeHtml(w.meaning.slice(0, 12))})</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderStorySection() {
+      renderStoryWordChips();
+      renderStoryHistoryList();
+      renderActiveStoryReader();
+    }
+
+    function renderStoryHistoryList() {
+      const listEl = document.getElementById('story-history-list');
+      if (!listEl) return;
+
+      if (appState.stories.length === 0) {
+        listEl.innerHTML = `<p class="text-xs text-slate-400">尚無故事紀錄</p>`;
+        return;
+      }
+
+      listEl.innerHTML = appState.stories.map(st => {
+        const isActive = st.id === appState.activeStoryId;
+        return `
+          <div
+            onclick="selectStory('${st.id}')"
+            class="p-3 rounded-xl border cursor-pointer transition flex items-center justify-between gap-2 ${
+              isActive ? 'border-indigo-600 bg-indigo-50/70' : 'border-slate-200 hover:bg-slate-50'
+            }"
+          >
+            <div class="min-w-0">
+              <div class="text-xs sm:text-sm font-bold text-slate-800 truncate">${escapeHtml(st.title)}</div>
+              <div class="text-[11px] text-slate-500 truncate">${escapeHtml(st.theme || '')} ｜ 單字：${escapeHtml((st.words || []).join(', '))}</div>
+            </div>
+            <button
+              onclick="event.stopPropagation(); deleteStory('${st.id}')"
+              class="text-slate-400 hover:text-rose-600 px-2 py-1 text-xs"
+              title="刪除此故事"
+            >
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectStory(id) {
+      stopSpeaking();
+      appState.activeStoryId = id;
+      renderStoryHistoryList();
+      renderActiveStoryReader();
+    }
+
+    function deleteStory(id) {
+      appState.stories = appState.stories.filter(s => s.id !== id);
+      if (appState.activeStoryId === id) {
+        appState.activeStoryId = appState.stories[0]?.id || null;
+      }
+      saveStoriesToStorage();
+      renderStorySection();
+    }
+
+    function toggleStoryTranslation() {
+      appState.showStoryTranslation = !appState.showStoryTranslation;
+      renderActiveStoryReader();
+    }
+
+    function speakFullStory(storyId, btnElement) {
+      const story = appState.stories.find(s => s.id === storyId);
+      if (!story) return;
+      const fullEnglish = (story.sentences || []).map(s => cleanTextForTTS(s.en)).join(' ');
+      speakText(fullEnglish, btnElement);
+    }
+
+    function renderActiveStoryReader() {
+      const container = document.getElementById('story-reader-container');
+      if (!container) return;
+
+      const story = appState.stories.find(s => s.id === appState.activeStoryId) || appState.stories[0];
+      if (!story) {
+        container.innerHTML = `
+          <div class="p-10 text-center text-slate-400 space-y-2">
+            <i class="fa-solid fa-book-open text-3xl"></i>
+            <p class="font-semibold text-slate-600">請從左側勾選單字、設定喜歡的主角或主題，點擊「AI 圍繞主角與指定語意編寫故事」</p>
+          </div>
+        `;
+        return;
+      }
+
+      const sentencesHtml = (story.sentences || []).map((s) => {
+        const safeEn = formatSafeHighlight(s.en);
+        const plainEn = cleanTextForTTS(s.en).replace(/'/g, "\\'");
+        return `
+          <div
+            onclick="speakText('${plainEn}', this)"
+            class="group p-3.5 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/40 cursor-pointer transition space-y-1"
+            title="點擊朗讀此句"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <p class="story-highlight text-base sm:text-lg leading-relaxed text-slate-800 font-medium">${safeEn}</p>
+              <span class="w-7 h-7 rounded-lg bg-slate-100 group-hover:bg-indigo-600 text-slate-500 group-hover:text-white flex items-center justify-center shrink-0 text-xs transition">
+                <i class="fa-solid fa-volume-high"></i>
+              </span>
+            </div>
+            ${appState.showStoryTranslation ? `<p class="text-xs sm:text-sm text-slate-500">${escapeHtml(s.zh)}</p>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const notesHtml = (story.notes || []).map(n => `
+        <li class="text-xs sm:text-sm text-slate-700 flex items-start gap-2">
+          <i class="fa-solid fa-check text-indigo-600 mt-1 text-xs"></i>
+          <span>${escapeHtml(n)}</span>
+        </li>
+      `).join('');
+
+      const questionHtml = story.question ? `
+        <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-200 space-y-1.5">
+          <div class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-comments text-amber-600"></i>
+            <span>閱讀理解與情境思考題 (Comprehension Check)</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-amber-950">${escapeHtml(story.question)}</p>
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <div class="space-y-5">
+          <!-- Story Header & Audio Toolbar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-indigo-100 text-indigo-700">${escapeHtml(story.level || appState.settings.cefr)}</span>
+                <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-violet-50 text-violet-700 border border-violet-200">${escapeHtml(story.theme || '')}</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1.5">${escapeHtml(story.title)}</h3>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                onclick="speakFullStory('${story.id}', this)"
+                class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm transition flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-play"></i> 全文朗讀
+              </button>
+              <button
+                onclick="stopSpeaking()"
+                class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition"
+                title="停止朗讀"
+              >
+                <i class="fa-solid fa-stop"></i>
+              </button>
+              <button
+                onclick="toggleStoryTranslation()"
+                class="px-3 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition"
+              >
+                ${appState.showStoryTranslation ? '隱藏中譯' : '顯示中譯'}
+              </button>
+            </div>
+          </div>
+
+          <div class="text-xs text-indigo-600 bg-indigo-50/70 border border-indigo-100 rounded-xl px-3.5 py-2 flex items-center gap-2">
+            <i class="fa-solid fa-headphones"></i>
+            <span>雙重編碼閱讀：點擊下方<b>任何一句英文</b>即可單獨發音跟讀（自動略過 Emoji）！</span>
+          </div>
+
+          <!-- Interactive Sentences -->
+          <div class="space-y-2.5">
+            ${sentencesHtml}
+          </div>
+
+          <!-- Comprehension Question -->
+          ${questionHtml}
+
+          <!-- Key Collocations Notes -->
+          ${notesHtml ? `
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">故事中的速記搭配詞重點</h4>
+              <ul class="space-y-1.5">${notesHtml}</ul>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    async function handleGenerateStory() {
+      const selectedWords = appState.words.filter(w => w.selectedForStory);
+      if (selectedWords.length === 0) {
+        showToast('請先勾選至少 2 個要編入故事的單字！', 'error');
+        return;
+      }
+
+      if (!appState.apiKey) {
+        showToast('請先設定您的免費 Google Gemini API Key！', 'error');
+        openSettingsModal('api');
+        return;
+      }
+
+      const themeInputVal = (document.getElementById('story-theme-input')?.value || appState.storyTheme || '日常溫馨與生活幽默').trim();
+      appState.storyTheme = themeInputVal;
+
+      const btn = document.getElementById('btn-generate-story');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>AI 正在圍繞「${themeInputVal.slice(0, 12)}」編寫故事...</span>`;
+
+      const cefr = appState.settings.cefr || 'A2';
+      const scaffoldLevel = getScaffoldLevelCode(cefr);
+      const wordsWithMeaning = selectedWords.map(w => `${w.word} (指定詞性與語意: ${w.pos} ${w.meaning})`).join('； ');
+
+      let storyTemplate = appState.prompts.story || DEFAULT_STORY_PROMPT;
+      let compiledStoryPrompt = storyTemplate
+        .replace(/\{\{WORDS_WITH_MEANING\}\}/g, wordsWithMeaning)
+        .replace(/\{\{WORDS\}\}/g, wordsWithMeaning)
+        .replace(/\{\{STORY_THEME\}\}/g, themeInputVal)
+        .replace(/\{\{LEVEL\}\}/g, cefr)
+        .replace(/\{\{SCAFFOLD_LEVEL\}\}/g, scaffoldLevel);
+
+      const fullPrompt = `${compiledStoryPrompt}
+
+請務必嚴格回傳單一 JSON Object 格式（不要包含 Markdown code block），結構如下：
+{
+  "title": "English Story Title (繁體中文故事標題)",
+  "sentences": [
+    {
+      "en": "English sentence with target words wrapped in <b>...</b> tags",
+      "zh": "該句自然生動的繁體中文翻譯"
+    }
+  ],
+  "notes": [
+    "故事中出現的目標單字片語：繁體中文搭配解析"
+  ],
+  "question": "1 題簡短有趣的英文閱讀理解或情境思考題（附上繁體中文翻譯）"
+}`;
+
+      try {
+        const model = getActiveModel();
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(appState.apiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: fullPrompt }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              temperature: 0.65
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(rawText);
+
+        const newStory = {
+          id: 'st-' + Date.now(),
+          title: parsed.title || 'AI 主題單字故事',
+          level: `${cefr} (使用 ${scaffoldLevel} 鷹架字彙)`,
+          theme: themeInputVal,
+          words: selectedWords.map(w => w.word),
+          sentences: Array.isArray(parsed.sentences) ? parsed.sentences : [],
+          notes: Array.isArray(parsed.notes) ? parsed.notes : [],
+          question: parsed.question || '',
+          createdAt: Date.now()
+        };
+
+        appState.stories.unshift(newStory);
+        appState.activeStoryId = newStory.id;
+        saveStoriesToStorage();
+        renderStorySection();
+        showToast('主題人物故事生成完畢！點擊句子即可聆聽發音', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast(`故事生成失敗：${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+
+    /********************************************************************
+     * 11. TAB 4: LOCAL ZERO-TOKEN QUIZ ENGINE (WITH EMOJI-SAFE TTS)
      ********************************************************************/
     function setWordMastery(id, stars) {
       const word = appState.words.find(w => w.id === id);
@@ -2207,10 +2873,13 @@ Return ONLY a valid JSON object matching this exact structure:
         ? target.phrases[Math.floor(Math.random() * target.phrases.length)]
         : { en: `<b>${target.word}</b>`, zh: target.meaning };
 
-      // Build Cloze blanked sentence
-      const plainPhraseEn = stripHtmlTags(phraseObj.en);
-      const regex = new RegExp(`\\b${escapeRegExp(target.word)}\\w*\\b`, 'gi');
-      const maskedPhraseEn = plainPhraseEn.replace(regex, '______');
+      // Build Cloze blanked sentence (keeping Emojis visible as visual hints!)
+      const displayPhraseEn = stripHtmlTags(phraseObj.en);
+      const plainPhraseEn = cleanTextForTTS(phraseObj.en);
+      const baseWord = target.word.trim();
+      const stem = baseWord.length > 4 ? baseWord.slice(0, -1) : baseWord;
+      const regex = new RegExp(`\\b${escapeRegExp(stem)}\\w*\\b`, 'gi');
+      const maskedPhraseEn = displayPhraseEn.replace(regex, '______');
 
       appState.quiz.currentQuestion = {
         target,
@@ -2230,7 +2899,7 @@ Return ONLY a valid JSON object matching this exact structure:
       if (!stage || !q) return;
 
       const mode = appState.quiz.mode;
-      const safeWordAudio = stripHtmlTags(q.target.word).replace(/'/g, "\\'");
+      const safeWordAudio = cleanTextForTTS(q.target.word).replace(/'/g, "\\'");
       const safePhraseAudio = q.plainPhraseEn.replace(/'/g, "\\'");
 
       let promptHtml = '';
