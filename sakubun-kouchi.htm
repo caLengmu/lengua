@@ -1,0 +1,3147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搶救中式英文大作戰：互動自學手冊</title>
+  <style>
+    /* ==========================================================================
+       1. 主題與排版變數設定區（未來調整配色、字體、圓角與間距，只需修改此處）
+       ========================================================================== */
+    :root {
+      /* 主色調（沉靜學術青綠） */
+      --color-primary: #0F766E;
+      --color-primary-hover: #115E59;
+      --color-primary-soft: #F0FDFA;
+      --color-primary-border: #99F6E4;
+
+      /* 背景與卡片色彩 */
+      --color-bg: #F8FAFC;
+      --color-surface: #FFFFFF;
+      --color-surface-muted: #F1F5F9;
+      --color-border: #E2E8F0;
+      --color-border-strong: #CBD5E1;
+
+      /* 文字色彩 */
+      --color-text: #1E293B;
+      --color-text-secondary: #475569;
+      --color-text-muted: #64748B;
+
+      /* 語意色彩：中式錯誤（柔玫瑰紅）、道地正確（祖母綠）、提示（暖琥珀） */
+      --color-error: #BE123C;
+      --color-error-bg: #FFF1F2;
+      --color-error-border: #FECDD3;
+
+      --color-success: #047857;
+      --color-success-bg: #ECFDF5;
+      --color-success-border: #A7F3D0;
+
+      --color-warning: #B45309;
+      --color-warning-bg: #FFFBEB;
+      --color-warning-border: #FDE68A;
+
+      /* 字體與基礎字級（會隨頁首 A- / A / A+ 動態切換） */
+      --font-sans: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Segoe UI", Roboto, sans-serif;
+      --font-en: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-size-base: 16px;
+      --line-height-base: 1.7;
+
+      /* 圓角、陰影與間距 */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+      --max-width: 960px;
+    }
+
+    /* ==========================================================================
+       2. 基礎重置與全域樣式
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: var(--font-size-base);
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: var(--line-height-base);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, p {
+      margin-top: 0;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .en-text {
+      font-family: var(--font-en);
+      letter-spacing: 0.01em;
+    }
+
+    /* ==========================================================================
+       3. 頂部固定導覽列與進度條
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0.75rem 1rem 0.5rem;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--color-primary);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      display: block;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* 字級切換器 A- / A / A+ */
+    .font-switcher {
+      display: inline-flex;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--color-surface);
+    }
+
+    .font-btn {
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      padding: 0.35rem 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 34px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .font-btn + .font-btn {
+      border-left: 1px solid var(--color-border);
+    }
+
+    .font-btn:hover {
+      background: var(--color-surface-muted);
+    }
+
+    .font-btn.active {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    /* 進度區塊 */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--color-surface-muted);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--color-primary), #14B8A6);
+      border-radius: var(--radius-pill);
+      transition: width 0.35s ease;
+    }
+
+    .progress-label {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* 頁籤導覽列（手機橫向滑動，電腦平鋪） */
+    .tab-nav-wrapper {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0.45rem 1rem 0.65rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .tab-nav-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 0.45rem;
+      min-width: max-content;
+    }
+
+    .tab-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.48rem 0.88rem;
+      min-height: 40px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+    }
+
+    .tab-pill:hover {
+      border-color: var(--color-primary-border);
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+    }
+
+    .tab-pill.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.22);
+    }
+
+    .tab-badge {
+      font-size: 0.72rem;
+      padding: 0.08rem 0.4rem;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.08);
+      color: inherit;
+    }
+
+    .tab-pill.active .tab-badge {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+    }
+
+    .tab-pill.completed .tab-badge {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+
+    .tab-pill.active.completed .tab-badge {
+      background: rgba(255, 255, 255, 0.28);
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       4. 主內容容器與共用元件
+       ========================================================================== */
+    .main-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--color-primary-soft) 100%);
+      border: 1px solid var(--color-primary-border);
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--color-primary);
+      background: #FFFFFF;
+      border: 1px solid var(--color-primary-border);
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 0.65rem;
+    }
+
+    .hero-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .hero-desc {
+      color: var(--color-text-secondary);
+      margin-bottom: 0;
+      font-size: 0.96rem;
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin: 1.75rem 0 0.9rem;
+    }
+
+    .section-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 5px;
+      height: 1.15em;
+      background: var(--color-primary);
+      border-radius: var(--radius-pill);
+    }
+
+    /* 按鈕樣式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.52rem 1rem;
+      min-height: 42px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.16s ease;
+      text-decoration: none;
+    }
+
+    .btn-sm {
+      padding: 0.36rem 0.75rem;
+      min-height: 36px;
+      font-size: 0.84rem;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .btn-outline {
+      background: var(--color-surface);
+      border-color: var(--color-border-strong);
+      color: var(--color-text-secondary);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-soft);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-text-muted);
+      border-color: transparent;
+    }
+
+    .btn-ghost:hover {
+      background: var(--color-surface-muted);
+      color: var(--color-text);
+    }
+
+    .btn-danger-ghost {
+      background: transparent;
+      color: var(--color-error);
+      border: 1px solid var(--color-error-border);
+    }
+
+    .btn-danger-ghost:hover {
+      background: var(--color-error-bg);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    /* ==========================================================================
+       5. 原文診斷室專屬樣式
+       ========================================================================== */
+    .essay-box {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1.25rem;
+      font-family: var(--font-en);
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--color-text);
+    }
+
+    .essay-box p {
+      text-indent: 2em;
+      margin-bottom: 0.9rem;
+    }
+
+    .essay-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .essay-compare-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .essay-compare-grid.two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .essay-label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 0.6rem;
+    }
+
+    .label-orig {
+      background: var(--color-error-bg);
+      color: var(--color-error);
+      border: 1px solid var(--color-error-border);
+    }
+
+    .label-good {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+      border: 1px solid var(--color-success-border);
+    }
+
+    .hl-key {
+      background: var(--color-primary-soft);
+      color: var(--color-primary-hover);
+      font-weight: 700;
+      padding: 0.05rem 0.28rem;
+      border-radius: 4px;
+      border-bottom: 2px solid var(--color-primary-border);
+    }
+
+    .hl-err {
+      background: var(--color-error-bg);
+      color: var(--color-error);
+      font-weight: 600;
+      padding: 0.05rem 0.28rem;
+      border-radius: 4px;
+      text-decoration: underline wavy var(--color-error);
+      text-underline-offset: 3px;
+    }
+
+    .paragraph-divider {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      background: var(--color-primary-soft);
+      border: 1px solid var(--color-primary-border);
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-sm);
+      margin: 1.2rem 0 0.85rem;
+      display: inline-block;
+    }
+
+    /* 逐句診斷卡片 */
+    .diag-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.2rem;
+      margin-bottom: 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .diag-card.is-open {
+      border-color: var(--color-primary-border);
+      box-shadow: var(--shadow-md);
+    }
+
+    .diag-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .diag-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--color-surface-muted);
+      color: var(--color-text-secondary);
+      font-weight: 700;
+      font-size: 0.86rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.1rem;
+    }
+
+    .diag-card.is-reviewed .diag-num {
+      background: var(--color-primary-soft);
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary-border);
+    }
+
+    .diag-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .diag-original {
+      font-family: var(--font-en);
+      font-size: 1.04rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.55rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .diag-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .hint-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      color: var(--color-warning);
+      background: var(--color-warning-bg);
+      border: 1px solid var(--color-warning-border);
+      padding: 0.22rem 0.6rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .diag-panel {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--color-border-strong);
+      animation: fadeSlide 0.22s ease;
+    }
+
+    .diag-card.is-open .diag-panel {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .diag-fix-box {
+      background: var(--color-success-bg);
+      border: 1px solid var(--color-success-border);
+      border-left: 4px solid var(--color-success);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .diag-fix-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-success);
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    .diag-fix-text {
+      font-family: var(--font-en);
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: #064E3B;
+      margin: 0;
+    }
+
+    .diag-sub-heading {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin: 0.65rem 0 0.35rem;
+    }
+
+    .diag-reasons {
+      margin: 0 0 0.75rem 0;
+      padding-left: 1.25rem;
+      color: var(--color-text-secondary);
+      font-size: 0.92rem;
+    }
+
+    .diag-reasons li {
+      margin-bottom: 0.3rem;
+    }
+
+    .diag-flow-box {
+      background: var(--color-primary-soft);
+      border: 1px solid var(--color-primary-border);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.95rem;
+      font-size: 0.9rem;
+      color: var(--color-text);
+    }
+
+    .diag-flow-box strong {
+      color: var(--color-primary-hover);
+    }
+
+    /* ==========================================================================
+       6. 六週教材：病灶心法卡片與對照表格
+       ========================================================================== */
+    .callout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 720px) {
+      .callout-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.2rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+    }
+
+    .callout-diagnosis {
+      border-top: 4px solid var(--color-error);
+    }
+
+    .callout-tip {
+      border-top: 4px solid var(--color-primary);
+    }
+
+    .callout h3 {
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .callout ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      font-size: 0.92rem;
+      color: var(--color-text-secondary);
+    }
+
+    .callout li {
+      margin-bottom: 0.45rem;
+    }
+
+    .callout li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 響應式對照表 */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      margin-bottom: 1.25rem;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+      text-align: left;
+    }
+
+    .compare-table th {
+      background: var(--color-surface-muted);
+      color: var(--color-text);
+      font-weight: 700;
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    .compare-table td {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .td-type {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    .td-wrong {
+      color: var(--color-error);
+      background: rgba(255, 241, 242, 0.55);
+      font-family: var(--font-en);
+    }
+
+    .td-right {
+      color: var(--color-success);
+      background: rgba(236, 253, 245, 0.55);
+      font-family: var(--font-en);
+    }
+
+    /* 第五週遮罩自測模式 */
+    .collocation-masked .td-right-mask {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .collocation-masked .td-right-mask:not(.revealed) .mask-content {
+      filter: blur(6px);
+      opacity: 0.35;
+      transition: all 0.2s;
+    }
+
+    .mask-hint {
+      display: none;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-left: 0.4rem;
+    }
+
+    .collocation-masked .td-right-mask:not(.revealed) .mask-hint {
+      display: inline;
+    }
+
+    /* 手機窄螢幕自動轉成堆疊卡片式表格，杜絕擠壓 */
+    @media (max-width: 640px) {
+      .compare-table thead {
+        display: none;
+      }
+      .compare-table, .compare-table tbody, .compare-table tr, .compare-table td {
+        display: block;
+        width: 100%;
+      }
+      .compare-table tr {
+        border-bottom: 2px solid var(--color-border);
+        padding: 0.55rem 0.75rem;
+      }
+      .compare-table tr:last-child {
+        border-bottom: none;
+      }
+      .compare-table td {
+        border: none;
+        padding: 0.38rem 0.5rem;
+        border-radius: 6px;
+        margin-bottom: 0.3rem;
+        white-space: normal;
+      }
+      .compare-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-family: var(--font-sans);
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: var(--color-text-muted);
+        margin-bottom: 0.15rem;
+      }
+      .compare-table td.td-wrong::before { color: var(--color-error); }
+      .compare-table td.td-right::before { color: var(--color-success); }
+    }
+
+    /* ==========================================================================
+       7. 互動練習題元件樣式
+       ========================================================================== */
+    .exercise-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .exercise-card.state-correct {
+      border-color: var(--color-success-border);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FAFFFD 100%);
+    }
+
+    .exercise-card.state-wrong {
+      border-color: var(--color-warning-border);
+    }
+
+    .ex-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .ex-num {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      background: var(--color-primary-soft);
+      padding: 0.18rem 0.6rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .ex-status {
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: var(--radius-pill);
+      padding: 0.15rem 0.6rem;
+    }
+
+    .ex-status.done {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+
+    .ex-prompt {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .ex-prompt .orig-pill {
+      display: block;
+      margin-top: 0.35rem;
+      padding: 0.6rem 0.85rem;
+      background: var(--color-error-bg);
+      border: 1px solid var(--color-error-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-error);
+      font-family: var(--font-en);
+      font-weight: 600;
+    }
+
+    .ex-input {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      border: 1.5px solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-en);
+      font-size: 0.98rem;
+      color: var(--color-text);
+      background: #FFFFFF;
+      transition: border-color 0.16s, box-shadow 0.16s;
+    }
+
+    .ex-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+
+    .ex-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    /* 選擇題按鈕 */
+    .choice-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 0.65rem 0;
+    }
+
+    .choice-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 0.65rem 1rem;
+      min-height: 44px;
+      border: 1.5px solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      font-family: var(--font-en);
+      font-weight: 600;
+      color: var(--color-text);
+      cursor: pointer;
+      transition: all 0.16s;
+    }
+
+    .choice-btn:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-soft);
+    }
+
+    .choice-btn.selected-correct {
+      border-color: var(--color-success);
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+
+    .choice-btn.selected-wrong {
+      border-color: var(--color-error);
+      background: var(--color-error-bg);
+      color: var(--color-error);
+    }
+
+    /* 句型重組詞塊（第三週 Q1） */
+    .tile-dropzone {
+      min-height: 56px;
+      padding: 0.65rem;
+      border: 2px dashed var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--color-bg);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .tile-dropzone.empty::after {
+      content: "點擊下方詞塊，依序排成正確的英文句子…";
+      color: var(--color-text-muted);
+      font-size: 0.88rem;
+    }
+
+    .tile-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .word-tile {
+      padding: 0.45rem 0.85rem;
+      min-height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--color-primary-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-family: var(--font-en);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .word-tile:hover {
+      background: var(--color-primary-soft);
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+
+    .word-tile.in-answer {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+
+    .word-tile.used {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* 句中填空與雙選下拉 */
+    .inline-sentence {
+      font-family: var(--font-en);
+      font-size: 1.02rem;
+      line-height: 2.2;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .inline-blank {
+      display: inline-block;
+      width: 135px;
+      max-width: 46vw;
+      padding: 0.25rem 0.55rem;
+      margin: 0 0.25rem;
+      border: none;
+      border-bottom: 2px solid var(--color-primary);
+      background: var(--color-primary-soft);
+      border-radius: 4px 4px 0 0;
+      font-family: var(--font-en);
+      font-weight: 600;
+      color: var(--color-text);
+      text-align: center;
+    }
+
+    .inline-blank:focus {
+      outline: none;
+      background: #fff;
+      box-shadow: 0 2px 0 var(--color-primary);
+    }
+
+    .inline-select {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      margin: 0 0.25rem;
+      border: 1.5px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      background: var(--color-primary-soft);
+      font-family: var(--font-en);
+      font-weight: 600;
+      color: var(--color-text);
+      cursor: pointer;
+    }
+
+    .zh-cue {
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      color: var(--color-text-muted);
+      margin-left: 0.3rem;
+    }
+
+    /* 回饋與解析框 */
+    .feedback-box {
+      margin-top: 0.8rem;
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      display: none;
+      animation: fadeSlide 0.2s ease;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-box.is-correct {
+      background: var(--color-success-bg);
+      border: 1px solid var(--color-success-border);
+      color: #064E3B;
+    }
+
+    .feedback-box.is-retry {
+      background: var(--color-warning-bg);
+      border: 1px solid var(--color-warning-border);
+      color: #78350F;
+    }
+
+    .feedback-box.is-reveal {
+      background: var(--color-surface-muted);
+      border: 1px solid var(--color-border-strong);
+      color: var(--color-text);
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    .model-answer {
+      font-family: var(--font-en);
+      font-weight: 700;
+      color: var(--color-success);
+      background: #FFFFFF;
+      padding: 0.45rem 0.7rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-success-border);
+      margin: 0.45rem 0;
+      display: block;
+    }
+
+    /* ==========================================================================
+       8. 第六週 SOP 自檢表與終極對照
+       ========================================================================== */
+    .sop-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sop-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.16s;
+    }
+
+    .sop-item:hover {
+      border-color: var(--color-primary-border);
+      background: var(--color-primary-soft);
+    }
+
+    .sop-item.checked {
+      background: var(--color-success-bg);
+      border-color: var(--color-success-border);
+    }
+
+    .sop-checkbox {
+      width: 22px;
+      height: 22px;
+      margin-top: 0.15rem;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .sop-text strong {
+      display: block;
+      color: var(--color-text);
+      margin-bottom: 0.15rem;
+    }
+
+    .sop-item.checked .sop-text strong {
+      color: var(--color-success);
+    }
+
+    .sop-text span {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* 底部上下週導覽 */
+    .pager-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* 客製化重設確認對話框（不使用瀏覽器原生 confirm/alert） */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 200;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    }
+
+    .modal-dialog h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .modal-dialog p {
+      font-size: 0.92rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部固定導覽列 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">En</div>
+          <div>
+            <h1 class="brand-title">搶救中式英文大作戰</h1>
+            <span class="brand-sub">台灣學生互動寫作自學手冊</span>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <div class="font-switcher" role="group" aria-label="字體大小切換">
+            <button type="button" class="font-btn" data-size="sm" title="縮小字體">A-</button>
+            <button type="button" class="font-btn active" data-size="md" title="標準字體">A</button>
+            <button type="button" class="font-btn" data-size="lg" title="放大字體">A+</button>
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost" id="btnResetProgress" title="重設所有作答進度">重設進度</button>
+        </div>
+      </div>
+
+      <div class="progress-row" aria-label="整體學習進度">
+        <span class="progress-label" id="progressText">已完成練習 0 / 34 題</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <span class="progress-label" id="progressPercent">0%</span>
+      </div>
+    </div>
+
+    <!-- 頁籤導覽（由 JS 動態渲染） -->
+    <nav class="tab-nav-wrapper" aria-label="單元選單">
+      <div class="tab-nav" id="tabNav"></div>
+    </nav>
+  </header>
+
+  <!-- 主要內容區（由 JS 依據 COURSE_DATA 動態渲染） -->
+  <main class="main-container" id="mainContent"></main>
+
+  <!-- 客製化確認視窗（取代 window.confirm） -->
+  <div class="modal-backdrop" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+    <div class="modal-dialog">
+      <h3 id="resetModalTitle">重設學習進度？</h3>
+      <p>這將會清除你在「原文診斷室」的檢視紀錄、六週所有練習題的完成狀態與自檢表勾選紀錄。確定要重新開始嗎？</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline btn-sm" id="btnCancelReset">取消</button>
+        <button type="button" class="btn btn-danger-ghost btn-sm" id="btnConfirmReset">確定重設</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       資料核心區：COURSE_DATA
+       --------------------------------------------------------------------------
+       【未來擴充指南】
+       1. 新增逐句診斷：在 COURSE_DATA.diagnosis.sentences 陣列中新增一筆物件。
+       2. 新增每週對照範例：在對應週次的 comparisons 陣列中新增 { type, wrong, right }。
+       3. 新增互動練習題：在對應週次的 exercises 陣列中新增物件，支援五種題型：
+          - 'rewrite'     : 單行文字改寫/翻譯題（含 acceptedAnswers 陣列、hint、modelAnswer、explanation）
+          - 'choice'      : 點擊式選擇題（含 options、answer、explanation）
+          - 'unscramble'  : 點擊詞塊句型重組題（含 tiles、acceptedAnswers、modelAnswer、explanation）
+          - 'dual-select' : 句中多組下拉選單題（含 parts、selects、explanation）
+          - 'fill-blanks' : 句中多格填空題（含 parts、blanks、explanation）
+       ========================================================================== */
+    const COURSE_DATA = {
+      /* ------------------------------------------------------------------------
+         頁籤 0：原文診斷室
+         ------------------------------------------------------------------------ */
+      diagnosis: {
+        id: 'diagnosis',
+        tabLabel: '原文診斷室',
+        shortLabel: '診斷',
+        heroEyebrow: 'STEP 0 · 先思考，再看解析',
+        heroTitle: '原文診斷室：找出隱藏的中式英文',
+        heroDesc: '請先閱讀這篇完整的學生原作，接著在下方「逐句思考區」一句一句自我診斷——先想想文法、拼字或語氣哪裡怪怪的，再點開「查看修改與建議」對照！',
+        originalEssay: [
+          'The two pictures is people love a vocation spot. The Picture A is about to beach. The landscape features is have a very beautiful beach and mountains. Near by have some hotels give a some tourismts. In this place Have suitable a some people such as like going to the beach, playing in the water, people and like see beautiful landscape people. The Picture B is about to take the camp car. This place a feature is that if we go to a far place not need early find a near by hotel , when the night falls, we only need to turn of the door and rest on in the car. Have suitable a some people such as will in advance to prepare things or some people very like traveling go to the mountains. Because of the place not hotels can rest , need live in the car.',
+          'If I end of the exams , I will choose to go to the beach. First, going to the beach can see the beautiful views. For example, I am go to the Hwallem in last year. That views is very pretty. Second , I\'m have many of my friends also enjoy going to the beach , so I plan will to in end of the exams later , go to the beach. Finally , go to the beach I can happily play water and ball at the beach. Due to this summer speriod . Feeling very happy. For these reasons , I will choose to go to the beach !'
+        ],
+        rewrittenEssayHtml: [
+          'The two pictures <span class="hl-key">show two popular vacation destinations</span>. Picture A <span class="hl-key">shows a</span> beach, and its <span class="hl-key">landscape features</span> a beautiful coastline and green mountains. <span class="hl-key">There are</span> some hotels <span class="hl-key">nearby that provide accommodation for tourists</span>. <span class="hl-key">Therefore</span>, this place <span class="hl-key">is suitable for</span> people who enjoy going to the beach, playing in the water, and <span class="hl-key">admiring beautiful scenery</span>. <span class="hl-key">In contrast</span>, Picture B <span class="hl-key">shows a camper parked in</span> a forest. <span class="hl-key">One advantage of traveling in a camper is that</span> even when we <span class="hl-key">travel to a remote area</span>, we do not need to find a nearby hotel <span class="hl-key">in advance</span>. When <span class="hl-key">night falls</span>, we only need to close the door and rest in the camper. <span class="hl-key">Thus</span>, a camper <span class="hl-key">is ideal for</span> people who like to prepare things in advance or enjoy traveling to the mountains. <span class="hl-key">Since there may be no hotels nearby</span>, travelers can stay in the camper <span class="hl-key">instead</span>.',
+          '<span class="hl-key">After I finish my exams</span>, I will choose to go to the beach <span class="hl-key">for three reasons</span>. First, going to the beach <span class="hl-key">allows me to enjoy</span> the <span class="hl-key">stunning scenery</span>. For example, I went to Hualien last year, and the view was <span class="hl-key">breathtaking</span>. Second, many of my friends also enjoy going to the beach, so I <span class="hl-key">plan to visit the beach with them</span> after my exams. Finally, <span class="hl-key">at the beach</span>, I can happily <span class="hl-key">play in the water</span> and play ball. <span class="hl-key">Since it will be summer vacation</span>, I believe I will <span class="hl-key">have a wonderful time</span> there. For these reasons, I will <span class="hl-key">definitely</span> choose to go to the beach.'
+        ],
+        revisionHighlights: [
+          { title: '轉折詞串聯邏輯', desc: '加入 In contrast（相較之下）、Therefore / Thus（因此），讓文章從「描述圖片畫面」流暢推進到「推論適合族群」。' },
+          { title: '避免重複與單調用字', desc: '將重複出現的 beautiful / very pretty 升級為 stunning、breathtaking，並以 ideal 替換第二次的 suitable，提升字彙豐富度。' },
+          { title: '徹底消滅中式 Have 與雙動詞', desc: '全篇「某地有某物」統一使用 There is / There are，並移除 Be 動詞與一般動詞打架的結構。' }
+        ],
+        sentences: [
+          {
+            id: 1, paragraph: 1,
+            original: 'The two pictures is people love a vocation spot.',
+            hint: '思考提示：主詞單複數、動詞選擇，以及「假期」的拼字？',
+            fixed: 'The two pictures show two popular vacation destinations.',
+            reasons: [
+              '主詞 two pictures 為複數，動詞不可用單數 is。',
+              '英文不能直譯「這兩張圖是人們喜歡的…」，描述圖片內容應用動詞 show。',
+              '拼字提醒：「假期」是 vacation（vocation 是職業／天職）；兩張圖對應兩個地點，需用複數 destinations。'
+            ],
+            flow: '作為開頭總起句，清楚點出「兩個受歡迎的度假勝地」，為後文分別介紹圖 A 與圖 B 鋪路。'
+          },
+          {
+            id: 2, paragraph: 1,
+            original: 'The Picture A is about to beach.',
+            hint: '思考提示：專有名詞冠詞、be about to 的真正意思，以及可數名詞？',
+            fixed: 'Picture A shows a beach.',
+            reasons: [
+              '專有名詞 Picture A 前面不需要加 The。',
+              'be about to 的意思是「即將做某事」，描述圖片直接用 shows 最自然。',
+              '可數名詞單數 beach 前須加上冠詞 a。'
+            ],
+            flow: '進階寫法可與第 3 句合併為 "Picture A shows a beach, and its landscape features..."，避免連續短句過於零碎。'
+          },
+          {
+            id: 3, paragraph: 1,
+            original: 'The landscape features is have a very beautiful beach and mountains.',
+            hint: '思考提示：這句話裡藏了幾個動詞？有沒有「動詞打架」？',
+            fixed: 'Its landscape features a very beautiful beach and green mountains.',
+            reasons: [
+              'feature 在此可直接當及物動詞「以……為特色」，不需要多加 is have。',
+              '英文一個子句中，絕對不可出現「be 動詞 + 原形動詞 (is have)」的雙動詞結構。'
+            ],
+            flow: '加上具體形容詞（如 beautiful coastline 與 green mountains），能讓畫面更有層次，並避免與前句的 beach 重複。'
+          },
+          {
+            id: 4, paragraph: 1,
+            original: 'Near by have some hotels give a some tourismts.',
+            hint: '思考提示：「某處有某物」不能用 have 開頭！此外檢查拼字與動詞數量。',
+            fixed: 'There are some hotels nearby that provide accommodation for tourists.',
+            reasons: [
+              '表達「某地有某物」必用 There is / There are，絕不可用 Have 開頭。',
+              'nearby（在附近）是一個字；遊客的正確拼法為 tourists。',
+              '用關係子句 that provide accommodation for... 取代動詞連用 give，結構才完整。'
+            ],
+            flow: '用 provide accommodation for tourists（提供遊客住宿）精準交代飯店功能，自然引出下一句「適合哪些遊客」。'
+          },
+          {
+            id: 5, paragraph: 1,
+            original: 'In this place Have suitable a some people such as like going to the beach, playing in the water, people and like see beautiful landscape people.',
+            hint: '思考提示：people 出現了三次！英文如何優雅表達「喜歡做某事的人」？',
+            fixed: 'Therefore, this place is suitable for people who enjoy going to the beach, playing in the water, and admiring beautiful scenery.',
+            reasons: [
+              '改掉中式 Have 開頭，使用 be suitable for...（適合……）。',
+              '修飾「做某事的人」必用關係代名詞 people who...，不可將 people 散落在句子各處。',
+              '平行結構：enjoy 後面接動名詞（V-ing），三個動作須一致為 going, playing, and admiring。'
+            ],
+            flow: '句首加上轉折詞 Therefore（因此），建立「有美麗海灘與飯店 → 因此適合特定族群」的因果邏輯。'
+          },
+          {
+            id: 6, paragraph: 1,
+            original: 'The Picture B is about to take the camp car.',
+            hint: '思考提示：「露營車」不是逐字翻譯的 camp car 喔！',
+            fixed: 'In contrast, Picture B shows a camper parked in a forest.',
+            reasons: [
+              '去掉 Picture B 前多餘的 The，並用 shows 取代 is about to。',
+              '「露營車」道地說法是 camper 或 camper van（而非中式直譯 camp car）。'
+            ],
+            flow: '句首加上 In contrast（相較之下）銜接圖 A 與圖 B，並補充場景細節 parked in a forest（停在森林裡）強化兩圖對比。'
+          },
+          {
+            id: 7, paragraph: 1,
+            original: 'This place a feature is that if we go to a far place not need early find a near by hotel , when the night falls, we only need to turn of the door and rest on in the car.',
+            hint: '思考提示：否定句少助動詞、「關門」動詞搭配錯誤，且兩個句子不能只用逗號接在一起。',
+            fixed: 'One advantage of traveling in a camper is that even when we travel to a remote area, we do not need to find a nearby hotel in advance. When night falls, we only need to close the door and rest in the camper.',
+            reasons: [
+              '否定句須加上助動詞與主詞：we do not need to（不能直接寫 not need）。',
+              '搭配詞修正：「關門」是 close the door（turn off 是關電器）；「提前」用 in advance 放句尾；「偏遠地區」用 a remote area 取代 a far place。',
+              'night falls（夜幕低垂）前不加 the；將過長的句子拆成兩句，避免逗號拼接（Comma Splice）。'
+            ],
+            flow: '開頭改用 One advantage of traveling in a camper is that... 取代模糊的 This place a feature，立刻點出露營車的核心優勢。'
+          },
+          {
+            id: 8, paragraph: 1,
+            original: 'Have suitable a some people such as will in advance to prepare things or some people very like traveling go to the mountains.',
+            hint: '思考提示：除了 Have 開頭與關代 who，注意「very like」是大忌！',
+            fixed: 'Thus, a camper is ideal for people who like to prepare things in advance or enjoy traveling to the mountains.',
+            reasons: [
+              '去掉 Have 開頭並用 people who... 連接動作。',
+              '英文不可用 very 直接修飾動詞（不可寫 very like），須改用 enjoy + V-ing 或 really like。',
+              '「去山裡旅行」為 traveling to the mountains，不需要多寫一個 go。'
+            ],
+            flow: '句首加 Thus（因此）承接前句優點，並以 ideal（理想的）替換前面用過的 suitable，提升字彙變化度。'
+          },
+          {
+            id: 9, paragraph: 1,
+            original: 'Because of the place not hotels can rest , need live in the car.',
+            hint: '思考提示：Because of 後面能接句子嗎？後半句少了誰（主詞）？',
+            fixed: 'Since there may be no hotels nearby, travelers can stay in the camper instead.',
+            reasons: [
+              'Because of 是介系詞，後面只能接名詞；接完整句子須用 Because 或 Since。',
+              '「沒有飯店」用 there may be no hotels；後半句須補上明確主詞 travelers。',
+              '旅遊短住用 stay（live 指長期居住）。'
+            ],
+            flow: '句尾補上 instead（作為替代），將「山區可能沒有飯店」與「住露營車」的因果關係緊密扣合。'
+          },
+          {
+            id: 10, paragraph: 2,
+            original: 'If I end of the exams , I will choose to go to the beach.',
+            hint: '思考提示：end of 是名詞片語，這句前半段有動詞嗎？',
+            fixed: 'After I finish my exams, I will choose to go to the beach for three reasons.',
+            reasons: [
+              'end of 是名詞片語，缺乏動詞，應改為完整子句 After I finish my exams。',
+              '考試一定會結束，用時間連接詞 After（在……之後）比條件連接詞 If（如果）更合乎實情。'
+            ],
+            flow: '句尾補上 for three reasons（基於三個理由），作為第二段主題句（Topic Sentence），讓讀者一目了然接下來會有三點論述。'
+          },
+          {
+            id: 11, paragraph: 2,
+            original: 'First, going to the beach can see the beautiful views.',
+            hint: '思考提示：「去海邊」這件事本身有眼睛可以「看」風景嗎？',
+            fixed: 'First, going to the beach allows me to enjoy the stunning scenery.',
+            reasons: [
+              '主詞 going to the beach（去海邊這件事）無法自己執行 see（看）的動作。',
+              '加上橋樑動詞 allows me to enjoy...（讓我能夠欣賞……），主詞與動作邏輯才通順。'
+            ],
+            flow: '將重複的 beautiful views 升級為 stunning scenery（絕美景色），為下一句花蓮旅遊舉例暖身。'
+          },
+          {
+            id: 12, paragraph: 2,
+            original: 'For example, I am go to the Hwallem in last year. That views is very pretty.',
+            hint: '思考提示：看到「去年」該用什麼時態？last year 前面需要加 in 嗎？',
+            fixed: 'For example, I went to Hualien last year, and the view was breathtaking.',
+            reasons: [
+              '出現過去時間 last year，動詞須切換過去式 went 與 was（並刪掉多餘的 am）。',
+              'last / next / this 開頭的時間詞前不加介系詞 in。',
+              '花蓮拼法為 Hualien 且不加 the；單數指示詞 That 不可配複數 views。'
+            ],
+            flow: '用 and 合併兩句短句，並用 breathtaking（令人驚嘆的）替換單調的 very pretty，畫面張力更強。'
+          },
+          {
+            id: 13, paragraph: 2,
+            original: 'Second , I\'m have many of my friends also enjoy going to the beach , so I plan will to in end of the exams later , go to the beach.',
+            hint: '思考提示：找出多餘的動詞（I\'m have、plan will）以及混亂的時間副詞位置。',
+            fixed: 'Second, many of my friends also enjoy going to the beach, so I plan to visit the beach with them after my exams.',
+            reasons: [
+              '刪掉多餘的 I\'m have，直接以 many of my friends 當主詞。',
+              'plan 與 will 語意重複，直接用 plan to + 原形動詞。',
+              '時間片語 after my exams 應放在句尾，不要插在動詞前面。'
+            ],
+            flow: '補上 with them（和他們一起），讓「朋友也愛海邊」與「我計畫去海邊」產生緊密的情感與因果連結。'
+          },
+          {
+            id: 14, paragraph: 2,
+            original: 'Finally , go to the beach I can happily play water and ball at the beach.',
+            hint: '思考提示：「玩水」少了哪個關鍵介系詞？句首的 go to the beach 結構完整嗎？',
+            fixed: 'Finally, at the beach, I can happily play in the water and play ball.',
+            reasons: [
+              '「玩水」英文必加介系詞：play in the water（不能直譯 play water）。',
+              '句首刪去結構斷裂的 go to the beach，改用簡潔的地點片語 at the beach，避免全段重複。'
+            ],
+            flow: '改以地點片語 at the beach 開頭，與前兩點的句型做出變化，讀起來更有節奏感。'
+          },
+          {
+            id: 15, paragraph: 2,
+            original: 'Due to this summer speriod . Feeling very happy.',
+            hint: '思考提示：這兩句是完整的英文句子嗎？誰的主詞和動詞不見了？',
+            fixed: 'Since it will be summer vacation, I believe I will have a wonderful time there.',
+            reasons: [
+              'Due to 是介系詞，不能獨立成句；Feeling very happy 缺少主詞與動詞（斷頭句）。',
+              '暑假直接用 summer vacation（原拼字 speriod 錯誤）。'
+            ],
+            flow: '改用 Since 引導原因，並以 I believe I will have a wonderful time there 取代單調的 feel happy，營造期待感。'
+          },
+          {
+            id: 16, paragraph: 2,
+            original: 'For these reasons , I will choose to go to the beach !',
+            hint: '思考提示：這句文法沒錯！但正式作文的標點符號和語氣還能怎麼微調？',
+            fixed: 'For these reasons, I will definitely choose to go to the beach.',
+            reasons: [
+              '這句結尾架構很棒！但正式英文作文通常避免使用驚嘆號，建議改為句點。'
+            ],
+            flow: '加上副詞 definitely（絕對、肯定），強化結尾說服力並首尾呼應。'
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         頁籤 1–6：六週改進計畫
+         ------------------------------------------------------------------------ */
+      weeks: [
+        /* ==================== 第 1 週 ==================== */
+        {
+          id: 'week1',
+          weekNum: 1,
+          tabLabel: '第 1 週',
+          title: '終結「動詞大亂鬥」與「Have 存在句」',
+          subtitle: '解決 Be 動詞＋一般動詞打架，以及中文「某地有某物」誤用 Have 的最常見錯誤。',
+          diagnosisPoints: [
+            '<strong>Be 動詞與一般動詞打架</strong>：常把 am / is / are 當成中文的「是」或語氣詞，寫出 is have、I am go、was happen 這種雙動詞結構。',
+            '<strong>Have 誤當「存在」用</strong>：英文的 have 表示「擁有」，表達「某地有某物」必須用 There is / There are。',
+            '<strong>There are 進階地雷</strong>：學會 There are 後，常忘記 are 已經是動詞，後面又直接接第二個動詞（如 There are many people like...）。'
+          ],
+          tips: [
+            '<strong>「一子句，一主將」原則</strong>：寫完句子圈出所有動詞；沒有連接詞（and, because, who, that）時，絕對不能出現第二個主要動詞。',
+            '<strong>存在句反射公式</strong>：只要想說「（某處）有……」，立刻套用 <code>There is / There are + 名詞 + 地點</code>。'
+          ],
+          comparisons: [
+            { type: 'Be + 原形動詞', wrong: 'I <b>am go</b> to Hualien last year.', right: 'I <b>went</b> to Hualien last year.' },
+            { type: 'Be + 原形動詞', wrong: 'I <b>am agree</b> with you.', right: 'I <b>agree</b> with you.' },
+            { type: 'Be + 一般動詞', wrong: 'The accident <b>was happen</b> yesterday.', right: 'The accident <b>happened</b> yesterday.' },
+            { type: 'Have 存在句', wrong: '<b>Near by have</b> some hotels.', right: '<b>There are</b> some hotels nearby.' },
+            { type: 'Have 存在句', wrong: '<b>In Taiwan, have</b> many night markets.', right: '<b>There are</b> many night markets in Taiwan.' },
+            { type: 'There are 雙動詞', wrong: '<b>There are</b> many students <b>use</b> phones in class.', right: '<b>There are</b> many students <b>who use</b> phones in class.（或 Many students use...）' }
+          ],
+          exercises: [
+            {
+              id: 'w1_q1', type: 'rewrite',
+              instruction: '抓蟲改錯：修正以下句子的動詞錯誤',
+              original: "I'm have a lot of homework to do tonight.",
+              hint: "把多餘的 'm（am）刪掉，保留一般動詞 have。",
+              modelAnswer: 'I have a lot of homework to do tonight.',
+              acceptedAnswers: ['I have a lot of homework to do tonight.'],
+              explanation: "英文不可將 Be 動詞（am）與一般動詞（have）連用，直接寫 I have... 即可。"
+            },
+            {
+              id: 'w1_q2', type: 'rewrite',
+              instruction: '抓蟲改錯：把中式 Have 改成正確的存在句',
+              original: 'On the mountain, have many tall trees and wild animals.',
+              hint: '表示「山上有……」，請用 There are 開頭，或把 on the mountain 放句尾。',
+              modelAnswer: 'There are many tall trees and wild animals on the mountain.',
+              acceptedAnswers: [
+                'There are many tall trees and wild animals on the mountain.',
+                'On the mountain, there are many tall trees and wild animals.'
+              ],
+              explanation: '表達「某地有某物」必須用 There are（複數），不能直接寫 have。'
+            },
+            {
+              id: 'w1_q3', type: 'rewrite',
+              instruction: '抓蟲改錯：解決動詞打架並注意修飾動詞的副詞',
+              original: 'She is very enjoys watching Korean dramas on weekends.',
+              hint: '刪掉 is，且 very 不能修飾動詞 enjoys，建議改用 really 或直接刪掉 very。',
+              modelAnswer: 'She really enjoys watching Korean dramas on weekends.',
+              acceptedAnswers: [
+                'She really enjoys watching Korean dramas on weekends.',
+                'She enjoys watching Korean dramas on weekends.'
+              ],
+              explanation: '刪掉多餘的 Be 動詞 is；另外 very 不可直接修飾一般動詞，需改為 really enjoys。'
+            },
+            {
+              id: 'w1_q4', type: 'rewrite',
+              instruction: '抓蟲改錯：解決 There are 後面出現第二個動詞的問題',
+              original: 'There are many people want to study abroad after graduation.',
+              hint: '可以在 people 後面補上關係代名詞 who，或直接刪掉 There are。',
+              modelAnswer: 'There are many people who want to study abroad after graduation.',
+              acceptedAnswers: [
+                'There are many people who want to study abroad after graduation.',
+                'Many people want to study abroad after graduation.'
+              ],
+              explanation: 'There are 裡已經有動詞 are 了，後面若要接第二個動詞 want，必須用關代 who 連接（或精簡寫成 Many people want...）。'
+            },
+            {
+              id: 'w1_q5', type: 'rewrite',
+              instruction: '抓蟲改錯：修正 happen 的動詞用法與時態',
+              original: 'Yesterday, a big earthquake was happen in eastern Taiwan.',
+              hint: 'happen（發生）沒有被動語態，也不能配 was + 原形，請直接改過去式！',
+              modelAnswer: 'Yesterday, a big earthquake happened in eastern Taiwan.',
+              acceptedAnswers: [
+                'Yesterday, a big earthquake happened in eastern Taiwan.',
+                'A big earthquake happened in eastern Taiwan yesterday.'
+              ],
+              explanation: 'happen 是不及物動詞，絕不加 Be 動詞，看到 Yesterday 直接改成過去式 happened。'
+            },
+            {
+              id: 'w1_q6', type: 'rewrite',
+              instruction: '抓蟲改錯：把中式 Have 改成正確的存在句',
+              original: 'In this restaurant, have delicious beef noodles and dumplings.',
+              hint: '主詞是複數（beef noodles and dumplings），請用 There are！',
+              modelAnswer: 'There are delicious beef noodles and dumplings in this restaurant.',
+              acceptedAnswers: [
+                'There are delicious beef noodles and dumplings in this restaurant.',
+                'In this restaurant, there are delicious beef noodles and dumplings.'
+              ],
+              explanation: '「餐廳裡有美食」表存在，須改用 There are（或以餐廳當主詞：This restaurant serves/has...）。'
+            }
+          ]
+        },
+
+        /* ==================== 第 2 週 ==================== */
+        {
+          id: 'week2',
+          weekNum: 2,
+          tabLabel: '第 2 週',
+          title: '搶救「神隱主詞」與「邏輯錯置主詞」',
+          subtitle: '杜絕缺主詞的斷頭句，並學會用 allows / helps 與虛主詞 It 讓主詞與動詞邏輯一致。',
+          diagnosisPoints: [
+            '<strong>神隱主詞（斷頭句）</strong>：受中文習慣影響常省略主詞（如 need live in the car、Feeling very happy），但英文除祈使句外皆須明確主詞。',
+            '<strong>主詞與動作搭不起來</strong>：中文常把「事」放開頭接「人的動作」（如 Going to the beach can see views），但「去海邊」本身沒有眼睛。',
+            '<strong>形容詞誤配「人」當主詞</strong>：把形容事物的 convenient、important 等字直接寫成 I am convenient。'
+          ],
+          tips: [
+            '<strong>主詞體檢公式</strong>：問自己「主詞真的能做這個動詞嗎？」若不行，立刻套用萬用橋樑：<code>V-ing + allows / helps + 人 + to V</code>。',
+            '<strong>虛主詞 It 救援法</strong>：遇到 convenient, important, necessary, possible，一律用 <code>It is + adj. + (for 人) + to V</code>。'
+          ],
+          comparisons: [
+            { type: '省略主詞', wrong: 'Because there are no hotels, <b>need</b> to sleep in the car.', right: 'Since there are no hotels, <b>travelers need</b> to stay in the camper.' },
+            { type: '缺主詞與動詞', wrong: '<b>Feeling</b> very happy.', right: '<b>I will feel</b> very happy.（或 I believe I will have a great time.）' },
+            { type: '事接人動作', wrong: '<b>Going to the beach can see</b> beautiful views.', right: '<b>Going to the beach allows me to enjoy</b> the beautiful scenery.' },
+            { type: '事接人動作', wrong: '<b>Listening to music can relax</b> my stress.', right: '<b>Listening to music helps me relieve</b> stress.' },
+            { type: '方便誤配人', wrong: '<b>I am</b> very <b>convenient</b> to take the MRT.', right: '<b>It is</b> very <b>convenient for me</b> to take the MRT.' },
+            { type: '原形當主詞', wrong: '<b>Play</b> basketball is my favorite hobby.', right: '<b>Playing</b> basketball is my favorite hobby.' }
+          ],
+          exercises: [
+            {
+              id: 'w2_q1', type: 'rewrite',
+              instruction: '主詞手術：讓「讀英文小說」與「學習新單字」邏輯通順',
+              original: 'Reading English novels can learn many new words.',
+              hint: '小說不會自己「學」單字，請用 allows me to learn 或 helps me (to) learn。',
+              modelAnswer: 'Reading English novels allows me to learn many new words.',
+              acceptedAnswers: [
+                'Reading English novels allows me to learn many new words.',
+                'Reading English novels helps me to learn many new words.',
+                'Reading English novels helps me learn many new words.',
+                'Reading English novels allows us to learn many new words.',
+                'Reading English novels helps us learn many new words.',
+                'By reading English novels, I can learn many new words.'
+              ],
+              explanation: '主詞 Reading English novels 是「一件事」，不能直接做 learn 的動作，加上 allows/helps me to 連接人的動作最自然。'
+            },
+            {
+              id: 'w2_q2', type: 'rewrite',
+              instruction: '主詞手術：修正 convenient 的主詞用法',
+              original: 'If you live near the station, you will be very convenient.',
+              hint: '不能說 you will be convenient，請改用虛主詞 it will be very convenient for you。',
+              modelAnswer: 'If you live near the station, it will be very convenient for you.',
+              acceptedAnswers: [
+                'If you live near the station, it will be very convenient for you.',
+                'If you live near the station, it will be very convenient.'
+              ],
+              explanation: 'convenient 只能形容「事情、地點或情況」，不能拿「人」當主詞，須使用虛主詞 It。'
+            },
+            {
+              id: 'w2_q3', type: 'rewrite',
+              instruction: '主詞手術：修正「原形動詞當主詞」的錯誤',
+              original: 'Exercise every day is good for our health.',
+              hint: '把句首動詞 Exercise 改成動名詞（V-ing）或不定詞（To V）當主詞。',
+              modelAnswer: 'Exercising every day is good for our health.',
+              acceptedAnswers: [
+                'Exercising every day is good for our health.',
+                'To exercise every day is good for our health.'
+              ],
+              explanation: '英文原形動詞不可直接當主詞，必須加上 -ing 變成動名詞 Exercising。'
+            },
+            {
+              id: 'w2_q4', type: 'rewrite',
+              instruction: '中翻英（注意補上隱形主詞）：「因為下大雨，決定待在家裡。」',
+              original: '提示：下大雨用 it rained heavily，記得補上「我」決定待在家！',
+              hint: 'Because it rained heavily, I decided to stay home.',
+              modelAnswer: 'Because it rained heavily, I decided to stay home.',
+              acceptedAnswers: [
+                'Because it rained heavily, I decided to stay home.',
+                'Because it rained heavily, I decided to stay at home.',
+                'Since it rained heavily, I decided to stay home.',
+                'Since it rained heavily, I decided to stay at home.',
+                'Because of the heavy rain, I decided to stay home.',
+                'Because of the heavy rain, I decided to stay at home.'
+              ],
+              explanation: '中文常省略「天氣主詞 it」與「人的主詞 I」，翻成英文時兩個主詞都必須補齊。'
+            },
+            {
+              id: 'w2_q5', type: 'rewrite',
+              instruction: '中翻英（套用 allows me to...）：「參加社團活動可以讓我交到很多新朋友。」',
+              original: '提示：參加社團活動可用 Joining club activities',
+              hint: 'Joining club activities allows me to make many new friends.',
+              modelAnswer: 'Joining club activities allows me to make many new friends.',
+              acceptedAnswers: [
+                'Joining club activities allows me to make many new friends.',
+                'Joining club activities helps me to make many new friends.',
+                'Joining club activities helps me make many new friends.',
+                'Participating in club activities allows me to make many new friends.'
+              ],
+              explanation: '先以動名詞片語 Joining club activities 當主詞，再用 allows me to make... 帶出人的動作，句型既道地又有高分感。'
+            }
+          ]
+        },
+
+        /* ==================== 第 3 週 ==================== */
+        {
+          id: 'week3',
+          weekNum: 3,
+          tabLabel: '第 3 週',
+          title: '馴服「修飾語順序、關係子句與情緒形容詞」',
+          subtitle: '戒掉頭重腳輕的中式語序，搞懂「先講人再加 who」、「地在前時在後」以及 -ed / -ing 差異。',
+          diagnosisPoints: [
+            '<strong>頭重腳輕的修飾語</strong>：把長串形容語塞在名詞前面（如 suitable for like going to the beach people），英文習慣「先講核心名詞，再用 who / which 往後延伸」。',
+            '<strong>時間地點與副詞放錯位置</strong>：把時間地點塞在動詞前面（I yesterday at the park met him），或用 very 直接修飾動詞（very like）。',
+            '<strong>-ed 與 -ing 形容詞大混淆</strong>：把「感到無聊 (bored)」誤寫成「令人無聊 (boring)」。'
+          ],
+          tips: [
+            '<strong>「人＋who＋動作」公式</strong>：遇到「……的人」，立刻寫 <code>people who + 動詞</code>。',
+            '<strong>地點先、時間後</strong>：先講完「誰做什麼事」，最後補上「方式 → 地點 → 時間」。',
+            '<strong>-ed 表感受，-ing 表特質</strong>：人感到……用 <code>-ed</code>（interested, excited, bored）；事物令人……用 <code>-ing</code>（interesting, exciting, boring）。'
+          ],
+          comparisons: [
+            { type: '修飾人的語序', wrong: 'Suitable for <b>like going to the beach people</b>.', right: 'Suitable for <b>people who enjoy going to the beach</b>.' },
+            { type: 'very 修飾動詞', wrong: 'Some people <b>very like</b> traveling.', right: 'Some people <b>really like</b> traveling.（或 enjoy traveling）' },
+            { type: '副詞位置', wrong: 'We do not need <b>early find</b> a hotel.', right: 'We do not need <b>to find</b> a hotel <b>in advance</b>.' },
+            { type: '時間地點順序', wrong: 'I <b>yesterday at the park</b> met my teacher.', right: 'I met my teacher <b>at the park yesterday</b>.' },
+            { type: '-ed / -ing 混淆', wrong: 'I felt very <b>boring</b> during the speech.', right: 'I felt very <b>bored</b> during the speech.' },
+            { type: '-ed / -ing 混淆', wrong: 'The movie was very <b>excited</b>.', right: 'The movie was very <b>exciting</b>.' }
+          ],
+          exercises: [
+            {
+              id: 'w3_q1', type: 'unscramble',
+              instruction: '點擊詞塊重組句子（記住口訣：動作＋受詞＋對象＋地點＋時間）',
+              tiles: ['saw', 'I', 'last night', 'a great movie', 'with my friends', 'at the theater'],
+              modelAnswer: 'I saw a great movie with my friends at the theater last night.',
+              acceptedAnswers: [
+                'I saw a great movie with my friends at the theater last night.',
+                'I saw a great movie at the theater with my friends last night.'
+              ],
+              explanation: '英文先把核心動作說完（I saw a great movie），再依序加上對象（with my friends）、地點（at the theater）與時間（last night）。'
+            },
+            {
+              id: 'w3_q2', type: 'rewrite',
+              instruction: '語序大改造：先把核心名詞 hotel 擺前面，再用關代 who 往後延伸',
+              original: 'This is a suitable for very like nature people hotel.',
+              hint: 'This is a hotel suitable for people who really like nature.',
+              modelAnswer: 'This is a hotel suitable for people who really like nature.',
+              acceptedAnswers: [
+                'This is a hotel suitable for people who really like nature.',
+                'This is a hotel suitable for people who love nature.',
+                'This is a hotel suitable for people who enjoy nature.',
+                'This hotel is suitable for people who really like nature.'
+              ],
+              explanation: '核心名詞 hotel 必須先講，後面接著修飾語 suitable for people who really like nature，同時修正 very like。'
+            },
+            {
+              id: 'w3_q3', type: 'dual-select',
+              instruction: '選出正確的情緒形容詞（-ed 表人的感受，-ing 表事物特質）',
+              parts: ['I am very ', ' in learning Japanese because the culture is very ', '.'],
+              selects: [
+                { options: ['interested', 'interesting'], answer: 'interested' },
+                { options: ['interested', 'interesting'], answer: 'interesting' }
+              ],
+              modelAnswer: 'I am very interested in learning Japanese because the culture is very interesting.',
+              explanation: '第一格主詞是人（I），表示「感到有興趣」用 interested；第二格主詞是文化（the culture），表示「令人覺得有趣」用 interesting。'
+            },
+            {
+              id: 'w3_q4', type: 'rewrite',
+              instruction: '改錯：修正「very 修飾動詞」的經典中式錯誤',
+              original: 'He very hates getting up early in the morning.',
+              hint: '把 very 改成 really。',
+              modelAnswer: 'He really hates getting up early in the morning.',
+              acceptedAnswers: ['He really hates getting up early in the morning.'],
+              explanation: 'very 只能修飾形容詞或副詞，不可直接修飾一般動詞（like / hate / enjoy），應改用 really。'
+            },
+            {
+              id: 'w3_q5', type: 'rewrite',
+              instruction: '中翻英（運用 people who...）：「這部電影非常適合喜歡冒險（adventure）的年輕人。」',
+              original: '提示：適合用 is very suitable for，年輕人用 young people',
+              hint: 'This movie is very suitable for young people who love adventure.',
+              modelAnswer: 'This movie is very suitable for young people who love adventure.',
+              acceptedAnswers: [
+                'This movie is very suitable for young people who love adventure.',
+                'This movie is very suitable for young people who like adventure.',
+                'This movie is very suitable for young people who enjoy adventure.',
+                'This movie is suitable for young people who love adventure.'
+              ],
+              explanation: '先寫 young people，再用關係子句 who love adventure 補充修飾，結構乾淨俐落。'
+            }
+          ]
+        },
+
+        /* ==================== 第 4 週 ==================== */
+        {
+          id: 'week4',
+          weekNum: 4,
+          tabLabel: '第 4 週',
+          title: '拆解「連接詞、介系詞與標點符號地雷」',
+          subtitle: '分清楚 Because vs. Because of，戒掉「因為…所以…」雙胞胎、多餘介系詞與逗號拼接。',
+          diagnosisPoints: [
+            '<strong>介系詞片語誤接句子</strong>：Because of、Due to、Despite 後面只能接名詞，不能接完整句子。',
+            '<strong>連接詞雙胞胎</strong>：英文不可同時出現 Because... so... 或 Although... but...，二選一即可。',
+            '<strong>介系詞亂加或漏掉</strong>：在 last year 前多加 in、在 discuss 後多加 about；或在 play water 漏掉 in the。',
+            '<strong>逗號拼接（Comma Splice）</strong>：英文不能只用一個逗號連接兩句完整的獨立句子。'
+          ],
+          tips: [
+            '<strong>接句子 vs. 接名詞</strong>：接句子用 <code>Because / Since / Although</code>；接名詞用 <code>Because of / Due to / Despite</code>。',
+            '<strong>時間「三不加」</strong>：看到 <code>this / that / next / last / every</code> 開頭的時間詞，前面一律不加 in / on / at。',
+            '<strong>五大免介系詞動詞</strong>：<code>discuss, marry, enter, emphasize, contact</code> 後面直接接受詞！'
+          ],
+          comparisons: [
+            { type: 'Because of + 句子', wrong: '<b>Because of</b> there are no hotels, we stay in the car.', right: '<b>Because / Since</b> there are no hotels, we stay in the camper.' },
+            { type: '連接詞雙胞胎', wrong: '<b>Because</b> I was tired, <b>so</b> I went to bed early.', right: '<b>Because</b> I was tired, I went to bed early.' },
+            { type: '連接詞雙胞胎', wrong: '<b>Although</b> it rained heavily, <b>but</b> we still went out.', right: '<b>Although</b> it rained heavily, we still went out.' },
+            { type: '時間多加介系詞', wrong: 'I went to Hualien <b>in last year</b>.', right: 'I went to Hualien <b>last year</b>.' },
+            { type: '及物動詞多介系詞', wrong: 'Let\'s <b>discuss about</b> the plan. / He <b>married with</b> her.', right: 'Let\'s <b>discuss</b> the plan. / He <b>married</b> her.' },
+            { type: '不及物漏介系詞', wrong: 'I like to <b>play water</b> and <b>listen music</b>.', right: 'I like to <b>play in the water</b> and <b>listen to music</b>.' },
+            { type: '逗號拼接錯誤', wrong: 'I love summer<b>,</b> I can go swimming.', right: 'I love summer <b>because</b> I can go swimming.（或改句號）' }
+          ],
+          exercises: [
+            {
+              id: 'w4_q1', type: 'choice',
+              instruction: '選出正確的字詞（判斷後面是「名詞片語」還是「完整句子」）：',
+              original: '________ the heavy rain, the outdoor concert was canceled.',
+              options: ['Because', 'Because of'],
+              answer: 'Because of',
+              explanation: 'the heavy rain（大雨）是名詞片語，沒有動詞，因此必須選介系詞片語 Because of。'
+            },
+            {
+              id: 'w4_q2', type: 'choice',
+              instruction: '選出正確的字詞（判斷後面是「名詞片語」還是「完整句子」）：',
+              original: '________ he studied very hard, he didn\'t pass the exam.',
+              options: ['Despite', 'Although'],
+              answer: 'Although',
+              explanation: 'he studied very hard 有主詞 he 與動詞 studied，是完整子句，因此必須選連接詞 Although。'
+            },
+            {
+              id: 'w4_q3', type: 'rewrite',
+              instruction: '改錯：拆散「雖然…但是…」連接詞雙胞胎',
+              original: 'Although the hotel is expensive, but the service is amazing.',
+              hint: 'Although 和 but 只能留一個！',
+              modelAnswer: 'Although the hotel is expensive, the service is amazing.',
+              acceptedAnswers: [
+                'Although the hotel is expensive, the service is amazing.',
+                'The hotel is expensive, but the service is amazing.'
+              ],
+              explanation: '英文中 Although 與 but 絕不可同時出現在同一句，保留其一即可。'
+            },
+            {
+              id: 'w4_q4', type: 'rewrite',
+              instruction: '改錯：刪去兩個多餘的介系詞',
+              original: 'We will discuss about our travel itinerary on next Monday.',
+              hint: 'discuss 後不加 about；next Monday 前不加 on。',
+              modelAnswer: 'We will discuss our travel itinerary next Monday.',
+              acceptedAnswers: ['We will discuss our travel itinerary next Monday.'],
+              explanation: 'discuss 是及物動詞，直接接受詞不加 about；next Monday 前有 next，不加介系詞 on。'
+            },
+            {
+              id: 'w4_q5', type: 'rewrite',
+              instruction: '改錯：修正「逗號拼接（Comma Splice）」錯誤',
+              original: 'I want to go to Kenting, the beaches there are stunning.',
+              hint: '把逗號改成連接詞 because（或 since），或改成句號分成兩句。',
+              modelAnswer: 'I want to go to Kenting because the beaches there are stunning.',
+              acceptedAnswers: [
+                'I want to go to Kenting because the beaches there are stunning.',
+                'I want to go to Kenting since the beaches there are stunning.',
+                'I want to go to Kenting. The beaches there are stunning.',
+                'I want to go to Kenting; the beaches there are stunning.'
+              ],
+              explanation: '兩個完整句子不能只用逗號相連，可加入連接詞 because 展現因果關係，或改為句號／分號。'
+            },
+            {
+              id: 'w4_q6', type: 'rewrite',
+              instruction: '改錯：補上兩個遺漏的必要介系詞',
+              original: 'She listens music while she waits her friends.',
+              hint: '「聽音樂」是 listen to music，「等朋友」是 wait for her friends。',
+              modelAnswer: 'She listens to music while she waits for her friends.',
+              acceptedAnswers: ['She listens to music while she waits for her friends.'],
+              explanation: 'listen 與 wait 都是不及物動詞，後面要接受詞時必須分別加上介系詞 to 與 for。'
+            }
+          ]
+        },
+
+        /* ==================== 第 5 週 ==================== */
+        {
+          id: 'week5',
+          weekNum: 5,
+          tabLabel: '第 5 週',
+          title: '戒斷「中式逐字直譯」：20 大高頻搭配詞',
+          subtitle: '文法正確還不夠，記住天生一對的「搭配詞（Collocations）」，文章立刻散發道地英文味。',
+          diagnosisPoints: [
+            '<strong>動詞與名詞亂湊</strong>：把「吃藥」翻成 eat medicine、「關門」寫成 turn off the door、「學知識」寫成 learn knowledge。',
+            '<strong>形容詞照中文直譯</strong>：把「大雨」寫成 big rain、「價格很貴」寫成 the price is expensive、「交通擁擠」寫成 crowded traffic。'
+          ],
+          tips: [
+            '<strong>背單字要「買一送一」</strong>：別只背 knowledge，直接背 <code>gain knowledge</code>；別只背 habit，直接背 <code>develop a habit</code>。',
+            '<strong>活用下方「測驗遮罩模式」</strong>：點開開關隱藏道地英文欄，自己先在腦中唸出答案，再點擊該列揭曉！'
+          ],
+          collocationGroups: [
+            {
+              groupTitle: 'A. 日常生活動作類（8 組）',
+              items: [
+                { type: '關門／開門', wrong: 'turn off / open the door', right: '<b>close / open</b> the door' },
+                { type: '開燈／關燈', wrong: 'open / close the light', right: '<b>turn on / turn off</b> the light' },
+                { type: '吃藥', wrong: 'eat medicine', right: '<b>take</b> medicine' },
+                { type: '看電影／看電視', wrong: 'see a movie / see TV', right: '<b>watch</b> a movie / TV（去戲院才用 see a movie）' },
+                { type: '看書／看報紙', wrong: 'see a book / look at a newspaper', right: '<b>read</b> a book / a newspaper' },
+                { type: '玩電腦／滑手機', wrong: 'play computer / slide the phone', right: '<b>use</b> the computer / <b>scroll through</b> one\'s phone' },
+                { type: '住在飯店／露營車（短住）', wrong: 'live in a hotel / car', right: '<b>stay in / at</b> a hotel / camper' },
+                { type: '買東西（購物）', wrong: 'buy things', right: '<b>go shopping</b> / <b>do some shopping</b>' }
+              ]
+            },
+            {
+              groupTitle: 'B. 學測寫作與形容詞高頻類（12 組）',
+              items: [
+                { type: '露營車', wrong: 'camp car', right: '<b>camper</b> / <b>camper van</b> / <b>RV</b>' },
+                { type: '偏遠地區', wrong: 'a far place', right: '<b>a remote area</b>' },
+                { type: '學習知識', wrong: 'learn knowledge', right: '<b>gain / acquire</b> knowledge' },
+                { type: '增廣見聞／開眼界', wrong: 'open my eyes', right: '<b>broaden my horizons</b>' },
+                { type: '養成習慣', wrong: 'build / make a habit', right: '<b>develop / form</b> a habit' },
+                { type: '下大雨', wrong: 'big rain', right: '<b>heavy</b> rain（小雨是 <b>light</b> rain）' },
+                { type: '交通擁擠', wrong: 'crowded traffic', right: '<b>heavy</b> traffic / a <b>traffic jam</b>' },
+                { type: '價格很貴／便宜', wrong: 'the price is expensive / cheap', right: 'the price is <b>high / low</b>（物品本身才說 expensive）' },
+                { type: '人口很多', wrong: 'the population is many', right: 'the population is <b>large</b>' },
+                { type: '讓我非常開心', wrong: 'make me very happy', right: '<b>bring me great joy</b> / <b>make my day</b>' },
+                { type: '幫我一個忙', wrong: 'help me a favor', right: '<b>do</b> me a favor' },
+                { type: '發生一件事', wrong: 'happen a thing', right: '<b>something happened</b>（事當主詞，無被動）' }
+              ]
+            }
+          ],
+          exercises: [
+            {
+              id: 'w5_q1', type: 'fill-blanks',
+              instruction: '填入最道地的搭配詞（注意時態與詞形）',
+              parts: ['You look sick. Did you ', ' your medicine this morning?'],
+              blanks: [{ cue: '吃藥', accepted: ['take'] }],
+              modelAnswer: 'take',
+              explanation: '「吃藥」英文固定搭配 take medicine，且助動詞 Did 後面用原形動詞 take。'
+            },
+            {
+              id: 'w5_q2', type: 'fill-blanks',
+              instruction: '填入最道地的搭配詞',
+              parts: ['Because of the ', ' traffic, I was late for school.'],
+              blanks: [{ cue: '擁擠的', accepted: ['heavy'] }],
+              modelAnswer: 'heavy',
+              explanation: '形容交通擁擠或車流量大，道地搭配為 heavy traffic（不用 crowded traffic）。'
+            },
+            {
+              id: 'w5_q3', type: 'fill-blanks',
+              instruction: '填入最道地的學測高頻搭配詞',
+              parts: ['Traveling to different countries can ', ' our horizons and help us ', ' new knowledge.'],
+              blanks: [
+                { cue: '增廣(見聞)', accepted: ['broaden', 'expand'] },
+                { cue: '獲得(知識)', accepted: ['gain', 'acquire'] }
+              ],
+              modelAnswer: 'broaden / gain（或 acquire）',
+              explanation: '「增廣見聞」用 broaden one\'s horizons；「獲得知識」用 gain / acquire knowledge（不用 learn knowledge）。'
+            },
+            {
+              id: 'w5_q4', type: 'fill-blanks',
+              instruction: '填入最道地的搭配詞',
+              parts: ['The price of this hotel room is too ', ', so we decided to ', ' in a hostel instead.'],
+              blanks: [
+                { cue: '貴(價格高)', accepted: ['high'] },
+                { cue: '短住', accepted: ['stay'] }
+              ],
+              modelAnswer: 'high / stay',
+              explanation: '主詞是 The price（價格）時要用 high / low（不能說 price is expensive）；旅遊短住用 stay（不用 live）。'
+            },
+            {
+              id: 'w5_q5', type: 'fill-blanks',
+              instruction: '填入最道地的搭配詞',
+              parts: ['We couldn\'t go hiking yesterday because of the ', ' rain.'],
+              blanks: [{ cue: '大雨', accepted: ['heavy'] }],
+              modelAnswer: 'heavy',
+              explanation: '「大雨」固定搭配為 heavy rain（小雨是 light rain），切勿直譯為 big rain。'
+            },
+            {
+              id: 'w5_q6', type: 'fill-blanks',
+              instruction: '填入最道地的動作搭配詞',
+              parts: ['Remember to ', ' the lights and ', ' the door before you leave the classroom.'],
+              blanks: [
+                { cue: '關燈', accepted: ['turn off', 'switch off'] },
+                { cue: '關門', accepted: ['close', 'shut'] }
+              ],
+              modelAnswer: 'turn off / close',
+              explanation: '電器開關用 turn on / turn off；門窗開關用 open / close，兩者別搞混囉！'
+            }
+          ]
+        },
+
+        /* ==================== 第 6 週 ==================== */
+        {
+          id: 'week6',
+          weekNum: 6,
+          tabLabel: '第 6 週',
+          title: '實戰「作文自檢 SOP」與綜合大考驗',
+          subtitle: '養成交卷前 60 秒雷達掃描習慣，並一口氣找出藏在短文中的 12 處經典中式地雷！',
+          sopChecklist: [
+            { id: 'sop1', title: '1. 動詞雷達', desc: '有沒有任何一句出現「Be 動詞 + 原形動詞」？有沒有用 Have 開頭講「某處有」？' },
+            { id: 'sop2', title: '2. 主詞雷達', desc: '有沒有少了主詞的斷頭句？主詞真的有能力做出後面的動詞嗎？' },
+            { id: 'sop3', title: '3. 連接詞雷達', desc: '有沒有誤寫 Because... so...、Although... but...，或只用一個逗號拼接兩句話？' },
+            { id: 'sop4', title: '4. 時態雷達', desc: '講「過去的經驗」（如 last year, yesterday）時，動詞全都有變過去式嗎？' },
+            { id: 'sop5', title: '5. 單複數雷達', desc: '可數名詞單數（如 beach, hotel, camper）前面有加 a / the 或改複數嗎？' },
+            { id: 'sop6', title: '6. 直譯雷達', desc: '有沒有不小心冒出 very like、play water、in last year、big rain、price is expensive 等中式直譯？' }
+          ],
+          finalChallengeRaw: 'In last weekend, I am go to Kenting with my friends. Because the weather was very sunny, so we felt very exciting. Near the beach have many restaurants, we ate delicious seafood there. Going to the beach can play water and see the beautiful sunset. Although the price of the hotel was very expensive, but we still lived there for one night. I very like this trip, because it can open my eyes and relax my stress.',
+          finalChallengeAnnotatedHtml: '<span class="hl-err">In last weekend</span>, I <span class="hl-err">am go</span> to Kenting with my friends. <span class="hl-err">Because</span> the weather was very sunny, <span class="hl-err">so</span> we felt very <span class="hl-err">exciting</span>. <span class="hl-err">Near the beach have</span> many restaurants<span class="hl-err">,</span> we ate delicious seafood there. <span class="hl-err">Going to the beach can play water</span> and see the beautiful sunset. <span class="hl-err">Although</span> the price of the hotel was very <span class="hl-err">expensive</span>, <span class="hl-err">but</span> we still <span class="hl-err">lived</span> there for one night. I <span class="hl-err">very like</span> this trip, because it can <span class="hl-err">open my eyes</span> and <span class="hl-err">relax my stress</span>.',
+          finalChallengeRewrittenHtml: '<span class="hl-key">Last weekend</span>, I <span class="hl-key">went</span> to Kenting with my friends. <span class="hl-key">Because</span> the weather was very sunny, we felt very <span class="hl-key">excited</span>. <span class="hl-key">There were</span> many restaurants near the beach<span class="hl-key">, and</span> we ate delicious seafood there. <span class="hl-key">At the beach, we could play in the water</span> and <span class="hl-key">admire</span> the beautiful sunset. <span class="hl-key">Although</span> the price of the hotel was very <span class="hl-key">high</span>, we still <span class="hl-key">stayed</span> there for one night. I <span class="hl-key">really enjoyed</span> this trip because it helped me <span class="hl-key">broaden my horizons</span> and <span class="hl-key">relieve my stress</span>.',
+          exercises: [
+            {
+              id: 'w6_q1', type: 'rewrite',
+              instruction: '綜合大改造（第 1 句 / 共 6 句）—— 揪出 2 處錯誤：時間介系詞＋動詞時態',
+              original: 'In last weekend, I am go to Kenting with my friends.',
+              hint: 'last weekend 前不加 in；去掉 am 並把 go 改成過去式 went。',
+              modelAnswer: 'Last weekend, I went to Kenting with my friends.',
+              acceptedAnswers: [
+                'Last weekend, I went to Kenting with my friends.',
+                'I went to Kenting with my friends last weekend.'
+              ],
+              explanation: '地雷①：last weekend 前不加 in。地雷②：不可寫 am go，過去時間須用過去式 went。'
+            },
+            {
+              id: 'w6_q2', type: 'rewrite',
+              instruction: '綜合大改造（第 2 句 / 共 6 句）—— 揪出 2 處錯誤：連接詞雙胞胎＋情緒形容詞',
+              original: 'Because the weather was very sunny, so we felt very exciting.',
+              hint: 'Because 與 so 二選一；人「感到興奮」是 excited。',
+              modelAnswer: 'Because the weather was very sunny, we felt very excited.',
+              acceptedAnswers: [
+                'Because the weather was very sunny, we felt very excited.',
+                'The weather was very sunny, so we felt very excited.',
+                'Since the weather was very sunny, we felt very excited.'
+              ],
+              explanation: '地雷③：Because 與 so 不能並用。地雷④：描述人「感到興奮」須用 -ed 結尾的 excited。'
+            },
+            {
+              id: 'w6_q3', type: 'rewrite',
+              instruction: '綜合大改造（第 3 句 / 共 6 句）—— 揪出 2 處錯誤：Have 存在句＋逗號拼接',
+              original: 'Near the beach have many restaurants, we ate delicious seafood there.',
+              hint: '過去式存在句用 There were；兩個獨立句子間加上連接詞 and（或改句號）。',
+              modelAnswer: 'There were many restaurants near the beach, and we ate delicious seafood there.',
+              acceptedAnswers: [
+                'There were many restaurants near the beach, and we ate delicious seafood there.',
+                'There were many restaurants near the beach. We ate delicious seafood there.',
+                'Near the beach, there were many restaurants, and we ate delicious seafood there.'
+              ],
+              explanation: '地雷⑤：表達「海邊附近有很多餐廳」須用過去式 There were。地雷⑥：兩句不可只用逗號隔開，需補上 and 或改句號。'
+            },
+            {
+              id: 'w6_q4', type: 'rewrite',
+              instruction: '綜合大改造（第 4 句 / 共 6 句）—— 揪出 2 處錯誤：主詞錯置＋玩水介系詞（注意過去式）',
+              original: 'Going to the beach can play water and see the beautiful sunset.',
+              hint: '用 At the beach, we could... 或 Going to the beach allowed us to...，且「玩水」是 play in the water。',
+              modelAnswer: 'At the beach, we could play in the water and admire the beautiful sunset.',
+              acceptedAnswers: [
+                'At the beach, we could play in the water and admire the beautiful sunset.',
+                'At the beach, we could play in the water and see the beautiful sunset.',
+                'At the beach, we could play in the water and watch the beautiful sunset.',
+                'Going to the beach allowed us to play in the water and admire the beautiful sunset.',
+                'Going to the beach allowed us to play in the water and see the beautiful sunset.'
+              ],
+              explanation: '地雷⑦：去海邊不會自己玩水，改以人（we）當主詞或用 allowed us to。地雷⑧：玩水必加介系詞 play in the water；搭配 admire/watch 夕陽更自然。'
+            },
+            {
+              id: 'w6_q5', type: 'rewrite',
+              instruction: '綜合大改造（第 5 句 / 共 6 句）—— 揪出 3 處錯誤：連接詞雙胞胎＋價格搭配＋短住動詞',
+              original: 'Although the price of the hotel was very expensive, but we still lived there for one night.',
+              hint: '刪掉 but；price 搭配 high；飯店短住用 stayed。',
+              modelAnswer: 'Although the price of the hotel was very high, we still stayed there for one night.',
+              acceptedAnswers: [
+                'Although the price of the hotel was very high, we still stayed there for one night.',
+                'The price of the hotel was very high, but we still stayed there for one night.',
+                'Although the hotel was very expensive, we still stayed there for one night.'
+              ],
+              explanation: '地雷⑨：Although 與 but 擇一。地雷⑩：price 搭配 high（或改寫成 the hotel was expensive）。地雷⑪：住飯店一晚用 stayed（非 lived）。'
+            },
+            {
+              id: 'w6_q6', type: 'rewrite',
+              instruction: '綜合大改造（第 6 句 / 共 6 句）—— 揪出 3 處錯誤：very like＋中式直譯搭配詞',
+              original: 'I very like this trip, because it can open my eyes and relax my stress.',
+              hint: '改用 really liked / really enjoyed；「開眼界」用 broaden my horizons，「紓壓」用 relieve my stress。',
+              modelAnswer: 'I really enjoyed this trip because it helped me broaden my horizons and relieve my stress.',
+              acceptedAnswers: [
+                'I really enjoyed this trip because it helped me broaden my horizons and relieve my stress.',
+                'I really liked this trip because it helped me broaden my horizons and relieve my stress.',
+                'I really enjoyed this trip because it broadened my horizons and relieved my stress.',
+                'I really liked this trip because it broadened my horizons and relieved my stress.',
+                'I really enjoyed this trip because it could broaden my horizons and relieve my stress.'
+              ],
+              explanation: '地雷⑫：very like 改為 really enjoyed / liked（過去式）；「開眼界」升級 broaden my horizons，「紓解壓力」用 relieve my stress，且 because 前不加逗號。'
+            }
+          ]
+        }
+      ]
+    };
+
+    /* ==========================================================================
+       狀態管理與 LocalStorage 持久化（含完整錯誤處理，避免沙盒環境報錯）
+       ========================================================================== */
+    const STORAGE_KEY = 'chinglish_rescue_workbook_v1';
+
+    const DEFAULT_STATE = {
+      activeTab: 'diagnosis',
+      fontSize: 'md',          // 'sm' | 'md' | 'lg'
+      reviewedSentences: [],   // 已點開檢視的句號陣列 [1, 2, ...]
+      completedExercises: [],  // 已完成的練習題 ID 陣列
+      sopChecked: [],          // 第六週已勾選的自檢表 ID
+      collocationMask: false,  // 第五週遮罩模式
+      showFullCompare: false,  // 原文診斷室是否展開對照高分版
+      showFinalBossCompare: false
+    };
+
+    let appState = loadState();
+
+    function loadState() {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { ...DEFAULT_STATE };
+        const parsed = JSON.parse(raw);
+        return {
+          ...DEFAULT_STATE,
+          ...parsed,
+          reviewedSentences: Array.isArray(parsed.reviewedSentences) ? parsed.reviewedSentences : [],
+          completedExercises: Array.isArray(parsed.completedExercises) ? parsed.completedExercises : [],
+          sopChecked: Array.isArray(parsed.sopChecked) ? parsed.sopChecked : []
+        };
+      } catch (err) {
+        return { ...DEFAULT_STATE };
+      }
+    }
+
+    function saveState() {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (err) {
+        // 若瀏覽器停用 localStorage，靜默降級為記憶體狀態
+      }
+    }
+
+    /* ==========================================================================
+       工具函式：文字正規化比對、字級切換、總進度計算
+       ========================================================================== */
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // 寬容比對使用者輸入的英文句子（忽略大小寫、多餘空白、句尾標點、彎引號與可選逗號差異）
+    function normalizeText(str, ignoreCommas = false) {
+      let s = String(str || '')
+        .replace(/[’‘]/g, "'")
+        .replace(/[“”]/g, '"')
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/\s+([.,!?;:])/g, '$1')
+        .replace(/[.!?]+$/, '')
+        .toLowerCase();
+      if (ignoreCommas) {
+        s = s.replace(/,/g, '');
+      }
+      return s;
+    }
+
+    function isAnswerMatch(userInput, acceptedList) {
+      const normStrict = normalizeText(userInput, false);
+      const normLoose = normalizeText(userInput, true);
+      if (!normStrict) return false;
+      return acceptedList.some((ans) => {
+        return normalizeText(ans, false) === normStrict || normalizeText(ans, true) === normLoose;
+      });
+    }
+
+    function getAllExerciseIds() {
+      const ids = [];
+      COURSE_DATA.weeks.forEach((w) => {
+        w.exercises.forEach((ex) => ids.push(ex.id));
+      });
+      return ids;
+    }
+
+    function markExerciseDone(exId) {
+      if (!appState.completedExercises.includes(exId)) {
+        appState.completedExercises.push(exId);
+        saveState();
+        updateProgressUI();
+        renderTabNav();
+      }
+    }
+
+    function applyFontSize(sizeKey) {
+      const map = { sm: '14.5px', md: '16px', lg: '18.5px' };
+      const px = map[sizeKey] || '16px';
+      document.documentElement.style.setProperty('--font-size-base', px);
+      appState.fontSize = sizeKey;
+      saveState();
+
+      document.querySelectorAll('.font-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.size === sizeKey);
+      });
+    }
+
+    function updateProgressUI() {
+      const allIds = getAllExerciseIds();
+      const total = allIds.length;
+      const doneCount = allIds.filter((id) => appState.completedExercises.includes(id)).length;
+      const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+      const textEl = document.getElementById('progressText');
+      const barEl = document.getElementById('progressBar');
+      const pctEl = document.getElementById('progressPercent');
+      if (textEl) textEl.textContent = `已完成練習 ${doneCount} / ${total} 題`;
+      if (barEl) barEl.style.width = `${pct}%`;
+      if (pctEl) pctEl.textContent = `${pct}%`;
+    }
+
+    /* ==========================================================================
+       導覽列渲染
+       ========================================================================== */
+    function getTabsMeta() {
+      const tabs = [
+        {
+          id: 'diagnosis',
+          label: COURSE_DATA.diagnosis.tabLabel,
+          done: appState.reviewedSentences.length,
+          total: COURSE_DATA.diagnosis.sentences.length,
+          isComplete: appState.reviewedSentences.length >= COURSE_DATA.diagnosis.sentences.length
+        }
+      ];
+      COURSE_DATA.weeks.forEach((w) => {
+        const done = w.exercises.filter((ex) => appState.completedExercises.includes(ex.id)).length;
+        const total = w.exercises.length;
+        tabs.push({
+          id: w.id,
+          label: w.tabLabel,
+          done,
+          total,
+          isComplete: done === total && total > 0
+        });
+      });
+      return tabs;
+    }
+
+    function renderTabNav() {
+      const nav = document.getElementById('tabNav');
+      const tabs = getTabsMeta();
+      nav.innerHTML = tabs.map((t) => `
+        <button
+          type="button"
+          class="tab-pill ${appState.activeTab === t.id ? 'active' : ''} ${t.isComplete ? 'completed' : ''}"
+          data-tab="${t.id}"
+          aria-current="${appState.activeTab === t.id ? 'page' : 'false'}"
+        >
+          <span>${t.label}</span>
+          <span class="tab-badge">${t.isComplete ? '✓' : `${t.done}/${t.total}`}</span>
+        </button>
+      `).join('');
+
+      nav.querySelectorAll('.tab-pill').forEach((btn) => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+    }
+
+    function switchTab(tabId) {
+      appState.activeTab = tabId;
+      saveState();
+      renderTabNav();
+      renderMain();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ==========================================================================
+       主視圖路由渲染
+       ========================================================================== */
+    function renderMain() {
+      const container = document.getElementById('mainContent');
+      if (appState.activeTab === 'diagnosis') {
+        renderDiagnosisView(container);
+      } else {
+        const weekData = COURSE_DATA.weeks.find((w) => w.id === appState.activeTab) || COURSE_DATA.weeks[0];
+        renderWeekView(container, weekData);
+      }
+    }
+
+    /* ==========================================================================
+       視圖 A：原文診斷室（Tab 0）
+       ========================================================================== */
+    function renderDiagnosisView(container) {
+      const data = COURSE_DATA.diagnosis;
+      const p1 = data.sentences.filter((s) => s.paragraph === 1);
+      const p2 = data.sentences.filter((s) => s.paragraph === 2);
+      const reviewedCount = appState.reviewedSentences.length;
+      const totalCount = data.sentences.length;
+
+      container.innerHTML = `
+        <!-- Hero 導引卡片 -->
+        <section class="card hero-card">
+          <span class="hero-eyebrow">${data.heroEyebrow}</span>
+          <h2 class="hero-title">${data.heroTitle}</h2>
+          <p class="hero-desc">${data.heroDesc}</p>
+        </section>
+
+        <!-- 區塊 A：完整原文檢視 -->
+        <div class="section-header">
+          <h3 class="section-title">完整原文檢視</h3>
+          <button type="button" class="btn btn-outline btn-sm" id="btnToggleFullCompare">
+            ${appState.showFullCompare ? '隱藏改寫版（只看原文）' : '對照完整高分改寫版'}
+          </button>
+        </div>
+
+        <section class="card">
+          <div class="essay-compare-grid ${appState.showFullCompare ? 'two-col' : ''}">
+            <div>
+              <span class="essay-label label-orig">學生原作（未修改原文）</span>
+              <div class="essay-box">
+                ${data.originalEssay.map((p) => `<p>${escapeHtml(p)}</p>`).join('')}
+              </div>
+            </div>
+            ${appState.showFullCompare ? `
+              <div>
+                <span class="essay-label label-good">高分改寫對照版（重點用字已標註）</span>
+                <div class="essay-box">
+                  ${data.rewrittenEssayHtml.map((p) => `<p>${p}</p>`).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </section>
+
+        <!-- 區塊 B：逐句思考與診斷 -->
+        <div class="section-header">
+          <h3 class="section-title">逐句思考與診斷 <span style="font-size:0.86rem;font-weight:600;color:var(--color-text-muted);">(已檢視 <span id="reviewedCounter">${reviewedCount}</span> / ${totalCount} 句)</span></h3>
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline btn-sm" id="btnExpandAllDiag">全部展開解析</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnCollapseAllDiag">全部隱藏</button>
+          </div>
+        </div>
+
+        <div class="paragraph-divider">第一段：圖片描述（句 1 – 9）</div>
+        <div id="diagGroup1">
+          ${p1.map((s) => renderDiagCardHtml(s)).join('')}
+        </div>
+
+        <div class="paragraph-divider">第二段：個人選擇與理由（句 10 – 16）</div>
+        <div id="diagGroup2">
+          ${p2.map((s) => renderDiagCardHtml(s)).join('')}
+        </div>
+
+        <!-- 區塊 C：完整改寫範文與亮點總結 -->
+        <div class="section-header">
+          <h3 class="section-title">完整高分改寫範文與亮點整理</h3>
+        </div>
+
+        <section class="card">
+          <span class="essay-label label-good">完整改寫範文（粗體色塊為值得背誦的高分表達）</span>
+          <div class="essay-box" style="margin-bottom: 1.1rem;">
+            ${data.rewrittenEssayHtml.map((p) => `<p>${p}</p>`).join('')}
+          </div>
+
+          <div class="callout callout-tip" style="margin-bottom: 1.25rem;">
+            <h3>三大改寫升級亮點</h3>
+            <ul>
+              ${data.revisionHighlights.map((h) => `<li><strong>${h.title}</strong>：${h.desc}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div style="text-align: center;">
+            <button type="button" class="btn btn-primary" id="btnStartSixWeeks">
+              準備好了！進入六週搶救計畫（第 1 週）→
+            </button>
+          </div>
+        </section>
+      `;
+
+      // 綁定原文對照切換
+      document.getElementById('btnToggleFullCompare').addEventListener('click', () => {
+        appState.showFullCompare = !appState.showFullCompare;
+        saveState();
+        renderDiagnosisView(container);
+      });
+
+      // 綁定單句展開／收合（預設全部隱藏）
+      container.querySelectorAll('.btn-toggle-diag').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('.diag-card');
+          const sentenceId = Number(card.dataset.id);
+          const willOpen = !card.classList.contains('is-open');
+          card.classList.toggle('is-open', willOpen);
+          btn.setAttribute('aria-expanded', String(willOpen));
+          btn.textContent = willOpen ? '隱藏修改與建議' : '查看修改與建議';
+
+          if (willOpen && !appState.reviewedSentences.includes(sentenceId)) {
+            appState.reviewedSentences.push(sentenceId);
+            card.classList.add('is-reviewed');
+            saveState();
+            const counter = document.getElementById('reviewedCounter');
+            if (counter) counter.textContent = appState.reviewedSentences.length;
+            renderTabNav();
+          }
+        });
+      });
+
+      // 全部展開／隱藏按鈕
+      document.getElementById('btnExpandAllDiag').addEventListener('click', () => {
+        container.querySelectorAll('.diag-card').forEach((card) => {
+          const sid = Number(card.dataset.id);
+          card.classList.add('is-open', 'is-reviewed');
+          const btn = card.querySelector('.btn-toggle-diag');
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'true');
+            btn.textContent = '隱藏修改與建議';
+          }
+          if (!appState.reviewedSentences.includes(sid)) {
+            appState.reviewedSentences.push(sid);
+          }
+        });
+        saveState();
+        const counter = document.getElementById('reviewedCounter');
+        if (counter) counter.textContent = appState.reviewedSentences.length;
+        renderTabNav();
+      });
+
+      document.getElementById('btnCollapseAllDiag').addEventListener('click', () => {
+        container.querySelectorAll('.diag-card').forEach((card) => {
+          card.classList.remove('is-open');
+          const btn = card.querySelector('.btn-toggle-diag');
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'false');
+            btn.textContent = '查看修改與建議';
+          }
+        });
+      });
+
+      // 進入第 1 週按鈕
+      document.getElementById('btnStartSixWeeks').addEventListener('click', () => switchTab('week1'));
+    }
+
+    function renderDiagCardHtml(s) {
+      const isReviewed = appState.reviewedSentences.includes(s.id);
+      return `
+        <article class="diag-card ${isReviewed ? 'is-reviewed' : ''}" data-id="${s.id}">
+          <div class="diag-top">
+            <div class="diag-num" title="第 ${s.id} 句">${String(s.id).padStart(2, '0')}</div>
+            <div class="diag-body">
+              <div class="diag-original">${escapeHtml(s.original)}</div>
+              <div class="diag-meta">
+                <span class="hint-tag">💡 ${escapeHtml(s.hint)}</span>
+                <button type="button" class="btn btn-outline btn-sm btn-toggle-diag" aria-expanded="false">
+                  查看修改與建議
+                </button>
+              </div>
+
+              <!-- 修改與建議面板：初始狀態完全隱藏 -->
+              <div class="diag-panel">
+                <div class="diag-fix-box">
+                  <span class="diag-fix-label">✅ 文法修正與升級句</span>
+                  <p class="diag-fix-text">${escapeHtml(s.fixed)}</p>
+                </div>
+
+                <div class="diag-sub-heading">📌 修改理由</div>
+                <ul class="diag-reasons">
+                  ${s.reasons.map((r) => `<li>${escapeHtml(r)}</li>`).join('')}
+                </ul>
+
+                <div class="diag-flow-box">
+                  <strong>✨ 內容擴充與前後銜接建議：</strong>${escapeHtml(s.flow)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    /* ==========================================================================
+       視圖 B：六週作戰單元（Week 1 – Week 6）
+       ========================================================================== */
+    function renderWeekView(container, week) {
+      const weekIndex = COURSE_DATA.weeks.findIndex((w) => w.id === week.id);
+      const prevTab = weekIndex === 0 ? { id: 'diagnosis', label: '← 回到原文診斷室' } : { id: COURSE_DATA.weeks[weekIndex - 1].id, label: `← 上一週（第 ${week.weekNum - 1} 週）` };
+      const nextTab = weekIndex < COURSE_DATA.weeks.length - 1 ? { id: COURSE_DATA.weeks[weekIndex + 1].id, label: `下一週（第 ${week.weekNum + 1} 週）→` } : null;
+
+      let contentHtml = `
+        <section class="card hero-card">
+          <span class="hero-eyebrow">WEEK ${week.weekNum} · 六週搶救作戰</span>
+          <h2 class="hero-title">第 ${week.weekNum} 週：${week.title}</h2>
+          <p class="hero-desc">${week.subtitle}</p>
+        </section>
+      `;
+
+      // 第 1–5 週：病灶剖析 & 改進心法
+      if (week.diagnosisPoints && week.tips) {
+        contentHtml += `
+          <div class="callout-grid">
+            <div class="callout callout-diagnosis">
+              <h3>🔍 核心病灶剖析</h3>
+              <ul>${week.diagnosisPoints.map((p) => `<li>${p}</li>`).join('')}</ul>
+            </div>
+            <div class="callout callout-tip">
+              <h3>🧭 改進心法與公式</h3>
+              <ul>${week.tips.map((t) => `<li>${t}</li>`).join('')}</ul>
+            </div>
+          </div>
+        `;
+      }
+
+      // 第 1–4 週：標準中式 vs 道地對照表
+      if (week.comparisons) {
+        contentHtml += `
+          <div class="section-header">
+            <h3 class="section-title">中式地雷 vs. 道地英文對照表</h3>
+          </div>
+          <div class="table-wrap">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th style="width:20%;">錯誤類型</th>
+                  <th style="width:38%;">❌ 中式地雷</th>
+                  <th style="width:42%;">✅ 道地英文修正</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${week.comparisons.map((row) => `
+                  <tr>
+                    <td class="td-type" data-label="錯誤類型">${row.type}</td>
+                    <td class="td-wrong" data-label="❌ 中式地雷">${row.wrong}</td>
+                    <td class="td-right" data-label="✅ 道地英文修正">${row.right}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // 第 5 週：20 大搭配詞分類表（含遮罩自測開關）
+      if (week.collocationGroups) {
+        contentHtml += `
+          <div class="section-header">
+            <h3 class="section-title">台灣學生最常直譯的 20 大搭配詞</h3>
+            <button type="button" class="btn btn-outline btn-sm" id="btnToggleCollocationMask">
+              ${appState.collocationMask ? '關閉測驗遮罩（顯示全部）' : '開啟測驗遮罩（隱藏右欄自測）'}
+            </button>
+          </div>
+          <div id="collocationTablesWrap" class="${appState.collocationMask ? 'collocation-masked' : ''}">
+            ${week.collocationGroups.map((grp) => `
+              <div class="paragraph-divider">${grp.groupTitle}</div>
+              <div class="table-wrap">
+                <table class="compare-table">
+                  <thead>
+                    <tr>
+                      <th style="width:24%;">中文想法</th>
+                      <th style="width:34%;">❌ 中式直譯</th>
+                      <th style="width:42%;">✅ 道地搭配詞</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${grp.items.map((row) => `
+                      <tr>
+                        <td class="td-type" data-label="中文想法">${row.type}</td>
+                        <td class="td-wrong" data-label="❌ 中式直譯">${row.wrong}</td>
+                        <td class="td-right td-right-mask" data-label="✅ 道地搭配詞" title="點擊切換顯示或隱藏">
+                          <span class="mask-content">${row.right}</span>
+                          <span class="mask-hint">（點此揭曉）</span>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // 第 6 週：60 秒交卷前自檢 SOP ＋ 終極短文預覽
+      if (week.sopChecklist) {
+        const checkedCount = week.sopChecklist.filter((i) => appState.sopChecked.includes(i.id)).length;
+        contentHtml += `
+          <div class="section-header">
+            <h3 class="section-title">交卷前 60 秒自檢 SOP（防呆雷達）</h3>
+            <span class="ex-status ${checkedCount === week.sopChecklist.length ? 'done' : ''}" id="sopCounter">
+              已演練 ${checkedCount} / ${week.sopChecklist.length} 項
+            </span>
+          </div>
+          <section class="card">
+            <p style="font-size:0.92rem;color:var(--color-text-secondary);margin-bottom:0.9rem;">
+              寫完英文作文後，請切換成「雷達掃描模式」，逐項點選確認以下 6 大項目：
+            </p>
+            <ul class="sop-list" id="sopList">
+              ${week.sopChecklist.map((item) => {
+                const isChecked = appState.sopChecked.includes(item.id);
+                return `
+                  <li class="sop-item ${isChecked ? 'checked' : ''}" data-sop="${item.id}">
+                    <input type="checkbox" class="sop-checkbox" ${isChecked ? 'checked' : ''} aria-label="${item.title}">
+                    <div class="sop-text">
+                      <strong>${item.title}</strong>
+                      <span>${item.desc}</span>
+                    </div>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </section>
+
+          <div class="section-header">
+            <h3 class="section-title">終極綜合大考驗：12 處重度中式英文大改造</h3>
+            <button type="button" class="btn btn-outline btn-sm" id="btnToggleFinalBoss">
+              ${appState.showFinalBossCompare ? '隱藏完整前後對照' : '查看完整 12 處地雷與高分對照'}
+            </button>
+          </div>
+          <section class="card">
+            <span class="essay-label label-orig">挑戰原文（內藏 12 處前五週學過的經典錯誤）</span>
+            <div class="essay-box" style="margin-bottom:${appState.showFinalBossCompare ? '1rem' : '0'};">
+              <p>${appState.showFinalBossCompare ? week.finalChallengeAnnotatedHtml : escapeHtml(week.finalChallengeRaw)}</p>
+            </div>
+            ${appState.showFinalBossCompare ? `
+              <span class="essay-label label-good">高分完整改造版（綠底標示為升級亮點）</span>
+              <div class="essay-box">
+                <p>${week.finalChallengeRewrittenHtml}</p>
+              </div>
+            ` : ''}
+          </section>
+        `;
+      }
+
+      // 互動實戰練習題區（所有週次共用渲染引擎）
+      contentHtml += `
+        <div class="section-header">
+          <h3 class="section-title">${week.weekNum === 6 ? '逐句實戰改造（共 6 句，即時對答案）' : `第 ${week.weekNum} 週互動實戰練習（即時對答案＋解析）`}</h3>
+        </div>
+        <div id="exerciseList">
+          ${week.exercises.map((ex, idx) => renderExerciseCardHtml(ex, idx)).join('')}
+        </div>
+
+        <!-- 上下頁導覽 -->
+        <nav class="pager-nav" aria-label="上下單元導覽">
+          <button type="button" class="btn btn-outline" id="btnPrevTab">${prevTab.label}</button>
+          ${nextTab
+            ? `<button type="button" class="btn btn-primary" id="btnNextTab">${nextTab.label}</button>`
+            : `<button type="button" class="btn btn-primary" id="btnBackHome">🎉 完成六週計畫！回原文診斷室複習</button>`
+          }
+        </nav>
+      `;
+
+      container.innerHTML = contentHtml;
+
+      // 綁定第 5 週遮罩模式
+      const maskBtn = document.getElementById('btnToggleCollocationMask');
+      if (maskBtn) {
+        maskBtn.addEventListener('click', () => {
+          appState.collocationMask = !appState.collocationMask;
+          saveState();
+          renderWeekView(container, week);
+        });
+        container.querySelectorAll('.td-right-mask').forEach((cell) => {
+          cell.addEventListener('click', () => {
+            if (appState.collocationMask) {
+              cell.classList.toggle('revealed');
+            }
+          });
+        });
+      }
+
+      // 綁定第 6 週 SOP 清單與終極對照切換
+      const sopList = document.getElementById('sopList');
+      if (sopList) {
+        sopList.querySelectorAll('.sop-item').forEach((li) => {
+          li.addEventListener('click', (e) => {
+            const cb = li.querySelector('.sop-checkbox');
+            if (e.target !== cb) cb.checked = !cb.checked;
+            const id = li.dataset.sop;
+            li.classList.toggle('checked', cb.checked);
+            if (cb.checked) {
+              if (!appState.sopChecked.includes(id)) appState.sopChecked.push(id);
+            } else {
+              appState.sopChecked = appState.sopChecked.filter((x) => x !== id);
+            }
+            saveState();
+            const c = week.sopChecklist.filter((i) => appState.sopChecked.includes(i.id)).length;
+            const counter = document.getElementById('sopCounter');
+            if (counter) {
+              counter.textContent = `已演練 ${c} / ${week.sopChecklist.length} 項`;
+              counter.classList.toggle('done', c === week.sopChecklist.length);
+            }
+          });
+        });
+      }
+
+      const finalBossBtn = document.getElementById('btnToggleFinalBoss');
+      if (finalBossBtn) {
+        finalBossBtn.addEventListener('click', () => {
+          appState.showFinalBossCompare = !appState.showFinalBossCompare;
+          saveState();
+          renderWeekView(container, week);
+        });
+      }
+
+      // 綁定所有互動題事件
+      bindExerciseEvents(container, week.exercises);
+
+      // 綁定上下頁按鈕
+      document.getElementById('btnPrevTab').addEventListener('click', () => switchTab(prevTab.id));
+      const nextBtn = document.getElementById('btnNextTab');
+      if (nextBtn) nextBtn.addEventListener('click', () => switchTab(nextTab.id));
+      const homeBtn = document.getElementById('btnBackHome');
+      if (homeBtn) homeBtn.addEventListener('click', () => switchTab('diagnosis'));
+    }
+
+    /* ==========================================================================
+       互動練習題渲染引擎（支援 5 種題型）
+       ========================================================================== */
+    function renderExerciseCardHtml(ex, idx) {
+      const isDone = appState.completedExercises.includes(ex.id);
+      let bodyHtml = '';
+
+      if (ex.type === 'rewrite') {
+        bodyHtml = `
+          <div class="ex-prompt">
+            ${escapeHtml(ex.instruction)}
+            ${ex.original ? `<span class="orig-pill">${escapeHtml(ex.original)}</span>` : ''}
+          </div>
+          <input type="text" class="ex-input" placeholder="在此輸入你修改或翻譯後的完整英文句子…" autocomplete="off" spellcheck="false" aria-label="作答輸入框">
+          <div class="ex-actions">
+            <button type="button" class="btn btn-primary btn-sm btn-check">檢查答案</button>
+            ${ex.hint ? `<button type="button" class="btn btn-outline btn-sm btn-hint">給點提示</button>` : ''}
+            <button type="button" class="btn btn-ghost btn-sm btn-reveal">看參考解答與解析</button>
+          </div>
+        `;
+      } else if (ex.type === 'choice') {
+        bodyHtml = `
+          <div class="ex-prompt">
+            ${escapeHtml(ex.instruction)}
+            <span class="orig-pill" style="background:var(--color-bg);border-color:var(--color-border-strong);color:var(--color-text);">${escapeHtml(ex.original)}</span>
+          </div>
+          <div class="choice-group">
+            ${ex.options.map((opt) => `<button type="button" class="choice-btn" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</button>`).join('')}
+          </div>
+        `;
+      } else if (ex.type === 'unscramble') {
+        bodyHtml = `
+          <div class="ex-prompt">${escapeHtml(ex.instruction)}</div>
+          <div class="tile-dropzone empty" aria-label="你的句型排列區"></div>
+          <div class="tile-pool" aria-label="可點選詞塊區">
+            ${ex.tiles.map((t, tIdx) => `<button type="button" class="word-tile" data-tidx="${tIdx}" data-word="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}
+          </div>
+          <div class="ex-actions">
+            <button type="button" class="btn btn-primary btn-sm btn-check">檢查排列</button>
+            <button type="button" class="btn btn-outline btn-sm btn-clear-tiles">重新排列</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-reveal">看參考解答與解析</button>
+          </div>
+        `;
+      } else if (ex.type === 'dual-select') {
+        let sentenceHtml = '';
+        ex.parts.forEach((part, pIdx) => {
+          sentenceHtml += escapeHtml(part);
+          if (pIdx < ex.selects.length) {
+            const sel = ex.selects[pIdx];
+            sentenceHtml += `
+              <select class="inline-select" data-sidx="${pIdx}" aria-label="第 ${pIdx + 1} 格選單">
+                <option value="">-- 請選擇 --</option>
+                ${sel.options.map((o) => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('')}
+              </select>
+            `;
+          }
+        });
+        bodyHtml = `
+          <div class="ex-prompt">${escapeHtml(ex.instruction)}</div>
+          <div class="inline-sentence">${sentenceHtml}</div>
+          <div class="ex-actions">
+            <button type="button" class="btn btn-primary btn-sm btn-check">檢查答案</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-reveal">看參考解答與解析</button>
+          </div>
+        `;
+      } else if (ex.type === 'fill-blanks') {
+        let sentenceHtml = '';
+        ex.parts.forEach((part, pIdx) => {
+          sentenceHtml += escapeHtml(part);
+          if (pIdx < ex.blanks.length) {
+            const b = ex.blanks[pIdx];
+            sentenceHtml += `<input type="text" class="inline-blank" data-bidx="${pIdx}" placeholder="${escapeHtml(b.cue)}" autocomplete="off" spellcheck="false" aria-label="${escapeHtml(b.cue)}"><span class="zh-cue">(${escapeHtml(b.cue)})</span>`;
+          }
+        });
+        bodyHtml = `
+          <div class="ex-prompt">${escapeHtml(ex.instruction)}</div>
+          <div class="inline-sentence">${sentenceHtml}</div>
+          <div class="ex-actions">
+            <button type="button" class="btn btn-primary btn-sm btn-check">檢查答案</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-reveal">看參考解答與解析</button>
+          </div>
+        `;
+      }
+
+      return `
+        <article class="exercise-card ${isDone ? 'state-correct' : ''}" data-exid="${ex.id}">
+          <div class="ex-header">
+            <span class="ex-num">練習 ${idx + 1}</span>
+            <span class="ex-status ${isDone ? 'done' : ''}">${isDone ? '✓ 已完成' : ''}</span>
+          </div>
+          ${bodyHtml}
+          <div class="feedback-box" role="status" aria-live="polite"></div>
+        </article>
+      `;
+    }
+
+    /* ==========================================================================
+       互動練習題事件綁定與批改邏輯
+       ========================================================================== */
+    function bindExerciseEvents(container, exercises) {
+      const exMap = {};
+      exercises.forEach((ex) => { exMap[ex.id] = ex; });
+
+      container.querySelectorAll('.exercise-card').forEach((card) => {
+        const ex = exMap[card.dataset.exid];
+        if (!ex) return;
+        const feedback = card.querySelector('.feedback-box');
+        const statusBadge = card.querySelector('.ex-status');
+
+        function setCardDoneUI() {
+          card.classList.remove('state-wrong');
+          card.classList.add('state-correct');
+          if (statusBadge) {
+            statusBadge.textContent = '✓ 已完成';
+            statusBadge.classList.add('done');
+          }
+          markExerciseDone(ex.id);
+        }
+
+        function showFeedback(kind, title, htmlBody) {
+          feedback.className = `feedback-box show is-${kind}`;
+          feedback.innerHTML = `<span class="feedback-title">${title}</span>${htmlBody}`;
+        }
+
+        // ---- 題型 1：文字改寫／翻譯題 ----
+        if (ex.type === 'rewrite') {
+          const input = card.querySelector('.ex-input');
+          const checkBtn = card.querySelector('.btn-check');
+          const hintBtn = card.querySelector('.btn-hint');
+          const revealBtn = card.querySelector('.btn-reveal');
+
+          function runCheck() {
+            const val = input.value.trim();
+            if (!val) {
+              showFeedback('retry', '尚未輸入答案', '請先試著在輸入框寫出你的改寫句子，再點選檢查喔！');
+              input.focus();
+              return;
+            }
+            if (isAnswerMatch(val, ex.acceptedAnswers)) {
+              setCardDoneUI();
+              showFeedback(
+                'correct',
+                '🎉 完全正確！寫得非常自然！',
+                `<span class="model-answer">參考範句：${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`
+              );
+            } else {
+              card.classList.add('state-wrong');
+              showFeedback(
+                'retry',
+                '💡 再微調一下，或核對參考解答',
+                `<div>你的句子與預設範本略有不同（若為語意相通的自由改寫，也可點選「看參考解答與解析」核對關鍵結構）。</div>`
+              );
+            }
+          }
+
+          checkBtn.addEventListener('click', runCheck);
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') runCheck();
+          });
+
+          if (hintBtn) {
+            hintBtn.addEventListener('click', () => {
+              showFeedback('reveal', '💡 破題提示', `<div>${escapeHtml(ex.hint)}</div>`);
+            });
+          }
+
+          revealBtn.addEventListener('click', () => {
+            showFeedback(
+              'reveal',
+              '📖 參考解答與文法解析',
+              `<span class="model-answer">${escapeHtml(ex.modelAnswer)}</span>
+               <div style="margin-bottom:0.65rem;"><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>
+               <button type="button" class="btn btn-outline btn-sm btn-self-mark">我已核對並理解，標記這題完成 ✓</button>`
+            );
+            const selfMark = feedback.querySelector('.btn-self-mark');
+            if (selfMark) {
+              selfMark.addEventListener('click', () => {
+                setCardDoneUI();
+                selfMark.remove();
+              });
+            }
+          });
+        }
+
+        // ---- 題型 2：即時選擇題 ----
+        if (ex.type === 'choice') {
+          const buttons = card.querySelectorAll('.choice-btn');
+          buttons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+              buttons.forEach((b) => b.classList.remove('selected-correct', 'selected-wrong'));
+              const chosen = btn.dataset.opt;
+              if (chosen === ex.answer) {
+                btn.classList.add('selected-correct');
+                setCardDoneUI();
+                showFeedback('correct', `🎉 答對了！答案是 ${escapeHtml(ex.answer)}`, `<div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+              } else {
+                btn.classList.add('selected-wrong');
+                card.classList.add('state-wrong');
+                showFeedback('retry', '❌ 再想一下喔！', '觀察一下空格後面是「完整句子（主詞＋動詞）」還是「名詞片語」呢？');
+              }
+            });
+          });
+        }
+
+        // ---- 題型 3：詞塊點擊重組題 ----
+        if (ex.type === 'unscramble') {
+          const dropzone = card.querySelector('.tile-dropzone');
+          const poolBtns = card.querySelectorAll('.tile-pool .word-tile');
+          const checkBtn = card.querySelector('.btn-check');
+          const clearBtn = card.querySelector('.btn-clear-tiles');
+          const revealBtn = card.querySelector('.btn-reveal');
+          let selectedTiles = []; // [{ tidx, word }]
+
+          function renderDropzone() {
+            dropzone.innerHTML = '';
+            dropzone.classList.toggle('empty', selectedTiles.length === 0);
+            selectedTiles.forEach((item, orderIdx) => {
+              const chip = document.createElement('button');
+              chip.type = 'button';
+              chip.className = 'word-tile in-answer';
+              chip.textContent = item.word;
+              chip.title = '點擊移回詞塊區';
+              chip.addEventListener('click', () => {
+                selectedTiles.splice(orderIdx, 1);
+                const poolBtn = card.querySelector(`.tile-pool .word-tile[data-tidx="${item.tidx}"]`);
+                if (poolBtn) poolBtn.classList.remove('used');
+                renderDropzone();
+              });
+              dropzone.appendChild(chip);
+            });
+          }
+
+          poolBtns.forEach((pBtn) => {
+            pBtn.addEventListener('click', () => {
+              const tidx = pBtn.dataset.tidx;
+              const word = pBtn.dataset.word;
+              pBtn.classList.add('used');
+              selectedTiles.push({ tidx, word });
+              renderDropzone();
+            });
+          });
+
+          clearBtn.addEventListener('click', () => {
+            selectedTiles = [];
+            poolBtns.forEach((b) => b.classList.remove('used'));
+            renderDropzone();
+            feedback.className = 'feedback-box';
+          });
+
+          checkBtn.addEventListener('click', () => {
+            if (selectedTiles.length < ex.tiles.length) {
+              showFeedback('retry', '詞塊還沒排完喔！', '請把下方所有詞塊都點選進來，組成完整句子再檢查。');
+              return;
+            }
+            const joined = selectedTiles.map((x) => x.word).join(' ');
+            if (isAnswerMatch(joined, ex.acceptedAnswers)) {
+              setCardDoneUI();
+              showFeedback('correct', '🎉 語序完全正確！', `<span class="model-answer">${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+            } else {
+              card.classList.add('state-wrong');
+              showFeedback('retry', '❌ 順序還差一點點！', '記得英文口訣：「主詞＋動詞＋受詞」放前面，「地點＋時間」擺句尾喔！點擊上方的詞塊可以移回重排。');
+            }
+          });
+
+          revealBtn.addEventListener('click', () => {
+            showFeedback('reveal', '📖 參考解答與解析', `<span class="model-answer">${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+          });
+        }
+
+        // ---- 題型 4：句中雙下拉選單 ----
+        if (ex.type === 'dual-select') {
+          const selects = card.querySelectorAll('.inline-select');
+          const checkBtn = card.querySelector('.btn-check');
+          const revealBtn = card.querySelector('.btn-reveal');
+
+          checkBtn.addEventListener('click', () => {
+            let allFilled = true;
+            let allCorrect = true;
+            selects.forEach((sel, idx) => {
+              if (!sel.value) allFilled = false;
+              if (sel.value !== ex.selects[idx].answer) allCorrect = false;
+            });
+
+            if (!allFilled) {
+              showFeedback('retry', '請完成所有選單', '請先幫每一個空格選出答案再檢查喔！');
+              return;
+            }
+            if (allCorrect) {
+              setCardDoneUI();
+              showFeedback('correct', '🎉 兩格全對！', `<span class="model-answer">${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+            } else {
+              card.classList.add('state-wrong');
+              showFeedback('retry', '❌ 有一格選反囉！', '記得：主詞是「人（感到……）」用 -ed，主詞是「事物（令人……）」用 -ing。');
+            }
+          });
+
+          revealBtn.addEventListener('click', () => {
+            showFeedback('reveal', '📖 參考解答與解析', `<span class="model-answer">${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+          });
+        }
+
+        // ---- 題型 5：句中多格填空題 ----
+        if (ex.type === 'fill-blanks') {
+          const blanks = card.querySelectorAll('.inline-blank');
+          const checkBtn = card.querySelector('.btn-check');
+          const revealBtn = card.querySelector('.btn-reveal');
+
+          function runBlankCheck() {
+            let allFilled = true;
+            let allCorrect = true;
+            blanks.forEach((inp, idx) => {
+              const val = inp.value.trim();
+              if (!val) allFilled = false;
+              const accepted = ex.blanks[idx].accepted;
+              if (!isAnswerMatch(val, accepted)) allCorrect = false;
+            });
+
+            if (!allFilled) {
+              showFeedback('retry', '還有空格沒填喔！', '請填完句子裡的所有空格再點選檢查。');
+              return;
+            }
+            if (allCorrect) {
+              setCardDoneUI();
+              showFeedback('correct', '🎉 搭配詞完全正確！', `<span class="model-answer">參考答案：${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+            } else {
+              card.classList.add('state-wrong');
+              showFeedback('retry', '💡 再檢查一下搭配詞拼字！', '可以往上翻閱 20 大搭配詞對照表，或點選「看參考解答與解析」。');
+            }
+          }
+
+          checkBtn.addEventListener('click', runBlankCheck);
+          blanks.forEach((inp) => {
+            inp.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') runBlankCheck();
+            });
+          });
+
+          revealBtn.addEventListener('click', () => {
+            showFeedback('reveal', '📖 參考解答與解析', `<span class="model-answer">參考答案：${escapeHtml(ex.modelAnswer)}</span><div><strong>解析：</strong>${escapeHtml(ex.explanation)}</div>`);
+          });
+        }
+      });
+    }
+
+    /* ==========================================================================
+       初始化與全域控制事件（字級切換、重設確認彈窗）
+       ========================================================================== */
+    function initApp() {
+      // 套用儲存的字體大小
+      applyFontSize(appState.fontSize);
+
+      // 綁定字體大小按鈕
+      document.querySelectorAll('.font-btn').forEach((btn) => {
+        btn.addEventListener('click', () => applyFontSize(btn.dataset.size));
+      });
+
+      // 綁定重設進度客製化彈窗
+      const resetModal = document.getElementById('resetModal');
+      document.getElementById('btnResetProgress').addEventListener('click', () => {
+        resetModal.classList.add('open');
+      });
+      document.getElementById('btnCancelReset').addEventListener('click', () => {
+        resetModal.classList.remove('open');
+      });
+      resetModal.addEventListener('click', (e) => {
+        if (e.target === resetModal) resetModal.classList.remove('open');
+      });
+      document.getElementById('btnConfirmReset').addEventListener('click', () => {
+        const keepFont = appState.fontSize;
+        appState = { ...DEFAULT_STATE, fontSize: keepFont };
+        saveState();
+        resetModal.classList.remove('open');
+        updateProgressUI();
+        renderTabNav();
+        renderMain();
+      });
+
+      // 首次渲染
+      updateProgressUI();
+      renderTabNav();
+      renderMain();
+    }
+
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
