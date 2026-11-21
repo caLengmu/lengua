@@ -70,7 +70,7 @@
       border: 2px solid var(--border-color);
       border-radius: 10px;
       padding: 8px 14px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
       background: #ffffff;
@@ -120,20 +120,23 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      align-items: center;
     }
 
-    .api-input {
+    .api-input,
+    .api-select {
       flex: 1;
-      min-width: 220px;
+      min-width: 180px;
       padding: 9px 12px;
       border: 2px solid var(--border-color);
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       background: #fff;
+      color: var(--text-main);
     }
 
     .api-hint {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
@@ -195,7 +198,7 @@
       cursor: pointer;
     }
 
-    /* 漫畫風格 Speech Bubble */
+    /* 漫畫風格 Speech Bubble（Tutor） */
     .speech-bubble {
       position: relative;
       width: 100%;
@@ -211,7 +214,6 @@
       word-break: break-word;
     }
 
-    /* 漫畫對話框上方尖角 */
     .speech-bubble.tutor-bubble::before {
       content: "";
       position: absolute;
@@ -234,16 +236,17 @@
       border-bottom: 10px solid var(--bubble-tutor);
     }
 
-    /* 使用者輸入區塊：[我/Me/...] + [Speech Bubble 輸入框] + [送出] */
+    /* 使用者輸入區塊：[Me/私/Yo/나/Io] + [Speech Bubble 輸入框（左側有尖角指向 Me）] + [送出] */
     .user-section {
       display: flex;
-      align-items: stretch;
-      gap: 10px;
+      align-items: center;
+      gap: 14px;
       width: 100%;
     }
 
     .user-badge {
-      min-width: 56px;
+      min-width: 58px;
+      height: 52px;
       padding: 0 12px;
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
@@ -258,8 +261,41 @@
       flex-shrink: 0;
     }
 
-    .user-bubble-input {
+    .user-bubble-wrapper {
+      position: relative;
       flex: 1;
+      display: flex;
+    }
+
+    /* 指向左側 Me 的小尖角 */
+    .user-bubble-wrapper::before {
+      content: "";
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 12px solid var(--border-color);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .user-bubble-wrapper::after {
+      content: "";
+      position: absolute;
+      left: -9px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-right: 10px solid var(--bubble-user);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .user-bubble-input {
+      width: 100%;
       min-height: 68px;
       max-height: 160px;
       padding: 12px 14px;
@@ -280,6 +316,7 @@
     }
 
     .send-btn {
+      height: 52px;
       padding: 0 18px;
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
@@ -316,16 +353,17 @@
 
       .user-section {
         flex-wrap: wrap;
+        gap: 10px;
       }
 
       .user-badge {
-        min-width: 48px;
+        min-width: 50px;
         height: 44px;
         font-size: 1rem;
       }
 
-      .user-bubble-input {
-        width: calc(100% - 62px);
+      .user-bubble-wrapper {
+        width: calc(100% - 64px);
         flex: none;
       }
 
@@ -359,15 +397,35 @@
         <button id="saveApiBtn" class="btn btn-primary" type="button">儲存金鑰</button>
         <button id="clearApiBtn" class="btn btn-secondary" type="button">清除</button>
       </div>
+
+      <div class="api-row">
+        <input
+          id="modelInput"
+          class="api-input"
+          type="text"
+          placeholder="模型名稱（例如 gemini-3.8-flash）"
+        />
+        <select id="apiModeSelect" class="api-select" aria-label="API 呼叫模式">
+          <option value="generateContent">GenerateContent API</option>
+          <option value="interactions">Interactions API</option>
+        </select>
+        <button id="detectModelsBtn" class="btn btn-secondary" type="button">偵測可用模型</button>
+      </div>
+
+      <div id="detectedModelsRow" class="api-row" style="display: none;">
+        <select id="detectedModelsSelect" class="api-select" aria-label="選擇偵測到的模型"></select>
+        <button id="applyModelBtn" class="btn btn-secondary" type="button">套用此模型</button>
+      </div>
+
       <p class="api-hint">
-        可至 Google AI Studio 申請免費額度的 API Key；金鑰只會儲存在你的瀏覽器本機（<code>localStorage</code>），不會寫入 HTML 檔或上傳至伺服器。
+        金鑰與模型設定僅保存在你的瀏覽器本機（<code>localStorage</code>）。若未來模型更新，可直接修改上方模型名稱或按「偵測可用模型」取得最新模型清單。
       </p>
     </section>
 
     <!-- Tutor 形象、語言選擇、開始對話與 Speech Bubble -->
     <main class="tutor-section">
       <div class="avatar-frame">
-        <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑，或修改下方設定表 -->
+        <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑 -->
         <img id="tutorAvatar" src="./female 1.1.gif" alt="Tutor 形象" />
       </div>
 
@@ -387,12 +445,14 @@
 
     <!-- 使用者 Speech Bubble 區塊 -->
     <section class="user-section" aria-label="輸入要翻譯的中文">
-      <div id="userSelfLabel" class="user-badge">我</div>
-      <textarea
-        id="userInput"
-        class="user-bubble-input"
-        placeholder="請輸入想翻譯的繁體中文或中文句子..."
-      ></textarea>
+      <div id="userSelfLabel" class="user-badge">Me</div>
+      <div class="user-bubble-wrapper">
+        <textarea
+          id="userInput"
+          class="user-bubble-input"
+          placeholder="請輸入想翻譯的繁體中文或中文句子..."
+        ></textarea>
+      </div>
       <button id="sendBtn" class="send-btn" type="button">送出</button>
     </section>
   </div>
@@ -405,31 +465,31 @@
      */
     const APP_CONFIG = {
       defaultLanguage: "en",
-      defaultSelfLabel: "我",
       storageKeys: {
         apiKey: "ai_tutor_gemini_api_key_v1",
+        model: "ai_tutor_gemini_model_v1",
+        apiMode: "ai_tutor_gemini_api_mode_v1",
         language: "ai_tutor_target_lang_v1",
-        characterId: "ai_tutor_character_id_v1",
-        modeId: "ai_tutor_mode_id_v1"
+        characterId: "ai_tutor_character_id_v1"
       },
       gemini: {
-        model: "gemini-2.5-flash",
-        endpointBase: "https://generativelanguage.googleapis.com/v1beta/models"
+        defaultModel: "gemini-3.8-flash",
+        defaultMode: "generateContent",
+        endpointBase: "https://generativelanguage.googleapis.com/v1beta"
       }
     };
 
     /**
      * 角色註冊表（Character Registry）
      * 未來要新增新角色時，只需在這裡新增一筆設定即可。
-     * 圖檔空位：請將對應的 GIF 檔放入與此 HTML 相同的資料夾（或改為你的圖片路徑）。
      */
     const CHARACTER_REGISTRY = {
       female_1: {
         id: "female_1",
         name: "Female 1",
         images: {
-          idle: "./female 1.1.gif",     // 預設／待機圖檔空位（對應 female 1.1.gif）
-          speaking: "./female 1.2.gif"  // TTS 說話中圖檔空位（對應 female 1.2.gif）
+          idle: "./female 1.1.gif",     // 預設／待機圖檔空位
+          speaking: "./female 1.2.gif"  // TTS 說話中圖檔空位
         },
         ttsConfig: {
           zhLang: "zh-TW",
@@ -437,18 +497,11 @@
           rate: 1.0
         }
       }
-      // 未來擴充範例：
-      // male_1: {
-      //   id: "male_1",
-      //   name: "Male 1",
-      //   images: { idle: "./male 1.1.gif", speaking: "./male 1.2.gif" },
-      //   ttsConfig: { zhLang: "zh-TW", pitch: 0.9, rate: 1.0 }
-      // }
     };
 
     /**
      * 語言註冊表（Language Registry）
-     * 包含：顯示名稱、開場白模板、左側「我」的字形、TTS 語系代碼
+     * 預設為英文（en），左側顯示對應字形：Me / 私 / Yo / 나 / Io
      */
     const LANGUAGE_REGISTRY = {
       en: {
@@ -503,6 +556,24 @@
       clearApiKey() {
         localStorage.removeItem(APP_CONFIG.storageKeys.apiKey);
       },
+      getModel() {
+        const saved = (localStorage.getItem(APP_CONFIG.storageKeys.model) || "").trim();
+        return saved || APP_CONFIG.gemini.defaultModel;
+      },
+      setModel(modelName) {
+        const clean = (modelName || "").trim() || APP_CONFIG.gemini.defaultModel;
+        localStorage.setItem(APP_CONFIG.storageKeys.model, clean);
+      },
+      getApiMode() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.apiMode);
+        return saved === "interactions" ? "interactions" : APP_CONFIG.gemini.defaultMode;
+      },
+      setApiMode(mode) {
+        localStorage.setItem(
+          APP_CONFIG.storageKeys.apiMode,
+          mode === "interactions" ? "interactions" : "generateContent"
+        );
+      },
       getLanguage() {
         const saved = localStorage.getItem(APP_CONFIG.storageKeys.language);
         return LANGUAGE_REGISTRY[saved] ? saved : APP_CONFIG.defaultLanguage;
@@ -522,18 +593,26 @@
       characterId: StorageManager.getCharacterId(),
       languageCode: StorageManager.getLanguage(),
       isSpeaking: false,
-      isTranslating: false,
-      hasStartedChat: false
+      isTranslating: false
     };
 
     /**
      * =========================================================================
-     * 3. 角色與 UI 控制器（Avatar & Bubble Controller）
+     * 3. 角色與圖片控制器（Avatar Controller）
      * =========================================================================
      */
     const AvatarController = {
       getCurrentCharacter() {
         return CHARACTER_REGISTRY[AppState.characterId] || CHARACTER_REGISTRY.female_1;
+      },
+      preloadImages() {
+        Object.values(CHARACTER_REGISTRY).forEach((charConfig) => {
+          [charConfig.images.idle, charConfig.images.speaking].forEach((src) => {
+            if (!src) return;
+            const img = new Image();
+            img.src = src;
+          });
+        });
       },
       setSpeakingState(speaking) {
         AppState.isSpeaking = Boolean(speaking);
@@ -554,7 +633,6 @@
     /**
      * =========================================================================
      * 4. 文字轉語音模組（TTS Service）
-     * 自動在開始朗讀時切換為 speaking 圖示，結束或發生錯誤時切回 idle 圖示
      * =========================================================================
      */
     const TTSService = {
@@ -567,22 +645,25 @@
           return Promise.resolve();
         }
 
-        // 停止先前尚未結束的語音，避免重疊
-        window.speechSynthesis.cancel();
+        // 只在正在朗讀或排隊中才取消，避免部分瀏覽器 cancel() 後立即 speak() 失效
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+          window.speechSynthesis.cancel();
+        }
 
         return new Promise((resolve) => {
           const utterance = new SpeechSynthesisUtterance(cleanText);
           utterance.lang = langCode;
 
           const charConfig = AvatarController.getCurrentCharacter();
-          utterance.pitch = charConfig.ttsConfig?.pitch ?? 1.0;
+          utterance.pitch = charConfig.ttsConfig?.pitch ?? 1.05;
           utterance.rate = charConfig.ttsConfig?.rate ?? 1.0;
 
-          // 嘗試挑選符合語系的語音包（若系統有安裝）
           const voices = window.speechSynthesis.getVoices();
           const matchedVoice =
             voices.find((v) => v.lang && v.lang.toLowerCase() === langCode.toLowerCase()) ||
-            voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(langCode.split("-")[0].toLowerCase()));
+            voices.find(
+              (v) => v.lang && v.lang.toLowerCase().startsWith(langCode.split("-")[0].toLowerCase())
+            );
           if (matchedVoice) {
             utterance.voice = matchedVoice;
           }
@@ -591,6 +672,7 @@
           const finish = () => {
             if (settled) return;
             settled = true;
+            clearTimeout(safetyTimer);
             AvatarController.setSpeakingState(false);
             resolve();
           };
@@ -602,22 +684,10 @@
           utterance.onend = finish;
           utterance.onerror = finish;
 
-          // 保底計時器：部分裝置若未觸發 onend，避免卡在說話圖示
-          const estimatedMs = Math.max(2500, cleanText.length * 160 + 2000);
+          const estimatedMs = Math.max(2600, cleanText.length * 160 + 2000);
           const safetyTimer = setTimeout(finish, estimatedMs);
 
-          const originalOnEnd = utterance.onend;
-          utterance.onend = () => {
-            clearTimeout(safetyTimer);
-            originalOnEnd();
-          };
-
-          const originalOnError = utterance.onerror;
-          utterance.onerror = () => {
-            clearTimeout(safetyTimer);
-            originalOnError();
-          };
-
+          // 立即切至說話狀態，確保視覺同步
           AvatarController.setSpeakingState(true);
           window.speechSynthesis.speak(utterance);
         });
@@ -626,37 +696,75 @@
 
     /**
      * =========================================================================
-     * 5. 功能模組介面（Feature Strategy：翻譯功能，未來可擴充文法/會話等）
+     * 5. AI 翻譯與動態模型查詢模組（Translation & Model Service）
      * =========================================================================
      */
     const TranslationService = {
+      buildPrompt(sourceText, langInfo) {
+        return [
+          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
+          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
+          `原文：${sourceText}`
+        ].join("\n");
+      },
+
+      async listAvailableModels(apiKey) {
+        const cleanKey = (apiKey || "").trim();
+        if (!cleanKey) {
+          throw new Error("請先輸入 Gemini API Key 再偵測模型。");
+        }
+
+        const url = `${APP_CONFIG.gemini.endpointBase}/models?key=${encodeURIComponent(cleanKey)}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`無法取得模型清單（HTTP ${response.status}）`);
+        }
+
+        const data = await response.json();
+        const models = (data.models || [])
+          .map((m) => (m.name || "").replace(/^models\//, ""))
+          .filter((name) => name.includes("gemini"));
+
+        return models;
+      },
+
       async translateChineseToTarget(sourceText, targetLangKey) {
         const apiKey = StorageManager.getApiKey();
         if (!apiKey) {
           throw new Error("尚未設定 Gemini API Key，請先點擊右上角「API 設定」輸入並儲存金鑰。");
         }
 
+        const model = StorageManager.getModel();
+        const mode = StorageManager.getApiMode();
         const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
-        const url = `${APP_CONFIG.gemini.endpointBase}/${APP_CONFIG.gemini.model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+        const prompt = this.buildPrompt(sourceText, langInfo);
 
-        const prompt = [
-          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
-          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
-          `原文：${sourceText}`
-        ].join("\n");
+        let url = "";
+        let payload = null;
+
+        if (mode === "interactions") {
+          url = `${APP_CONFIG.gemini.endpointBase}/interactions?key=${encodeURIComponent(apiKey)}`;
+          payload = {
+            model,
+            input: prompt
+          };
+        } else {
+          url = `${APP_CONFIG.gemini.endpointBase}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+          payload = {
+            contents: [
+              {
+                parts: [{ text: prompt }]
+              }
+            ]
+          };
+        }
 
         const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: prompt }]
-              }
-            ]
-          })
+          body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
@@ -673,11 +781,26 @@
         }
 
         const data = await response.json();
-        const resultText =
-          data?.candidates?.[0]?.content?.parts
+
+        // 同時相容 generateContent 與 interactions 常見輸出結構
+        let resultText = "";
+        if (Array.isArray(data?.candidates)) {
+          resultText = data.candidates[0]?.content?.parts
             ?.map((part) => part.text || "")
             .join("")
             .trim() || "";
+        }
+
+        if (!resultText && Array.isArray(data?.outputs)) {
+          resultText = data.outputs
+            .map((item) => item?.text || item?.content || "")
+            .join("")
+            .trim();
+        }
+
+        if (!resultText && typeof data?.output === "string") {
+          resultText = data.output.trim();
+        }
 
         if (!resultText) {
           throw new Error("API 回傳內容為空，請再試一次。");
@@ -708,15 +831,11 @@
       },
 
       syncLanguageUI() {
-        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode];
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         const selfBadgeEl = document.getElementById("userSelfLabel");
-        if (!langInfo || !selfBadgeEl) {
-          selfBadgeEl.textContent = APP_CONFIG.defaultSelfLabel;
-          return;
+        if (selfBadgeEl) {
+          selfBadgeEl.textContent = langInfo.selfWord;
         }
-
-        // 依選擇的語言顯示不同形式的「我」
-        selfBadgeEl.textContent = langInfo.selfWord || APP_CONFIG.defaultSelfLabel;
       },
 
       setStatus(msg) {
@@ -736,11 +855,14 @@
         document.getElementById("targetLangSelect").disabled = busy;
       },
 
+      closeApiPanel() {
+        document.getElementById("apiPanel").classList.remove("open");
+      },
+
       async handleStartChat() {
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         const greetingText = langInfo.greeting(langInfo.label);
 
-        AppState.hasStartedChat = true;
         this.setTutorBubble(greetingText);
         this.setStatus("家教正在說話...");
 
@@ -772,7 +894,6 @@
           this.setTutorBubble(translatedText);
           this.setStatus(`已翻譯成${langInfo.label}，正在朗讀...`);
 
-          // 自動啟動 TTS（切換成 speaking 圖示），結束後自動切回 idle 圖示
           await TTSService.speak(translatedText, langInfo.ttsLang);
           this.setStatus("");
         } catch (error) {
@@ -784,48 +905,103 @@
         }
       },
 
-      bindEvents() {
-        // 載入已存的 API Key
+      async handleDetectModels() {
         const apiKeyInput = document.getElementById("apiKeyInput");
-        apiKeyInput.value = StorageManager.getApiKey();
+        const modelInput = document.getElementById("modelInput");
+        const currentKey = apiKeyInput.value.trim() || StorageManager.getApiKey();
 
-        // 切換 API 設定面板
+        this.setStatus("正在查詢可用模型...");
+        try {
+          const models = await TranslationService.listAvailableModels(currentKey);
+          const rowEl = document.getElementById("detectedModelsRow");
+          const selectEl = document.getElementById("detectedModelsSelect");
+
+          if (!models.length) {
+            this.setStatus("未找到可用的 Gemini 模型。");
+            return;
+          }
+
+          selectEl.innerHTML = "";
+          models.forEach((m) => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = m;
+            selectEl.appendChild(opt);
+          });
+
+          if (models.includes(modelInput.value.trim())) {
+            selectEl.value = modelInput.value.trim();
+          }
+
+          rowEl.style.display = "flex";
+          this.setStatus(`已偵測到 ${models.length} 個模型，可選擇後套用。`);
+        } catch (err) {
+          this.setStatus(`⚠️ ${err.message}`);
+        }
+      },
+
+      bindEvents() {
+        const apiKeyInput = document.getElementById("apiKeyInput");
+        const modelInput = document.getElementById("modelInput");
+        const apiModeSelect = document.getElementById("apiModeSelect");
+
+        apiKeyInput.value = StorageManager.getApiKey();
+        modelInput.value = StorageManager.getModel();
+        apiModeSelect.value = StorageManager.getApiMode();
+
         document.getElementById("toggleApiBtn").addEventListener("click", () => {
           document.getElementById("apiPanel").classList.toggle("open");
         });
 
-        // 儲存 API Key
+        // 儲存金鑰與模型設定後，自動收合面板
         document.getElementById("saveApiBtn").addEventListener("click", () => {
           StorageManager.setApiKey(apiKeyInput.value);
+          StorageManager.setModel(modelInput.value);
+          StorageManager.setApiMode(apiModeSelect.value);
+
           apiKeyInput.value = StorageManager.getApiKey();
-          this.setStatus("已將 API Key 儲存於此裝置瀏覽器。");
+          modelInput.value = StorageManager.getModel();
+          this.closeApiPanel();
+          this.setStatus("已儲存 API 設定並收合視窗。");
         });
 
-        // 清除 API Key
         document.getElementById("clearApiBtn").addEventListener("click", () => {
           StorageManager.clearApiKey();
           apiKeyInput.value = "";
           this.setStatus("已清除本機儲存的 API Key。");
         });
 
-        // 語言切換
+        apiModeSelect.addEventListener("change", (e) => {
+          StorageManager.setApiMode(e.target.value);
+        });
+
+        document.getElementById("detectModelsBtn").addEventListener("click", () => {
+          this.handleDetectModels();
+        });
+
+        document.getElementById("applyModelBtn").addEventListener("click", () => {
+          const selectedModel = document.getElementById("detectedModelsSelect").value;
+          if (selectedModel) {
+            modelInput.value = selectedModel;
+            StorageManager.setModel(selectedModel);
+            this.setStatus(`已套用模型：${selectedModel}`);
+          }
+        });
+
         document.getElementById("targetLangSelect").addEventListener("change", (e) => {
           AppState.languageCode = e.target.value;
           StorageManager.setLanguage(AppState.languageCode);
           this.syncLanguageUI();
         });
 
-        // 開始對話
         document.getElementById("startChatBtn").addEventListener("click", () => {
           this.handleStartChat();
         });
 
-        // 送出翻譯
         document.getElementById("sendBtn").addEventListener("click", () => {
           this.handleSendTranslation();
         });
 
-        // 支援 Enter 送出（Shift + Enter 換行）
         document.getElementById("userInput").addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -835,13 +1011,16 @@
           }
         });
 
-        // 預先觸發瀏覽器語音列表載入
         if ("speechSynthesis" in window) {
           window.speechSynthesis.getVoices();
+          window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+          };
         }
       },
 
       init() {
+        AvatarController.preloadImages();
         this.initLanguageSelect();
         this.syncLanguageUI();
         AvatarController.setSpeakingState(false);
