@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 外語家教 - 翻譯練習</title>
+  <style>
+    :root {
+      --bg-color: #f4f6fb;
+      --card-bg: #ffffff;
+      --primary: #3b6ef6;
+      --primary-hover: #2855d4;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #222222;
+      --bubble-tutor: #fffdf5;
+      --bubble-user: #eef4ff;
+      --shadow-comic: 4px 4px 0px #222222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
+      background: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 18px;
+      box-shadow: 6px 6px 0px var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* 頂部列與 API 設定面板 */
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #d1d5db;
+    }
+
+    .app-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 2px 2px 0px var(--border-color);
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+    }
+
+    .api-panel {
+      background: #f9fafb;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .api-panel.open {
+      display: flex;
+    }
+
+    .api-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .api-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .api-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .status-text {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--primary);
+      min-height: 1.2em;
+    }
+
+    /* Tutor 角色與控制區 */
+    .tutor-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar-frame {
+      width: 280px;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #e5e7eb;
+      box-shadow: var(--shadow-comic);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .lang-select {
+      padding: 9px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: 2px 2px 0px var(--border-color);
+      cursor: pointer;
+    }
+
+    /* 漫畫風格 Speech Bubble */
+    .speech-bubble {
+      position: relative;
+      width: 100%;
+      background: var(--bubble-tutor);
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow-comic);
+      min-height: 84px;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* 漫畫對話框上方尖角 */
+    .speech-bubble.tutor-bubble::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 12px solid var(--border-color);
+    }
+
+    .speech-bubble.tutor-bubble::after {
+      content: "";
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid var(--bubble-tutor);
+    }
+
+    /* 使用者輸入區塊：[我/Me/...] + [Speech Bubble 輸入框] + [送出] */
+    .user-section {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .user-badge {
+      min-width: 56px;
+      padding: 0 12px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      background: #fef3c7;
+      box-shadow: 3px 3px 0px var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .user-bubble-input {
+      flex: 1;
+      min-height: 68px;
+      max-height: 160px;
+      padding: 12px 14px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--bubble-user);
+      box-shadow: 3px 3px 0px var(--border-color);
+      font-family: inherit;
+      font-size: 1rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text-main);
+    }
+
+    .user-bubble-input:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .send-btn {
+      padding: 0 18px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px var(--border-color);
+      flex-shrink: 0;
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .send-btn:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .send-btn:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    /* 手機版響應式調整 */
+    @media (max-width: 600px) {
+      .app-container {
+        padding: 14px;
+        border-radius: 14px;
+      }
+
+      .user-section {
+        flex-wrap: wrap;
+      }
+
+      .user-badge {
+        min-width: 48px;
+        height: 44px;
+        font-size: 1rem;
+      }
+
+      .user-bubble-input {
+        width: calc(100% - 62px);
+        flex: none;
+      }
+
+      .send-btn {
+        width: 100%;
+        height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 頂部列 -->
+    <header class="top-bar">
+      <div class="app-title">
+        <span>🌐 AI 外語家教</span>
+      </div>
+      <button id="toggleApiBtn" class="btn btn-secondary" type="button">⚙️ API 設定</button>
+    </header>
+
+    <!-- 本地 API 設定區（存在使用者本機 localStorage） -->
+    <section id="apiPanel" class="api-panel" aria-label="API 設定">
+      <div class="api-row">
+        <input
+          id="apiKeyInput"
+          class="api-input"
+          type="password"
+          placeholder="貼上你的 Gemini API Key（僅保存在此裝置瀏覽器）"
+          autocomplete="off"
+        />
+        <button id="saveApiBtn" class="btn btn-primary" type="button">儲存金鑰</button>
+        <button id="clearApiBtn" class="btn btn-secondary" type="button">清除</button>
+      </div>
+      <p class="api-hint">
+        可至 Google AI Studio 申請免費額度的 API Key；金鑰只會儲存在你的瀏覽器本機（<code>localStorage</code>），不會寫入 HTML 檔或上傳至伺服器。
+      </p>
+    </section>
+
+    <!-- Tutor 形象、語言選擇、開始對話與 Speech Bubble -->
+    <main class="tutor-section">
+      <div class="avatar-frame">
+        <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑，或修改下方設定表 -->
+        <img id="tutorAvatar" src="./female 1.1.gif" alt="Tutor 形象" />
+      </div>
+
+      <div class="controls-row">
+        <button id="startChatBtn" class="btn btn-primary" type="button">開始對話</button>
+        <select id="targetLangSelect" class="lang-select" aria-label="選擇目標語言">
+          <!-- 選項由語言設定表動態產生，預設為英文 -->
+        </select>
+      </div>
+
+      <div id="tutorBubble" class="speech-bubble tutor-bubble">
+        點擊「開始對話」與家教打招呼，或在下方輸入中文句子進行翻譯練習吧！
+      </div>
+
+      <div id="statusText" class="status-text" role="status" aria-live="polite"></div>
+    </main>
+
+    <!-- 使用者 Speech Bubble 區塊 -->
+    <section class="user-section" aria-label="輸入要翻譯的中文">
+      <div id="userSelfLabel" class="user-badge">我</div>
+      <textarea
+        id="userInput"
+        class="user-bubble-input"
+        placeholder="請輸入想翻譯的繁體中文或中文句子..."
+      ></textarea>
+      <button id="sendBtn" class="send-btn" type="button">送出</button>
+    </section>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. 可擴充設定區（未來新增角色、語言、功能模組皆可在此擴充）
+     * =========================================================================
+     */
+    const APP_CONFIG = {
+      defaultLanguage: "en",
+      defaultSelfLabel: "我",
+      storageKeys: {
+        apiKey: "ai_tutor_gemini_api_key_v1",
+        language: "ai_tutor_target_lang_v1",
+        characterId: "ai_tutor_character_id_v1",
+        modeId: "ai_tutor_mode_id_v1"
+      },
+      gemini: {
+        model: "gemini-2.5-flash",
+        endpointBase: "https://generativelanguage.googleapis.com/v1beta/models"
+      }
+    };
+
+    /**
+     * 角色註冊表（Character Registry）
+     * 未來要新增新角色時，只需在這裡新增一筆設定即可。
+     * 圖檔空位：請將對應的 GIF 檔放入與此 HTML 相同的資料夾（或改為你的圖片路徑）。
+     */
+    const CHARACTER_REGISTRY = {
+      female_1: {
+        id: "female_1",
+        name: "Female 1",
+        images: {
+          idle: "./female 1.1.gif",     // 預設／待機圖檔空位（對應 female 1.1.gif）
+          speaking: "./female 1.2.gif"  // TTS 說話中圖檔空位（對應 female 1.2.gif）
+        },
+        ttsConfig: {
+          zhLang: "zh-TW",
+          pitch: 1.05,
+          rate: 1.0
+        }
+      }
+      // 未來擴充範例：
+      // male_1: {
+      //   id: "male_1",
+      //   name: "Male 1",
+      //   images: { idle: "./male 1.1.gif", speaking: "./male 1.2.gif" },
+      //   ttsConfig: { zhLang: "zh-TW", pitch: 0.9, rate: 1.0 }
+      // }
+    };
+
+    /**
+     * 語言註冊表（Language Registry）
+     * 包含：顯示名稱、開場白模板、左側「我」的字形、TTS 語系代碼
+     */
+    const LANGUAGE_REGISTRY = {
+      en: {
+        code: "en",
+        label: "英文",
+        selfWord: "Me",
+        ttsLang: "en-US",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      ja: {
+        code: "ja",
+        label: "日文",
+        selfWord: "私",
+        ttsLang: "ja-JP",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      es: {
+        code: "es",
+        label: "西班牙文",
+        selfWord: "Yo",
+        ttsLang: "es-ES",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      ko: {
+        code: "ko",
+        label: "韓文",
+        selfWord: "나",
+        ttsLang: "ko-KR",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      it: {
+        code: "it",
+        label: "義大利文",
+        selfWord: "Io",
+        ttsLang: "it-IT",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 2. 儲存與狀態管理（State & Storage Manager）
+     * =========================================================================
+     */
+    const StorageManager = {
+      getApiKey() {
+        return (localStorage.getItem(APP_CONFIG.storageKeys.apiKey) || "").trim();
+      },
+      setApiKey(key) {
+        localStorage.setItem(APP_CONFIG.storageKeys.apiKey, (key || "").trim());
+      },
+      clearApiKey() {
+        localStorage.removeItem(APP_CONFIG.storageKeys.apiKey);
+      },
+      getLanguage() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.language);
+        return LANGUAGE_REGISTRY[saved] ? saved : APP_CONFIG.defaultLanguage;
+      },
+      setLanguage(langCode) {
+        if (LANGUAGE_REGISTRY[langCode]) {
+          localStorage.setItem(APP_CONFIG.storageKeys.language, langCode);
+        }
+      },
+      getCharacterId() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.characterId);
+        return CHARACTER_REGISTRY[saved] ? saved : "female_1";
+      }
+    };
+
+    const AppState = {
+      characterId: StorageManager.getCharacterId(),
+      languageCode: StorageManager.getLanguage(),
+      isSpeaking: false,
+      isTranslating: false,
+      hasStartedChat: false
+    };
+
+    /**
+     * =========================================================================
+     * 3. 角色與 UI 控制器（Avatar & Bubble Controller）
+     * =========================================================================
+     */
+    const AvatarController = {
+      getCurrentCharacter() {
+        return CHARACTER_REGISTRY[AppState.characterId] || CHARACTER_REGISTRY.female_1;
+      },
+      setSpeakingState(speaking) {
+        AppState.isSpeaking = Boolean(speaking);
+        const charConfig = this.getCurrentCharacter();
+        const imgEl = document.getElementById("tutorAvatar");
+        if (!imgEl) return;
+
+        const targetSrc = AppState.isSpeaking
+          ? charConfig.images.speaking
+          : charConfig.images.idle;
+
+        if (imgEl.getAttribute("src") !== targetSrc) {
+          imgEl.setAttribute("src", targetSrc);
+        }
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 4. 文字轉語音模組（TTS Service）
+     * 自動在開始朗讀時切換為 speaking 圖示，結束或發生錯誤時切回 idle 圖示
+     * =========================================================================
+     */
+    const TTSService = {
+      speak(text, langCode = "zh-TW") {
+        const cleanText = (text || "").trim();
+        if (!cleanText) return Promise.resolve();
+
+        if (!("speechSynthesis" in window)) {
+          AvatarController.setSpeakingState(false);
+          return Promise.resolve();
+        }
+
+        // 停止先前尚未結束的語音，避免重疊
+        window.speechSynthesis.cancel();
+
+        return new Promise((resolve) => {
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = langCode;
+
+          const charConfig = AvatarController.getCurrentCharacter();
+          utterance.pitch = charConfig.ttsConfig?.pitch ?? 1.0;
+          utterance.rate = charConfig.ttsConfig?.rate ?? 1.0;
+
+          // 嘗試挑選符合語系的語音包（若系統有安裝）
+          const voices = window.speechSynthesis.getVoices();
+          const matchedVoice =
+            voices.find((v) => v.lang && v.lang.toLowerCase() === langCode.toLowerCase()) ||
+            voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(langCode.split("-")[0].toLowerCase()));
+          if (matchedVoice) {
+            utterance.voice = matchedVoice;
+          }
+
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            AvatarController.setSpeakingState(false);
+            resolve();
+          };
+
+          utterance.onstart = () => {
+            AvatarController.setSpeakingState(true);
+          };
+
+          utterance.onend = finish;
+          utterance.onerror = finish;
+
+          // 保底計時器：部分裝置若未觸發 onend，避免卡在說話圖示
+          const estimatedMs = Math.max(2500, cleanText.length * 160 + 2000);
+          const safetyTimer = setTimeout(finish, estimatedMs);
+
+          const originalOnEnd = utterance.onend;
+          utterance.onend = () => {
+            clearTimeout(safetyTimer);
+            originalOnEnd();
+          };
+
+          const originalOnError = utterance.onerror;
+          utterance.onerror = () => {
+            clearTimeout(safetyTimer);
+            originalOnError();
+          };
+
+          AvatarController.setSpeakingState(true);
+          window.speechSynthesis.speak(utterance);
+        });
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 5. 功能模組介面（Feature Strategy：翻譯功能，未來可擴充文法/會話等）
+     * =========================================================================
+     */
+    const TranslationService = {
+      async translateChineseToTarget(sourceText, targetLangKey) {
+        const apiKey = StorageManager.getApiKey();
+        if (!apiKey) {
+          throw new Error("尚未設定 Gemini API Key，請先點擊右上角「API 設定」輸入並儲存金鑰。");
+        }
+
+        const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
+        const url = `${APP_CONFIG.gemini.endpointBase}/${APP_CONFIG.gemini.model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+        const prompt = [
+          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
+          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
+          `原文：${sourceText}`
+        ].join("\n");
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [{ text: prompt }]
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) {
+          let errMsg = `API 請求失敗（HTTP ${response.status}）`;
+          try {
+            const errData = await response.json();
+            if (errData?.error?.message) {
+              errMsg = `API 錯誤：${errData.error.message}`;
+            }
+          } catch (_) {
+            // 忽略 JSON 解析失敗
+          }
+          throw new Error(errMsg);
+        }
+
+        const data = await response.json();
+        const resultText =
+          data?.candidates?.[0]?.content?.parts
+            ?.map((part) => part.text || "")
+            .join("")
+            .trim() || "";
+
+        if (!resultText) {
+          throw new Error("API 回傳內容為空，請再試一次。");
+        }
+
+        return resultText;
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 6. 介面渲染與事件綁定（UI Controller）
+     * =========================================================================
+     */
+    const UIController = {
+      initLanguageSelect() {
+        const selectEl = document.getElementById("targetLangSelect");
+        selectEl.innerHTML = "";
+
+        Object.values(LANGUAGE_REGISTRY).forEach((lang) => {
+          const option = document.createElement("option");
+          option.value = lang.code;
+          option.textContent = lang.label;
+          selectEl.appendChild(option);
+        });
+
+        selectEl.value = AppState.languageCode;
+      },
+
+      syncLanguageUI() {
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode];
+        const selfBadgeEl = document.getElementById("userSelfLabel");
+        if (!langInfo || !selfBadgeEl) {
+          selfBadgeEl.textContent = APP_CONFIG.defaultSelfLabel;
+          return;
+        }
+
+        // 依選擇的語言顯示不同形式的「我」
+        selfBadgeEl.textContent = langInfo.selfWord || APP_CONFIG.defaultSelfLabel;
+      },
+
+      setStatus(msg) {
+        const statusEl = document.getElementById("statusText");
+        if (statusEl) statusEl.textContent = msg || "";
+      },
+
+      setTutorBubble(text) {
+        const bubbleEl = document.getElementById("tutorBubble");
+        if (bubbleEl) bubbleEl.textContent = text;
+      },
+
+      setBusy(busy) {
+        AppState.isTranslating = busy;
+        document.getElementById("sendBtn").disabled = busy;
+        document.getElementById("startChatBtn").disabled = busy;
+        document.getElementById("targetLangSelect").disabled = busy;
+      },
+
+      async handleStartChat() {
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        const greetingText = langInfo.greeting(langInfo.label);
+
+        AppState.hasStartedChat = true;
+        this.setTutorBubble(greetingText);
+        this.setStatus("家教正在說話...");
+
+        const charConfig = AvatarController.getCurrentCharacter();
+        await TTSService.speak(greetingText, charConfig.ttsConfig?.zhLang || "zh-TW");
+        this.setStatus("");
+      },
+
+      async handleSendTranslation() {
+        const inputEl = document.getElementById("userInput");
+        const sourceText = inputEl.value.trim();
+
+        if (!sourceText) {
+          this.setStatus("請先輸入想要翻譯的中文句子。");
+          inputEl.focus();
+          return;
+        }
+
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        this.setBusy(true);
+        this.setStatus(`正在翻譯成${langInfo.label}...`);
+
+        try {
+          const translatedText = await TranslationService.translateChineseToTarget(
+            sourceText,
+            AppState.languageCode
+          );
+
+          this.setTutorBubble(translatedText);
+          this.setStatus(`已翻譯成${langInfo.label}，正在朗讀...`);
+
+          // 自動啟動 TTS（切換成 speaking 圖示），結束後自動切回 idle 圖示
+          await TTSService.speak(translatedText, langInfo.ttsLang);
+          this.setStatus("");
+        } catch (error) {
+          this.setTutorBubble(`⚠️ ${error.message}`);
+          this.setStatus("");
+          AvatarController.setSpeakingState(false);
+        } finally {
+          this.setBusy(false);
+        }
+      },
+
+      bindEvents() {
+        // 載入已存的 API Key
+        const apiKeyInput = document.getElementById("apiKeyInput");
+        apiKeyInput.value = StorageManager.getApiKey();
+
+        // 切換 API 設定面板
+        document.getElementById("toggleApiBtn").addEventListener("click", () => {
+          document.getElementById("apiPanel").classList.toggle("open");
+        });
+
+        // 儲存 API Key
+        document.getElementById("saveApiBtn").addEventListener("click", () => {
+          StorageManager.setApiKey(apiKeyInput.value);
+          apiKeyInput.value = StorageManager.getApiKey();
+          this.setStatus("已將 API Key 儲存於此裝置瀏覽器。");
+        });
+
+        // 清除 API Key
+        document.getElementById("clearApiBtn").addEventListener("click", () => {
+          StorageManager.clearApiKey();
+          apiKeyInput.value = "";
+          this.setStatus("已清除本機儲存的 API Key。");
+        });
+
+        // 語言切換
+        document.getElementById("targetLangSelect").addEventListener("change", (e) => {
+          AppState.languageCode = e.target.value;
+          StorageManager.setLanguage(AppState.languageCode);
+          this.syncLanguageUI();
+        });
+
+        // 開始對話
+        document.getElementById("startChatBtn").addEventListener("click", () => {
+          this.handleStartChat();
+        });
+
+        // 送出翻譯
+        document.getElementById("sendBtn").addEventListener("click", () => {
+          this.handleSendTranslation();
+        });
+
+        // 支援 Enter 送出（Shift + Enter 換行）
+        document.getElementById("userInput").addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (!AppState.isTranslating) {
+              this.handleSendTranslation();
+            }
+          }
+        });
+
+        // 預先觸發瀏覽器語音列表載入
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.getVoices();
+        }
+      },
+
+      init() {
+        this.initLanguageSelect();
+        this.syncLanguageUI();
+        AvatarController.setSpeakingState(false);
+        this.bindEvents();
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      UIController.init();
+    });
+  </script>
+</body>
+</html>
