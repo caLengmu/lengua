@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 外語家教 - 翻譯練習</title>
+  <title>AI 外語家教 - 翻譯、複習與測驗</title>
   <style>
     :root {
       --bg-color: #f4f6fb;
       --card-bg: #ffffff;
       --primary: #3b6ef6;
       --primary-hover: #2855d4;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
       --text-main: #1f2937;
       --text-muted: #6b7280;
       --border-color: #222222;
@@ -45,9 +47,20 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
+      align-self: flex-start;
     }
 
-    /* 頂部列與 API 設定面板 */
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    /* 頂部列 */
     .top-bar {
       display: flex;
       flex-wrap: wrap;
@@ -77,6 +90,10 @@
       color: var(--text-main);
       box-shadow: 2px 2px 0px var(--border-color);
       transition: transform 0.08s ease, background-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .btn:active {
@@ -102,6 +119,20 @@
       background: #f3f4f6;
     }
 
+    .btn-secondary:hover:not(:disabled) {
+      background: #e5e7eb;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #fecaca;
+    }
+
+    /* API 設定面板 */
     .api-panel {
       background: #f9fafb;
       border: 2px solid var(--border-color);
@@ -239,7 +270,7 @@
       border-bottom: 10px solid var(--bubble-tutor);
     }
 
-    /* Speech Bubble 下方控制列：由左至右 [語言選單] [語速] [說話] */
+    /* Speech Bubble 下方控制列：由左至右 [語言選單] [語速] [說話（往右延伸佔滿剩餘空間）] */
     .bubble-actions {
       display: flex;
       flex-wrap: wrap;
@@ -259,6 +290,13 @@
       color: var(--text-main);
       box-shadow: 2px 2px 0px var(--border-color);
       cursor: pointer;
+    }
+
+    .speak-expand-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 9px 16px;
+      font-size: 0.98rem;
     }
 
     /* 語速調整彈窗（Modal） */
@@ -332,7 +370,7 @@
       color: var(--text-muted);
     }
 
-    /* 使用者輸入區塊：[Me/私/Yo/나/Io] + [Speech Bubble 輸入框（含右下角清除鍵與左側尖角）] + [送出] */
+    /* 使用者輸入區塊 */
     .user-section {
       display: flex;
       align-items: flex-start;
@@ -364,7 +402,6 @@
       display: flex;
     }
 
-    /* 指向左側 Me 的小尖角 */
     .user-bubble-wrapper::before {
       content: "";
       position: absolute;
@@ -412,7 +449,6 @@
       outline-offset: 1px;
     }
 
-    /* 放於 speech bubble 內部右下角的一鍵清除按鈕 */
     .clear-bubble-btn {
       position: absolute;
       right: 10px;
@@ -473,6 +509,196 @@
       cursor: not-allowed;
     }
 
+    /* [存檔][複習][測驗] 區塊：與 [送出] 保持明顯距離避免誤按 */
+    .mode-toolbar {
+      margin-top: 14px;
+      padding-top: 18px;
+      border-top: 2px dashed #d1d5db;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    /* 複習頁面樣式 */
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .date-group {
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      background: #fafafa;
+      box-shadow: 3px 3px 0px var(--border-color);
+      overflow: hidden;
+    }
+
+    .date-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #fffdf5;
+    }
+
+    .date-toggle-btn {
+      flex: 1;
+      text-align: left;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px;
+    }
+
+    .icon-del-btn {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      background: #fff;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .icon-del-btn:hover {
+      background: #fee2e2;
+    }
+
+    .date-group-body {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border-top: 1.5px solid #e5e7eb;
+      background: #ffffff;
+    }
+
+    .date-group.open .date-group-body {
+      display: flex;
+    }
+
+    .review-item {
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-item-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .review-translated {
+      font-weight: 800;
+      font-size: 1.04rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+
+    .review-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .review-source {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 28px 16px;
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      border: 2px dashed #d1d5db;
+      border-radius: 14px;
+    }
+
+    /* 測驗準備與進行樣式 */
+    .quiz-setup-box {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .quiz-date-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-date-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: #fffdf5;
+      box-shadow: 2px 2px 0px var(--border-color);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+
+    .quiz-date-checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .quiz-progress-box {
+      width: 100%;
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quiz-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 14px;
+      background: #e5e7eb;
+      border: 2px solid var(--border-color);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.25s ease;
+    }
+
     /* 手機版響應式調整 */
     @media (max-width: 600px) {
       .app-container {
@@ -507,103 +733,195 @@
         height: 44px;
         margin-top: 0;
       }
+
+      .mode-toolbar {
+        gap: 8px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="app-container">
-    <!-- 頂部列 -->
-    <header class="top-bar">
-      <div class="app-title">
-        <span>🌐 AI 外語家教</span>
-      </div>
-      <button id="toggleApiBtn" class="btn btn-secondary" type="button">⚙️ API 設定</button>
-    </header>
+    <!-- ==================== 1. 主翻譯畫面 ==================== -->
+    <div id="mainView" class="view-section active">
+      <header class="top-bar">
+        <div class="app-title">
+          <span>🌐 AI 外語家教</span>
+        </div>
+        <button id="toggleApiBtn" class="btn btn-secondary" type="button">⚙️ API 設定</button>
+      </header>
 
-    <!-- 本地 API 設定區（存在使用者本機 localStorage） -->
-    <section id="apiPanel" class="api-panel" aria-label="API 設定">
-      <div class="api-row">
-        <input
-          id="apiKeyInput"
-          class="api-input"
-          type="password"
-          placeholder="貼上你的 Gemini API Key（僅保存在此裝置瀏覽器）"
-          autocomplete="off"
-        />
-        <button id="saveApiBtn" class="btn btn-primary" type="button">儲存金鑰</button>
-        <button id="clearApiBtn" class="btn btn-secondary" type="button">清除</button>
-      </div>
+      <!-- 本地 API 設定區 -->
+      <section id="apiPanel" class="api-panel" aria-label="API 設定">
+        <div class="api-row">
+          <input
+            id="apiKeyInput"
+            class="api-input"
+            type="password"
+            placeholder="貼上你的 Gemini API Key（僅保存在此裝置瀏覽器）"
+            autocomplete="off"
+          />
+          <button id="saveApiBtn" class="btn btn-primary" type="button">儲存金鑰</button>
+          <button id="clearApiBtn" class="btn btn-secondary" type="button">清除</button>
+        </div>
 
-      <div class="api-row">
-        <input
-          id="modelInput"
-          class="api-input"
-          type="text"
-          placeholder="模型名稱（預設 gemini-3.5-flash-lite）"
-        />
-      </div>
+        <div class="api-row">
+          <input
+            id="modelInput"
+            class="api-input"
+            type="text"
+            placeholder="模型名稱（預設 gemini-3.5-flash-lite）"
+          />
+        </div>
 
-      <div class="api-guide">
-        <div class="api-guide-title">💡 如何免費取得並設定 Gemini API Key？</div>
-        <ol>
-          <li>
-            前往
-            <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>
-            並使用你的 Google 帳號登入。
-          </li>
-          <li>
-            在左側選單或首頁點擊 <strong>Get API key</strong>（取得 API 金鑰），建立一組新的 API Key。
-          </li>
-          <li>
-            點擊該金鑰旁的 <strong>Copy（複製）</strong> 圖示。
-          </li>
-          <li>
-            回到本頁上方輸入框，按滑鼠右鍵選擇 <strong>貼上</strong>（或使用快捷鍵 <code>Ctrl+V</code> / <code>Cmd+V</code>），再按 <strong>儲存金鑰</strong> 即可開始使用。
-          </li>
-        </ol>
-      </div>
-    </section>
+        <div class="api-guide">
+          <div class="api-guide-title">💡 如何免費取得並設定 Gemini API Key？</div>
+          <ol>
+            <li>
+              前往
+              <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>
+              並使用你的 Google 帳號登入。
+            </li>
+            <li>
+              在左側選單或首頁點擊 <strong>Get API key</strong>（取得 API 金鑰），建立一組新的 API Key。
+            </li>
+            <li>
+              點擊該金鑰旁的 <strong>Copy（複製）</strong> 圖示。
+            </li>
+            <li>
+              回到本頁上方輸入框，按滑鼠右鍵選擇 <strong>貼上</strong>（或使用快捷鍵 <code>Ctrl+V</code> / <code>Cmd+V</code>），再按 <strong>儲存金鑰</strong> 即可開始使用。
+            </li>
+          </ol>
+        </div>
+      </section>
 
-    <!-- Tutor 形象、Speech Bubble 與下方控制列 -->
-    <main class="tutor-section">
-      <div class="avatar-frame">
-        <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑 -->
-        <img id="tutorAvatar" src="./female 1.1.gif" alt="Tutor 形象" />
-      </div>
+      <!-- Tutor 形象、Speech Bubble 與下方控制列 -->
+      <main class="tutor-section">
+        <div class="avatar-frame">
+          <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑 -->
+          <img id="tutorAvatarMain" class="tutor-avatar-img" src="./female 1.1.gif" alt="Tutor 形象" />
+        </div>
 
-      <div id="tutorBubble" class="speech-bubble tutor-bubble">
-        同學好，今天想學英文的哪句話呢？
-      </div>
+        <div id="tutorBubble" class="speech-bubble tutor-bubble">
+          同學好，今天想學英文的哪句話呢？
+        </div>
 
-      <!-- 由左至右：[語言選單] [語速] [說話] -->
-      <div class="bubble-actions">
-        <select id="targetLangSelect" class="lang-select" aria-label="選擇目標語言"></select>
-        <button id="speedBtn" class="btn btn-secondary" type="button">語速 (1x)</button>
-        <button id="speakBtn" class="btn btn-primary" type="button">說話</button>
-      </div>
+        <!-- 由左至右：[語言選單] [語速] [說話] -->
+        <div class="bubble-actions">
+          <select id="targetLangSelect" class="lang-select" aria-label="選擇目標語言"></select>
+          <button id="speedBtn" class="btn btn-secondary speed-trigger-btn" type="button">語速 (1x)</button>
+          <button id="speakBtn" class="btn btn-primary speak-expand-btn" type="button">🔊 說話</button>
+        </div>
 
-      <div id="statusText" class="status-text" role="status" aria-live="polite"></div>
-    </main>
+        <div id="mainStatusText" class="status-text" role="status" aria-live="polite"></div>
+      </main>
 
-    <!-- 使用者 Speech Bubble 區塊 -->
-    <section class="user-section" aria-label="輸入要翻譯的中文">
-      <div id="userSelfLabel" class="user-badge">Me</div>
-      <div class="user-bubble-wrapper">
-        <textarea
-          id="userInput"
-          class="user-bubble-input"
-          placeholder="請輸入想翻譯的中文句子..."
-        ></textarea>
-        <button
-          id="clearBubbleBtn"
-          class="clear-bubble-btn"
-          type="button"
-          title="清除輸入內容"
-          aria-label="清除輸入內容"
-        >×</button>
+      <!-- 使用者 Speech Bubble 區塊 -->
+      <section class="user-section" aria-label="輸入要翻譯的中文">
+        <div id="userSelfLabel" class="user-badge">Me</div>
+        <div class="user-bubble-wrapper">
+          <textarea
+            id="userInput"
+            class="user-bubble-input"
+            placeholder="請輸入想翻譯的中文句子..."
+          ></textarea>
+          <button
+            id="clearBubbleBtn"
+            class="clear-bubble-btn"
+            type="button"
+            title="清除輸入內容"
+            aria-label="清除輸入內容"
+          >×</button>
+        </div>
+        <button id="sendBtn" class="send-btn" type="button">送出</button>
+      </section>
+
+      <!-- [存檔][複習][測驗] -->
+      <nav class="mode-toolbar" aria-label="學習功能">
+        <button id="saveRecordBtn" class="btn btn-secondary" type="button">💾 存檔</button>
+        <button id="openReviewBtn" class="btn btn-secondary" type="button">📖 複習</button>
+        <button id="openQuizSetupBtn" class="btn btn-secondary" type="button">📝 測驗</button>
+      </nav>
+    </div>
+
+    <!-- ==================== 2. 複習頁面 ==================== -->
+    <div id="reviewView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📖 複習紀錄</div>
+        <button id="backFromReviewBtn" class="btn btn-secondary" type="button">← 返回翻譯</button>
+      </header>
+
+      <div id="reviewStatusText" class="status-text" role="status" aria-live="polite"></div>
+      <div id="reviewListContainer" class="review-list"></div>
+    </div>
+
+    <!-- ==================== 3. 測驗準備頁面 ==================== -->
+    <div id="quizSetupView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📝 選擇測驗日期</div>
+        <button id="backFromQuizSetupBtn" class="btn btn-secondary" type="button">← 返回翻譯</button>
+      </header>
+
+      <div class="quiz-setup-box">
+        <button id="startQuizBtn" class="btn btn-primary" type="button">開始測驗</button>
+        <div id="quizStatusText" class="status-text" role="status" aria-live="polite"></div>
+        <div id="quizDateListContainer" class="quiz-date-list"></div>
       </div>
-      <button id="sendBtn" class="send-btn" type="button">送出</button>
-    </section>
+    </div>
+
+    <!-- ==================== 4. 測驗進行頁面 ==================== -->
+    <div id="quizPlayView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📝 翻譯測驗中</div>
+        <!-- [結束測驗] 放最上方避免與底部 [送出答案] 誤按 -->
+        <button id="exitQuizBtn" class="btn btn-danger" type="button">✕ 結束測驗</button>
+      </header>
+
+      <main class="tutor-section">
+        <div class="avatar-frame">
+          <img id="tutorAvatarQuiz" class="tutor-avatar-img" src="./female 1.1.gif" alt="Tutor 形象" />
+        </div>
+
+        <div id="quizTutorBubble" class="speech-bubble tutor-bubble"></div>
+
+        <!-- 測驗模式下將語言選擇、語速、說話替換為 [下一題] -->
+        <div class="bubble-actions">
+          <button id="nextQuestionBtn" class="btn btn-secondary speak-expand-btn" type="button">下一題 →</button>
+        </div>
+
+        <div id="quizPlayStatusText" class="status-text" role="status" aria-live="polite"></div>
+      </main>
+
+      <section class="user-section" aria-label="輸入測驗答案">
+        <div id="quizUserSelfLabel" class="user-badge">Me</div>
+        <div class="user-bubble-wrapper">
+          <textarea
+            id="quizAnswerInput"
+            class="user-bubble-input"
+            placeholder="請輸入你的翻譯答案..."
+          ></textarea>
+          <button
+            id="clearQuizAnswerBtn"
+            class="clear-bubble-btn"
+            type="button"
+            title="清除答案"
+            aria-label="清除答案"
+          >×</button>
+        </div>
+        <button id="submitAnswerBtn" class="send-btn" type="button">送出答案</button>
+      </section>
+
+      <!-- 最下方進度條（總題數以及目前作答進度） -->
+      <div class="quiz-progress-box">
+        <div class="quiz-progress-label">
+          <span id="quizProgressText">進度：0 / 0 題</span>
+          <span id="quizScoreText">答對：0 題</span>
+        </div>
+        <div class="progress-track">
+          <div id="quizProgressFill" class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- 語速調整彈窗 -->
@@ -623,7 +941,7 @@
   <script>
     /**
      * =========================================================================
-     * 1. 可擴充設定區（未來新增角色、語言、功能模組皆可在此擴充）
+     * 1. 可擴充設定區
      * =========================================================================
      */
     const APP_CONFIG = {
@@ -641,6 +959,11 @@
         speechRate: "ai_tutor_speech_rate_v1",
         characterId: "ai_tutor_character_id_v1"
       },
+      db: {
+        name: "AITutorStudyDB",
+        version: 1,
+        storeName: "translations"
+      },
       gemini: {
         defaultModel: "gemini-3.5-flash-lite",
         endpointBase: "https://generativelanguage.googleapis.com/v1beta/models"
@@ -649,15 +972,14 @@
 
     /**
      * 角色註冊表（Character Registry）
-     * 未來要新增新角色時，只需在這裡新增一筆設定即可。
      */
     const CHARACTER_REGISTRY = {
       female_1: {
         id: "female_1",
         name: "Female 1",
         images: {
-          idle: "./female 1.1.gif",     // 預設／待機圖檔空位
-          speaking: "./female 1.2.gif"  // TTS 說話中圖檔空位
+          idle: "./female 1.1.gif",
+          speaking: "./female 1.2.gif"
         },
         ttsConfig: {
           zhLang: "zh-TW",
@@ -668,7 +990,6 @@
 
     /**
      * 語言註冊表（Language Registry）
-     * 預設為英文（en），左側顯示對應字形：Me / 私 / Yo / 나 / Io
      */
     const LANGUAGE_REGISTRY = {
       en: {
@@ -710,7 +1031,7 @@
 
     /**
      * =========================================================================
-     * 2. 儲存與狀態管理（State & Storage Manager）
+     * 2. LocalStorage 與狀態管理
      * =========================================================================
      */
     const StorageManager = {
@@ -759,18 +1080,155 @@
     };
 
     const AppState = {
+      activeView: "mainView",
       characterId: StorageManager.getCharacterId(),
       languageCode: StorageManager.getLanguage(),
       speechRate: StorageManager.getSpeechRate(),
-      // 目前 speech bubble 內容的朗讀語系：預設為繁體中文，翻譯完成後切為目標語言
       currentTtsLang: "zh-TW",
+      lastTranslation: null, // { sourceText, translatedText, langCode }
       isSpeaking: false,
-      isTranslating: false
+      isBusy: false,
+      quiz: {
+        questions: [],
+        currentIndex: 0,
+        answeredCount: 0,
+        correctCount: 0,
+        currentQuestionAnswered: false
+      }
     };
 
     /**
      * =========================================================================
-     * 3. 角色與圖片控制器（Avatar Controller）
+     * 3. IndexedDB 存檔服務（StudyArchiveDB）
+     * =========================================================================
+     */
+    const StudyArchiveDB = {
+      dbInstance: null,
+
+      open() {
+        if (this.dbInstance) return Promise.resolve(this.dbInstance);
+
+        return new Promise((resolve, reject) => {
+          if (!("indexedDB" in window)) {
+            reject(new Error("此瀏覽器不支援 IndexedDB 存檔。"));
+            return;
+          }
+
+          const request = indexedDB.open(APP_CONFIG.db.name, APP_CONFIG.db.version);
+
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(APP_CONFIG.db.storeName)) {
+              const store = db.createObjectStore(APP_CONFIG.db.storeName, {
+                keyPath: "id",
+                autoIncrement: true
+              });
+              store.createIndex("dateKey", "dateKey", { unique: false });
+              store.createIndex("timestamp", "timestamp", { unique: false });
+            }
+          };
+
+          request.onsuccess = (event) => {
+            this.dbInstance = event.target.result;
+            resolve(this.dbInstance);
+          };
+
+          request.onerror = () => {
+            reject(new Error("開啟 IndexedDB 失敗。"));
+          };
+        });
+      },
+
+      formatDateKey(date = new Date()) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        return `${yyyy}/${mm}/${dd}`;
+      },
+
+      async getAllRecords() {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readonly");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const req = store.getAll();
+          req.onsuccess = () => {
+            const list = req.result || [];
+            list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            resolve(list);
+          };
+          req.onerror = () => reject(new Error("讀取存檔失敗。"));
+        });
+      },
+
+      async addRecord({ sourceText, translatedText, langCode }) {
+        const all = await this.getAllRecords();
+        const dateKey = this.formatDateKey(new Date());
+        const duplicate = all.find(
+          (item) =>
+            item.dateKey === dateKey &&
+            item.langCode === langCode &&
+            item.sourceText.trim() === sourceText.trim() &&
+            item.translatedText.trim() === translatedText.trim()
+        );
+        if (duplicate) {
+          return { saved: false, reason: "duplicate" };
+        }
+
+        const db = await this.open();
+        const record = {
+          dateKey,
+          timestamp: Date.now(),
+          langCode,
+          sourceText: sourceText.trim(),
+          translatedText: translatedText.trim()
+        };
+
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const req = store.add(record);
+          req.onsuccess = () => resolve({ saved: true, id: req.result, record });
+          req.onerror = () => reject(new Error("寫入存檔失敗。"));
+        });
+      },
+
+      async deleteRecordById(id) {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const req = store.delete(id);
+          req.onsuccess = () => resolve();
+          req.onerror = () => reject(new Error("刪除紀錄失敗。"));
+        });
+      },
+
+      async deleteRecordsByDateKey(dateKey) {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const index = store.index("dateKey");
+          const req = index.openCursor(IDBKeyRange.only(dateKey));
+
+          req.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+              cursor.delete();
+              cursor.continue();
+            }
+          };
+
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(new Error("刪除整日紀錄失敗。"));
+        });
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 4. 角色與 TTS 服務
      * =========================================================================
      */
     const AvatarController = {
@@ -789,25 +1247,26 @@
       setSpeakingState(speaking) {
         AppState.isSpeaking = Boolean(speaking);
         const charConfig = this.getCurrentCharacter();
-        const imgEl = document.getElementById("tutorAvatar");
-        if (!imgEl) return;
-
         const targetSrc = AppState.isSpeaking
           ? charConfig.images.speaking
           : charConfig.images.idle;
 
-        if (imgEl.getAttribute("src") !== targetSrc) {
-          imgEl.setAttribute("src", targetSrc);
-        }
+        document.querySelectorAll(".tutor-avatar-img").forEach((imgEl) => {
+          if (imgEl.getAttribute("src") !== targetSrc) {
+            imgEl.setAttribute("src", targetSrc);
+          }
+        });
       }
     };
 
-    /**
-     * =========================================================================
-     * 4. 文字轉語音模組（TTS Service）
-     * =========================================================================
-     */
     const TTSService = {
+      stop() {
+        if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+          window.speechSynthesis.cancel();
+        }
+        AvatarController.setSpeakingState(false);
+      },
+
       speak(text, langCode = "zh-TW") {
         const cleanText = (text || "").trim();
         if (!cleanText) return Promise.resolve();
@@ -855,7 +1314,10 @@
           utterance.onend = finish;
           utterance.onerror = finish;
 
-          const estimatedMs = Math.max(2600, (cleanText.length * 160) / Math.max(0.5, AppState.speechRate) + 2000);
+          const estimatedMs = Math.max(
+            2600,
+            (cleanText.length * 160) / Math.max(0.5, AppState.speechRate) + 2000
+          );
           const safetyTimer = setTimeout(finish, estimatedMs);
 
           AvatarController.setSpeakingState(true);
@@ -866,25 +1328,18 @@
 
     /**
      * =========================================================================
-     * 5. AI 翻譯模組（Translation Service）
+     * 5. Gemini API 服務（翻譯 ＋ 彈性批改測驗）
      * =========================================================================
      */
-    const TranslationService = {
-      async translateChineseToTarget(sourceText, targetLangKey) {
+    const GeminiService = {
+      async callModel(prompt) {
         const apiKey = StorageManager.getApiKey();
         if (!apiKey) {
           throw new Error("尚未設定 Gemini API Key，請先點擊右上角「API 設定」輸入並儲存金鑰。");
         }
 
         const model = StorageManager.getModel();
-        const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
         const url = `${APP_CONFIG.gemini.endpointBase}/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-
-        const prompt = [
-          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
-          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
-          `原文：${sourceText}`
-        ].join("\n");
 
         const response = await fetch(url, {
           method: "POST",
@@ -925,18 +1380,76 @@
         }
 
         return resultText;
+      },
+
+      async translateChineseToTarget(sourceText, targetLangKey) {
+        const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
+        const prompt = [
+          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
+          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
+          `原文：${sourceText}`
+        ].join("\n");
+
+        return this.callModel(prompt);
+      },
+
+      async gradeTranslationAnswer({ sourceText, referenceTranslation, userAnswer, langLabel }) {
+        const prompt = [
+          `你是一位親切且精準的外語家教，正在批改學生的${langLabel}翻譯測驗。`,
+          `請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。`,
+          `請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：`,
+          `{"isCorrect": true或false, "feedback": "簡短精準的繁體中文回饋（1~2句話，直接切中重點）"}`,
+          `規則：`,
+          `- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確。`,
+          `- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異，並鼓勵學生再試一次。`,
+          `中文題目：${sourceText}`,
+          `參考譯文：${referenceTranslation}`,
+          `學生作答：${userAnswer}`
+        ].join("\n");
+
+        const rawText = await this.callModel(prompt);
+        const cleaned = rawText
+          .replace(/^```json\s*/i, "")
+          .replace(/^```\s*/i, "")
+          .replace(/\s*```$/i, "")
+          .trim();
+
+        try {
+          const parsed = JSON.parse(cleaned);
+          const isCorrect = Boolean(parsed.isCorrect);
+          const feedback =
+            (parsed.feedback || "").trim() ||
+            (isCorrect ? "翻譯得很棒，繼續保持！" : `可以試試「${referenceTranslation}」，再試一次看看喔！`);
+          return { isCorrect, feedback };
+        } catch (_) {
+          // 若模型未回傳標準 JSON，做安全 fallback
+          const lower = cleaned.toLowerCase();
+          const isCorrect = lower.includes("正確") && !lower.includes("不正確") && !lower.includes("答錯");
+          return {
+            isCorrect,
+            feedback: cleaned
+          };
+        }
       }
     };
 
     /**
      * =========================================================================
-     * 6. 介面渲染與事件綁定（UI Controller）
+     * 6. 介面控制器（UI Controller：主畫面、複習、測驗）
      * =========================================================================
      */
     const UIController = {
       formatRateLabel(rate) {
         const rounded = Math.round(rate * 10) / 10;
         return Number.isInteger(rounded) ? `${rounded}x` : `${rounded.toFixed(1)}x`;
+      },
+
+      switchView(viewId) {
+        TTSService.stop();
+        AppState.activeView = viewId;
+        document.querySelectorAll(".view-section").forEach((sec) => {
+          sec.classList.toggle("active", sec.id === viewId);
+        });
       },
 
       initLanguageSelect() {
@@ -957,6 +1470,7 @@
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         const charConfig = AvatarController.getCurrentCharacter();
         AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
+        AppState.lastTranslation = null;
         this.setTutorBubble(langInfo.greeting(langInfo.label));
       },
 
@@ -970,27 +1484,25 @@
 
       syncRateUI() {
         const label = this.formatRateLabel(AppState.speechRate);
-        document.getElementById("speedBtn").textContent = `語速 (${label})`;
+        document.querySelectorAll(".speed-trigger-btn").forEach((btn) => {
+          btn.textContent = `語速 (${label})`;
+        });
         document.getElementById("rateDisplay").textContent = label;
       },
 
-      autoResizeUserInput() {
-        const textarea = document.getElementById("userInput");
-        const clearBtn = document.getElementById("clearBubbleBtn");
+      autoResizeTextarea(textarea, clearBtn, minHeight = 96) {
         if (!textarea) return;
-
         textarea.style.height = "auto";
-        const nextHeight = Math.max(96, textarea.scrollHeight);
+        const nextHeight = Math.max(minHeight, textarea.scrollHeight);
         textarea.style.height = `${nextHeight}px`;
-
         if (clearBtn) {
           clearBtn.classList.toggle("visible", textarea.value.length > 0);
         }
       },
 
-      setStatus(msg) {
-        const statusEl = document.getElementById("statusText");
-        if (statusEl) statusEl.textContent = msg || "";
+      setMainStatus(msg) {
+        const el = document.getElementById("mainStatusText");
+        if (el) el.textContent = msg || "";
       },
 
       setTutorBubble(text) {
@@ -998,11 +1510,14 @@
         if (bubbleEl) bubbleEl.textContent = text;
       },
 
-      setBusy(busy) {
-        AppState.isTranslating = busy;
+      setMainBusy(busy) {
+        AppState.isBusy = busy;
         document.getElementById("sendBtn").disabled = busy;
         document.getElementById("speakBtn").disabled = busy;
         document.getElementById("targetLangSelect").disabled = busy;
+        document.getElementById("saveRecordBtn").disabled = busy;
+        document.getElementById("openReviewBtn").disabled = busy;
+        document.getElementById("openQuizSetupBtn").disabled = busy;
       },
 
       closeApiPanel() {
@@ -1028,11 +1543,11 @@
         const bubbleText = (document.getElementById("tutorBubble")?.textContent || "").trim();
         if (!bubbleText) return;
 
-        this.setBusy(true);
-        this.setStatus("家教正在說話...");
+        this.setMainBusy(true);
+        this.setMainStatus("家教正在說話...");
         await TTSService.speak(bubbleText, AppState.currentTtsLang);
-        this.setStatus("");
-        this.setBusy(false);
+        this.setMainStatus("");
+        this.setMainBusy(false);
       },
 
       async handleSendTranslation() {
@@ -1040,73 +1555,406 @@
         const sourceText = inputEl.value.trim();
 
         if (!sourceText) {
-          this.setStatus("請先輸入想要翻譯的中文句子。");
+          this.setMainStatus("請先輸入想要翻譯的中文句子。");
           inputEl.focus();
           return;
         }
 
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
-        this.setBusy(true);
-        this.setStatus(`正在翻譯成${langInfo.label}...`);
+        this.setMainBusy(true);
+        this.setMainStatus(`正在翻譯成${langInfo.label}...`);
 
         try {
-          const translatedText = await TranslationService.translateChineseToTarget(
+          const translatedText = await GeminiService.translateChineseToTarget(
             sourceText,
             AppState.languageCode
           );
 
-          // 翻譯完成後，切為目標語言 TTS，之後按「說話」可反覆聽譯文
           AppState.currentTtsLang = langInfo.ttsLang;
+          AppState.lastTranslation = {
+            sourceText,
+            translatedText,
+            langCode: AppState.languageCode
+          };
+
           this.setTutorBubble(translatedText);
-          this.setStatus(`已翻譯成${langInfo.label}，正在朗讀...`);
+          this.setMainStatus(`已翻譯成${langInfo.label}，正在朗讀...`);
 
           await TTSService.speak(translatedText, AppState.currentTtsLang);
-          this.setStatus("");
+          this.setMainStatus("");
         } catch (error) {
           this.setTutorBubble(`⚠️ ${error.message}`);
-          this.setStatus("");
+          this.setMainStatus("");
           AvatarController.setSpeakingState(false);
         } finally {
-          this.setBusy(false);
+          this.setMainBusy(false);
+        }
+      },
+
+      /* -------------------- 存檔與複習功能 -------------------- */
+      async handleSaveRecord() {
+        const currentInput = document.getElementById("userInput").value.trim();
+        const currentBubble = document.getElementById("tutorBubble").textContent.trim();
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        const greetingText = langInfo.greeting(langInfo.label);
+
+        if (
+          !AppState.lastTranslation ||
+          !currentInput ||
+          !currentBubble ||
+          currentBubble === greetingText ||
+          currentBubble.startsWith("⚠️")
+        ) {
+          this.setMainStatus("請先輸入中文並完成翻譯後再存檔。");
+          return;
+        }
+
+        try {
+          const res = await StudyArchiveDB.addRecord({
+            sourceText: currentInput,
+            translatedText: currentBubble,
+            langCode: AppState.lastTranslation.langCode || AppState.languageCode
+          });
+
+          if (res.saved) {
+            this.setMainStatus(`已存檔（${res.record.dateKey}・${langInfo.label}）。`);
+          } else {
+            this.setMainStatus("今天已經存過這組翻譯囉！");
+          }
+        } catch (err) {
+          this.setMainStatus(`⚠️ ${err.message}`);
+        }
+      },
+
+      async openReviewView() {
+        this.switchView("reviewView");
+        document.getElementById("reviewStatusText").textContent = "";
+        await this.renderReviewList();
+      },
+
+      async renderReviewList() {
+        const container = document.getElementById("reviewListContainer");
+        container.innerHTML = "";
+
+        try {
+          const records = await StudyArchiveDB.getAllRecords();
+          if (!records.length) {
+            container.innerHTML = `<div class="empty-state">目前還沒有存檔紀錄，回到翻譯頁面完成翻譯後按「存檔」即可建立。</div>`;
+            return;
+          }
+
+          // 依日期分組
+          const groupedMap = new Map();
+          records.forEach((rec) => {
+            if (!groupedMap.has(rec.dateKey)) {
+              groupedMap.set(rec.dateKey, []);
+            }
+            groupedMap.get(rec.dateKey).push(rec);
+          });
+
+          groupedMap.forEach((items, dateKey) => {
+            const groupEl = document.createElement("div");
+            groupEl.className = "date-group"; // 預設為收合狀態
+
+            const headerEl = document.createElement("div");
+            headerEl.className = "date-group-header";
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.type = "button";
+            toggleBtn.className = "date-toggle-btn";
+            toggleBtn.innerHTML = `<span>▸</span><span>${dateKey}</span><span style="color:#6b7280;font-size:0.86rem;">(${items.length} 句)</span>`;
+
+            const delDateBtn = document.createElement("button");
+            delDateBtn.type = "button";
+            delDateBtn.className = "icon-del-btn";
+            delDateBtn.title = `刪除 ${dateKey} 整日紀錄`;
+            delDateBtn.setAttribute("aria-label", `刪除 ${dateKey} 整日紀錄`);
+            delDateBtn.textContent = "❌";
+
+            const bodyEl = document.createElement("div");
+            bodyEl.className = "date-group-body";
+
+            toggleBtn.addEventListener("click", () => {
+              const isOpen = groupEl.classList.toggle("open");
+              toggleBtn.querySelector("span").textContent = isOpen ? "▾" : "▸";
+            });
+
+            delDateBtn.addEventListener("click", async (e) => {
+              e.stopPropagation();
+              const confirmed = window.confirm(`確定要刪除「${dateKey}」的整筆存檔資訊嗎？`);
+              if (!confirmed) return;
+              await StudyArchiveDB.deleteRecordsByDateKey(dateKey);
+              document.getElementById("reviewStatusText").textContent = `已刪除 ${dateKey} 的紀錄。`;
+              await this.renderReviewList();
+            });
+
+            items.forEach((item) => {
+              const itemEl = document.createElement("div");
+              itemEl.className = "review-item";
+
+              const topRow = document.createElement("div");
+              topRow.className = "review-item-top";
+
+              const translatedEl = document.createElement("div");
+              translatedEl.className = "review-translated";
+              translatedEl.textContent = item.translatedText;
+
+              const actionsEl = document.createElement("div");
+              actionsEl.className = "review-item-actions";
+
+              const speakItemBtn = document.createElement("button");
+              speakItemBtn.type = "button";
+              speakItemBtn.className = "icon-del-btn";
+              speakItemBtn.title = "朗讀此翻譯";
+              speakItemBtn.setAttribute("aria-label", "朗讀此翻譯");
+              speakItemBtn.textContent = "🔊";
+              speakItemBtn.addEventListener("click", async () => {
+                const langInfo = LANGUAGE_REGISTRY[item.langCode] || LANGUAGE_REGISTRY.en;
+                document.getElementById("reviewStatusText").textContent = `正在朗讀（${langInfo.label}・${this.formatRateLabel(AppState.speechRate)}）...`;
+                await TTSService.speak(item.translatedText, langInfo.ttsLang);
+                document.getElementById("reviewStatusText").textContent = "";
+              });
+
+              const delItemBtn = document.createElement("button");
+              delItemBtn.type = "button";
+              delItemBtn.className = "icon-del-btn";
+              delItemBtn.title = "刪除此條資訊";
+              delItemBtn.setAttribute("aria-label", "刪除此條資訊");
+              delItemBtn.textContent = "❌";
+              delItemBtn.addEventListener("click", async () => {
+                const confirmed = window.confirm("確定要刪除這條資訊嗎？");
+                if (!confirmed) return;
+                await StudyArchiveDB.deleteRecordById(item.id);
+                document.getElementById("reviewStatusText").textContent = "已刪除該條紀錄。";
+                await this.renderReviewList();
+              });
+
+              actionsEl.appendChild(speakItemBtn);
+              actionsEl.appendChild(delItemBtn);
+
+              topRow.appendChild(translatedEl);
+              topRow.appendChild(actionsEl);
+
+              const sourceEl = document.createElement("div");
+              sourceEl.className = "review-source";
+              sourceEl.textContent = `(${item.sourceText})`;
+
+              itemEl.appendChild(topRow);
+              itemEl.appendChild(sourceEl);
+              bodyEl.appendChild(itemEl);
+            });
+
+            headerEl.appendChild(toggleBtn);
+            headerEl.appendChild(delDateBtn);
+            groupEl.appendChild(headerEl);
+            groupEl.appendChild(bodyEl);
+            container.appendChild(groupEl);
+          });
+        } catch (err) {
+          container.innerHTML = `<div class="empty-state">⚠️ ${err.message}</div>`;
+        }
+      },
+
+      /* -------------------- 測驗功能 -------------------- */
+      async openQuizSetupView() {
+        this.switchView("quizSetupView");
+        document.getElementById("quizStatusText").textContent = "";
+        const listContainer = document.getElementById("quizDateListContainer");
+        listContainer.innerHTML = "";
+
+        try {
+          const records = await StudyArchiveDB.getAllRecords();
+          if (!records.length) {
+            listContainer.innerHTML = `<div class="empty-state">尚無存檔資料可出題，請先到翻譯頁存檔幾句話吧！</div>`;
+            document.getElementById("startQuizBtn").disabled = true;
+            return;
+          }
+
+          document.getElementById("startQuizBtn").disabled = false;
+          const dateCounts = new Map();
+          records.forEach((r) => {
+            dateCounts.set(r.dateKey, (dateCounts.get(r.dateKey) || 0) + 1);
+          });
+
+          dateCounts.forEach((count, dateKey) => {
+            const labelEl = document.createElement("label");
+            labelEl.className = "quiz-date-checkbox-row";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = dateKey;
+            checkbox.className = "quiz-date-checkbox";
+
+            const textSpan = document.createElement("span");
+            textSpan.textContent = `${dateKey}（${count} 題）`;
+
+            labelEl.appendChild(checkbox);
+            labelEl.appendChild(textSpan);
+            listContainer.appendChild(labelEl);
+          });
+        } catch (err) {
+          listContainer.innerHTML = `<div class="empty-state">⚠️ ${err.message}</div>`;
+        }
+      },
+
+      async startQuiz() {
+        const checkedDates = Array.from(
+          document.querySelectorAll(".quiz-date-checkbox:checked")
+        ).map((cb) => cb.value);
+
+        if (!checkedDates.length) {
+          document.getElementById("quizStatusText").textContent = "請至少勾選一個日期再按「開始測驗」。";
+          return;
+        }
+
+        const allRecords = await StudyArchiveDB.getAllRecords();
+        const selectedRecords = allRecords.filter((r) => checkedDates.includes(r.dateKey));
+
+        if (!selectedRecords.length) {
+          document.getElementById("quizStatusText").textContent = "所選日期沒有可用的題目。";
+          return;
+        }
+
+        AppState.quiz = {
+          questions: selectedRecords,
+          currentIndex: 0,
+          answeredCount: 0,
+          correctCount: 0,
+          currentQuestionAnswered: false
+        };
+
+        this.switchView("quizPlayView");
+        this.renderQuizQuestion();
+      },
+
+      renderQuizQuestion() {
+        const { questions, currentIndex } = AppState.quiz;
+        const answerInput = document.getElementById("quizAnswerInput");
+        const clearBtn = document.getElementById("clearQuizAnswerBtn");
+
+        answerInput.value = "";
+        this.autoResizeTextarea(answerInput, clearBtn, 96);
+        document.getElementById("quizPlayStatusText").textContent = "";
+        AppState.quiz.currentQuestionAnswered = false;
+        document.getElementById("submitAnswerBtn").disabled = false;
+
+        this.updateQuizProgressUI();
+
+        if (currentIndex >= questions.length) {
+          const { correctCount, questions: qList } = AppState.quiz;
+          const summaryText = `測驗完成！本次共 ${qList.length} 題，你答對了 ${correctCount} 題。辛苦了，按右上角「結束測驗」即可返回！`;
+          document.getElementById("quizTutorBubble").textContent = summaryText;
+          document.getElementById("submitAnswerBtn").disabled = true;
+          document.getElementById("nextQuestionBtn").disabled = true;
+          TTSService.speak(summaryText, "zh-TW");
+          return;
+        }
+
+        document.getElementById("nextQuestionBtn").disabled = false;
+        const q = questions[currentIndex];
+        const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
+        document.getElementById("quizUserSelfLabel").textContent = langInfo.selfWord;
+        document.getElementById("quizTutorBubble").textContent =
+          `請將「${q.sourceText}」翻譯成${langInfo.label}。`;
+      },
+
+      updateQuizProgressUI() {
+        const { questions, answeredCount, correctCount } = AppState.quiz;
+        const total = questions.length;
+        const pct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+
+        document.getElementById("quizProgressText").textContent = `進度：${answeredCount} / ${total} 題`;
+        document.getElementById("quizScoreText").textContent = `答對：${correctCount} 題`;
+        document.getElementById("quizProgressFill").style.width = `${pct}%`;
+      },
+
+      async handleSubmitQuizAnswer() {
+        const { questions, currentIndex, currentQuestionAnswered } = AppState.quiz;
+        if (currentIndex >= questions.length || currentQuestionAnswered) return;
+
+        const userAnswer = document.getElementById("quizAnswerInput").value.trim();
+        if (!userAnswer) {
+          document.getElementById("quizPlayStatusText").textContent = "請先輸入你的翻譯答案再送出。";
+          return;
+        }
+
+        const q = questions[currentIndex];
+        const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
+
+        document.getElementById("submitAnswerBtn").disabled = true;
+        document.getElementById("nextQuestionBtn").disabled = true;
+        document.getElementById("quizPlayStatusText").textContent = "家教正在批改答案...";
+
+        try {
+          const result = await GeminiService.gradeTranslationAnswer({
+            sourceText: q.sourceText,
+            referenceTranslation: q.translatedText,
+            userAnswer,
+            langLabel: langInfo.label
+          });
+
+          AppState.quiz.answeredCount += 1;
+          if (result.isCorrect) {
+            AppState.quiz.correctCount += 1;
+          }
+          AppState.quiz.currentQuestionAnswered = true;
+          this.updateQuizProgressUI();
+
+          document.getElementById("quizTutorBubble").textContent = result.feedback;
+          document.getElementById("quizPlayStatusText").textContent = "家教正在說話...";
+
+          await TTSService.speak(result.feedback, "zh-TW");
+          document.getElementById("quizPlayStatusText").textContent = "";
+        } catch (err) {
+          document.getElementById("quizTutorBubble").textContent = `⚠️ ${err.message}`;
+          document.getElementById("quizPlayStatusText").textContent = "";
+          document.getElementById("submitAnswerBtn").disabled = false;
+        } finally {
+          document.getElementById("nextQuestionBtn").disabled = false;
+        }
+      },
+
+      handleNextQuizQuestion() {
+        const { currentIndex, questions } = AppState.quiz;
+        if (currentIndex < questions.length) {
+          AppState.quiz.currentIndex += 1;
+          this.renderQuizQuestion();
         }
       },
 
       bindEvents() {
         const apiKeyInput = document.getElementById("apiKeyInput");
         const modelInput = document.getElementById("modelInput");
-
         apiKeyInput.value = StorageManager.getApiKey();
         modelInput.value = StorageManager.getModel();
 
-        // API 面板開關
+        // API 面板開關與儲存收合
         document.getElementById("toggleApiBtn").addEventListener("click", () => {
           document.getElementById("apiPanel").classList.toggle("open");
         });
 
-        // 儲存後自動收合
         document.getElementById("saveApiBtn").addEventListener("click", () => {
           StorageManager.setApiKey(apiKeyInput.value);
           StorageManager.setModel(modelInput.value);
-
           apiKeyInput.value = StorageManager.getApiKey();
           modelInput.value = StorageManager.getModel();
           this.closeApiPanel();
-          this.setStatus("已儲存 API 設定並收合視窗。");
+          this.setMainStatus("已儲存 API 設定並收合視窗。");
         });
 
         document.getElementById("clearApiBtn").addEventListener("click", () => {
           StorageManager.clearApiKey();
           apiKeyInput.value = "";
-          this.setStatus("已清除本機儲存的 API Key。");
+          this.setMainStatus("已清除本機儲存的 API Key。");
         });
 
-        // 切換目標語言：清空譯文、回復預設問候語，TTS 切回繁體中文
+        // 切換目標語言
         document.getElementById("targetLangSelect").addEventListener("change", (e) => {
           AppState.languageCode = e.target.value;
           StorageManager.setLanguage(AppState.languageCode);
           this.syncLanguageUI();
           this.resetBubbleToGreeting();
-          this.setStatus("");
+          this.setMainStatus("");
         });
 
         // 語速調整視窗
@@ -1132,20 +1980,22 @@
           }
         });
 
-        // 說話鍵：唸出目前 speech bubble 內容
+        // 說話鍵
         document.getElementById("speakBtn").addEventListener("click", () => {
           this.handleSpeakCurrentBubble();
         });
 
-        // 使用者輸入框自動增高與一鍵清除
+        // 主畫面輸入框自動增高與一鍵清除
         const userInputEl = document.getElementById("userInput");
+        const clearBubbleBtn = document.getElementById("clearBubbleBtn");
         userInputEl.addEventListener("input", () => {
-          this.autoResizeUserInput();
+          this.autoResizeTextarea(userInputEl, clearBubbleBtn, 96);
         });
 
-        document.getElementById("clearBubbleBtn").addEventListener("click", () => {
+        clearBubbleBtn.addEventListener("click", () => {
           userInputEl.value = "";
-          this.autoResizeUserInput();
+          AppState.lastTranslation = null;
+          this.autoResizeTextarea(userInputEl, clearBubbleBtn, 96);
           userInputEl.focus();
         });
 
@@ -1157,10 +2007,62 @@
         userInputEl.addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            if (!AppState.isTranslating) {
+            if (!AppState.isBusy) {
               this.handleSendTranslation();
             }
           }
+        });
+
+        // [存檔][複習][測驗]
+        document.getElementById("saveRecordBtn").addEventListener("click", () => {
+          this.handleSaveRecord();
+        });
+
+        document.getElementById("openReviewBtn").addEventListener("click", () => {
+          this.openReviewView();
+        });
+
+        document.getElementById("openQuizSetupBtn").addEventListener("click", () => {
+          this.openQuizSetupView();
+        });
+
+        // 複習頁返回
+        document.getElementById("backFromReviewBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+        });
+
+        // 測驗準備頁事件
+        document.getElementById("backFromQuizSetupBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+        });
+
+        document.getElementById("startQuizBtn").addEventListener("click", () => {
+          this.startQuiz();
+        });
+
+        // 測驗進行頁事件
+        document.getElementById("exitQuizBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+        });
+
+        document.getElementById("nextQuestionBtn").addEventListener("click", () => {
+          this.handleNextQuizQuestion();
+        });
+
+        document.getElementById("submitAnswerBtn").addEventListener("click", () => {
+          this.handleSubmitQuizAnswer();
+        });
+
+        const quizAnswerEl = document.getElementById("quizAnswerInput");
+        const clearQuizAnswerBtn = document.getElementById("clearQuizAnswerBtn");
+        quizAnswerEl.addEventListener("input", () => {
+          this.autoResizeTextarea(quizAnswerEl, clearQuizAnswerBtn, 96);
+        });
+
+        clearQuizAnswerBtn.addEventListener("click", () => {
+          quizAnswerEl.value = "";
+          this.autoResizeTextarea(quizAnswerEl, clearQuizAnswerBtn, 96);
+          quizAnswerEl.focus();
         });
 
         if ("speechSynthesis" in window) {
@@ -1177,7 +2079,11 @@
         this.syncLanguageUI();
         this.syncRateUI();
         this.resetBubbleToGreeting();
-        this.autoResizeUserInput();
+        this.autoResizeTextarea(
+          document.getElementById("userInput"),
+          document.getElementById("clearBubbleBtn"),
+          96
+        );
         AvatarController.setSpeakingState(false);
         this.bindEvents();
       }
