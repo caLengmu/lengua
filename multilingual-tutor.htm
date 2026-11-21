@@ -82,7 +82,7 @@
     .btn {
       border: 2px solid var(--border-color);
       border-radius: 10px;
-      padding: 8px 14px;
+      padding: 8px 12px;
       font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
@@ -94,6 +94,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     .btn:active {
@@ -121,6 +122,12 @@
 
     .btn-secondary:hover:not(:disabled) {
       background: #e5e7eb;
+    }
+
+    .btn-active-pill {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-color: var(--border-color);
     }
 
     .btn-danger {
@@ -270,18 +277,24 @@
       border-bottom: 10px solid var(--bubble-tutor);
     }
 
-    /* Speech Bubble 下方控制列：由左至右 [語言選單] [語速] [說話（往右延伸佔滿剩餘空間）] */
+    /* Speech Bubble 下方控制列：三等分同一行 */
     .bubble-actions {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: stretch;
       gap: 10px;
       width: 100%;
     }
 
+    .equal-item {
+      flex: 1 1 0;
+      min-width: 0;
+      width: 100%;
+    }
+
     .lang-select {
-      padding: 8px 12px;
+      padding: 8px 10px;
       border: 2px solid var(--border-color);
       border-radius: 10px;
       font-size: 0.92rem;
@@ -290,16 +303,10 @@
       color: var(--text-main);
       box-shadow: 2px 2px 0px var(--border-color);
       cursor: pointer;
+      text-align: center;
     }
 
-    .speak-expand-btn {
-      flex: 1;
-      min-width: 130px;
-      padding: 9px 16px;
-      font-size: 0.98rem;
-    }
-
-    /* 語速調整彈窗（Modal） */
+    /* 語速調整彈窗（四顆按鈕：靜音、1x、1.25x、1.5x） */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -317,7 +324,7 @@
 
     .rate-modal {
       width: 100%;
-      max-width: 320px;
+      max-width: 340px;
       background: #ffffff;
       border: 2.5px solid var(--border-color);
       border-radius: 16px;
@@ -325,7 +332,7 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       text-align: center;
     }
 
@@ -334,43 +341,43 @@
       font-weight: 800;
     }
 
-    .rate-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
+    .rate-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
 
-    .rate-step-btn {
-      width: 44px;
-      height: 44px;
+    .rate-preset-btn {
+      padding: 10px 12px;
       border: 2px solid var(--border-color);
       border-radius: 12px;
       background: #f3f4f6;
-      font-size: 1.3rem;
+      color: var(--text-main);
+      font-size: 0.98rem;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 2px 2px 0px var(--border-color);
+      transition: transform 0.08s ease, background-color 0.15s ease;
     }
 
-    .rate-step-btn:active {
+    .rate-preset-btn:active {
       transform: translate(2px, 2px);
       box-shadow: none;
     }
 
-    .rate-value {
-      min-width: 72px;
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .rate-range-note {
-      font-size: 0.82rem;
-      color: var(--text-muted);
+    .rate-preset-btn.selected {
+      background: var(--primary);
+      color: #ffffff;
     }
 
     /* 使用者輸入區塊 */
+    .user-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
     .user-section {
       display: flex;
       align-items: flex-start;
@@ -477,6 +484,19 @@
     .clear-bubble-btn:hover {
       background: #e5e7eb;
       color: #111827;
+    }
+
+    /* 日文語氣三選一列（熟人 / 陌生人 / 服務業者） */
+    .jp-style-row {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-left: 72px;
+      width: 100%;
+    }
+
+    .jp-style-row.visible {
+      display: grid;
     }
 
     .send-btn {
@@ -706,6 +726,16 @@
         border-radius: 14px;
       }
 
+      .bubble-actions {
+        gap: 6px;
+      }
+
+      .btn,
+      .lang-select {
+        padding: 8px 6px;
+        font-size: 0.84rem;
+      }
+
       .user-section {
         flex-wrap: wrap;
         gap: 10px;
@@ -726,6 +756,10 @@
       .user-bubble-wrapper::before,
       .user-bubble-wrapper::after {
         top: 22px;
+      }
+
+      .jp-style-row {
+        padding-left: 0;
       }
 
       .send-btn {
@@ -806,34 +840,43 @@
           同學好，今天想學英文的哪句話呢？
         </div>
 
-        <!-- 由左至右：[語言選單] [語速] [說話] -->
+        <!-- 三等分同一行：[語言選單] [語速] [說話] -->
         <div class="bubble-actions">
-          <select id="targetLangSelect" class="lang-select" aria-label="選擇目標語言"></select>
-          <button id="speedBtn" class="btn btn-secondary speed-trigger-btn" type="button">語速 (1x)</button>
-          <button id="speakBtn" class="btn btn-primary speak-expand-btn" type="button">🔊 說話</button>
+          <select id="targetLangSelect" class="lang-select equal-item" aria-label="選擇目標語言"></select>
+          <button id="speedBtn" class="btn btn-secondary speed-trigger-btn equal-item" type="button">語速 (1x)</button>
+          <button id="speakBtn" class="btn btn-primary equal-item" type="button">說話</button>
         </div>
 
         <div id="mainStatusText" class="status-text" role="status" aria-live="polite"></div>
       </main>
 
       <!-- 使用者 Speech Bubble 區塊 -->
-      <section class="user-section" aria-label="輸入要翻譯的中文">
-        <div id="userSelfLabel" class="user-badge">Me</div>
-        <div class="user-bubble-wrapper">
-          <textarea
-            id="userInput"
-            class="user-bubble-input"
-            placeholder="請輸入想翻譯的中文句子..."
-          ></textarea>
-          <button
-            id="clearBubbleBtn"
-            class="clear-bubble-btn"
-            type="button"
-            title="清除輸入內容"
-            aria-label="清除輸入內容"
-          >×</button>
+      <section class="user-column" aria-label="輸入要翻譯的中文">
+        <div class="user-section">
+          <div id="userSelfLabel" class="user-badge">Me</div>
+          <div class="user-bubble-wrapper">
+            <textarea
+              id="userInput"
+              class="user-bubble-input"
+              placeholder="請輸入想翻譯的中文句子..."
+            ></textarea>
+            <button
+              id="clearBubbleBtn"
+              class="clear-bubble-btn"
+              type="button"
+              title="清除輸入內容"
+              aria-label="清除輸入內容"
+            >×</button>
+          </div>
+          <button id="sendBtn" class="send-btn" type="button">送出</button>
         </div>
-        <button id="sendBtn" class="send-btn" type="button">送出</button>
+
+        <!-- 日文專屬語氣三選一：預設 [陌生人] -->
+        <div id="jpStyleRow" class="jp-style-row" aria-label="日文語氣選擇">
+          <button id="jpCasualBtn" class="btn btn-secondary jp-style-btn" data-jp-style="casual" type="button">熟人</button>
+          <button id="jpPoliteBtn" class="btn btn-secondary jp-style-btn btn-active-pill" data-jp-style="polite" type="button">陌生人</button>
+          <button id="jpHonorificBtn" class="btn btn-secondary jp-style-btn" data-jp-style="honorific" type="button">服務業者</button>
+        </div>
       </section>
 
       <!-- [存檔][複習][測驗] -->
@@ -873,7 +916,6 @@
     <div id="quizPlayView" class="view-section">
       <header class="top-bar">
         <div class="app-title">📝 翻譯測驗中</div>
-        <!-- [結束測驗] 放最上方避免與底部 [送出答案] 誤按 -->
         <button id="exitQuizBtn" class="btn btn-danger" type="button">✕ 結束測驗</button>
       </header>
 
@@ -884,9 +926,11 @@
 
         <div id="quizTutorBubble" class="speech-bubble tutor-bubble"></div>
 
-        <!-- 測驗模式下將語言選擇、語速、說話替換為 [下一題] -->
+        <!-- 由左至右：[語速] [再試一次] [下一題] -->
         <div class="bubble-actions">
-          <button id="nextQuestionBtn" class="btn btn-secondary speak-expand-btn" type="button">下一題 →</button>
+          <button id="quizSpeedBtn" class="btn btn-secondary speed-trigger-btn equal-item" type="button">語速 (1x)</button>
+          <button id="retryQuestionBtn" class="btn btn-secondary equal-item" type="button">再試一次</button>
+          <button id="nextQuestionBtn" class="btn btn-primary equal-item" type="button">下一題</button>
         </div>
 
         <div id="quizPlayStatusText" class="status-text" role="status" aria-live="polite"></div>
@@ -924,17 +968,17 @@
     </div>
   </div>
 
-  <!-- 語速調整彈窗 -->
+  <!-- 語速調整彈窗：靜音、1x、1.25x、1.5x -->
   <div id="speedModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="rateModalTitle">
     <div class="rate-modal">
-      <div id="rateModalTitle" class="rate-modal-title">調整語速</div>
-      <div class="rate-controls">
-        <button id="rateMinusBtn" class="rate-step-btn" type="button" aria-label="減慢語速">-</button>
-        <div id="rateDisplay" class="rate-value">1x</div>
-        <button id="ratePlusBtn" class="rate-step-btn" type="button" aria-label="加快語速">+</button>
+      <div id="rateModalTitle" class="rate-modal-title">選擇語速</div>
+      <div class="rate-preset-grid">
+        <button class="rate-preset-btn" data-rate-mode="mute" type="button">靜音</button>
+        <button class="rate-preset-btn" data-rate-mode="1" type="button">1x</button>
+        <button class="rate-preset-btn" data-rate-mode="1.25" type="button">1.25x</button>
+        <button class="rate-preset-btn" data-rate-mode="1.5" type="button">1.5x</button>
       </div>
-      <div class="rate-range-note">每次調整 0.1x（範圍：0.5x ～ 1.5x）</div>
-      <button id="closeRateModalBtn" class="btn btn-primary" type="button">完成</button>
+      <button id="closeRateModalBtn" class="btn btn-secondary" type="button">關閉</button>
     </div>
   </div>
 
@@ -946,17 +990,15 @@
      */
     const APP_CONFIG = {
       defaultLanguage: "en",
-      speechRate: {
-        defaultRate: 1.0,
-        min: 0.5,
-        max: 1.5,
-        step: 0.1
+      defaultSpeechSetting: {
+        muted: false,
+        rate: 1.0
       },
       storageKeys: {
         apiKey: "ai_tutor_gemini_api_key_v1",
         model: "ai_tutor_gemini_model_v1",
         language: "ai_tutor_target_lang_v1",
-        speechRate: "ai_tutor_speech_rate_v1",
+        speechSetting: "ai_tutor_speech_setting_v1",
         characterId: "ai_tutor_character_id_v1"
       },
       db: {
@@ -970,9 +1012,6 @@
       }
     };
 
-    /**
-     * 角色註冊表（Character Registry）
-     */
     const CHARACTER_REGISTRY = {
       female_1: {
         id: "female_1",
@@ -988,9 +1027,6 @@
       }
     };
 
-    /**
-     * 語言註冊表（Language Registry）
-     */
     const LANGUAGE_REGISTRY = {
       en: {
         code: "en",
@@ -1029,6 +1065,12 @@
       }
     };
 
+    const JP_STYLE_MAP = {
+      casual: { key: "casual", label: "熟人", tag: "熟人聊天" },
+      polite: { key: "polite", label: "陌生人", tag: "陌生人互動" },
+      honorific: { key: "honorific", label: "服務業者", tag: "服務業者用語" }
+    };
+
     /**
      * =========================================================================
      * 2. LocalStorage 與狀態管理
@@ -1061,17 +1103,24 @@
           localStorage.setItem(APP_CONFIG.storageKeys.language, langCode);
         }
       },
-      getSpeechRate() {
-        const raw = parseFloat(localStorage.getItem(APP_CONFIG.storageKeys.speechRate));
-        if (Number.isNaN(raw)) return APP_CONFIG.speechRate.defaultRate;
-        const clamped = Math.min(APP_CONFIG.speechRate.max, Math.max(APP_CONFIG.speechRate.min, raw));
-        return Math.round(clamped * 10) / 10;
+      getSpeechSetting() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(APP_CONFIG.storageKeys.speechSetting) || "null");
+          if (raw && typeof raw === "object") {
+            const allowedRates = [1, 1.25, 1.5];
+            const rate = allowedRates.includes(Number(raw.rate)) ? Number(raw.rate) : 1.0;
+            return { muted: Boolean(raw.muted), rate };
+          }
+        } catch (_) {}
+        return { ...APP_CONFIG.defaultSpeechSetting };
       },
-      setSpeechRate(rate) {
-        const clamped = Math.min(APP_CONFIG.speechRate.max, Math.max(APP_CONFIG.speechRate.min, rate));
-        const rounded = Math.round(clamped * 10) / 10;
-        localStorage.setItem(APP_CONFIG.storageKeys.speechRate, String(rounded));
-        return rounded;
+      setSpeechSetting(setting) {
+        const clean = {
+          muted: Boolean(setting.muted),
+          rate: [1, 1.25, 1.5].includes(Number(setting.rate)) ? Number(setting.rate) : 1.0
+        };
+        localStorage.setItem(APP_CONFIG.storageKeys.speechSetting, JSON.stringify(clean));
+        return clean;
       },
       getCharacterId() {
         const saved = localStorage.getItem(APP_CONFIG.storageKeys.characterId);
@@ -1083,7 +1132,8 @@
       activeView: "mainView",
       characterId: StorageManager.getCharacterId(),
       languageCode: StorageManager.getLanguage(),
-      speechRate: StorageManager.getSpeechRate(),
+      jpStyle: "polite", // casual | polite | honorific，預設陌生人
+      speechSetting: StorageManager.getSpeechSetting(),
       currentTtsLang: "zh-TW",
       lastTranslation: null, // { sourceText, translatedText, langCode }
       isSpeaking: false,
@@ -1228,7 +1278,7 @@
 
     /**
      * =========================================================================
-     * 4. 角色與 TTS 服務
+     * 4. 角色與 TTS 服務（支援靜音、語速與「」分段語系切換）
      * =========================================================================
      */
     const AvatarController = {
@@ -1267,17 +1317,16 @@
         AvatarController.setSpeakingState(false);
       },
 
-      speak(text, langCode = "zh-TW") {
+      speakSingleSegment(text, langCode = "zh-TW") {
         const cleanText = (text || "").trim();
-        if (!cleanText) return Promise.resolve();
-
-        if (!("speechSynthesis" in window)) {
+        if (!cleanText || AppState.speechSetting.muted) {
           AvatarController.setSpeakingState(false);
           return Promise.resolve();
         }
 
-        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-          window.speechSynthesis.cancel();
+        if (!("speechSynthesis" in window)) {
+          AvatarController.setSpeakingState(false);
+          return Promise.resolve();
         }
 
         return new Promise((resolve) => {
@@ -1286,7 +1335,7 @@
 
           const charConfig = AvatarController.getCurrentCharacter();
           utterance.pitch = charConfig.ttsConfig?.pitch ?? 1.05;
-          utterance.rate = AppState.speechRate;
+          utterance.rate = AppState.speechSetting.rate;
 
           const voices = window.speechSynthesis.getVoices();
           const matchedVoice =
@@ -1303,7 +1352,6 @@
             if (settled) return;
             settled = true;
             clearTimeout(safetyTimer);
-            AvatarController.setSpeakingState(false);
             resolve();
           };
 
@@ -1315,14 +1363,85 @@
           utterance.onerror = finish;
 
           const estimatedMs = Math.max(
-            2600,
-            (cleanText.length * 160) / Math.max(0.5, AppState.speechRate) + 2000
+            2200,
+            (cleanText.length * 160) / Math.max(0.5, AppState.speechSetting.rate) + 1800
           );
           const safetyTimer = setTimeout(finish, estimatedMs);
 
           AvatarController.setSpeakingState(true);
           window.speechSynthesis.speak(utterance);
         });
+      },
+
+      async speak(text, langCode = "zh-TW") {
+        const cleanText = (text || "").trim();
+        if (!cleanText) return;
+
+        if (AppState.speechSetting.muted) {
+          AvatarController.setSpeakingState(false);
+          return;
+        }
+
+        if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+          window.speechSynthesis.cancel();
+        }
+
+        await this.speakSingleSegment(cleanText, langCode);
+        AvatarController.setSpeakingState(false);
+      },
+
+      /**
+       * 測驗講評專用：將「」外的內容以繁體中文朗讀，「」內的內容切為目標語言朗讀
+       */
+      async speakFeedbackWithQuotes(feedbackText, quotedLangCode = "en-US") {
+        const raw = (feedbackText || "").trim();
+        if (!raw) return;
+
+        if (AppState.speechSetting.muted) {
+          AvatarController.setSpeakingState(false);
+          return;
+        }
+
+        if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+          window.speechSynthesis.cancel();
+        }
+
+        const regex = /「([^」]+)」/g;
+        const segments = [];
+        let lastIndex = 0;
+        let match;
+
+        while ((match = regex.exec(raw)) !== null) {
+          if (match.index > lastIndex) {
+            const zhPart = raw.slice(lastIndex, match.index).trim();
+            if (zhPart) {
+              segments.push({ text: zhPart, lang: "zh-TW" });
+            }
+          }
+          const quotedPart = (match[1] || "").trim();
+          if (quotedPart) {
+            segments.push({ text: quotedPart, lang: quotedLangCode });
+          }
+          lastIndex = regex.lastIndex;
+        }
+
+        if (lastIndex < raw.length) {
+          const tailPart = raw.slice(lastIndex).trim();
+          if (tailPart) {
+            segments.push({ text: tailPart, lang: "zh-TW" });
+          }
+        }
+
+        if (!segments.length) {
+          segments.push({ text: raw, lang: "zh-TW" });
+        }
+
+        for (let i = 0; i < segments.length; i++) {
+          if (AppState.speechSetting.muted) break;
+          await this.speakSingleSegment(segments[i].text, segments[i].lang);
+        }
+
+        AvatarController.setSpeakingState(false);
       }
     };
 
@@ -1362,9 +1481,7 @@
             if (errData?.error?.message) {
               errMsg = `API 錯誤：${errData.error.message}`;
             }
-          } catch (_) {
-            // 忽略 JSON 解析失敗
-          }
+          } catch (_) {}
           throw new Error(errMsg);
         }
 
@@ -1382,13 +1499,30 @@
         return resultText;
       },
 
-      async translateChineseToTarget(sourceText, targetLangKey) {
+      buildFormattedSourceText(rawChinese, targetLangKey, jpStyleKey) {
+        const clean = (rawChinese || "").trim();
+        if (targetLangKey === "ja") {
+          const styleInfo = JP_STYLE_MAP[jpStyleKey] || JP_STYLE_MAP.polite;
+          return `${clean}(${styleInfo.tag})`;
+        }
+        return clean;
+      },
+
+      async translateChineseToTarget(formattedSourceText, targetLangKey) {
         const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
+        const jpExtraRule =
+          targetLangKey === "ja"
+            ? "若原文後方括號標示 (熟人聊天)、(陌生人互動) 或 (服務業者用語)，請嚴格依該語氣層次與敬語程度翻譯。"
+            : "";
+
         const prompt = [
           `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
           `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
-          `原文：${sourceText}`
-        ].join("\n");
+          jpExtraRule,
+          `原文：${formattedSourceText}`
+        ]
+          .filter(Boolean)
+          .join("\n");
 
         return this.callModel(prompt);
       },
@@ -1400,8 +1534,8 @@
           `請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：`,
           `{"isCorrect": true或false, "feedback": "簡短精準的繁體中文回饋（1~2句話，直接切中重點）"}`,
           `規則：`,
-          `- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確。`,
-          `- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異，並鼓勵學生再試一次。`,
+          `- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確；若要引述${langLabel}詞句，請用「」包起來。`,
+          `- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次；若要引述${langLabel}詞句，請用「」包起來。`,
           `中文題目：${sourceText}`,
           `參考譯文：${referenceTranslation}`,
           `學生作答：${userAnswer}`
@@ -1422,26 +1556,23 @@
             (isCorrect ? "翻譯得很棒，繼續保持！" : `可以試試「${referenceTranslation}」，再試一次看看喔！`);
           return { isCorrect, feedback };
         } catch (_) {
-          // 若模型未回傳標準 JSON，做安全 fallback
           const lower = cleaned.toLowerCase();
           const isCorrect = lower.includes("正確") && !lower.includes("不正確") && !lower.includes("答錯");
-          return {
-            isCorrect,
-            feedback: cleaned
-          };
+          return { isCorrect, feedback: cleaned };
         }
       }
     };
 
     /**
      * =========================================================================
-     * 6. 介面控制器（UI Controller：主畫面、複習、測驗）
+     * 6. 介面控制器（UI Controller）
      * =========================================================================
      */
     const UIController = {
-      formatRateLabel(rate) {
-        const rounded = Math.round(rate * 10) / 10;
-        return Number.isInteger(rounded) ? `${rounded}x` : `${rounded.toFixed(1)}x`;
+      getSpeechDisplayLabel() {
+        if (AppState.speechSetting.muted) return "靜音";
+        const r = AppState.speechSetting.rate;
+        return Number.isInteger(r) ? `${r}x` : `${r}x`;
       },
 
       switchView(viewId) {
@@ -1480,14 +1611,32 @@
         if (selfBadgeEl) {
           selfBadgeEl.textContent = langInfo.selfWord;
         }
+
+        const jpRow = document.getElementById("jpStyleRow");
+        if (jpRow) {
+          jpRow.classList.toggle("visible", AppState.languageCode === "ja");
+        }
       },
 
-      syncRateUI() {
-        const label = this.formatRateLabel(AppState.speechRate);
+      syncJpStyleUI() {
+        document.querySelectorAll(".jp-style-btn").forEach((btn) => {
+          btn.classList.toggle("btn-active-pill", btn.dataset.jpStyle === AppState.jpStyle);
+        });
+      },
+
+      syncSpeechSettingUI() {
+        const label = this.getSpeechDisplayLabel();
         document.querySelectorAll(".speed-trigger-btn").forEach((btn) => {
           btn.textContent = `語速 (${label})`;
         });
-        document.getElementById("rateDisplay").textContent = label;
+
+        document.querySelectorAll(".rate-preset-btn").forEach((btn) => {
+          const mode = btn.dataset.rateMode;
+          const isSelected =
+            (mode === "mute" && AppState.speechSetting.muted) ||
+            (!AppState.speechSetting.muted && Number(mode) === AppState.speechSetting.rate);
+          btn.classList.toggle("selected", isSelected);
+        });
       },
 
       autoResizeTextarea(textarea, clearBtn, minHeight = 96) {
@@ -1510,6 +1659,30 @@
         if (bubbleEl) bubbleEl.textContent = text;
       },
 
+      /**
+       * 測驗頁 Tutor Bubble 渲染：「」內的內容用粗體
+       */
+      setQuizTutorBubbleWithBoldQuotes(text) {
+        const bubbleEl = document.getElementById("quizTutorBubble");
+        if (!bubbleEl) return;
+        bubbleEl.innerHTML = "";
+
+        const raw = text || "";
+        const regex = /(「[^」]*」)/g;
+        const parts = raw.split(regex);
+
+        parts.forEach((part) => {
+          if (!part) return;
+          if (part.startsWith("「") && part.endsWith("」")) {
+            const strong = document.createElement("strong");
+            strong.textContent = part;
+            bubbleEl.appendChild(strong);
+          } else {
+            bubbleEl.appendChild(document.createTextNode(part));
+          }
+        });
+      },
+
       setMainBusy(busy) {
         AppState.isBusy = busy;
         document.getElementById("sendBtn").disabled = busy;
@@ -1518,6 +1691,7 @@
         document.getElementById("saveRecordBtn").disabled = busy;
         document.getElementById("openReviewBtn").disabled = busy;
         document.getElementById("openQuizSetupBtn").disabled = busy;
+        document.querySelectorAll(".jp-style-btn").forEach((b) => (b.disabled = busy));
       },
 
       closeApiPanel() {
@@ -1525,7 +1699,7 @@
       },
 
       openSpeedModal() {
-        this.syncRateUI();
+        this.syncSpeechSettingUI();
         document.getElementById("speedModalBackdrop").classList.add("open");
       },
 
@@ -1533,10 +1707,22 @@
         document.getElementById("speedModalBackdrop").classList.remove("open");
       },
 
-      adjustSpeechRate(delta) {
-        const nextRate = StorageManager.setSpeechRate(AppState.speechRate + delta);
-        AppState.speechRate = nextRate;
-        this.syncRateUI();
+      selectSpeechOption(mode) {
+        if (mode === "mute") {
+          AppState.speechSetting = StorageManager.setSpeechSetting({
+            muted: true,
+            rate: AppState.speechSetting.rate
+          });
+          TTSService.stop();
+        } else {
+          const numRate = Number(mode);
+          AppState.speechSetting = StorageManager.setSpeechSetting({
+            muted: false,
+            rate: numRate
+          });
+        }
+        this.syncSpeechSettingUI();
+        this.closeSpeedModal();
       },
 
       async handleSpeakCurrentBubble() {
@@ -1544,7 +1730,7 @@
         if (!bubbleText) return;
 
         this.setMainBusy(true);
-        this.setMainStatus("家教正在說話...");
+        this.setMainStatus(AppState.speechSetting.muted ? "目前為靜音模式" : "家教正在說話...");
         await TTSService.speak(bubbleText, AppState.currentTtsLang);
         this.setMainStatus("");
         this.setMainBusy(false);
@@ -1552,33 +1738,43 @@
 
       async handleSendTranslation() {
         const inputEl = document.getElementById("userInput");
-        const sourceText = inputEl.value.trim();
+        const rawChinese = inputEl.value.trim();
 
-        if (!sourceText) {
+        if (!rawChinese) {
           this.setMainStatus("請先輸入想要翻譯的中文句子。");
           inputEl.focus();
           return;
         }
 
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        const formattedSourceText = GeminiService.buildFormattedSourceText(
+          rawChinese,
+          AppState.languageCode,
+          AppState.jpStyle
+        );
+
         this.setMainBusy(true);
         this.setMainStatus(`正在翻譯成${langInfo.label}...`);
 
         try {
           const translatedText = await GeminiService.translateChineseToTarget(
-            sourceText,
+            formattedSourceText,
             AppState.languageCode
           );
 
           AppState.currentTtsLang = langInfo.ttsLang;
           AppState.lastTranslation = {
-            sourceText,
+            sourceText: formattedSourceText,
             translatedText,
             langCode: AppState.languageCode
           };
 
           this.setTutorBubble(translatedText);
-          this.setMainStatus(`已翻譯成${langInfo.label}，正在朗讀...`);
+          this.setMainStatus(
+            AppState.speechSetting.muted
+              ? `已翻譯成${langInfo.label}（靜音中）`
+              : `已翻譯成${langInfo.label}，正在朗讀...`
+          );
 
           await TTSService.speak(translatedText, AppState.currentTtsLang);
           this.setMainStatus("");
@@ -1609,9 +1805,15 @@
           return;
         }
 
+        const formattedSourceText = GeminiService.buildFormattedSourceText(
+          currentInput,
+          AppState.languageCode,
+          AppState.jpStyle
+        );
+
         try {
           const res = await StudyArchiveDB.addRecord({
-            sourceText: currentInput,
+            sourceText: formattedSourceText,
             translatedText: currentBubble,
             langCode: AppState.lastTranslation.langCode || AppState.languageCode
           });
@@ -1643,7 +1845,6 @@
             return;
           }
 
-          // 依日期分組
           const groupedMap = new Map();
           records.forEach((rec) => {
             if (!groupedMap.has(rec.dateKey)) {
@@ -1654,7 +1855,7 @@
 
           groupedMap.forEach((items, dateKey) => {
             const groupEl = document.createElement("div");
-            groupEl.className = "date-group"; // 預設為收合狀態
+            groupEl.className = "date-group";
 
             const headerEl = document.createElement("div");
             headerEl.className = "date-group-header";
@@ -1710,7 +1911,8 @@
               speakItemBtn.textContent = "🔊";
               speakItemBtn.addEventListener("click", async () => {
                 const langInfo = LANGUAGE_REGISTRY[item.langCode] || LANGUAGE_REGISTRY.en;
-                document.getElementById("reviewStatusText").textContent = `正在朗讀（${langInfo.label}・${this.formatRateLabel(AppState.speechRate)}）...`;
+                document.getElementById("reviewStatusText").textContent =
+                  `正在朗讀（${langInfo.label}・${this.getSpeechDisplayLabel()}）...`;
                 await TTSService.speak(item.translatedText, langInfo.ttsLang);
                 document.getElementById("reviewStatusText").textContent = "";
               });
@@ -1837,14 +2039,16 @@
         document.getElementById("quizPlayStatusText").textContent = "";
         AppState.quiz.currentQuestionAnswered = false;
         document.getElementById("submitAnswerBtn").disabled = false;
+        document.getElementById("retryQuestionBtn").disabled = false;
 
         this.updateQuizProgressUI();
 
         if (currentIndex >= questions.length) {
           const { correctCount, questions: qList } = AppState.quiz;
           const summaryText = `測驗完成！本次共 ${qList.length} 題，你答對了 ${correctCount} 題。辛苦了，按右上角「結束測驗」即可返回！`;
-          document.getElementById("quizTutorBubble").textContent = summaryText;
+          this.setQuizTutorBubbleWithBoldQuotes(summaryText);
           document.getElementById("submitAnswerBtn").disabled = true;
+          document.getElementById("retryQuestionBtn").disabled = true;
           document.getElementById("nextQuestionBtn").disabled = true;
           TTSService.speak(summaryText, "zh-TW");
           return;
@@ -1854,8 +2058,29 @@
         const q = questions[currentIndex];
         const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
         document.getElementById("quizUserSelfLabel").textContent = langInfo.selfWord;
-        document.getElementById("quizTutorBubble").textContent =
-          `請將「${q.sourceText}」翻譯成${langInfo.label}。`;
+        this.setQuizTutorBubbleWithBoldQuotes(
+          `請將「${q.sourceText}」翻譯成${langInfo.label}。`
+        );
+      },
+
+      handleRetryQuizQuestion() {
+        const { questions, currentIndex } = AppState.quiz;
+        if (currentIndex >= questions.length) return;
+
+        TTSService.stop();
+        const q = questions[currentIndex];
+        const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
+        const answerInput = document.getElementById("quizAnswerInput");
+        const clearBtn = document.getElementById("clearQuizAnswerBtn");
+
+        answerInput.value = "";
+        this.autoResizeTextarea(answerInput, clearBtn, 96);
+        document.getElementById("quizPlayStatusText").textContent = "已清空作答，請再試一次（答對題數不會重新累計）。";
+        document.getElementById("submitAnswerBtn").disabled = false;
+        this.setQuizTutorBubbleWithBoldQuotes(
+          `請將「${q.sourceText}」翻譯成${langInfo.label}。`
+        );
+        answerInput.focus();
       },
 
       updateQuizProgressUI() {
@@ -1869,8 +2094,8 @@
       },
 
       async handleSubmitQuizAnswer() {
-        const { questions, currentIndex, currentQuestionAnswered } = AppState.quiz;
-        if (currentIndex >= questions.length || currentQuestionAnswered) return;
+        const { questions, currentIndex } = AppState.quiz;
+        if (currentIndex >= questions.length) return;
 
         const userAnswer = document.getElementById("quizAnswerInput").value.trim();
         if (!userAnswer) {
@@ -1882,6 +2107,7 @@
         const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
 
         document.getElementById("submitAnswerBtn").disabled = true;
+        document.getElementById("retryQuestionBtn").disabled = true;
         document.getElementById("nextQuestionBtn").disabled = true;
         document.getElementById("quizPlayStatusText").textContent = "家教正在批改答案...";
 
@@ -1893,23 +2119,28 @@
             langLabel: langInfo.label
           });
 
-          AppState.quiz.answeredCount += 1;
-          if (result.isCorrect) {
-            AppState.quiz.correctCount += 1;
+          // 僅首次作答累計進度與答對題數；按「再試一次」後重答不會重複累計
+          if (!AppState.quiz.currentQuestionAnswered) {
+            AppState.quiz.answeredCount += 1;
+            if (result.isCorrect) {
+              AppState.quiz.correctCount += 1;
+            }
+            AppState.quiz.currentQuestionAnswered = true;
+            this.updateQuizProgressUI();
           }
-          AppState.quiz.currentQuestionAnswered = true;
-          this.updateQuizProgressUI();
 
-          document.getElementById("quizTutorBubble").textContent = result.feedback;
-          document.getElementById("quizPlayStatusText").textContent = "家教正在說話...";
+          this.setQuizTutorBubbleWithBoldQuotes(result.feedback);
+          document.getElementById("quizPlayStatusText").textContent =
+            AppState.speechSetting.muted ? "（靜音中）" : "家教正在說話...";
 
-          await TTSService.speak(result.feedback, "zh-TW");
+          await TTSService.speakFeedbackWithQuotes(result.feedback, langInfo.ttsLang);
           document.getElementById("quizPlayStatusText").textContent = "";
         } catch (err) {
-          document.getElementById("quizTutorBubble").textContent = `⚠️ ${err.message}`;
+          this.setQuizTutorBubbleWithBoldQuotes(`⚠️ ${err.message}`);
           document.getElementById("quizPlayStatusText").textContent = "";
           document.getElementById("submitAnswerBtn").disabled = false;
         } finally {
+          document.getElementById("retryQuestionBtn").disabled = false;
           document.getElementById("nextQuestionBtn").disabled = false;
         }
       },
@@ -1957,17 +2188,25 @@
           this.setMainStatus("");
         });
 
-        // 語速調整視窗
-        document.getElementById("speedBtn").addEventListener("click", () => {
-          this.openSpeedModal();
+        // 日文語氣三選一
+        document.querySelectorAll(".jp-style-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            AppState.jpStyle = btn.dataset.jpStyle;
+            this.syncJpStyleUI();
+          });
         });
 
-        document.getElementById("rateMinusBtn").addEventListener("click", () => {
-          this.adjustSpeechRate(-APP_CONFIG.speechRate.step);
+        // 語速彈窗（主畫面與測驗頁共用）
+        document.querySelectorAll(".speed-trigger-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            this.openSpeedModal();
+          });
         });
 
-        document.getElementById("ratePlusBtn").addEventListener("click", () => {
-          this.adjustSpeechRate(APP_CONFIG.speechRate.step);
+        document.querySelectorAll(".rate-preset-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            this.selectSpeechOption(btn.dataset.rateMode);
+          });
         });
 
         document.getElementById("closeRateModalBtn").addEventListener("click", () => {
@@ -2045,6 +2284,10 @@
           this.switchView("mainView");
         });
 
+        document.getElementById("retryQuestionBtn").addEventListener("click", () => {
+          this.handleRetryQuizQuestion();
+        });
+
         document.getElementById("nextQuestionBtn").addEventListener("click", () => {
           this.handleNextQuizQuestion();
         });
@@ -2077,7 +2320,8 @@
         AvatarController.preloadImages();
         this.initLanguageSelect();
         this.syncLanguageUI();
-        this.syncRateUI();
+        this.syncJpStyleUI();
+        this.syncSpeechSettingUI();
         this.resetBubbleToGreeting();
         this.autoResizeTextarea(
           document.getElementById("userInput"),
