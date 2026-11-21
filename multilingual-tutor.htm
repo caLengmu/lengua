@@ -109,7 +109,7 @@
       padding: 14px;
       display: none;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .api-panel.open {
@@ -123,10 +123,9 @@
       align-items: center;
     }
 
-    .api-input,
-    .api-select {
+    .api-input {
       flex: 1;
-      min-width: 180px;
+      min-width: 190px;
       padding: 9px 12px;
       border: 2px solid var(--border-color);
       border-radius: 8px;
@@ -135,10 +134,34 @@
       color: var(--text-main);
     }
 
-    .api-hint {
-      font-size: 0.84rem;
-      color: var(--text-muted);
-      line-height: 1.5;
+    .api-guide {
+      background: #ffffff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .api-guide-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--primary);
+    }
+
+    .api-guide ol {
+      padding-left: 20px;
+    }
+
+    .api-guide li + li {
+      margin-top: 4px;
+    }
+
+    .api-guide a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: underline;
     }
 
     .status-text {
@@ -146,6 +169,7 @@
       font-weight: 600;
       color: var(--primary);
       min-height: 1.2em;
+      text-align: center;
     }
 
     /* Tutor 角色與控制區 */
@@ -177,27 +201,6 @@
       display: block;
     }
 
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .lang-select {
-      padding: 9px 12px;
-      border: 2px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      background: #fff;
-      color: var(--text-main);
-      box-shadow: 2px 2px 0px var(--border-color);
-      cursor: pointer;
-    }
-
     /* 漫畫風格 Speech Bubble（Tutor） */
     .speech-bubble {
       position: relative;
@@ -207,8 +210,8 @@
       border-radius: 16px;
       padding: 16px 18px;
       box-shadow: var(--shadow-comic);
-      min-height: 84px;
-      font-size: 1.05rem;
+      min-height: 92px;
+      font-size: 1.06rem;
       line-height: 1.65;
       white-space: pre-wrap;
       word-break: break-word;
@@ -236,17 +239,111 @@
       border-bottom: 10px solid var(--bubble-tutor);
     }
 
-    /* 使用者輸入區塊：[Me/私/Yo/나/Io] + [Speech Bubble 輸入框（左側有尖角指向 Me）] + [送出] */
-    .user-section {
+    /* Speech Bubble 下方控制列：由左至右 [語言選單] [語速] [說話] */
+    .bubble-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .lang-select {
+      padding: 8px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: 2px 2px 0px var(--border-color);
+      cursor: pointer;
+    }
+
+    /* 語速調整彈窗（Modal） */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .rate-modal {
+      width: 100%;
+      max-width: 320px;
+      background: #ffffff;
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0px var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .rate-modal-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .rate-controls {
       display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .rate-step-btn {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: #f3f4f6;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--border-color);
+    }
+
+    .rate-step-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .rate-value {
+      min-width: 72px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .rate-range-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* 使用者輸入區塊：[Me/私/Yo/나/Io] + [Speech Bubble 輸入框（含右下角清除鍵與左側尖角）] + [送出] */
+    .user-section {
+      display: flex;
+      align-items: flex-start;
       gap: 14px;
       width: 100%;
     }
 
     .user-badge {
       min-width: 58px;
-      height: 52px;
+      height: 54px;
+      margin-top: 12px;
       padding: 0 12px;
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
@@ -272,7 +369,7 @@
       content: "";
       position: absolute;
       left: -12px;
-      top: 50%;
+      top: 38px;
       transform: translateY(-50%);
       border-top: 9px solid transparent;
       border-bottom: 9px solid transparent;
@@ -285,7 +382,7 @@
       content: "";
       position: absolute;
       left: -9px;
-      top: 50%;
+      top: 38px;
       transform: translateY(-50%);
       border-top: 7px solid transparent;
       border-bottom: 7px solid transparent;
@@ -296,17 +393,17 @@
 
     .user-bubble-input {
       width: 100%;
-      min-height: 68px;
-      max-height: 160px;
-      padding: 12px 14px;
+      min-height: 96px;
+      padding: 14px 40px 14px 16px;
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
       background: var(--bubble-user);
       box-shadow: 3px 3px 0px var(--border-color);
       font-family: inherit;
       font-size: 1rem;
-      line-height: 1.5;
-      resize: vertical;
+      line-height: 1.55;
+      resize: none;
+      overflow-y: hidden;
       color: var(--text-main);
     }
 
@@ -315,8 +412,40 @@
       outline-offset: 1px;
     }
 
+    /* 放於 speech bubble 內部右下角的一鍵清除按鈕 */
+    .clear-bubble-btn {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 26px;
+      height: 26px;
+      border: 1.5px solid #9ca3af;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: #4b5563;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .clear-bubble-btn.visible {
+      display: flex;
+    }
+
+    .clear-bubble-btn:hover {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
     .send-btn {
-      height: 52px;
+      height: 54px;
+      margin-top: 12px;
       padding: 0 18px;
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
@@ -359,6 +488,7 @@
       .user-badge {
         min-width: 50px;
         height: 44px;
+        margin-top: 0;
         font-size: 1rem;
       }
 
@@ -367,9 +497,15 @@
         flex: none;
       }
 
+      .user-bubble-wrapper::before,
+      .user-bubble-wrapper::after {
+        top: 22px;
+      }
+
       .send-btn {
         width: 100%;
         height: 44px;
+        margin-top: 0;
       }
     }
   </style>
@@ -403,41 +539,47 @@
           id="modelInput"
           class="api-input"
           type="text"
-          placeholder="模型名稱（例如 gemini-3.8-flash）"
+          placeholder="模型名稱（預設 gemini-3.5-flash-lite）"
         />
-        <select id="apiModeSelect" class="api-select" aria-label="API 呼叫模式">
-          <option value="generateContent">GenerateContent API</option>
-          <option value="interactions">Interactions API</option>
-        </select>
-        <button id="detectModelsBtn" class="btn btn-secondary" type="button">偵測可用模型</button>
       </div>
 
-      <div id="detectedModelsRow" class="api-row" style="display: none;">
-        <select id="detectedModelsSelect" class="api-select" aria-label="選擇偵測到的模型"></select>
-        <button id="applyModelBtn" class="btn btn-secondary" type="button">套用此模型</button>
+      <div class="api-guide">
+        <div class="api-guide-title">💡 如何免費取得並設定 Gemini API Key？</div>
+        <ol>
+          <li>
+            前往
+            <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>
+            並使用你的 Google 帳號登入。
+          </li>
+          <li>
+            在左側選單或首頁點擊 <strong>Get API key</strong>（取得 API 金鑰），建立一組新的 API Key。
+          </li>
+          <li>
+            點擊該金鑰旁的 <strong>Copy（複製）</strong> 圖示。
+          </li>
+          <li>
+            回到本頁上方輸入框，按滑鼠右鍵選擇 <strong>貼上</strong>（或使用快捷鍵 <code>Ctrl+V</code> / <code>Cmd+V</code>），再按 <strong>儲存金鑰</strong> 即可開始使用。
+          </li>
+        </ol>
       </div>
-
-      <p class="api-hint">
-        金鑰與模型設定僅保存在你的瀏覽器本機（<code>localStorage</code>）。若未來模型更新，可直接修改上方模型名稱或按「偵測可用模型」取得最新模型清單。
-      </p>
     </section>
 
-    <!-- Tutor 形象、語言選擇、開始對話與 Speech Bubble -->
+    <!-- Tutor 形象、Speech Bubble 與下方控制列 -->
     <main class="tutor-section">
       <div class="avatar-frame">
         <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑 -->
         <img id="tutorAvatar" src="./female 1.1.gif" alt="Tutor 形象" />
       </div>
 
-      <div class="controls-row">
-        <button id="startChatBtn" class="btn btn-primary" type="button">開始對話</button>
-        <select id="targetLangSelect" class="lang-select" aria-label="選擇目標語言">
-          <!-- 選項由語言設定表動態產生，預設為英文 -->
-        </select>
+      <div id="tutorBubble" class="speech-bubble tutor-bubble">
+        同學好，今天想學英文的哪句話呢？
       </div>
 
-      <div id="tutorBubble" class="speech-bubble tutor-bubble">
-        點擊「開始對話」與家教打招呼，或在下方輸入中文句子進行翻譯練習吧！
+      <!-- 由左至右：[語言選單] [語速] [說話] -->
+      <div class="bubble-actions">
+        <select id="targetLangSelect" class="lang-select" aria-label="選擇目標語言"></select>
+        <button id="speedBtn" class="btn btn-secondary" type="button">語速 (1x)</button>
+        <button id="speakBtn" class="btn btn-primary" type="button">說話</button>
       </div>
 
       <div id="statusText" class="status-text" role="status" aria-live="polite"></div>
@@ -450,11 +592,32 @@
         <textarea
           id="userInput"
           class="user-bubble-input"
-          placeholder="請輸入想翻譯的繁體中文或中文句子..."
+          placeholder="請輸入想翻譯的中文句子..."
         ></textarea>
+        <button
+          id="clearBubbleBtn"
+          class="clear-bubble-btn"
+          type="button"
+          title="清除輸入內容"
+          aria-label="清除輸入內容"
+        >×</button>
       </div>
       <button id="sendBtn" class="send-btn" type="button">送出</button>
     </section>
+  </div>
+
+  <!-- 語速調整彈窗 -->
+  <div id="speedModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="rateModalTitle">
+    <div class="rate-modal">
+      <div id="rateModalTitle" class="rate-modal-title">調整語速</div>
+      <div class="rate-controls">
+        <button id="rateMinusBtn" class="rate-step-btn" type="button" aria-label="減慢語速">-</button>
+        <div id="rateDisplay" class="rate-value">1x</div>
+        <button id="ratePlusBtn" class="rate-step-btn" type="button" aria-label="加快語速">+</button>
+      </div>
+      <div class="rate-range-note">每次調整 0.1x（範圍：0.5x ～ 1.5x）</div>
+      <button id="closeRateModalBtn" class="btn btn-primary" type="button">完成</button>
+    </div>
   </div>
 
   <script>
@@ -465,17 +628,22 @@
      */
     const APP_CONFIG = {
       defaultLanguage: "en",
+      speechRate: {
+        defaultRate: 1.0,
+        min: 0.5,
+        max: 1.5,
+        step: 0.1
+      },
       storageKeys: {
         apiKey: "ai_tutor_gemini_api_key_v1",
         model: "ai_tutor_gemini_model_v1",
-        apiMode: "ai_tutor_gemini_api_mode_v1",
         language: "ai_tutor_target_lang_v1",
+        speechRate: "ai_tutor_speech_rate_v1",
         characterId: "ai_tutor_character_id_v1"
       },
       gemini: {
-        defaultModel: "gemini-3.8-flash",
-        defaultMode: "generateContent",
-        endpointBase: "https://generativelanguage.googleapis.com/v1beta"
+        defaultModel: "gemini-3.5-flash-lite",
+        endpointBase: "https://generativelanguage.googleapis.com/v1beta/models"
       }
     };
 
@@ -493,8 +661,7 @@
         },
         ttsConfig: {
           zhLang: "zh-TW",
-          pitch: 1.05,
-          rate: 1.0
+          pitch: 1.05
         }
       }
     };
@@ -564,16 +731,6 @@
         const clean = (modelName || "").trim() || APP_CONFIG.gemini.defaultModel;
         localStorage.setItem(APP_CONFIG.storageKeys.model, clean);
       },
-      getApiMode() {
-        const saved = localStorage.getItem(APP_CONFIG.storageKeys.apiMode);
-        return saved === "interactions" ? "interactions" : APP_CONFIG.gemini.defaultMode;
-      },
-      setApiMode(mode) {
-        localStorage.setItem(
-          APP_CONFIG.storageKeys.apiMode,
-          mode === "interactions" ? "interactions" : "generateContent"
-        );
-      },
       getLanguage() {
         const saved = localStorage.getItem(APP_CONFIG.storageKeys.language);
         return LANGUAGE_REGISTRY[saved] ? saved : APP_CONFIG.defaultLanguage;
@@ -582,6 +739,18 @@
         if (LANGUAGE_REGISTRY[langCode]) {
           localStorage.setItem(APP_CONFIG.storageKeys.language, langCode);
         }
+      },
+      getSpeechRate() {
+        const raw = parseFloat(localStorage.getItem(APP_CONFIG.storageKeys.speechRate));
+        if (Number.isNaN(raw)) return APP_CONFIG.speechRate.defaultRate;
+        const clamped = Math.min(APP_CONFIG.speechRate.max, Math.max(APP_CONFIG.speechRate.min, raw));
+        return Math.round(clamped * 10) / 10;
+      },
+      setSpeechRate(rate) {
+        const clamped = Math.min(APP_CONFIG.speechRate.max, Math.max(APP_CONFIG.speechRate.min, rate));
+        const rounded = Math.round(clamped * 10) / 10;
+        localStorage.setItem(APP_CONFIG.storageKeys.speechRate, String(rounded));
+        return rounded;
       },
       getCharacterId() {
         const saved = localStorage.getItem(APP_CONFIG.storageKeys.characterId);
@@ -592,6 +761,9 @@
     const AppState = {
       characterId: StorageManager.getCharacterId(),
       languageCode: StorageManager.getLanguage(),
+      speechRate: StorageManager.getSpeechRate(),
+      // 目前 speech bubble 內容的朗讀語系：預設為繁體中文，翻譯完成後切為目標語言
+      currentTtsLang: "zh-TW",
       isSpeaking: false,
       isTranslating: false
     };
@@ -645,7 +817,6 @@
           return Promise.resolve();
         }
 
-        // 只在正在朗讀或排隊中才取消，避免部分瀏覽器 cancel() 後立即 speak() 失效
         if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
           window.speechSynthesis.cancel();
         }
@@ -656,7 +827,7 @@
 
           const charConfig = AvatarController.getCurrentCharacter();
           utterance.pitch = charConfig.ttsConfig?.pitch ?? 1.05;
-          utterance.rate = charConfig.ttsConfig?.rate ?? 1.0;
+          utterance.rate = AppState.speechRate;
 
           const voices = window.speechSynthesis.getVoices();
           const matchedVoice =
@@ -684,10 +855,9 @@
           utterance.onend = finish;
           utterance.onerror = finish;
 
-          const estimatedMs = Math.max(2600, cleanText.length * 160 + 2000);
+          const estimatedMs = Math.max(2600, (cleanText.length * 160) / Math.max(0.5, AppState.speechRate) + 2000);
           const safetyTimer = setTimeout(finish, estimatedMs);
 
-          // 立即切至說話狀態，確保視覺同步
           AvatarController.setSpeakingState(true);
           window.speechSynthesis.speak(utterance);
         });
@@ -696,38 +866,10 @@
 
     /**
      * =========================================================================
-     * 5. AI 翻譯與動態模型查詢模組（Translation & Model Service）
+     * 5. AI 翻譯模組（Translation Service）
      * =========================================================================
      */
     const TranslationService = {
-      buildPrompt(sourceText, langInfo) {
-        return [
-          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
-          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
-          `原文：${sourceText}`
-        ].join("\n");
-      },
-
-      async listAvailableModels(apiKey) {
-        const cleanKey = (apiKey || "").trim();
-        if (!cleanKey) {
-          throw new Error("請先輸入 Gemini API Key 再偵測模型。");
-        }
-
-        const url = `${APP_CONFIG.gemini.endpointBase}/models?key=${encodeURIComponent(cleanKey)}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`無法取得模型清單（HTTP ${response.status}）`);
-        }
-
-        const data = await response.json();
-        const models = (data.models || [])
-          .map((m) => (m.name || "").replace(/^models\//, ""))
-          .filter((name) => name.includes("gemini"));
-
-        return models;
-      },
-
       async translateChineseToTarget(sourceText, targetLangKey) {
         const apiKey = StorageManager.getApiKey();
         if (!apiKey) {
@@ -735,36 +877,27 @@
         }
 
         const model = StorageManager.getModel();
-        const mode = StorageManager.getApiMode();
         const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
-        const prompt = this.buildPrompt(sourceText, langInfo);
+        const url = `${APP_CONFIG.gemini.endpointBase}/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-        let url = "";
-        let payload = null;
-
-        if (mode === "interactions") {
-          url = `${APP_CONFIG.gemini.endpointBase}/interactions?key=${encodeURIComponent(apiKey)}`;
-          payload = {
-            model,
-            input: prompt
-          };
-        } else {
-          url = `${APP_CONFIG.gemini.endpointBase}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-          payload = {
-            contents: [
-              {
-                parts: [{ text: prompt }]
-              }
-            ]
-          };
-        }
+        const prompt = [
+          `你是一位親切的外語家教。請將以下輸入的中文句子翻譯成自然道地的${langInfo.label}。`,
+          `規則：只輸出翻譯後的${langInfo.label}內容，不要加多餘解釋、引號或前綴。`,
+          `原文：${sourceText}`
+        ].join("\n");
 
         const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [{ text: prompt }]
+              }
+            ]
+          })
         });
 
         if (!response.ok) {
@@ -781,26 +914,11 @@
         }
 
         const data = await response.json();
-
-        // 同時相容 generateContent 與 interactions 常見輸出結構
-        let resultText = "";
-        if (Array.isArray(data?.candidates)) {
-          resultText = data.candidates[0]?.content?.parts
+        const resultText =
+          data?.candidates?.[0]?.content?.parts
             ?.map((part) => part.text || "")
             .join("")
             .trim() || "";
-        }
-
-        if (!resultText && Array.isArray(data?.outputs)) {
-          resultText = data.outputs
-            .map((item) => item?.text || item?.content || "")
-            .join("")
-            .trim();
-        }
-
-        if (!resultText && typeof data?.output === "string") {
-          resultText = data.output.trim();
-        }
 
         if (!resultText) {
           throw new Error("API 回傳內容為空，請再試一次。");
@@ -816,6 +934,11 @@
      * =========================================================================
      */
     const UIController = {
+      formatRateLabel(rate) {
+        const rounded = Math.round(rate * 10) / 10;
+        return Number.isInteger(rounded) ? `${rounded}x` : `${rounded.toFixed(1)}x`;
+      },
+
       initLanguageSelect() {
         const selectEl = document.getElementById("targetLangSelect");
         selectEl.innerHTML = "";
@@ -830,11 +953,38 @@
         selectEl.value = AppState.languageCode;
       },
 
+      resetBubbleToGreeting() {
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        const charConfig = AvatarController.getCurrentCharacter();
+        AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
+        this.setTutorBubble(langInfo.greeting(langInfo.label));
+      },
+
       syncLanguageUI() {
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         const selfBadgeEl = document.getElementById("userSelfLabel");
         if (selfBadgeEl) {
           selfBadgeEl.textContent = langInfo.selfWord;
+        }
+      },
+
+      syncRateUI() {
+        const label = this.formatRateLabel(AppState.speechRate);
+        document.getElementById("speedBtn").textContent = `語速 (${label})`;
+        document.getElementById("rateDisplay").textContent = label;
+      },
+
+      autoResizeUserInput() {
+        const textarea = document.getElementById("userInput");
+        const clearBtn = document.getElementById("clearBubbleBtn");
+        if (!textarea) return;
+
+        textarea.style.height = "auto";
+        const nextHeight = Math.max(96, textarea.scrollHeight);
+        textarea.style.height = `${nextHeight}px`;
+
+        if (clearBtn) {
+          clearBtn.classList.toggle("visible", textarea.value.length > 0);
         }
       },
 
@@ -851,7 +1001,7 @@
       setBusy(busy) {
         AppState.isTranslating = busy;
         document.getElementById("sendBtn").disabled = busy;
-        document.getElementById("startChatBtn").disabled = busy;
+        document.getElementById("speakBtn").disabled = busy;
         document.getElementById("targetLangSelect").disabled = busy;
       },
 
@@ -859,16 +1009,30 @@
         document.getElementById("apiPanel").classList.remove("open");
       },
 
-      async handleStartChat() {
-        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
-        const greetingText = langInfo.greeting(langInfo.label);
+      openSpeedModal() {
+        this.syncRateUI();
+        document.getElementById("speedModalBackdrop").classList.add("open");
+      },
 
-        this.setTutorBubble(greetingText);
+      closeSpeedModal() {
+        document.getElementById("speedModalBackdrop").classList.remove("open");
+      },
+
+      adjustSpeechRate(delta) {
+        const nextRate = StorageManager.setSpeechRate(AppState.speechRate + delta);
+        AppState.speechRate = nextRate;
+        this.syncRateUI();
+      },
+
+      async handleSpeakCurrentBubble() {
+        const bubbleText = (document.getElementById("tutorBubble")?.textContent || "").trim();
+        if (!bubbleText) return;
+
+        this.setBusy(true);
         this.setStatus("家教正在說話...");
-
-        const charConfig = AvatarController.getCurrentCharacter();
-        await TTSService.speak(greetingText, charConfig.ttsConfig?.zhLang || "zh-TW");
+        await TTSService.speak(bubbleText, AppState.currentTtsLang);
         this.setStatus("");
+        this.setBusy(false);
       },
 
       async handleSendTranslation() {
@@ -891,10 +1055,12 @@
             AppState.languageCode
           );
 
+          // 翻譯完成後，切為目標語言 TTS，之後按「說話」可反覆聽譯文
+          AppState.currentTtsLang = langInfo.ttsLang;
           this.setTutorBubble(translatedText);
           this.setStatus(`已翻譯成${langInfo.label}，正在朗讀...`);
 
-          await TTSService.speak(translatedText, langInfo.ttsLang);
+          await TTSService.speak(translatedText, AppState.currentTtsLang);
           this.setStatus("");
         } catch (error) {
           this.setTutorBubble(`⚠️ ${error.message}`);
@@ -905,59 +1071,22 @@
         }
       },
 
-      async handleDetectModels() {
-        const apiKeyInput = document.getElementById("apiKeyInput");
-        const modelInput = document.getElementById("modelInput");
-        const currentKey = apiKeyInput.value.trim() || StorageManager.getApiKey();
-
-        this.setStatus("正在查詢可用模型...");
-        try {
-          const models = await TranslationService.listAvailableModels(currentKey);
-          const rowEl = document.getElementById("detectedModelsRow");
-          const selectEl = document.getElementById("detectedModelsSelect");
-
-          if (!models.length) {
-            this.setStatus("未找到可用的 Gemini 模型。");
-            return;
-          }
-
-          selectEl.innerHTML = "";
-          models.forEach((m) => {
-            const opt = document.createElement("option");
-            opt.value = m;
-            opt.textContent = m;
-            selectEl.appendChild(opt);
-          });
-
-          if (models.includes(modelInput.value.trim())) {
-            selectEl.value = modelInput.value.trim();
-          }
-
-          rowEl.style.display = "flex";
-          this.setStatus(`已偵測到 ${models.length} 個模型，可選擇後套用。`);
-        } catch (err) {
-          this.setStatus(`⚠️ ${err.message}`);
-        }
-      },
-
       bindEvents() {
         const apiKeyInput = document.getElementById("apiKeyInput");
         const modelInput = document.getElementById("modelInput");
-        const apiModeSelect = document.getElementById("apiModeSelect");
 
         apiKeyInput.value = StorageManager.getApiKey();
         modelInput.value = StorageManager.getModel();
-        apiModeSelect.value = StorageManager.getApiMode();
 
+        // API 面板開關
         document.getElementById("toggleApiBtn").addEventListener("click", () => {
           document.getElementById("apiPanel").classList.toggle("open");
         });
 
-        // 儲存金鑰與模型設定後，自動收合面板
+        // 儲存後自動收合
         document.getElementById("saveApiBtn").addEventListener("click", () => {
           StorageManager.setApiKey(apiKeyInput.value);
           StorageManager.setModel(modelInput.value);
-          StorageManager.setApiMode(apiModeSelect.value);
 
           apiKeyInput.value = StorageManager.getApiKey();
           modelInput.value = StorageManager.getModel();
@@ -971,38 +1100,61 @@
           this.setStatus("已清除本機儲存的 API Key。");
         });
 
-        apiModeSelect.addEventListener("change", (e) => {
-          StorageManager.setApiMode(e.target.value);
-        });
-
-        document.getElementById("detectModelsBtn").addEventListener("click", () => {
-          this.handleDetectModels();
-        });
-
-        document.getElementById("applyModelBtn").addEventListener("click", () => {
-          const selectedModel = document.getElementById("detectedModelsSelect").value;
-          if (selectedModel) {
-            modelInput.value = selectedModel;
-            StorageManager.setModel(selectedModel);
-            this.setStatus(`已套用模型：${selectedModel}`);
-          }
-        });
-
+        // 切換目標語言：清空譯文、回復預設問候語，TTS 切回繁體中文
         document.getElementById("targetLangSelect").addEventListener("change", (e) => {
           AppState.languageCode = e.target.value;
           StorageManager.setLanguage(AppState.languageCode);
           this.syncLanguageUI();
+          this.resetBubbleToGreeting();
+          this.setStatus("");
         });
 
-        document.getElementById("startChatBtn").addEventListener("click", () => {
-          this.handleStartChat();
+        // 語速調整視窗
+        document.getElementById("speedBtn").addEventListener("click", () => {
+          this.openSpeedModal();
         });
 
+        document.getElementById("rateMinusBtn").addEventListener("click", () => {
+          this.adjustSpeechRate(-APP_CONFIG.speechRate.step);
+        });
+
+        document.getElementById("ratePlusBtn").addEventListener("click", () => {
+          this.adjustSpeechRate(APP_CONFIG.speechRate.step);
+        });
+
+        document.getElementById("closeRateModalBtn").addEventListener("click", () => {
+          this.closeSpeedModal();
+        });
+
+        document.getElementById("speedModalBackdrop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            this.closeSpeedModal();
+          }
+        });
+
+        // 說話鍵：唸出目前 speech bubble 內容
+        document.getElementById("speakBtn").addEventListener("click", () => {
+          this.handleSpeakCurrentBubble();
+        });
+
+        // 使用者輸入框自動增高與一鍵清除
+        const userInputEl = document.getElementById("userInput");
+        userInputEl.addEventListener("input", () => {
+          this.autoResizeUserInput();
+        });
+
+        document.getElementById("clearBubbleBtn").addEventListener("click", () => {
+          userInputEl.value = "";
+          this.autoResizeUserInput();
+          userInputEl.focus();
+        });
+
+        // 送出翻譯
         document.getElementById("sendBtn").addEventListener("click", () => {
           this.handleSendTranslation();
         });
 
-        document.getElementById("userInput").addEventListener("keydown", (e) => {
+        userInputEl.addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             if (!AppState.isTranslating) {
@@ -1023,6 +1175,9 @@
         AvatarController.preloadImages();
         this.initLanguageSelect();
         this.syncLanguageUI();
+        this.syncRateUI();
+        this.resetBubbleToGreeting();
+        this.autoResizeUserInput();
         AvatarController.setSpeakingState(false);
         this.bindEvents();
       }
