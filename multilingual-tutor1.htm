@@ -1,0 +1,3361 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 外語家教 - 任務、翻譯、複習與測驗</title>
+  <style>
+    :root {
+      --bg-color: #f4f6fb;
+      --card-bg: #ffffff;
+      --primary: #3b6ef6;
+      --primary-hover: #2855d4;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #222222;
+      --bubble-tutor: #fffdf5;
+      --bubble-user: #eef4ff;
+      --shadow-comic: 4px 4px 0px #222222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
+      background: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 18px;
+      box-shadow: 6px 6px 0px var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-self: flex-start;
+    }
+
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    /* 頂部列 */
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #d1d5db;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 2px 2px 0px var(--border-color);
+      transition: transform 0.08s ease, background-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #e5e7eb;
+    }
+
+    .btn-active-pill {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-color: var(--border-color);
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #fecaca;
+    }
+
+    /* API 設定面板 */
+    .api-panel {
+      background: #f9fafb;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .api-panel.open {
+      display: flex;
+    }
+
+    .api-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .api-input {
+      flex: 1;
+      min-width: 190px;
+      padding: 9px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      background: #fff;
+      color: var(--text-main);
+    }
+
+    .api-guide {
+      background: #ffffff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .api-guide-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--primary);
+    }
+
+    .api-guide ol {
+      padding-left: 20px;
+    }
+
+    .api-guide li + li {
+      margin-top: 4px;
+    }
+
+    .api-guide a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    .api-safety-box {
+      background: #fffdf5;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .api-safety-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #b45309;
+    }
+
+    .api-safety-box ul {
+      padding-left: 18px;
+    }
+
+    .api-safety-box li + li {
+      margin-top: 4px;
+    }
+
+    .status-text {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--primary);
+      min-height: 1.2em;
+      text-align: center;
+    }
+
+    /* Tutor 角色與控制區 */
+    .tutor-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar-frame {
+      width: 280px;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #e5e7eb;
+      box-shadow: var(--shadow-comic);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 漫畫風格 Speech Bubble（Tutor） */
+    .speech-bubble {
+      position: relative;
+      width: 100%;
+      background: var(--bubble-tutor);
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow-comic);
+      min-height: 92px;
+      font-size: 1.06rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .speech-bubble.tutor-bubble::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 12px solid var(--border-color);
+    }
+
+    .speech-bubble.tutor-bubble::after {
+      content: "";
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid var(--bubble-tutor);
+    }
+
+    /* 起始未選任務時，收起人物對話框以下全部內容 */
+    .task-body-collapsible {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .task-body-collapsible.collapsed {
+      display: none;
+    }
+
+    /* Speech Bubble 下方控制列：三等分同一行 */
+    .bubble-actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .equal-item {
+      flex: 1 1 0;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .lang-select {
+      padding: 8px 10px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: 2px 2px 0px var(--border-color);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* 彈窗共用背景 */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    /* 主畫面語速微調彈窗 */
+    .rate-modal {
+      width: 100%;
+      max-width: 340px;
+      background: #ffffff;
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0px var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .rate-modal-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .rate-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .rate-step-btn {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: #f3f4f6;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--border-color);
+    }
+
+    .rate-step-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .rate-value {
+      min-width: 72px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .rate-range-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* 測驗頁語速預設按鈕彈窗 */
+    .rate-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .rate-preset-btn {
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: #f3f4f6;
+      color: var(--text-main);
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--border-color);
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .rate-preset-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .rate-preset-btn.selected {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    /* 多指令編輯彈窗 */
+    .prompt-modal {
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0px var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .prompt-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prompt-item-card {
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prompt-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prompt-box-label {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .prompt-sub-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .default-prompt-preview {
+      background: #f3f4f6;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #374151;
+      white-space: pre-wrap;
+      max-height: 105px;
+      overflow-y: auto;
+    }
+
+    .custom-prompt-textarea {
+      width: 100%;
+      min-height: 105px;
+      padding: 9px 11px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text-main);
+      background: #fffdf5;
+    }
+
+    .prompt-var-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .prompt-modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* 任務列表樣式 */
+    .task-list-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .task-select-btn {
+      flex: 1;
+      justify-content: space-between;
+      padding: 11px 14px;
+      font-size: 0.98rem;
+    }
+
+    .task-badge-soon {
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #4b5563;
+      font-weight: 700;
+    }
+
+    .task-badge-active {
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    /* 使用者輸入區塊 */
+    .user-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .user-badge {
+      min-width: 58px;
+      height: 54px;
+      margin-top: 12px;
+      padding: 0 12px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      background: #fef3c7;
+      box-shadow: 3px 3px 0px var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .user-bubble-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+    }
+
+    .user-bubble-wrapper::before {
+      content: "";
+      position: absolute;
+      left: -12px;
+      top: 38px;
+      transform: translateY(-50%);
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 12px solid var(--border-color);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .user-bubble-wrapper::after {
+      content: "";
+      position: absolute;
+      left: -9px;
+      top: 38px;
+      transform: translateY(-50%);
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-right: 10px solid var(--bubble-user);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .user-bubble-input {
+      width: 100%;
+      min-height: 96px;
+      padding: 14px 40px 14px 16px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--bubble-user);
+      box-shadow: 3px 3px 0px var(--border-color);
+      font-family: inherit;
+      font-size: 1rem;
+      line-height: 1.55;
+      resize: none;
+      overflow-y: hidden;
+      color: var(--text-main);
+    }
+
+    .user-bubble-input:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .clear-bubble-btn {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 26px;
+      height: 26px;
+      border: 1.5px solid #9ca3af;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: #4b5563;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .clear-bubble-btn.visible {
+      display: flex;
+    }
+
+    .clear-bubble-btn:hover {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    /* 日文語氣三選一列（常體 / 敬體 / 服務業者） */
+    .jp-style-row {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-left: 72px;
+      width: 100%;
+    }
+
+    .jp-style-row.visible {
+      display: grid;
+    }
+
+    .send-btn {
+      height: 54px;
+      margin-top: 12px;
+      padding: 0 18px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px var(--border-color);
+      flex-shrink: 0;
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .send-btn:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .send-btn:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    /* [存檔][複習][測驗] 區塊 */
+    .mode-toolbar {
+      margin-top: 14px;
+      padding-top: 18px;
+      border-top: 2px dashed #d1d5db;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .mode-toolbar.hidden-for-task {
+      display: none;
+    }
+
+    /* 複習頁面樣式 */
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .date-group {
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      background: #fafafa;
+      box-shadow: 3px 3px 0px var(--border-color);
+      overflow: hidden;
+    }
+
+    .date-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #fffdf5;
+    }
+
+    .date-toggle-btn {
+      flex: 1;
+      text-align: left;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px;
+    }
+
+    .icon-del-btn {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      background: #fff;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .icon-del-btn:hover {
+      background: #fee2e2;
+    }
+
+    .date-group-body {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border-top: 1.5px solid #e5e7eb;
+      background: #ffffff;
+    }
+
+    .date-group.open .date-group-body {
+      display: flex;
+    }
+
+    .review-item {
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-item-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .review-translated {
+      font-weight: 800;
+      font-size: 1.04rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+
+    .review-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .review-source {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 28px 16px;
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      border: 2px dashed #d1d5db;
+      border-radius: 14px;
+    }
+
+    /* 測驗準備與進行樣式（兩大類） */
+    .quiz-setup-box {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .quiz-category-card {
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafafa;
+      box-shadow: 3px 3px 0px var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .quiz-category-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .ai-quiz-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quiz-date-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-date-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: #fffdf5;
+      box-shadow: 2px 2px 0px var(--border-color);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .quiz-date-checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .quiz-progress-box {
+      width: 100%;
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quiz-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 14px;
+      background: #e5e7eb;
+      border: 2px solid var(--border-color);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.25s ease;
+    }
+
+    /* 手機版響應式調整 */
+    @media (max-width: 600px) {
+      .app-container {
+        padding: 14px;
+        border-radius: 14px;
+      }
+
+      .bubble-actions {
+        gap: 6px;
+      }
+
+      .btn,
+      .lang-select {
+        padding: 8px 6px;
+        font-size: 0.84rem;
+      }
+
+      .ai-quiz-btn-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .user-section {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .user-badge {
+        min-width: 50px;
+        height: 44px;
+        margin-top: 0;
+        font-size: 1rem;
+      }
+
+      .user-bubble-wrapper {
+        width: calc(100% - 64px);
+        flex: none;
+      }
+
+      .user-bubble-wrapper::before,
+      .user-bubble-wrapper::after {
+        top: 22px;
+      }
+
+      .jp-style-row {
+        padding-left: 0;
+      }
+
+      .send-btn {
+        width: 100%;
+        height: 44px;
+        margin-top: 0;
+      }
+
+      .mode-toolbar {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- ==================== 1. 主畫面 ==================== -->
+    <div id="mainView" class="view-section active">
+      <header class="top-bar">
+        <div class="app-title">
+          <span>🌐 AI 外語家教</span>
+        </div>
+        <div class="top-actions">
+          <button id="openTaskViewBtn" class="btn btn-secondary" type="button">📋 任務</button>
+          <button id="toggleApiBtn" class="btn btn-secondary" type="button">⚙️ API 設定</button>
+        </div>
+      </header>
+
+      <!-- 本地 API 設定區 -->
+      <section id="apiPanel" class="api-panel" aria-label="API 設定">
+        <div class="api-row">
+          <input
+            id="apiKeyInput"
+            class="api-input"
+            type="password"
+            placeholder="貼上你的 Gemini API Key（僅保存在此裝置瀏覽器）"
+            autocomplete="off"
+          />
+          <button id="saveApiBtn" class="btn btn-primary" type="button">儲存金鑰</button>
+          <button id="clearApiBtn" class="btn btn-secondary" type="button">清除</button>
+        </div>
+
+        <div class="api-row">
+          <input
+            id="modelInput"
+            class="api-input"
+            type="text"
+            placeholder="模型名稱（預設 gemini-3.5-flash-lite）"
+          />
+        </div>
+
+        <div class="api-guide">
+          <div class="api-guide-title">💡 如何免費取得並設定 Gemini API Key？</div>
+          <ol>
+            <li>
+              前往
+              <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>
+              並使用你的 Google 帳號登入。
+            </li>
+            <li>
+              在左側選單或首頁點擊 <strong>Get API key</strong>（取得 API 金鑰），建立一組新的 API Key。
+            </li>
+            <li>
+              點擊該金鑰旁的 <strong>Copy（複製）</strong> 圖示。
+            </li>
+            <li>
+              回到本頁上方輸入框，按滑鼠右鍵選擇 <strong>貼上</strong>（或使用快捷鍵 <code>Ctrl+V</code> / <code>Cmd+V</code>），再按 <strong>儲存金鑰</strong> 即可開始使用。
+            </li>
+          </ol>
+        </div>
+
+        <div class="api-safety-box">
+          <div class="api-safety-title">🔒 給你的簡單安全小提醒</div>
+          <ul>
+            <li>你的 API 金鑰就像家裡鑰匙，只會保存在<strong>你現在這台裝置的瀏覽器</strong>裡，不會傳到我們的網站主機，也不會寫進這個網頁檔案中。</li>
+            <li>請使用<strong>你自己的 Google 帳號</strong>申請金鑰，不要使用別人提供的金鑰，也不要隨便把金鑰截圖或貼給他人看。</li>
+            <li>如果是在<strong>學校、圖書館或借用別人的電腦／手機</strong>使用，離開前請記得按一下旁邊的<strong>「清除」</strong>按鈕，把金鑰從這台裝置移除。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Tutor 形象與 Speech Bubble -->
+      <main class="tutor-section">
+        <div class="avatar-frame">
+          <!-- 圖檔空位：部署至 GitHub 時，請將兩張 GIF 放在與本 HTML 相同路徑 -->
+          <img id="tutorAvatarMain" class="tutor-avatar-img" src="./female 1.1.gif" alt="Tutor 形象" />
+        </div>
+
+        <div id="tutorBubble" class="speech-bubble tutor-bubble">同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。</div>
+      </main>
+
+      <!-- 起始未選任務時，此區塊收起；選擇任務後展開 -->
+      <div id="taskBodyCollapsible" class="task-body-collapsible collapsed">
+        <!-- 三等分同一行：[語言選單] [語速] [說話] -->
+        <div class="bubble-actions">
+          <select id="targetLangSelect" class="lang-select equal-item" aria-label="選擇語言"></select>
+          <button id="mainSpeedBtn" class="btn btn-secondary equal-item" type="button">語速 (1x)</button>
+          <button id="speakBtn" class="btn btn-primary equal-item" type="button">說話</button>
+        </div>
+
+        <div id="mainStatusText" class="status-text" role="status" aria-live="polite"></div>
+
+        <!-- 使用者 Speech Bubble 區塊 -->
+        <section class="user-column" aria-label="使用者輸入區">
+          <div class="user-section">
+            <div id="userSelfLabel" class="user-badge">Me</div>
+            <div class="user-bubble-wrapper">
+              <textarea
+                id="userInput"
+                class="user-bubble-input"
+                placeholder="請輸入想翻譯的中文句子..."
+              ></textarea>
+              <button
+                id="clearBubbleBtn"
+                class="clear-bubble-btn"
+                type="button"
+                title="清除輸入內容"
+                aria-label="清除輸入內容"
+              >×</button>
+            </div>
+            <button id="sendBtn" class="send-btn" type="button">送出</button>
+          </div>
+
+          <!-- 日文專屬語氣三選一：常體 / 敬體（預設） / 服務業者 -->
+          <div id="jpStyleRow" class="jp-style-row" aria-label="日文語氣選擇">
+            <button id="jpCasualBtn" class="btn btn-secondary jp-style-btn" data-jp-style="casual" type="button">常體</button>
+            <button id="jpPoliteBtn" class="btn btn-secondary jp-style-btn btn-active-pill" data-jp-style="polite" type="button">敬體</button>
+            <button id="jpHonorificBtn" class="btn btn-secondary jp-style-btn" data-jp-style="honorific" type="button">服務業者</button>
+          </div>
+        </section>
+
+        <!-- [存檔][複習][測驗]（[自訂] 任務時隱藏） -->
+        <nav id="mainModeToolbar" class="mode-toolbar" aria-label="學習功能">
+          <button id="saveRecordBtn" class="btn btn-secondary" type="button">💾 存檔</button>
+          <button id="openReviewBtn" class="btn btn-secondary" type="button">📖 複習</button>
+          <button id="openQuizSetupBtn" class="btn btn-secondary" type="button">📝 測驗</button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ==================== 2. 任務選擇頁面 ==================== -->
+    <div id="taskView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📋 選擇任務與編輯指令</div>
+        <button id="backFromTaskBtn" class="btn btn-secondary" type="button">← 返回主畫面</button>
+      </header>
+
+      <div id="taskStatusText" class="status-text" role="status" aria-live="polite"></div>
+
+      <div id="taskListContainer" class="task-list-box">
+        <!-- 由 TASK_REGISTRY 動態產生：會話、文章導讀、翻譯、單字、自訂，每列皆有 [編輯指令] -->
+      </div>
+    </div>
+
+    <!-- ==================== 3. 複習頁面 ==================== -->
+    <div id="reviewView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📖 複習紀錄</div>
+        <button id="backFromReviewBtn" class="btn btn-secondary" type="button">← 返回翻譯</button>
+      </header>
+
+      <div id="reviewStatusText" class="status-text" role="status" aria-live="polite"></div>
+      <div id="reviewListContainer" class="review-list"></div>
+    </div>
+
+    <!-- ==================== 4. 測驗準備頁面（兩大類） ==================== -->
+    <div id="quizSetupView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📝 選擇測驗模式</div>
+        <button id="backFromQuizSetupBtn" class="btn btn-secondary" type="button">← 返回翻譯</button>
+      </header>
+
+      <div id="quizStatusText" class="status-text" role="status" aria-live="polite"></div>
+
+      <div class="quiz-setup-box">
+        <!-- 類別一：AI 隨機產生考題 -->
+        <section class="quiz-category-card" aria-label="AI 隨機產生考題">
+          <div class="quiz-category-title">1. AI 隨機產生考題</div>
+          <div class="ai-quiz-btn-grid">
+            <button id="aiQuizGsatEnBtn" class="btn btn-primary" type="button">模擬學測中譯英</button>
+            <button id="aiQuizDailyJaBtn" class="btn btn-primary" type="button">生活&amp;旅遊日文</button>
+          </div>
+        </section>
+
+        <!-- 類別二：勾選測驗範圍以開始測驗（含內建資料＆存檔資料） -->
+        <section class="quiz-category-card" aria-label="勾選測驗範圍以開始測驗">
+          <div class="quiz-category-title">2. 勾選測驗範圍以開始測驗（含內建資料＆存檔資料）</div>
+          <div id="quizDateListContainer" class="quiz-date-list"></div>
+          <button id="startQuizBtn" class="btn btn-secondary" type="button">開始測驗</button>
+        </section>
+      </div>
+    </div>
+
+    <!-- ==================== 5. 測驗進行頁面 ==================== -->
+    <div id="quizPlayView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">📝 翻譯測驗中</div>
+        <button id="exitQuizBtn" class="btn btn-danger" type="button">✕ 結束測驗</button>
+      </header>
+
+      <main class="tutor-section">
+        <div class="avatar-frame">
+          <img id="tutorAvatarQuiz" class="tutor-avatar-img" src="./female 1.1.gif" alt="Tutor 形象" />
+        </div>
+
+        <div id="quizTutorBubble" class="speech-bubble tutor-bubble"></div>
+
+        <!-- 由左至右：[語速] [再試一次] [下一題] -->
+        <div class="bubble-actions">
+          <button id="quizSpeedBtn" class="btn btn-secondary equal-item" type="button">語速 (1.2x)</button>
+          <button id="retryQuestionBtn" class="btn btn-secondary equal-item" type="button">再試一次</button>
+          <button id="nextQuestionBtn" class="btn btn-primary equal-item" type="button">下一題</button>
+        </div>
+
+        <div id="quizPlayStatusText" class="status-text" role="status" aria-live="polite"></div>
+      </main>
+
+      <section class="user-section" aria-label="輸入測驗答案">
+        <div id="quizUserSelfLabel" class="user-badge">Me</div>
+        <div class="user-bubble-wrapper">
+          <textarea
+            id="quizAnswerInput"
+            class="user-bubble-input"
+            placeholder="請輸入你的翻譯答案..."
+          ></textarea>
+          <button
+            id="clearQuizAnswerBtn"
+            class="clear-bubble-btn"
+            type="button"
+            title="清除答案"
+            aria-label="清除答案"
+          >×</button>
+        </div>
+        <button id="submitAnswerBtn" class="send-btn" type="button">送出答案</button>
+      </section>
+
+      <!-- 最下方進度條（總題數以及目前作答進度） -->
+      <div class="quiz-progress-box">
+        <div class="quiz-progress-label">
+          <span id="quizProgressText">進度：0 / 0 題</span>
+          <span id="quizScoreText">答對：0 題</span>
+        </div>
+        <div class="progress-track">
+          <div id="quizProgressFill" class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 多指令編輯彈窗（支援單一或多項指令） -->
+  <div id="promptModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="promptModalTitle">
+    <div class="prompt-modal">
+      <div class="prompt-modal-header">
+        <div id="promptModalTitle" class="rate-modal-title">編輯指令</div>
+        <button id="closePromptModalBtn" class="btn btn-secondary" type="button">✕</button>
+      </div>
+
+      <div id="promptEditorItemsContainer" style="display:flex;flex-direction:column;gap:12px;"></div>
+
+      <div class="prompt-var-hint" id="promptVarHintText"></div>
+
+      <div class="prompt-modal-actions">
+        <button id="resetAllPromptsBtn" class="btn btn-secondary" type="button">全部還原內建</button>
+        <button id="saveAllPromptsBtn" class="btn btn-primary" type="button">儲存指令</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主畫面語速微調彈窗 -->
+  <div id="mainSpeedModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="mainRateModalTitle">
+    <div class="rate-modal">
+      <div id="mainRateModalTitle" class="rate-modal-title">調整語速</div>
+      <div class="rate-controls">
+        <button id="mainRateMinusBtn" class="rate-step-btn" type="button" aria-label="減慢語速">-</button>
+        <div id="mainRateDisplay" class="rate-value">1x</div>
+        <button id="mainRatePlusBtn" class="rate-step-btn" type="button" aria-label="加快語速">+</button>
+      </div>
+      <div class="rate-range-note">每次調整 0.1x（範圍：0.5x ～ 1.5x）</div>
+      <button id="closeMainRateModalBtn" class="btn btn-primary" type="button">完成</button>
+    </div>
+  </div>
+
+  <!-- 測驗頁語速彈窗：靜音、1x、1.2x、1.5x -->
+  <div id="quizSpeedModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="quizRateModalTitle">
+    <div class="rate-modal">
+      <div id="quizRateModalTitle" class="rate-modal-title">選擇測驗語速</div>
+      <div class="rate-preset-grid">
+        <button class="rate-preset-btn" data-rate-mode="mute" type="button">靜音</button>
+        <button class="rate-preset-btn" data-rate-mode="1" type="button">1x</button>
+        <button class="rate-preset-btn" data-rate-mode="1.2" type="button">1.2x</button>
+        <button class="rate-preset-btn" data-rate-mode="1.5" type="button">1.5x</button>
+      </div>
+      <button id="closeQuizRateModalBtn" class="btn btn-secondary" type="button">關閉</button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. 可擴充設定區
+     * =========================================================================
+     */
+    const APP_CONFIG = {
+      languageMode: "multi", // "multi" | "english_only"
+      defaultLanguage: "en",
+      defaultCustomTaskLanguage: "zh-TW",
+      initialGreeting:
+        "同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。",
+      customTaskGreeting: "同學好，請問有什麼需要我協助的地方？",
+      customTaskPlaceholder: "請輸入想說的話…",
+      mainSpeechRate: {
+        defaultRate: 1.0,
+        min: 0.5,
+        max: 1.5,
+        step: 0.1
+      },
+      defaultQuizSpeechSetting: {
+        muted: false,
+        rate: 1.2
+      },
+      aiQuizBatchSize: 5,
+      storageKeys: {
+        apiKey: "ai_tutor_gemini_api_key_v1",
+        model: "ai_tutor_gemini_model_v1",
+        language: "ai_tutor_target_lang_v1",
+        customLanguage: "ai_tutor_custom_lang_v1",
+        mainSpeechRate: "ai_tutor_main_speech_rate_v1",
+        quizSpeechSetting: "ai_tutor_quiz_speech_setting_v1",
+        characterId: "ai_tutor_character_id_v1",
+        customTaskPromptsV2: "ai_tutor_custom_task_prompts_v2"
+      },
+      db: {
+        name: "AITutorStudyDB",
+        version: 1,
+        storeName: "translations"
+      },
+      gemini: {
+        defaultModel: "gemini-3.5-flash-lite",
+        endpointBase: "https://generativelanguage.googleapis.com/v1beta/models"
+      }
+    };
+
+    const CHARACTER_REGISTRY = {
+      female_1: {
+        id: "female_1",
+        name: "Female 1",
+        images: {
+          idle: "./female 1.1.gif",
+          speaking: "./female 1.2.gif"
+        },
+        ttsConfig: {
+          zhLang: "zh-TW",
+          pitch: 1.05
+        }
+      }
+    };
+
+    const LANGUAGE_REGISTRY = {
+      en: {
+        code: "en",
+        label: "英文",
+        selfWord: "Me",
+        ttsLang: "en-US",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      ja: {
+        code: "ja",
+        label: "日文",
+        selfWord: "私",
+        ttsLang: "ja-JP",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      es: {
+        code: "es",
+        label: "西班牙文",
+        selfWord: "Yo",
+        ttsLang: "es-ES",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      ko: {
+        code: "ko",
+        label: "韓文",
+        selfWord: "나",
+        ttsLang: "ko-KR",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      },
+      it: {
+        code: "it",
+        label: "義大利文",
+        selfWord: "Io",
+        ttsLang: "it-IT",
+        greeting: (langLabel) => `同學好，今天想學${langLabel}的哪句話呢？`
+      }
+    };
+
+    /**
+     * 「自訂」任務語言選單包含繁體中文（zh-TW）與各外語
+     */
+    const CUSTOM_CHAT_LANGUAGES = {
+      "zh-TW": {
+        code: "zh-TW",
+        label: "繁體中文",
+        selfWord: "我",
+        ttsLang: "zh-TW"
+      },
+      en: {
+        code: "en",
+        label: "英文",
+        selfWord: "Me",
+        ttsLang: "en-US"
+      },
+      ja: {
+        code: "ja",
+        label: "日文",
+        selfWord: "私",
+        ttsLang: "ja-JP"
+      },
+      es: {
+        code: "es",
+        label: "西班牙文",
+        selfWord: "Yo",
+        ttsLang: "es-ES"
+      },
+      ko: {
+        code: "ko",
+        label: "韓文",
+        selfWord: "나",
+        ttsLang: "ko-KR"
+      },
+      it: {
+        code: "it",
+        label: "義大利文",
+        selfWord: "Io",
+        ttsLang: "it-IT"
+      }
+    };
+
+    const JP_STYLE_MAP = {
+      casual: {
+        key: "casual",
+        label: "常體",
+        tag: "常體",
+        instruction:
+          "請使用自然道地的常體（普通形，如 〜ている？／だ・である體），不要用敬語（ます／です），適合熟人或朋友日常聊天。"
+      },
+      polite: {
+        key: "polite",
+        label: "敬體",
+        tag: "敬體",
+        instruction:
+          "請使用初級日語教科書最常用的敬體（ます／ません／ました／ですか 等丁寧語），語氣禮貌清晰，不要過度使用服務業敬語。"
+      },
+      honorific: {
+        key: "honorific",
+        label: "服務業者",
+        tag: "服務業者",
+        instruction:
+          "請使用道地的服務業敬語／丁寧敬語（如 お〜ですか、〜ていただけますでしょうか 等），適合店家、飯店、餐廳或客服情境。"
+      }
+    };
+
+    /**
+     * 任務註冊表（Task Registry）
+     * 每個任務可包含一或多項指令（prompts 陣列），編輯指令時會一併列出
+     */
+    const TASK_REGISTRY = [
+      {
+        id: "conversation",
+        label: "會話",
+        enabled: false,
+        hintText: "可使用變數：{目標語言}、{原文}",
+        prompts: [
+          {
+            key: "chat",
+            title: "口說會話指令",
+            defaultPrompt:
+              "你是一位親切的{目標語言}口說會話家教。請用自然的{目標語言}與學生互動對話，並適時以繁體中文提供簡短提示。\n使用者輸入：{原文}"
+          }
+        ]
+      },
+      {
+        id: "reading",
+        label: "文章導讀",
+        enabled: false,
+        hintText: "可使用變數：{目標語言}、{原文}",
+        prompts: [
+          {
+            key: "guide",
+            title: "文章導讀指令",
+            defaultPrompt:
+              "你是一位外語閱讀導讀家教。請針對使用者提供的{目標語言}或中文內容進行重點導讀、核心句型與關鍵詞彙說明。\n內容：{原文}"
+          }
+        ]
+      },
+      {
+        id: "translation",
+        label: "翻譯",
+        enabled: true,
+        hintText: "翻譯指令變數：{目標語言}、{原文}、{日文語氣說明}；批改指令變數：{語言}、{題目}、{參考譯文}、{作答}",
+        prompts: [
+          {
+            key: "translate",
+            title: "翻譯指令",
+            defaultPrompt:
+              "你是一位親切的外語家教，專精協助學習者掌握自然語氣。請將以下輸入的中文句子翻譯成自然道地的{目標語言}。\n規則：只輸出翻譯後的{目標語言}內容，不要加多餘解釋、引號或前綴。\n{日文語氣說明}\n原文：{原文}"
+          },
+          {
+            key: "quiz_grade",
+            title: "測驗批改指令",
+            defaultPrompt:
+              "你是一位親切且精準的外語家教，正在批改學生的{語言}翻譯測驗。\n請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"isCorrect\": true或false, \"feedback\": \"簡短精準的繁體中文回饋（1~2句話，直接切中重點）\"}\n規則：\n- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確；若要引述{語言}詞句，請用「」包起來。\n- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次；若要引述{語言}詞句，請用「」包起來。\n中文題目：{題目}\n參考譯文：{參考譯文}\n學生作答：{作答}"
+          }
+        ]
+      },
+      {
+        id: "vocabulary",
+        label: "單字",
+        enabled: false,
+        hintText: "可使用變數：{目標語言}、{原文}",
+        prompts: [
+          {
+            key: "vocab",
+            title: "單字學習指令",
+            defaultPrompt:
+              "你是一位外語單字家教。請針對使用者輸入的詞彙或主題，提供實用的{目標語言}單字、詞性、中文釋義與簡短例句。\n輸入：{原文}"
+          }
+        ]
+      },
+      {
+        id: "custom",
+        label: "自訂",
+        enabled: true,
+        hintText: "可使用變數：{原文}",
+        prompts: [
+          {
+            key: "custom_chat",
+            title: "自訂互動指令",
+            defaultPrompt:
+              "請與使用者進行一般互動。規則：使用者用什麼語言輸入，你就用什麼語言回應；語言風格言簡意賅不囉嗦，並嚴格限制在 100 字內。\n使用者輸入：{原文}"
+          }
+        ]
+      }
+    ];
+
+    /**
+     * 內建題庫 Registry（未來可在此逐步新增內建測驗範圍）
+     */
+    const BUILT_IN_QUIZ_BANK = {};
+
+    /**
+     * =========================================================================
+     * 2. LocalStorage 與狀態管理
+     * =========================================================================
+     */
+    const StorageManager = {
+      getApiKey() {
+        return (localStorage.getItem(APP_CONFIG.storageKeys.apiKey) || "").trim();
+      },
+      setApiKey(key) {
+        localStorage.setItem(APP_CONFIG.storageKeys.apiKey, (key || "").trim());
+      },
+      clearApiKey() {
+        localStorage.removeItem(APP_CONFIG.storageKeys.apiKey);
+      },
+      getModel() {
+        const saved = (localStorage.getItem(APP_CONFIG.storageKeys.model) || "").trim();
+        return saved || APP_CONFIG.gemini.defaultModel;
+      },
+      setModel(modelName) {
+        const clean = (modelName || "").trim() || APP_CONFIG.gemini.defaultModel;
+        localStorage.setItem(APP_CONFIG.storageKeys.model, clean);
+      },
+      getLanguage() {
+        if (APP_CONFIG.languageMode === "english_only") return "en";
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.language);
+        return LANGUAGE_REGISTRY[saved] ? saved : APP_CONFIG.defaultLanguage;
+      },
+      setLanguage(langCode) {
+        if (APP_CONFIG.languageMode === "english_only") return;
+        if (LANGUAGE_REGISTRY[langCode]) {
+          localStorage.setItem(APP_CONFIG.storageKeys.language, langCode);
+        }
+      },
+      getCustomLanguage() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.customLanguage);
+        return CUSTOM_CHAT_LANGUAGES[saved] ? saved : APP_CONFIG.defaultCustomTaskLanguage;
+      },
+      setCustomLanguage(langCode) {
+        if (CUSTOM_CHAT_LANGUAGES[langCode]) {
+          localStorage.setItem(APP_CONFIG.storageKeys.customLanguage, langCode);
+        }
+      },
+      getMainSpeechRate() {
+        const raw = parseFloat(localStorage.getItem(APP_CONFIG.storageKeys.mainSpeechRate));
+        if (Number.isNaN(raw)) return APP_CONFIG.mainSpeechRate.defaultRate;
+        const clamped = Math.min(
+          APP_CONFIG.mainSpeechRate.max,
+          Math.max(APP_CONFIG.mainSpeechRate.min, raw)
+        );
+        return Math.round(clamped * 10) / 10;
+      },
+      setMainSpeechRate(rate) {
+        const clamped = Math.min(
+          APP_CONFIG.mainSpeechRate.max,
+          Math.max(APP_CONFIG.mainSpeechRate.min, rate)
+        );
+        const rounded = Math.round(clamped * 10) / 10;
+        localStorage.setItem(APP_CONFIG.storageKeys.mainSpeechRate, String(rounded));
+        return rounded;
+      },
+      getQuizSpeechSetting() {
+        try {
+          const raw = JSON.parse(
+            localStorage.getItem(APP_CONFIG.storageKeys.quizSpeechSetting) || "null"
+          );
+          if (raw && typeof raw === "object") {
+            const allowedRates = [1, 1.2, 1.5];
+            const rate = allowedRates.includes(Number(raw.rate))
+              ? Number(raw.rate)
+              : APP_CONFIG.defaultQuizSpeechSetting.rate;
+            return { muted: Boolean(raw.muted), rate };
+          }
+        } catch (_) {}
+        return { ...APP_CONFIG.defaultQuizSpeechSetting };
+      },
+      setQuizSpeechSetting(setting) {
+        const clean = {
+          muted: Boolean(setting.muted),
+          rate: [1, 1.2, 1.5].includes(Number(setting.rate))
+            ? Number(setting.rate)
+            : APP_CONFIG.defaultQuizSpeechSetting.rate
+        };
+        localStorage.setItem(APP_CONFIG.storageKeys.quizSpeechSetting, JSON.stringify(clean));
+        return clean;
+      },
+      getCustomTaskPromptsMap() {
+        try {
+          const raw = JSON.parse(
+            localStorage.getItem(APP_CONFIG.storageKeys.customTaskPromptsV2) || "{}"
+          );
+          return raw && typeof raw === "object" ? raw : {};
+        } catch (_) {
+          return {};
+        }
+      },
+      setTaskPromptOverride(taskId, promptKey, value) {
+        const map = this.getCustomTaskPromptsMap();
+        if (!map[taskId]) map[taskId] = {};
+        const trimmed = (value || "").trim();
+        if (trimmed) {
+          map[taskId][promptKey] = trimmed;
+        } else {
+          delete map[taskId][promptKey];
+        }
+        if (Object.keys(map[taskId]).length === 0) {
+          delete map[taskId];
+        }
+        localStorage.setItem(APP_CONFIG.storageKeys.customTaskPromptsV2, JSON.stringify(map));
+      },
+      resetTaskPrompts(taskId) {
+        const map = this.getCustomTaskPromptsMap();
+        delete map[taskId];
+        localStorage.setItem(APP_CONFIG.storageKeys.customTaskPromptsV2, JSON.stringify(map));
+      },
+      getEffectivePrompt(taskId, promptKey) {
+        const taskDef = TASK_REGISTRY.find((t) => t.id === taskId);
+        const promptDef = taskDef?.prompts.find((p) => p.key === promptKey);
+        const map = this.getCustomTaskPromptsMap();
+        const customVal = map?.[taskId]?.[promptKey];
+        if (customVal && customVal.trim()) {
+          return customVal.trim();
+        }
+        return promptDef ? promptDef.defaultPrompt : "";
+      },
+      getCharacterId() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.characterId);
+        return CHARACTER_REGISTRY[saved] ? saved : "female_1";
+      }
+    };
+
+    const AppState = {
+      activeView: "mainView",
+      selectedTaskId: null, // 起始尚未選擇任務，收起下方內容
+      editingTaskId: null,
+      characterId: StorageManager.getCharacterId(),
+      languageCode: StorageManager.getLanguage(),
+      customLanguageCode: StorageManager.getCustomLanguage(),
+      jpStyle: "polite", // casual | polite | honorific，預設敬體
+      mainSpeechRate: StorageManager.getMainSpeechRate(),
+      quizSpeechSetting: StorageManager.getQuizSpeechSetting(),
+      currentTtsLang: "zh-TW",
+      lastTranslation: null, // { sourceText, translatedText, langCode }
+      isSpeaking: false,
+      isBusy: false,
+      quiz: {
+        questions: [],
+        currentIndex: 0,
+        answeredCount: 0,
+        correctCount: 0,
+        currentQuestionAnswered: false
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 3. IndexedDB 存檔服務（StudyArchiveDB）
+     * =========================================================================
+     */
+    const StudyArchiveDB = {
+      dbInstance: null,
+
+      open() {
+        if (this.dbInstance) return Promise.resolve(this.dbInstance);
+
+        return new Promise((resolve, reject) => {
+          if (!("indexedDB" in window)) {
+            reject(new Error("此瀏覽器不支援 IndexedDB 存檔。"));
+            return;
+          }
+
+          const request = indexedDB.open(APP_CONFIG.db.name, APP_CONFIG.db.version);
+
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(APP_CONFIG.db.storeName)) {
+              const store = db.createObjectStore(APP_CONFIG.db.storeName, {
+                keyPath: "id",
+                autoIncrement: true
+              });
+              store.createIndex("dateKey", "dateKey", { unique: false });
+              store.createIndex("timestamp", "timestamp", { unique: false });
+            }
+          };
+
+          request.onsuccess = (event) => {
+            this.dbInstance = event.target.result;
+            resolve(this.dbInstance);
+          };
+
+          request.onerror = () => {
+            reject(new Error("開啟 IndexedDB 失敗。"));
+          };
+        });
+      },
+
+      formatDateKey(date = new Date()) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        return `${yyyy}/${mm}/${dd}`;
+      },
+
+      async getAllRecords() {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readonly");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const req = store.getAll();
+          req.onsuccess = () => {
+            const list = req.result || [];
+            list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            resolve(list);
+          };
+          req.onerror = () => reject(new Error("讀取存檔失敗。"));
+        });
+      },
+
+      async addRecord({ sourceText, translatedText, langCode }) {
+        const all = await this.getAllRecords();
+        const dateKey = this.formatDateKey(new Date());
+        const duplicate = all.find(
+          (item) =>
+            item.dateKey === dateKey &&
+            item.langCode === langCode &&
+            item.sourceText.trim() === sourceText.trim() &&
+            item.translatedText.trim() === translatedText.trim()
+        );
+        if (duplicate) {
+          return { saved: false, reason: "duplicate" };
+        }
+
+        const db = await this.open();
+        const record = {
+          dateKey,
+          timestamp: Date.now(),
+          langCode,
+          sourceText: sourceText.trim(),
+          translatedText: translatedText.trim()
+        };
+
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const req = store.add(record);
+          req.onsuccess = () => resolve({ saved: true, id: req.result, record });
+          req.onerror = () => reject(new Error("寫入存檔失敗。"));
+        });
+      },
+
+      async deleteRecordById(id) {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const req = store.delete(id);
+          req.onsuccess = () => resolve();
+          req.onerror = () => reject(new Error("刪除紀錄失敗。"));
+        });
+      },
+
+      async deleteRecordsByDateKey(dateKey) {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const index = store.index("dateKey");
+          const req = index.openCursor(IDBKeyRange.only(dateKey));
+
+          req.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+              cursor.delete();
+              cursor.continue();
+            }
+          };
+
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(new Error("刪除整日紀錄失敗。"));
+        });
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 4. 角色與 TTS 服務
+     * =========================================================================
+     */
+    const AvatarController = {
+      getCurrentCharacter() {
+        return CHARACTER_REGISTRY[AppState.characterId] || CHARACTER_REGISTRY.female_1;
+      },
+      preloadImages() {
+        Object.values(CHARACTER_REGISTRY).forEach((charConfig) => {
+          [charConfig.images.idle, charConfig.images.speaking].forEach((src) => {
+            if (!src) return;
+            const img = new Image();
+            img.src = src;
+          });
+        });
+      },
+      setSpeakingState(speaking) {
+        AppState.isSpeaking = Boolean(speaking);
+        const charConfig = this.getCurrentCharacter();
+        const targetSrc = AppState.isSpeaking
+          ? charConfig.images.speaking
+          : charConfig.images.idle;
+
+        document.querySelectorAll(".tutor-avatar-img").forEach((imgEl) => {
+          if (imgEl.getAttribute("src") !== targetSrc) {
+            imgEl.setAttribute("src", targetSrc);
+          }
+        });
+      }
+    };
+
+    const TTSService = {
+      stop() {
+        if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+          window.speechSynthesis.cancel();
+        }
+        AvatarController.setSpeakingState(false);
+      },
+
+      speakSingleSegment(text, langCode = "zh-TW", rate = 1.0) {
+        const cleanText = (text || "").trim();
+        if (!cleanText) {
+          AvatarController.setSpeakingState(false);
+          return Promise.resolve();
+        }
+
+        if (!("speechSynthesis" in window)) {
+          AvatarController.setSpeakingState(false);
+          return Promise.resolve();
+        }
+
+        return new Promise((resolve) => {
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = langCode;
+
+          const charConfig = AvatarController.getCurrentCharacter();
+          utterance.pitch = charConfig.ttsConfig?.pitch ?? 1.05;
+          utterance.rate = rate;
+
+          const voices = window.speechSynthesis.getVoices();
+          const matchedVoice =
+            voices.find((v) => v.lang && v.lang.toLowerCase() === langCode.toLowerCase()) ||
+            voices.find(
+              (v) => v.lang && v.lang.toLowerCase().startsWith(langCode.split("-")[0].toLowerCase())
+            );
+          if (matchedVoice) {
+            utterance.voice = matchedVoice;
+          }
+
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(safetyTimer);
+            resolve();
+          };
+
+          utterance.onstart = () => {
+            AvatarController.setSpeakingState(true);
+          };
+
+          utterance.onend = finish;
+          utterance.onerror = finish;
+
+          const estimatedMs = Math.max(
+            2200,
+            (cleanText.length * 160) / Math.max(0.5, rate) + 1800
+          );
+          const safetyTimer = setTimeout(finish, estimatedMs);
+
+          AvatarController.setSpeakingState(true);
+          window.speechSynthesis.speak(utterance);
+        });
+      },
+
+      async speakMain(text, langCode = "zh-TW") {
+        const cleanText = (text || "").trim();
+        if (!cleanText) return;
+
+        if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+          window.speechSynthesis.cancel();
+        }
+
+        await this.speakSingleSegment(cleanText, langCode, AppState.mainSpeechRate);
+        AvatarController.setSpeakingState(false);
+      },
+
+      async speakQuizFeedbackWithQuotes(feedbackText, quotedLangCode = "en-US") {
+        const raw = (feedbackText || "").trim();
+        if (!raw) return;
+
+        if (AppState.quizSpeechSetting.muted) {
+          AvatarController.setSpeakingState(false);
+          return;
+        }
+
+        if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
+          window.speechSynthesis.cancel();
+        }
+
+        const rate = AppState.quizSpeechSetting.rate;
+        const regex = /「([^」]+)」/g;
+        const segments = [];
+        let lastIndex = 0;
+        let match;
+
+        while ((match = regex.exec(raw)) !== null) {
+          if (match.index > lastIndex) {
+            const zhPart = raw.slice(lastIndex, match.index).trim();
+            if (zhPart) {
+              segments.push({ text: zhPart, lang: "zh-TW" });
+            }
+          }
+          const quotedPart = (match[1] || "").trim();
+          if (quotedPart) {
+            segments.push({ text: quotedPart, lang: quotedLangCode });
+          }
+          lastIndex = regex.lastIndex;
+        }
+
+        if (lastIndex < raw.length) {
+          const tailPart = raw.slice(lastIndex).trim();
+          if (tailPart) {
+            segments.push({ text: tailPart, lang: "zh-TW" });
+          }
+        }
+
+        if (!segments.length) {
+          segments.push({ text: raw, lang: "zh-TW" });
+        }
+
+        for (let i = 0; i < segments.length; i++) {
+          if (AppState.quizSpeechSetting.muted) break;
+          await this.speakSingleSegment(segments[i].text, segments[i].lang, rate);
+        }
+
+        AvatarController.setSpeakingState(false);
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 5. Gemini API 服務（翻譯 ＋ 自訂互動 ＋ 批次出題 ＋ 彈性批改測驗）
+     * =========================================================================
+     */
+    const GeminiService = {
+      async callModel(prompt) {
+        const apiKey = StorageManager.getApiKey();
+        if (!apiKey) {
+          throw new Error("尚未設定 Gemini API Key，請先點擊右上角「API 設定」輸入並儲存金鑰。");
+        }
+
+        const model = StorageManager.getModel();
+        const url = `${APP_CONFIG.gemini.endpointBase}/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [{ text: prompt }]
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) {
+          let errMsg = `API 請求失敗（HTTP ${response.status}）`;
+          try {
+            const errData = await response.json();
+            if (errData?.error?.message) {
+              errMsg = `API 錯誤：${errData.error.message}`;
+            }
+          } catch (_) {}
+          throw new Error(errMsg);
+        }
+
+        const data = await response.json();
+        const resultText =
+          data?.candidates?.[0]?.content?.parts
+            ?.map((part) => part.text || "")
+            .join("")
+            .trim() || "";
+
+        if (!resultText) {
+          throw new Error("API 回傳內容為空，請再試一次。");
+        }
+
+        return resultText;
+      },
+
+      buildFormattedSourceText(rawChinese, targetLangKey, jpStyleKey) {
+        const clean = (rawChinese || "").trim();
+        if (targetLangKey === "ja") {
+          const styleInfo = JP_STYLE_MAP[jpStyleKey] || JP_STYLE_MAP.polite;
+          return `${clean}(${styleInfo.tag})`;
+        }
+        return clean;
+      },
+
+      async translateChineseToTarget(formattedSourceText, targetLangKey, jpStyleKey = "polite") {
+        const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
+        const styleInfo = JP_STYLE_MAP[jpStyleKey] || JP_STYLE_MAP.polite;
+        const jpRuleText =
+          targetLangKey === "ja"
+            ? `日文語氣規範（${styleInfo.tag}）：${styleInfo.instruction}`
+            : "";
+
+        const template = StorageManager.getEffectivePrompt("translation", "translate");
+        const hasSourceVar = template.includes("{原文}");
+        const hasLangVar = template.includes("{目標語言}");
+        const hasJpVar = template.includes("{日文語氣說明}");
+
+        let prompt = template
+          .replaceAll("{目標語言}", langInfo.label)
+          .replaceAll("{原文}", formattedSourceText)
+          .replaceAll("{日文語氣說明}", jpRuleText);
+
+        if (!hasLangVar) {
+          prompt = `目標語言：${langInfo.label}\n${prompt}`;
+        }
+        if (!hasJpVar && jpRuleText) {
+          prompt = `${prompt}\n${jpRuleText}`;
+        }
+        if (!hasSourceVar) {
+          prompt = `${prompt}\n原文：${formattedSourceText}`;
+        }
+
+        return this.callModel(prompt);
+      },
+
+      async sendCustomChat(userText) {
+        const template = StorageManager.getEffectivePrompt("custom", "custom_chat");
+        const hasSourceVar = template.includes("{原文}");
+        let prompt = template.replaceAll("{原文}", userText);
+        if (!hasSourceVar) {
+          prompt = `${prompt}\n使用者輸入：${userText}`;
+        }
+        return this.callModel(prompt);
+      },
+
+      async generateQuizBatch(topicKey, count = APP_CONFIG.aiQuizBatchSize) {
+        const isGsatEn = topicKey === "gsat_en";
+        const langCode = isGsatEn ? "en" : "ja";
+
+        const topicInstruction = isGsatEn
+          ? [
+              "題型：台灣高中學測英文「中譯英」風格。",
+              "請出自然且具句型／片語／詞彙練習價值的繁體中文句子（約 15～28 字），並提供道地英文參考譯文。"
+            ].join("\n")
+          : [
+              "題型：N5～N3 生活與旅遊日文（中文翻日文）。",
+              "請涵蓋居酒屋、咖啡店、旅館、購物、買票、交通工具、手作市集、機場等不同情境的實用繁體中文句子（約 8～20 字），並提供自然道地日文參考譯文（以初級教科書常見的ます形敬體為主，必要時可搭配自然日常用法）。"
+            ].join("\n");
+
+        const prompt = [
+          `請一次產生 ${count} 題翻譯練習題，嚴格以純 JSON 陣列回覆（不要用 markdown 程式碼區塊包覆，不要多餘文字）。`,
+          `格式：[{"zh":"中文題目","ref":"參考譯文"}]`,
+          topicInstruction
+        ].join("\n");
+
+        const rawText = await this.callModel(prompt);
+        const cleaned = rawText
+          .replace(/^```json\s*/i, "")
+          .replace(/^```\s*/i, "")
+          .replace(/\s*```$/i, "")
+          .trim();
+
+        const parsed = JSON.parse(cleaned);
+        if (!Array.isArray(parsed) || !parsed.length) {
+          throw new Error("AI 產生的題目格式不正確，請再試一次。");
+        }
+
+        return parsed
+          .filter((item) => item && item.zh && item.ref)
+          .map((item) => ({
+            sourceText: String(item.zh).trim(),
+            translatedText: String(item.ref).trim(),
+            langCode
+          }));
+      },
+
+      async gradeTranslationAnswer({ sourceText, referenceTranslation, userAnswer, langLabel }) {
+        const template = StorageManager.getEffectivePrompt("translation", "quiz_grade");
+        const prompt = template
+          .replaceAll("{語言}", langLabel)
+          .replaceAll("{目標語言}", langLabel)
+          .replaceAll("{題目}", sourceText)
+          .replaceAll("{參考譯文}", referenceTranslation)
+          .replaceAll("{作答}", userAnswer);
+
+        const rawText = await this.callModel(prompt);
+        const cleaned = rawText
+          .replace(/^```json\s*/i, "")
+          .replace(/^```\s*/i, "")
+          .replace(/\s*```$/i, "")
+          .trim();
+
+        try {
+          const parsed = JSON.parse(cleaned);
+          const isCorrect = Boolean(parsed.isCorrect);
+          const feedback =
+            (parsed.feedback || "").trim() ||
+            (isCorrect ? "翻譯得很棒，繼續保持！" : `可以試試「${referenceTranslation}」，再試一次看看喔！`);
+          return { isCorrect, feedback };
+        } catch (_) {
+          const lower = cleaned.toLowerCase();
+          const isCorrect = lower.includes("正確") && !lower.includes("不正確") && !lower.includes("答錯");
+          return { isCorrect, feedback: cleaned };
+        }
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 6. 介面控制器（UI Controller）
+     * =========================================================================
+     */
+    const UIController = {
+      formatMainRateLabel(rate) {
+        const rounded = Math.round(rate * 10) / 10;
+        return Number.isInteger(rounded) ? `${rounded}x` : `${rounded.toFixed(1)}x`;
+      },
+
+      getQuizSpeechDisplayLabel() {
+        if (AppState.quizSpeechSetting.muted) return "靜音";
+        return `${AppState.quizSpeechSetting.rate}x`;
+      },
+
+      shuffleArray(list) {
+        const arr = [...list];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      },
+
+      switchView(viewId) {
+        TTSService.stop();
+        AppState.activeView = viewId;
+        document.querySelectorAll(".view-section").forEach((sec) => {
+          sec.classList.toggle("active", sec.id === viewId);
+        });
+      },
+
+      /**
+       * 依目前任務動態更新語言選單：
+       * - 一般／翻譯任務：顯示目標語言（預設英文）
+       * - 自訂任務：加入繁體中文（zh-TW）與各外語，預設繁體中文
+       */
+      refreshLanguageSelectForTask() {
+        const selectEl = document.getElementById("targetLangSelect");
+        selectEl.innerHTML = "";
+
+        const isCustom = AppState.selectedTaskId === "custom";
+        const registry = isCustom ? CUSTOM_CHAT_LANGUAGES : LANGUAGE_REGISTRY;
+
+        const entries =
+          APP_CONFIG.languageMode === "english_only" && !isCustom
+            ? Object.values(registry).filter((l) => l.code === "en")
+            : Object.values(registry);
+
+        entries.forEach((lang) => {
+          const option = document.createElement("option");
+          option.value = lang.code;
+          option.textContent = lang.label;
+          selectEl.appendChild(option);
+        });
+
+        const currentCode = isCustom ? AppState.customLanguageCode : AppState.languageCode;
+        selectEl.value = registry[currentCode] ? currentCode : isCustom ? "zh-TW" : "en";
+        selectEl.style.display =
+          APP_CONFIG.languageMode === "english_only" && !isCustom ? "none" : "";
+      },
+
+      resetBubbleToGreeting() {
+        const charConfig = AvatarController.getCurrentCharacter();
+        if (AppState.selectedTaskId === "custom") {
+          AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
+          AppState.lastTranslation = null;
+          this.setTutorBubble(APP_CONFIG.customTaskGreeting);
+          return;
+        }
+
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
+        AppState.lastTranslation = null;
+        this.setTutorBubble(langInfo.greeting(langInfo.label));
+      },
+
+      syncTaskLayoutUI() {
+        const bodyEl = document.getElementById("taskBodyCollapsible");
+        const toolbarEl = document.getElementById("mainModeToolbar");
+        const inputEl = document.getElementById("userInput");
+
+        if (!AppState.selectedTaskId) {
+          bodyEl.classList.add("collapsed");
+          this.setTutorBubble(APP_CONFIG.initialGreeting);
+          return;
+        }
+
+        bodyEl.classList.remove("collapsed");
+        this.refreshLanguageSelectForTask();
+        this.syncLanguageUI();
+
+        if (AppState.selectedTaskId === "custom") {
+          toolbarEl.classList.add("hidden-for-task");
+          inputEl.placeholder = APP_CONFIG.customTaskPlaceholder;
+          this.resetBubbleToGreeting();
+        } else {
+          toolbarEl.classList.remove("hidden-for-task");
+          inputEl.placeholder = "請輸入想翻譯的中文句子...";
+          this.resetBubbleToGreeting();
+        }
+      },
+
+      syncLanguageUI() {
+        const isCustom = AppState.selectedTaskId === "custom";
+        const selfBadgeEl = document.getElementById("userSelfLabel");
+
+        if (isCustom) {
+          const customLang =
+            CUSTOM_CHAT_LANGUAGES[AppState.customLanguageCode] ||
+            CUSTOM_CHAT_LANGUAGES["zh-TW"];
+          if (selfBadgeEl) selfBadgeEl.textContent = customLang.selfWord;
+        } else {
+          const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+          if (selfBadgeEl) selfBadgeEl.textContent = langInfo.selfWord;
+        }
+
+        const jpRow = document.getElementById("jpStyleRow");
+        if (jpRow) {
+          const showJp =
+            !isCustom &&
+            APP_CONFIG.languageMode !== "english_only" &&
+            AppState.languageCode === "ja";
+          jpRow.classList.toggle("visible", showJp);
+        }
+      },
+
+      syncJpStyleUI() {
+        document.querySelectorAll(".jp-style-btn").forEach((btn) => {
+          btn.classList.toggle("btn-active-pill", btn.dataset.jpStyle === AppState.jpStyle);
+        });
+      },
+
+      syncMainRateUI() {
+        const label = this.formatMainRateLabel(AppState.mainSpeechRate);
+        document.getElementById("mainSpeedBtn").textContent = `語速 (${label})`;
+        document.getElementById("mainRateDisplay").textContent = label;
+      },
+
+      syncQuizSpeechUI() {
+        const label = this.getQuizSpeechDisplayLabel();
+        document.getElementById("quizSpeedBtn").textContent = `語速 (${label})`;
+
+        document.querySelectorAll(".rate-preset-btn").forEach((btn) => {
+          const mode = btn.dataset.rateMode;
+          const isSelected =
+            (mode === "mute" && AppState.quizSpeechSetting.muted) ||
+            (!AppState.quizSpeechSetting.muted && Number(mode) === AppState.quizSpeechSetting.rate);
+          btn.classList.toggle("selected", isSelected);
+        });
+      },
+
+      autoResizeTextarea(textarea, clearBtn, minHeight = 96) {
+        if (!textarea) return;
+        textarea.style.height = "auto";
+        const nextHeight = Math.max(minHeight, textarea.scrollHeight);
+        textarea.style.height = `${nextHeight}px`;
+        if (clearBtn) {
+          clearBtn.classList.toggle("visible", textarea.value.length > 0);
+        }
+      },
+
+      setMainStatus(msg) {
+        const el = document.getElementById("mainStatusText");
+        if (el) el.textContent = msg || "";
+      },
+
+      setTutorBubble(text) {
+        const bubbleEl = document.getElementById("tutorBubble");
+        if (bubbleEl) bubbleEl.textContent = text;
+      },
+
+      setQuizTutorBubbleWithBoldQuotes(text) {
+        const bubbleEl = document.getElementById("quizTutorBubble");
+        if (!bubbleEl) return;
+        bubbleEl.innerHTML = "";
+
+        const raw = text || "";
+        const regex = /(「[^」]*」)/g;
+        const parts = raw.split(regex);
+
+        parts.forEach((part) => {
+          if (!part) return;
+          if (part.startsWith("「") && part.endsWith("」")) {
+            const strong = document.createElement("strong");
+            strong.textContent = part;
+            bubbleEl.appendChild(strong);
+          } else {
+            bubbleEl.appendChild(document.createTextNode(part));
+          }
+        });
+      },
+
+      setMainBusy(busy) {
+        AppState.isBusy = busy;
+        document.getElementById("sendBtn").disabled = busy;
+        document.getElementById("speakBtn").disabled = busy;
+        document.getElementById("targetLangSelect").disabled = busy;
+        document.getElementById("saveRecordBtn").disabled = busy;
+        document.getElementById("openReviewBtn").disabled = busy;
+        document.getElementById("openQuizSetupBtn").disabled = busy;
+        document.querySelectorAll(".jp-style-btn").forEach((b) => (b.disabled = busy));
+      },
+
+      closeApiPanel() {
+        document.getElementById("apiPanel").classList.remove("open");
+      },
+
+      /* -------------------- 任務與多指令編輯 -------------------- */
+      renderTaskList() {
+        const container = document.getElementById("taskListContainer");
+        container.innerHTML = "";
+        const customMap = StorageManager.getCustomTaskPromptsMap();
+
+        TASK_REGISTRY.forEach((task) => {
+          const rowEl = document.createElement("div");
+          rowEl.className = "task-row";
+
+          const selectBtn = document.createElement("button");
+          selectBtn.type = "button";
+          selectBtn.className = `btn task-select-btn ${
+            AppState.selectedTaskId === task.id ? "btn-active-pill" : "btn-secondary"
+          }`;
+
+          const leftSpan = document.createElement("span");
+          const taskOverride = customMap[task.id] || {};
+          const hasCustom = Object.values(taskOverride).some((v) => Boolean((v || "").trim()));
+          leftSpan.textContent = task.label + (hasCustom ? "（已自訂指令）" : "");
+
+          const rightBadge = document.createElement("span");
+          if (task.enabled) {
+            rightBadge.className = "task-badge-active";
+            rightBadge.textContent = AppState.selectedTaskId === task.id ? "使用中" : "可選擇";
+          } else {
+            rightBadge.className = "task-badge-soon";
+            rightBadge.textContent = "即將推出";
+          }
+
+          selectBtn.appendChild(leftSpan);
+          selectBtn.appendChild(rightBadge);
+
+          selectBtn.addEventListener("click", () => {
+            if (!task.enabled) {
+              document.getElementById("taskStatusText").textContent =
+                `「${task.label}」功能尚未開放，目前可選擇「翻譯」或「自訂」。`;
+              return;
+            }
+            AppState.selectedTaskId = task.id;
+            this.switchView("mainView");
+            this.syncTaskLayoutUI();
+            this.setMainStatus(`已切換至「${task.label}」任務。`);
+          });
+
+          const editBtn = document.createElement("button");
+          editBtn.type = "button";
+          editBtn.className = "btn btn-secondary";
+          editBtn.textContent = "編輯指令";
+          editBtn.addEventListener("click", () => {
+            this.openPromptEditor(task.id);
+          });
+
+          rowEl.appendChild(selectBtn);
+          rowEl.appendChild(editBtn);
+          container.appendChild(rowEl);
+        });
+      },
+
+      openPromptEditor(taskId) {
+        const taskDef = TASK_REGISTRY.find((t) => t.id === taskId);
+        if (!taskDef) return;
+
+        AppState.editingTaskId = taskId;
+        const customMap = StorageManager.getCustomTaskPromptsMap();
+        const taskOverride = customMap[taskId] || {};
+
+        document.getElementById("promptModalTitle").textContent = `編輯指令 — ${taskDef.label}`;
+        document.getElementById("promptVarHintText").textContent = taskDef.hintText || "";
+
+        const itemsContainer = document.getElementById("promptEditorItemsContainer");
+        itemsContainer.innerHTML = "";
+
+        taskDef.prompts.forEach((pItem) => {
+          const card = document.createElement("div");
+          card.className = "prompt-item-card";
+
+          const topRow = document.createElement("div");
+          topRow.className = "prompt-item-top";
+
+          const titleEl = document.createElement("div");
+          titleEl.className = "prompt-box-label";
+          titleEl.textContent = pItem.title;
+
+          const resetSingleBtn = document.createElement("button");
+          resetSingleBtn.type = "button";
+          resetSingleBtn.className = "btn btn-secondary";
+          resetSingleBtn.style.padding = "4px 8px";
+          resetSingleBtn.style.fontSize = "0.78rem";
+          resetSingleBtn.textContent = "還原此項";
+
+          const defaultSub = document.createElement("div");
+          defaultSub.className = "prompt-sub-label";
+          defaultSub.textContent = "原本內建指令";
+
+          const defaultBox = document.createElement("div");
+          defaultBox.className = "default-prompt-preview";
+          defaultBox.textContent = pItem.defaultPrompt;
+
+          const customSub = document.createElement("div");
+          customSub.className = "prompt-sub-label";
+          customSub.textContent = "你的自訂指令（留空則使用內建指令）";
+
+          const textarea = document.createElement("textarea");
+          textarea.className = "custom-prompt-textarea";
+          textarea.dataset.promptKey = pItem.key;
+          textarea.value = taskOverride[pItem.key] || "";
+          textarea.placeholder = "輸入你想使用的指令...";
+
+          resetSingleBtn.addEventListener("click", () => {
+            textarea.value = "";
+          });
+
+          topRow.appendChild(titleEl);
+          topRow.appendChild(resetSingleBtn);
+          card.appendChild(topRow);
+          card.appendChild(defaultSub);
+          card.appendChild(defaultBox);
+          card.appendChild(customSub);
+          card.appendChild(textarea);
+          itemsContainer.appendChild(card);
+        });
+
+        document.getElementById("promptModalBackdrop").classList.add("open");
+      },
+
+      closePromptEditor() {
+        AppState.editingTaskId = null;
+        document.getElementById("promptModalBackdrop").classList.remove("open");
+      },
+
+      saveAllEditedPrompts() {
+        const taskId = AppState.editingTaskId;
+        if (!taskId) return;
+
+        const textareas = document.querySelectorAll("#promptEditorItemsContainer .custom-prompt-textarea");
+        textareas.forEach((ta) => {
+          const pKey = ta.dataset.promptKey;
+          StorageManager.setTaskPromptOverride(taskId, pKey, ta.value);
+        });
+
+        this.closePromptEditor();
+        this.renderTaskList();
+        document.getElementById("taskStatusText").textContent = "已儲存指令設定。";
+      },
+
+      resetAllEditedPrompts() {
+        const taskId = AppState.editingTaskId;
+        if (!taskId) return;
+
+        StorageManager.resetTaskPrompts(taskId);
+        document
+          .querySelectorAll("#promptEditorItemsContainer .custom-prompt-textarea")
+          .forEach((ta) => {
+            ta.value = "";
+          });
+        this.renderTaskList();
+        document.getElementById("taskStatusText").textContent = "已全部還原為內建指令。";
+      },
+
+      /* 主畫面語速微調視窗 */
+      openMainSpeedModal() {
+        this.syncMainRateUI();
+        document.getElementById("mainSpeedModalBackdrop").classList.add("open");
+      },
+
+      closeMainSpeedModal() {
+        document.getElementById("mainSpeedModalBackdrop").classList.remove("open");
+      },
+
+      adjustMainSpeechRate(delta) {
+        AppState.mainSpeechRate = StorageManager.setMainSpeechRate(AppState.mainSpeechRate + delta);
+        this.syncMainRateUI();
+      },
+
+      /* 測驗頁語速預設視窗 */
+      openQuizSpeedModal() {
+        this.syncQuizSpeechUI();
+        document.getElementById("quizSpeedModalBackdrop").classList.add("open");
+      },
+
+      closeQuizSpeedModal() {
+        document.getElementById("quizSpeedModalBackdrop").classList.remove("open");
+      },
+
+      selectQuizSpeechOption(mode) {
+        if (mode === "mute") {
+          AppState.quizSpeechSetting = StorageManager.setQuizSpeechSetting({
+            muted: true,
+            rate: AppState.quizSpeechSetting.rate
+          });
+          TTSService.stop();
+        } else {
+          AppState.quizSpeechSetting = StorageManager.setQuizSpeechSetting({
+            muted: false,
+            rate: Number(mode)
+          });
+        }
+        this.syncQuizSpeechUI();
+        this.closeQuizSpeedModal();
+      },
+
+      async handleSpeakCurrentBubble() {
+        const bubbleText = (document.getElementById("tutorBubble")?.textContent || "").trim();
+        if (!bubbleText) return;
+
+        this.setMainBusy(true);
+        this.setMainStatus("家教正在說話...");
+        await TTSService.speakMain(bubbleText, AppState.currentTtsLang);
+        this.setMainStatus("");
+        this.setMainBusy(false);
+      },
+
+      async handleSendPrimaryAction() {
+        const inputEl = document.getElementById("userInput");
+        const rawText = inputEl.value.trim();
+
+        if (!rawText) {
+          this.setMainStatus(
+            AppState.selectedTaskId === "custom"
+              ? "請先輸入想說的話。"
+              : "請先輸入想要翻譯的中文句子。"
+          );
+          inputEl.focus();
+          return;
+        }
+
+        // 依語言選單決定 TTS 語系（方案 A，不自動跳轉語言選單）
+        const isCustom = AppState.selectedTaskId === "custom";
+        const ttsLang = isCustom
+          ? (CUSTOM_CHAT_LANGUAGES[AppState.customLanguageCode] || CUSTOM_CHAT_LANGUAGES["zh-TW"]).ttsLang
+          : (LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en).ttsLang;
+
+        this.setMainBusy(true);
+        this.setMainStatus(isCustom ? "家教正在思考..." : "正在翻譯...");
+
+        try {
+          let replyText = "";
+          if (isCustom) {
+            replyText = await GeminiService.sendCustomChat(rawText);
+            AppState.currentTtsLang = ttsLang;
+          } else {
+            const formattedSourceText = GeminiService.buildFormattedSourceText(
+              rawText,
+              AppState.languageCode,
+              AppState.jpStyle
+            );
+            replyText = await GeminiService.translateChineseToTarget(
+              formattedSourceText,
+              AppState.languageCode,
+              AppState.jpStyle
+            );
+            AppState.currentTtsLang = ttsLang;
+            AppState.lastTranslation = {
+              sourceText: formattedSourceText,
+              translatedText: replyText,
+              langCode: AppState.languageCode
+            };
+          }
+
+          this.setTutorBubble(replyText);
+          this.setMainStatus("家教正在說話...");
+          await TTSService.speakMain(replyText, AppState.currentTtsLang);
+          this.setMainStatus("");
+        } catch (error) {
+          this.setTutorBubble(`⚠️ ${error.message}`);
+          this.setMainStatus("");
+          AvatarController.setSpeakingState(false);
+        } finally {
+          this.setMainBusy(false);
+        }
+      },
+
+      /* -------------------- 存檔與複習功能 -------------------- */
+      async handleSaveRecord() {
+        const currentInput = document.getElementById("userInput").value.trim();
+        const currentBubble = document.getElementById("tutorBubble").textContent.trim();
+        const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
+        const greetingText = langInfo.greeting(langInfo.label);
+
+        if (
+          !AppState.lastTranslation ||
+          !currentInput ||
+          !currentBubble ||
+          currentBubble === greetingText ||
+          currentBubble.startsWith("⚠️")
+        ) {
+          this.setMainStatus("請先輸入中文並完成翻譯後再存檔。");
+          return;
+        }
+
+        const formattedSourceText = GeminiService.buildFormattedSourceText(
+          currentInput,
+          AppState.languageCode,
+          AppState.jpStyle
+        );
+
+        try {
+          const res = await StudyArchiveDB.addRecord({
+            sourceText: formattedSourceText,
+            translatedText: currentBubble,
+            langCode: AppState.lastTranslation.langCode || AppState.languageCode
+          });
+
+          if (res.saved) {
+            this.setMainStatus(`已存檔（${res.record.dateKey}・${langInfo.label}）。`);
+          } else {
+            this.setMainStatus("今天已經存過這組翻譯囉！");
+          }
+        } catch (err) {
+          this.setMainStatus(`⚠️ ${err.message}`);
+        }
+      },
+
+      async openReviewView() {
+        this.switchView("reviewView");
+        document.getElementById("reviewStatusText").textContent = "";
+        await this.renderReviewList();
+      },
+
+      async renderReviewList() {
+        const container = document.getElementById("reviewListContainer");
+        container.innerHTML = "";
+
+        try {
+          const records = await StudyArchiveDB.getAllRecords();
+          if (!records.length) {
+            container.innerHTML = `<div class="empty-state">目前還沒有存檔紀錄，回到翻譯頁面完成翻譯後按「存檔」即可建立。</div>`;
+            return;
+          }
+
+          const groupedMap = new Map();
+          records.forEach((rec) => {
+            if (!groupedMap.has(rec.dateKey)) {
+              groupedMap.set(rec.dateKey, []);
+            }
+            groupedMap.get(rec.dateKey).push(rec);
+          });
+
+          groupedMap.forEach((items, dateKey) => {
+            const groupEl = document.createElement("div");
+            groupEl.className = "date-group";
+
+            const headerEl = document.createElement("div");
+            headerEl.className = "date-group-header";
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.type = "button";
+            toggleBtn.className = "date-toggle-btn";
+            toggleBtn.innerHTML = `<span>▸</span><span>${dateKey}</span><span style="color:#6b7280;font-size:0.86rem;">(${items.length} 句)</span>`;
+
+            const delDateBtn = document.createElement("button");
+            delDateBtn.type = "button";
+            delDateBtn.className = "icon-del-btn";
+            delDateBtn.title = `刪除 ${dateKey} 整日紀錄`;
+            delDateBtn.setAttribute("aria-label", `刪除 ${dateKey} 整日紀錄`);
+            delDateBtn.textContent = "❌";
+
+            const bodyEl = document.createElement("div");
+            bodyEl.className = "date-group-body";
+
+            toggleBtn.addEventListener("click", () => {
+              const isOpen = groupEl.classList.toggle("open");
+              toggleBtn.querySelector("span").textContent = isOpen ? "▾" : "▸";
+            });
+
+            delDateBtn.addEventListener("click", async (e) => {
+              e.stopPropagation();
+              const confirmed = window.confirm(`確定要刪除「${dateKey}」的整筆存檔資訊嗎？`);
+              if (!confirmed) return;
+              await StudyArchiveDB.deleteRecordsByDateKey(dateKey);
+              document.getElementById("reviewStatusText").textContent = `已刪除 ${dateKey} 的紀錄。`;
+              await this.renderReviewList();
+            });
+
+            items.forEach((item) => {
+              const itemEl = document.createElement("div");
+              itemEl.className = "review-item";
+
+              const topRow = document.createElement("div");
+              topRow.className = "review-item-top";
+
+              const translatedEl = document.createElement("div");
+              translatedEl.className = "review-translated";
+              translatedEl.textContent = item.translatedText;
+
+              const actionsEl = document.createElement("div");
+              actionsEl.className = "review-item-actions";
+
+              const speakItemBtn = document.createElement("button");
+              speakItemBtn.type = "button";
+              speakItemBtn.className = "icon-del-btn";
+              speakItemBtn.title = "朗讀此翻譯";
+              speakItemBtn.setAttribute("aria-label", "朗讀此翻譯");
+              speakItemBtn.textContent = "🔊";
+              speakItemBtn.addEventListener("click", async () => {
+                const langInfo = LANGUAGE_REGISTRY[item.langCode] || LANGUAGE_REGISTRY.en;
+                document.getElementById("reviewStatusText").textContent =
+                  `正在朗讀（${langInfo.label}・${this.formatMainRateLabel(AppState.mainSpeechRate)}）...`;
+                await TTSService.speakMain(item.translatedText, langInfo.ttsLang);
+                document.getElementById("reviewStatusText").textContent = "";
+              });
+
+              const delItemBtn = document.createElement("button");
+              delItemBtn.type = "button";
+              delItemBtn.className = "icon-del-btn";
+              delItemBtn.title = "刪除此條資訊";
+              delItemBtn.setAttribute("aria-label", "刪除此條資訊");
+              delItemBtn.textContent = "❌";
+              delItemBtn.addEventListener("click", async () => {
+                const confirmed = window.confirm("確定要刪除這條資訊嗎？");
+                if (!confirmed) return;
+                await StudyArchiveDB.deleteRecordById(item.id);
+                document.getElementById("reviewStatusText").textContent = "已刪除該條紀錄。";
+                await this.renderReviewList();
+              });
+
+              actionsEl.appendChild(speakItemBtn);
+              actionsEl.appendChild(delItemBtn);
+
+              topRow.appendChild(translatedEl);
+              topRow.appendChild(actionsEl);
+
+              const sourceEl = document.createElement("div");
+              sourceEl.className = "review-source";
+              sourceEl.textContent = `(${item.sourceText})`;
+
+              itemEl.appendChild(topRow);
+              itemEl.appendChild(sourceEl);
+              bodyEl.appendChild(itemEl);
+            });
+
+            headerEl.appendChild(toggleBtn);
+            headerEl.appendChild(delDateBtn);
+            groupEl.appendChild(headerEl);
+            groupEl.appendChild(bodyEl);
+            container.appendChild(groupEl);
+          });
+        } catch (err) {
+          container.innerHTML = `<div class="empty-state">⚠️ ${err.message}</div>`;
+        }
+      },
+
+      /* -------------------- 測驗功能（兩大類） -------------------- */
+      async openQuizSetupView() {
+        this.switchView("quizSetupView");
+        document.getElementById("quizStatusText").textContent = "";
+        const listContainer = document.getElementById("quizDateListContainer");
+        listContainer.innerHTML = "";
+
+        try {
+          const records = await StudyArchiveDB.getAllRecords();
+          const scopeMap = new Map();
+
+          Object.entries(BUILT_IN_QUIZ_BANK).forEach(([scopeName, qList]) => {
+            if (Array.isArray(qList) && qList.length > 0) {
+              scopeMap.set(scopeName, {
+                type: "builtin",
+                count: qList.length
+              });
+            }
+          });
+
+          records.forEach((r) => {
+            const prev = scopeMap.get(r.dateKey);
+            if (prev && prev.type === "archive") {
+              prev.count += 1;
+            } else {
+              scopeMap.set(r.dateKey, {
+                type: "archive",
+                count: 1
+              });
+            }
+          });
+
+          if (!scopeMap.size) {
+            listContainer.innerHTML = `<div class="empty-state">目前尚無內建或存檔題目；你也可以直接使用上方「1. AI 隨機產生考題」開始測驗！</div>`;
+            document.getElementById("startQuizBtn").disabled = true;
+            return;
+          }
+
+          document.getElementById("startQuizBtn").disabled = false;
+          scopeMap.forEach((info, scopeKey) => {
+            const labelEl = document.createElement("label");
+            labelEl.className = "quiz-date-checkbox-row";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = scopeKey;
+            checkbox.dataset.scopeType = info.type;
+            checkbox.className = "quiz-date-checkbox";
+
+            const tagLabel = info.type === "builtin" ? "內建・" : "";
+            const textSpan = document.createElement("span");
+            textSpan.textContent = `${tagLabel}${scopeKey}（${info.count} 題）`;
+
+            labelEl.appendChild(checkbox);
+            labelEl.appendChild(textSpan);
+            listContainer.appendChild(labelEl);
+          });
+        } catch (err) {
+          listContainer.innerHTML = `<div class="empty-state">⚠️ ${err.message}</div>`;
+        }
+      },
+
+      async startAiQuiz(topicKey) {
+        const topicLabel = topicKey === "gsat_en" ? "模擬學測中譯英" : "生活&旅遊日文";
+        const aiBtnEn = document.getElementById("aiQuizGsatEnBtn");
+        const aiBtnJa = document.getElementById("aiQuizDailyJaBtn");
+        const startBtn = document.getElementById("startQuizBtn");
+
+        aiBtnEn.disabled = true;
+        aiBtnJa.disabled = true;
+        startBtn.disabled = true;
+        document.getElementById("quizStatusText").textContent =
+          `正在批次產生「${topicLabel}」考題（${APP_CONFIG.aiQuizBatchSize} 題）...`;
+
+        try {
+          const batchQuestions = await GeminiService.generateQuizBatch(
+            topicKey,
+            APP_CONFIG.aiQuizBatchSize
+          );
+
+          AppState.quiz = {
+            questions: this.shuffleArray(batchQuestions),
+            currentIndex: 0,
+            answeredCount: 0,
+            correctCount: 0,
+            currentQuestionAnswered: false
+          };
+
+          document.getElementById("quizStatusText").textContent = "";
+          this.switchView("quizPlayView");
+          this.renderQuizQuestion();
+        } catch (err) {
+          document.getElementById("quizStatusText").textContent = `⚠️ ${err.message}`;
+        } finally {
+          aiBtnEn.disabled = false;
+          aiBtnJa.disabled = false;
+          startBtn.disabled = false;
+        }
+      },
+
+      async startSelectedScopeQuiz() {
+        const checkedBoxes = Array.from(
+          document.querySelectorAll(".quiz-date-checkbox:checked")
+        );
+
+        if (!checkedBoxes.length) {
+          document.getElementById("quizStatusText").textContent =
+            "請至少勾選一個範圍再按「開始測驗」。";
+          return;
+        }
+
+        const allRecords = await StudyArchiveDB.getAllRecords();
+        const pool = [];
+
+        checkedBoxes.forEach((cb) => {
+          const scopeKey = cb.value;
+          const scopeType = cb.dataset.scopeType;
+
+          if (scopeType === "builtin" && Array.isArray(BUILT_IN_QUIZ_BANK[scopeKey])) {
+            BUILT_IN_QUIZ_BANK[scopeKey].forEach((item) => {
+              pool.push({
+                sourceText: item.sourceText,
+                translatedText: item.translatedText,
+                langCode: item.langCode || "en"
+              });
+            });
+          } else {
+            allRecords
+              .filter((r) => r.dateKey === scopeKey)
+              .forEach((r) => {
+                pool.push({
+                  sourceText: r.sourceText,
+                  translatedText: r.translatedText,
+                  langCode: r.langCode || "en"
+                });
+              });
+          }
+        });
+
+        if (!pool.length) {
+          document.getElementById("quizStatusText").textContent = "所選範圍沒有可用的題目。";
+          return;
+        }
+
+        AppState.quiz = {
+          questions: this.shuffleArray(pool),
+          currentIndex: 0,
+          answeredCount: 0,
+          correctCount: 0,
+          currentQuestionAnswered: false
+        };
+
+        this.switchView("quizPlayView");
+        this.renderQuizQuestion();
+      },
+
+      renderQuizQuestion() {
+        const { questions, currentIndex } = AppState.quiz;
+        const answerInput = document.getElementById("quizAnswerInput");
+        const clearBtn = document.getElementById("clearQuizAnswerBtn");
+
+        answerInput.value = "";
+        this.autoResizeTextarea(answerInput, clearBtn, 96);
+        document.getElementById("quizPlayStatusText").textContent = "";
+        AppState.quiz.currentQuestionAnswered = false;
+        document.getElementById("submitAnswerBtn").disabled = false;
+        document.getElementById("retryQuestionBtn").disabled = false;
+
+        this.updateQuizProgressUI();
+
+        if (currentIndex >= questions.length) {
+          const { correctCount, questions: qList } = AppState.quiz;
+          const summaryText = `測驗完成！本次共 ${qList.length} 題，你答對了 ${correctCount} 題。辛苦了，按右上角「結束測驗」即可返回！`;
+          this.setQuizTutorBubbleWithBoldQuotes(summaryText);
+          document.getElementById("submitAnswerBtn").disabled = true;
+          document.getElementById("retryQuestionBtn").disabled = true;
+          document.getElementById("nextQuestionBtn").disabled = true;
+          TTSService.speakQuizFeedbackWithQuotes(summaryText, "zh-TW");
+          return;
+        }
+
+        document.getElementById("nextQuestionBtn").disabled = false;
+        const q = questions[currentIndex];
+        const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
+        document.getElementById("quizUserSelfLabel").textContent = langInfo.selfWord;
+        this.setQuizTutorBubbleWithBoldQuotes(
+          `請將「${q.sourceText}」翻譯成${langInfo.label}。`
+        );
+      },
+
+      handleRetryQuizQuestion() {
+        const { questions, currentIndex } = AppState.quiz;
+        if (currentIndex >= questions.length) return;
+
+        TTSService.stop();
+        const q = questions[currentIndex];
+        const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
+        const answerInput = document.getElementById("quizAnswerInput");
+        const clearBtn = document.getElementById("clearQuizAnswerBtn");
+
+        answerInput.value = "";
+        this.autoResizeTextarea(answerInput, clearBtn, 96);
+        document.getElementById("quizPlayStatusText").textContent =
+          "已清空作答，請再試一次（答對題數不會重新累計）。";
+        document.getElementById("submitAnswerBtn").disabled = false;
+        this.setQuizTutorBubbleWithBoldQuotes(
+          `請將「${q.sourceText}」翻譯成${langInfo.label}。`
+        );
+        answerInput.focus();
+      },
+
+      updateQuizProgressUI() {
+        const { questions, answeredCount, correctCount } = AppState.quiz;
+        const total = questions.length;
+        const pct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+
+        document.getElementById("quizProgressText").textContent = `進度：${answeredCount} / ${total} 題`;
+        document.getElementById("quizScoreText").textContent = `答對：${correctCount} 題`;
+        document.getElementById("quizProgressFill").style.width = `${pct}%`;
+      },
+
+      async handleSubmitQuizAnswer() {
+        const { questions, currentIndex } = AppState.quiz;
+        if (currentIndex >= questions.length) return;
+
+        const userAnswer = document.getElementById("quizAnswerInput").value.trim();
+        if (!userAnswer) {
+          document.getElementById("quizPlayStatusText").textContent = "請先輸入你的翻譯答案再送出。";
+          return;
+        }
+
+        const q = questions[currentIndex];
+        const langInfo = LANGUAGE_REGISTRY[q.langCode] || LANGUAGE_REGISTRY.en;
+
+        document.getElementById("submitAnswerBtn").disabled = true;
+        document.getElementById("retryQuestionBtn").disabled = true;
+        document.getElementById("nextQuestionBtn").disabled = true;
+        document.getElementById("quizPlayStatusText").textContent = "家教正在批改答案...";
+
+        try {
+          const result = await GeminiService.gradeTranslationAnswer({
+            sourceText: q.sourceText,
+            referenceTranslation: q.translatedText,
+            userAnswer,
+            langLabel: langInfo.label
+          });
+
+          if (!AppState.quiz.currentQuestionAnswered) {
+            AppState.quiz.answeredCount += 1;
+            if (result.isCorrect) {
+              AppState.quiz.correctCount += 1;
+            }
+            AppState.quiz.currentQuestionAnswered = true;
+            this.updateQuizProgressUI();
+          }
+
+          this.setQuizTutorBubbleWithBoldQuotes(result.feedback);
+          document.getElementById("quizPlayStatusText").textContent =
+            AppState.quizSpeechSetting.muted ? "（靜音中）" : "家教正在說話...";
+
+          await TTSService.speakQuizFeedbackWithQuotes(result.feedback, langInfo.ttsLang);
+          document.getElementById("quizPlayStatusText").textContent = "";
+        } catch (err) {
+          this.setQuizTutorBubbleWithBoldQuotes(`⚠️ ${err.message}`);
+          document.getElementById("quizPlayStatusText").textContent = "";
+          document.getElementById("submitAnswerBtn").disabled = false;
+        } finally {
+          document.getElementById("retryQuestionBtn").disabled = false;
+          document.getElementById("nextQuestionBtn").disabled = false;
+        }
+      },
+
+      handleNextQuizQuestion() {
+        const { currentIndex, questions } = AppState.quiz;
+        if (currentIndex < questions.length) {
+          AppState.quiz.currentIndex += 1;
+          this.renderQuizQuestion();
+        }
+      },
+
+      bindEvents() {
+        const apiKeyInput = document.getElementById("apiKeyInput");
+        const modelInput = document.getElementById("modelInput");
+        apiKeyInput.value = StorageManager.getApiKey();
+        modelInput.value = StorageManager.getModel();
+
+        // 任務頁開關與返回
+        document.getElementById("openTaskViewBtn").addEventListener("click", () => {
+          document.getElementById("taskStatusText").textContent = "";
+          this.renderTaskList();
+          this.switchView("taskView");
+        });
+
+        document.getElementById("backFromTaskBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+          this.syncTaskLayoutUI();
+        });
+
+        // 多指令編輯彈窗事件
+        document.getElementById("closePromptModalBtn").addEventListener("click", () => {
+          this.closePromptEditor();
+        });
+
+        document.getElementById("promptModalBackdrop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            this.closePromptEditor();
+          }
+        });
+
+        document.getElementById("saveAllPromptsBtn").addEventListener("click", () => {
+          this.saveAllEditedPrompts();
+        });
+
+        document.getElementById("resetAllPromptsBtn").addEventListener("click", () => {
+          this.resetAllEditedPrompts();
+        });
+
+        // API 面板開關與儲存收合
+        document.getElementById("toggleApiBtn").addEventListener("click", () => {
+          document.getElementById("apiPanel").classList.toggle("open");
+        });
+
+        document.getElementById("saveApiBtn").addEventListener("click", () => {
+          StorageManager.setApiKey(apiKeyInput.value);
+          StorageManager.setModel(modelInput.value);
+          apiKeyInput.value = StorageManager.getApiKey();
+          modelInput.value = StorageManager.getModel();
+          this.closeApiPanel();
+          this.setMainStatus("已儲存 API 設定並收合視窗。");
+        });
+
+        document.getElementById("clearApiBtn").addEventListener("click", () => {
+          StorageManager.clearApiKey();
+          apiKeyInput.value = "";
+          this.setMainStatus("已清除本機儲存的 API Key。");
+        });
+
+        // 語言切換（依目前任務儲存對應語系，不自動跳轉語言選單）
+        document.getElementById("targetLangSelect").addEventListener("change", (e) => {
+          const val = e.target.value;
+          if (AppState.selectedTaskId === "custom") {
+            AppState.customLanguageCode = val;
+            StorageManager.setCustomLanguage(val);
+            this.syncLanguageUI();
+            this.setMainStatus("");
+          } else {
+            AppState.languageCode = val;
+            StorageManager.setLanguage(val);
+            this.syncLanguageUI();
+            this.resetBubbleToGreeting();
+            this.setMainStatus("");
+          }
+        });
+
+        // 日文語氣三選一
+        document.querySelectorAll(".jp-style-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            AppState.jpStyle = btn.dataset.jpStyle;
+            this.syncJpStyleUI();
+          });
+        });
+
+        // 主畫面語速微調彈窗
+        document.getElementById("mainSpeedBtn").addEventListener("click", () => {
+          this.openMainSpeedModal();
+        });
+
+        document.getElementById("mainRateMinusBtn").addEventListener("click", () => {
+          this.adjustMainSpeechRate(-APP_CONFIG.mainSpeechRate.step);
+        });
+
+        document.getElementById("mainRatePlusBtn").addEventListener("click", () => {
+          this.adjustMainSpeechRate(APP_CONFIG.mainSpeechRate.step);
+        });
+
+        document.getElementById("closeMainRateModalBtn").addEventListener("click", () => {
+          this.closeMainSpeedModal();
+        });
+
+        document.getElementById("mainSpeedModalBackdrop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            this.closeMainSpeedModal();
+          }
+        });
+
+        // 測驗頁語速預設彈窗
+        document.getElementById("quizSpeedBtn").addEventListener("click", () => {
+          this.openQuizSpeedModal();
+        });
+
+        document.querySelectorAll(".rate-preset-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            this.selectQuizSpeechOption(btn.dataset.rateMode);
+          });
+        });
+
+        document.getElementById("closeQuizRateModalBtn").addEventListener("click", () => {
+          this.closeQuizSpeedModal();
+        });
+
+        document.getElementById("quizSpeedModalBackdrop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            this.closeQuizSpeedModal();
+          }
+        });
+
+        // 說話鍵
+        document.getElementById("speakBtn").addEventListener("click", () => {
+          this.handleSpeakCurrentBubble();
+        });
+
+        // 主畫面輸入框自動增高與一鍵清除
+        const userInputEl = document.getElementById("userInput");
+        const clearBubbleBtn = document.getElementById("clearBubbleBtn");
+        userInputEl.addEventListener("input", () => {
+          this.autoResizeTextarea(userInputEl, clearBubbleBtn, 96);
+        });
+
+        clearBubbleBtn.addEventListener("click", () => {
+          userInputEl.value = "";
+          AppState.lastTranslation = null;
+          this.autoResizeTextarea(userInputEl, clearBubbleBtn, 96);
+          userInputEl.focus();
+        });
+
+        // 送出（翻譯 或 自訂互動）
+        document.getElementById("sendBtn").addEventListener("click", () => {
+          this.handleSendPrimaryAction();
+        });
+
+        userInputEl.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (!AppState.isBusy) {
+              this.handleSendPrimaryAction();
+            }
+          }
+        });
+
+        // [存檔][複習][測驗]
+        document.getElementById("saveRecordBtn").addEventListener("click", () => {
+          this.handleSaveRecord();
+        });
+
+        document.getElementById("openReviewBtn").addEventListener("click", () => {
+          this.openReviewView();
+        });
+
+        document.getElementById("openQuizSetupBtn").addEventListener("click", () => {
+          this.openQuizSetupView();
+        });
+
+        // 複習頁返回
+        document.getElementById("backFromReviewBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+        });
+
+        // 測驗準備頁事件（兩大類）
+        document.getElementById("backFromQuizSetupBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+        });
+
+        document.getElementById("aiQuizGsatEnBtn").addEventListener("click", () => {
+          this.startAiQuiz("gsat_en");
+        });
+
+        document.getElementById("aiQuizDailyJaBtn").addEventListener("click", () => {
+          this.startAiQuiz("daily_ja");
+        });
+
+        document.getElementById("startQuizBtn").addEventListener("click", () => {
+          this.startSelectedScopeQuiz();
+        });
+
+        // 測驗進行頁事件
+        document.getElementById("exitQuizBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+        });
+
+        document.getElementById("retryQuestionBtn").addEventListener("click", () => {
+          this.handleRetryQuizQuestion();
+        });
+
+        document.getElementById("nextQuestionBtn").addEventListener("click", () => {
+          this.handleNextQuizQuestion();
+        });
+
+        document.getElementById("submitAnswerBtn").addEventListener("click", () => {
+          this.handleSubmitQuizAnswer();
+        });
+
+        const quizAnswerEl = document.getElementById("quizAnswerInput");
+        const clearQuizAnswerBtn = document.getElementById("clearQuizAnswerBtn");
+        quizAnswerEl.addEventListener("input", () => {
+          this.autoResizeTextarea(quizAnswerEl, clearQuizAnswerBtn, 96);
+        });
+
+        clearQuizAnswerBtn.addEventListener("click", () => {
+          quizAnswerEl.value = "";
+          this.autoResizeTextarea(quizAnswerEl, clearQuizAnswerBtn, 96);
+          quizAnswerEl.focus();
+        });
+
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.getVoices();
+          window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+          };
+        }
+      },
+
+      init() {
+        AvatarController.preloadImages();
+        this.refreshLanguageSelectForTask();
+        this.syncLanguageUI();
+        this.syncJpStyleUI();
+        this.syncMainRateUI();
+        this.syncQuizSpeechUI();
+        this.syncTaskLayoutUI();
+        this.autoResizeTextarea(
+          document.getElementById("userInput"),
+          document.getElementById("clearBubbleBtn"),
+          96
+        );
+        AvatarController.setSpeakingState(false);
+        this.bindEvents();
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      UIController.init();
+    });
+  </script>
+</body>
+</html>
