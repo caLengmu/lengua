@@ -146,6 +146,15 @@
       background: #fecaca;
     }
 
+    .btn-stop-speaking {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .btn-stop-speaking:hover:not(:disabled) {
+      background: var(--danger-hover);
+    }
+
     /* API 設定面板 */
     .api-panel {
       background: #f9fafb;
@@ -1095,7 +1104,7 @@
 
       <!-- 起始未選任務時，此區塊收起；選擇任務後展開 -->
       <div id="taskBodyCollapsible" class="task-body-collapsible collapsed">
-        <!-- 三等分同一行：[語言選單] [語速] [說話] -->
+        <!-- 三等分同一行：[語言選單] [語速] [說話/停止] -->
         <div class="bubble-actions">
           <select id="targetLangSelect" class="lang-select equal-item" aria-label="選擇語言"></select>
           <button id="mainSpeedBtn" class="btn btn-secondary equal-item" type="button">語速 (1x)</button>
@@ -1151,9 +1160,7 @@
 
       <div id="taskStatusText" class="status-text" role="status" aria-live="polite"></div>
 
-      <div id="taskListContainer" class="task-list-box">
-        <!-- 由 TASK_REGISTRY 動態產生：會話、文章導讀、翻譯、單字、自訂，每列皆有 [編輯指令] -->
-      </div>
+      <div id="taskListContainer" class="task-list-box"></div>
     </div>
 
     <!-- ==================== 3. 複習頁面 ==================== -->
@@ -1177,7 +1184,6 @@
       <div id="quizStatusText" class="status-text" role="status" aria-live="polite"></div>
 
       <div class="quiz-setup-box">
-        <!-- 類別一：AI 隨機產生考題 -->
         <section class="quiz-category-card" aria-label="AI 隨機產生考題">
           <div class="quiz-category-title">1. AI 隨機產生考題</div>
           <div class="ai-quiz-btn-grid">
@@ -1186,7 +1192,6 @@
           </div>
         </section>
 
-        <!-- 類別二：勾選測驗範圍以開始測驗（含內建資料＆存檔資料） -->
         <section class="quiz-category-card" aria-label="勾選測驗範圍以開始測驗">
           <div class="quiz-category-title">2. 勾選測驗範圍以開始測驗（含內建資料＆存檔資料）</div>
           <div id="quizDateListContainer" class="quiz-date-list"></div>
@@ -1238,7 +1243,6 @@
         <button id="submitAnswerBtn" class="send-btn" type="button">送出答案</button>
       </section>
 
-      <!-- 最下方進度條（總題數以及目前作答進度） -->
       <div class="quiz-progress-box">
         <div class="quiz-progress-label">
           <span id="quizProgressText">進度：0 / 0 題</span>
@@ -1251,7 +1255,7 @@
     </div>
   </div>
 
-  <!-- 多指令編輯彈窗（支援單一或多項指令） -->
+  <!-- 多指令編輯彈窗 -->
   <div id="promptModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="promptModalTitle">
     <div class="prompt-modal">
       <div class="prompt-modal-header">
@@ -1308,6 +1312,7 @@
       languageMode: "multi", // "multi" | "english_only"
       defaultLanguage: "en",
       defaultCustomTaskLanguage: "zh-TW",
+      customChatMaxTurns: 6, // 自訂任務保留最近 6 輪對話記憶
       initialGreeting:
         "同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。",
       customTaskGreeting: "同學好，請問有什麼需要我協助的地方？",
@@ -1397,9 +1402,6 @@
       }
     };
 
-    /**
-     * 「自訂」任務語言選單包含繁體中文（zh-TW）與各外語
-     */
     const CUSTOM_CHAT_LANGUAGES = {
       "zh-TW": {
         code: "zh-TW",
@@ -1465,20 +1467,20 @@
 
     /**
      * 任務註冊表（Task Registry）
-     * 每個任務可包含一或多項指令（prompts 陣列），編輯指令時會一併列出
+     * 統一使用 {輸出語言} 與 {輸入內容}（測驗批改另含 {題目}、{參考譯文}，翻譯另含 {日文語氣說明}）
      */
     const TASK_REGISTRY = [
       {
         id: "conversation",
         label: "會話",
         enabled: false,
-        hintText: "可使用變數：{目標語言}、{原文}",
+        hintText: "可用變數：{輸出語言}、{輸入內容}",
         prompts: [
           {
             key: "chat",
             title: "口說會話指令",
             defaultPrompt:
-              "你是一位親切的{目標語言}口說會話家教。請用自然的{目標語言}與學生互動對話，並適時以繁體中文提供簡短提示。\n使用者輸入：{原文}"
+              "你是一位親切的{輸出語言}口說會話家教。請用自然的{輸出語言}與學生互動對話，並適時以繁體中文提供簡短提示。\n使用者輸入：{輸入內容}"
           }
         ]
       },
@@ -1486,13 +1488,13 @@
         id: "reading",
         label: "文章導讀",
         enabled: false,
-        hintText: "可使用變數：{目標語言}、{原文}",
+        hintText: "可用變數：{輸出語言}、{輸入內容}",
         prompts: [
           {
             key: "guide",
             title: "文章導讀指令",
             defaultPrompt:
-              "你是一位外語閱讀導讀家教。請針對使用者提供的{目標語言}或中文內容進行重點導讀、核心句型與關鍵詞彙說明。\n內容：{原文}"
+              "你是一位外語閱讀導讀家教。請以{輸出語言}為主進行重點導讀、核心句型與關鍵詞彙說明。\n內容：{輸入內容}"
           }
         ]
       },
@@ -1500,19 +1502,20 @@
         id: "translation",
         label: "翻譯",
         enabled: true,
-        hintText: "翻譯指令變數：{目標語言}、{原文}、{日文語氣說明}；批改指令變數：{語言}、{題目}、{參考譯文}、{作答}",
+        hintText:
+          "翻譯指令變數：{輸出語言}、{輸入內容}、{日文語氣說明}；批改指令變數：{輸出語言}、{輸入內容}、{題目}、{參考譯文}",
         prompts: [
           {
             key: "translate",
             title: "翻譯指令",
             defaultPrompt:
-              "你是一位親切的外語家教，專精協助學習者掌握自然語氣。請將以下輸入的中文句子翻譯成自然道地的{目標語言}。\n規則：只輸出翻譯後的{目標語言}內容，不要加多餘解釋、引號或前綴。\n{日文語氣說明}\n原文：{原文}"
+              "你是一位親切的外語家教，專精協助學習者掌握自然語氣。請將以下輸入的中文句子翻譯成自然道地的{輸出語言}。\n規則：只輸出翻譯後的{輸出語言}內容，不要加多餘解釋、引號或前綴。\n{日文語氣說明}\n原文：{輸入內容}"
           },
           {
             key: "quiz_grade",
             title: "測驗批改指令",
             defaultPrompt:
-              "你是一位親切且精準的外語家教，正在批改學生的{語言}翻譯測驗。\n請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"isCorrect\": true或false, \"feedback\": \"簡短精準的繁體中文回饋（1~2句話，直接切中重點）\"}\n規則：\n- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確；若要引述{語言}詞句，請用「」包起來。\n- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次；若要引述{語言}詞句，請用「」包起來。\n中文題目：{題目}\n參考譯文：{參考譯文}\n學生作答：{作答}"
+              "你是一位親切且精準的外語家教，正在批改學生的{輸出語言}翻譯測驗。\n請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"isCorrect\": true或false, \"feedback\": \"簡短精準的繁體中文回饋（1~2句話，直接切中重點）\"}\n規則：\n- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確；若要引述{輸出語言}詞句，請用「」包起來。\n- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次；若要引述{輸出語言}詞句，請用「」包起來。\n中文題目：{題目}\n參考譯文：{參考譯文}\n學生作答：{輸入內容}"
           }
         ]
       },
@@ -1520,13 +1523,13 @@
         id: "vocabulary",
         label: "單字",
         enabled: false,
-        hintText: "可使用變數：{目標語言}、{原文}",
+        hintText: "可用變數：{輸出語言}、{輸入內容}",
         prompts: [
           {
             key: "vocab",
             title: "單字學習指令",
             defaultPrompt:
-              "你是一位外語單字家教。請針對使用者輸入的詞彙或主題，提供實用的{目標語言}單字、詞性、中文釋義與簡短例句。\n輸入：{原文}"
+              "你是一位外語單字家教。請針對使用者輸入的詞彙或主題，提供實用的{輸出語言}單字、詞性、中文釋義與簡短例句。\n輸入：{輸入內容}"
           }
         ]
       },
@@ -1534,13 +1537,13 @@
         id: "custom",
         label: "自訂",
         enabled: true,
-        hintText: "可使用變數：{原文}",
+        hintText: "可用變數：{輸出語言}、{輸入內容}",
         prompts: [
           {
             key: "custom_chat",
             title: "自訂互動指令",
             defaultPrompt:
-              "請與使用者進行一般互動。規則：使用者用什麼語言輸入，你就用什麼語言回應；語言風格言簡意賅不囉嗦，並嚴格限制在 100 字內。\n使用者輸入：{原文}"
+              "請與使用者進行一般互動。規則：\n1. 無論使用者輸入什麼語言，你都必須完全使用「{輸出語言}」回答，不要混用其他語言。\n2. 語言風格言簡意賅、自然親切不囉嗦，並嚴格限制在 100 字內。\n使用者輸入：{輸入內容}"
           }
         ]
       }
@@ -1684,16 +1687,18 @@
 
     const AppState = {
       activeView: "mainView",
-      selectedTaskId: null, // 起始尚未選擇任務，收起下方內容
+      selectedTaskId: null,
       editingTaskId: null,
       characterId: StorageManager.getCharacterId(),
       languageCode: StorageManager.getLanguage(),
       customLanguageCode: StorageManager.getCustomLanguage(),
-      jpStyle: "polite", // casual | polite | honorific，預設敬體
+      jpStyle: "polite",
       mainSpeechRate: StorageManager.getMainSpeechRate(),
       quizSpeechSetting: StorageManager.getQuizSpeechSetting(),
       currentTtsLang: "zh-TW",
-      lastTranslation: null, // { sourceText, translatedText, langCode }
+      lastTranslation: null,
+      // 自訂任務最近 N 輪對話記憶（每輪包含 user 與 model 兩則）
+      customChatHistory: [],
       isSpeaking: false,
       isBusy: false,
       quiz: {
@@ -1836,7 +1841,7 @@
 
     /**
      * =========================================================================
-     * 4. 角色與 TTS 服務
+     * 4. 角色與 TTS 服務（支援說話/停止 Toggle）
      * =========================================================================
      */
     const AvatarController = {
@@ -1853,9 +1858,10 @@
         });
       },
       setSpeakingState(speaking) {
-        AppState.isSpeaking = Boolean(speaking);
+        const nextSpeaking = Boolean(speaking);
+        AppState.isSpeaking = nextSpeaking;
         const charConfig = this.getCurrentCharacter();
-        const targetSrc = AppState.isSpeaking
+        const targetSrc = nextSpeaking
           ? charConfig.images.speaking
           : charConfig.images.idle;
 
@@ -1864,11 +1870,20 @@
             imgEl.setAttribute("src", targetSrc);
           }
         });
+
+        UIController.syncSpeakToggleButton(nextSpeaking);
       }
     };
 
     const TTSService = {
+      _activeReject: null,
+
       stop() {
+        if (typeof this._activeReject === "function") {
+          const rejectFn = this._activeReject;
+          this._activeReject = null;
+          rejectFn(new Error("STOPPED_BY_USER"));
+        }
         if ("speechSynthesis" in window && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
           window.speechSynthesis.cancel();
         }
@@ -1887,7 +1902,29 @@
           return Promise.resolve();
         }
 
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
+          let settled = false;
+          let safetyTimer = null;
+
+          const cleanup = () => {
+            if (safetyTimer) {
+              clearTimeout(safetyTimer);
+              safetyTimer = null;
+            }
+            if (this._activeReject === cancelHandler) {
+              this._activeReject = null;
+            }
+          };
+
+          const cancelHandler = (err) => {
+            if (settled) return;
+            settled = true;
+            cleanup();
+            reject(err || new Error("STOPPED_BY_USER"));
+          };
+
+          this._activeReject = cancelHandler;
+
           const utterance = new SpeechSynthesisUtterance(cleanText);
           utterance.lang = langCode;
 
@@ -1905,11 +1942,10 @@
             utterance.voice = matchedVoice;
           }
 
-          let settled = false;
           const finish = () => {
             if (settled) return;
             settled = true;
-            clearTimeout(safetyTimer);
+            cleanup();
             resolve();
           };
 
@@ -1924,7 +1960,7 @@
             2200,
             (cleanText.length * 160) / Math.max(0.5, rate) + 1800
           );
-          const safetyTimer = setTimeout(finish, estimatedMs);
+          safetyTimer = setTimeout(finish, estimatedMs);
 
           AvatarController.setSpeakingState(true);
           window.speechSynthesis.speak(utterance);
@@ -1939,8 +1975,16 @@
           window.speechSynthesis.cancel();
         }
 
-        await this.speakSingleSegment(cleanText, langCode, AppState.mainSpeechRate);
-        AvatarController.setSpeakingState(false);
+        try {
+          await this.speakSingleSegment(cleanText, langCode, AppState.mainSpeechRate);
+        } catch (err) {
+          if (err && err.message === "STOPPED_BY_USER") {
+            return;
+          }
+          throw err;
+        } finally {
+          AvatarController.setSpeakingState(false);
+        }
       },
 
       async speakQuizFeedbackWithQuotes(feedbackText, quotedLangCode = "en-US") {
@@ -1987,22 +2031,53 @@
           segments.push({ text: raw, lang: "zh-TW" });
         }
 
-        for (let i = 0; i < segments.length; i++) {
-          if (AppState.quizSpeechSetting.muted) break;
-          await this.speakSingleSegment(segments[i].text, segments[i].lang, rate);
+        try {
+          for (let i = 0; i < segments.length; i++) {
+            if (AppState.quizSpeechSetting.muted) break;
+            await this.speakSingleSegment(segments[i].text, segments[i].lang, rate);
+          }
+        } catch (err) {
+          if (err && err.message === "STOPPED_BY_USER") {
+            return;
+          }
+          throw err;
+        } finally {
+          AvatarController.setSpeakingState(false);
         }
-
-        AvatarController.setSpeakingState(false);
       }
     };
 
     /**
      * =========================================================================
-     * 5. Gemini API 服務（翻譯 ＋ 自訂互動 ＋ 批次出題 ＋ 彈性批改測驗）
+     * 5. 統一變數替換與 Gemini API 服務
      * =========================================================================
      */
+    const PromptResolver = {
+      /**
+       * 統一替換 {輸出語言} 與 {輸入內容}（並相容舊變數名稱）
+       */
+      resolve(template, {
+        outputLang = "",
+        inputText = "",
+        questionText = "",
+        referenceText = "",
+        jpStyleNote = ""
+      }) {
+        return (template || "")
+          .replaceAll("{輸出語言}", outputLang)
+          .replaceAll("{輸入內容}", inputText)
+          .replaceAll("{目標語言}", outputLang)
+          .replaceAll("{語言}", outputLang)
+          .replaceAll("{原文}", inputText)
+          .replaceAll("{作答}", inputText)
+          .replaceAll("{題目}", questionText)
+          .replaceAll("{參考譯文}", referenceText)
+          .replaceAll("{日文語氣說明}", jpStyleNote);
+      }
+    };
+
     const GeminiService = {
-      async callModel(prompt) {
+      async callContents(contents) {
         const apiKey = StorageManager.getApiKey();
         if (!apiKey) {
           throw new Error("尚未設定 Gemini API Key，請先點擊右上角「API 設定」輸入並儲存金鑰。");
@@ -2016,13 +2091,7 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: prompt }]
-              }
-            ]
-          })
+          body: JSON.stringify({ contents })
         });
 
         if (!response.ok) {
@@ -2050,6 +2119,14 @@
         return resultText;
       },
 
+      async callSinglePrompt(prompt) {
+        return this.callContents([
+          {
+            parts: [{ text: prompt }]
+          }
+        ]);
+      },
+
       buildFormattedSourceText(rawChinese, targetLangKey, jpStyleKey) {
         const clean = (rawChinese || "").trim();
         if (targetLangKey === "ja") {
@@ -2068,36 +2145,70 @@
             : "";
 
         const template = StorageManager.getEffectivePrompt("translation", "translate");
-        const hasSourceVar = template.includes("{原文}");
-        const hasLangVar = template.includes("{目標語言}");
-        const hasJpVar = template.includes("{日文語氣說明}");
+        let prompt = PromptResolver.resolve(template, {
+          outputLang: langInfo.label,
+          inputText: formattedSourceText,
+          jpStyleNote: jpRuleText
+        });
 
-        let prompt = template
-          .replaceAll("{目標語言}", langInfo.label)
-          .replaceAll("{原文}", formattedSourceText)
-          .replaceAll("{日文語氣說明}", jpRuleText);
-
-        if (!hasLangVar) {
-          prompt = `目標語言：${langInfo.label}\n${prompt}`;
+        if (!template.includes("{輸出語言}") && !template.includes("{目標語言}")) {
+          prompt = `輸出語言：${langInfo.label}\n${prompt}`;
         }
-        if (!hasJpVar && jpRuleText) {
+        if (!template.includes("{日文語氣說明}") && jpRuleText) {
           prompt = `${prompt}\n${jpRuleText}`;
         }
-        if (!hasSourceVar) {
-          prompt = `${prompt}\n原文：${formattedSourceText}`;
+        if (!template.includes("{輸入內容}") && !template.includes("{原文}")) {
+          prompt = `${prompt}\n輸入內容：${formattedSourceText}`;
         }
 
-        return this.callModel(prompt);
+        return this.callSinglePrompt(prompt);
       },
 
-      async sendCustomChat(userText) {
+      /**
+       * 自訂任務：帶入最近 N 輪對話記憶（不帶翻譯/測驗記憶）
+       */
+      async sendCustomChat(userText, outputLangCode) {
+        const langInfo =
+          CUSTOM_CHAT_LANGUAGES[outputLangCode] || CUSTOM_CHAT_LANGUAGES["zh-TW"];
         const template = StorageManager.getEffectivePrompt("custom", "custom_chat");
-        const hasSourceVar = template.includes("{原文}");
-        let prompt = template.replaceAll("{原文}", userText);
-        if (!hasSourceVar) {
-          prompt = `${prompt}\n使用者輸入：${userText}`;
+
+        const currentTurnPrompt = PromptResolver.resolve(template, {
+          outputLang: langInfo.label,
+          inputText: userText
+        });
+
+        const recentTurns = AppState.customChatHistory.slice(-APP_CONFIG.customChatMaxTurns);
+        const contents = [];
+
+        recentTurns.forEach((turn) => {
+          contents.push({
+            role: "user",
+            parts: [{ text: turn.userText }]
+          });
+          contents.push({
+            role: "model",
+            parts: [{ text: turn.modelText }]
+          });
+        });
+
+        contents.push({
+          role: "user",
+          parts: [{ text: currentTurnPrompt }]
+        });
+
+        const replyText = await this.callContents(contents);
+
+        AppState.customChatHistory.push({
+          userText,
+          modelText: replyText
+        });
+        if (AppState.customChatHistory.length > APP_CONFIG.customChatMaxTurns) {
+          AppState.customChatHistory = AppState.customChatHistory.slice(
+            -APP_CONFIG.customChatMaxTurns
+          );
         }
-        return this.callModel(prompt);
+
+        return replyText;
       },
 
       async generateQuizBatch(topicKey, count = APP_CONFIG.aiQuizBatchSize) {
@@ -2120,7 +2231,7 @@
           topicInstruction
         ].join("\n");
 
-        const rawText = await this.callModel(prompt);
+        const rawText = await this.callSinglePrompt(prompt);
         const cleaned = rawText
           .replace(/^```json\s*/i, "")
           .replace(/^```\s*/i, "")
@@ -2143,14 +2254,14 @@
 
       async gradeTranslationAnswer({ sourceText, referenceTranslation, userAnswer, langLabel }) {
         const template = StorageManager.getEffectivePrompt("translation", "quiz_grade");
-        const prompt = template
-          .replaceAll("{語言}", langLabel)
-          .replaceAll("{目標語言}", langLabel)
-          .replaceAll("{題目}", sourceText)
-          .replaceAll("{參考譯文}", referenceTranslation)
-          .replaceAll("{作答}", userAnswer);
+        const prompt = PromptResolver.resolve(template, {
+          outputLang: langLabel,
+          inputText: userAnswer,
+          questionText: sourceText,
+          referenceText: referenceTranslation
+        });
 
-        const rawText = await this.callModel(prompt);
+        const rawText = await this.callSinglePrompt(prompt);
         const cleaned = rawText
           .replace(/^```json\s*/i, "")
           .replace(/^```\s*/i, "")
@@ -2197,6 +2308,21 @@
         return arr;
       },
 
+      syncSpeakToggleButton(isSpeaking) {
+        const speakBtn = document.getElementById("speakBtn");
+        if (!speakBtn) return;
+
+        if (isSpeaking) {
+          speakBtn.textContent = "停止";
+          speakBtn.classList.remove("btn-primary");
+          speakBtn.classList.add("btn-stop-speaking");
+        } else {
+          speakBtn.textContent = "說話";
+          speakBtn.classList.remove("btn-stop-speaking");
+          speakBtn.classList.add("btn-primary");
+        }
+      },
+
       switchView(viewId) {
         TTSService.stop();
         AppState.activeView = viewId;
@@ -2205,11 +2331,6 @@
         });
       },
 
-      /**
-       * 依目前任務動態更新語言選單：
-       * - 一般／翻譯任務：顯示目標語言（預設英文）
-       * - 自訂任務：加入繁體中文（zh-TW）與各外語，預設繁體中文
-       */
       refreshLanguageSelectForTask() {
         const selectEl = document.getElementById("targetLangSelect");
         selectEl.innerHTML = "";
@@ -2238,7 +2359,10 @@
       resetBubbleToGreeting() {
         const charConfig = AvatarController.getCurrentCharacter();
         if (AppState.selectedTaskId === "custom") {
-          AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
+          const customLang =
+            CUSTOM_CHAT_LANGUAGES[AppState.customLanguageCode] ||
+            CUSTOM_CHAT_LANGUAGES["zh-TW"];
+          AppState.currentTtsLang = customLang.ttsLang || charConfig.ttsConfig?.zhLang || "zh-TW";
           AppState.lastTranslation = null;
           this.setTutorBubble(APP_CONFIG.customTaskGreeting);
           return;
@@ -2369,7 +2493,6 @@
       setMainBusy(busy) {
         AppState.isBusy = busy;
         document.getElementById("sendBtn").disabled = busy;
-        document.getElementById("speakBtn").disabled = busy;
         document.getElementById("targetLangSelect").disabled = busy;
         document.getElementById("saveRecordBtn").disabled = busy;
         document.getElementById("openReviewBtn").disabled = busy;
@@ -2419,6 +2542,9 @@
               document.getElementById("taskStatusText").textContent =
                 `「${task.label}」功能尚未開放，目前可選擇「翻譯」或「自訂」。`;
               return;
+            }
+            if (AppState.selectedTaskId !== task.id) {
+              AppState.customChatHistory = [];
             }
             AppState.selectedTaskId = task.id;
             this.switchView("mainView");
@@ -2583,15 +2709,27 @@
         this.closeQuizSpeedModal();
       },
 
-      async handleSpeakCurrentBubble() {
+      /**
+       * 說話 / 停止 Toggle
+       */
+      async handleSpeakOrStopToggle() {
+        if (AppState.isSpeaking || ("speechSynthesis" in window && window.speechSynthesis.speaking)) {
+          TTSService.stop();
+          this.setMainStatus("已停止朗讀。");
+          return;
+        }
+
         const bubbleText = (document.getElementById("tutorBubble")?.textContent || "").trim();
         if (!bubbleText) return;
 
         this.setMainBusy(true);
         this.setMainStatus("家教正在說話...");
-        await TTSService.speakMain(bubbleText, AppState.currentTtsLang);
-        this.setMainStatus("");
-        this.setMainBusy(false);
+        try {
+          await TTSService.speakMain(bubbleText, AppState.currentTtsLang);
+        } finally {
+          this.setMainStatus("");
+          this.setMainBusy(false);
+        }
       },
 
       async handleSendPrimaryAction() {
@@ -2608,7 +2746,6 @@
           return;
         }
 
-        // 依語言選單決定 TTS 語系（方案 A，不自動跳轉語言選單）
         const isCustom = AppState.selectedTaskId === "custom";
         const ttsLang = isCustom
           ? (CUSTOM_CHAT_LANGUAGES[AppState.customLanguageCode] || CUSTOM_CHAT_LANGUAGES["zh-TW"]).ttsLang
@@ -2620,7 +2757,7 @@
         try {
           let replyText = "";
           if (isCustom) {
-            replyText = await GeminiService.sendCustomChat(rawText);
+            replyText = await GeminiService.sendCustomChat(rawText, AppState.customLanguageCode);
             AppState.currentTtsLang = ttsLang;
           } else {
             const formattedSourceText = GeminiService.buildFormattedSourceText(
@@ -3161,7 +3298,7 @@
           this.setMainStatus("已清除本機儲存的 API Key。");
         });
 
-        // 語言切換（依目前任務儲存對應語系，不自動跳轉語言選單）
+        // 語言切換
         document.getElementById("targetLangSelect").addEventListener("change", (e) => {
           const val = e.target.value;
           if (AppState.selectedTaskId === "custom") {
@@ -3230,12 +3367,12 @@
           }
         });
 
-        // 說話鍵
+        // 說話 / 停止 Toggle 鍵
         document.getElementById("speakBtn").addEventListener("click", () => {
-          this.handleSpeakCurrentBubble();
+          this.handleSpeakOrStopToggle();
         });
 
-        // 主畫面輸入框自動增高與一鍵清除
+        // 主畫面輸入框自動增高與一鍵清除（清除時一併重置自訂對話記憶）
         const userInputEl = document.getElementById("userInput");
         const clearBubbleBtn = document.getElementById("clearBubbleBtn");
         userInputEl.addEventListener("input", () => {
@@ -3245,6 +3382,9 @@
         clearBubbleBtn.addEventListener("click", () => {
           userInputEl.value = "";
           AppState.lastTranslation = null;
+          if (AppState.selectedTaskId === "custom") {
+            AppState.customChatHistory = [];
+          }
           this.autoResizeTextarea(userInputEl, clearBubbleBtn, 96);
           userInputEl.focus();
         });
