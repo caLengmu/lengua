@@ -1397,7 +1397,123 @@ accurate"></textarea>
       modelName: "gemini-3.5-flash-lite",
       librarySelectedDeckId: BUILTIN_LIBRARIES[0].id,
       libraryCheckedWords: new Set(),
-// ... existing code ... -->
+      showStoryZh: false,
+      isReadingFullStory: false,
+      activeQuiz: null
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 3: WEB SPEECH API ENGINE (可調語速與逐句高亮朗讀)
+     * ============================================================================
+     */
+    const SpeechEngine = {
+      voices: [],
+      sentenceQueue: [],
+      currentQueueIdx: 0,
+      isPlayingSequence: false,
+
+      init() {
+        const loadVoices = () => {
+          const allVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+          this.voices = allVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+          const select = document.getElementById("voiceSelect");
+          if (!select) return;
+          const prevVal = select.value;
+          select.innerHTML = '<option value="">自動選擇自然英語發音</option>';
+          this.voices.forEach(v => {
+            const opt = document.createElement("option");
+            opt.value = v.voiceURI;
+            opt.textContent = `${v.name} (${v.lang})`;
+            select.appendChild(opt);
+          });
+          if (prevVal) select.value = prevVal;
+        };
+        loadVoices();
+        if (window.speechSynthesis && window.speechSynthesis.onvoiceschanged !== undefined) {
+          window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+      },
+
+      stop() {
+        this.isPlayingSequence = false;
+        this.sentenceQueue = [];
+        this.currentQueueIdx = 0;
+        AppState.isReadingFullStory = false;
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel();
+        }
+        document.querySelectorAll(".story-sentence.active-reading").forEach(el => {
+          el.classList.remove("active-reading");
+        });
+        const toggleBtn = document.getElementById("toggleFullStoryReadBtn");
+        if (toggleBtn) {
+          toggleBtn.innerHTML = "🔊 全文朗讀";
+          toggleBtn.classList.remove("speaking");
+        }
+      },
+
+      speakText(text, onEndCallback = null) {
+        if (!window.speechSynthesis) {
+          showToast("⚠️ 您的瀏覽器不支援語音朗讀功能");
+          return;
+        }
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "en-US";
+        utter.rate = AppState.speechRate;
+        if (AppState.selectedVoiceURI) {
+          const chosen = this.voices.find(v => v.voiceURI === AppState.selectedVoiceURI);
+          if (chosen) utter.voice = chosen;
+        }
+        utter.onend = () => {
+          if (typeof onEndCallback === "function") onEndCallback();
+        };
+        utter.onerror = () => {
+          if (typeof onEndCallback === "function") onEndCallback();
+        };
+        window.speechSynthesis.speak(utter);
+      },
+
+      playStorySequence(sentenceElements) {
+        this.stop();
+        if (!sentenceElements || sentenceElements.length === 0) return;
+
+        this.sentenceQueue = Array.from(sentenceElements);
+        this.currentQueueIdx = 0;
+        this.isPlayingSequence = true;
+        AppState.isReadingFullStory = true;
+
+        const toggleBtn = document.getElementById("toggleFullStoryReadBtn");
+        if (toggleBtn) {
+          toggleBtn.innerHTML = "🔇 停止朗讀";
+          toggleBtn.classList.add("speaking");
+        }
+
+        const readNext = () => {
+          if (!this.isPlayingSequence || this.currentQueueIdx >= this.sentenceQueue.length) {
+            this.stop();
+            return;
+          }
+          document.querySelectorAll(".story-sentence.active-reading").forEach(el => {
+            el.classList.remove("active-reading");
+          });
+          const el = this.sentenceQueue[this.currentQueueIdx];
+          el.classList.add("active-reading");
+          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+          const textToRead = el.dataset.rawSentence || el.textContent;
+          this.speakText(textToRead, () => {
+            if (!this.isPlayingSequence) return;
+            this.currentQueueIdx++;
+            setTimeout(readNext, 220);
+          });
+        };
+
+        readNext();
+      }
+    };
+
     /**
      * ============================================================================
      * MODULE 4: API KEY & GEMINI AI SERVICE
@@ -1431,7 +1547,6 @@ accurate"></textarea>
       },
 
       getEffectiveKey() {
-        // 優先使用使用者輸入並儲存的金鑰；若無則保留空字串供支援自動注入的預覽環境使用
         return AppState.apiKey || "";
       },
 
@@ -1471,14 +1586,944 @@ accurate"></textarea>
         }
         return true;
       },
-// ... existing code ... -->
+
       async generateGroupContent(groupWords, cefrLevel = "A2") {
         const key = this.getEffectiveKey();
         const model = this.getEffectiveModel();
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
 
         const levelDescriptions = {
-// ... existing code ... -->
+          A1: "CEFR A1 (Beginner: very simple, short sentences, basic everyday vocabulary)",
+          A2: "CEFR A2 (Elementary: clear, natural daily-life sentences with obvious context clues)",
+          B1: "CEFR B1 (Intermediate: natural narrative sentences suitable for high school exams or TOEIC)",
+          B2: "CEFR B2 (Upper-Intermediate: rich, cohesive academic or journalistic narrative)"
+        };
+        const levelPrompt = levelDescriptions[cefrLevel] || levelDescriptions.A2;
+
+        const wordListText = groupWords
+          .map(w => `- ${w.word}${w.pos ? ` (${w.pos})` : ""}${w.zh ? `: ${w.zh}` : ""}`)
+          .join("\n");
+
+        const prompt = `You are an expert ESL/EFL curriculum designer helping students prepare for exams.
+Target CEFR Difficulty for surrounding text: ${levelPrompt}.
+
+Target Vocabulary/Phrases:
+${wordListText}
+
+Tasks:
+1. For EACH target word/phrase, provide:
+   - "word": exact target word/phrase
+   - "pos": part of speech (e.g., "v.", "n.", "adj.", "phr.")
+   - "zh": concise Traditional Chinese (繁體中文) meaning
+   - "illustrative": a clear illustrative sentence at ${cefrLevel} difficulty containing strong context clues so the learner can infer the meaning of the target word/phrase without a dictionary.
+   - "collocation": a super-short sentence (STRICTLY under 10 English words) showcasing a high-frequency collocation of the target word/phrase.
+2. Write a cohesive, engaging short story (140–200 English words) at ${cefrLevel} difficulty that naturally weaves ALL of the target words/phrases above into a unified plot. Do NOT just list definitions; tell a real story.
+3. Provide a natural Traditional Chinese (繁體中文) translation of the story ("storyZh") and a short Traditional Chinese title ("title").
+
+Return ONLY valid JSON with this exact schema (no markdown fences):
+{
+  "title": "故事繁體中文標題",
+  "story": "Full English story...",
+  "storyZh": "完整繁體中文故事翻譯...",
+  "words": [
+    {
+      "word": "...",
+      "pos": "...",
+      "zh": "...",
+      "illustrative": "...",
+      "collocation": "..."
+    }
+  ]
+}`;
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              responseMimeType: "application/json"
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `API 請求錯誤 (${response.status})`);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const cleaned = rawText.replace(/```json|```/gi, "").trim();
+        return JSON.parse(cleaned);
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 5: SPACED REPETITION SYSTEM (SRS 間隔重複記憶追蹤)
+     * ============================================================================
+     */
+    const SRSManager = {
+      STORAGE_KEY: "vocabsprint_srs_records_v1",
+
+      getAll() {
+        try {
+          return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || "{}");
+        } catch {
+          return {};
+        }
+      },
+
+      saveAll(records) {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(records));
+        this.updateDueBadge();
+      },
+
+      upsertWord(wordObj) {
+        if (!wordObj || !wordObj.word) return;
+        const records = this.getAll();
+        const key = wordObj.word.toLowerCase().trim();
+        if (!records[key]) {
+          records[key] = {
+            ...wordObj,
+            box: 0,
+            nextReview: Date.now(),
+            lastReviewed: null,
+            wrongCount: 0
+          };
+        } else {
+          records[key] = {
+            ...records[key],
+            pos: wordObj.pos || records[key].pos,
+            zh: wordObj.zh || records[key].zh,
+            illustrative: wordObj.illustrative || records[key].illustrative,
+            collocation: wordObj.collocation || records[key].collocation
+          };
+        }
+        this.saveAll(records);
+      },
+
+      recordAnswer(wordObj, isCorrect) {
+        const records = this.getAll();
+        const key = wordObj.word.toLowerCase().trim();
+        const existing = records[key] || {
+          ...wordObj,
+          box: 0,
+          nextReview: Date.now(),
+          wrongCount: 0
+        };
+
+        // 間隔天數：Box 0 (立即), Box 1 (1天), Box 2 (3天), Box 3 (7天), Box 4 (14天), Box 5 (30天)
+        const intervalsDays = [0, 1, 3, 7, 14, 30];
+        if (isCorrect) {
+          existing.box = Math.min(5, (existing.box || 0) + 1);
+        } else {
+          existing.box = 0;
+          existing.wrongCount = (existing.wrongCount || 0) + 1;
+        }
+        const days = intervalsDays[existing.box] || 0;
+        existing.nextReview = Date.now() + days * 24 * 60 * 60 * 1000;
+        existing.lastReviewed = Date.now();
+        records[key] = existing;
+        this.saveAll(records);
+      },
+
+      getDueWords() {
+        const records = this.getAll();
+        const now = Date.now();
+        return Object.values(records).filter(item => (item.nextReview || 0) <= now);
+      },
+
+      updateDueBadge() {
+        const dueCount = this.getDueWords().length;
+        const badge = document.getElementById("srsDueBadge");
+        if (badge) {
+          badge.textContent = `🧠 今日待複習：${dueCount} 字`;
+        }
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 6: DATE-BASED SESSION STORAGE & BACKUP MANAGER
+     * ============================================================================
+     */
+    const StorageManager = {
+      STORAGE_KEY: "vocabsprint_saved_sessions_v1",
+
+      getSessions() {
+        try {
+          return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || "[]");
+        } catch {
+          return [];
+        }
+      },
+
+      saveSession(customTitle) {
+        if (!AppState.groups || AppState.groups.length === 0) {
+          showToast("⚠️ 目前尚無可儲存的單字與故事內容！");
+          return;
+        }
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10);
+        const totalWords = AppState.groups.reduce((sum, g) => sum + g.words.length, 0);
+        const title = (customTitle || "").trim() || `${dateStr} 單字學習紀錄 (${totalWords}字)`;
+
+        const sessions = this.getSessions();
+        const newRecord = {
+          id: "sess_" + Date.now(),
+          date: dateStr,
+          timestamp: now.toLocaleString("zh-TW", { hour12: false }),
+          title,
+          totalWords,
+          groups: AppState.groups
+        };
+
+        sessions.unshift(newRecord);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
+        UIRenderer.renderHistoryList();
+        showToast(`✅ 已成功儲存「${title}」！`);
+      },
+
+      loadSession(id) {
+        const sessions = this.getSessions();
+        const target = sessions.find(s => s.id === id);
+        if (!target) return;
+        AppState.groups = target.groups;
+        AppState.activeGroupIndex = 0;
+        document.getElementById("saveTitleInput").value = target.title;
+        UIRenderer.renderStudyView();
+        UIRenderer.switchTab("studyTab");
+        showToast(`📖 已載入「${target.title}」`);
+      },
+
+      deleteSession(id) {
+        const sessions = this.getSessions().filter(s => s.id !== id);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
+        UIRenderer.renderHistoryList();
+        showToast("🗑️ 已刪除該筆存檔紀錄");
+      },
+
+      exportJSON() {
+        const payload = {
+          exportedAt: new Date().toISOString(),
+          sessions: this.getSessions(),
+          srs: SRSManager.getAll()
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `VocabSprint_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("📤 已匯出 JSON 學習備份檔！");
+      },
+
+      importJSON(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const parsed = JSON.parse(e.target.result);
+            if (Array.isArray(parsed.sessions)) {
+              const existing = this.getSessions();
+              const existingIds = new Set(existing.map(s => s.id));
+              const merged = [...existing];
+              parsed.sessions.forEach(s => {
+                if (!existingIds.has(s.id)) merged.push(s);
+              });
+              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(merged));
+            }
+            if (parsed.srs && typeof parsed.srs === "object") {
+              const currentSrs = SRSManager.getAll();
+              SRSManager.saveAll({ ...currentSrs, ...parsed.srs });
+            }
+            UIRenderer.renderHistoryList();
+            showToast("📥 備份檔匯入成功！");
+          } catch {
+            showToast("❌ 匯入失敗：檔案格式不正確");
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 7: BUILT-IN LIBRARY CONTROLLER
+     * ============================================================================
+     */
+    const LibraryController = {
+      openModal() {
+        const select = document.getElementById("libraryDeckSelect");
+        select.innerHTML = "";
+        BUILTIN_LIBRARIES.forEach(deck => {
+          const opt = document.createElement("option");
+          opt.value = deck.id;
+          opt.textContent = `${deck.name} (${deck.words.length} 字)`;
+          select.appendChild(opt);
+        });
+        this.renderDeck(AppState.librarySelectedDeckId || BUILTIN_LIBRARIES[0].id, true);
+        document.getElementById("libraryModal").classList.remove("hidden");
+      },
+
+      closeModal() {
+        document.getElementById("libraryModal").classList.add("hidden");
+      },
+
+      renderDeck(deckId, resetSelection = false) {
+        AppState.librarySelectedDeckId = deckId;
+        const deck = BUILTIN_LIBRARIES.find(d => d.id === deckId) || BUILTIN_LIBRARIES[0];
+        if (resetSelection) {
+          AppState.libraryCheckedWords = new Set(deck.words.slice(0, 10).map(w => w.word));
+        }
+
+        const meta = document.getElementById("libraryDeckMeta");
+        meta.innerHTML = `<strong>${deck.name}</strong><br><span style="color:var(--text-secondary);">${deck.description}</span>`;
+
+        const presetBtn = document.getElementById("loadPresetWithStoriesBtn");
+        if (deck.presetStories && deck.presetStories.length > 0) {
+          presetBtn.classList.remove("hidden");
+        } else {
+          presetBtn.classList.add("hidden");
+        }
+
+        const grid = document.getElementById("libraryWordsGrid");
+        grid.innerHTML = "";
+        deck.words.forEach(item => {
+          const chip = document.createElement("div");
+          const isSelected = AppState.libraryCheckedWords.has(item.word);
+          chip.className = `library-word-chip ${isSelected ? "selected" : ""}`;
+          chip.innerHTML = `<span>${isSelected ? "✓" : "+"}</span><strong>${item.word}</strong><span style="font-size:0.78rem; opacity:0.85;">${item.zh || ""}</span>`;
+          chip.addEventListener("click", () => {
+            if (AppState.libraryCheckedWords.has(item.word)) {
+              AppState.libraryCheckedWords.delete(item.word);
+            } else {
+              AppState.libraryCheckedWords.add(item.word);
+            }
+            this.renderDeck(deckId, false);
+          });
+          grid.appendChild(chip);
+        });
+      },
+
+      importCheckedToWorkspace() {
+        const deck = BUILTIN_LIBRARIES.find(d => d.id === AppState.librarySelectedDeckId);
+        if (!deck) return;
+        const chosen = deck.words.filter(w => AppState.libraryCheckedWords.has(w.word));
+        if (chosen.length === 0) {
+          showToast("⚠️ 請至少勾選 1 個單字！");
+          return;
+        }
+        const textarea = document.getElementById("customWordsInput");
+        const existingLines = textarea.value.trim() ? textarea.value.trim().split("\n") : [];
+        const newLines = chosen.map(w => `${w.word} | ${w.pos || ""} | ${w.zh || ""}`);
+        textarea.value = [...existingLines, ...newLines].join("\n");
+        UIRenderer.updateInputWordCount();
+        this.closeModal();
+        showToast(`📥 已匯入 ${chosen.length} 個單字至學習清單！`);
+      },
+
+      loadFullPresetWithStories() {
+        const deck = BUILTIN_LIBRARIES.find(d => d.id === AppState.librarySelectedDeckId);
+        if (!deck || !deck.presetStories || deck.presetStories.length === 0) return;
+
+        const size = deck.defaultGroupSize || 10;
+        const groups = [];
+        for (let i = 0; i < deck.words.length; i += size) {
+          const idx = groups.length;
+          const slice = deck.words.slice(i, i + size);
+          const presetStory = deck.presetStories[idx] || {};
+          slice.forEach(w => SRSManager.upsertWord(w));
+          groups.push({
+            groupIndex: idx,
+            title: presetStory.title || `第 ${idx + 1} 組`,
+            cefrLevel: "A2/B1",
+            words: slice,
+            story: presetStory.story || "",
+            storyZh: presetStory.storyZh || ""
+          });
+        }
+
+        AppState.groups = groups;
+        AppState.activeGroupIndex = 0;
+        document.getElementById("saveTitleInput").value = deck.name.slice(0, 24);
+        this.closeModal();
+        UIRenderer.renderStudyView();
+        UIRenderer.switchTab("studyTab");
+        showToast(`📖 已載入全套 ${deck.words.length} 字與 ${groups.length} 篇原創故事！`);
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 8: THREE-MODE QUIZ ENGINE (三合一互動測驗引擎)
+     * ============================================================================
+     */
+    const QuizEngine = {
+      start(scope, mode) {
+        let pool = [];
+        if (scope === "currentGroup") {
+          const activeGroup = AppState.groups[AppState.activeGroupIndex];
+          pool = activeGroup ? [...activeGroup.words] : [];
+        } else if (scope === "allCurrent") {
+          pool = AppState.groups.flatMap(g => g.words);
+        } else if (scope === "srsDue") {
+          pool = SRSManager.getDueWords();
+        }
+
+        // 過濾出有完整例句的題庫；若來自純單字，補上基本結構
+        pool = pool.filter(w => w && w.word);
+        if (pool.length < 2) {
+          showToast("⚠️ 測驗範圍至少需要 2 個單字，請先產生單字或選擇其他範圍！");
+          return;
+        }
+
+        const shuffled = [...pool].sort(() => Math.random() - 0.5);
+        AppState.activeQuiz = {
+          mode,
+          questions: shuffled,
+          allDistractors: pool,
+          currentIndex: 0,
+          score: 0,
+          wrongItems: [],
+          answered: false
+        };
+
+        const arena = document.getElementById("quizArena");
+        arena.classList.remove("hidden");
+        this.renderQuestion();
+      },
+
+      buildBlankSentence(sentence, targetWord) {
+        if (!sentence) return `Please choose the word meaning "${targetWord}".`;
+        const escaped = targetWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(`\\b${escaped}[a-z]*\\b`, "gi");
+        if (regex.test(sentence)) {
+          return sentence.replace(regex, "________");
+        }
+        return `${sentence} (Target: ________)`;
+      },
+
+      renderQuestion() {
+        const qState = AppState.activeQuiz;
+        const arena = document.getElementById("quizArena");
+        if (!qState || qState.currentIndex >= qState.questions.length) {
+          this.renderSummary();
+          return;
+        }
+
+        const current = qState.questions[qState.currentIndex];
+        qState.answered = false;
+
+        // 準備四選一干擾項
+        const others = qState.allDistractors
+          .filter(w => w.word.toLowerCase() !== current.word.toLowerCase())
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3);
+        const options = [current, ...others].sort(() => Math.random() - 0.5);
+
+        let promptHtml = "";
+        if (qState.mode === "contextCloze") {
+          const blanked = this.buildBlankSentence(current.illustrative, current.word);
+          promptHtml = `
+            <span class="badge" style="margin-bottom:0.5rem;">語境推斷克漏字</span>
+            <p style="font-size:1.15rem; font-weight:600; margin:0.5rem 0;">${blanked}</p>
+            <p style="font-size:0.9rem; color:var(--text-muted);">提示詞性：${current.pos || "—"}</p>
+          `;
+        } else if (qState.mode === "collocationMatch") {
+          const blankedColloc = this.buildBlankSentence(current.collocation, current.word);
+          promptHtml = `
+            <span class="badge badge-warn" style="margin-bottom:0.5rem;">高頻搭配詞挑戰</span>
+            <p style="font-size:1.15rem; font-weight:600; margin:0.5rem 0;">${blankedColloc}</p>
+            <p style="font-size:0.95rem; color:var(--text-secondary);">中文釋義提示：<strong>${current.zh || "請選出最適合的搭配單字"}</strong></p>
+          `;
+        } else {
+          promptHtml = `
+            <span class="badge badge-success" style="margin-bottom:0.5rem;">聽力發音辨識（可隨時調整上方語速）</span>
+            <div style="margin:0.75rem 0;">
+              <button id="quizListenReplayBtn" class="btn btn-primary">🔊 點擊聆聽單字與示範句</button>
+            </div>
+            <p style="font-size:0.88rem; color:var(--text-muted);">聽完發音後，請選出正確的英文單字與中文釋義：</p>
+          `;
+        }
+
+        arena.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+            <strong>第 ${qState.currentIndex + 1} / ${qState.questions.length} 題</strong>
+            <span class="badge">目前得分：${qState.score}</span>
+          </div>
+          <div style="background:var(--bg-surface-alt); padding:1rem; border-radius:var(--radius-md); margin-bottom:1rem;">
+            ${promptHtml}
+          </div>
+          <div id="quizOptionsBox">
+            ${options.map((opt, idx) => `
+              <button class="quiz-option" data-word="${opt.word}">
+                <span class="badge">${String.fromCharCode(65 + idx)}</span>
+                <span><strong>${opt.word}</strong> ${qState.mode === "listening" && opt.zh ? `<span style="color:var(--text-secondary); font-weight:400;">(${opt.zh})</span>` : ""}</span>
+              </button>
+            `).join("")}
+          </div>
+          <div id="quizFeedbackBox" class="hidden" style="margin-top:0.85rem; padding:0.85rem; border-radius:var(--radius-md);"></div>
+          <div style="margin-top:1rem; text-align:right;">
+            <button id="quizNextBtn" class="btn btn-primary hidden">下一題 ➔</button>
+          </div>
+        `;
+
+        if (qState.mode === "listening") {
+          const playAudio = () => {
+            SpeechEngine.speakText(`${current.word}. ${current.collocation || current.illustrative || ""}`);
+          };
+          document.getElementById("quizListenReplayBtn").addEventListener("click", playAudio);
+          setTimeout(playAudio, 250);
+        }
+
+        document.querySelectorAll("#quizOptionsBox .quiz-option").forEach(btn => {
+          btn.addEventListener("click", () => {
+            if (qState.answered) return;
+            qState.answered = true;
+            const chosenWord = btn.dataset.word;
+            const isCorrect = chosenWord.toLowerCase() === current.word.toLowerCase();
+
+            SRSManager.recordAnswer(current, isCorrect);
+
+            document.querySelectorAll("#quizOptionsBox .quiz-option").forEach(b => {
+              b.disabled = true;
+              if (b.dataset.word.toLowerCase() === current.word.toLowerCase()) {
+                b.classList.add("correct");
+              } else if (b === btn && !isCorrect) {
+                b.classList.add("wrong");
+              }
+            });
+
+            const fb = document.getElementById("quizFeedbackBox");
+            fb.classList.remove("hidden");
+            if (isCorrect) {
+              qState.score++;
+              fb.style.background = "var(--status-success-bg)";
+              fb.style.color = "var(--status-success)";
+              fb.innerHTML = `✅ <strong>答對了！</strong> ${current.word} (${current.pos || ""})：${current.zh || ""}`;
+            } else {
+              qState.wrongItems.push(current);
+              fb.style.background = "var(--status-error-bg)";
+              fb.style.color = "var(--status-error)";
+              fb.innerHTML = `❌ <strong>答錯了！</strong> 正確答案是 <strong>${current.word}</strong>（${current.zh || ""}）。<br><small>原句：${current.illustrative || current.collocation || ""}</small>`;
+            }
+
+            SpeechEngine.speakText(current.word);
+            document.getElementById("quizNextBtn").classList.remove("hidden");
+          });
+        });
+
+        document.getElementById("quizNextBtn").addEventListener("click", () => {
+          qState.currentIndex++;
+          this.renderQuestion();
+        });
+      },
+
+      renderSummary() {
+        const qState = AppState.activeQuiz;
+        const arena = document.getElementById("quizArena");
+        const accuracy = Math.round((qState.score / qState.questions.length) * 100);
+
+        arena.innerHTML = `
+          <div style="text-align:center; padding:1rem 0;">
+            <div style="font-size:2.5rem; margin-bottom:0.5rem;">${accuracy >= 80 ? "🏆" : "💪"}</div>
+            <h3 style="font-size:1.35rem; margin-bottom:0.35rem;">測驗完成！正確率 ${accuracy}%</h3>
+            <p style="color:var(--text-secondary); margin-bottom:1.25rem;">
+              共 ${qState.questions.length} 題，答對 ${qState.score} 題。答題紀錄已自動更新至 SRS 間隔複習排程！
+            </p>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.75rem;">
+              ${qState.wrongItems.length > 0 ? `<button id="retryWrongQuizBtn" class="btn btn-accent">🔁 只針對錯題重練 (${qState.wrongItems.length} 題)</button>` : ""}
+              <button id="restartSameQuizBtn" class="btn btn-primary">🔄 再測驗一次</button>
+            </div>
+          </div>
+        `;
+
+        if (qState.wrongItems.length > 0) {
+          document.getElementById("retryWrongQuizBtn").addEventListener("click", () => {
+            AppState.activeQuiz = {
+              mode: qState.mode,
+              questions: [...qState.wrongItems].sort(() => Math.random() - 0.5),
+              allDistractors: qState.allDistractors,
+              currentIndex: 0,
+              score: 0,
+              wrongItems: [],
+              answered: false
+            };
+            this.renderQuestion();
+          });
+        }
+
+        document.getElementById("restartSameQuizBtn").addEventListener("click", () => {
+          this.start(
+            document.getElementById("quizScopeSelect").value,
+            document.getElementById("quizTypeSelect").value
+          );
+        });
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 9: UI RENDERER & HELPERS
+     * ============================================================================
+     */
+    function showToast(message) {
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.25s ease";
+        setTimeout(() => toast.remove(), 260);
+      }, 3000);
+    }
+
+    const UIRenderer = {
+      switchTab(tabId) {
+        SpeechEngine.stop();
+        document.querySelectorAll(".nav-tab").forEach(tab => {
+          tab.classList.toggle("active", tab.dataset.tab === tabId);
+        });
+        document.querySelectorAll(".tab-panel").forEach(panel => {
+          panel.classList.toggle("active", panel.id === tabId);
+        });
+      },
+
+      updateInputWordCount() {
+        const raw = document.getElementById("customWordsInput").value.trim();
+        const count = raw ? raw.split("\n").filter(line => line.trim()).length : 0;
+        document.getElementById("selectedWordsCountBadge").textContent = `目前清單：${count} 字`;
+      },
+
+      highlightTargetWords(text, wordsList) {
+        if (!text) return "";
+        let result = text;
+        const sortedWords = [...wordsList]
+          .map(w => w.word)
+          .filter(Boolean)
+          .sort((a, b) => b.length - a.length);
+
+        sortedWords.forEach(word => {
+          const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const regex = new RegExp(`\\b(${escaped}[a-z]*)\\b`, "gi");
+          result = result.replace(regex, '<strong class="target-word">$1</strong>');
+        });
+        return result;
+      },
+
+      renderStudyView() {
+        const pillsContainer = document.getElementById("groupPillsContainer");
+        const contentContainer = document.getElementById("studyContentContainer");
+
+        if (!AppState.groups || AppState.groups.length === 0) {
+          pillsContainer.innerHTML = "";
+          contentContainer.innerHTML = `
+            <div class="card" style="text-align:center; padding:2.5rem 1rem;">
+              <div style="font-size:2.5rem; margin-bottom:0.5rem;">📖</div>
+              <h3 style="margin-bottom:0.4rem;">尚未載入或產生學習內容</h3>
+              <p style="color:var(--text-secondary); margin-bottom:1.15rem;">
+                請先到「<strong>1. 建立學習任務</strong>」輸入自訂單字或從「內建單字庫」匯入後產生例句與故事。
+              </p>
+              <button class="btn btn-primary" onclick="UIRenderer.switchTab('workspaceTab')">前往建立學習任務</button>
+            </div>
+          `;
+          return;
+        }
+
+        pillsContainer.innerHTML = AppState.groups.map((g, idx) => `
+          <button class="group-pill ${idx === AppState.activeGroupIndex ? "active" : ""}" data-group-idx="${idx}">
+            第 ${idx + 1} 組（${g.words.length} 字）
+          </button>
+        `).join("");
+
+        pillsContainer.querySelectorAll(".group-pill").forEach(btn => {
+          btn.addEventListener("click", () => {
+            SpeechEngine.stop();
+            AppState.activeGroupIndex = Number(btn.dataset.groupIdx);
+            this.renderStudyView();
+          });
+        });
+
+        const group = AppState.groups[AppState.activeGroupIndex];
+        const rawSentences = (group.story || "")
+          .match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [];
+
+        const storySentencesHtml = rawSentences.map(s => {
+          const trimmed = s.trim();
+          if (!trimmed) return "";
+          const highlighted = this.highlightTargetWords(trimmed, group.words);
+          return `<span class="story-sentence" data-raw-sentence="${trimmed.replace(/"/g, "&quot;")}">${highlighted} </span>`;
+        }).join("");
+
+        const cardsHtml = group.words.map(w => `
+          <div class="vocab-card">
+            <div>
+              <div class="vocab-header">
+                <div>
+                  <span class="vocab-word">${w.word}</span>
+                  <span class="vocab-pos">${w.pos || ""}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <span style="font-weight:700; color:var(--text-secondary);">${w.zh || ""}</span>
+                  <button class="speak-btn" data-speak="${w.word.replace(/"/g, "&quot;")}" title="單字發音">🔊</button>
+                </div>
+              </div>
+
+              <div class="sentence-block" style="margin-top:0.75rem;">
+                <div>
+                  <span class="sentence-label label-illus">語境示範句</span>
+                  <p style="font-size:0.96rem;">${this.highlightTargetWords(w.illustrative || "", [w])}</p>
+                </div>
+                <button class="speak-btn" data-speak="${(w.illustrative || "").replace(/"/g, "&quot;")}" title="朗讀示範句">🔊</button>
+              </div>
+
+              <div class="sentence-block" style="margin-top:0.55rem;">
+                <div>
+                  <span class="sentence-label label-colloc">高頻搭配詞短句</span>
+                  <p style="font-size:0.96rem;">${this.highlightTargetWords(w.collocation || "", [w])}</p>
+                </div>
+                <button class="speak-btn" data-speak="${(w.collocation || "").replace(/"/g, "&quot;")}" title="朗讀搭配短句">🔊</button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+
+        contentContainer.innerHTML = `
+          <div class="story-box">
+            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.65rem;">
+              <div>
+                <span class="badge">難度：${group.cefrLevel || "A2"}</span>
+                <h3 style="font-size:1.2rem; margin-top:0.25rem;">📘 ${group.title || `第 ${AppState.activeGroupIndex + 1} 組情境故事`}</h3>
+              </div>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button id="toggleFullStoryReadBtn" class="speak-btn">🔊 全文朗讀</button>
+                <button id="toggleStoryZhBtn" class="btn btn-secondary btn-sm">${AppState.showStoryZh ? "隱藏翻譯" : "顯示翻譯"}</button>
+              </div>
+            </div>
+
+            <div id="storySentencesContainer" class="story-text">${storySentencesHtml}</div>
+
+            <div id="storyZhBox" class="${AppState.showStoryZh ? "" : "hidden"}" style="margin-top:1rem; padding-top:0.85rem; border-top:1px dashed var(--border-color); color:var(--text-secondary); font-size:0.96rem;">
+              <strong>中文翻譯：</strong>${group.storyZh || "（無中文翻譯）"}
+            </div>
+          </div>
+
+          <div class="vocab-list">${cardsHtml}</div>
+        `;
+
+        // 綁定故事逐句點擊朗讀
+        contentContainer.querySelectorAll(".story-sentence").forEach(span => {
+          span.addEventListener("click", () => {
+            SpeechEngine.stop();
+            span.classList.add("active-reading");
+            SpeechEngine.speakText(span.dataset.rawSentence, () => {
+              span.classList.remove("active-reading");
+            });
+          });
+        });
+
+        // 全文朗讀 / 停止朗讀 Toggle
+        document.getElementById("toggleFullStoryReadBtn").addEventListener("click", () => {
+          if (AppState.isReadingFullStory) {
+            SpeechEngine.stop();
+          } else {
+            const sentences = contentContainer.querySelectorAll(".story-sentence");
+            SpeechEngine.playStorySequence(sentences);
+          }
+        });
+
+        // 顯示翻譯 / 隱藏翻譯 Toggle
+        document.getElementById("toggleStoryZhBtn").addEventListener("click", (e) => {
+          AppState.showStoryZh = !AppState.showStoryZh;
+          document.getElementById("storyZhBox").classList.toggle("hidden", !AppState.showStoryZh);
+          e.currentTarget.textContent = AppState.showStoryZh ? "隱藏翻譯" : "顯示翻譯";
+        });
+
+        // 綁定各單字與例句發音按鈕
+        contentContainer.querySelectorAll(".speak-btn[data-speak]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            SpeechEngine.stop();
+            SpeechEngine.speakText(btn.dataset.speak);
+          });
+        });
+      },
+
+      renderHistoryList() {
+        const container = document.getElementById("historyListContainer");
+        const sessions = StorageManager.getSessions();
+        if (sessions.length === 0) {
+          container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:1.5rem 0;">目前尚無存檔紀錄。在「2. 故事與例句」頁面點擊「💾 儲存本次學習紀錄」即可按日期保存。</p>`;
+          return;
+        }
+
+        container.innerHTML = sessions.map(s => `
+          <div class="sentence-block" style="margin-bottom:0.75rem; align-items:center; flex-wrap:wrap;">
+            <div>
+              <span class="badge">📅 ${s.date}</span>
+              <strong style="margin-left:0.4rem; font-size:1.02rem;">${s.title}</strong>
+              <div style="font-size:0.84rem; color:var(--text-muted); margin-top:0.2rem;">
+                儲存時間：${s.timestamp} ｜ 共 ${s.groups.length} 組（${s.totalWords} 字）
+              </div>
+            </div>
+            <div style="display:flex; gap:0.45rem;">
+              <button class="btn btn-primary btn-sm" onclick="StorageManager.loadSession('${s.id}')">📖 載入複習</button>
+              <button class="btn btn-danger btn-sm" onclick="StorageManager.deleteSession('${s.id}')">🗑️</button>
+            </div>
+          </div>
+        `).join("");
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 10: WORD PARSING & AI GENERATION WORKFLOW
+     * ============================================================================
+     */
+    function parseUserWordList(rawText) {
+      const lines = rawText.split("\n").map(l => l.trim()).filter(Boolean);
+      const parsed = [];
+      const seen = new Set();
+
+      lines.forEach(line => {
+        const parts = line.split("|").map(p => p.trim());
+        const word = parts[0];
+        if (!word) return;
+        const lower = word.toLowerCase();
+        if (seen.has(lower)) return;
+        seen.add(lower);
+
+        parsed.push({
+          word,
+          pos: parts[1] || "",
+          zh: parts[2] || ""
+        });
+      });
+      return parsed;
+    }
+
+    async function handleGenerateLearningContent() {
+      const rawText = document.getElementById("customWordsInput").value;
+      const wordItems = parseUserWordList(rawText);
+
+      if (wordItems.length === 0) {
+        showToast("⚠️ 請先輸入至少 1 個單字或片語，或從內建單字庫匯入！");
+        return;
+      }
+
+      const cefrLevel = document.getElementById("cefrLevelSelect").value;
+      const orderMode = document.getElementById("orderMode").value;
+      const groupSize = Math.max(1, parseInt(document.getElementById("groupSizeInput").value, 10) || 10);
+
+      const orderedList = orderMode === "random"
+        ? [...wordItems].sort(() => Math.random() - 0.5)
+        : [...wordItems];
+
+      const chunks = [];
+      for (let i = 0; i < orderedList.length; i += groupSize) {
+        chunks.push(orderedList.slice(i, i + groupSize));
+      }
+
+      const btn = document.getElementById("generateGroupsBtn");
+      btn.disabled = true;
+
+      try {
+        const generatedGroups = [];
+        for (let i = 0; i < chunks.length; i++) {
+          btn.innerHTML = `<span class="loader-spinner"></span> 正在生成第 ${i + 1} / ${chunks.length} 組故事與例句...`;
+          const aiResult = await AIService.generateGroupContent(chunks[i], cefrLevel);
+          const groupWords = (aiResult.words && aiResult.words.length > 0) ? aiResult.words : chunks[i];
+          groupWords.forEach(w => SRSManager.upsertWord(w));
+
+          generatedGroups.push({
+            groupIndex: i,
+            title: aiResult.title || `第 ${i + 1} 組情境故事`,
+            cefrLevel,
+            words: groupWords,
+            story: aiResult.story || "",
+            storyZh: aiResult.storyZh || ""
+          });
+        }
+
+        AppState.groups = generatedGroups;
+        AppState.activeGroupIndex = 0;
+        document.getElementById("saveTitleInput").value = `${new Date().toISOString().slice(0, 10)} 衝刺學習 (${orderedList.length}字)`;
+        UIRenderer.renderStudyView();
+        UIRenderer.switchTab("studyTab");
+        showToast(`🎉 成功生成 ${generatedGroups.length} 組例句與連貫故事！`);
+      } catch (err) {
+        console.error(err);
+        showToast(`❌ 生成失敗：${err.message}`);
+        if (!AppState.apiKey) {
+          document.getElementById("openApiModalBtn").click();
+        }
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "✨ 產生雙軌例句與連貫故事";
+      }
+    }
+
+    /**
+     * ============================================================================
+     * MODULE 11: INITIALIZATION & EVENT BINDINGS
+     * ============================================================================
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+      SpeechEngine.init();
+      AIService.loadKey();
+      SRSManager.updateDueBadge();
+
+      // 1. 分頁切換
+      document.querySelectorAll(".nav-tab").forEach(tab => {
+        tab.addEventListener("click", () => UIRenderer.switchTab(tab.dataset.tab));
+      });
+
+      // 2. 字體縮放控制
+      document.querySelectorAll("[data-scale]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("[data-scale]").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          document.documentElement.style.setProperty("--font-scale", btn.dataset.scale);
+        });
+      });
+
+      // 3. 色彩主題切換
+      document.querySelectorAll("[data-theme-btn]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("[data-theme-btn]").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          document.documentElement.setAttribute("data-theme", btn.dataset.themeBtn);
+        });
+      });
+
+      // 4. 語音朗讀速率與聲線控制
+      const rateSlider = document.getElementById("rateSlider");
+      const rateLabel = document.getElementById("rateValueLabel");
+      const syncRate = (val) => {
+        const rate = parseFloat(val) || 1.0;
+        AppState.speechRate = rate;
+        rateSlider.value = rate;
+        rateLabel.textContent = `${rate.toFixed(2)}x`;
+        document.querySelectorAll(".speed-preset").forEach(p => {
+          p.classList.toggle("active", Math.abs(parseFloat(p.dataset.rate) - rate) < 0.01);
+        });
+      };
+
+      document.querySelectorAll(".speed-preset").forEach(btn => {
+        btn.addEventListener("click", () => syncRate(btn.dataset.rate));
+      });
+      rateSlider.addEventListener("input", () => syncRate(rateSlider.value));
+      document.getElementById("voiceSelect").addEventListener("change", (e) => {
+        AppState.selectedVoiceURI = e.target.value;
+      });
+      document.getElementById("globalStopSpeechBtn").addEventListener("click", () => SpeechEngine.stop());
+
       // 5. API Key 與模型設定 Modal 控制與連線測試
       const apiModal = document.getElementById("apiKeyModal");
       const apiInput = document.getElementById("apiKeyInput");
