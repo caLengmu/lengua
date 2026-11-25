@@ -1153,9 +1153,12 @@ accurate"></textarea>
 
       <div class="step-box">
         <strong>步驟 1：前往 Google AI Studio 官方網站</strong>
-        <p style="font-size:0.9rem; margin-top:0.25rem;">
-          點擊開啟 <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:var(--brand-primary); font-weight:700; text-decoration:underline;">https://aistudio.google.com/app/apikey</a>，並使用您的 Google (Gmail) 帳號登入。
+        <p style="font-size:0.9rem; margin-top:0.25rem; margin-bottom:0.6rem;">
+          點擊下方按鈕開啟 Google 官方金鑰頁面，並使用您的 Google (Gmail) 帳號登入：
         </p>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="text-decoration:none; max-width:100%; word-break:break-word;">
+          🌐 前往 Google AI Studio 取得免費金鑰 ↗
+        </a>
       </div>
 
       <div class="step-box">
@@ -1183,10 +1186,26 @@ accurate"></textarea>
         </p>
       </div>
 
+      <div class="form-group" style="margin-top:1rem; padding-top:0.85rem; border-top:1px dashed var(--border-color);">
+        <label for="modelPresetSelect">選擇或自訂 Gemini AI 模型（預設為最新輕量高速版）：</label>
+        <div class="form-grid form-grid-2" style="gap:0.5rem;">
+          <select id="modelPresetSelect" class="form-control">
+            <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite（預設推薦）</option>
+            <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+            <option value="custom">✏️ 自訂其他模型名稱...</option>
+          </select>
+          <input type="text" id="modelNameInput" class="form-control" value="gemini-3.5-flash-lite" placeholder="輸入模型代碼，例如 gemini-3.5-flash-lite" autocomplete="off" />
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.35rem;">
+          💡 未來若 Google 推出新版模型或舊模型停用，可直接在此修改模型名稱並儲存，無需修改程式碼。
+        </p>
+      </div>
+
       <div id="apiTestResultBox" class="hidden" style="margin-top:0.85rem; padding:0.75rem; border-radius:var(--radius-md); font-size:0.92rem; font-weight:600;"></div>
 
       <div style="display:flex; flex-wrap:wrap; gap:0.65rem; margin-top:1.15rem;">
-        <button id="saveAndTestApiKeyBtn" class="btn btn-primary" style="flex:1;">💾 儲存並測試連線</button>
+        <button id="saveAndTestApiKeyBtn" class="btn btn-primary" style="flex:1;">💾 儲存設定並測試連線</button>
         <button id="removeApiKeyBtn" class="btn btn-danger">🗑️ 清除已存金鑰</button>
       </div>
     </div>
@@ -1375,91 +1394,49 @@ accurate"></textarea>
       speechRate: 1.0,
       selectedVoiceURI: "",
       apiKey: "",
+      modelName: "gemini-3.5-flash-lite",
       librarySelectedDeckId: BUILTIN_LIBRARIES[0].id,
       libraryCheckedWords: new Set(),
-      quiz: {
-        questions: [],
-        currentIndex: 0,
-        score: 0,
-        wrongItems: [],
-        mode: "contextCloze"
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 3: UTILITIES & SAFE HTML HELPERS
-     * ============================================================================
-     */
-    function showToast(message, duration = 3200) {
-      const container = document.getElementById("toastContainer");
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.textContent = message;
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(10px)";
-        toast.style.transition = "all 0.25s ease";
-        setTimeout(() => toast.remove(), 260);
-      }, duration);
-    }
-
-    function escapeHTML(str) {
-      if (!str) return "";
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-    }
-
-    function highlightTargetWords(text, wordList) {
-      if (!text) return "";
-      let safeText = escapeHTML(text);
-      const sortedWords = [...wordList]
-        .map(w => (typeof w === "string" ? w : w.word).trim())
-        .filter(Boolean)
-        .sort((a, b) => b.length - a.length);
-
-      sortedWords.forEach(word => {
-        const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(`\\b(${escapedWord}(?:s|es|ed|d|ing|ly)?)\\b`, "gi");
-        safeText = safeText.replace(regex, '<strong class="target-word">$1</strong>');
-      });
-      return safeText;
-    }
-
+// ... existing code ... -->
     /**
      * ============================================================================
      * MODULE 4: API KEY & GEMINI AI SERVICE
-     * 支援環境內建空字串注入 或 使用者自行在瀏覽器儲存的 Gemini API Key
+     * 支援環境內建空字串注入 或 使用者自行在瀏覽器儲存的 Gemini API Key 與模型名稱
      * ============================================================================
      */
     const AIService = {
       STORAGE_KEY: "vocabsprint_gemini_api_key_v1",
-      model: "gemini-2.5-flash",
+      MODEL_STORAGE_KEY: "vocabsprint_gemini_model_v1",
+      DEFAULT_MODEL: "gemini-3.5-flash-lite",
 
       loadKey() {
         const saved = localStorage.getItem(this.STORAGE_KEY) || "";
         AppState.apiKey = saved.trim();
+        const savedModel = localStorage.getItem(this.MODEL_STORAGE_KEY) || this.DEFAULT_MODEL;
+        AppState.modelName = savedModel.trim() || this.DEFAULT_MODEL;
         this.updateStatusUI();
       },
 
-      saveKey(newKey) {
+      saveSettings(newKey, newModel) {
         AppState.apiKey = newKey.trim();
         if (AppState.apiKey) {
           localStorage.setItem(this.STORAGE_KEY, AppState.apiKey);
         } else {
           localStorage.removeItem(this.STORAGE_KEY);
         }
+
+        AppState.modelName = (newModel || "").trim() || this.DEFAULT_MODEL;
+        localStorage.setItem(this.MODEL_STORAGE_KEY, AppState.modelName);
         this.updateStatusUI();
       },
 
       getEffectiveKey() {
         // 優先使用使用者輸入並儲存的金鑰；若無則保留空字串供支援自動注入的預覽環境使用
         return AppState.apiKey || "";
+      },
+
+      getEffectiveModel() {
+        return AppState.modelName || this.DEFAULT_MODEL;
       },
 
       updateStatusUI() {
@@ -1470,16 +1447,17 @@ accurate"></textarea>
         if (AppState.apiKey) {
           btn.classList.remove("missing");
           btn.classList.add("configured");
-          text.textContent = "API 已設定";
+          text.textContent = `API 已設定 (${this.getEffectiveModel()})`;
         } else {
           btn.classList.remove("configured");
           btn.classList.add("missing");
-          text.textContent = "設定 API Key";
+          text.textContent = "設定 API / 模型";
         }
       },
 
-      async testConnection(keyToTest) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${encodeURIComponent(keyToTest)}`;
+      async testConnection(keyToTest, modelToTest) {
+        const model = (modelToTest || this.getEffectiveModel()).trim();
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(keyToTest)}`;
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1493,1236 +1471,45 @@ accurate"></textarea>
         }
         return true;
       },
-
-      async fetchWithBackoff(url, payload, maxRetries = 2) {
-        let delay = 1000;
-        for (let attempt = 0; attempt <= maxRetries; attempt++) {
-          try {
-            const response = await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-            });
-            if (!response.ok) {
-              const errData = await response.json().catch(() => ({}));
-              throw new Error(errData?.error?.message || `HTTP ${response.status}`);
-            }
-            return await response.json();
-          } catch (err) {
-            if (attempt === maxRetries) throw err;
-            await new Promise(res => setTimeout(res, delay));
-            delay *= 2;
-          }
-        }
-      },
-
+// ... existing code ... -->
       async generateGroupContent(groupWords, cefrLevel = "A2") {
         const key = this.getEffectiveKey();
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${encodeURIComponent(key)}`;
+        const model = this.getEffectiveModel();
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
 
         const levelDescriptions = {
-          A1: "CEFR A1 (入門級)：除目標單字外，所有背景單字與文法必須極度簡單基礎（如國小/國一程度），短句結構，讓初學者零負擔秒懂。",
-          A2: "CEFR A2 (初級)：除目標單字外，使用清晰的生活化基礎詞彙（國中程度），句子長度適中且充滿明顯的上下文線索，讓學習者不查字典就能猜出目標單字意思。",
-          B1: "CEFR B1 (中級)：使用完整流暢的敘事句型與日常高中基礎字彙，貼近學測與多益基礎閱讀難度。",
-          B2: "CEFR B2 (中高級)：使用自然道地的進階句型與豐富語境，適合升學或檢定高分衝刺。"
-        };
-
-        const prompt = `你是一位專精於「考試詞彙衝刺與語境記憶法」的英語教學專家。
-請嚴格依照指定的語言難度【${levelDescriptions[cefrLevel] || levelDescriptions.A2}】，為以下單字或片語清單生成 JSON 學習教材：
-
-【任務要求】
-1. 針對清單中的每一個目標單字/片語（必須完整保留原本英文拼寫，不可更改）：
-   - pos：詞性縮寫（如 v., n., adj., adv., phr.）。
-   - zh：精準簡潔的繁體中文釋義（適合台灣學生考試記憶）。
-   - illustrative（語境示範句）：一句包含該目標單字的英文例句。句子難易度必須符合【${cefrLevel}】，且句中必須有強烈的因果、對比或生活場景線索（Context Clues），幫助學生推斷字義。
-   - collocation（高頻搭配詞短句）：一句 **10 個英文單字以內**的超短自然例句，展現該字在考試中最常考的高頻搭配詞（Collocation）。
-2. 撰寫一篇連貫短篇故事（story）：
-   - 必須將本組「所有」目標單字/片語自然融入同一個完整故事情節中（約 130–180 個英文字，可適度使用過去式或第三人稱等自然詞形變化）。
-   - 故事整體用字與文法難度同樣必須符合【${cefrLevel}】，情節生動有畫面感，絕不可只是條列單字。
-   - storyZh：提供流暢自然的繁體中文故事翻譯。
-
-目標單字清單：
-${JSON.stringify(groupWords.map(w => ({ word: w.word, pos: w.pos || "", zh: w.zh || "" })))}`;
-
-        const payload = {
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: "application/json",
-            responseSchema: {
-              type: "OBJECT",
-              properties: {
-                words: {
-                  type: "ARRAY",
-                  items: {
-                    type: "OBJECT",
-                    properties: {
-                      word: { type: "STRING" },
-                      pos: { type: "STRING" },
-                      zh: { type: "STRING" },
-                      illustrative: { type: "STRING" },
-                      collocation: { type: "STRING" }
-                    },
-                    required: ["word", "pos", "zh", "illustrative", "collocation"]
-                  }
-                },
-                story: { type: "STRING" },
-                storyZh: { type: "STRING" }
-              },
-              required: ["words", "story", "storyZh"]
-            }
-          }
-        };
-
-        const result = await this.fetchWithBackoff(url, payload);
-        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) throw new Error("AI 回傳內容為空");
-        return JSON.parse(text);
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 5: SPEECH CONTROLLER (Web Speech API 語音朗讀與 Toggle 狀態同步)
-     * ============================================================================
-     */
-    const SpeechController = {
-      synth: window.speechSynthesis,
-      voices: [],
-      isReadingStory: false,
-
-      init() {
-        const loadVoices = () => {
-          this.voices = this.synth.getVoices();
-          const select = document.getElementById("voiceSelect");
-          if (!select) return;
-
-          const enVoices = this.voices.filter(v => v.lang.toLowerCase().startsWith("en"));
-          select.innerHTML = '<option value="">自動選擇自然英語發音</option>';
-          enVoices.forEach(v => {
-            const opt = document.createElement("option");
-            opt.value = v.voiceURI;
-            opt.textContent = `${v.name} (${v.lang})`;
-            select.appendChild(opt);
-          });
-        };
-
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = loadVoices;
-        }
-      },
-
-      getPreferredVoice() {
-        if (AppState.selectedVoiceURI) {
-          const found = this.voices.find(v => v.voiceURI === AppState.selectedVoiceURI);
-          if (found) return found;
-        }
-        return (
-          this.voices.find(v => v.lang === "en-US" && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Samantha"))) ||
-          this.voices.find(v => v.lang.startsWith("en-US")) ||
-          this.voices.find(v => v.lang.startsWith("en")) ||
-          null
-        );
-      },
-
-      updateStoryToggleBtnUI(isReading) {
-        const btn = document.getElementById("toggleStoryReadBtn");
-        if (!btn) return;
-        if (isReading) {
-          btn.classList.add("speaking");
-          btn.innerHTML = "🔇 停止朗讀";
-        } else {
-          btn.classList.remove("speaking");
-          btn.innerHTML = "🔊 全文朗讀";
-        }
-      },
-
-      stop() {
-        this.isReadingStory = false;
-        if (this.synth.speaking || this.synth.pending) {
-          this.synth.cancel();
-        }
-        document.querySelectorAll(".speak-btn.speaking").forEach(btn => btn.classList.remove("speaking"));
-        document.querySelectorAll(".story-sentence.active-reading").forEach(el => el.classList.remove("active-reading"));
-        this.updateStoryToggleBtnUI(false);
-      },
-
-      speak(text, triggerBtn = null, onEndCallback = null) {
-        if (!("speechSynthesis" in window)) {
-          showToast("⚠️ 您的瀏覽器不支援語音朗讀功能");
-          return;
-        }
-
-        this.stop();
-
-        const cleanText = text.replace(/<[^>]*>/g, "").trim();
-        if (!cleanText) return;
-
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-        const voice = this.getPreferredVoice();
-        if (voice) utterance.voice = voice;
-        utterance.lang = voice ? voice.lang : "en-US";
-        utterance.rate = AppState.speechRate;
-        utterance.pitch = 1.0;
-
-        if (triggerBtn) triggerBtn.classList.add("speaking");
-
-        utterance.onend = () => {
-          if (triggerBtn) triggerBtn.classList.remove("speaking");
-          if (onEndCallback) onEndCallback();
-        };
-
-        utterance.onerror = () => {
-          if (triggerBtn) triggerBtn.classList.remove("speaking");
-        };
-
-        this.synth.speak(utterance);
-      },
-
-      toggleStoryReading(sentenceElements) {
-        if (this.isReadingStory) {
-          this.stop();
-          return;
-        }
-        if (!sentenceElements || sentenceElements.length === 0) return;
-
-        this.stop();
-        this.isReadingStory = true;
-        this.updateStoryToggleBtnUI(true);
-
-        let idx = 0;
-        const readNext = () => {
-          if (!this.isReadingStory || idx >= sentenceElements.length) {
-            this.stop();
-            return;
-          }
-
-          document.querySelectorAll(".story-sentence.active-reading").forEach(el => el.classList.remove("active-reading"));
-          const currentEl = sentenceElements[idx];
-          currentEl.classList.add("active-reading");
-
-          const utterance = new SpeechSynthesisUtterance(currentEl.textContent.trim());
-          const voice = this.getPreferredVoice();
-          if (voice) utterance.voice = voice;
-          utterance.lang = voice ? voice.lang : "en-US";
-          utterance.rate = AppState.speechRate;
-
-          utterance.onend = () => {
-            idx++;
-            readNext();
-          };
-          utterance.onerror = () => {
-            this.stop();
-          };
-
-          this.synth.speak(utterance);
-        };
-
-        readNext();
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 6: SPACED REPETITION (SRS) TRACKER & STORAGE MANAGER
-     * 追蹤每個單字的熟悉程度與下次建議複習日期，幫助短期考試高效記憶
-     * ============================================================================
-     */
-    const SRSManager = {
-      STORAGE_KEY: "vocabsprint_srs_records_v1",
-
-      getAll() {
-        try {
-          return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || "{}");
-        } catch (e) {
-          return {};
-        }
-      },
-
-      saveAll(data) {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-        this.updateBadges();
-      },
-
-      /**
-       * 記錄或更新單字作答結果：
-       * level 0: 新單字/需重練 -> 當天立即複習
-       * level 1: 學習中 -> 1 天後複習
-       * level 2: 熟悉 -> 3 天後複習
-       * level 3: 精通 -> 7 天後複習
-       */
-      recordReview(wordObj, isCorrect) {
-        const db = this.getAll();
-        const key = wordObj.word.trim().toLowerCase();
-        const existing = db[key] || {
-          word: wordObj.word,
-          pos: wordObj.pos || "",
-          zh: wordObj.zh || "",
-          illustrative: wordObj.illustrative || "",
-          collocation: wordObj.collocation || "",
-          level: 0,
-          nextReviewDate: new Date().toISOString().split("T")[0]
-        };
-
-        // 保留最新的雙軌例句資訊
-        if (wordObj.illustrative) existing.illustrative = wordObj.illustrative;
-        if (wordObj.collocation) existing.collocation = wordObj.collocation;
-        if (wordObj.zh) existing.zh = wordObj.zh;
-        if (wordObj.pos) existing.pos = wordObj.pos;
-
-        if (isCorrect) {
-          existing.level = Math.min(3, existing.level + 1);
-        } else {
-          existing.level = 0; // 答錯重置為需立即加強
-        }
-
-        const daysToAdd = [0, 1, 3, 7][existing.level];
-        const nextDate = new Date();
-        nextDate.setDate(nextDate.getDate() + daysToAdd);
-        existing.nextReviewDate = nextDate.toISOString().split("T")[0];
-
-        db[key] = existing;
-        this.saveAll(db);
-      },
-
-      getDueWords() {
-        const db = this.getAll();
-        const today = new Date().toISOString().split("T")[0];
-        return Object.values(db).filter(item => item.nextReviewDate <= today);
-      },
-
-      getWordLevelLabel(wordStr) {
-        const db = this.getAll();
-        const item = db[wordStr.trim().toLowerCase()];
-        if (!item) return { text: "新單字", cls: "" };
-        if (item.level === 0) return { text: "需加強 (今日複習)", cls: "badge-warn" };
-        if (item.level === 1) return { text: "學習中 (Lv.1)", cls: "" };
-        if (item.level === 2) return { text: "熟悉 (Lv.2)", cls: "badge-success" };
-        return { text: "精通 (Lv.3)", cls: "badge-success" };
-      },
-
-      updateBadges() {
-        const dueCount = this.getDueWords().length;
-        const badge1 = document.getElementById("srsDueBadge");
-        const badge2 = document.getElementById("quizSrsStatusBadge");
-        if (badge1) badge1.textContent = `🧠 今日待複習：${dueCount} 字`;
-        if (badge2) badge2.textContent = `今日到期複習：${dueCount} 字`;
-      }
-    };
-
-    const StorageManager = {
-      STORAGE_KEY: "vocabsprint_saved_sessions_v1",
-
-      getAllSessions() {
-        try {
-          return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || "[]");
-        } catch (e) {
-          return [];
-        }
-      },
-
-      saveSession(customTitle) {
-        if (!AppState.groups || AppState.groups.length === 0) {
-          showToast("⚠️ 目前沒有可儲存的學習內容，請先產生例句與故事！");
-          return;
-        }
-
-        const today = new Date().toISOString().split("T")[0];
-        const totalWords = AppState.groups.reduce((acc, g) => acc + g.words.length, 0);
-        const title = customTitle.trim() || `單字故事衝刺 (${AppState.groups.length}組 / 共${totalWords}字)`;
-
-        const newRecord = {
-          id: "rec_" + Date.now(),
-          date: today,
-          timestamp: new Date().toLocaleString("zh-TW", { hour12: false }),
-          title,
-          totalWords,
-          groups: AppState.groups
-        };
-
-        const sessions = this.getAllSessions();
-        sessions.unshift(newRecord);
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
-        showToast(`✅ 已成功存檔：「${today} - ${title}」`);
-        UIRenderer.renderHistoryList();
-      },
-
-      deleteSession(id) {
-        const sessions = this.getAllSessions().filter(s => s.id !== id);
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
-        showToast("🗑️ 已刪除該筆學習紀錄");
-        UIRenderer.renderHistoryList();
-      },
-
-      loadSession(id) {
-        const session = this.getAllSessions().find(s => s.id === id);
-        if (!session) return;
-
-        AppState.groups = session.groups;
-        AppState.activeGroupIndex = 0;
-
-        UIRenderer.renderStudyView();
-        UIRenderer.switchTab("studyTab");
-        showToast(`📖 已載入「${session.date} - ${session.title}」`);
-      },
-
-      exportJSON() {
-        const sessions = this.getAllSessions();
-        const srs = SRSManager.getAll();
-        if (sessions.length === 0 && Object.keys(srs).length === 0) {
-          showToast("⚠️ 目前沒有任何存檔或記憶紀錄可供匯出");
-          return;
-        }
-        const payload = { version: 2, sessions, srs };
-        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        const today = new Date().toISOString().split("T")[0];
-        a.href = url;
-        a.download = `VocabSprint_Backup_${today}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast("📤 已匯出完整備份檔 (含存檔與 SRS 紀錄)！");
-      },
-
-      importJSON(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const parsed = JSON.parse(e.target.result);
-            const importedSessions = Array.isArray(parsed) ? parsed : (parsed.sessions || []);
-            const currentSessions = this.getAllSessions();
-            const merged = [...importedSessions, ...currentSessions];
-            const unique = Array.from(new Map(merged.map(item => [item.id, item])).values());
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(unique));
-
-            if (parsed.srs && typeof parsed.srs === "object") {
-              const mergedSrs = { ...SRSManager.getAll(), ...parsed.srs };
-              SRSManager.saveAll(mergedSrs);
-            }
-
-            UIRenderer.renderHistoryList();
-            showToast(`📥 成功匯入 ${importedSessions.length} 筆學習紀錄！`);
-          } catch (err) {
-            showToast("❌ 匯入失敗：檔案格式不正確");
-          }
-        };
-        reader.readAsText(file);
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 7: WORD PARSER & GROUPING ENGINE
-     * ============================================================================
-     */
-    const WordProcessor = {
-      // 建立內建單字的快速查詢字典（保留原本優質雙軌例句）
-      getBuiltinLookupMap() {
-        const map = new Map();
-        BUILTIN_LIBRARIES.forEach(lib => {
-          lib.words.forEach(w => {
-            map.set(w.word.trim().toLowerCase(), w);
-          });
-        });
-        return map;
-      },
-
-      parseInputText(rawText) {
-        const lookup = this.getBuiltinLookupMap();
-        const lines = rawText
-          .split(/\r?\n/)
-          .map(line => line.trim())
-          .filter(Boolean);
-
-        return lines.map((line, index) => {
-          const parts = line.split(/\s*\|\s*|\t+/).map(p => p.trim());
-          const rawWord = parts[0] || "";
-          const builtinMatch = lookup.get(rawWord.toLowerCase());
-
-          return {
-            id: Date.now() + index,
-            word: rawWord,
-            pos: parts[1] || (builtinMatch ? builtinMatch.pos : ""),
-            zh: parts[2] || (builtinMatch ? builtinMatch.zh : ""),
-            illustrative: parts[3] || (builtinMatch ? builtinMatch.illustrative : ""),
-            collocation: parts[4] || (builtinMatch ? builtinMatch.collocation : "")
-          };
-        }).filter(item => item.word.length > 0);
-      },
-
-      chunkWords(words, orderMode = "sequential", groupSize = 10) {
-        const pool = [...words];
-        if (orderMode === "random") {
-          for (let i = pool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [pool[i], pool[j]] = [pool[j], pool[i]];
-          }
-        }
-
-        const size = Math.max(1, parseInt(groupSize, 10) || 10);
-        const chunks = [];
-        for (let i = 0; i < pool.length; i += size) {
-          chunks.push(pool.slice(i, i + size));
-        }
-        return chunks;
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 8: QUIZ ENGINE (三合一互動測驗 + 自動更新 SRS 記憶狀態)
-     * ============================================================================
-     */
-    const QuizEngine = {
-      start(scope = "currentGroup", mode = "contextCloze", customWordPool = null) {
-        let pool = [];
-        if (customWordPool && customWordPool.length > 0) {
-          pool = customWordPool;
-        } else if (scope === "srsDue") {
-          pool = SRSManager.getDueWords();
-          if (pool.length === 0) {
-            showToast("🎉 太棒了！目前沒有到期的 SRS 複習單字，可先學習新單字或測驗本組！");
-            return;
-          }
-        } else if (scope === "allCurrent") {
-          pool = AppState.groups.flatMap(g => g.words);
-        } else {
-          const activeGroup = AppState.groups[AppState.activeGroupIndex];
-          pool = activeGroup ? activeGroup.words : [];
-        }
-
-        if (pool.length < 2) {
-          showToast("⚠️ 測驗單字至少需要 2 個以上，請先產生學習組別或選擇較大範圍！");
-          return;
-        }
-
-        const shuffled = [...pool].sort(() => Math.random() - 0.5);
-        const builtinPool = BUILTIN_LIBRARIES[0].words;
-        const distractorSource = pool.length >= 4 ? pool : [...pool, ...builtinPool];
-
-        const questions = shuffled.map(target => {
-          const distractors = distractorSource
-            .filter(w => w.word.toLowerCase() !== target.word.toLowerCase())
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-
-          const options = [target, ...distractors].sort(() => Math.random() - 0.5);
-
-          const escaped = target.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          const regex = new RegExp(`\\b${escaped}(?:s|es|ed|d|ing|ly)?\\b`, "gi");
-          const maskedIllustrative = (target.illustrative || "").replace(regex, "________");
-          const maskedCollocation = (target.collocation || "").replace(regex, "________");
-
-          return {
-            target,
-            options,
-            maskedIllustrative: maskedIllustrative.includes("____") ? maskedIllustrative : `(${target.zh}) ________`,
-            maskedCollocation: maskedCollocation.includes("____") ? maskedCollocation : `(${target.zh}) ________`
-          };
-        });
-
-        AppState.quiz = {
-          questions,
-          currentIndex: 0,
-          score: 0,
-          wrongItems: [],
-          mode
-        };
-
-        const arena = document.getElementById("quizArena");
-        arena.classList.remove("hidden");
-        this.renderQuestion();
-      },
-
-      renderQuestion() {
-        const arena = document.getElementById("quizArena");
-        const { questions, currentIndex, mode } = AppState.quiz;
-
-        if (currentIndex >= questions.length) {
-          this.renderSummary();
-          return;
-        }
-
-        const q = questions[currentIndex];
-        const progressText = `第 ${currentIndex + 1} / ${questions.length} 題`;
-
-        let promptHTML = "";
-        if (mode === "contextCloze") {
-          promptHTML = `
-            <div style="font-size:0.88rem; color:var(--brand-primary); font-weight:700; margin-bottom:0.4rem;">
-              【語境推斷克漏字】請根據上下文線索選出最適合填入空格的單字：
-            </div>
-            <div style="font-size:1.18rem; font-weight:600; background:var(--bg-surface-alt); padding:1rem; border-radius:var(--radius-md); margin-bottom:0.5rem;">
-              ${escapeHTML(q.maskedIllustrative)}
-            </div>
-            <div style="font-size:0.92rem; color:var(--text-secondary);">
-              💡 中文提示：${escapeHTML(q.target.zh)} (${escapeHTML(q.target.pos)})
-            </div>
-          `;
-        } else if (mode === "collocationMatch") {
-          promptHTML = `
-            <div style="font-size:0.88rem; color:var(--brand-accent); font-weight:700; margin-bottom:0.4rem;">
-              【高頻搭配詞與拼寫挑戰】選出或拼出能與短句自然搭配的單字：
-            </div>
-            <div style="font-size:1.2rem; font-weight:700; background:var(--bg-surface-alt); padding:1rem; border-radius:var(--radius-md); margin-bottom:0.75rem;">
-              ${escapeHTML(q.maskedCollocation)}
-            </div>
-            <div style="font-size:0.95rem; margin-bottom:0.85rem;">
-              中文釋義：<strong>${escapeHTML(q.target.zh)}</strong> <span style="color:var(--text-muted);">(${escapeHTML(q.target.pos)})</span>
-            </div>
-            <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-              <input type="text" id="spellingInput" class="form-control" placeholder="拼寫挑戰：直接輸入英文單字..." autocomplete="off" />
-              <button id="submitSpellingBtn" class="btn btn-accent">送出拼寫</button>
-            </div>
-            <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.4rem;">或從下方四個選項中點選：</div>
-          `;
-        } else if (mode === "listening") {
-          promptHTML = `
-            <div style="font-size:0.88rem; color:var(--brand-primary); font-weight:700; margin-bottom:0.5rem;">
-              【聽力辨識測驗】點擊播放語音，選出你聽到的單字與釋義：
-            </div>
-            <div style="display:flex; flex-wrap:wrap; gap:0.65rem; background:var(--bg-surface-alt); padding:1rem; border-radius:var(--radius-md); margin-bottom:0.75rem;">
-              <button id="playQuizWordBtn" class="btn btn-primary">🔊 聽單字發音</button>
-              <button id="playQuizCollocBtn" class="btn btn-secondary">🔊 聽搭配詞短句</button>
-            </div>
-          `;
-        }
-
-        const optionsHTML = q.options.map((opt, idx) => {
-          const label = mode === "listening"
-            ? `${escapeHTML(opt.word)} — ${escapeHTML(opt.zh)}`
-            : `${escapeHTML(opt.word)} (${escapeHTML(opt.pos)})`;
-          return `
-            <button class="quiz-option" data-word="${escapeHTML(opt.word)}">
-              <span style="display:inline-flex; align-items:center; justify-content:center; width:1.75rem; height:1.75rem; border-radius:50%; background:var(--bg-surface-alt); font-size:0.85rem;">
-                ${String.fromCharCode(65 + idx)}
-              </span>
-              <span>${label}</span>
-            </button>
-          `;
-        }).join("");
-
-        arena.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
-            <span class="badge">${progressText}</span>
-            <span style="font-weight:700; color:var(--brand-primary);">目前得分：${AppState.quiz.score}</span>
-          </div>
-          ${promptHTML}
-          <div id="quizOptionsBox" style="margin-top:0.75rem;">
-            ${optionsHTML}
-          </div>
-          <div id="quizFeedbackBox" class="hidden" style="margin-top:1rem; padding:1rem; border-radius:var(--radius-md); background:var(--bg-surface-alt);"></div>
-        `;
-
-        if (mode === "listening") {
-          setTimeout(() => SpeechController.speak(q.target.word), 200);
-          document.getElementById("playQuizWordBtn").addEventListener("click", (e) => {
-            SpeechController.speak(q.target.word, e.currentTarget);
-          });
-          document.getElementById("playQuizCollocBtn").addEventListener("click", (e) => {
-            SpeechController.speak(q.target.collocation, e.currentTarget);
-          });
-        }
-
-        const spellingBtn = document.getElementById("submitSpellingBtn");
-        const spellingInput = document.getElementById("spellingInput");
-        if (spellingBtn && spellingInput) {
-          const checkSpelling = () => {
-            const val = spellingInput.value.trim();
-            if (!val) return;
-            this.handleAnswer(val);
-          };
-          spellingBtn.addEventListener("click", checkSpelling);
-          spellingInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") checkSpelling();
-          });
-        }
-
-        arena.querySelectorAll(".quiz-option").forEach(btn => {
-          btn.addEventListener("click", () => {
-            this.handleAnswer(btn.dataset.word);
-          });
-        });
-      },
-
-      handleAnswer(submittedWord) {
-        const q = AppState.quiz.questions[AppState.quiz.currentIndex];
-        const isCorrect = submittedWord.trim().toLowerCase() === q.target.word.trim().toLowerCase();
-
-        // 更新 SRS 間隔複習記憶狀態
-        SRSManager.recordReview(q.target, isCorrect);
-
-        if (isCorrect) {
-          AppState.quiz.score += 1;
-        } else {
-          AppState.quiz.wrongItems.push(q.target);
-        }
-
-        document.querySelectorAll(".quiz-option").forEach(btn => {
-          btn.disabled = true;
-          const btnWord = btn.dataset.word.toLowerCase();
-          if (btnWord === q.target.word.toLowerCase()) {
-            btn.classList.add("correct");
-          } else if (btnWord === submittedWord.trim().toLowerCase() && !isCorrect) {
-            btn.classList.add("wrong");
-          }
-        });
-
-        const spInput = document.getElementById("spellingInput");
-        const spBtn = document.getElementById("submitSpellingBtn");
-        if (spInput) spInput.disabled = true;
-        if (spBtn) spBtn.disabled = true;
-
-        SpeechController.speak(q.target.word);
-
-        const srsStatus = SRSManager.getWordLevelLabel(q.target.word);
-        const feedbackBox = document.getElementById("quizFeedbackBox");
-        feedbackBox.classList.remove("hidden");
-        feedbackBox.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.4rem;">
-            <span style="font-weight:700; font-size:1.05rem; color:${isCorrect ? "var(--status-success)" : "var(--status-error)"};">
-              ${isCorrect ? "✅ 答對了！記憶等級提升！" : `❌ 答錯囉！正確答案是：${escapeHTML(q.target.word)}`}
-            </span>
-            <span class="badge ${srsStatus.cls}">🧠 SRS 狀態：${srsStatus.text}</span>
-          </div>
-          <div style="font-size:0.95rem; margin-bottom:0.35rem;">
-            <strong>${escapeHTML(q.target.word)}</strong> (${escapeHTML(q.target.pos)}) — ${escapeHTML(q.target.zh)}
-          </div>
-          <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.25rem;">
-            • <strong>語境示範句：</strong>${escapeHTML(q.target.illustrative)}
-          </div>
-          <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.85rem;">
-            • <strong>高頻搭配詞：</strong>${escapeHTML(q.target.collocation)}
-          </div>
-          <button id="nextQuestionBtn" class="btn btn-primary">
-            ${AppState.quiz.currentIndex + 1 < AppState.quiz.questions.length ? "下一題 ➡️" : "查看測驗成績 📊"}
-          </button>
-        `;
-
-        document.getElementById("nextQuestionBtn").addEventListener("click", () => {
-          AppState.quiz.currentIndex += 1;
-          this.renderQuestion();
-        });
-      },
-
-      renderSummary() {
-        const arena = document.getElementById("quizArena");
-        const { questions, score, wrongItems, mode } = AppState.quiz;
-        const accuracy = Math.round((score / questions.length) * 100);
-
-        const wrongListHTML = wrongItems.length === 0
-          ? `<p style="color:var(--status-success); font-weight:700;">🎉 完美全對！所有單字的 SRS 記憶間隔都已延長！</p>`
-          : `
-            <div style="margin-top:0.75rem;">
-              <h4 style="margin-bottom:0.5rem;">📌 錯題清單（已自動排入今日優先複習，共 ${wrongItems.length} 字）：</h4>
-              <ul style="list-style:none; display:flex; flex-direction:column; gap:0.5rem;">
-                ${wrongItems.map(item => `
-                  <li style="background:var(--bg-surface-alt); padding:0.65rem 0.85rem; border-radius:var(--radius-md); display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
-                    <div>
-                      <strong>${escapeHTML(item.word)}</strong> (${escapeHTML(item.pos)}) — ${escapeHTML(item.zh)}
-                      <div style="font-size:0.85rem; color:var(--text-secondary);">${escapeHTML(item.collocation)}</div>
-                    </div>
-                    <button class="speak-btn" onclick="SpeechController.speak('${escapeHTML(item.word).replace(/'/g, "\\'")}', this)">🔊</button>
-                  </li>
-                `).join("")}
-              </ul>
-            </div>
-          `;
-
-        arena.innerHTML = `
-          <div style="text-align:center; padding:1rem 0;">
-            <div style="font-size:2.5rem; margin-bottom:0.25rem;">🏆</div>
-            <h3 style="font-size:1.4rem; margin-bottom:0.35rem;">測驗完成！</h3>
-            <p style="font-size:1.15rem; font-weight:700; color:var(--brand-primary);">
-              答對題數：${score} / ${questions.length}（正確率 ${accuracy}%）
-            </p>
-          </div>
-          ${wrongListHTML}
-          <div style="display:flex; flex-wrap:wrap; gap:0.65rem; margin-top:1.25rem;">
-            ${wrongItems.length > 0 ? `<button id="retryWrongBtn" class="btn btn-accent">🔁 只針對這 ${wrongItems.length} 個錯題重測</button>` : ""}
-            <button id="restartQuizBtn" class="btn btn-primary">🔄 再測驗一次</button>
-          </div>
-        `;
-
-        if (wrongItems.length > 0) {
-          document.getElementById("retryWrongBtn").addEventListener("click", () => {
-            this.start("custom", mode, wrongItems);
-          });
-        }
-        document.getElementById("restartQuizBtn").addEventListener("click", () => {
-          this.start(document.getElementById("quizScopeSelect").value, mode);
-        });
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 9: UI RENDERER & LIBRARY MODAL CONTROLLER
-     * ============================================================================
-     */
-    const UIRenderer = {
-      switchTab(tabId) {
-        SpeechController.stop();
-        document.querySelectorAll(".nav-tab").forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.tab === tabId);
-        });
-        document.querySelectorAll(".tab-panel").forEach(panel => {
-          panel.classList.toggle("active", panel.id === tabId);
-        });
-      },
-
-      updateInputWordCount() {
-        const raw = document.getElementById("customWordsInput").value;
-        const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-        document.getElementById("selectedWordsCountBadge").textContent = `目前清單：${lines.length} 字`;
-      },
-
-      renderStudyView() {
-        const pillsBox = document.getElementById("groupPillsContainer");
-        const contentBox = document.getElementById("studyContentContainer");
-
-        if (!AppState.groups || AppState.groups.length === 0) {
-          pillsBox.innerHTML = "";
-          contentBox.innerHTML = `
-            <div class="card" style="text-align:center; padding:2.5rem 1rem;">
-              <p style="font-size:1.1rem; margin-bottom:1rem;">目前還沒有產生學習組別喔！請先輸入單字或從「內建單字庫」匯入詞彙。</p>
-              <button class="btn btn-primary" onclick="UIRenderer.switchTab('workspaceTab')">前往建立學習任務</button>
-            </div>
-          `;
-          return;
-        }
-
-        pillsBox.innerHTML = AppState.groups.map((grp, idx) => `
-          <button class="group-pill ${idx === AppState.activeGroupIndex ? "active" : ""}" data-group-idx="${idx}">
-            ${escapeHTML(grp.title || `第 ${idx + 1} 組`)} (${grp.words.length}字)
-          </button>
-        `).join("");
-
-        pillsBox.querySelectorAll(".group-pill").forEach(btn => {
-          btn.addEventListener("click", () => {
-            SpeechController.stop();
-            AppState.activeGroupIndex = parseInt(btn.dataset.groupIdx, 10);
-            this.renderStudyView();
-          });
-        });
-
-        const currentGroup = AppState.groups[AppState.activeGroupIndex];
-        const rawSentences = currentGroup.story
-          .match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [currentGroup.story];
-
-        const formattedSentencesHTML = rawSentences.map(sentence => {
-          const highlighted = highlightTargetWords(sentence.trim(), currentGroup.words);
-          return `<span class="story-sentence" title="點擊朗讀此句">${highlighted}</span> `;
-        }).join("");
-
-        contentBox.innerHTML = `
-          <!-- 連貫情境短篇故事區 -->
-          <div class="story-box">
-            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.5rem;">
-              <div>
-                <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
-                  <span class="badge">情境連貫故事</span>
-                  ${currentGroup.cefrLevel ? `<span class="badge badge-success">難度：${escapeHTML(currentGroup.cefrLevel)}</span>` : ""}
-                </div>
-                <h3 style="font-size:1.18rem; margin-top:0.3rem;">${escapeHTML(currentGroup.storyTitle || `${currentGroup.title} 短篇故事`)}</h3>
-              </div>
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <!-- 需求指定：[🔊 全文朗讀] / [🔇 停止朗讀] Toggle -->
-                <button id="toggleStoryReadBtn" class="speak-btn">🔊 全文朗讀</button>
-                <!-- 需求指定：[顯示翻譯] / [隱藏翻譯] Toggle -->
-                <button id="toggleStoryZhBtn" class="btn btn-secondary btn-sm">顯示翻譯</button>
-              </div>
-            </div>
-
-            <div id="storyTextContainer" class="story-text">
-              ${formattedSentencesHTML}
-            </div>
-
-            <div id="storyZhContainer" class="hidden" style="margin-top:0.9rem; padding-top:0.8rem; border-top:1px dashed var(--border-strong); color:var(--text-secondary); font-size:0.96rem; line-height:1.75;">
-              <strong>📖 中文翻譯：</strong>${escapeHTML(currentGroup.storyZh || "（無中文翻譯）")}
-            </div>
-          </div>
-
-          <!-- 單字與雙軌例句卡片列表 -->
-          <div class="vocab-list">
-            ${currentGroup.words.map((item, wIdx) => {
-              const srsInfo = SRSManager.getWordLevelLabel(item.word);
-              return `
-                <article class="vocab-card">
-                  <div>
-                    <div class="vocab-header">
-                      <div>
-                        <span style="font-size:0.82rem; color:var(--text-muted); margin-right:0.3rem;">#${wIdx + 1}</span>
-                        <span class="vocab-word">${escapeHTML(item.word)}</span>
-                        <span class="vocab-pos">${escapeHTML(item.pos)}</span>
-                      </div>
-                      <div style="display:flex; align-items:center; gap:0.4rem;">
-                        <span class="badge ${srsInfo.cls}" style="font-size:0.72rem;">${srsInfo.text}</span>
-                        <button class="speak-btn" data-speak="${escapeHTML(item.word)}">🔊 單字</button>
-                      </div>
-                    </div>
-                    <div style="font-size:1.05rem; font-weight:700; margin-top:0.45rem;">${escapeHTML(item.zh)}</div>
-                  </div>
-
-                  <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                    <div class="sentence-block">
-                      <div>
-                        <span class="sentence-label label-illus">1. 語境示範句 (Illustrative)</span>
-                        <div style="font-size:0.98rem;">${highlightTargetWords(item.illustrative, [item])}</div>
-                      </div>
-                      <button class="speak-btn" data-speak="${escapeHTML(item.illustrative)}">🔊</button>
-                    </div>
-
-                    <div class="sentence-block">
-                      <div>
-                        <span class="sentence-label label-colloc">2. 高頻搭配詞短句 (Collocation)</span>
-                        <div style="font-size:0.98rem;">${highlightTargetWords(item.collocation, [item])}</div>
-                      </div>
-                      <button class="speak-btn" data-speak="${escapeHTML(item.collocation)}">🔊</button>
-                    </div>
-                  </div>
-                </article>
-              `;
-            }).join("")}
-          </div>
-        `;
-
-        // 綁定卡片內發音按鈕
-        contentBox.querySelectorAll(".speak-btn[data-speak]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            SpeechController.speak(btn.dataset.speak, btn);
-          });
-        });
-
-        // 綁定 [🔊 全文朗讀] / [🔇 停止朗讀] Toggle
-        const toggleStoryReadBtn = document.getElementById("toggleStoryReadBtn");
-        const sentenceEls = Array.from(contentBox.querySelectorAll(".story-sentence"));
-        toggleStoryReadBtn.addEventListener("click", () => {
-          SpeechController.toggleStoryReading(sentenceEls);
-        });
-
-        // 綁定故事單句點擊發音
-        sentenceEls.forEach(el => {
-          el.addEventListener("click", () => {
-            document.querySelectorAll(".story-sentence.active-reading").forEach(s => s.classList.remove("active-reading"));
-            el.classList.add("active-reading");
-            SpeechController.speak(el.textContent, null, () => el.classList.remove("active-reading"));
-          });
-        });
-
-        // 綁定 [顯示翻譯] / [隱藏翻譯] Toggle
-        const toggleStoryZhBtn = document.getElementById("toggleStoryZhBtn");
-        const storyZhContainer = document.getElementById("storyZhContainer");
-        toggleStoryZhBtn.addEventListener("click", () => {
-          const isHidden = storyZhContainer.classList.toggle("hidden");
-          toggleStoryZhBtn.textContent = isHidden ? "顯示翻譯" : "隱藏翻譯";
-        });
-      },
-
-      renderHistoryList() {
-        const container = document.getElementById("historyListContainer");
-        const sessions = StorageManager.getAllSessions();
-
-        if (sessions.length === 0) {
-          container.innerHTML = `
-            <div style="text-align:center; padding:2rem; color:var(--text-muted); background:var(--bg-surface-alt); border-radius:var(--radius-md);">
-              尚無任何儲存紀錄。在「故事與例句」頁面點擊「💾 儲存本次學習紀錄」，即可按日期保存進度！
-            </div>
-          `;
-          return;
-        }
-
-        container.innerHTML = `
-          <div style="display:flex; flex-direction:column; gap:0.75rem;">
-            ${sessions.map(sec => `
-              <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.75rem; background:var(--bg-surface);">
-                <div>
-                  <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                    <span class="badge">📅 ${escapeHTML(sec.date)}</span>
-                    <strong style="font-size:1.05rem;">${escapeHTML(sec.title)}</strong>
-                  </div>
-                  <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;">
-                    建立時間：${escapeHTML(sec.timestamp)} ｜ 共 ${sec.groups.length} 組（${sec.totalWords} 個單字）
-                  </div>
-                </div>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                  <button class="btn btn-primary btn-sm" onclick="StorageManager.loadSession('${sec.id}')">📖 載入複習</button>
-                  <button class="btn btn-accent btn-sm" onclick="StorageManager.loadSession('${sec.id}'); UIRenderer.switchTab('quizTab');">🎯 開始測驗</button>
-                  <button class="btn btn-danger btn-sm" onclick="StorageManager.deleteSession('${sec.id}')">🗑️ 刪除</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 10: LIBRARY MODAL CONTROLLER (內建單字庫管理)
-     * ============================================================================
-     */
-    const LibraryController = {
-      openModal() {
-        const modal = document.getElementById("libraryModal");
-        const select = document.getElementById("libraryDeckSelect");
-
-        select.innerHTML = BUILTIN_LIBRARIES.map(lib => `
-          <option value="${lib.id}">${escapeHTML(lib.name)} (${lib.words.length}字)</option>
-        `).join("");
-
-        select.value = AppState.librarySelectedDeckId;
-        this.renderDeck(AppState.librarySelectedDeckId, true);
-        modal.classList.remove("hidden");
-      },
-
-      closeModal() {
-        document.getElementById("libraryModal").classList.add("hidden");
-      },
-
-      renderDeck(deckId, selectAllByDefault = false) {
-        AppState.librarySelectedDeckId = deckId;
-        const deck = BUILTIN_LIBRARIES.find(d => d.id === deckId) || BUILTIN_LIBRARIES[0];
-
-        if (selectAllByDefault) {
-          AppState.libraryCheckedWords = new Set(deck.words.map(w => w.word));
-        }
-
-        const hasPresetStories = deck.presetStories && deck.presetStories.length > 0;
-        document.getElementById("libraryDeckMeta").innerHTML = `
-          <div>${escapeHTML(deck.description)}</div>
-          <div style="margin-top:0.4rem; font-weight:700; color:var(--brand-primary);">
-            ${hasPresetStories
-              ? "✅ 此字庫附帶完整原創連貫故事（可直接離線載入，或匯入後自訂難度請 AI 重新改寫）"
-              : "✨ 匯入後可選擇 A1–B2 難度，由 AI 為您即時量身生成例句與故事"}
-          </div>
-        `;
-
-        const loadPresetBtn = document.getElementById("loadPresetWithStoriesBtn");
-        loadPresetBtn.classList.toggle("hidden", !hasPresetStories);
-
-        const grid = document.getElementById("libraryWordsGrid");
-        grid.innerHTML = deck.words.map(item => {
-          const isChecked = AppState.libraryCheckedWords.has(item.word);
-          return `
-            <div class="library-word-chip ${isChecked ? "selected" : ""}" data-lib-word="${escapeHTML(item.word)}">
-              <span>${isChecked ? "☑️" : "⬜"}</span>
-              <span>${escapeHTML(item.word)}</span>
-              <span style="font-size:0.78rem; opacity:0.8;">${escapeHTML(item.zh)}</span>
-            </div>
-          `;
-        }).join("");
-
-        grid.querySelectorAll(".library-word-chip").forEach(chip => {
-          chip.addEventListener("click", () => {
-            const w = chip.dataset.libWord;
-            if (AppState.libraryCheckedWords.has(w)) {
-              AppState.libraryCheckedWords.delete(w);
-            } else {
-              AppState.libraryCheckedWords.add(w);
-            }
-            this.renderDeck(deckId, false);
-          });
-        });
-      },
-
-      importCheckedToWorkspace() {
-        const deck = BUILTIN_LIBRARIES.find(d => d.id === AppState.librarySelectedDeckId);
-        if (!deck) return;
-
-        const chosen = deck.words.filter(w => AppState.libraryCheckedWords.has(w.word));
-        if (chosen.length === 0) {
-          showToast("⚠️ 請至少勾選 1 個單字！");
-          return;
-        }
-
-        const textarea = document.getElementById("customWordsInput");
-        const existingLines = textarea.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-        const formattedNew = chosen.map(w => `${w.word} | ${w.pos} | ${w.zh}`);
-        textarea.value = [...existingLines, ...formattedNew].join("\n");
-
-        UIRenderer.updateInputWordCount();
-        this.closeModal();
-        showToast(`📥 已將 ${chosen.length} 個單字加入學習清單！`);
-      },
-
-      loadFullPresetWithStories() {
-        const deck = BUILTIN_LIBRARIES.find(d => d.id === AppState.librarySelectedDeckId);
-        if (!deck || !deck.presetStories || deck.presetStories.length === 0) return;
-
-        const chunks = WordProcessor.chunkWords(deck.words, "sequential", deck.defaultGroupSize || 10);
-        AppState.groups = chunks.map((chunk, idx) => {
-          const preset = deck.presetStories[idx] || {
-            title: `第 ${idx + 1} 組故事`,
-            story: "",
-            storyZh: ""
-          };
-          return {
-            groupIndex: idx,
-            title: `第 ${idx + 1} 組`,
-            storyTitle: preset.title,
-            cefrLevel: "內建精選",
-            words: chunk,
-            story: preset.story,
-            storyZh: preset.storyZh
-          };
-        });
-
-        AppState.activeGroupIndex = 0;
-        this.closeModal();
-        UIRenderer.renderStudyView();
-        UIRenderer.switchTab("studyTab");
-        showToast(`📖 已載入「${deck.name}」完整故事與雙軌例句！`);
-      }
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 11: MAIN GENERATION FLOW & EVENT INITIALIZATION
-     * ============================================================================
-     */
-    async function handleGenerateLearningContent() {
-      const rawText = document.getElementById("customWordsInput").value;
-      const parsedWords = WordProcessor.parseInputText(rawText);
-
-      if (parsedWords.length === 0) {
-        showToast("⚠️ 請先在清單中輸入單字／片語，或從「內建單字庫」匯入！");
-        document.getElementById("customWordsInput").focus();
-        return;
-      }
-
-      const cefrLevel = document.getElementById("cefrLevelSelect").value;
-      const orderMode = document.getElementById("orderMode").value;
-      const groupSize = parseInt(document.getElementById("groupSizeInput").value, 10) || 10;
-
-      // 檢查是否剛好是完整的「核心精選 50 字」且為照順序 10 字一組且未要求特定重新生成
-      const default50 = BUILTIN_LIBRARIES[0];
-      const isExactDefault50 =
-        orderMode === "sequential" &&
-        groupSize === 10 &&
-        parsedWords.length === default50.words.length &&
-        parsedWords.every((w, i) => w.word.toLowerCase() === default50.words[i].word.toLowerCase());
-
-      // 若沒有設定 API Key 且剛好符合內建 50 字預設分組，直接使用內建原創故事
-      if (!AIService.getEffectiveKey() && isExactDefault50) {
-        LibraryController.loadFullPresetWithStories();
-        return;
-      }
-
-      // 若沒有 API Key，引導使用者開啟教學視窗設定
-      if (!AIService.getEffectiveKey() && window.location.protocol === "file:") {
-        showToast("🔑 請先設定您的免費 Google Gemini API Key，即可為任意單字生成例句與故事！");
-        document.getElementById("apiKeyModal").classList.remove("hidden");
-        return;
-      }
-
-      const chunks = WordProcessor.chunkWords(parsedWords, orderMode, groupSize);
-      const btn = document.getElementById("generateGroupsBtn");
-      btn.disabled = true;
-      const originalHTML = btn.innerHTML;
-
-      try {
-        const generatedGroups = [];
-
-        for (let i = 0; i < chunks.length; i++) {
-          const chunk = chunks[i];
-          btn.innerHTML = `<span class="loader-spinner"></span> 正在依 ${cefrLevel} 難度生成第 ${i + 1} / ${chunks.length} 組...`;
-
-          const aiResult = await AIService.generateGroupContent(chunk, cefrLevel);
-          generatedGroups.push({
-            groupIndex: i,
-            title: `第 ${i + 1} 組`,
-            storyTitle: `第 ${i + 1} 組情境故事 (${cefrLevel})`,
-            cefrLevel,
-            words: aiResult.words,
-            story: aiResult.story,
-            storyZh: aiResult.storyZh
-          });
-        }
-
-        AppState.groups = generatedGroups;
-        AppState.activeGroupIndex = 0;
-
-        UIRenderer.renderStudyView();
-        UIRenderer.switchTab("studyTab");
-        showToast(`✨ 生成完成！共 ${generatedGroups.length} 組（難度：${cefrLevel}）`);
-      } catch (err) {
-        console.error(err);
-        showToast(`❌ 生成失敗：${err.message}。請確認 API Key 是否正確或網路是否暢通！`, 4800);
-        if (!AppState.apiKey) {
-          document.getElementById("apiKeyModal").classList.remove("hidden");
-        }
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalHTML;
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      SpeechController.init();
-      AIService.loadKey();
-      SRSManager.updateBadges();
-
-      // 1. 字級四段式縮放
-      document.querySelectorAll("[data-scale]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll("[data-scale]").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          document.documentElement.style.setProperty("--font-scale", btn.dataset.scale);
-        });
-      });
-
-      // 2. 三種護眼主題切換
-      document.querySelectorAll("[data-theme-btn]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll("[data-theme-btn]").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          document.documentElement.setAttribute("data-theme", btn.dataset.themeBtn);
-        });
-      });
-
-      // 3. 語速控制
-      const rateSlider = document.getElementById("rateSlider");
-      const rateLabel = document.getElementById("rateValueLabel");
-      const updateRate = (newRate) => {
-        const val = Math.min(1.5, Math.max(0.5, parseFloat(newRate)));
-        AppState.speechRate = val;
-        rateSlider.value = val;
-        rateLabel.textContent = `${val.toFixed(2)}x`;
-        document.querySelectorAll(".speed-preset").forEach(btn => {
-          btn.classList.toggle("active", Math.abs(parseFloat(btn.dataset.rate) - val) < 0.03);
-        });
-      };
-
-      rateSlider.addEventListener("input", (e) => updateRate(e.target.value));
-      document.querySelectorAll(".speed-preset").forEach(btn => {
-        btn.addEventListener("click", () => updateRate(btn.dataset.rate));
-      });
-      document.getElementById("voiceSelect").addEventListener("change", (e) => {
-        AppState.selectedVoiceURI = e.target.value;
-      });
-      document.getElementById("globalStopSpeechBtn").addEventListener("click", () => {
-        SpeechController.stop();
-      });
-
-      // 4. 分頁切換
-      document.querySelectorAll(".nav-tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-          UIRenderer.switchTab(tab.dataset.tab);
-          if (tab.dataset.tab === "historyTab") {
-            UIRenderer.renderHistoryList();
-          }
-        });
-      });
-
-      // 5. API Key Modal 控制與連線測試
+// ... existing code ... -->
+      // 5. API Key 與模型設定 Modal 控制與連線測試
       const apiModal = document.getElementById("apiKeyModal");
       const apiInput = document.getElementById("apiKeyInput");
+      const modelPresetSelect = document.getElementById("modelPresetSelect");
+      const modelNameInput = document.getElementById("modelNameInput");
       const apiTestBox = document.getElementById("apiTestResultBox");
+
+      const syncModelUI = (modelStr) => {
+        const current = (modelStr || AIService.DEFAULT_MODEL).trim();
+        modelNameInput.value = current;
+        const presetValues = Array.from(modelPresetSelect.options).map(o => o.value);
+        modelPresetSelect.value = presetValues.includes(current) && current !== "custom" ? current : "custom";
+      };
+
+      modelPresetSelect.addEventListener("change", () => {
+        if (modelPresetSelect.value !== "custom") {
+          modelNameInput.value = modelPresetSelect.value;
+        } else {
+          modelNameInput.focus();
+        }
+      });
+
+      modelNameInput.addEventListener("input", () => {
+        const typed = modelNameInput.value.trim();
+        const presetValues = Array.from(modelPresetSelect.options).map(o => o.value);
+        modelPresetSelect.value = presetValues.includes(typed) && typed !== "custom" ? typed : "custom";
+      });
 
       document.getElementById("openApiModalBtn").addEventListener("click", () => {
         apiInput.value = AppState.apiKey;
+        syncModelUI(AppState.modelName);
         apiTestBox.classList.add("hidden");
         apiModal.classList.remove("hidden");
       });
@@ -2737,6 +1524,7 @@ ${JSON.stringify(groupWords.map(w => ({ word: w.word, pos: w.pos || "", zh: w.zh
 
       document.getElementById("saveAndTestApiKeyBtn").addEventListener("click", async (e) => {
         const key = apiInput.value.trim();
+        const chosenModel = modelNameInput.value.trim() || AIService.DEFAULT_MODEL;
         if (!key) {
           showToast("⚠️ 請先貼上您的 Gemini API Key！");
           return;
@@ -2747,26 +1535,26 @@ ${JSON.stringify(groupWords.map(w => ({ word: w.word, pos: w.pos || "", zh: w.zh
         apiTestBox.classList.add("hidden");
 
         try {
-          await AIService.testConnection(key);
-          AIService.saveKey(key);
+          await AIService.testConnection(key, chosenModel);
+          AIService.saveSettings(key, chosenModel);
           apiTestBox.style.background = "var(--status-success-bg)";
           apiTestBox.style.color = "var(--status-success)";
-          apiTestBox.textContent = "✅ 連線成功！您的 API Key 已安全儲存於本機瀏覽器中。";
+          apiTestBox.textContent = `✅ 連線成功！已儲存 API Key 與模型（${chosenModel}）。`;
           apiTestBox.classList.remove("hidden");
-          showToast("🎉 API Key 驗證成功並已儲存！");
+          showToast(`🎉 設定成功！目前使用模型：${chosenModel}`);
         } catch (err) {
           apiTestBox.style.background = "var(--status-error-bg)";
           apiTestBox.style.color = "var(--status-error)";
-          apiTestBox.textContent = `❌ 驗證失敗：${err.message}（請確認是否完整複製 AIza 開頭的金鑰）`;
+          apiTestBox.textContent = `❌ 驗證失敗：${err.message}（請確認 API Key 與模型名稱是否正確）`;
           apiTestBox.classList.remove("hidden");
         } finally {
           btn.disabled = false;
-          btn.innerHTML = "💾 儲存並測試連線";
+          btn.innerHTML = "💾 儲存設定並測試連線";
         }
       });
 
       document.getElementById("removeApiKeyBtn").addEventListener("click", () => {
-        AIService.saveKey("");
+        AIService.saveSettings("", modelNameInput.value.trim() || AIService.DEFAULT_MODEL);
         apiInput.value = "";
         apiTestBox.classList.add("hidden");
         showToast("🗑️ 已清除儲存的 API Key");
