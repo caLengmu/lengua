@@ -128,7 +128,7 @@
       color: var(--text-primary);
       line-height: 1.65;
       min-height: 100vh;
-      padding-bottom: 5rem;
+      padding-bottom: 4.5rem;
       transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
@@ -146,7 +146,7 @@
     }
 
     /* ==========================================================================
-       3. TOP HEADER & TTS BAR
+       3. COMPACT MOBILE-FIRST HEADER & COLLAPSIBLE TOOLBAR
        ========================================================================== */
     .app-header {
       position: sticky;
@@ -155,56 +155,91 @@
       background-color: var(--bg-surface);
       border-bottom: 1px solid var(--border-color);
       box-shadow: var(--shadow-sm);
-      padding: 0.7rem 1rem;
     }
 
-    .header-inner {
+    .header-top-bar {
       max-width: 1140px;
       margin: 0 auto;
+      padding: 0.45rem 0.85rem;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 0.65rem;
+      gap: 0.5rem;
+      min-height: 50px;
+    }
+
+    @media (min-width: 768px) {
+      .header-top-bar {
+        padding: 0.65rem 1rem;
+      }
     }
 
     .brand-area {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 0.45rem;
+      min-width: 0;
     }
 
     .brand-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--brand-primary);
+      white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 0.45rem;
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--brand-primary);
+      gap: 0.35rem;
+    }
+
+    @media (min-width: 768px) {
+      .brand-title {
+        font-size: 1.18rem;
+      }
     }
 
     .brand-subtitle {
-      font-size: 0.78rem;
+      display: none;
+      font-size: 0.8rem;
       color: var(--text-muted);
+      margin-left: 0.35rem;
     }
 
-    .toolbar-controls {
+    @media (min-width: 960px) {
+      .brand-subtitle {
+        display: inline;
+      }
+    }
+
+    .header-actions {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.4rem;
+      flex-shrink: 0;
     }
 
     .api-status-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.38rem 0.75rem;
+      gap: 0.28rem;
+      padding: 0.3rem 0.65rem;
       border-radius: var(--radius-pill);
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       font-weight: 700;
       border: 1px solid transparent;
       transition: all var(--transition-fast);
-      min-height: 36px;
+      min-height: 34px;
+      max-width: 155px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 768px) {
+      .api-status-btn {
+        max-width: 240px;
+        font-size: 0.84rem;
+        padding: 0.35rem 0.75rem;
+      }
     }
 
     .api-status-btn.configured {
@@ -219,23 +254,87 @@
       border-color: var(--status-warn);
     }
 
+    /* 手機版收合控制列按鈕（桌機版隱藏，因桌機直接展開） */
+    .mobile-drawer-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-height: 34px;
+    }
+
+    .mobile-drawer-toggle.active {
+      background: var(--brand-primary-soft);
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+    }
+
+    @media (min-width: 768px) {
+      .mobile-drawer-toggle {
+        display: none;
+      }
+    }
+
+    /* 可收合的工具抽屜（手機預設收合以節省高度，桌機常駐展開） */
+    .collapsible-toolbar {
+      background: var(--bg-surface-alt);
+      border-top: 1px solid var(--border-color);
+      padding: 0.55rem 0.85rem;
+      display: none;
+    }
+
+    .collapsible-toolbar.open {
+      display: block;
+    }
+
+    @media (min-width: 768px) {
+      .collapsible-toolbar {
+        display: block;
+        padding: 0.45rem 1rem;
+      }
+    }
+
+    .toolbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+    }
+
+    .toolbar-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
     .control-pill-group {
       display: inline-flex;
       align-items: center;
-      background: var(--bg-surface-alt);
-      padding: 0.18rem;
+      background: var(--bg-surface);
+      padding: 0.15rem;
       border-radius: var(--radius-pill);
       border: 1px solid var(--border-color);
     }
 
     .pill-btn {
-      padding: 0.25rem 0.55rem;
+      padding: 0.22rem 0.5rem;
       border-radius: var(--radius-pill);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-secondary);
-      min-width: 2rem;
-      min-height: 2rem;
+      min-width: 1.85rem;
+      min-height: 1.85rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -252,33 +351,8 @@
       color: #0f172a;
     }
 
-    /* 常駐語速控制列 */
-    .tts-bar {
-      background: var(--bg-surface-alt);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.5rem 1rem;
-    }
-
-    .tts-bar-inner {
-      max-width: 1140px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.65rem;
-      font-size: 0.88rem;
-    }
-
-    .tts-speed-group {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
     .tts-slider {
-      width: 100px;
+      width: 90px;
       accent-color: var(--brand-primary);
       cursor: pointer;
     }
@@ -288,43 +362,50 @@
        ========================================================================== */
     .main-container {
       max-width: 1140px;
-      margin: 1rem auto;
-      padding: 0 1rem;
+      margin: 0.75rem auto;
+      padding: 0 0.85rem;
+    }
+
+    @media (min-width: 768px) {
+      .main-container {
+        margin: 1rem auto;
+        padding: 0 1rem;
+      }
     }
 
     .nav-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.35rem;
+      gap: 0.3rem;
       background: var(--bg-surface);
-      padding: 0.35rem;
+      padding: 0.3rem;
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-color);
       box-shadow: var(--shadow-sm);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
 
     .nav-tab {
-      padding: 0.6rem 0.4rem;
+      padding: 0.5rem 0.3rem;
       border-radius: var(--radius-md);
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.84rem;
       color: var(--text-secondary);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.2rem;
+      gap: 0.15rem;
       transition: all var(--transition-fast);
       text-align: center;
-      position: relative;
     }
 
     @media (min-width: 640px) {
       .nav-tab {
         flex-direction: row;
         gap: 0.45rem;
-        font-size: 0.96rem;
+        font-size: 0.95rem;
+        padding: 0.6rem 0.5rem;
       }
     }
 
@@ -343,7 +424,7 @@
 
     .tab-panel {
       display: none;
-      animation: fadeIn 0.22s ease;
+      animation: fadeIn 0.2s ease;
     }
 
     .tab-panel.active {
@@ -362,15 +443,15 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.25rem;
+      padding: 1.15rem;
       box-shadow: var(--shadow-sm);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.15rem;
     }
 
     .card-title {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -405,7 +486,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
-      padding: 0.65rem 1.1rem;
+      padding: 0.62rem 1.05rem;
       border-radius: var(--radius-md);
       font-weight: 600;
       transition: all var(--transition-fast);
@@ -449,25 +530,24 @@
 
     .btn-sm {
       padding: 0.38rem 0.75rem;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       min-height: 36px;
       border-radius: var(--radius-sm);
     }
 
-    /* 發音小按鈕 */
     .speak-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
-      padding: 0.4rem 0.75rem;
+      padding: 0.38rem 0.72rem;
       border-radius: var(--radius-pill);
       background: var(--brand-primary-soft);
       color: var(--brand-primary);
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 700;
-      min-height: 38px;
-      min-width: 38px;
+      min-height: 36px;
+      min-width: 36px;
       transition: all var(--transition-fast);
       flex-shrink: 0;
     }
@@ -490,7 +570,7 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 0.9rem;
     }
 
     @media (min-width: 768px) {
@@ -505,14 +585,14 @@
     .form-group label {
       display: block;
       font-weight: 600;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       margin-bottom: 0.35rem;
       color: var(--text-secondary);
     }
 
     .form-control {
       width: 100%;
-      padding: 0.65rem 0.85rem;
+      padding: 0.62rem 0.82rem;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-strong);
       background: var(--bg-surface);
@@ -526,21 +606,21 @@
     }
 
     /* ==========================================================================
-       6. HERO / DASHBOARD CARDS (Clean Home Screen)
+       6. HERO / DASHBOARD CARDS & ENGINE SWITCHER
        ========================================================================== */
     .hero-banner {
       background: linear-gradient(135deg, var(--bg-surface) 0%, var(--brand-primary-soft) 100%);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      margin-bottom: 1.25rem;
+      padding: 1.25rem;
+      margin-bottom: 1.15rem;
     }
 
     .quick-action-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0.85rem;
-      margin-top: 1.15rem;
+      gap: 0.75rem;
+      margin-top: 1rem;
     }
 
     @media (min-width: 768px) {
@@ -553,12 +633,12 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 1.1rem;
+      padding: 0.95rem;
       text-align: left;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 0.5rem;
+      gap: 0.35rem;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
 
@@ -568,19 +648,65 @@
       border-color: var(--brand-primary);
     }
 
+    /* 雙引擎生成模式切換頁籤 */
+    .engine-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      background: var(--bg-surface-alt);
+      padding: 0.35rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1rem;
+    }
+
+    .engine-tab-btn {
+      padding: 0.6rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-align: center;
+      transition: all var(--transition-fast);
+    }
+
+    .engine-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--brand-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 進度條 */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-surface-alt);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-top: 0.6rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--brand-primary);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
     /* ==========================================================================
        7. STUDY VIEW: STORY BOX & VOCAB CARDS
        ========================================================================== */
     .group-pills-bar {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       overflow-x: auto;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
+      padding-bottom: 0.45rem;
+      margin-bottom: 0.9rem;
     }
 
     .group-pill {
-      padding: 0.48rem 1rem;
+      padding: 0.45rem 0.95rem;
       border-radius: var(--radius-pill);
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
@@ -603,13 +729,22 @@
       background: var(--bg-surface);
       border: 2px solid var(--brand-primary-soft);
       border-radius: var(--radius-lg);
-      padding: 1.35rem;
-      margin-bottom: 1.5rem;
+      padding: 1.25rem;
+      margin-bottom: 1.35rem;
       box-shadow: var(--shadow-sm);
     }
 
+    .story-empty-cta {
+      background: var(--bg-surface-alt);
+      border: 1.5px dashed var(--brand-primary);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
     .story-text {
-      font-size: 1.08rem;
+      font-size: 1.06rem;
       line-height: 1.9;
       margin-top: 0.85rem;
     }
@@ -641,7 +776,7 @@
     .vocab-list {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 0.95rem;
     }
 
     @media (min-width: 900px) {
@@ -654,12 +789,12 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.15rem;
+      padding: 1.1rem;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 0.85rem;
+      gap: 0.8rem;
     }
 
     .vocab-header {
@@ -668,17 +803,17 @@
       justify-content: space-between;
       gap: 0.5rem;
       border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 0.6rem;
+      padding-bottom: 0.55rem;
     }
 
     .vocab-word {
-      font-size: 1.35rem;
+      font-size: 1.32rem;
       font-weight: 700;
       color: var(--brand-primary);
     }
 
     .vocab-pos {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-style: italic;
       color: var(--text-muted);
       margin-left: 0.3rem;
@@ -686,12 +821,12 @@
 
     .sentence-block {
       background: var(--bg-surface-alt);
-      padding: 0.75rem;
+      padding: 0.72rem;
       border-radius: var(--radius-md);
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 0.65rem;
+      gap: 0.6rem;
     }
 
     .sentence-label {
@@ -700,7 +835,7 @@
       font-weight: 700;
       padding: 0.1rem 0.45rem;
       border-radius: 4px;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.22rem;
     }
 
     .label-illus {
@@ -725,7 +860,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 0.85rem;
       overflow-y: auto;
     }
 
@@ -737,7 +872,7 @@
       max-width: 720px;
       max-height: 90vh;
       overflow-y: auto;
-      padding: 1.5rem;
+      padding: 1.35rem;
       box-shadow: var(--shadow-lg);
       position: relative;
       animation: fadeIn 0.2s ease;
@@ -746,7 +881,7 @@
     .step-box {
       background: var(--bg-surface-alt);
       border-left: 4px solid var(--brand-primary);
-      padding: 0.85rem 1rem;
+      padding: 0.8rem 0.95rem;
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
       margin-bottom: 0.75rem;
     }
@@ -777,12 +912,12 @@
     .quiz-option {
       width: 100%;
       text-align: left;
-      padding: 0.9rem 1.1rem;
+      padding: 0.85rem 1.05rem;
       border-radius: var(--radius-md);
       border: 2px solid var(--border-color);
       background: var(--bg-surface);
       font-weight: 600;
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.6rem;
       transition: all var(--transition-fast);
       display: flex;
       align-items: center;
@@ -833,8 +968,8 @@
     }
 
     .loader-spinner {
-      width: 1.1rem;
-      height: 1.1rem;
+      width: 1.05rem;
+      height: 1.05rem;
       border: 2.5px solid currentColor;
       border-right-color: transparent;
       border-radius: 50%;
@@ -854,94 +989,98 @@
 <body>
 
   <!-- ========================================================================
-       頂部導覽列：品牌名稱、API Key 設定狀態、字級縮放、護眼主題
+       精簡型跨裝置頂部列：手機版單行不佔高度，點擊「⚙️ 顯示/語速」展開設定抽屜
        ======================================================================== -->
   <header class="app-header">
-    <div class="header-inner">
+    <div class="header-top-bar">
       <div class="brand-area">
         <div class="brand-title">
           <span>🚀 VocabSprint AI</span>
-          <span class="badge">升學・檢定衝刺</span>
         </div>
-        <div class="brand-subtitle">AI 語境故事記憶 × 搭配詞強化 × 間隔複習</div>
+        <span class="brand-subtitle">AI 單字衝刺與情境記憶實驗室</span>
       </div>
 
-      <div class="toolbar-controls">
+      <div class="header-actions">
         <!-- Gemini API Key 設定狀態按鈕 -->
-        <button id="openApiModalBtn" class="api-status-btn missing" title="設定您的 Google Gemini API Key">
-          <span id="apiStatusIcon">🔑</span>
-          <span id="apiStatusText">設定 API Key</span>
+        <button id="openApiModalBtn" class="api-status-btn missing" title="設定您的 Google Gemini API Key 與模型">
+          <span>🔑</span>
+          <span id="apiStatusText">設定 API</span>
         </button>
 
-        <!-- 字體大小四段式調整 -->
-        <div class="control-pill-group" role="group" aria-label="字體大小調整">
-          <button class="pill-btn" data-scale="0.9" title="縮小字體">A-</button>
-          <button class="pill-btn active" data-scale="1" title="標準字體">A</button>
-          <button class="pill-btn" data-scale="1.15" title="放大字體">A+</button>
-          <button class="pill-btn" data-scale="1.3" title="特大字體">A++</button>
+        <!-- 手機版收合控制列按鈕 -->
+        <button id="mobileToolbarToggleBtn" class="mobile-drawer-toggle" aria-expanded="false" aria-controls="collapsibleToolbar">
+          <span>⚙️ 語速/顯示</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 可收合控制抽屜（桌機常駐單行，手機點擊展開） -->
+    <div id="collapsibleToolbar" class="collapsible-toolbar">
+      <div class="toolbar-inner">
+        <div class="toolbar-row">
+          <strong>🔊 語速：</strong>
+          <button class="pill-btn speed-preset" data-rate="0.6">0.6x</button>
+          <button class="pill-btn speed-preset" data-rate="0.8">0.8x</button>
+          <button class="pill-btn speed-preset active" data-rate="1.0">1.0x</button>
+          <button class="pill-btn speed-preset" data-rate="1.2">1.2x</button>
+          <input type="range" id="rateSlider" class="tts-slider" min="0.5" max="1.5" step="0.05" value="1.0" aria-label="微調語速" />
+          <span id="rateValueLabel" style="font-weight:700; min-width:2.8rem;">1.00x</span>
+          <button id="globalStopSpeechBtn" class="btn btn-secondary btn-sm" style="min-height:30px; padding:0.2rem 0.55rem;">⏹ 停止</button>
         </div>
 
-        <!-- 三種視覺主題切換 -->
-        <div class="control-pill-group" role="group" aria-label="色彩主題切換">
-          <button class="pill-btn active" data-theme-btn="light" title="明亮白">☀️ 明亮</button>
-          <button class="pill-btn" data-theme-btn="sepia" title="護眼米黃">📜 護眼</button>
-          <button class="pill-btn" data-theme-btn="dark" title="夜間深色">🌙 夜間</button>
+        <div class="toolbar-row">
+          <!-- 字體大小四段式調整 -->
+          <div class="control-pill-group" role="group" aria-label="字體大小調整">
+            <button class="pill-btn" data-scale="0.9" title="縮小字體">A-</button>
+            <button class="pill-btn active" data-scale="1" title="標準字體">A</button>
+            <button class="pill-btn" data-scale="1.15" title="放大字體">A+</button>
+            <button class="pill-btn" data-scale="1.3" title="特大字體">A++</button>
+          </div>
+
+          <!-- 三種視覺主題切換 -->
+          <div class="control-pill-group" role="group" aria-label="色彩主題切換">
+            <button class="pill-btn active" data-theme-btn="light" title="明亮白">☀️</button>
+            <button class="pill-btn" data-theme-btn="sepia" title="護眼米黃">📜</button>
+            <button class="pill-btn" data-theme-btn="dark" title="夜間深色">🌙</button>
+          </div>
+
+          <select id="voiceSelect" class="form-control" style="padding:0.22rem 0.45rem; font-size:0.82rem; max-width:165px;" aria-label="選擇英語發音聲線">
+            <option value="">自動選擇自然英語</option>
+          </select>
         </div>
       </div>
     </div>
   </header>
-
-  <!-- 常駐語音朗讀與語速調節列 -->
-  <div class="tts-bar">
-    <div class="tts-bar-inner">
-      <div class="tts-speed-group">
-        <strong>🔊 朗讀語速：</strong>
-        <button class="pill-btn speed-preset" data-rate="0.6">0.6x 慢速</button>
-        <button class="pill-btn speed-preset" data-rate="0.8">0.8x 適中</button>
-        <button class="pill-btn speed-preset active" data-rate="1.0">1.0x 正常</button>
-        <button class="pill-btn speed-preset" data-rate="1.2">1.2x 進階</button>
-        <input type="range" id="rateSlider" class="tts-slider" min="0.5" max="1.5" step="0.05" value="1.0" aria-label="微調語速" />
-        <span id="rateValueLabel" style="font-weight:700; min-width:3.1rem;">1.00x</span>
-      </div>
-
-      <div style="display:flex; gap:0.4rem; align-items:center;">
-        <select id="voiceSelect" class="form-control" style="padding:0.25rem 0.5rem; font-size:0.85rem; max-width:190px;" aria-label="選擇英語發音聲線">
-          <option value="">自動選擇自然英語發音</option>
-        </select>
-        <button id="globalStopSpeechBtn" class="btn btn-secondary btn-sm">⏹ 停止</button>
-      </div>
-    </div>
-  </div>
 
   <!-- 主工作區 -->
   <main class="main-container">
     <!-- 四大功能分頁 -->
     <nav class="nav-tabs" role="tablist">
       <button class="nav-tab active" data-tab="workspaceTab">
-        <span>✨</span><span>1. 建立學習任務</span>
+        <span>✨</span><span>1. 建立任務</span>
       </button>
       <button class="nav-tab" data-tab="studyTab">
         <span>📖</span><span>2. 故事與例句</span>
       </button>
       <button class="nav-tab" data-tab="quizTab">
-        <span>🎯</span><span>3. 測驗與 SRS 複習</span>
+        <span>🎯</span><span>3. 測驗複習</span>
       </button>
       <button class="nav-tab" data-tab="historyTab">
-        <span>🗂️</span><span>4. 日期存檔庫</span>
+        <span>🗂️</span><span>4. 日期存檔</span>
       </button>
     </nav>
 
     <!-- ======================================================================
-         分頁 1：建立學習任務（清爽首頁：自訂單字 + 內建單字庫入口 + 難度與分組）
+         分頁 1：建立學習任務（雙引擎：API 兩階段生成 vs 免 API 外部複製貼上匯入）
          ====================================================================== -->
     <section id="workspaceTab" class="tab-panel active">
       <!-- 歡迎引導與快速入口 -->
       <div class="hero-banner">
-        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:0.75rem;">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:0.65rem;">
           <div>
-            <h2 style="font-size:1.3rem; margin-bottom:0.3rem;">準備好開始今天的單字衝刺了嗎？</h2>
-            <p style="font-size:0.95rem; color:var(--text-secondary);">
-              挑選你想背的單字或片語，讓 AI 依你的程度撰寫<strong>語境示範句</strong>、<strong>高頻搭配短句</strong>與<strong>連貫短篇故事</strong>，再透過測驗與間隔重複（SRS）牢牢記住！
+            <h2 style="font-size:1.22rem; margin-bottom:0.25rem;">短期單字衝刺 × 雙軌例句與故事記憶</h2>
+            <p style="font-size:0.9rem; color:var(--text-secondary);">
+              支援<strong>個人 API 兩階段輕量生成</strong>（不超時、不負擔），也支援<strong>免 API 複製貼上外部 AI 回答匯入</strong>！
             </p>
           </div>
           <span id="srsDueBadge" class="badge badge-warn">🧠 今日待複習：0 字</span>
@@ -949,54 +1088,50 @@
 
         <div class="quick-action-grid">
           <button type="button" class="action-tile" onclick="document.getElementById('customWordsInput').focus()">
-            <div style="font-size:1.4rem;">✍️</div>
+            <div style="font-size:1.3rem;">✍️</div>
             <div>
               <strong>輸入自訂／指定單字</strong>
-              <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.2rem;">
-                貼上課本生字、考卷錯題或片語，一鍵生成故事與雙軌例句。
+              <p style="font-size:0.83rem; color:var(--text-secondary); margin-top:0.15rem;">
+                貼上課本生字、考卷錯題或片語，建立專屬教材。
               </p>
             </div>
           </button>
 
           <button type="button" class="action-tile" id="openLibraryModalBtn">
-            <div style="font-size:1.4rem;">📚</div>
+            <div style="font-size:1.3rem;">📚</div>
             <div>
               <strong>從「內建單字庫」挑選</strong>
-              <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.2rem;">
-                瀏覽內建精選字庫（含完整原創故事），未來支援大考六級、多益字表。
+              <p style="font-size:0.83rem; color:var(--text-secondary); margin-top:0.15rem;">
+                瀏覽精選詞庫與完整原創故事（含學測／多益擴充範本）。
               </p>
             </div>
           </button>
 
           <button type="button" class="action-tile" id="quickSrsReviewBtn">
-            <div style="font-size:1.4rem;">🧠</div>
+            <div style="font-size:1.3rem;">🧠</div>
             <div>
               <strong>今日 SRS 間隔複習</strong>
-              <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.2rem;">
-                依據記憶曲線，優先複習到期與曾答錯的單字，應考不遺忘。
+              <p style="font-size:0.83rem; color:var(--text-secondary); margin-top:0.15rem;">
+                針對到期與曾答錯的單字進行強化測驗，考前不遺忘。
               </p>
             </div>
           </button>
         </div>
       </div>
 
-      <!-- 步驟一：輸入或管理本次要學習的單字清單 -->
+      <!-- 步驟一：準備單字清單與分組參數 -->
       <div class="card">
         <div class="card-title">
-          <span>📝 步驟一：準備本次學習的單字／片語清單</span>
-          <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+          <span>📝 步驟一：準備學習單字清單與分組設定</span>
+          <div style="display:flex; gap:0.45rem; align-items:center; flex-wrap:wrap;">
             <span id="selectedWordsCountBadge" class="badge">目前清單：0 字</span>
-            <button type="button" id="openLibraryInlineBtn" class="btn btn-secondary btn-sm">📚 開啟內建單字庫</button>
-            <button type="button" id="clearInputBtn" class="btn btn-secondary btn-sm">🧹 清空清單</button>
+            <button type="button" id="openLibraryInlineBtn" class="btn btn-secondary btn-sm">📚 內建單字庫</button>
+            <button type="button" id="clearInputBtn" class="btn btn-secondary btn-sm">🧹 清空</button>
           </div>
         </div>
 
-        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.65rem;">
-          每行輸入一個單字或片語（可直接只貼英文單字，或用 <code>單字 | 詞性 | 中文釋義</code> 格式貼上）：
-        </p>
-
-        <div class="form-group" style="margin-bottom:0.75rem;">
-          <textarea id="customWordsInput" class="form-control" rows="6" placeholder="在此輸入或貼上你想學習的單字／片語（每行一筆），或點擊上方「📚 開啟內建單字庫」直接匯入：
+        <div class="form-group" style="margin-bottom:0.85rem;">
+          <textarea id="customWordsInput" class="form-control" rows="5" placeholder="每行輸入一個單字或片語（可直接只貼英文，或用 單字 | 詞性 | 中文釋義 格式），或點擊「📚 內建單字庫」匯入：
 例如：
 resilient
 take into account
@@ -1004,22 +1139,15 @@ procrastinate
 breakthrough
 accurate"></textarea>
         </div>
-      </div>
-
-      <!-- 步驟二：設定生成語言難度（預設 A2）、排序與分組方式 -->
-      <div class="card">
-        <div class="card-title">
-          <span>⚙️ 步驟二：選擇生成難度與分組設定</span>
-        </div>
 
         <div class="form-grid form-grid-3">
           <div class="form-group">
             <label for="cefrLevelSelect">生成內容語言難度（例句與故事）</label>
             <select id="cefrLevelSelect" class="form-control">
-              <option value="A1">入門 (A1) — 極簡基礎句型，零壓力入門</option>
-              <option value="A2" selected>初級 (A2) — 清晰生活情境（預設推薦）</option>
-              <option value="B1">中級 (B1) — 完整敘事結構，貼近學測/多益</option>
-              <option value="B2">中高級 (B2) — 豐富修辭語境，高分衝刺</option>
+              <option value="A1">入門 (A1) — 極簡基礎句型</option>
+              <option value="A2" selected>初級 (A2) — 清晰生活情境（預設）</option>
+              <option value="B1">中級 (B1) — 完整敘事（學測/多益）</option>
+              <option value="B2">中高級 (B2) — 豐富語境（高分衝刺）</option>
             </select>
           </div>
 
@@ -1036,26 +1164,97 @@ accurate"></textarea>
             <input type="number" id="groupSizeInput" class="form-control" min="1" max="50" value="10" />
           </div>
         </div>
+      </div>
 
-        <div style="margin-top: 1.25rem; display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-          <button id="generateGroupsBtn" class="btn btn-primary" style="flex:1; min-width:250px; font-size:1.05rem;">
-            ✨ 產生雙軌例句與連貫故事
+      <!-- 步驟二：雙引擎生成選擇（方式一：API 兩階段 vs 方式二：免 API 外部複製貼上） -->
+      <div class="card">
+        <div class="card-title">
+          <span>⚡ 步驟二：選擇產生學習內容的方式</span>
+        </div>
+
+        <div class="engine-tabs" role="tablist">
+          <button type="button" class="engine-tab-btn active" data-engine-panel="apiTwoStagePanel">
+            ⚡ 方式一：API 兩階段生成
+          </button>
+          <button type="button" class="engine-tab-btn" data-engine-panel="externalPastePanel">
+            📋 方式二：免 API 複製貼上匯入
+          </button>
+        </div>
+
+        <!-- 方式一面板：API 兩階段生成 -->
+        <div id="apiTwoStagePanel">
+          <div style="background:var(--bg-surface-alt); padding:0.85rem 1rem; border-radius:var(--radius-md); font-size:0.9rem; margin-bottom:1rem;">
+            <strong>💡 為什麼分兩階段？</strong> 為了避免免費版 API Key 單次輸出過長而逾時或失敗：
+            <ul style="margin-left:1.25rem; margin-top:0.3rem; color:var(--text-secondary);">
+              <li><strong>第一階段（現在執行）：</strong>快速生成所有單字的<strong>中文釋義、語境示範句、高頻搭配詞</strong>（超過 12 字會自動分批處理）。</li>
+              <li><strong>第二階段（進入故事頁後按需執行）：</strong>在您想讀故事的分組中，單獨點擊<strong>「📖 為本組生成連貫故事」</strong>，每次只處理一組，又快又穩！</li>
+            </ul>
+          </div>
+
+          <button id="generateStage1Btn" class="btn btn-primary" style="width:100%; font-size:1.02rem;">
+            ✨ 第一階段：生成單字與雙軌例句
+          </button>
+
+          <!-- 分批進度條容器 -->
+          <div id="stage1ProgressBox" class="hidden" style="margin-top:0.85rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.88rem; font-weight:600;">
+              <span id="stage1ProgressLabel">準備生成中...</span>
+              <span id="stage1ProgressPercent">0%</span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div id="stage1ProgressFill" class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 方式二面板：免 API 外部 AI 複製貼上匯入 -->
+        <div id="externalPastePanel" class="hidden">
+          <div style="background:var(--bg-surface-alt); padding:0.85rem 1rem; border-radius:var(--radius-md); font-size:0.9rem; margin-bottom:1rem;">
+            <strong>🆓 完全免申請 API Key！借用免費網頁版 Gemini / ChatGPT：</strong>
+            <ol style="margin-left:1.25rem; margin-top:0.3rem; color:var(--text-secondary);">
+              <li>點擊下方<strong>「📋 1. 一鍵複製專屬 AI 指令」</strong>（已自動將您的單字、分組與難度打包好）。</li>
+              <li>開啟免費的 <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" style="color:var(--brand-primary); font-weight:700;">Gemini 網頁版 ↗</a>，貼上並送出。</li>
+              <li>複製 Gemini 的完整回答，貼回下方文字框並點擊<strong>「📥 2. 解析並建立學習內容」</strong>！</li>
+            </ol>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.65rem; margin-bottom:0.85rem;">
+            <button type="button" id="copyExternalPromptBtn" class="btn btn-accent" style="flex:1; min-width:220px;">
+              📋 1. 一鍵複製專屬 AI 指令
+            </button>
+          </div>
+
+          <!-- 隱藏的指令暫存區（方便手動複製或檢視） -->
+          <div id="promptPreviewBox" class="hidden" style="margin-bottom:0.85rem;">
+            <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:0.25rem;">
+              已產生的指令內容（若自動複製受阻可手動全選複製）：
+            </label>
+            <textarea id="generatedPromptTextarea" class="form-control" rows="3" readonly style="font-size:0.82rem; background:var(--bg-surface-alt);"></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0.85rem;">
+            <label for="externalAiResponseInput">貼上 Gemini / ChatGPT 的完整回答：</label>
+            <textarea id="externalAiResponseInput" class="form-control" rows="5" placeholder="請直接把 AI 回答整段貼在這裡（就算前後有聊天開場白或 ```json 符號也沒關係，系統會自動擷取資料）..."></textarea>
+          </div>
+
+          <button type="button" id="parseExternalResponseBtn" class="btn btn-primary" style="width:100%; font-size:1.02rem;">
+            📥 2. 解析 AI 回答並建立學習內容
           </button>
         </div>
       </div>
     </section>
 
     <!-- ======================================================================
-         分頁 2：故事與雙軌例句學習區
+         分頁 2：故事與雙軌例句學習區（支援第二階段單組故事按需生成）
          ====================================================================== -->
     <section id="studyTab" class="tab-panel">
       <!-- 頂部存檔與測驗快捷列 -->
-      <div class="card" style="padding:0.9rem 1.15rem;">
-        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.75rem;">
+      <div class="card" style="padding:0.85rem 1.05rem;">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.65rem;">
           <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem; flex:1;">
-            <input type="text" id="saveTitleInput" class="form-control" style="max-width:300px;" placeholder="輸入本次學習標題（如：段考 Unit 3）" />
+            <input type="text" id="saveTitleInput" class="form-control" style="max-width:290px;" placeholder="輸入本次學習標題（如：段考 Unit 3）" />
             <button id="saveSessionBtn" class="btn btn-primary btn-sm">
-              💾 儲存本次學習紀錄
+              💾 儲存紀錄
             </button>
           </div>
           <div style="display:flex; gap:0.5rem;">
@@ -1083,7 +1282,7 @@ accurate"></textarea>
           <span id="quizSrsStatusBadge" class="badge">已完成記憶追蹤</span>
         </div>
 
-        <div class="form-grid form-grid-3" style="margin-bottom:1rem;">
+        <div class="form-grid form-grid-3" style="margin-bottom:0.85rem;">
           <div class="form-group">
             <label for="quizScopeSelect">測驗單字範圍</label>
             <select id="quizScopeSelect" class="form-control">
@@ -1121,9 +1320,9 @@ accurate"></textarea>
         <div class="card-title">
           <span>🗂️ 學習紀錄庫（按日期存檔）</span>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button id="exportBackupBtn" class="btn btn-secondary btn-sm">📤 匯出備份檔 (JSON)</button>
+            <button id="exportBackupBtn" class="btn btn-secondary btn-sm">📤 匯出備份 (JSON)</button>
             <label class="btn btn-secondary btn-sm" style="cursor:pointer; margin:0;">
-              📥 匯入備份檔
+              📥 匯入備份
               <input type="file" id="importBackupInput" accept=".json" class="hidden" />
             </label>
           </div>
@@ -1143,46 +1342,39 @@ accurate"></textarea>
   <div id="apiKeyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
     <div class="modal-dialog">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h3 id="apiModalTitle" style="font-size:1.25rem; font-weight:700;">🔑 設定您的 Google Gemini API Key</h3>
+        <h3 id="apiModalTitle" style="font-size:1.2rem; font-weight:700;">🔑 設定 Google Gemini API Key 與模型</h3>
         <button id="closeApiModalBtn" class="btn btn-secondary btn-sm">✕ 關閉</button>
       </div>
 
-      <p style="font-size:0.95rem; color:var(--text-secondary); margin-bottom:1rem;">
-        為了讓這份網頁在您的電腦、平板或手機上<strong>獨立運作</strong>並隨時產生專屬例句與故事，請貼上您個人的免費 Google Gemini API Key（完全不需要會寫程式，只需 1 分鐘）：
+      <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1rem;">
+        若您想使用<strong>「方式一：API 兩階段自動生成」</strong>，請貼上您的免費 Google Gemini API Key（完全免費、不需會寫程式；若暫時不想申請，也可直接使用<strong>「方式二：免 API 複製貼上匯入」</strong>）：
       </p>
 
       <div class="step-box">
         <strong>步驟 1：前往 Google AI Studio 官方網站</strong>
-        <p style="font-size:0.9rem; margin-top:0.25rem; margin-bottom:0.6rem;">
+        <p style="font-size:0.88rem; margin-top:0.25rem; margin-bottom:0.6rem;">
           點擊下方按鈕開啟 Google 官方金鑰頁面，並使用您的 Google (Gmail) 帳號登入：
         </p>
-        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="text-decoration:none; max-width:100%; word-break:break-word;">
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="text-decoration:none; max-width:100%;">
           🌐 前往 Google AI Studio 取得免費金鑰 ↗
         </a>
       </div>
 
       <div class="step-box">
-        <strong>步驟 2：建立一組免費 API 金鑰</strong>
-        <p style="font-size:0.9rem; margin-top:0.25rem;">
-          在頁面右上角或中央點擊藍色的 <strong>「Create API key（建立 API 金鑰）」</strong> 按鈕，選擇任一專案（或直接建立新專案）即可產生金鑰。
-        </p>
-      </div>
-
-      <div class="step-box">
-        <strong>步驟 3：複製金鑰並貼入下方欄位</strong>
-        <p style="font-size:0.9rem; margin-top:0.25rem;">
-          點擊 <strong>「Copy」</strong> 複製那串以 <code>AIza...</code> 開頭的英文數字金鑰，貼到下方輸入框中並按下儲存。
+        <strong>步驟 2：建立並複製 API 金鑰</strong>
+        <p style="font-size:0.88rem; margin-top:0.25rem;">
+          點擊頁面上的 <strong>「Create API key（建立 API 金鑰）」</strong>，產生後點擊 <strong>「Copy」</strong> 複製那串以 <code>AIza...</code> 開頭的金鑰。
         </p>
       </div>
 
       <div class="form-group" style="margin-top:1rem;">
-        <label for="apiKeyInput">貼上您的 Gemini API Key：</label>
+        <label for="apiKeyInput">步驟 3：貼上您的 Gemini API Key：</label>
         <div style="display:flex; gap:0.5rem;">
           <input type="password" id="apiKeyInput" class="form-control" placeholder="AIzaSy..." autocomplete="off" />
           <button type="button" id="toggleApiKeyVisBtn" class="btn btn-secondary">👁️ 顯示</button>
         </div>
-        <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.35rem;">
-          🔒 隱私保護說明：您的金鑰只會安全儲存在您自己裝置的瀏覽器（localStorage）中，直接與 Google 官方伺服器連線，不會經過任何第三方網站。
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.35rem;">
+          🔒 隱私保護：您的金鑰只會儲存在本機瀏覽器（localStorage）中，直接與 Google 官方伺服器連線。
         </p>
       </div>
 
@@ -1197,16 +1389,16 @@ accurate"></textarea>
           </select>
           <input type="text" id="modelNameInput" class="form-control" value="gemini-3.5-flash-lite" placeholder="輸入模型代碼，例如 gemini-3.5-flash-lite" autocomplete="off" />
         </div>
-        <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.35rem;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.35rem;">
           💡 未來若 Google 推出新版模型或舊模型停用，可直接在此修改模型名稱並儲存，無需修改程式碼。
         </p>
       </div>
 
-      <div id="apiTestResultBox" class="hidden" style="margin-top:0.85rem; padding:0.75rem; border-radius:var(--radius-md); font-size:0.92rem; font-weight:600;"></div>
+      <div id="apiTestResultBox" class="hidden" style="margin-top:0.85rem; padding:0.75rem; border-radius:var(--radius-md); font-size:0.9rem; font-weight:600;"></div>
 
-      <div style="display:flex; flex-wrap:wrap; gap:0.65rem; margin-top:1.15rem;">
+      <div style="display:flex; flex-wrap:wrap; gap:0.65rem; margin-top:1.1rem;">
         <button id="saveAndTestApiKeyBtn" class="btn btn-primary" style="flex:1;">💾 儲存設定並測試連線</button>
-        <button id="removeApiKeyBtn" class="btn btn-danger">🗑️ 清除已存金鑰</button>
+        <button id="removeApiKeyBtn" class="btn btn-danger">🗑️ 清除金鑰</button>
       </div>
     </div>
   </div>
@@ -1217,24 +1409,24 @@ accurate"></textarea>
   <div id="libraryModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="libModalTitle">
     <div class="modal-dialog" style="max-width:820px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h3 id="libModalTitle" style="font-size:1.25rem; font-weight:700;">📚 內建主題單字庫</h3>
+        <h3 id="libModalTitle" style="font-size:1.2rem; font-weight:700;">📚 內建主題單字庫</h3>
         <button id="closeLibraryModalBtn" class="btn btn-secondary btn-sm">✕ 關閉</button>
       </div>
 
-      <div class="form-group" style="margin-bottom:1rem;">
+      <div class="form-group" style="margin-bottom:0.85rem;">
         <label for="libraryDeckSelect">選擇字庫分類（未來可持續擴充各類考試字表）：</label>
         <select id="libraryDeckSelect" class="form-control"></select>
       </div>
 
-      <div id="libraryDeckMeta" style="background:var(--bg-surface-alt); padding:0.85rem 1rem; border-radius:var(--radius-md); margin-bottom:1rem; font-size:0.92rem;"></div>
+      <div id="libraryDeckMeta" style="background:var(--bg-surface-alt); padding:0.8rem 0.95rem; border-radius:var(--radius-md); margin-bottom:0.85rem; font-size:0.9rem;"></div>
 
-      <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.7rem;">
         <button id="libSelectAllBtn" class="btn btn-secondary btn-sm">☑️ 全選本字庫</button>
         <button id="libSelectFirst10Btn" class="btn btn-secondary btn-sm">🔟 選取前 10 個字</button>
         <button id="libDeselectAllBtn" class="btn btn-secondary btn-sm">⬜ 取消全選</button>
       </div>
 
-      <div id="libraryWordsGrid" style="display:flex; flex-wrap:wrap; gap:0.45rem; max-height:280px; overflow-y:auto; padding:0.5rem; border:1px solid var(--border-color); border-radius:var(--radius-md); margin-bottom:1.15rem;"></div>
+      <div id="libraryWordsGrid" style="display:flex; flex-wrap:wrap; gap:0.45rem; max-height:260px; overflow-y:auto; padding:0.5rem; border:1px solid var(--border-color); border-radius:var(--radius-md); margin-bottom:1.1rem;"></div>
 
       <div style="display:flex; flex-wrap:wrap; gap:0.65rem;">
         <button id="importSelectedToWorkspaceBtn" class="btn btn-primary" style="flex:1;">
@@ -1350,7 +1542,7 @@ accurate"></textarea>
       {
         id: "ceec_level4_sample",
         name: "大考中心學測核心詞彙精選（示範擴充庫）",
-        description: "針對高中升學考試（學測／分科測驗）挑選的高頻閱讀與寫作核心字彙，可一鍵匯入並請 AI 依指定 CEFR 程度生成例句與故事。",
+        description: "針對高中升學考試（學測／分科測驗）挑選的高頻閱讀與寫作核心字彙，可一鍵匯入並透過 API 兩階段或外部 AI 生成例句與故事。",
         defaultGroupSize: 8,
         words: [
           { word: "sustainable", pos: "adj.", zh: "永續的；可持續的" },
@@ -1397,127 +1589,248 @@ accurate"></textarea>
       modelName: "gemini-3.5-flash-lite",
       librarySelectedDeckId: BUILTIN_LIBRARIES[0].id,
       libraryCheckedWords: new Set(),
-      showStoryZh: false,
-      isReadingFullStory: false,
-      activeQuiz: null
-    };
-
-    /**
-     * ============================================================================
-     * MODULE 3: WEB SPEECH API ENGINE (可調語速與逐句高亮朗讀)
-     * ============================================================================
-     */
-    const SpeechEngine = {
-      voices: [],
-      sentenceQueue: [],
-      currentQueueIdx: 0,
-      isPlayingSequence: false,
-
-      init() {
-        const loadVoices = () => {
-          const allVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-          this.voices = allVoices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
-          const select = document.getElementById("voiceSelect");
-          if (!select) return;
-          const prevVal = select.value;
-          select.innerHTML = '<option value="">自動選擇自然英語發音</option>';
-          this.voices.forEach(v => {
-            const opt = document.createElement("option");
-            opt.value = v.voiceURI;
-            opt.textContent = `${v.name} (${v.lang})`;
-            select.appendChild(opt);
-          });
-          if (prevVal) select.value = prevVal;
-        };
-        loadVoices();
-        if (window.speechSynthesis && window.speechSynthesis.onvoiceschanged !== undefined) {
-          window.speechSynthesis.onvoiceschanged = loadVoices;
-        }
-      },
-
-      stop() {
-        this.isPlayingSequence = false;
-        this.sentenceQueue = [];
-        this.currentQueueIdx = 0;
-        AppState.isReadingFullStory = false;
-        if (window.speechSynthesis) {
-          window.speechSynthesis.cancel();
-        }
-        document.querySelectorAll(".story-sentence.active-reading").forEach(el => {
-          el.classList.remove("active-reading");
-        });
-        const toggleBtn = document.getElementById("toggleFullStoryReadBtn");
-        if (toggleBtn) {
-          toggleBtn.innerHTML = "🔊 全文朗讀";
-          toggleBtn.classList.remove("speaking");
-        }
-      },
-
-      speakText(text, onEndCallback = null) {
-        if (!window.speechSynthesis) {
-          showToast("⚠️ 您的瀏覽器不支援語音朗讀功能");
-          return;
-        }
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "en-US";
-        utter.rate = AppState.speechRate;
-        if (AppState.selectedVoiceURI) {
-          const chosen = this.voices.find(v => v.voiceURI === AppState.selectedVoiceURI);
-          if (chosen) utter.voice = chosen;
-        }
-        utter.onend = () => {
-          if (typeof onEndCallback === "function") onEndCallback();
-        };
-        utter.onerror = () => {
-          if (typeof onEndCallback === "function") onEndCallback();
-        };
-        window.speechSynthesis.speak(utter);
-      },
-
-      playStorySequence(sentenceElements) {
-        this.stop();
-        if (!sentenceElements || sentenceElements.length === 0) return;
-
-        this.sentenceQueue = Array.from(sentenceElements);
-        this.currentQueueIdx = 0;
-        this.isPlayingSequence = true;
-        AppState.isReadingFullStory = true;
-
-        const toggleBtn = document.getElementById("toggleFullStoryReadBtn");
-        if (toggleBtn) {
-          toggleBtn.innerHTML = "🔇 停止朗讀";
-          toggleBtn.classList.add("speaking");
-        }
-
-        const readNext = () => {
-          if (!this.isPlayingSequence || this.currentQueueIdx >= this.sentenceQueue.length) {
-            this.stop();
-            return;
-          }
-          document.querySelectorAll(".story-sentence.active-reading").forEach(el => {
-            el.classList.remove("active-reading");
-          });
-          const el = this.sentenceQueue[this.currentQueueIdx];
-          el.classList.add("active-reading");
-          el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-          const textToRead = el.dataset.rawSentence || el.textContent;
-          this.speakText(textToRead, () => {
-            if (!this.isPlayingSequence) return;
-            this.currentQueueIdx++;
-            setTimeout(readNext, 220);
-          });
-        };
-
-        readNext();
+      quiz: {
+        active: false,
+        mode: "contextCloze",
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        wrongWords: []
       }
     };
 
     /**
      * ============================================================================
-     * MODULE 4: API KEY & GEMINI AI SERVICE
-     * 支援環境內建空字串注入 或 使用者自行在瀏覽器儲存的 Gemini API Key 與模型名稱
+     * MODULE 3: UTILITY FUNCTIONS
+     * ============================================================================
+     */
+    function showToast(message, duration = 3000) {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.25s ease";
+        setTimeout(() => toast.remove(), 250);
+      }, duration);
+    }
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function highlightTargetWordsInText(text, wordsList) {
+      let safeText = escapeHTML(text);
+      const sorted = [...wordsList].sort((a, b) => b.word.length - a.word.length);
+      sorted.forEach(item => {
+        const w = item.word.trim();
+        if (!w) return;
+        const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(`\\b(${escaped}(?:s|es|ed|d|ing|ly)?)\\b`, "gi");
+        safeText = safeText.replace(regex, '<strong class="target-word">$1</strong>');
+      });
+      return safeText;
+    }
+
+    function splitIntoSentences(paragraph) {
+      if (!paragraph) return [];
+      const matches = paragraph.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g);
+      return matches ? matches.map(s => s.trim()).filter(Boolean) : [paragraph];
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function chunkArray(arr, size) {
+      const chunks = [];
+      const validSize = Math.max(1, parseInt(size, 10) || 10);
+      for (let i = 0; i < arr.length; i += validSize) {
+        chunks.push(arr.slice(i, i + validSize));
+      }
+      return chunks;
+    }
+
+    function parseWordsInput(rawText) {
+      const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const parsed = [];
+      const seen = new Set();
+
+      const builtinMap = new Map();
+      BUILTIN_LIBRARIES.forEach(deck => {
+        deck.words.forEach(w => builtinMap.set(w.word.toLowerCase(), w));
+      });
+
+      for (const line of lines) {
+        const parts = line.split("|").map(p => p.trim());
+        const word = parts[0];
+        if (!word) continue;
+        const key = word.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        const known = builtinMap.get(key);
+        parsed.push({
+          word: word,
+          pos: parts[1] || (known ? known.pos : ""),
+          zh: parts[2] || (known ? known.zh : ""),
+          illustrative: known && !parts[1] && !parts[2] ? known.illustrative : "",
+          collocation: known && !parts[1] && !parts[2] ? known.collocation : ""
+        });
+      }
+      return parsed;
+    }
+
+    /**
+     * ============================================================================
+     * MODULE 4: TEXT-TO-SPEECH (TTS) ENGINE WITH TOGGLE & SENTENCE HIGHLIGHT
+     * ============================================================================
+     */
+    const SpeechEngine = {
+      synth: window.speechSynthesis,
+      voices: [],
+      isReadingStory: false,
+      storyQueueIndex: 0,
+      storySentences: [],
+      onStateChangeCallback: null,
+
+      init() {
+        const loadVoices = () => {
+          this.voices = this.synth ? this.synth.getVoices() : [];
+          this.populateVoiceDropdown();
+        };
+        loadVoices();
+        if (this.synth && this.synth.onvoiceschanged !== undefined) {
+          this.synth.onvoiceschanged = loadVoices;
+        }
+      },
+
+      populateVoiceDropdown() {
+        const select = document.getElementById("voiceSelect");
+        if (!select) return;
+        const enVoices = this.voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+        const currentVal = AppState.selectedVoiceURI;
+        select.innerHTML = '<option value="">自動選擇自然英語</option>';
+        enVoices.forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v.voiceURI;
+          opt.textContent = `${v.name} (${v.lang})`;
+          select.appendChild(opt);
+        });
+        if (currentVal) select.value = currentVal;
+      },
+
+      getPreferredVoice() {
+        if (!this.voices.length) return null;
+        if (AppState.selectedVoiceURI) {
+          const found = this.voices.find(v => v.voiceURI === AppState.selectedVoiceURI);
+          if (found) return found;
+        }
+        return (
+          this.voices.find(v => v.lang === "en-US" && v.name.includes("Natural")) ||
+          this.voices.find(v => v.lang === "en-US" && v.name.includes("Google")) ||
+          this.voices.find(v => v.lang === "en-US") ||
+          this.voices.find(v => v.lang.startsWith("en")) ||
+          null
+        );
+      },
+
+      stop() {
+        this.isReadingStory = false;
+        if (this.synth) {
+          this.synth.cancel();
+        }
+        document.querySelectorAll(".speak-btn.speaking").forEach(b => b.classList.remove("speaking"));
+        document.querySelectorAll(".story-sentence.active-reading").forEach(el => el.classList.remove("active-reading"));
+        if (this.onStateChangeCallback) {
+          this.onStateChangeCallback(false);
+        }
+      },
+
+      speakText(text, triggerBtn = null) {
+        if (!this.synth) {
+          showToast("⚠️ 您的瀏覽器不支援語音朗讀功能");
+          return;
+        }
+        this.stop();
+
+        const cleanText = text.replace(/<[^>]*>/g, "");
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        utter.lang = "en-US";
+        utter.rate = AppState.speechRate;
+        const voice = this.getPreferredVoice();
+        if (voice) utter.voice = voice;
+
+        if (triggerBtn) {
+          triggerBtn.classList.add("speaking");
+          utter.onend = () => triggerBtn.classList.remove("speaking");
+          utter.onerror = () => triggerBtn.classList.remove("speaking");
+        }
+        this.synth.speak(utter);
+      },
+
+      toggleStoryReadAloud(sentences, onStateChange) {
+        if (this.isReadingStory) {
+          this.stop();
+          return;
+        }
+        if (!this.synth || !sentences.length) return;
+        this.stop();
+        this.isReadingStory = true;
+        this.storySentences = sentences;
+        this.storyQueueIndex = 0;
+        this.onStateChangeCallback = onStateChange;
+        if (this.onStateChangeCallback) this.onStateChangeCallback(true);
+        this._readNextStorySentence();
+      },
+
+      _readNextStorySentence() {
+        if (!this.isReadingStory || this.storyQueueIndex >= this.storySentences.length) {
+          this.stop();
+          return;
+        }
+        const idx = this.storyQueueIndex;
+        document.querySelectorAll(".story-sentence").forEach(el => el.classList.remove("active-reading"));
+        const activeEl = document.querySelector(`.story-sentence[data-s-idx="${idx}"]`);
+        if (activeEl) {
+          activeEl.classList.add("active-reading");
+        }
+
+        const utter = new SpeechSynthesisUtterance(this.storySentences[idx]);
+        utter.lang = "en-US";
+        utter.rate = AppState.speechRate;
+        const voice = this.getPreferredVoice();
+        if (voice) utter.voice = voice;
+
+        utter.onend = () => {
+          if (!this.isReadingStory) return;
+          this.storyQueueIndex++;
+          this._readNextStorySentence();
+        };
+        utter.onerror = () => {
+          this.stop();
+        };
+        this.synth.speak(utter);
+      }
+    };
+
+    /**
+     * ============================================================================
+     * MODULE 5: DUAL-ENGINE AI & EXTERNAL PROMPT SERVICE
+     * Engine A: Two-Stage API Generation (Stage 1 Batched Vocab Cards -> Stage 2 Single-Group Story)
+     * Engine B: Zero-API External Prompt Generator & Robust JSON Response Importer
      * ============================================================================
      */
     const AIService = {
@@ -1562,11 +1875,11 @@ accurate"></textarea>
         if (AppState.apiKey) {
           btn.classList.remove("missing");
           btn.classList.add("configured");
-          text.textContent = `API 已設定 (${this.getEffectiveModel()})`;
+          text.textContent = `API (${this.getEffectiveModel()})`;
         } else {
           btn.classList.remove("configured");
           btn.classList.add("missing");
-          text.textContent = "設定 API / 模型";
+          text.textContent = "設定 API";
         }
       },
 
@@ -1587,51 +1900,43 @@ accurate"></textarea>
         return true;
       },
 
-      async generateGroupContent(groupWords, cefrLevel = "A2") {
+      _getLevelInstruction(cefrLevel) {
+        const levelDescriptions = {
+          A1: "CEFR A1 (Beginner): Use very simple, everyday words and short basic sentences.",
+          A2: "CEFR A2 (Elementary): Use clear, simple daily vocabulary and straightforward sentence structures suitable for beginners/pre-intermediate learners.",
+          B1: "CEFR B1 (Intermediate): Use natural intermediate vocabulary and clear narrative structure suitable for high school exams or TOEIC.",
+          B2: "CEFR B2 (Upper-Intermediate): Use rich, natural upper-intermediate vocabulary and varied sentence structures."
+        };
+        return levelDescriptions[cefrLevel] || levelDescriptions.A2;
+      },
+
+      /**
+       * 第一階段 API 呼叫：僅生成單字釋義與雙軌例句（不寫故事，大幅降低單次輸出負擔）
+       */
+      async generateVocabCardsBatch(wordsBatch, cefrLevel = "A2") {
         const key = this.getEffectiveKey();
         const model = this.getEffectiveModel();
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
 
-        const levelDescriptions = {
-          A1: "CEFR A1 (Beginner: very simple, short sentences, basic everyday vocabulary)",
-          A2: "CEFR A2 (Elementary: clear, natural daily-life sentences with obvious context clues)",
-          B1: "CEFR B1 (Intermediate: natural narrative sentences suitable for high school exams or TOEIC)",
-          B2: "CEFR B2 (Upper-Intermediate: rich, cohesive academic or journalistic narrative)"
-        };
-        const levelPrompt = levelDescriptions[cefrLevel] || levelDescriptions.A2;
+        const prompt = `You are an expert English vocabulary teacher.
+Target vocabulary list: ${wordsBatch.map(w => w.word).join(", ")}
+Difficulty level for background context: ${this._getLevelInstruction(cefrLevel)}
 
-        const wordListText = groupWords
-          .map(w => `- ${w.word}${w.pos ? ` (${w.pos})` : ""}${w.zh ? `: ${w.zh}` : ""}`)
-          .join("\n");
+Task: For each target word/phrase, provide:
+1. "pos": part of speech (e.g., "v.", "adj.", "n.", "phr.").
+2. "zh": accurate Traditional Chinese meaning (繁體中文釋義).
+3. "illustrative": a clear illustrative sentence containing strong context clues so learners can infer the word's meaning. Keep all non-target words strictly within ${cefrLevel} difficulty!
+4. "collocation": a super-short sentence (STRICTLY 10 words or fewer) highlighting a high-frequency collocation with the target word.
 
-        const prompt = `You are an expert ESL/EFL curriculum designer helping students prepare for exams.
-Target CEFR Difficulty for surrounding text: ${levelPrompt}.
-
-Target Vocabulary/Phrases:
-${wordListText}
-
-Tasks:
-1. For EACH target word/phrase, provide:
-   - "word": exact target word/phrase
-   - "pos": part of speech (e.g., "v.", "n.", "adj.", "phr.")
-   - "zh": concise Traditional Chinese (繁體中文) meaning
-   - "illustrative": a clear illustrative sentence at ${cefrLevel} difficulty containing strong context clues so the learner can infer the meaning of the target word/phrase without a dictionary.
-   - "collocation": a super-short sentence (STRICTLY under 10 English words) showcasing a high-frequency collocation of the target word/phrase.
-2. Write a cohesive, engaging short story (140–200 English words) at ${cefrLevel} difficulty that naturally weaves ALL of the target words/phrases above into a unified plot. Do NOT just list definitions; tell a real story.
-3. Provide a natural Traditional Chinese (繁體中文) translation of the story ("storyZh") and a short Traditional Chinese title ("title").
-
-Return ONLY valid JSON with this exact schema (no markdown fences):
+Return ONLY valid JSON matching this schema:
 {
-  "title": "故事繁體中文標題",
-  "story": "Full English story...",
-  "storyZh": "完整繁體中文故事翻譯...",
   "words": [
     {
-      "word": "...",
-      "pos": "...",
-      "zh": "...",
-      "illustrative": "...",
-      "collocation": "..."
+      "word": "target word",
+      "pos": "v.",
+      "zh": "繁體中文釋義",
+      "illustrative": "Illustrative sentence with clear context clues.",
+      "collocation": "Short high-frequency collocation sentence."
     }
   ]
 }`;
@@ -1642,27 +1947,140 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {
-              temperature: 0.7,
-              responseMimeType: "application/json"
+              responseMimeType: "application/json",
+              temperature: 0.5
             }
           })
         });
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
-          throw new Error(errData?.error?.message || `API 請求錯誤 (${response.status})`);
+          throw new Error(errData?.error?.message || `API 請求失敗 (${response.status})`);
         }
 
         const data = await response.json();
-        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        const cleaned = rawText.replace(/```json|```/gi, "").trim();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+        const parsed = this.extractJsonObject(text);
+        return Array.isArray(parsed.words) ? parsed.words : [];
+      },
+
+      /**
+       * 第二階段 API 呼叫：針對單一分組按需生成連貫故事與中文翻譯
+       */
+      async generateSingleGroupStory(groupWords, cefrLevel = "A2") {
+        const key = this.getEffectiveKey();
+        const model = this.getEffectiveModel();
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+
+        const prompt = `You are an expert English storyteller and language teacher.
+Target vocabulary list (${groupWords.length} items): ${groupWords.map(w => `${w.word} (${w.zh || ""})`).join(", ")}
+Difficulty level for background narrative: ${this._getLevelInstruction(cefrLevel)}
+
+Task: Write an engaging, cohesive short story (around 130-190 words) that naturally weaves in ALL target words/phrases listed above. Keep background vocabulary and grammar strictly at ${cefrLevel} level. Also provide a Traditional Chinese title and full Traditional Chinese translation.
+
+Return ONLY valid JSON matching this schema:
+{
+  "title": "故事中文標題 (English Title)",
+  "story": "Full English story text weaving in all target words...",
+  "storyZh": "完整繁體中文故事翻譯..."
+}`;
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+              temperature: 0.7
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `API 請求失敗 (${response.status})`);
+        }
+
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+        const parsed = this.extractJsonObject(text);
+        if (!parsed.story) {
+          throw new Error("AI 回傳的故事內容為空，請再試一次。");
+        }
+        return {
+          title: parsed.title || "AI 情境故事",
+          story: parsed.story,
+          storyZh: parsed.storyZh || ""
+        };
+      },
+
+      /**
+       * 方式二：產生供外部網頁版 Gemini / ChatGPT 使用的標準化 Prompt
+       */
+      buildExternalPrompt(chunks, cefrLevel = "A2") {
+        const groupDescriptions = chunks.map((grp, idx) => {
+          const listStr = grp.map(w => w.zh ? `${w.word} (${w.zh})` : w.word).join(", ");
+          return `- Group ${idx + 1}: ${listStr}`;
+        }).join("\n");
+
+        return `你現在是一位專業的英語教學專家。請幫我為以下分組的英文單字/片語，製作「語境示範句」、「10字內高頻搭配詞短句」以及「每組一篇連貫短篇故事」。
+
+【語言難度要求】
+除目標單字本身外，所有例句與故事的背景用字與句型難度請嚴格控制在：${this._getLevelInstruction(cefrLevel)}
+
+【分組單字清單】
+${groupDescriptions}
+
+【輸出格式要求】
+請「只輸出」合法的 JSON 格式（不要加上多餘的解釋文字），格式必須完全符合以下結構：
+\`\`\`json
+{
+  "cefrLevel": "${cefrLevel}",
+  "groups": [
+    {
+      "groupIndex": 1,
+      "title": "故事中文標題 (English Title)",
+      "words": [
+        {
+          "word": "目標單字",
+          "pos": "詞性 (如 v. / adj. / n.)",
+          "zh": "繁體中文釋義",
+          "illustrative": "包含明顯上下文線索的語境示範句（背景用字符合 ${cefrLevel} 難度）",
+          "collocation": "10個字以內的高頻搭配詞超短例句"
+        }
+      ],
+      "story": "將本組所有目標單字自然串連而成的連貫英文短篇故事（約 140-190 字，背景用字符合 ${cefrLevel} 難度）",
+      "storyZh": "整篇故事的繁體中文翻譯"
+    }
+  ]
+}
+\`\`\``;
+      },
+
+      /**
+       * 容錯 JSON 擷取器：自動剝除 Markdown ```json 標記與前後聊天文字
+       */
+      extractJsonObject(rawText) {
+        let cleaned = rawText.trim();
+        // 嘗試擷取 ```json ... ``` 或 ``` ... ``` 區塊
+        const fenceMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)```/i);
+        if (fenceMatch && fenceMatch[1]) {
+          cleaned = fenceMatch[1].trim();
+        }
+        // 尋找最外層的 { ... }
+        const firstBrace = cleaned.indexOf("{");
+        const lastBrace = cleaned.lastIndexOf("}");
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+        }
         return JSON.parse(cleaned);
       }
     };
 
     /**
      * ============================================================================
-     * MODULE 5: SPACED REPETITION SYSTEM (SRS 間隔重複記憶追蹤)
+     * MODULE 6: SPACED REPETITION (SRS) MEMORY TRACKER
      * ============================================================================
      */
     const SRSManager = {
@@ -1681,59 +2099,49 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         this.updateDueBadge();
       },
 
-      upsertWord(wordObj) {
+      recordResult(wordObj, isCorrect) {
         if (!wordObj || !wordObj.word) return;
         const records = this.getAll();
-        const key = wordObj.word.toLowerCase().trim();
-        if (!records[key]) {
-          records[key] = {
-            ...wordObj,
-            box: 0,
-            nextReview: Date.now(),
-            lastReviewed: null,
-            wrongCount: 0
-          };
-        } else {
-          records[key] = {
-            ...records[key],
-            pos: wordObj.pos || records[key].pos,
-            zh: wordObj.zh || records[key].zh,
-            illustrative: wordObj.illustrative || records[key].illustrative,
-            collocation: wordObj.collocation || records[key].collocation
-          };
-        }
-        this.saveAll(records);
-      },
+        const key = wordObj.word.toLowerCase();
+        const now = Date.now();
+        const dayMs = 24 * 60 * 60 * 1000;
 
-      recordAnswer(wordObj, isCorrect) {
-        const records = this.getAll();
-        const key = wordObj.word.toLowerCase().trim();
-        const existing = records[key] || {
-          ...wordObj,
-          box: 0,
-          nextReview: Date.now(),
-          wrongCount: 0
+        const prev = records[key] || {
+          word: wordObj.word,
+          pos: wordObj.pos || "",
+          zh: wordObj.zh || "",
+          illustrative: wordObj.illustrative || "",
+          collocation: wordObj.collocation || "",
+          intervalDays: 0,
+          reps: 0,
+          nextReviewAt: now
         };
 
-        // 間隔天數：Box 0 (立即), Box 1 (1天), Box 2 (3天), Box 3 (7天), Box 4 (14天), Box 5 (30天)
-        const intervalsDays = [0, 1, 3, 7, 14, 30];
+        if (wordObj.zh) prev.zh = wordObj.zh;
+        if (wordObj.pos) prev.pos = wordObj.pos;
+        if (wordObj.illustrative) prev.illustrative = wordObj.illustrative;
+        if (wordObj.collocation) prev.collocation = wordObj.collocation;
+
         if (isCorrect) {
-          existing.box = Math.min(5, (existing.box || 0) + 1);
+          prev.reps += 1;
+          if (prev.reps === 1) prev.intervalDays = 1;
+          else if (prev.reps === 2) prev.intervalDays = 3;
+          else prev.intervalDays = Math.round(prev.intervalDays * 2.2);
+          prev.nextReviewAt = now + prev.intervalDays * dayMs;
         } else {
-          existing.box = 0;
-          existing.wrongCount = (existing.wrongCount || 0) + 1;
+          prev.reps = 0;
+          prev.intervalDays = 0;
+          prev.nextReviewAt = now;
         }
-        const days = intervalsDays[existing.box] || 0;
-        existing.nextReview = Date.now() + days * 24 * 60 * 60 * 1000;
-        existing.lastReviewed = Date.now();
-        records[key] = existing;
+
+        records[key] = prev;
         this.saveAll(records);
       },
 
       getDueWords() {
         const records = this.getAll();
         const now = Date.now();
-        return Object.values(records).filter(item => (item.nextReview || 0) <= now);
+        return Object.values(records).filter(item => item.nextReviewAt <= now && item.illustrative);
       },
 
       updateDueBadge() {
@@ -1747,13 +2155,13 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
 
     /**
      * ============================================================================
-     * MODULE 6: DATE-BASED SESSION STORAGE & BACKUP MANAGER
+     * MODULE 7: STORAGE MANAGER (按日期存檔與跨裝置 JSON 匯出/匯入)
      * ============================================================================
      */
     const StorageManager = {
-      STORAGE_KEY: "vocabsprint_saved_sessions_v1",
+      STORAGE_KEY: "vocabsprint_sessions_v1",
 
-      getSessions() {
+      getAllSessions() {
         try {
           return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || "[]");
         } catch {
@@ -1763,55 +2171,65 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
 
       saveSession(customTitle) {
         if (!AppState.groups || AppState.groups.length === 0) {
-          showToast("⚠️ 目前尚無可儲存的單字與故事內容！");
+          showToast("⚠️ 目前沒有可儲存的學習內容，請先建立單字組！");
           return;
         }
+        const sessions = this.getAllSessions();
         const now = new Date();
         const dateStr = now.toISOString().slice(0, 10);
+        const timeStr = now.toTimeString().slice(0, 5);
         const totalWords = AppState.groups.reduce((sum, g) => sum + g.words.length, 0);
-        const title = (customTitle || "").trim() || `${dateStr} 單字學習紀錄 (${totalWords}字)`;
 
-        const sessions = this.getSessions();
-        const newRecord = {
-          id: "sess_" + Date.now(),
+        const title = (customTitle || "").trim() || `單字衝刺紀錄 (${totalWords} 字)`;
+
+        // 若標題與今日已有紀錄相同，則更新該筆紀錄（方便第二階段補完故事後覆蓋儲存）
+        const existingIdx = sessions.findIndex(s => s.date === dateStr && s.title === title);
+        const recordObj = {
+          id: existingIdx !== -1 ? sessions[existingIdx].id : "sess_" + Date.now(),
           date: dateStr,
-          timestamp: now.toLocaleString("zh-TW", { hour12: false }),
+          time: timeStr,
           title,
           totalWords,
           groups: AppState.groups
         };
 
-        sessions.unshift(newRecord);
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
-        UIRenderer.renderHistoryList();
-        showToast(`✅ 已成功儲存「${title}」！`);
-      },
+        if (existingIdx !== -1) {
+          sessions[existingIdx] = recordObj;
+        } else {
+          sessions.unshift(recordObj);
+        }
 
-      loadSession(id) {
-        const sessions = this.getSessions();
-        const target = sessions.find(s => s.id === id);
-        if (!target) return;
-        AppState.groups = target.groups;
-        AppState.activeGroupIndex = 0;
-        document.getElementById("saveTitleInput").value = target.title;
-        UIRenderer.renderStudyView();
-        UIRenderer.switchTab("studyTab");
-        showToast(`📖 已載入「${target.title}」`);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
+        showToast(`✅ 已成功儲存「${title}」(${dateStr})`);
+        UIRenderer.renderHistoryList();
       },
 
       deleteSession(id) {
-        const sessions = this.getSessions().filter(s => s.id !== id);
+        const sessions = this.getAllSessions().filter(s => s.id !== id);
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessions));
         UIRenderer.renderHistoryList();
-        showToast("🗑️ 已刪除該筆存檔紀錄");
+        showToast("🗑️ 已刪除該筆學習紀錄");
+      },
+
+      loadSession(id) {
+        const found = this.getAllSessions().find(s => s.id === id);
+        if (!found) return;
+        AppState.groups = found.groups;
+        AppState.activeGroupIndex = 0;
+        document.getElementById("saveTitleInput").value = found.title;
+        UIRenderer.renderStudyView();
+        UIRenderer.switchTab("studyTab");
+        showToast(`📖 已載入「${found.title}」`);
       },
 
       exportJSON() {
-        const payload = {
-          exportedAt: new Date().toISOString(),
-          sessions: this.getSessions(),
-          srs: SRSManager.getAll()
-        };
+        const sessions = this.getAllSessions();
+        const srs = SRSManager.getAll();
+        if (!sessions.length && !Object.keys(srs).length) {
+          showToast("⚠️ 目前沒有任何存檔可匯出");
+          return;
+        }
+        const payload = { sessions, srs };
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -1819,29 +2237,34 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         a.download = `VocabSprint_Backup_${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast("📤 已匯出 JSON 學習備份檔！");
+        showToast("📤 已匯出跨裝置備份檔！");
       },
 
       importJSON(file) {
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
-            const parsed = JSON.parse(e.target.result);
-            if (Array.isArray(parsed.sessions)) {
-              const existing = this.getSessions();
-              const existingIds = new Set(existing.map(s => s.id));
-              const merged = [...existing];
-              parsed.sessions.forEach(s => {
-                if (!existingIds.has(s.id)) merged.push(s);
-              });
-              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(merged));
+            const imported = JSON.parse(e.target.result);
+            const importedSessions = Array.isArray(imported) ? imported : (imported.sessions || []);
+            const existing = this.getAllSessions();
+            const existingIds = new Set(existing.map(s => s.id));
+            let added = 0;
+            importedSessions.forEach(item => {
+              if (item && item.groups && !existingIds.has(item.id)) {
+                existing.push(item);
+                added++;
+              }
+            });
+            existing.sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(existing));
+
+            if (imported && imported.srs) {
+              const mergedSrs = { ...SRSManager.getAll(), ...imported.srs };
+              SRSManager.saveAll(mergedSrs);
             }
-            if (parsed.srs && typeof parsed.srs === "object") {
-              const currentSrs = SRSManager.getAll();
-              SRSManager.saveAll({ ...currentSrs, ...parsed.srs });
-            }
+
             UIRenderer.renderHistoryList();
-            showToast("📥 備份檔匯入成功！");
+            showToast(`📥 成功匯入 ${added} 筆學習紀錄！`);
           } catch {
             showToast("❌ 匯入失敗：檔案格式不正確");
           }
@@ -1852,20 +2275,17 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
 
     /**
      * ============================================================================
-     * MODULE 7: BUILT-IN LIBRARY CONTROLLER
+     * MODULE 8: BUILT-IN LIBRARY CONTROLLER
      * ============================================================================
      */
     const LibraryController = {
       openModal() {
         const select = document.getElementById("libraryDeckSelect");
-        select.innerHTML = "";
-        BUILTIN_LIBRARIES.forEach(deck => {
-          const opt = document.createElement("option");
-          opt.value = deck.id;
-          opt.textContent = `${deck.name} (${deck.words.length} 字)`;
-          select.appendChild(opt);
-        });
-        this.renderDeck(AppState.librarySelectedDeckId || BUILTIN_LIBRARIES[0].id, true);
+        select.innerHTML = BUILTIN_LIBRARIES.map(deck =>
+          `<option value="${deck.id}">${escapeHTML(deck.name)}</option>`
+        ).join("");
+        select.value = AppState.librarySelectedDeckId;
+        this.renderDeck(AppState.librarySelectedDeckId, true);
         document.getElementById("libraryModal").classList.remove("hidden");
       },
 
@@ -1876,615 +2296,898 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
       renderDeck(deckId, resetSelection = false) {
         AppState.librarySelectedDeckId = deckId;
         const deck = BUILTIN_LIBRARIES.find(d => d.id === deckId) || BUILTIN_LIBRARIES[0];
+
         if (resetSelection) {
           AppState.libraryCheckedWords = new Set(deck.words.slice(0, 10).map(w => w.word));
         }
 
-        const meta = document.getElementById("libraryDeckMeta");
-        meta.innerHTML = `<strong>${deck.name}</strong><br><span style="color:var(--text-secondary);">${deck.description}</span>`;
+        const hasPresetStories = deck.presetStories && deck.presetStories.length > 0;
+        document.getElementById("libraryDeckMeta").innerHTML = `
+          <div>${escapeHTML(deck.description)}</div>
+          <div style="margin-top:0.4rem; font-weight:700; color:var(--brand-primary);">
+            共收錄 ${deck.words.length} 個單字 ｜ ${hasPresetStories ? "✅ 內建完整原創故事與雙軌例句（可免 API 直接載入）" : "⚡ 匯入後可使用 API 兩階段或免 API 外部 AI 生成例句與故事"}
+          </div>
+        `;
 
-        const presetBtn = document.getElementById("loadPresetWithStoriesBtn");
-        if (deck.presetStories && deck.presetStories.length > 0) {
-          presetBtn.classList.remove("hidden");
-        } else {
-          presetBtn.classList.add("hidden");
-        }
+        const loadPresetBtn = document.getElementById("loadPresetWithStoriesBtn");
+        loadPresetBtn.style.display = hasPresetStories ? "inline-flex" : "none";
 
         const grid = document.getElementById("libraryWordsGrid");
-        grid.innerHTML = "";
-        deck.words.forEach(item => {
-          const chip = document.createElement("div");
-          const isSelected = AppState.libraryCheckedWords.has(item.word);
-          chip.className = `library-word-chip ${isSelected ? "selected" : ""}`;
-          chip.innerHTML = `<span>${isSelected ? "✓" : "+"}</span><strong>${item.word}</strong><span style="font-size:0.78rem; opacity:0.85;">${item.zh || ""}</span>`;
+        grid.innerHTML = deck.words.map(w => {
+          const isChecked = AppState.libraryCheckedWords.has(w.word);
+          return `
+            <div class="library-word-chip ${isChecked ? "selected" : ""}" data-lib-word="${escapeHTML(w.word)}">
+              <span>${isChecked ? "☑️" : "⬜"}</span>
+              <span>${escapeHTML(w.word)}</span>
+              <span style="font-size:0.78rem; opacity:0.8;">${escapeHTML(w.zh)}</span>
+            </div>
+          `;
+        }).join("");
+
+        grid.querySelectorAll(".library-word-chip").forEach(chip => {
           chip.addEventListener("click", () => {
-            if (AppState.libraryCheckedWords.has(item.word)) {
-              AppState.libraryCheckedWords.delete(item.word);
+            const word = chip.dataset.libWord;
+            if (AppState.libraryCheckedWords.has(word)) {
+              AppState.libraryCheckedWords.delete(word);
             } else {
-              AppState.libraryCheckedWords.add(item.word);
+              AppState.libraryCheckedWords.add(word);
             }
             this.renderDeck(deckId, false);
           });
-          grid.appendChild(chip);
         });
       },
 
       importCheckedToWorkspace() {
         const deck = BUILTIN_LIBRARIES.find(d => d.id === AppState.librarySelectedDeckId);
         if (!deck) return;
-        const chosen = deck.words.filter(w => AppState.libraryCheckedWords.has(w.word));
-        if (chosen.length === 0) {
-          showToast("⚠️ 請至少勾選 1 個單字！");
+        const selected = deck.words.filter(w => AppState.libraryCheckedWords.has(w.word));
+        if (!selected.length) {
+          showToast("⚠️ 請至少勾選一個單字！");
           return;
         }
         const textarea = document.getElementById("customWordsInput");
-        const existingLines = textarea.value.trim() ? textarea.value.trim().split("\n") : [];
-        const newLines = chosen.map(w => `${w.word} | ${w.pos || ""} | ${w.zh || ""}`);
+        const existingLines = textarea.value.trim() ? textarea.value.trim().split(/\r?\n/) : [];
+        const newLines = selected.map(w => `${w.word} | ${w.pos} | ${w.zh}`);
         textarea.value = [...existingLines, ...newLines].join("\n");
         UIRenderer.updateInputWordCount();
         this.closeModal();
-        showToast(`📥 已匯入 ${chosen.length} 個單字至學習清單！`);
+        showToast(`📥 已匯入 ${selected.length} 個單字至學習清單！`);
       },
 
       loadFullPresetWithStories() {
         const deck = BUILTIN_LIBRARIES.find(d => d.id === AppState.librarySelectedDeckId);
-        if (!deck || !deck.presetStories || deck.presetStories.length === 0) return;
+        if (!deck || !deck.presetStories || !deck.presetStories.length) return;
 
-        const size = deck.defaultGroupSize || 10;
-        const groups = [];
-        for (let i = 0; i < deck.words.length; i += size) {
-          const idx = groups.length;
-          const slice = deck.words.slice(i, i + size);
-          const presetStory = deck.presetStories[idx] || {};
-          slice.forEach(w => SRSManager.upsertWord(w));
-          groups.push({
-            groupIndex: idx,
-            title: presetStory.title || `第 ${idx + 1} 組`,
-            cefrLevel: "A2/B1",
-            words: slice,
-            story: presetStory.story || "",
-            storyZh: presetStory.storyZh || ""
-          });
-        }
-
-        AppState.groups = groups;
+        const chunks = chunkArray(deck.words, deck.defaultGroupSize || 10);
+        AppState.groups = chunks.map((grpWords, idx) => {
+          const preset = deck.presetStories[idx] || { title: `第 ${idx + 1} 組`, story: "", storyZh: "" };
+          return {
+            groupIndex: idx + 1,
+            title: preset.title,
+            cefrLevel: "A2",
+            words: grpWords,
+            story: preset.story,
+            storyZh: preset.storyZh
+          };
+        });
         AppState.activeGroupIndex = 0;
-        document.getElementById("saveTitleInput").value = deck.name.slice(0, 24);
+        document.getElementById("saveTitleInput").value = deck.name.split("（")[0];
         this.closeModal();
         UIRenderer.renderStudyView();
         UIRenderer.switchTab("studyTab");
-        showToast(`📖 已載入全套 ${deck.words.length} 字與 ${groups.length} 篇原創故事！`);
+        showToast(`🎉 已直接載入「${deck.name.split("（")[0]}」全套故事與例句！`);
       }
     };
 
     /**
      * ============================================================================
-     * MODULE 8: THREE-MODE QUIZ ENGINE (三合一互動測驗引擎)
+     * MODULE 9: QUIZ ENGINE (三合一測驗與 SRS 記憶更新)
      * ============================================================================
      */
     const QuizEngine = {
-      start(scope, mode) {
+      start(scope, mode, customWordPool = null) {
+        SpeechEngine.stop();
         let pool = [];
-        if (scope === "currentGroup") {
-          const activeGroup = AppState.groups[AppState.activeGroupIndex];
-          pool = activeGroup ? [...activeGroup.words] : [];
-        } else if (scope === "allCurrent") {
-          pool = AppState.groups.flatMap(g => g.words);
+
+        if (customWordPool && customWordPool.length) {
+          pool = customWordPool;
         } else if (scope === "srsDue") {
           pool = SRSManager.getDueWords();
+          if (!pool.length) {
+            showToast("🎉 太棒了！目前沒有到期的複習單字，可先學習新單字或選擇目前組別測驗！");
+            return;
+          }
+        } else if (scope === "currentGroup") {
+          if (!AppState.groups.length) {
+            showToast("⚠️ 請先在「1. 建立任務」產生或載入單字組！");
+            return;
+          }
+          pool = AppState.groups[AppState.activeGroupIndex]?.words || [];
+        } else {
+          if (!AppState.groups.length) {
+            showToast("⚠️ 請先在「1. 建立任務」產生或載入單字組！");
+            return;
+          }
+          pool = AppState.groups.flatMap(g => g.words);
         }
 
-        // 過濾出有完整例句的題庫；若來自純單字，補上基本結構
-        pool = pool.filter(w => w && w.word);
-        if (pool.length < 2) {
-          showToast("⚠️ 測驗範圍至少需要 2 個單字，請先產生單字或選擇其他範圍！");
+        const validPool = pool.filter(w => w.illustrative && w.collocation);
+        if (validPool.length < 2) {
+          showToast("⚠️ 單字數量不足或尚未產生例句（至少需 2 個具備例句的單字）！");
           return;
         }
 
-        const shuffled = [...pool].sort(() => Math.random() - 0.5);
-        AppState.activeQuiz = {
+        const shuffled = shuffleArray(validPool);
+        const questions = shuffled.map(target => this.buildQuestion(target, validPool, mode));
+
+        AppState.quiz = {
+          active: true,
           mode,
-          questions: shuffled,
-          allDistractors: pool,
+          questions,
           currentIndex: 0,
           score: 0,
-          wrongItems: [],
-          answered: false
+          wrongWords: []
         };
 
-        const arena = document.getElementById("quizArena");
-        arena.classList.remove("hidden");
-        this.renderQuestion();
+        UIRenderer.renderQuizQuestion();
       },
 
-      buildBlankSentence(sentence, targetWord) {
-        if (!sentence) return `Please choose the word meaning "${targetWord}".`;
-        const escaped = targetWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(`\\b${escaped}[a-z]*\\b`, "gi");
-        if (regex.test(sentence)) {
-          return sentence.replace(regex, "________");
-        }
-        return `${sentence} (Target: ________)`;
-      },
+      buildQuestion(target, fullPool, mode) {
+        const distractors = shuffleArray(
+          fullPool.filter(w => w.word.toLowerCase() !== target.word.toLowerCase())
+        ).slice(0, 3);
+        const options = shuffleArray([target, ...distractors]);
 
-      renderQuestion() {
-        const qState = AppState.activeQuiz;
-        const arena = document.getElementById("quizArena");
-        if (!qState || qState.currentIndex >= qState.questions.length) {
-          this.renderSummary();
-          return;
-        }
+        const escaped = target.word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const blankRegex = new RegExp(`\\b${escaped}(?:s|es|ed|d|ing|ly)?\\b`, "gi");
 
-        const current = qState.questions[qState.currentIndex];
-        qState.answered = false;
-
-        // 準備四選一干擾項
-        const others = qState.allDistractors
-          .filter(w => w.word.toLowerCase() !== current.word.toLowerCase())
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 3);
-        const options = [current, ...others].sort(() => Math.random() - 0.5);
-
-        let promptHtml = "";
-        if (qState.mode === "contextCloze") {
-          const blanked = this.buildBlankSentence(current.illustrative, current.word);
-          promptHtml = `
-            <span class="badge" style="margin-bottom:0.5rem;">語境推斷克漏字</span>
-            <p style="font-size:1.15rem; font-weight:600; margin:0.5rem 0;">${blanked}</p>
-            <p style="font-size:0.9rem; color:var(--text-muted);">提示詞性：${current.pos || "—"}</p>
-          `;
-        } else if (qState.mode === "collocationMatch") {
-          const blankedColloc = this.buildBlankSentence(current.collocation, current.word);
-          promptHtml = `
-            <span class="badge badge-warn" style="margin-bottom:0.5rem;">高頻搭配詞挑戰</span>
-            <p style="font-size:1.15rem; font-weight:600; margin:0.5rem 0;">${blankedColloc}</p>
-            <p style="font-size:0.95rem; color:var(--text-secondary);">中文釋義提示：<strong>${current.zh || "請選出最適合的搭配單字"}</strong></p>
-          `;
-        } else {
-          promptHtml = `
-            <span class="badge badge-success" style="margin-bottom:0.5rem;">聽力發音辨識（可隨時調整上方語速）</span>
-            <div style="margin:0.75rem 0;">
-              <button id="quizListenReplayBtn" class="btn btn-primary">🔊 點擊聆聽單字與示範句</button>
-            </div>
-            <p style="font-size:0.88rem; color:var(--text-muted);">聽完發音後，請選出正確的英文單字與中文釋義：</p>
-          `;
-        }
-
-        arena.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
-            <strong>第 ${qState.currentIndex + 1} / ${qState.questions.length} 題</strong>
-            <span class="badge">目前得分：${qState.score}</span>
-          </div>
-          <div style="background:var(--bg-surface-alt); padding:1rem; border-radius:var(--radius-md); margin-bottom:1rem;">
-            ${promptHtml}
-          </div>
-          <div id="quizOptionsBox">
-            ${options.map((opt, idx) => `
-              <button class="quiz-option" data-word="${opt.word}">
-                <span class="badge">${String.fromCharCode(65 + idx)}</span>
-                <span><strong>${opt.word}</strong> ${qState.mode === "listening" && opt.zh ? `<span style="color:var(--text-secondary); font-weight:400;">(${opt.zh})</span>` : ""}</span>
-              </button>
-            `).join("")}
-          </div>
-          <div id="quizFeedbackBox" class="hidden" style="margin-top:0.85rem; padding:0.85rem; border-radius:var(--radius-md);"></div>
-          <div style="margin-top:1rem; text-align:right;">
-            <button id="quizNextBtn" class="btn btn-primary hidden">下一題 ➔</button>
-          </div>
-        `;
-
-        if (qState.mode === "listening") {
-          const playAudio = () => {
-            SpeechEngine.speakText(`${current.word}. ${current.collocation || current.illustrative || ""}`);
+        if (mode === "contextCloze") {
+          const maskedSentence = target.illustrative.replace(blankRegex, "________");
+          return {
+            type: "contextCloze",
+            target,
+            promptText: maskedSentence,
+            hintZh: `中文提示：${target.zh} (${target.pos || ""})`,
+            options
           };
-          document.getElementById("quizListenReplayBtn").addEventListener("click", playAudio);
-          setTimeout(playAudio, 250);
+        } else if (mode === "collocationMatch") {
+          const maskedColloc = target.collocation.replace(blankRegex, "________");
+          return {
+            type: "collocationMatch",
+            target,
+            promptText: maskedColloc,
+            hintZh: `中文提示：${target.zh} (${target.pos || ""})`,
+            options
+          };
+        } else {
+          return {
+            type: "listening",
+            target,
+            audioText: `${target.word}. ${target.collocation}`,
+            options
+          };
+        }
+      },
+
+      submitChoice(selectedWordStr, btnEl) {
+        const q = AppState.quiz.questions[AppState.quiz.currentIndex];
+        const isCorrect = selectedWordStr.toLowerCase() === q.target.word.toLowerCase();
+
+        document.querySelectorAll(".quiz-option").forEach(b => (b.disabled = true));
+        SRSManager.recordResult(q.target, isCorrect);
+
+        if (isCorrect) {
+          btnEl.classList.add("correct");
+          AppState.quiz.score++;
+        } else {
+          btnEl.classList.add("wrong");
+          AppState.quiz.wrongWords.push(q.target);
+          document.querySelectorAll(".quiz-option").forEach(b => {
+            if (b.dataset.word.toLowerCase() === q.target.word.toLowerCase()) {
+              b.classList.add("correct");
+            }
+          });
         }
 
-        document.querySelectorAll("#quizOptionsBox .quiz-option").forEach(btn => {
-          btn.addEventListener("click", () => {
-            if (qState.answered) return;
-            qState.answered = true;
-            const chosenWord = btn.dataset.word;
-            const isCorrect = chosenWord.toLowerCase() === current.word.toLowerCase();
+        const feedback = document.getElementById("quizFeedbackBox");
+        feedback.classList.remove("hidden");
+        feedback.innerHTML = `
+          <div style="padding:0.85rem; border-radius:var(--radius-md); background:${isCorrect ? "var(--status-success-bg)" : "var(--status-error-bg)"}; color:${isCorrect ? "var(--status-success)" : "var(--status-error)"}; margin-top:0.75rem;">
+            <strong>${isCorrect ? "✅ 答對了！（已延長下次複習間隔）" : `❌ 答錯了！正確答案是：${escapeHTML(q.target.word)}（已排入優先複習）`}</strong>
+            <div style="margin-top:0.35rem; color:var(--text-primary); font-weight:400; font-size:0.9rem;">
+              <div><strong>示範句：</strong>${escapeHTML(q.target.illustrative)}</div>
+              <div><strong>搭配短句：</strong>${escapeHTML(q.target.collocation)}</div>
+            </div>
+          </div>
+          <button id="nextQuizQuestionBtn" class="btn btn-primary" style="margin-top:0.85rem; width:100%;">
+            ${AppState.quiz.currentIndex + 1 < AppState.quiz.questions.length ? "下一題 ➡️" : "查看測驗成績 📊"}
+          </button>
+        `;
 
-            SRSManager.recordAnswer(current, isCorrect);
-
-            document.querySelectorAll("#quizOptionsBox .quiz-option").forEach(b => {
-              b.disabled = true;
-              if (b.dataset.word.toLowerCase() === current.word.toLowerCase()) {
-                b.classList.add("correct");
-              } else if (b === btn && !isCorrect) {
-                b.classList.add("wrong");
-              }
-            });
-
-            const fb = document.getElementById("quizFeedbackBox");
-            fb.classList.remove("hidden");
-            if (isCorrect) {
-              qState.score++;
-              fb.style.background = "var(--status-success-bg)";
-              fb.style.color = "var(--status-success)";
-              fb.innerHTML = `✅ <strong>答對了！</strong> ${current.word} (${current.pos || ""})：${current.zh || ""}`;
-            } else {
-              qState.wrongItems.push(current);
-              fb.style.background = "var(--status-error-bg)";
-              fb.style.color = "var(--status-error)";
-              fb.innerHTML = `❌ <strong>答錯了！</strong> 正確答案是 <strong>${current.word}</strong>（${current.zh || ""}）。<br><small>原句：${current.illustrative || current.collocation || ""}</small>`;
-            }
-
-            SpeechEngine.speakText(current.word);
-            document.getElementById("quizNextBtn").classList.remove("hidden");
-          });
-        });
-
-        document.getElementById("quizNextBtn").addEventListener("click", () => {
-          qState.currentIndex++;
-          this.renderQuestion();
+        document.getElementById("nextQuizQuestionBtn").addEventListener("click", () => {
+          AppState.quiz.currentIndex++;
+          if (AppState.quiz.currentIndex < AppState.quiz.questions.length) {
+            UIRenderer.renderQuizQuestion();
+          } else {
+            UIRenderer.renderQuizSummary();
+          }
         });
       },
 
-      renderSummary() {
-        const qState = AppState.activeQuiz;
-        const arena = document.getElementById("quizArena");
-        const accuracy = Math.round((qState.score / qState.questions.length) * 100);
+      submitSpelling(typedStr) {
+        const q = AppState.quiz.questions[AppState.quiz.currentIndex];
+        const cleanTyped = typedStr.trim().toLowerCase();
+        const isCorrect = cleanTyped === q.target.word.toLowerCase();
 
-        arena.innerHTML = `
-          <div style="text-align:center; padding:1rem 0;">
-            <div style="font-size:2.5rem; margin-bottom:0.5rem;">${accuracy >= 80 ? "🏆" : "💪"}</div>
-            <h3 style="font-size:1.35rem; margin-bottom:0.35rem;">測驗完成！正確率 ${accuracy}%</h3>
-            <p style="color:var(--text-secondary); margin-bottom:1.25rem;">
-              共 ${qState.questions.length} 題，答對 ${qState.score} 題。答題紀錄已自動更新至 SRS 間隔複習排程！
-            </p>
-            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.75rem;">
-              ${qState.wrongItems.length > 0 ? `<button id="retryWrongQuizBtn" class="btn btn-accent">🔁 只針對錯題重練 (${qState.wrongItems.length} 題)</button>` : ""}
-              <button id="restartSameQuizBtn" class="btn btn-primary">🔄 再測驗一次</button>
-            </div>
-          </div>
-        `;
+        const inputEl = document.getElementById("spellingInput");
+        const submitBtn = document.getElementById("submitSpellingBtn");
+        if (inputEl) inputEl.disabled = true;
+        if (submitBtn) submitBtn.disabled = true;
 
-        if (qState.wrongItems.length > 0) {
-          document.getElementById("retryWrongQuizBtn").addEventListener("click", () => {
-            AppState.activeQuiz = {
-              mode: qState.mode,
-              questions: [...qState.wrongItems].sort(() => Math.random() - 0.5),
-              allDistractors: qState.allDistractors,
-              currentIndex: 0,
-              score: 0,
-              wrongItems: [],
-              answered: false
-            };
-            this.renderQuestion();
-          });
+        SRSManager.recordResult(q.target, isCorrect);
+
+        if (isCorrect) {
+          AppState.quiz.score++;
+        } else {
+          AppState.quiz.wrongWords.push(q.target);
         }
 
-        document.getElementById("restartSameQuizBtn").addEventListener("click", () => {
-          this.start(
-            document.getElementById("quizScopeSelect").value,
-            document.getElementById("quizTypeSelect").value
-          );
+        const feedback = document.getElementById("quizFeedbackBox");
+        feedback.classList.remove("hidden");
+        feedback.innerHTML = `
+          <div style="padding:0.85rem; border-radius:var(--radius-md); background:${isCorrect ? "var(--status-success-bg)" : "var(--status-error-bg)"}; color:${isCorrect ? "var(--status-success)" : "var(--status-error)"}; margin-top:0.75rem;">
+            <strong>${isCorrect ? "✅ 拼寫完全正確！" : `❌ 正確拼法為：${escapeHTML(q.target.word)}`}</strong>
+            <div style="margin-top:0.35rem; color:var(--text-primary); font-weight:400; font-size:0.9rem;">
+              <div><strong>完整搭配短句：</strong>${escapeHTML(q.target.collocation)}</div>
+              <div><strong>示範句：</strong>${escapeHTML(q.target.illustrative)}</div>
+            </div>
+          </div>
+          <button id="nextQuizQuestionBtn" class="btn btn-primary" style="margin-top:0.85rem; width:100%;">
+            ${AppState.quiz.currentIndex + 1 < AppState.quiz.questions.length ? "下一題 ➡️" : "查看測驗成績 📊"}
+          </button>
+        `;
+
+        document.getElementById("nextQuizQuestionBtn").addEventListener("click", () => {
+          AppState.quiz.currentIndex++;
+          if (AppState.quiz.currentIndex < AppState.quiz.questions.length) {
+            UIRenderer.renderQuizQuestion();
+          } else {
+            UIRenderer.renderQuizSummary();
+          }
         });
       }
     };
 
     /**
      * ============================================================================
-     * MODULE 9: UI RENDERER & HELPERS
+     * MODULE 10: UI RENDERER
      * ============================================================================
      */
-    function showToast(message) {
-      const container = document.getElementById("toastContainer");
-      if (!container) return;
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.textContent = message;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transition = "opacity 0.25s ease";
-        setTimeout(() => toast.remove(), 260);
-      }, 3000);
-    }
-
     const UIRenderer = {
       switchTab(tabId) {
         SpeechEngine.stop();
-        document.querySelectorAll(".nav-tab").forEach(tab => {
-          tab.classList.toggle("active", tab.dataset.tab === tabId);
+        document.querySelectorAll(".nav-tab").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.tab === tabId);
         });
         document.querySelectorAll(".tab-panel").forEach(panel => {
           panel.classList.toggle("active", panel.id === tabId);
         });
+        if (tabId === "historyTab") {
+          this.renderHistoryList();
+        }
       },
 
       updateInputWordCount() {
-        const raw = document.getElementById("customWordsInput").value.trim();
-        const count = raw ? raw.split("\n").filter(line => line.trim()).length : 0;
-        document.getElementById("selectedWordsCountBadge").textContent = `目前清單：${count} 字`;
-      },
-
-      highlightTargetWords(text, wordsList) {
-        if (!text) return "";
-        let result = text;
-        const sortedWords = [...wordsList]
-          .map(w => w.word)
-          .filter(Boolean)
-          .sort((a, b) => b.length - a.length);
-
-        sortedWords.forEach(word => {
-          const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          const regex = new RegExp(`\\b(${escaped}[a-z]*)\\b`, "gi");
-          result = result.replace(regex, '<strong class="target-word">$1</strong>');
-        });
-        return result;
+        const raw = document.getElementById("customWordsInput").value;
+        const count = parseWordsInput(raw).length;
+        const badge = document.getElementById("selectedWordsCountBadge");
+        if (badge) badge.textContent = `目前清單：${count} 字`;
       },
 
       renderStudyView() {
         const pillsContainer = document.getElementById("groupPillsContainer");
         const contentContainer = document.getElementById("studyContentContainer");
 
-        if (!AppState.groups || AppState.groups.length === 0) {
+        if (!AppState.groups || !AppState.groups.length) {
           pillsContainer.innerHTML = "";
           contentContainer.innerHTML = `
-            <div class="card" style="text-align:center; padding:2.5rem 1rem;">
+            <div class="card" style="text-align:center; padding:2.5rem 1.25rem;">
               <div style="font-size:2.5rem; margin-bottom:0.5rem;">📖</div>
-              <h3 style="margin-bottom:0.4rem;">尚未載入或產生學習內容</h3>
-              <p style="color:var(--text-secondary); margin-bottom:1.15rem;">
-                請先到「<strong>1. 建立學習任務</strong>」輸入自訂單字或從「內建單字庫」匯入後產生例句與故事。
+              <h3 style="margin-bottom:0.4rem;">尚未載入任何學習單字組</h3>
+              <p style="color:var(--text-secondary); margin-bottom:1.15rem; font-size:0.95rem;">
+                請先到「<strong>1. 建立任務</strong>」輸入自訂單字，或從「<strong>內建單字庫</strong>」挑選主題詞彙！
               </p>
-              <button class="btn btn-primary" onclick="UIRenderer.switchTab('workspaceTab')">前往建立學習任務</button>
+              <button type="button" class="btn btn-primary" onclick="UIRenderer.switchTab('workspaceTab')">
+                ✨ 前往建立學習任務
+              </button>
             </div>
           `;
           return;
         }
 
-        pillsContainer.innerHTML = AppState.groups.map((g, idx) => `
-          <button class="group-pill ${idx === AppState.activeGroupIndex ? "active" : ""}" data-group-idx="${idx}">
-            第 ${idx + 1} 組（${g.words.length} 字）
+        pillsContainer.innerHTML = AppState.groups.map((grp, idx) => `
+          <button class="group-pill ${idx === AppState.activeGroupIndex ? "active" : ""}" data-grp-idx="${idx}">
+            第 ${grp.groupIndex} 組 (${grp.words.length}字) ${grp.story ? "📖" : ""}
           </button>
         `).join("");
 
         pillsContainer.querySelectorAll(".group-pill").forEach(btn => {
           btn.addEventListener("click", () => {
             SpeechEngine.stop();
-            AppState.activeGroupIndex = Number(btn.dataset.groupIdx);
+            AppState.activeGroupIndex = parseInt(btn.dataset.grpIdx, 10);
             this.renderStudyView();
           });
         });
 
         const group = AppState.groups[AppState.activeGroupIndex];
-        const rawSentences = (group.story || "")
-          .match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [];
+        const sentences = splitIntoSentences(group.story);
+        const storySentencesHTML = sentences.map((s, sIdx) =>
+          `<span class="story-sentence" data-s-idx="${sIdx}" title="點擊單獨朗讀此句">${highlightTargetWordsInText(s, group.words)}</span>`
+        ).join(" ");
 
-        const storySentencesHtml = rawSentences.map(s => {
-          const trimmed = s.trim();
-          if (!trimmed) return "";
-          const highlighted = this.highlightTargetWords(trimmed, group.words);
-          return `<span class="story-sentence" data-raw-sentence="${trimmed.replace(/"/g, "&quot;")}">${highlighted} </span>`;
-        }).join("");
+        // 故事區塊：支援尚未生成時的「第二階段生成按鈕」與已生成後的「全文朗讀 / 顯示翻譯 / 重新生成」
+        const storySectionHTML = group.story
+          ? `
+            <div class="story-box">
+              <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.55rem;">
+                <div>
+                  <span class="badge">第 ${group.groupIndex} 組 連貫情境故事 ・ 難度 ${escapeHTML(group.cefrLevel || "A2")}</span>
+                  <h3 style="font-size:1.15rem; margin-top:0.35rem;">${escapeHTML(group.title || `第 ${group.groupIndex} 組情境故事`)}</h3>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">
+                  <button id="toggleStoryReadBtn" class="speak-btn">🔊 全文朗讀</button>
+                  <button id="toggleStoryZhBtn" class="btn btn-secondary btn-sm">顯示翻譯</button>
+                  <button id="generateSingleStoryBtn" class="btn btn-secondary btn-sm" title="使用 API 重新為本組撰寫一篇新故事">🔄 重骰故事</button>
+                </div>
+              </div>
 
-        const cardsHtml = group.words.map(w => `
-          <div class="vocab-card">
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.4rem;">
+                💡 提示：點擊「🔊 全文朗讀」可逐句高亮跟讀，也可直接點擊故事中的任一句子單獨發音。
+              </p>
+
+              <div class="story-text" id="storyParagraphEl">${storySentencesHTML}</div>
+
+              ${group.storyZh ? `
+                <div id="storyZhBox" class="hidden" style="margin-top:0.9rem; padding-top:0.85rem; border-top:1px dashed var(--border-color); color:var(--text-secondary); font-size:0.95rem;">
+                  <strong>【中文翻譯】</strong><br/>${escapeHTML(group.storyZh)}
+                </div>
+              ` : ""}
+            </div>
+          `
+          : `
+            <div class="story-box">
+              <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.5rem;">
+                <div>
+                  <span class="badge">第 ${group.groupIndex} 組 連貫情境故事 ・ 難度 ${escapeHTML(group.cefrLevel || "A2")}</span>
+                  <h3 style="font-size:1.12rem; margin-top:0.3rem;">第二階段：將本組 ${group.words.length} 個單字串成連貫故事</h3>
+                </div>
+              </div>
+              <div class="story-empty-cta">
+                <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:0.8rem;">
+                  先瀏覽下方的雙軌例句熟悉單字，準備好後點擊下方按鈕，AI 將專門為這 <strong>${group.words.length} 個單字</strong>編寫一篇專屬短篇故事！
+                </p>
+                <button id="generateSingleStoryBtn" class="btn btn-primary">
+                  📖 第二階段：為本組生成連貫情境故事
+                </button>
+              </div>
+            </div>
+          `;
+
+        const vocabCardsHTML = group.words.map((item, wIdx) => `
+          <article class="vocab-card">
             <div>
               <div class="vocab-header">
                 <div>
-                  <span class="vocab-word">${w.word}</span>
-                  <span class="vocab-pos">${w.pos || ""}</span>
+                  <span class="vocab-word">${escapeHTML(item.word)}</span>
+                  <span class="vocab-pos">${escapeHTML(item.pos)}</span>
+                  <div style="font-weight:600; color:var(--text-secondary); margin-top:0.15rem;">${escapeHTML(item.zh)}</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                  <span style="font-weight:700; color:var(--text-secondary);">${w.zh || ""}</span>
-                  <button class="speak-btn" data-speak="${w.word.replace(/"/g, "&quot;")}" title="單字發音">🔊</button>
-                </div>
+                <button class="speak-btn word-speak-btn" data-speak-text="${escapeHTML(item.word)}" title="朗讀單字">
+                  🔊 單字
+                </button>
               </div>
 
+              <!-- 1. 語境示範句 -->
               <div class="sentence-block" style="margin-top:0.75rem;">
                 <div>
-                  <span class="sentence-label label-illus">語境示範句</span>
-                  <p style="font-size:0.96rem;">${this.highlightTargetWords(w.illustrative || "", [w])}</p>
+                  <span class="sentence-label label-illus">1. 語境示範句 (Context Clues)</span>
+                  <div style="font-size:0.96rem;">${highlightTargetWordsInText(item.illustrative, [item])}</div>
                 </div>
-                <button class="speak-btn" data-speak="${(w.illustrative || "").replace(/"/g, "&quot;")}" title="朗讀示範句">🔊</button>
+                <button class="speak-btn sent-speak-btn" data-w-idx="${wIdx}" data-type="illustrative" title="朗讀示範句">
+                  🔊
+                </button>
               </div>
 
-              <div class="sentence-block" style="margin-top:0.55rem;">
+              <!-- 2. 10字內高頻搭配詞短句 -->
+              <div class="sentence-block" style="margin-top:0.6rem;">
                 <div>
-                  <span class="sentence-label label-colloc">高頻搭配詞短句</span>
-                  <p style="font-size:0.96rem;">${this.highlightTargetWords(w.collocation || "", [w])}</p>
+                  <span class="sentence-label label-colloc">2. 高頻搭配詞短句</span>
+                  <div style="font-size:0.96rem; font-weight:500;">${highlightTargetWordsInText(item.collocation, [item])}</div>
                 </div>
-                <button class="speak-btn" data-speak="${(w.collocation || "").replace(/"/g, "&quot;")}" title="朗讀搭配短句">🔊</button>
+                <button class="speak-btn sent-speak-btn" data-w-idx="${wIdx}" data-type="collocation" title="朗讀搭配短句">
+                  🔊
+                </button>
               </div>
             </div>
-          </div>
+          </article>
         `).join("");
 
         contentContainer.innerHTML = `
-          <div class="story-box">
-            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.65rem;">
-              <div>
-                <span class="badge">難度：${group.cefrLevel || "A2"}</span>
-                <h3 style="font-size:1.2rem; margin-top:0.25rem;">📘 ${group.title || `第 ${AppState.activeGroupIndex + 1} 組情境故事`}</h3>
-              </div>
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <button id="toggleFullStoryReadBtn" class="speak-btn">🔊 全文朗讀</button>
-                <button id="toggleStoryZhBtn" class="btn btn-secondary btn-sm">${AppState.showStoryZh ? "隱藏翻譯" : "顯示翻譯"}</button>
-              </div>
-            </div>
-
-            <div id="storySentencesContainer" class="story-text">${storySentencesHtml}</div>
-
-            <div id="storyZhBox" class="${AppState.showStoryZh ? "" : "hidden"}" style="margin-top:1rem; padding-top:0.85rem; border-top:1px dashed var(--border-color); color:var(--text-secondary); font-size:0.96rem;">
-              <strong>中文翻譯：</strong>${group.storyZh || "（無中文翻譯）"}
-            </div>
-          </div>
-
-          <div class="vocab-list">${cardsHtml}</div>
+          ${storySectionHTML}
+          <h3 style="font-size:1.08rem; margin-bottom:0.8rem;">📚 本組單字與雙軌例句（共 ${group.words.length} 字）</h3>
+          <div class="vocab-list">${vocabCardsHTML}</div>
         `;
 
-        // 綁定故事逐句點擊朗讀
-        contentContainer.querySelectorAll(".story-sentence").forEach(span => {
-          span.addEventListener("click", () => {
-            SpeechEngine.stop();
-            span.classList.add("active-reading");
-            SpeechEngine.speakText(span.dataset.rawSentence, () => {
-              span.classList.remove("active-reading");
+        // 綁定第二階段單組故事生成按鈕
+        const genStoryBtn = document.getElementById("generateSingleStoryBtn");
+        if (genStoryBtn) {
+          genStoryBtn.addEventListener("click", () => handleGenerateStage2Story(AppState.activeGroupIndex, genStoryBtn));
+        }
+
+        // 綁定全文朗讀 Toggle 與 中文翻譯 Toggle
+        const toggleReadBtn = document.getElementById("toggleStoryReadBtn");
+        if (toggleReadBtn) {
+          toggleReadBtn.addEventListener("click", () => {
+            SpeechEngine.toggleStoryReadAloud(sentences, (isReading) => {
+              if (isReading) {
+                toggleReadBtn.textContent = "🔇 停止朗讀";
+                toggleReadBtn.classList.add("speaking");
+              } else {
+                toggleReadBtn.textContent = "🔊 全文朗讀";
+                toggleReadBtn.classList.remove("speaking");
+              }
             });
           });
-        });
+        }
 
-        // 全文朗讀 / 停止朗讀 Toggle
-        document.getElementById("toggleFullStoryReadBtn").addEventListener("click", () => {
-          if (AppState.isReadingFullStory) {
-            SpeechEngine.stop();
-          } else {
-            const sentences = contentContainer.querySelectorAll(".story-sentence");
-            SpeechEngine.playStorySequence(sentences);
-          }
-        });
-
-        // 顯示翻譯 / 隱藏翻譯 Toggle
-        document.getElementById("toggleStoryZhBtn").addEventListener("click", (e) => {
-          AppState.showStoryZh = !AppState.showStoryZh;
-          document.getElementById("storyZhBox").classList.toggle("hidden", !AppState.showStoryZh);
-          e.currentTarget.textContent = AppState.showStoryZh ? "隱藏翻譯" : "顯示翻譯";
-        });
-
-        // 綁定各單字與例句發音按鈕
-        contentContainer.querySelectorAll(".speak-btn[data-speak]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            SpeechEngine.stop();
-            SpeechEngine.speakText(btn.dataset.speak);
+        const toggleZhBtn = document.getElementById("toggleStoryZhBtn");
+        const zhBox = document.getElementById("storyZhBox");
+        if (toggleZhBtn && zhBox) {
+          toggleZhBtn.addEventListener("click", () => {
+            const isHidden = zhBox.classList.contains("hidden");
+            zhBox.classList.toggle("hidden", !isHidden);
+            toggleZhBtn.textContent = isHidden ? "隱藏翻譯" : "顯示翻譯";
           });
+        }
+
+        contentContainer.querySelectorAll(".story-sentence").forEach(span => {
+          span.addEventListener("click", () => {
+            const sIdx = parseInt(span.dataset.sIdx, 10);
+            SpeechEngine.speakText(sentences[sIdx]);
+          });
+        });
+
+        contentContainer.querySelectorAll(".word-speak-btn").forEach(btn => {
+          btn.addEventListener("click", () => SpeechEngine.speakText(btn.dataset.speakText, btn));
+        });
+
+        contentContainer.querySelectorAll(".sent-speak-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const item = group.words[parseInt(btn.dataset.wIdx, 10)];
+            const text = btn.dataset.type === "illustrative" ? item.illustrative : item.collocation;
+            SpeechEngine.speakText(text, btn);
+          });
+        });
+      },
+
+      renderQuizQuestion() {
+        const arena = document.getElementById("quizArena");
+        arena.classList.remove("hidden");
+        const q = AppState.quiz.questions[AppState.quiz.currentIndex];
+        const total = AppState.quiz.questions.length;
+        const num = AppState.quiz.currentIndex + 1;
+
+        if (q.type === "contextCloze") {
+          arena.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+              <span class="badge">測驗一：語境推斷克漏字</span>
+              <strong>進度：${num} / ${total} （目前得分：${AppState.quiz.score}）</strong>
+            </div>
+            <div style="background:var(--bg-surface-alt); padding:1.15rem; border-radius:var(--radius-md); font-size:1.1rem; margin-bottom:0.85rem;">
+              ${escapeHTML(q.promptText)}
+            </div>
+            <div style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.9rem;">${escapeHTML(q.hintZh)}</div>
+            <div>
+              ${q.options.map((opt, i) => `
+                <button class="quiz-option" data-word="${escapeHTML(opt.word)}">
+                  <span class="badge">${String.fromCharCode(65 + i)}</span>
+                  <span>${escapeHTML(opt.word)}</span>
+                </button>
+              `).join("")}
+            </div>
+            <div id="quizFeedbackBox" class="hidden"></div>
+          `;
+
+          arena.querySelectorAll(".quiz-option").forEach(btn => {
+            btn.addEventListener("click", () => QuizEngine.submitChoice(btn.dataset.word, btn));
+          });
+        } else if (q.type === "collocationMatch") {
+          arena.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+              <span class="badge">測驗二：高頻搭配詞與拼寫挑戰</span>
+              <strong>進度：${num} / ${total} （目前得分：${AppState.quiz.score}）</strong>
+            </div>
+            <div style="background:var(--bg-surface-alt); padding:1.15rem; border-radius:var(--radius-md); font-size:1.1rem; margin-bottom:0.65rem;">
+              ${escapeHTML(q.promptText)}
+            </div>
+            <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.9rem;">
+              ${escapeHTML(q.hintZh)} ｜ 字首提示：<strong>${escapeHTML(q.target.word[0])}___</strong>（共 ${q.target.word.length} 個字母）
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <input type="text" id="spellingInput" class="form-control" style="flex:1; min-width:200px;" placeholder="請輸入完整英文單字..." autocomplete="off" autocapitalize="none" />
+              <button id="submitSpellingBtn" class="btn btn-primary">送出答案</button>
+            </div>
+            <div id="quizFeedbackBox" class="hidden"></div>
+          `;
+
+          const inputEl = document.getElementById("spellingInput");
+          const submitBtn = document.getElementById("submitSpellingBtn");
+          inputEl.focus();
+          submitBtn.addEventListener("click", () => QuizEngine.submitSpelling(inputEl.value));
+          inputEl.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") QuizEngine.submitSpelling(inputEl.value);
+          });
+        } else {
+          arena.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+              <span class="badge">測驗三：聽力發音辨識測驗</span>
+              <strong>進度：${num} / ${total} （目前得分：${AppState.quiz.score}）</strong>
+            </div>
+            <div style="text-align:center; padding:1.35rem; background:var(--bg-surface-alt); border-radius:var(--radius-md); margin-bottom:0.9rem;">
+              <p style="margin-bottom:0.65rem; color:var(--text-secondary);">請仔細聆聽單字與高頻搭配短句發音，選出正確單字：</p>
+              <button id="playQuizAudioBtn" class="btn btn-primary">🔊 播放發音（可於上方調整語速）</button>
+            </div>
+            <div>
+              ${q.options.map((opt, i) => `
+                <button class="quiz-option" data-word="${escapeHTML(opt.word)}">
+                  <span class="badge">${String.fromCharCode(65 + i)}</span>
+                  <span>${escapeHTML(opt.word)} <small style="color:var(--text-muted); font-weight:400;">(${escapeHTML(opt.zh)})</small></span>
+                </button>
+              `).join("")}
+            </div>
+            <div id="quizFeedbackBox" class="hidden"></div>
+          `;
+
+          const playBtn = document.getElementById("playQuizAudioBtn");
+          playBtn.addEventListener("click", () => SpeechEngine.speakText(q.audioText, playBtn));
+          setTimeout(() => SpeechEngine.speakText(q.audioText, playBtn), 200);
+
+          arena.querySelectorAll(".quiz-option").forEach(btn => {
+            btn.addEventListener("click", () => QuizEngine.submitChoice(btn.dataset.word, btn));
+          });
+        }
+      },
+
+      renderQuizSummary() {
+        const arena = document.getElementById("quizArena");
+        const total = AppState.quiz.questions.length;
+        const score = AppState.quiz.score;
+        const percent = Math.round((score / total) * 100);
+        const wrongCount = AppState.quiz.wrongWords.length;
+
+        arena.innerHTML = `
+          <div style="text-align:center; padding:1.35rem 0.5rem;">
+            <div style="font-size:2.6rem; margin-bottom:0.4rem;">${percent >= 80 ? "🏆" : "💪"}</div>
+            <h3 style="font-size:1.35rem; margin-bottom:0.4rem;">測驗完成！您的得分：${score} / ${total} (${percent}%)</h3>
+            <p style="color:var(--text-secondary); margin-bottom:1.15rem; font-size:0.92rem;">
+              系統已自動根據您的答題表現更新 <strong>SRS 間隔重複排程</strong>！
+            </p>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.65rem;">
+              ${wrongCount > 0 ? `<button id="retryWrongBtn" class="btn btn-accent">🔁 針對答錯的 ${wrongCount} 個單字重練</button>` : ""}
+              <button id="restartQuizBtn" class="btn btn-primary">🔄 再測驗一次</button>
+              <button id="backToStudyBtn" class="btn btn-secondary">📖 返回故事與例句</button>
+            </div>
+          </div>
+        `;
+
+        if (wrongCount > 0) {
+          document.getElementById("retryWrongBtn").addEventListener("click", () => {
+            const uniqueWrongs = Array.from(new Map(AppState.quiz.wrongWords.map(w => [w.word, w])).values());
+            QuizEngine.start("custom", AppState.quiz.mode, uniqueWrongs);
+          });
+        }
+        document.getElementById("restartQuizBtn").addEventListener("click", () => {
+          QuizEngine.start(
+            document.getElementById("quizScopeSelect").value,
+            document.getElementById("quizTypeSelect").value
+          );
+        });
+        document.getElementById("backToStudyBtn").addEventListener("click", () => {
+          this.switchTab("studyTab");
         });
       },
 
       renderHistoryList() {
         const container = document.getElementById("historyListContainer");
-        const sessions = StorageManager.getSessions();
-        if (sessions.length === 0) {
-          container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:1.5rem 0;">目前尚無存檔紀錄。在「2. 故事與例句」頁面點擊「💾 儲存本次學習紀錄」即可按日期保存。</p>`;
+        const sessions = StorageManager.getAllSessions();
+
+        if (!sessions.length) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+              目前尚無儲存的學習紀錄。在「2. 故事與例句」分頁點擊「💾 儲存紀錄」即可按日期保存！
+            </div>
+          `;
           return;
         }
 
-        container.innerHTML = sessions.map(s => `
-          <div class="sentence-block" style="margin-bottom:0.75rem; align-items:center; flex-wrap:wrap;">
+        container.innerHTML = sessions.map(sess => `
+          <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.95rem; margin-bottom:0.75rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.75rem; background:var(--bg-surface-alt);">
             <div>
-              <span class="badge">📅 ${s.date}</span>
-              <strong style="margin-left:0.4rem; font-size:1.02rem;">${s.title}</strong>
-              <div style="font-size:0.84rem; color:var(--text-muted); margin-top:0.2rem;">
-                儲存時間：${s.timestamp} ｜ 共 ${s.groups.length} 組（${s.totalWords} 字）
+              <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                <span class="badge">📅 ${escapeHTML(sess.date)} ${escapeHTML(sess.time || "")}</span>
+                <strong>${escapeHTML(sess.title)}</strong>
+              </div>
+              <div style="font-size:0.86rem; color:var(--text-secondary); margin-top:0.3rem;">
+                共 ${sess.groups.length} 組 ／ ${sess.totalWords} 個單字：
+                ${escapeHTML(sess.groups.flatMap(g => g.words).slice(0, 8).map(w => w.word).join(", "))}${sess.totalWords > 8 ? "..." : ""}
               </div>
             </div>
             <div style="display:flex; gap:0.45rem;">
-              <button class="btn btn-primary btn-sm" onclick="StorageManager.loadSession('${s.id}')">📖 載入複習</button>
-              <button class="btn btn-danger btn-sm" onclick="StorageManager.deleteSession('${s.id}')">🗑️</button>
+              <button class="btn btn-primary btn-sm load-sess-btn" data-id="${sess.id}">📖 載入複習</button>
+              <button class="btn btn-danger btn-sm del-sess-btn" data-id="${sess.id}">🗑️</button>
             </div>
           </div>
         `).join("");
+
+        container.querySelectorAll(".load-sess-btn").forEach(btn => {
+          btn.addEventListener("click", () => StorageManager.loadSession(btn.dataset.id));
+        });
+        container.querySelectorAll(".del-sess-btn").forEach(btn => {
+          btn.addEventListener("click", () => StorageManager.deleteSession(btn.dataset.id));
+        });
       }
     };
 
     /**
      * ============================================================================
-     * MODULE 10: WORD PARSING & AI GENERATION WORKFLOW
+     * MODULE 11: DUAL-ENGINE WORKFLOW HANDLERS
      * ============================================================================
      */
-    function parseUserWordList(rawText) {
-      const lines = rawText.split("\n").map(l => l.trim()).filter(Boolean);
-      const parsed = [];
-      const seen = new Set();
-
-      lines.forEach(line => {
-        const parts = line.split("|").map(p => p.trim());
-        const word = parts[0];
-        if (!word) return;
-        const lower = word.toLowerCase();
-        if (seen.has(lower)) return;
-        seen.add(lower);
-
-        parsed.push({
-          word,
-          pos: parts[1] || "",
-          zh: parts[2] || ""
-        });
-      });
-      return parsed;
-    }
-
-    async function handleGenerateLearningContent() {
+    // 方式一（第一階段）：分批生成單字卡與雙軌例句
+    async function handleGenerateStage1Vocab() {
+      const btn = document.getElementById("generateStage1Btn");
       const rawText = document.getElementById("customWordsInput").value;
-      const wordItems = parseUserWordList(rawText);
+      let wordList = parseWordsInput(rawText);
 
-      if (wordItems.length === 0) {
-        showToast("⚠️ 請先輸入至少 1 個單字或片語，或從內建單字庫匯入！");
+      if (!wordList.length) {
+        showToast("⚠️ 請先輸入單字，或從「內建單字庫」匯入單字！");
         return;
       }
 
       const cefrLevel = document.getElementById("cefrLevelSelect").value;
       const orderMode = document.getElementById("orderMode").value;
-      const groupSize = Math.max(1, parseInt(document.getElementById("groupSizeInput").value, 10) || 10);
+      const groupSize = parseInt(document.getElementById("groupSizeInput").value, 10) || 10;
 
-      const orderedList = orderMode === "random"
-        ? [...wordItems].sort(() => Math.random() - 0.5)
-        : [...wordItems];
-
-      const chunks = [];
-      for (let i = 0; i < orderedList.length; i += groupSize) {
-        chunks.push(orderedList.slice(i, i + groupSize));
+      if (orderMode === "random") {
+        wordList = shuffleArray(wordList);
       }
 
-      const btn = document.getElementById("generateGroupsBtn");
+      const progressBox = document.getElementById("stage1ProgressBox");
+      const progressLabel = document.getElementById("stage1ProgressLabel");
+      const progressPercent = document.getElementById("stage1ProgressPercent");
+      const progressFill = document.getElementById("stage1ProgressFill");
+
       btn.disabled = true;
+      btn.innerHTML = '<span class="loader-spinner"></span> 第一階段：正在生成雙軌例句...';
+      progressBox.classList.remove("hidden");
 
       try {
-        const generatedGroups = [];
-        for (let i = 0; i < chunks.length; i++) {
-          btn.innerHTML = `<span class="loader-spinner"></span> 正在生成第 ${i + 1} / ${chunks.length} 組故事與例句...`;
-          const aiResult = await AIService.generateGroupContent(chunks[i], cefrLevel);
-          const groupWords = (aiResult.words && aiResult.words.length > 0) ? aiResult.words : chunks[i];
-          groupWords.forEach(w => SRSManager.upsertWord(w));
+        // 每批最多 10 個單字呼叫 API，確保輕量免費模型穩定不超時
+        const apiBatches = chunkArray(wordList, 10);
+        const enrichedMap = new Map();
 
-          generatedGroups.push({
-            groupIndex: i,
-            title: aiResult.title || `第 ${i + 1} 組情境故事`,
-            cefrLevel,
-            words: groupWords,
-            story: aiResult.story || "",
-            storyZh: aiResult.storyZh || ""
+        for (let i = 0; i < apiBatches.length; i++) {
+          const batch = apiBatches[i];
+          const doneBefore = i * 10;
+          const pct = Math.round((doneBefore / wordList.length) * 100);
+          progressLabel.textContent = `正在處理第 ${doneBefore + 1} ~ ${Math.min(doneBefore + batch.length, wordList.length)} 字（共 ${wordList.length} 字）...`;
+          progressPercent.textContent = `${pct}%`;
+          progressFill.style.width = `${pct}%`;
+
+          const aiWords = await AIService.generateVocabCardsBatch(batch, cefrLevel);
+          aiWords.forEach(item => {
+            if (item && item.word) {
+              enrichedMap.set(item.word.toLowerCase().trim(), item);
+            }
           });
         }
 
-        AppState.groups = generatedGroups;
+        progressLabel.textContent = `已完成全部 ${wordList.length} 字！`;
+        progressPercent.textContent = "100%";
+        progressFill.style.width = "100%";
+
+        const finalWords = wordList.map(orig => {
+          const ai = enrichedMap.get(orig.word.toLowerCase().trim());
+          return {
+            word: orig.word,
+            pos: (ai && ai.pos) || orig.pos || "n./v.",
+            zh: (ai && ai.zh) || orig.zh || "請參考例句語境",
+            illustrative: (ai && ai.illustrative) || orig.illustrative || `Here is an example using the word ${orig.word}.`,
+            collocation: (ai && ai.collocation) || orig.collocation || `Practice using ${orig.word} daily.`
+          };
+        });
+
+        const chunks = chunkArray(finalWords, groupSize);
+        AppState.groups = chunks.map((grpWords, idx) => ({
+          groupIndex: idx + 1,
+          title: `第 ${idx + 1} 組單字學習`,
+          cefrLevel,
+          words: grpWords,
+          story: "",
+          storyZh: ""
+        }));
         AppState.activeGroupIndex = 0;
-        document.getElementById("saveTitleInput").value = `${new Date().toISOString().slice(0, 10)} 衝刺學習 (${orderedList.length}字)`;
+
+        document.getElementById("saveTitleInput").value = `${cefrLevel} 單字衝刺 (${finalWords.length} 字)`;
         UIRenderer.renderStudyView();
         UIRenderer.switchTab("studyTab");
-        showToast(`🎉 成功生成 ${generatedGroups.length} 組例句與連貫故事！`);
+        showToast(`✅ 第一階段完成！已建立 ${AppState.groups.length} 組單字卡，可隨時按需生成各組故事！`);
       } catch (err) {
         console.error(err);
-        showToast(`❌ 生成失敗：${err.message}`);
-        if (!AppState.apiKey) {
-          document.getElementById("openApiModalBtn").click();
-        }
+        showToast(`❌ 生成失敗：${err.message}（若未設定 API Key，可改用「方式二：免 API 複製貼上匯入」）`, 4500);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = "✨ 產生雙軌例句與連貫故事";
+        btn.innerHTML = "✨ 第一階段：生成單字與雙軌例句";
+        setTimeout(() => progressBox.classList.add("hidden"), 1500);
+      }
+    }
+
+    // 方式一（第二階段）：針對單一分組按需生成連貫故事
+    async function handleGenerateStage2Story(groupIdx, triggerBtn) {
+      const group = AppState.groups[groupIdx];
+      if (!group) return;
+
+      const originalHTML = triggerBtn.innerHTML;
+      triggerBtn.disabled = true;
+      triggerBtn.innerHTML = '<span class="loader-spinner"></span> 正在編寫本組故事...';
+
+      try {
+        const result = await AIService.generateSingleGroupStory(group.words, group.cefrLevel || "A2");
+        group.title = result.title;
+        group.story = result.story;
+        group.storyZh = result.storyZh;
+
+        UIRenderer.renderStudyView();
+        showToast(`🎉 第 ${group.groupIndex} 組連貫故事生成完成！`);
+      } catch (err) {
+        console.error(err);
+        showToast(`❌ 故事生成失敗：${err.message}`, 4000);
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = originalHTML;
+      }
+    }
+
+    // 方式二（步驟 1）：複製外部 AI 專屬指令
+    function handleCopyExternalPrompt() {
+      const rawText = document.getElementById("customWordsInput").value;
+      let wordList = parseWordsInput(rawText);
+      if (!wordList.length) {
+        showToast("⚠️ 請先輸入單字，或從「內建單字庫」匯入單字！");
+        return;
+      }
+
+      const cefrLevel = document.getElementById("cefrLevelSelect").value;
+      const orderMode = document.getElementById("orderMode").value;
+      const groupSize = parseInt(document.getElementById("groupSizeInput").value, 10) || 10;
+
+      if (orderMode === "random") {
+        wordList = shuffleArray(wordList);
+      }
+
+      const chunks = chunkArray(wordList, groupSize);
+      const promptStr = AIService.buildExternalPrompt(chunks, cefrLevel);
+
+      const previewBox = document.getElementById("promptPreviewBox");
+      const previewTextarea = document.getElementById("generatedPromptTextarea");
+      previewTextarea.value = promptStr;
+      previewBox.classList.remove("hidden");
+
+      // 使用相容 iFrame 與手機的複製方式
+      previewTextarea.select();
+      previewTextarea.setSelectionRange(0, 99999);
+      let copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch {
+        copied = false;
+      }
+
+      if (copied) {
+        showToast("📋 已複製專屬 AI 指令！請貼給網頁版 Gemini / ChatGPT");
+      } else {
+        showToast("⚠️ 請從下方框內手動全選複製指令！");
+      }
+    }
+
+    // 方式二（步驟 2）：解析外部 AI 回答並建立學習內容
+    function handleParseExternalResponse() {
+      const rawResponse = document.getElementById("externalAiResponseInput").value.trim();
+      if (!rawResponse) {
+        showToast("⚠️ 請先將 Gemini / ChatGPT 的回答貼進文字框中！");
+        return;
+      }
+
+      try {
+        const parsed = AIService.extractJsonObject(rawResponse);
+        const cefrLevel = parsed.cefrLevel || document.getElementById("cefrLevelSelect").value || "A2";
+
+        if (!Array.isArray(parsed.groups) || !parsed.groups.length) {
+          throw new Error("找不到 groups 分組資料，請確認是否完整複製了 AI 的 JSON 回答。");
+        }
+
+        const formattedGroups = parsed.groups.map((g, idx) => {
+          const words = Array.isArray(g.words) ? g.words.map(w => ({
+            word: String(w.word || "").trim(),
+            pos: String(w.pos || "").trim(),
+            zh: String(w.zh || "").trim(),
+            illustrative: String(w.illustrative || "").trim(),
+            collocation: String(w.collocation || "").trim()
+          })).filter(w => w.word) : [];
+
+          return {
+            groupIndex: g.groupIndex || idx + 1,
+            title: g.title || `第 ${idx + 1} 組情境故事`,
+            cefrLevel,
+            words,
+            story: String(g.story || "").trim(),
+            storyZh: String(g.storyZh || "").trim()
+          };
+        }).filter(g => g.words.length > 0);
+
+        if (!formattedGroups.length) {
+          throw new Error("解析後的單字清單為空，請重新複製 AI 回答。");
+        }
+
+        const totalWords = formattedGroups.reduce((s, g) => s + g.words.length, 0);
+        AppState.groups = formattedGroups;
+        AppState.activeGroupIndex = 0;
+
+        document.getElementById("saveTitleInput").value = `${cefrLevel} 單字匯入 (${totalWords} 字)`;
+        UIRenderer.renderStudyView();
+        UIRenderer.switchTab("studyTab");
+        showToast(`🎉 成功匯入 ${formattedGroups.length} 組（共 ${totalWords} 字）與連貫故事！`);
+      } catch (err) {
+        console.error(err);
+        showToast(`❌ 解析失敗：${err.message}`, 4500);
       }
     }
 
     /**
      * ============================================================================
-     * MODULE 11: INITIALIZATION & EVENT BINDINGS
+     * MODULE 12: INITIALIZATION & EVENT LISTENERS
      * ============================================================================
      */
-    document.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", () => {
       SpeechEngine.init();
       AIService.loadKey();
       SRSManager.updateDueBadge();
 
-      // 1. 分頁切換
+      // 1. 手機版收合控制抽屜切換
+      const mobileToggleBtn = document.getElementById("mobileToolbarToggleBtn");
+      const toolbarDrawer = document.getElementById("collapsibleToolbar");
+      mobileToggleBtn.addEventListener("click", () => {
+        const isOpen = toolbarDrawer.classList.toggle("open");
+        mobileToggleBtn.classList.toggle("active", isOpen);
+        mobileToggleBtn.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      // 2. 分頁切換
       document.querySelectorAll(".nav-tab").forEach(tab => {
         tab.addEventListener("click", () => UIRenderer.switchTab(tab.dataset.tab));
       });
 
-      // 2. 字體縮放控制
+      // 3. 雙引擎生成面板切換
+      document.querySelectorAll(".engine-tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".engine-tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          const targetId = btn.dataset.enginePanel;
+          document.getElementById("apiTwoStagePanel").classList.toggle("hidden", targetId !== "apiTwoStagePanel");
+          document.getElementById("externalPastePanel").classList.toggle("hidden", targetId !== "externalPastePanel");
+        });
+      });
+
+      // 4. 字級大小縮放
       document.querySelectorAll("[data-scale]").forEach(btn => {
         btn.addEventListener("click", () => {
           document.querySelectorAll("[data-scale]").forEach(b => b.classList.remove("active"));
@@ -2493,7 +3196,7 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         });
       });
 
-      // 3. 色彩主題切換
+      // 5. 色彩主題切換
       document.querySelectorAll("[data-theme-btn]").forEach(btn => {
         btn.addEventListener("click", () => {
           document.querySelectorAll("[data-theme-btn]").forEach(b => b.classList.remove("active"));
@@ -2502,29 +3205,28 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         });
       });
 
-      // 4. 語音朗讀速率與聲線控制
+      // 6. 語速控制
       const rateSlider = document.getElementById("rateSlider");
       const rateLabel = document.getElementById("rateValueLabel");
-      const syncRate = (val) => {
-        const rate = parseFloat(val) || 1.0;
-        AppState.speechRate = rate;
-        rateSlider.value = rate;
-        rateLabel.textContent = `${rate.toFixed(2)}x`;
-        document.querySelectorAll(".speed-preset").forEach(p => {
-          p.classList.toggle("active", Math.abs(parseFloat(p.dataset.rate) - rate) < 0.01);
+      const updateSpeechRate = (newRate) => {
+        AppState.speechRate = parseFloat(newRate);
+        rateSlider.value = AppState.speechRate;
+        rateLabel.textContent = AppState.speechRate.toFixed(2) + "x";
+        document.querySelectorAll(".speed-preset").forEach(b => {
+          b.classList.toggle("active", Math.abs(parseFloat(b.dataset.rate) - AppState.speechRate) < 0.01);
         });
       };
 
       document.querySelectorAll(".speed-preset").forEach(btn => {
-        btn.addEventListener("click", () => syncRate(btn.dataset.rate));
+        btn.addEventListener("click", () => updateSpeechRate(btn.dataset.rate));
       });
-      rateSlider.addEventListener("input", () => syncRate(rateSlider.value));
+      rateSlider.addEventListener("input", (e) => updateSpeechRate(e.target.value));
       document.getElementById("voiceSelect").addEventListener("change", (e) => {
         AppState.selectedVoiceURI = e.target.value;
       });
       document.getElementById("globalStopSpeechBtn").addEventListener("click", () => SpeechEngine.stop());
 
-      // 5. API Key 與模型設定 Modal 控制與連線測試
+      // 7. API Key 與模型設定 Modal 控制與連線測試
       const apiModal = document.getElementById("apiKeyModal");
       const apiInput = document.getElementById("apiKeyInput");
       const modelPresetSelect = document.getElementById("modelPresetSelect");
@@ -2605,7 +3307,7 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         showToast("🗑️ 已清除儲存的 API Key");
       });
 
-      // 6. 內建單字庫 Modal 控制
+      // 8. 內建單字庫 Modal 控制
       document.getElementById("openLibraryModalBtn").addEventListener("click", () => LibraryController.openModal());
       document.getElementById("openLibraryInlineBtn").addEventListener("click", () => LibraryController.openModal());
       document.getElementById("closeLibraryModalBtn").addEventListener("click", () => LibraryController.closeModal());
@@ -2638,16 +3340,18 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         LibraryController.loadFullPresetWithStories();
       });
 
-      // 7. 清單計算與生成按鈕
+      // 9. 清單計算與雙引擎按鈕
       document.getElementById("customWordsInput").addEventListener("input", () => UIRenderer.updateInputWordCount());
       document.getElementById("clearInputBtn").addEventListener("click", () => {
         document.getElementById("customWordsInput").value = "";
         UIRenderer.updateInputWordCount();
         showToast("🧹 已清空輸入清單");
       });
-      document.getElementById("generateGroupsBtn").addEventListener("click", handleGenerateLearningContent);
+      document.getElementById("generateStage1Btn").addEventListener("click", handleGenerateStage1Vocab);
+      document.getElementById("copyExternalPromptBtn").addEventListener("click", handleCopyExternalPrompt);
+      document.getElementById("parseExternalResponseBtn").addEventListener("click", handleParseExternalResponse);
 
-      // 8. 存檔、測驗與 SRS 快捷入口
+      // 10. 存檔、測驗與 SRS 快捷入口
       document.getElementById("saveSessionBtn").addEventListener("click", () => {
         StorageManager.saveSession(document.getElementById("saveTitleInput").value);
       });
@@ -2677,7 +3381,7 @@ Return ONLY valid JSON with this exact schema (no markdown fences):
         QuizEngine.start(scope, mode);
       });
 
-      // 初始乾淨首頁狀態渲染
+      // 初始渲染
       UIRenderer.updateInputWordCount();
       UIRenderer.renderStudyView();
       UIRenderer.renderHistoryList();
