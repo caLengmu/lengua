@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="warm">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>LexiLift GSAT｜高中學測字彙與寫作升級庫</title>
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & THEME VARIABLES (易於未來調整配色與字級的 CSS 變數系統)
+       ========================================================================== */
+    :root {
+      --base-font-size: 17px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      --font-serif: "Georgia", "Times New Roman", "Noto Serif TC", serif;
+
+      /* Default Warm Paper Theme (最大化長時間閱讀舒適度) */
+      --bg-page: #F8F6F1;
+      --bg-surface: #FFFFFF;
+      --bg-surface-alt: #F1EFE9;
+      --bg-pill: #EAE6DC;
+      --text-primary: #1F2421;
+      --text-secondary: #525B56;
+      --text-muted: #7A827D;
+      --border-color: #E2DDD2;
+
+      --accent-primary: #1E56A0;       /* 沉穩學院藍 */
+      --accent-primary-soft: #EBF2FC;
+      --accent-upgrade: #0F766E;       /* 升級字彙翡翠綠 */
+      --accent-upgrade-soft: #E6F4F1;
+      --accent-warn: #B45309;          /* 辨析提醒琥珀色 */
+      --accent-warn-soft: #FEF3C7;
+      --accent-danger: #B91C1C;
+      --accent-danger-soft: #FEE2E2;
+
+      --shadow-sm: 0 1px 3px rgba(31, 36, 33, 0.06);
+      --shadow-md: 0 4px 14px rgba(31, 36, 33, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --nav-height: 64px;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #121518;
+      --bg-surface: #1B2026;
+      --bg-surface-alt: #242A32;
+      --bg-pill: #2D343E;
+      --text-primary: #F1F5F9;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+      --border-color: #333C48;
+
+      --accent-primary: #60A5FA;
+      --accent-primary-soft: #1E293B;
+      --accent-upgrade: #2DD4BF;
+      --accent-upgrade-soft: #132E2C;
+      --accent-warn: #FBBF24;
+      --accent-warn-soft: #2E2412;
+      --accent-danger: #F87171;
+      --accent-danger-soft: #311717;
+    }
+
+    [data-theme="sepia"] {
+      --bg-page: #F4ECD8;
+      --bg-surface: #FBF6EA;
+      --bg-surface-alt: #EDE2C8;
+      --bg-pill: #E3D5B7;
+      --text-primary: #3B2F23;
+      --text-secondary: #5E4D3B;
+      --text-muted: #826E59;
+      --border-color: #DCCBA9;
+
+      --accent-primary: #2B5B84;
+      --accent-primary-soft: #E3ECF2;
+      --accent-upgrade: #2A6F5B;
+      --accent-upgrade-soft: #E1EFEA;
+      --accent-warn: #9A4E12;
+      --accent-warn-soft: #F5E5CE;
+      --accent-danger: #A62626;
+      --accent-danger-soft: #F5DADA;
+    }
+
+    /* ==========================================================================
+       2. BASE & TYPOGRAPHY
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      font-size: var(--base-font-size);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.65;
+      padding-bottom: calc(var(--nav-height) + 28px);
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-bottom: 48px;
+      }
+    }
+
+    /* ==========================================================================
+       3. HEADER & READING COMFORT TOOLBAR
+       ========================================================================== */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-upgrade-soft);
+      color: var(--accent-upgrade);
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .comfort-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      padding: 3px;
+    }
+
+    .ctrl-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .ctrl-btn.active {
+      background: var(--bg-surface);
+      color: var(--accent-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Desktop Top Navigation */
+    .desktop-nav {
+      display: none;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 16px;
+      gap: 6px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (min-width: 768px) {
+      .desktop-nav {
+        display: flex;
+      }
+    }
+
+    .nav-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover {
+      color: var(--accent-primary);
+    }
+
+    .nav-tab.active {
+      color: var(--accent-primary);
+      border-bottom-color: var(--accent-primary);
+    }
+
+    /* Mobile Bottom Navigation */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    @media (min-width: 768px) {
+      .mobile-nav {
+        display: none;
+      }
+    }
+
+    .mobile-nav-btn {
+      flex: 1;
+      height: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .mobile-nav-btn.active {
+      color: var(--accent-primary);
+    }
+
+    .mobile-nav-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* ==========================================================================
+       4. MAIN CONTAINER & VIEWS
+       ========================================================================== */
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 18px 16px;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       5. SEARCH, FILTERS & UTILITY BARS
+       ========================================================================== */
+    .filter-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .toggle-pill {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface-alt);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toggle-pill.active {
+      background: var(--accent-primary-soft);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .category-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .cat-chip {
+      white-space: nowrap;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface-alt);
+      color: var(--text-secondary);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cat-chip.active {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      border-color: var(--accent-primary);
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       6. VOCABULARY CARDS (MOBILE-OPTIMIZED & SCANNABLE)
+       ========================================================================== */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .vocab-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .vocab-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .vocab-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--bg-pill);
+      color: var(--text-secondary);
+    }
+
+    .tag-level {
+      background: var(--accent-primary-soft);
+      color: var(--accent-primary);
+    }
+
+    .tag-register {
+      background: var(--accent-upgrade-soft);
+      color: var(--accent-upgrade);
+    }
+
+    .star-btn {
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 2px 6px;
+      line-height: 1;
+    }
+
+    .star-btn.starred {
+      color: #F59E0B;
+    }
+
+    .word-comparison {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-surface-alt);
+      border-radius: var(--radius-sm);
+    }
+
+    .word-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .word-basic {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .word-arrow {
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .word-advanced {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--accent-upgrade);
+    }
+
+    .meaning-row {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .meaning-hidden .meaning-text,
+    .meaning-hidden .nuance-text {
+      filter: blur(5px);
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .nuance-box {
+      font-size: 0.86rem;
+      color: var(--accent-warn);
+      background: var(--accent-warn-soft);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-warn);
+    }
+
+    .register-frame {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: var(--accent-primary-soft);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .example-box {
+      border-top: 1px dashed var(--border-color);
+      padding-top: 10px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .example-en {
+      font-size: 0.96rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .example-zh {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* TTS Speaker Button */
+    .tts-btn {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--accent-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.15s ease;
+    }
+
+    .tts-btn.sm {
+      width: 28px;
+      height: 28px;
+      font-size: 0.8rem;
+    }
+
+    .tts-btn:hover {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      border-color: var(--accent-primary);
+    }
+
+    .tts-btn.speaking {
+      background: var(--accent-upgrade);
+      color: #FFFFFF;
+      border-color: var(--accent-upgrade);
+      transform: scale(1.08);
+    }
+
+    /* ==========================================================================
+       7. REGISTER & NUANCE EXPRESSION STUDIO (TAB 2)
+       ========================================================================== */
+    .guide-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .guide-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      color: var(--accent-primary);
+    }
+
+    .formula-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .formula-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .formula-box {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .formula-pattern {
+      font-weight: 700;
+      color: var(--accent-upgrade);
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .modifier-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 12px 0;
+    }
+
+    .mod-chip {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--accent-primary-soft);
+      color: var(--accent-primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .mod-chip.active {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+    }
+
+    .builder-preview {
+      background: var(--bg-surface-alt);
+      border-left: 4px solid var(--accent-upgrade);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* ==========================================================================
+       8. INTERACTIVE QUIZ (TAB 3)
+       ========================================================================== */
+    .quiz-header-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quiz-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quiz-q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-q-text {
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 600px) {
+      .quiz-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .quiz-opt {
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      text-align: left;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .quiz-opt.selected {
+      background: var(--accent-primary-soft);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .quiz-opt.correct {
+      background: var(--accent-upgrade-soft);
+      border-color: var(--accent-upgrade);
+      color: var(--accent-upgrade);
+    }
+
+    .quiz-opt.wrong {
+      background: var(--accent-danger-soft);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .quiz-exp {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface-alt);
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      display: none;
+    }
+
+    .quiz-exp.show {
+      display: block;
+    }
+
+    .primary-btn {
+      background: var(--accent-primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .primary-btn:hover {
+      opacity: 0.92;
+    }
+
+    /* ==========================================================================
+       9. WRITING UPGRADE BRIDGE (TAB 4 - 銜接未來作文練習)
+       ========================================================================== */
+    .writing-box {
+      width: 100%;
+      min-height: 130px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    .suggestion-list {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .suggestion-item {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .replace-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--accent-upgrade);
+      background: var(--accent-upgrade-soft);
+      color: var(--accent-upgrade);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .replace-btn:hover {
+      background: var(--accent-upgrade);
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER & READING COMFORT TOOLBAR -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-title">
+          <span>LexiLift GSAT</span>
+          <span class="brand-badge">學測字彙升級</span>
+        </div>
+        <span class="brand-sub">Word Choice, Register & Writing Bridge</span>
+      </div>
+
+      <div class="comfort-controls" aria-label="閱讀舒適度設定">
+        <!-- Font Size Adjuster -->
+        <div class="control-group" title="調整字體大小">
+          <button class="ctrl-btn" data-size="15" onclick="setFontSize(15)">A-</button>
+          <button class="ctrl-btn active" data-size="17" onclick="setFontSize(17)">A</button>
+          <button class="ctrl-btn" data-size="19" onclick="setFontSize(19)">A+</button>
+          <button class="ctrl-btn" data-size="21" onclick="setFontSize(21)">A++</button>
+        </div>
+
+        <!-- Theme Switcher -->
+        <div class="control-group" title="切換閱讀底色">
+          <button class="ctrl-btn active" data-theme-btn="warm" onclick="setTheme('warm')">柔白</button>
+          <button class="ctrl-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">護眼紙</button>
+          <button class="ctrl-btn" data-theme-btn="dark" onclick="setTheme('dark')">夜間</button>
+        </div>
+
+        <!-- TTS Speed -->
+        <div class="control-group" title="朗讀語速 (en-US)">
+          <button class="ctrl-btn" data-rate="0.82" onclick="setTtsRate(0.82)">慢速</button>
+          <button class="ctrl-btn active" data-rate="1.0" onclick="setTtsRate(1.0)">正常</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+      <button class="nav-tab active" data-tab="explorer" onclick="switchTab('explorer')">📚 字彙升級庫</button>
+      <button class="nav-tab" data-tab="register" onclick="switchTab('register')">💬 語氣與替換表達</button>
+      <button class="nav-tab" data-tab="quiz" onclick="switchTab('quiz')">✍️ 學測與語氣測驗</button>
+      <button class="nav-tab" data-tab="writing" onclick="switchTab('writing')">🚀 寫作升級實驗室</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- ======================================================================
+         VIEW 1: VOCABULARY EXPLORER
+         ====================================================================== -->
+    <section id="view-explorer" class="view-section active">
+      <div class="filter-panel">
+        <div class="search-row">
+          <input type="text" id="searchInput" class="search-input" placeholder="搜尋單字、中文意思或例句 (例如: purchase, 重要, impact)..." oninput="renderVocab()" />
+          <button class="toggle-pill" id="btnHideMeaning" onclick="toggleHideMeaning()">🙈 遮蔽中文自我測驗</button>
+          <button class="toggle-pill" id="btnOnlyStarred" onclick="toggleOnlyStarred()">⭐ 只看收藏 (<span id="starCount">0</span>)</button>
+        </div>
+        <div class="category-scroll" id="categoryChips"></div>
+      </div>
+
+      <div class="stats-bar">
+        <span id="vocabCountText">顯示 0 組字彙</span>
+        <span>點擊 🔊 可聆聽美式發音 (en-US)</span>
+      </div>
+
+      <div class="vocab-grid" id="vocabGrid"></div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 2: REGISTER & NUANCE EXPRESSION STUDIO
+         ====================================================================== -->
+    <section id="view-register" class="view-section">
+      <div class="guide-card">
+        <h2 class="guide-title">如何用英文精準描述「字彙升級」與「語氣差異」？</h2>
+        <p style="margin:0; color:var(--text-secondary);">
+          在英文寫作與口說討論中，我們常用以下兩個核心句型來說明某個字比另一個字更高級、正式、禮貌或精確。這個概念也直接融入本平台的「學測與語氣測驗」題幹中！
+        </p>
+
+        <div class="formula-grid">
+          <div class="formula-box">
+            <div class="formula-pattern">1. [A] is a + [形容詞] + word for [B].</div>
+            <div style="font-size:0.9rem; color:var(--text-secondary);">
+              用於<strong>單字對單字</strong>的替換說明。<br>
+              例：<em>"<strong>Purchase</strong> is a <strong>fancier</strong> word for <strong>buy</strong>."</em>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="tts-btn sm" onclick="speakText('Purchase is a fancier word for buy.', this)">🔊</button>
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-pattern">2. [A] is a + [形容詞] + way to say [B].</div>
+            <div style="font-size:0.9rem; color:var(--text-secondary);">
+              適用於<strong>片語、句型或完整表達方式</strong>。<br>
+              例：<em>"<strong>In my opinion</strong> is a <strong>more formal</strong> way to say <strong>I think</strong>."</em>
+            </div>
+            <div style="margin-top:8px;">
+              <button class="tts-btn sm" onclick="speakText('In my opinion is a more formal way to say I think.', this)">🔊</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <h3 class="guide-title" style="font-size:1.08rem;">互動句型變化器：替換 fancier 增加語氣精準度</h3>
+        <p style="margin:0 0 8px 0; font-size:0.9rem; color:var(--text-secondary);">
+          點選不同的程度副詞與形容詞，聽聽看語氣與適用情境的差別：
+        </p>
+
+        <div class="modifier-chips" id="modifierChips"></div>
+
+        <div id="modifierExplanation" style="font-size:0.92rem; color:var(--text-primary); margin-bottom:10px;"></div>
+
+        <div class="builder-preview">
+          <div>
+            <div id="builderSentence" style="font-weight:700; font-size:1.05rem; color:var(--accent-primary);"></div>
+            <div id="builderTranslation" style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;"></div>
+          </div>
+          <button class="tts-btn" id="builderTtsBtn" onclick="speakBuilder()">🔊</button>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <h3 class="guide-title" style="font-size:1.08rem;">高中學測準備三核心（CEEC 大考中心詞彙策略）</h3>
+        <ul style="margin:8px 0 0 0; padding-left:20px; color:var(--text-secondary);">
+          <li><strong>Synonyms（同義替換）</strong>：例如 <em>tiredness → fatigue</em>，避免作文從頭到尾重複 <em>very good / very bad / I think</em>。</li>
+          <li><strong>Collocations（高頻搭配詞）</strong>：例如 <em>cause fatigue</em>、<em>emerge from</em>、<em>play a crucial role</em>，克漏字最常考動詞與名詞的固定搭配。</li>
+          <li><strong>Word Distinctions（近義字辨析）</strong>：例如 <em>appear / emerge</em>、<em>rise / raise</em>、<em>adapt / adopt</em>，掌握語意細微差別才能拿滿分。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 3: QUIZ MODE
+         ====================================================================== -->
+    <section id="view-quiz" class="view-section">
+      <div class="quiz-header-card">
+        <div>
+          <h2 style="margin:0; font-size:1.15rem; color:var(--accent-primary);">學測字彙與語氣辨析測驗</h2>
+          <p style="margin:4px 0 0 0; font-size:0.86rem; color:var(--text-secondary);">
+            結合「學測實戰克漏字」與「語氣替換題幹 (fancier / more formal / less formal / more precise)」
+          </p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <select id="quizFilter" class="search-input" style="min-width:170px; padding:8px 12px;" onchange="initQuiz()">
+            <option value="all">全部題目 (20 題)</option>
+            <option value="gsat">學測實戰克漏字 (10 題)</option>
+            <option value="register">語氣與替換表達題 (10 題)</option>
+          </select>
+          <button class="toggle-pill" onclick="initQuiz()">🔄 重新洗牌</button>
+        </div>
+      </div>
+
+      <div id="quizContainer"></div>
+
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:16px;">
+        <button class="primary-btn" onclick="submitQuiz()">送出答案並查看解析</button>
+        <div id="quizScoreBox" style="font-weight:800; font-size:1.05rem; color:var(--accent-upgrade);"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 4: WRITING UPGRADE BRIDGE
+         ====================================================================== -->
+    <section id="view-writing" class="view-section">
+      <div class="guide-card">
+        <h2 class="guide-title">寫作字彙即時升級檢測（Writing Upgrade Bridge）</h2>
+        <p style="margin:0 0 12px 0; font-size:0.9rem; color:var(--text-secondary);">
+          輸入或貼上你的英文草稿，系統會自動偵測可升級的基礎用字與高頻作文片語（如 <em>I think, a lot of, very important, solve a problem</em>），一鍵替換並聆聽朗讀！
+        </p>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+          <button class="cat-chip" onclick="loadSampleEssay(1)">載入範例 1：科技與社群媒體</button>
+          <button class="cat-chip" onclick="loadSampleEssay(2)">載入範例 2：環境保護與習慣</button>
+        </div>
+
+        <textarea id="writingInput" class="writing-box" oninput="analyzeWriting()" placeholder="在此輸入英文句子，例如：I think social media has a very big effect on teenagers, so we need to solve this problem..."></textarea>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap; gap:8px;">
+          <span id="writingMatchCount" style="font-size:0.88rem; font-weight:700; color:var(--accent-primary);">偵測到 0 個可升級表達</span>
+          <button class="toggle-pill" onclick="speakWriting()">🔊 朗讀整段草稿 (en-US)</button>
+        </div>
+
+        <div class="suggestion-list" id="writingSuggestions"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-btn active" data-tab="explorer" onclick="switchTab('explorer')">
+      <span class="mobile-nav-icon">📚</span>
+      <span>字彙庫</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="register" onclick="switchTab('register')">
+      <span class="mobile-nav-icon">💬</span>
+      <span>語氣句型</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="quiz" onclick="switchTab('quiz')">
+      <span class="mobile-nav-icon">✍️</span>
+      <span>互動測驗</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="writing" onclick="switchTab('writing')">
+      <span class="mobile-nav-icon">🚀</span>
+      <span>寫作升級</span>
+    </button>
+  </nav>
+
+  <!-- ========================================================================
+       MODULAR DATA & APPLICATION LOGIC (未來擴充只需在 VOCAB_DATA 與 QUIZ_DATA 新增物件)
+       ======================================================================== -->
+  <script>
+    /* ------------------------------------------------------------------------
+       1. CENTRALIZED VOCABULARY DATABASE
+       包含附件所有字彙 + 擴充大考中心高中核心寫作升級字彙 (Level 3-5)
+       ------------------------------------------------------------------------ */
+    const CATEGORIES = [
+      { id: "all", label: "全部字彙" },
+      { id: "verbs-basic", label: "1. 基礎動詞升級" },
+      { id: "verbs-nuance", label: "2. 近義動詞辨析" },
+      { id: "adj", label: "3. 形容詞升級" },
+      { id: "noun", label: "4. 名詞升級" },
+      { id: "adv", label: "5. 副詞升級" },
+      { id: "pairs", label: "6. 學測易混淆字辨析" },
+      { id: "phrases", label: "7. 作文高分片語升級" }
+    ];
+
+    const VOCAB_DATA = [
+      // 1. Everyday Words -> More Advanced Words (Verbs)
+      { id: "v1", cat: "verbs-basic", level: "Level 3", basic: "buy", advanced: "purchase", meaning: "購買（較正式、商業或書面語）", register: "more formal", example: "The company purchased new equipment.", exampleZh: "這家公司購買了新設備。" },
+      { id: "v2", cat: "verbs-basic", level: "Level 3", basic: "help", advanced: "assist", meaning: "協助、援助（正式場合或服務語境）", register: "more formal", example: "Volunteers assisted the elderly.", exampleZh: "志工協助了年長者。" },
+      { id: "v3", cat: "verbs-basic", level: "Level 3", basic: "show", advanced: "demonstrate", meaning: "證明、展示（強調透過證據或實驗說明）", register: "more academic", example: "The experiment demonstrates the result.", exampleZh: "這項實驗證明了該結果。" },
+      { id: "v4", cat: "verbs-basic", level: "Level 3", basic: "tell", advanced: "inform", meaning: "通知、告知（正式通知訊息或變動）", register: "more formal", example: "Please inform us of any changes.", exampleZh: "如有任何變動請通知我們。" },
+      { id: "v5", cat: "verbs-basic", level: "Level 4", basic: "ask", advanced: "inquire", meaning: "詢問、打聽（較正式禮貌地詢問資訊）", register: "more formal / polite", example: "He inquired about the job.", exampleZh: "他詢問了有關這份工作的資訊。" },
+      { id: "v6", cat: "verbs-basic", level: "Level 3", basic: "need", advanced: "require", meaning: "需要、要求（客觀條件或規定上的必要）", register: "more formal", example: "This job requires patience.", exampleZh: "這份工作需要耐心。" },
+      { id: "v7", cat: "verbs-basic", level: "Level 3", basic: "get", advanced: "obtain", meaning: "獲得、取得（經由努力或管道取得資訊/資格）", register: "more formal", example: "Students can obtain information online.", exampleZh: "學生可以在網路上取得資訊。" },
+      { id: "v8", cat: "verbs-basic", level: "Level 4", basic: "use", advanced: "utilize", meaning: "善用、有效利用（強調發揮最大效用）", register: "more academic", example: "We should utilize our time wisely.", exampleZh: "我們應該明智地善用時間。" },
+      { id: "v9", cat: "verbs-basic", level: "Level 4", basic: "start", advanced: "commence", meaning: "開始（非常正式，常見於典禮、會議或公告）", register: "much more formal", example: "The meeting will commence at 9 a.m.", exampleZh: "會議將於上午九點開始。" },
+      { id: "v10", cat: "verbs-basic", level: "Level 3", basic: "end", advanced: "conclude", meaning: "結束、作結（演講、報告或活動的收尾）", register: "more formal", example: "The speech concluded with a joke.", exampleZh: "這場演講以一則笑話作結。" },
+      { id: "v11", cat: "verbs-basic", level: "Level 3", basic: "try", advanced: "attempt", meaning: "嘗試、企圖（通常指嘗試較困難的事情）", register: "more formal", example: "She attempted to solve the problem.", exampleZh: "她嘗試解決這個問題。" },
+      { id: "v12", cat: "verbs-basic", level: "Level 3", basic: "keep", advanced: "maintain", meaning: "維持、保持（狀態、水準或健康習慣）", register: "more formal", example: "We should maintain a healthy lifestyle.", exampleZh: "我們應該維持健康的生活方式。" },
+      { id: "v13", cat: "verbs-basic", level: "Level 3", basic: "choose", advanced: "select", meaning: "挑選、選擇（經過考量後的正式選擇）", register: "more formal", example: "Students can select their own topics.", exampleZh: "學生可以自行挑選題目。" },
+      { id: "v14", cat: "verbs-basic", level: "Level 3", basic: "make", advanced: "create", meaning: "創造、創作（從無到有產生作品或價值）", register: "more precise", example: "The artist created a beautiful painting.", exampleZh: "這位藝術家創作了一幅美麗的畫作。" },
+      { id: "v15", cat: "verbs-basic", level: "Level 3", basic: "fix", advanced: "repair", meaning: "修理、修繕（機器、建築或損壞物品）", register: "more formal", example: "He repaired the broken machine.", exampleZh: "他修好了那台故障的機器。" },
+      // Extra GSAT High-Frequency Verbs
+      { id: "v16", cat: "verbs-basic", level: "Level 4", basic: "cut down on", advanced: "reduce", meaning: "減少、降低（數量、浪費或污染）", register: "more concise / formal", example: "We must reduce plastic waste to protect the ocean.", exampleZh: "我們必須減少塑膠垃圾以保護海洋。" },
+      { id: "v17", cat: "verbs-basic", level: "Level 4", basic: "talk about", advanced: "discuss", meaning: "討論、探討（深入交換意見）", register: "more academic", example: "The article discusses the pros and cons of AI.", exampleZh: "這篇文章探討了人工智慧的優缺點。" },
+
+      // 2. Verbs: Similar Meanings, Different Uses
+      { id: "vn1", cat: "verbs-nuance", level: "Level 4", basic: "appear", advanced: "emerge", meaning: "浮現、顯露（問題、事實或新趨勢逐漸顯現）", register: "more precise", nuance: "appear 指視覺上出現；emerge 強調從隱藏中浮現或問題產生。", example: "New problems emerged during the discussion.", exampleZh: "討論過程中浮現了新的問題。" },
+      { id: "vn2", cat: "verbs-nuance", level: "Level 3", basic: "appear", advanced: "occur", meaning: "發生、出現（意外、錯誤或事件發生）", register: "more formal", nuance: "occur 為不及物動詞，不可用被動語態。", example: "A strange error appeared on the screen.", exampleZh: "螢幕上出現了一個奇怪的錯誤。" },
+      { id: "vn3", cat: "verbs-nuance", level: "Level 3", basic: "rise", advanced: "increase", meaning: "增加、上升（數據、價格、比例提高）", register: "more academic", nuance: "rise 不及物（自行上升）；increase 可及物也可不及物。", example: "The price of food has increased.", exampleZh: "食物的價格已經上漲了。" },
+      { id: "vn4", cat: "verbs-nuance", level: "Level 3", basic: "raise", advanced: "increase", meaning: "提高、調升（人為調高費用、標準或意識）", register: "more formal", nuance: "raise 為及物動詞，後面必須接受詞（如 raise the fee）。", example: "The school raised the entrance fee.", exampleZh: "學校調高了入學費用。" },
+      { id: "vn5", cat: "verbs-nuance", level: "Level 3", basic: "grow", advanced: "expand", meaning: "擴展、擴大（規模、業務、影響力向外延伸）", register: "more precise", example: "The business expanded rapidly.", exampleZh: "這家企業迅速擴展。" },
+      { id: "vn6", cat: "verbs-nuance", level: "Level 3", basic: "find", advanced: "discover", meaning: "發現（原本就存在但未知的事物或科學現象）", register: "more precise", example: "Scientists discovered a new species.", exampleZh: "科學家發現了一個新物種。" },
+      { id: "vn7", cat: "verbs-nuance", level: "Level 4", basic: "find out", advanced: "reveal", meaning: "揭露、顯示（報告、調查揭開原本隱藏的真相）", register: "more formal", example: "The report revealed the truth.", exampleZh: "這份報告揭露了真相。" },
+      { id: "vn8", cat: "verbs-nuance", level: "Level 3", basic: "happen", advanced: "occur", meaning: "發生（較正式的書面用語，常用於新聞或報告）", register: "more formal", example: "The accident occurred yesterday.", exampleZh: "這起意外發生在昨天。" },
+      { id: "vn9", cat: "verbs-nuance", level: "Level 3", basic: "happen", advanced: "take place", meaning: "舉行、發生（通常指事先安排或計畫好的活動）", register: "more precise", nuance: "occur 多指意外或突發事件；take place 多指有計畫的活動。", example: "The event will take place tomorrow.", exampleZh: "這場活動將於明天舉行。" },
+      { id: "vn10", cat: "verbs-nuance", level: "Level 4", basic: "leave", advanced: "depart", meaning: "出發、離開（交通工具或正式行程啟程）", register: "more formal", example: "The train departs at 8 a.m.", exampleZh: "火車將於上午八點發車。" },
+      { id: "vn11", cat: "verbs-nuance", level: "Level 3", basic: "think about", advanced: "consider", meaning: "考慮、仔細思考（後接 V-ing 或名詞）", register: "more formal", example: "We should consider other options.", exampleZh: "我們應該考慮其他選項。" },
+      { id: "vn12", cat: "verbs-nuance", level: "Level 4", basic: "understand", advanced: "comprehend", meaning: "理解、領悟（較深層的閱讀或概念理解）", register: "more academic", example: "Some students cannot comprehend the passage.", exampleZh: "有些學生無法理解這篇文章。" },
+      { id: "vn13", cat: "verbs-nuance", level: "Level 4", basic: "explain", advanced: "clarify", meaning: "闡明、澄清（消除誤解，使指示或觀點更清楚）", register: "more precise", example: "The teacher clarified the instructions.", exampleZh: "老師把指示說明得更清楚了。" },
+      { id: "vn14", cat: "verbs-nuance", level: "Level 3", basic: "get better", advanced: "improve", meaning: "改善、進步（能力、健康或狀況變好）", register: "more concise / formal", example: "Her English has improved greatly.", exampleZh: "她的英文進步了很多。" },
+      { id: "vn15", cat: "verbs-nuance", level: "Level 4", basic: "get worse", advanced: "worsen", meaning: "惡化、變糟（天氣、病情或局勢惡化）", register: "more concise / formal", example: "The weather conditions worsened.", exampleZh: "天氣狀況惡化了。" },
+      { id: "vn16", cat: "verbs-nuance", level: "Level 4", basic: "show", advanced: "indicate", meaning: "指出、顯示（數據、跡象或研究結果顯示）", register: "more academic", example: "The results indicate a clear difference.", exampleZh: "結果顯示出明顯的差異。" },
+      { id: "vn17", cat: "verbs-nuance", level: "Level 4", basic: "show", advanced: "illustrate", meaning: "圖解、舉例說明（透過圖表或實例闡述）", register: "more academic", example: "The chart illustrates the changes.", exampleZh: "這張圖表說明了這些變化。" },
+      { id: "vn18", cat: "verbs-nuance", level: "Level 4", basic: "stop", advanced: "cease", meaning: "停止、終止（正式書面語，指動作或現象停止）", register: "much more formal", example: "The noise finally ceased.", exampleZh: "噪音終於停止了。" },
+      { id: "vn19", cat: "verbs-nuance", level: "Level 3", basic: "give", advanced: "provide", meaning: "提供（資源、服務、機會或協助）", register: "more formal", example: "The school provides free meals.", exampleZh: "學校提供免費餐點。" },
+      { id: "vn20", cat: "verbs-nuance", level: "Level 3", basic: "support", advanced: "encourage", meaning: "鼓勵、促進（給予信心或推動發展）", register: "more precise", example: "Parents should encourage their children.", exampleZh: "父母應該鼓勵孩子。" },
+
+      // 3. Adjectives: Basic -> Advanced
+      { id: "a1", cat: "adj", level: "Level 3", basic: "important", advanced: "essential", meaning: "不可或缺的、極重要的（強調缺少就無法運作）", register: "stronger / more academic", example: "Sleep is essential for good health.", exampleZh: "睡眠對健康不可或缺。" },
+      { id: "a2", cat: "adj", level: "Level 4", basic: "important", advanced: "significant", meaning: "重大的、有深遠意義的（數據、影響或角色）", register: "more academic", example: "Education plays a significant role in society.", exampleZh: "教育在社會中扮演重要角色。" },
+      { id: "a3", cat: "adj", level: "Level 4", basic: "necessary", advanced: "vital", meaning: "至關重要的、維繫生命的", register: "stronger / more formal", example: "Clean water is vital to human life.", exampleZh: "乾淨的水對人類生命至關重要。" },
+      { id: "a4", cat: "adj", level: "Level 4", basic: "good", advanced: "beneficial", meaning: "有益的、有幫助的（常用搭配：be beneficial to）", register: "more academic", example: "Exercise is beneficial to our health.", exampleZh: "運動對我們的健康有益。" },
+      { id: "a5", cat: "adj", level: "Level 3", basic: "bad", advanced: "harmful", meaning: "有害的（常用搭配：be harmful to）", register: "more precise / formal", example: "Smoking is harmful to the body.", exampleZh: "吸菸對身體有害。" },
+      { id: "a6", cat: "adj", level: "Level 4", basic: "dangerous", advanced: "hazardous", meaning: "危險的、危害健康的（化學物質、環境或工作條件）", register: "more technical / formal", example: "Some chemicals are hazardous to humans.", exampleZh: "某些化學物質對人體有害。" },
+      { id: "a7", cat: "adj", level: "Level 3", basic: "difficult", advanced: "challenging", meaning: "具挑戰性的（正向且客觀地描述困難）", register: "more constructive", example: "Learning a new language can be challenging.", exampleZh: "學習一門新語言可能很有挑戰性。" },
+      { id: "a8", cat: "adj", level: "Level 4", basic: "easy", advanced: "effortless", meaning: "毫不費力的、輕鬆自然的", register: "more expressive", example: "The task seemed effortless to her.", exampleZh: "這項任務對她來說似乎毫不費力。" },
+      { id: "a9", cat: "adj", level: "Level 3", basic: "beautiful", advanced: "attractive", meaning: "迷人的、有吸引力的（風景、城市或特質）", register: "more descriptive", example: "The city is attractive to tourists.", exampleZh: "這座城市對遊客很有吸引力。" },
+      { id: "a10", cat: "adj", level: "Level 3", basic: "smart", advanced: "intelligent", meaning: "聰穎的、具高智商的（較正式的書面讚美）", register: "more formal", example: "She is an intelligent student.", exampleZh: "她是位聰穎的學生。" },
+      { id: "a11", cat: "adj", level: "Level 3", basic: "famous", advanced: "well-known", meaning: "知名的、眾所周知的", register: "more refined", example: "The writer is well-known around the world.", exampleZh: "這位作家聞名全球。" },
+      { id: "a12", cat: "adj", level: "Level 4", basic: "common", advanced: "widespread", meaning: "普遍的、廣泛流傳的（現象、問題或觀念）", register: "more academic", example: "The problem is widespread in many countries.", exampleZh: "這個問題在許多國家都很普遍。" },
+      { id: "a13", cat: "adj", level: "Level 3", basic: "unusual", advanced: "rare", meaning: "罕見的、難得的", register: "more precise", example: "This is a rare opportunity.", exampleZh: "這是一個難得的機會。" },
+      { id: "a14", cat: "adj", level: "Level 3", basic: "clear", advanced: "obvious", meaning: "明顯的、顯而易見的", register: "more emphatic", example: "It was obvious that he was tired.", exampleZh: "很明顯他累了。" },
+      { id: "a15", cat: "adj", level: "Level 3", basic: "possible", advanced: "likely", meaning: "很有可能的（常用句型：It is likely to / that...）", register: "more natural in essays", example: "It is likely to rain tomorrow.", exampleZh: "明天很可能會下雨。" },
+      { id: "a16", cat: "adj", level: "Level 4", basic: "different", advanced: "distinct", meaning: "截然不同的、有明顯區別的", register: "more academic", example: "The two cultures have distinct traditions.", exampleZh: "這兩種文化有著截然不同的傳統。" },
+      { id: "a17", cat: "adj", level: "Level 3", basic: "similar", advanced: "alike", meaning: "相像的（通常放在 be 動詞或連綴動詞之後作補語）", register: "more idiomatic", nuance: "alike 通常不直接放在名詞前（不說 alike sisters，而說 look alike）。", example: "The two sisters look alike.", exampleZh: "這對姊妹長得很像。" },
+      { id: "a18", cat: "adj", level: "Level 4", basic: "serious", advanced: "severe", meaning: "嚴重的、劇烈的（災害、損害、疾病或短缺）", register: "stronger / more formal", example: "The storm caused severe damage.", exampleZh: "暴風雨造成了嚴重的損害。" },
+      { id: "a19", cat: "adj", level: "Level 4", basic: "large", advanced: "enormous", meaning: "巨大的、龐大的（體積、數量或壓力）", register: "stronger / more vivid", example: "The building is enormous.", exampleZh: "這棟建築物非常龐大。" },
+      { id: "a20", cat: "adj", level: "Level 3", basic: "small", advanced: "tiny", meaning: "微小的、極小的", register: "more vivid", example: "A tiny insect was on the table.", exampleZh: "桌上有一隻微小的昆蟲。" },
+
+      // 4. Nouns: Basic -> Advanced
+      { id: "n1", cat: "noun", level: "Level 4", basic: "tiredness", advanced: "fatigue", meaning: "疲勞、勞累（身心長期累積的疲憊）", register: "more formal / medical", example: "Lack of sleep can cause fatigue.", exampleZh: "睡眠不足會導致疲勞。" },
+      { id: "n2", cat: "noun", level: "Level 3", basic: "happiness", advanced: "joy", meaning: "喜悅、歡樂（深層而純粹的快樂）", register: "more literary / expressive", example: "Her face was filled with joy.", exampleZh: "她的臉上洋溢著喜悅。" },
+      { id: "n3", cat: "noun", level: "Level 3", basic: "sadness", advanced: "sorrow", meaning: "悲傷、哀痛（較深沉的失落或哀傷）", register: "more literary / formal", example: "He felt deep sorrow after the loss.", exampleZh: "失去之後他感到深沉的悲痛。" },
+      { id: "n4", cat: "noun", level: "Level 4", basic: "fear", advanced: "anxiety", meaning: "焦慮、不安（考前或面對不確定性的緊張）", register: "more psychological / precise", example: "Many students experience anxiety before exams.", exampleZh: "許多學生在考試前會感到焦慮。" },
+      { id: "n5", cat: "noun", level: "Level 3", basic: "worry", advanced: "concern", meaning: "擔憂、關切（社會議題或公共事務的憂慮）", register: "more formal", example: "Climate change is a major concern.", exampleZh: "氣候變遷是一項重大的隱憂。" },
+      { id: "n6", cat: "noun", level: "Level 4", basic: "idea", advanced: "concept", meaning: "概念、觀念（抽象的理論或核心想法）", register: "more academic", example: "The concept is difficult to understand.", exampleZh: "這個概念很難理解。" },
+      { id: "n7", cat: "noun", level: "Level 3", basic: "chance", advanced: "opportunity", meaning: "機會、良機（學習、成長或職涯的好機會）", register: "more formal", example: "This is a great opportunity to learn.", exampleZh: "這是學習的大好機會。" },
+      { id: "n8", cat: "noun", level: "Level 4", basic: "result", advanced: "outcome", meaning: "結果、最終結局（事件或努力後的最終結果）", register: "more academic", example: "The outcome surprised everyone.", exampleZh: "這個結果讓每個人都感到驚訝。" },
+      { id: "n9", cat: "noun", level: "Level 3", basic: "reason", advanced: "factor", meaning: "因素、要素（影響決策或現象的關鍵原因）", register: "more analytical", example: "Money is an important factor in this decision.", exampleZh: "金錢是這項決定中的重要因素。" },
+      { id: "n10", cat: "noun", level: "Level 3", basic: "problem", advanced: "issue", meaning: "議題、問題（值得探討的社會或環境問題）", register: "more formal / neutral", example: "Air pollution is a serious issue.", exampleZh: "空氣污染是一個嚴重的議題。" },
+      { id: "n11", cat: "noun", level: "Level 3", basic: "danger", advanced: "threat", meaning: "威脅、潛在危險", register: "more formal / serious", example: "Climate change is a global threat.", exampleZh: "氣候變遷是一項全球性的威脅。" },
+      { id: "n12", cat: "noun", level: "Level 4", basic: "effect", advanced: "impact", meaning: "衝擊、深遠影響（常用搭配：have an impact on）", register: "stronger / more academic", example: "Social media has a strong impact on teenagers.", exampleZh: "社群媒體對青少年有強烈的影響。" },
+      { id: "n13", cat: "noun", level: "Level 4", basic: "goal", advanced: "objective", meaning: "目標、宗旨（計畫或政策要達成的具體目標）", register: "more formal", example: "Our main objective is to improve education.", exampleZh: "我們的主要目標是改善教育。" },
+      { id: "n14", cat: "noun", level: "Level 4", basic: "job", advanced: "occupation", meaning: "職業（正式表格或文章中指稱工作類型）", register: "much more formal", example: "Teaching is a rewarding occupation.", exampleZh: "教書是一份很有成就感的職業。" },
+      { id: "n15", cat: "noun", level: "Level 3", basic: "way", advanced: "method", meaning: "方法、方式（有系統的作法）", register: "more formal", example: "This method saves time.", exampleZh: "這個方法很省時間。" },
+      { id: "n16", cat: "noun", level: "Level 3", basic: "mistake", advanced: "error", meaning: "錯誤、失誤（計算、判斷或系統上的錯誤）", register: "more formal", example: "The student made a serious error.", exampleZh: "這位學生犯了一個嚴重的錯誤。" },
+      { id: "n17", cat: "noun", level: "Level 3", basic: "answer", advanced: "response", meaning: "回應、答覆（對問題、請求或刺激的反應）", register: "more formal", example: "We are still waiting for his response.", exampleZh: "我們仍在等待他的回覆。" },
+      { id: "n18", cat: "noun", level: "Level 3", basic: "growth", advanced: "development", meaning: "發展、演進（科技、經濟或個人能力的發展）", register: "more formal", example: "Technology has changed rapidly with the development of AI.", exampleZh: "隨著人工智慧的發展，科技已迅速改變。" },
+      { id: "n19", cat: "noun", level: "Level 4", basic: "change", advanced: "transformation", meaning: "轉變、徹底改造（重大的結構或面貌改變）", register: "stronger / more formal", example: "The city has undergone a major transformation.", exampleZh: "這座城市經歷了重大的轉變。" },
+      { id: "n20", cat: "noun", level: "Level 4", basic: "difference", advanced: "distinction", meaning: "區別、差別（精細或重要的概念差異）", register: "more academic", example: "There is an important distinction between the two ideas.", exampleZh: "這兩個想法之間有著重要的區別。" },
+
+      // 5. Adverbs: Basic -> Advanced
+      { id: "ad1", cat: "adv", level: "Level 3", basic: "very", advanced: "extremely", meaning: "極度地、非常", register: "stronger / more formal", example: "The test was extremely difficult.", exampleZh: "這場考試極為困難。" },
+      { id: "ad2", cat: "adv", level: "Level 3", basic: "very", advanced: "highly", meaning: "高度地、非常（常搭配 respected, recommended, likely）", register: "more formal", example: "She is highly respected.", exampleZh: "她備受敬重。" },
+      { id: "ad3", cat: "adv", level: "Level 4", basic: "very", advanced: "remarkably", meaning: "非凡地、驚人地（突出且令人印象深刻）", register: "more expressive", example: "The child is remarkably talented.", exampleZh: "這孩子天賦異稟。" },
+      { id: "ad4", cat: "adv", level: "Level 3", basic: "quickly", advanced: "rapidly", meaning: "迅速地（趨勢、科技或人口快速變化）", register: "more formal", example: "Technology is developing rapidly.", exampleZh: "科技正在迅速發展。" },
+      { id: "ad5", cat: "adv", level: "Level 3", basic: "slowly", advanced: "gradually", meaning: "逐漸地、逐步地（強調隨時間推移的漸進過程）", register: "more precise", example: "The situation gradually improved.", exampleZh: "情況逐漸好轉了。" },
+      { id: "ad6", cat: "adv", level: "Level 4", basic: "finally", advanced: "eventually", meaning: "最終、終於（經歷波折或長時間後的結果）", register: "more narrative / formal", example: "They eventually found a solution.", exampleZh: "他們最終找到了解決方案。" },
+      { id: "ad7", cat: "adv", level: "Level 3", basic: "suddenly", advanced: "unexpectedly", meaning: "出乎意料地、突然地", register: "more descriptive", example: "The lights went out unexpectedly.", exampleZh: "燈光出乎意料地熄滅了。" },
+      { id: "ad8", cat: "adv", level: "Level 3", basic: "carefully", advanced: "closely", meaning: "仔細地、密切地（觀察、檢視或合作）", register: "more idiomatic", example: "The police examined the evidence closely.", exampleZh: "警方仔細檢視了證據。" },
+      { id: "ad9", cat: "adv", level: "Level 3", basic: "clearly", advanced: "obviously", meaning: "明顯地、顯然", register: "more emphatic", example: "He was obviously disappointed.", exampleZh: "他顯然很失望。" },
+      { id: "ad10", cat: "adv", level: "Level 3", basic: "usually", advanced: "generally", meaning: "一般而言、通常（作文中提出普遍現象的好用字）", register: "more academic", example: "Students generally enjoy the activity.", exampleZh: "學生一般都很喜歡這項活動。" },
+      { id: "ad11", cat: "adv", level: "Level 3", basic: "almost", advanced: "nearly", meaning: "幾乎、將近", register: "slightly more formal", example: "The project is nearly complete.", exampleZh: "這項專案已接近完成。" },
+      { id: "ad12", cat: "adv", level: "Level 4", basic: "mainly", advanced: "primarily", meaning: "主要地、首要地（作文分析主因時極佳）", register: "more academic", example: "The course is primarily for beginners.", exampleZh: "這門課程主要是為初學者設計的。" },
+      { id: "ad13", cat: "adv", level: "Level 4", basic: "also", advanced: "additionally", meaning: "此外、另外（置於句首作為轉承詞）", register: "more formal", example: "Additionally, students can join clubs.", exampleZh: "此外，學生還可以參加社團。" },
+      { id: "ad14", cat: "adv", level: "Level 3", basic: "perhaps", advanced: "possibly", meaning: "可能地、也許", register: "more objective", example: "This could possibly be the answer.", exampleZh: "這有可能是答案。" },
+      { id: "ad15", cat: "adv", level: "Level 3", basic: "completely", advanced: "entirely", meaning: "完全地、徹底地", register: "more formal", example: "I entirely agree with your opinion.", exampleZh: "我完全同意你的看法。" },
+
+      // 6. Important Word Pairs for the GSAT
+      { id: "p1", cat: "pairs", level: "Level 4", basic: "appear", advanced: "emerge", meaning: "appear = 視覺上出現；emerge = 浮現、為人所知", register: "nuance pair", nuance: "appear 強調「看得到」；emerge 強調「原本隱藏的事實/問題浮現」。", example: "New facts emerged during the investigation.", exampleZh: "調查過程中浮現了新的事實。" },
+      { id: "p2", cat: "pairs", level: "Level 3", basic: "rise", advanced: "raise", meaning: "rise = 自行上升（不及物）；raise = 舉起、調高（及物）", register: "grammar pair", nuance: "記憶口訣：太陽自己 rise；舉手 raise your hand（後面要加受詞）。", example: "Prices rise. / They raise prices.", exampleZh: "物價上漲。／他們調高價格。" },
+      { id: "p3", cat: "pairs", level: "Level 3", basic: "borrow", advanced: "lend", meaning: "borrow = 借入；lend = 借出", register: "direction pair", nuance: "borrow A from B（向某人借）；lend A to B（借給某人）。", example: "Can I borrow your pen? / Can you lend me your pen?", exampleZh: "我可以借你的筆嗎？／你可以把筆借我嗎？" },
+      { id: "p4", cat: "pairs", level: "Level 3", basic: "discover", advanced: "invent", meaning: "discover = 發現（原本就存在）；invent = 發明（創造新事物）", register: "meaning pair", nuance: "哥倫布發現新大陸用 discover；愛迪生發明電燈用 invent。", example: "Scientists discovered a new planet.", exampleZh: "科學家發現了一顆新行星。" },
+      { id: "p5", cat: "pairs", level: "Level 4", basic: "economic", advanced: "economical", meaning: "economic = 經濟上的；economical = 節省的、實惠的", register: "suffix pair", nuance: "economic growth（經濟成長）；an economical car（省油省錢的車）。", example: "Economic growth is important. / This car is economical.", exampleZh: "經濟成長很重要。／這輛車很省油省錢。" },
+      { id: "p6", cat: "pairs", level: "Level 4", basic: "historic", advanced: "historical", meaning: "historic = 具歷史意義的；historical = 歷史相關的", register: "suffix pair", nuance: "historic moment（歷史性的一刻）；historical novel（歷史小說）。", example: "It was a historic event.", exampleZh: "這是一場具有歷史意義的事件。" },
+      { id: "p7", cat: "pairs", level: "Level 4", basic: "sensible", advanced: "sensitive", meaning: "sensible = 明智的、合理的；sensitive = 敏感的、體貼的", register: "confusable pair", nuance: "sensible decision（明智的決定）；sensitive to criticism（對批評很敏感）。", example: "That is a sensible decision. / She is sensitive to criticism.", exampleZh: "那是個明智的決定。／她對批評很敏感。" },
+      { id: "p8", cat: "pairs", level: "Level 4", basic: "personal", advanced: "personnel", meaning: "personal = 個人的、私人的；personnel = 全體員工、人事部門", register: "confusable pair", nuance: "重音不同：PERsonal（形容詞）vs. personNEL（集合名詞）。", example: "This is my personal opinion.", exampleZh: "這是我個人的意見。" },
+      { id: "p9", cat: "pairs", level: "Level 4", basic: "adapt", advanced: "adopt", meaning: "adapt = 適應、改編；adopt = 採納、領養", register: "vowel pair", nuance: "a 聯想 adjust（調整適應）；o 聯想 option（選擇採納）。", example: "We must adapt to changes. / They adopted a new policy.", exampleZh: "我們必須適應變化。／他們採納了新政策。" },
+      { id: "p10", cat: "pairs", level: "Level 4", basic: "assure", advanced: "ensure", meaning: "assure = 向某人保證；ensure = 確保（某事發生）", register: "prefix pair", nuance: "assure + 人 + that...；ensure + 事物/安全。", example: "I assure you that everything is fine. / Please ensure safety.", exampleZh: "我向你保證一切都好。／請確保安全。" },
+      { id: "p11", cat: "pairs", level: "Level 3", basic: "affect", advanced: "effect", meaning: "affect = 影響（動詞）；effect = 影響、結果（名詞）", register: "POS pair", nuance: "affect 幾乎都當動詞；effect 幾乎都當名詞（have an effect on）。", example: "Stress affects sleep. / Stress has an effect on sleep.", exampleZh: "壓力會影響睡眠。／壓力對睡眠有影響。" },
+      { id: "p12", cat: "pairs", level: "Level 3", basic: "beside", advanced: "besides", meaning: "beside = 在……旁邊；besides = 除此之外（還有）", register: "preposition pair", nuance: "多了 s 代表「再加上去」的意思。", example: "Sit beside me. / Besides English, she studies French.", exampleZh: "坐在我旁邊。／除了英文之外，她還學法文。" },
+
+      // 7. 學測作文特別推薦：Useful Vocabulary Upgrades
+      { id: "ph1", cat: "phrases", level: "Essay Core", basic: "I think", advanced: "In my opinion / I believe", meaning: "我認為（避免作文每段都用 I think 開頭）", register: "more academic", example: "In my opinion, schools should teach financial literacy.", exampleZh: "依我之見，學校應該教授理財素養。" },
+      { id: "ph2", cat: "phrases", level: "Essay Core", basic: "a lot of", advanced: "numerous / a great deal of", meaning: "許多的（numerous 接可數複數；a great deal of 接不可數）", register: "more formal", nuance: "a lot of 偏口語，作文中可數名詞改用 numerous，不可數改用 a great deal of。", example: "Numerous students struggle with time management.", exampleZh: "許多學生在時間管理上遇到困難。" },
+      { id: "ph3", cat: "phrases", level: "Essay Core", basic: "very important", advanced: "essential / crucial", meaning: "極為重要的、關鍵的", register: "stronger / more formal", example: "Critical thinking is crucial in the digital age.", exampleZh: "批判性思考在數位時代至關重要。" },
+      { id: "ph4", cat: "phrases", level: "Essay Core", basic: "very big", advanced: "enormous / considerable", meaning: "龐大的、相當可觀的", register: "more formal", example: "The project requires a considerable amount of effort.", exampleZh: "這項計畫需要相當可觀的努力。" },
+      { id: "ph5", cat: "phrases", level: "Essay Core", basic: "very bad", advanced: "terrible / harmful", meaning: "糟糕的、有害的", register: "more precise", example: "Excessive screen time is harmful to teenagers' eyesight.", exampleZh: "過度使用螢幕對青少年的視力有害。" },
+      { id: "ph6", cat: "phrases", level: "Essay Core", basic: "very good", advanced: "excellent / beneficial", meaning: "極佳的、有益的", register: "more academic", example: "Reading regularly is beneficial to vocabulary growth.", exampleZh: "規律閱讀對字彙成長很有幫助。" },
+      { id: "ph7", cat: "phrases", level: "Essay Core", basic: "make people happy", advanced: "bring people joy", meaning: "帶給人們喜悅", register: "more expressive", example: "Helping others can bring people genuine joy.", exampleZh: "幫助他人能帶給人們真誠的喜悅。" },
+      { id: "ph8", cat: "phrases", level: "Essay Core", basic: "make a difference", advanced: "have an impact", meaning: "產生影響（常用搭配：have a positive impact on）", register: "more academic", example: "Small daily habits can have a lasting impact on our lives.", exampleZh: "日常的小習慣能對我們的生活產生深遠的影響。" },
+      { id: "ph9", cat: "phrases", level: "Essay Core", basic: "have a problem", advanced: "face a challenge", meaning: "面臨挑戰（比 have a problem 更有成熟分析感）", register: "more formal", example: "Many graduates face a challenge when entering the job market.", exampleZh: "許多畢業生在進入職場時面臨挑戰。" },
+      { id: "ph10", cat: "phrases", level: "Essay Core", basic: "solve a problem", advanced: "address an issue", meaning: "處理／解決議題（政府、社會或學校層級）", register: "more formal", example: "The government must take steps to address this issue.", exampleZh: "政府必須採取行動來解決這個議題。" },
+      { id: "ph11", cat: "phrases", level: "Essay Core", basic: "get information", advanced: "obtain information", meaning: "取得資訊", register: "more formal", example: "People can easily obtain information through smartphones.", exampleZh: "人們可以透過智慧型手機輕鬆取得資訊。" },
+      { id: "ph12", cat: "phrases", level: "Essay Core", basic: "give advice", advanced: "offer advice", meaning: "提供建議", register: "more polite / formal", example: "Teachers often offer advice on how to prepare for exams.", exampleZh: "老師經常提供如何準備考試的建議。" },
+      { id: "ph13", cat: "phrases", level: "Essay Core", basic: "spend time", advanced: "devote time to", meaning: "投入時間於……（注意 to 為介系詞，後接 V-ing）", register: "more dedicated / formal", nuance: "devote time to + V-ing / N，展現全心投入的態度。", example: "She devotes two hours every day to practicing English.", exampleZh: "她每天投入兩小時練習英文。" },
+      { id: "ph14", cat: "phrases", level: "Essay Core", basic: "help people", advanced: "assist individuals", meaning: "協助個人／民眾", register: "more formal", example: "Community centers assist individuals in need.", exampleZh: "社區中心協助有需要的民眾。" },
+      { id: "ph15", cat: "phrases", level: "Essay Core", basic: "learn knowledge", advanced: "acquire knowledge", meaning: "獲得知識（道地搭配詞，英文不說 learn knowledge！）", register: "idiomatic collocation", nuance: "中式英文常誤用 learn knowledge，正確搭配是 acquire / gain knowledge。", example: "Students acquire knowledge through both reading and experience.", exampleZh: "學生透過閱讀與經驗獲得知識。" },
+      { id: "ph16", cat: "phrases", level: "Essay Core", basic: "make progress", advanced: "achieve progress", meaning: "取得進展", register: "more formal", example: "With consistent practice, you will achieve steady progress.", exampleZh: "透過持續練習，你將取得穩定的進步。" },
+      { id: "ph17", cat: "phrases", level: "Essay Core", basic: "deal with problems", advanced: "cope with difficulties", meaning: "應對困難（強調心理調適與克服難關）", register: "more expressive", example: "Learning how to cope with difficulties builds resilience.", exampleZh: "學習如何應對困難能培養韌性。" },
+      { id: "ph18", cat: "phrases", level: "Essay Core", basic: "think carefully", advanced: "consider carefully", meaning: "審慎考慮", register: "more formal", example: "We must consider carefully before making a final decision.", exampleZh: "我們在做最終決定前必須審慎考慮。" },
+      { id: "ph19", cat: "phrases", level: "Essay Core", basic: "find a solution", advanced: "discover a solution", meaning: "找出解決方案", register: "more formal", example: "Teamwork helped them discover a practical solution.", exampleZh: "團隊合作幫助他們找出了切實可行的解決方案。" },
+      { id: "ph20", cat: "phrases", level: "Essay Core", basic: "play an important role", advanced: "play a crucial role", meaning: "扮演關鍵角色", register: "stronger / essay gold", example: "Parents play a crucial role in shaping children's values.", exampleZh: "父母在塑造孩子的價值觀方面扮演關鍵角色。" }
+    ];
+
+    /* ------------------------------------------------------------------------
+       2. REGISTER MODIFIERS FOR SENTENCE BUILDER
+       ------------------------------------------------------------------------ */
+    const REGISTER_MODIFIERS = [
+      {
+        id: "fancier",
+        label: "fancier",
+        desc: "「更高級、更華麗或更有文采的」—— 最適合用來向學習者解釋如何把口語平淡的字升級成有亮點的寫作用字。",
+        sentence: '"Utilize" is a fancier word for "use", and "in my opinion" is a fancier way to say "I think".',
+        zh: '「Utilize」是「use」更高級的用字，而「in my opinion」則是「I think」更高級的表達方式。'
+      },
+      {
+        id: "more-formal",
+        label: "more formal",
+        desc: "「更正式的」—— 用於商業書信、學術報告、演講或學測議論文，取代日常口語詞彙。",
+        sentence: '"Purchase" is a more formal word for "buy", and "offer advice" is a more formal way to say "give advice".',
+        zh: '「Purchase」是「buy」更正式的用字，而「offer advice」是「give advice」更正式的說法。'
+      },
+      {
+        id: "less-formal",
+        label: "less formal / more casual",
+        desc: "「較不正式／較口語的」—— 反向比較！提醒學生某些字雖然意思相同，但只適合日常對話，不適合正式作文。",
+        sentence: '"Kids" is a less formal word for "children", and "a lot of" is a more casual way to say "numerous".',
+        zh: '「Kids」是「children」較口語的說法，而「a lot of」是「numerous」較隨興的表達方式。'
+      },
+      {
+        id: "more-polite",
+        label: "more polite",
+        desc: "「更有禮貌、較委婉的」—— 在請求、詢問或提出不同意見時降低生硬感。",
+        sentence: '"Inquire" is a more polite word for "ask", and "Could you lend me..." is a more polite way to say "Give me...".',
+        zh: '「Inquire」是「ask」更有禮貌的用字，而「Could you lend me...」是「Give me...」更禮貌的說法。'
+      },
+      {
+        id: "more-precise",
+        label: "more precise / academic",
+        desc: "「更精確／更具學術性的」—— 取代籠統的 good, bad, show, big，讓論點更有說服力。",
+        sentence: '"Beneficial" is a more precise word for "good", and "address an issue" is a more academic way to say "solve a problem".',
+        zh: '「Beneficial」是「good」更精確的用字，而「address an issue」是「solve a problem」更具學術性的說法。'
+      }
+    ];
+
+    /* ------------------------------------------------------------------------
+       3. QUIZ DATABASE (10 題附件原題 + 10 題語氣替換表達題幹)
+       ------------------------------------------------------------------------ */
+    const QUIZ_DATA = [
+      // Original 10 GSAT Questions from attached docx
+      { id: "q1", type: "gsat", q: "New problems began to _____ after the new policy was introduced.", options: ["emerge", "purchase", "maintain", "depart"], answer: 0, exp: "emerge 意為「浮現、產生」，常與 new problems 搭配；purchase（購買）、maintain（維持）、depart（出發）皆不符語意。" },
+      { id: "q2", type: "gsat", q: "Lack of sleep can cause physical and mental _____.", options: ["fatigue", "opportunity", "response", "concept"], answer: 0, exp: "fatigue 意為「疲勞」（tiredness 的進階名詞），cause fatigue 為高頻搭配詞。" },
+      { id: "q3", type: "gsat", q: "The government should take action to _____ the environment.", options: ["protect", "occur", "reveal", "commence"], answer: 0, exp: "protect the environment 意為「保護環境」；occur（發生）、reveal（揭露）、commence（開始）語意不符。" },
+      { id: "q4", type: "gsat", q: "The report _____ that many students suffer from stress.", options: ["indicated", "borrowed", "repaired", "departed"], answer: 0, exp: "indicate 意為「顯示、指出」（show 的進階學術動詞），常用於報告或研究結果。" },
+      { id: "q5", type: "gsat", q: "Regular exercise is _____ to good health.", options: ["essential", "rare", "tiny", "obvious"], answer: 0, exp: "be essential to 意為「對……不可或缺」，是 important 的進階形容詞。" },
+      { id: "q6", type: "gsat", q: "We need to _____ to changes in our environment.", options: ["adapt", "adopt", "invent", "discover"], answer: 0, exp: "adapt to 意為「適應……」；adopt 則為「採納、領養」（後面直接接受詞，不加 to）。" },
+      { id: "q7", type: "gsat", q: "The new technology has had a great _____ on our lives.", options: ["impact", "error", "occupation", "sorrow"], answer: 0, exp: "have a great impact on 意為「對……有重大影響」，可替換 effect 或 make a difference。" },
+      { id: "q8", type: "gsat", q: "The company plans to _____ its business next year.", options: ["expand", "cease", "clarify", "inquire"], answer: 0, exp: "expand its business 意為「擴展業務」，是 grow 的進階動詞。" },
+      { id: "q9", type: "gsat", q: "This machine is more _____ because it uses less energy.", options: ["economical", "economic", "historic", "sensitive"], answer: 0, exp: "economical 意為「節省能源／金錢的、實惠的」；economic 則為「經濟學／經濟層面的」。" },
+      { id: "q10", type: "gsat", q: "The teacher asked us to _____ the problem carefully.", options: ["consider", "occur", "emerge", "depart"], answer: 0, exp: "consider the problem carefully 意為「仔細考慮這個問題」（think about carefully 的升級）。" },
+
+      // 10 Register & Nuance Pattern Questions ("A is a fancier/more formal/less formal word/way to say B")
+      { id: "q11", type: "register", q: 'Which word is a fancier, more formal word for "buy"?', options: ["purchase", "depart", "cease", "inquire"], answer: 0, exp: '"Purchase" is a fancier / more formal word for "buy"（購買）。' },
+      { id: "q12", type: "register", q: 'Which expression is a more formal way to say "solve a problem" in an essay?', options: ["address an issue", "borrow a pen", "sit beside", "look alike"], answer: 0, exp: '"Address an issue" is a more formal way to say "solve a problem"（處理／解決議題）。' },
+      { id: "q13", type: "register", q: 'Compared to "commence", the word "start" is a _____ word.', options: ["less formal", "more academic", "more technical", "fancier"], answer: 0, exp: '"Start" is a less formal word for "commence"（start 較日常口語，commence 非常正式）。' },
+      { id: "q14", type: "register", q: 'Which phrase is a fancier way to say "spend time" when showing dedication?', options: ["devote time to", "cease time from", "depart time for", "raise time on"], answer: 0, exp: '"Devote time to" is a fancier / more dedicated way to say "spend time"（投入時間於……）。' },
+      { id: "q15", type: "register", q: 'Which word is a more polite and formal word for "ask" when requesting information?', options: ["inquire", "worsen", "adopt", "assure"], answer: 0, exp: '"Inquire" is a more polite and formal word for "ask"（詢問、打聽）。' },
+      { id: "q16", type: "register", q: 'In academic writing, "numerous" is a more formal word for "_____".', options: ["a lot of", "very tiny", "less likely", "quite alike"], answer: 0, exp: '"Numerous" is a more formal way to say "a lot of"（用於修飾可數複數名詞）。' },
+      { id: "q17", type: "register", q: 'Which collocation is a more idiomatic and fancier way to say "learn knowledge"?', options: ["acquire knowledge", "invent knowledge", "repair knowledge", "depart knowledge"], answer: 0, exp: '英文中「獲得知識」的道地搭配是 "acquire knowledge"，而非中式英文的 "learn knowledge"。' },
+      { id: "q18", type: "register", q: 'Which word is a more precise word for "bad" when describing damage to health?', options: ["harmful", "effortless", "economical", "historic"], answer: 0, exp: '"Harmful" is a more precise word for "bad"（對健康或環境有害的）。' },
+      { id: "q19", type: "register", q: 'Which expression is a more formal way to say "I think" at the beginning of a paragraph?', options: ["In my opinion", "Beside me", "As a result", "By accident"], answer: 0, exp: '"In my opinion" is a more formal way to say "I think"（依我之見）。' },
+      { id: "q20", type: "register", q: '"Fatigue" is a more formal and medical word for "_____".', options: ["tiredness", "happiness", "sorrow", "opportunity"], answer: 0, exp: '"Fatigue" is a more formal word for "tiredness"（疲勞、勞累）。' }
+    ];
+
+    /* ------------------------------------------------------------------------
+       4. WRITING UPGRADE RULES (FOR TAB 4)
+       ------------------------------------------------------------------------ */
+    const WRITING_RULES = [
+      { basic: "I think", upgrade: "In my opinion,", note: "更正式的作文開頭表達 (more formal way to say)" },
+      { basic: "a lot of", upgrade: "numerous", note: "可數名詞前更學術的「許多」(more academic)" },
+      { basic: "very big", upgrade: "enormous", note: "更有張力的形容詞升級 (fancier word)" },
+      { basic: "very important", upgrade: "crucial", note: "議論文高頻「關鍵的」(stronger / more formal)" },
+      { basic: "effect", upgrade: "impact", note: "強調深遠衝擊與影響 (stronger noun)" },
+      { basic: "solve this problem", upgrade: "address this issue", note: "公共議題探討標準搭配 (more formal way to say)" },
+      { basic: "solve the problem", upgrade: "address the issue", note: "公共議題探討標準搭配 (more formal way to say)" },
+      { basic: "very bad", upgrade: "harmful", note: "更精確指出「有害的」(more precise word)" },
+      { basic: "very good", upgrade: "beneficial", note: "更精確指出「有益的」(more academic word)" },
+      { basic: "spend time", upgrade: "devote time to", note: "展現投入精神的動詞片語 (fancier way to say)" },
+      { basic: "learn knowledge", upgrade: "acquire knowledge", note: "修正中式英文的道地搭配 (idiomatic collocation)" },
+      { basic: "help people", upgrade: "assist individuals", note: "更正式的書面用語 (more formal way to say)" }
+    ];
+
+    /* ------------------------------------------------------------------------
+       5. STATE & INITIALIZATION
+       ------------------------------------------------------------------------ */
+    let state = {
+      activeTab: "explorer",
+      activeCat: "all",
+      hideMeaning: false,
+      onlyStarred: false,
+      starredIds: JSON.parse(localStorage.getItem("lexilift_starred") || "[]"),
+      ttsRate: 1.0,
+      selectedModifier: "fancier",
+      quizQuestions: [],
+      quizSelections: {},
+      quizSubmitted: false
+    };
+
+    function init() {
+      // Restore saved reading preferences
+      const savedSize = localStorage.getItem("lexilift_fontsize");
+      if (savedSize) setFontSize(Number(savedSize));
+
+      const savedTheme = localStorage.getItem("lexilift_theme");
+      if (savedTheme) setTheme(savedTheme);
+
+      renderCategoryChips();
+      updateStarCount();
+      renderVocab();
+      renderModifiers();
+      initQuiz();
+      loadSampleEssay(1);
+    }
+
+    /* ------------------------------------------------------------------------
+       6. READING COMFORT & NAVIGATION CONTROLS
+       ------------------------------------------------------------------------ */
+    function setFontSize(px) {
+      document.documentElement.style.setProperty("--base-font-size", px + "px");
+      localStorage.setItem("lexilift_fontsize", px);
+      document.querySelectorAll("[data-size]").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.size) === px);
+      });
+    }
+
+    function setTheme(themeName) {
+      document.documentElement.setAttribute("data-theme", themeName);
+      localStorage.setItem("lexilift_theme", themeName);
+      document.querySelectorAll("[data-theme-btn]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.themeBtn === themeName);
+      });
+    }
+
+    function setTtsRate(rate) {
+      state.ttsRate = rate;
+      document.querySelectorAll("[data-rate]").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.rate) === rate);
+      });
+    }
+
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      document.querySelectorAll(".view-section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById("view-" + tabId).classList.add("active");
+
+      document.querySelectorAll("[data-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* ------------------------------------------------------------------------
+       7. TEXT-TO-SPEECH (en-US) ENGINE
+       ------------------------------------------------------------------------ */
+    function speakText(text, btnEl) {
+      if (!("speechSynthesis" in window)) {
+        alert("您的瀏覽器不支援語音朗讀功能 (Web Speech API)。");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      document.querySelectorAll(".tts-btn.speaking").forEach(b => b.classList.remove("speaking"));
+
+      // Clean slash alternatives for smoother pronunciation
+      const cleanText = text.replace(/\s*\/\s*/g, ", or ");
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = "en-US";
+      utterance.rate = state.ttsRate;
+
+      const voices = window.speechSynthesis.getVoices();
+      const enUsVoice = voices.find(v => v.lang === "en-US" && v.name.includes("Google")) ||
+                        voices.find(v => v.lang === "en-US") ||
+                        voices.find(v => v.lang.startsWith("en"));
+      if (enUsVoice) utterance.voice = enUsVoice;
+
+      if (btnEl) {
+        btnEl.classList.add("speaking");
+        utterance.onend = () => btnEl.classList.remove("speaking");
+        utterance.onerror = () => btnEl.classList.remove("speaking");
+      }
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Ensure voices are loaded asynchronously on mobile browsers
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+
+    /* ------------------------------------------------------------------------
+       8. VOCABULARY EXPLORER RENDERING
+       ------------------------------------------------------------------------ */
+    function renderCategoryChips() {
+      const container = document.getElementById("categoryChips");
+      container.innerHTML = CATEGORIES.map(c => `
+        <button class="cat-chip ${state.activeCat === c.id ? "active" : ""}" onclick="selectCategory('${c.id}')">
+          ${c.label}
+        </button>
+      `).join("");
+    }
+
+    function selectCategory(catId) {
+      state.activeCat = catId;
+      renderCategoryChips();
+      renderVocab();
+    }
+
+    function toggleHideMeaning() {
+      state.hideMeaning = !state.hideMeaning;
+      document.getElementById("btnHideMeaning").classList.toggle("active", state.hideMeaning);
+      renderVocab();
+    }
+
+    function toggleOnlyStarred() {
+      state.onlyStarred = !state.onlyStarred;
+      document.getElementById("btnOnlyStarred").classList.toggle("active", state.onlyStarred);
+      renderVocab();
+    }
+
+    function toggleStar(id) {
+      const idx = state.starredIds.indexOf(id);
+      if (idx === -1) state.starredIds.push(id);
+      else state.starredIds.splice(idx, 1);
+      localStorage.setItem("lexilift_starred", JSON.stringify(state.starredIds));
+      updateStarCount();
+      renderVocab();
+    }
+
+    function updateStarCount() {
+      document.getElementById("starCount").textContent = state.starredIds.length;
+    }
+
+    function buildRegisterSentence(item) {
+      const isPhrase = item.basic.includes(" ") || item.advanced.includes(" ");
+      const frame = isPhrase ? "way to say" : "word for";
+      const advClean = item.advanced.split("/")[0].trim();
+      return `"${capitalize(advClean)}" is a ${item.register} ${frame} "${item.basic}".`;
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function renderVocab() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const filtered = VOCAB_DATA.filter(item => {
+        if (state.activeCat !== "all" && item.cat !== state.activeCat) return false;
+        if (state.onlyStarred && !state.starredIds.includes(item.id)) return false;
+        if (q) {
+          const hay = `${item.basic} ${item.advanced} ${item.meaning} ${item.example} ${item.exampleZh}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      document.getElementById("vocabCountText").textContent = `顯示 ${filtered.length} 組字彙`;
+
+      const grid = document.getElementById("vocabGrid");
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:32px; color:var(--text-muted);">找不到符合條件的字彙，請嘗試其他關鍵字或切換分類。</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        const isStarred = state.starredIds.includes(item.id);
+        const catObj = CATEGORIES.find(c => c.id === item.cat);
+        const regSentence = buildRegisterSentence(item);
+        const safeBasic = escapeAttr(item.basic);
+        const safeAdv = escapeAttr(item.advanced);
+        const safeEx = escapeAttr(item.example);
+        const safeReg = escapeAttr(regSentence);
+
+        return `
+          <article class="vocab-card ${state.hideMeaning ? "meaning-hidden" : ""}">
+            <div>
+              <div class="card-top">
+                <div class="card-tags">
+                  <span class="tag tag-level">${item.level}</span>
+                  <span class="tag">${catObj ? catObj.label.replace(/^\d+\.\s*/, "") : ""}</span>
+                  <span class="tag tag-register">${item.register}</span>
+                </div>
+                <button class="star-btn ${isStarred ? "starred" : ""}" onclick="toggleStar('${item.id}')" title="收藏單字">
+                  ${isStarred ? "★" : "☆"}
+                </button>
+              </div>
+
+              <div class="word-comparison" style="margin-top:10px;">
+                <div class="word-box">
+                  <span class="word-basic">${item.basic}</span>
+                  <button class="tts-btn sm" onclick="speakText('${safeBasic}', this)" title="朗讀基礎字">🔊</button>
+                </div>
+                <span class="word-arrow">→</span>
+                <div class="word-box">
+                  <span class="word-advanced">${item.advanced}</span>
+                  <button class="tts-btn sm" onclick="speakText('${safeAdv}', this)" title="朗讀進階字">🔊</button>
+                </div>
+              </div>
+
+              <div class="meaning-row" style="margin-top:10px;">
+                <span class="meaning-text">${item.meaning}</span>
+              </div>
+
+              ${item.nuance ? `<div class="nuance-box" style="margin-top:8px;"><span class="nuance-text">💡 辨析：${item.nuance}</span></div>` : ""}
+
+              <div class="register-frame" style="margin-top:8px;">
+                <span>💬 ${regSentence}</span>
+                <button class="tts-btn sm" onclick="speakText('${safeReg}', this)" title="朗讀語氣替換句型">🔊</button>
+              </div>
+            </div>
+
+            <div class="example-box">
+              <div>
+                <div class="example-en">${item.example}</div>
+                <div class="example-zh meaning-text">${item.exampleZh}</div>
+              </div>
+              <button class="tts-btn" onclick="speakText('${safeEx}', this)" title="朗讀例句 (en-US)">🔊</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function escapeAttr(str) {
+      return str.replace(/'/g, "\'").replace(/"/g, "&quot;");
+    }
+
+    /* ------------------------------------------------------------------------
+       9. REGISTER MODIFIER BUILDER (TAB 2)
+       ------------------------------------------------------------------------ */
+    function renderModifiers() {
+      const container = document.getElementById("modifierChips");
+      container.innerHTML = REGISTER_MODIFIERS.map(m => `
+        <button class="mod-chip ${state.selectedModifier === m.id ? "active" : ""}" onclick="selectModifier('${m.id}')">
+          ${m.label}
+        </button>
+      `).join("");
+
+      const current = REGISTER_MODIFIERS.find(m => m.id === state.selectedModifier);
+      document.getElementById("modifierExplanation").textContent = current.desc;
+      document.getElementById("builderSentence").textContent = current.sentence;
+      document.getElementById("builderTranslation").textContent = current.zh;
+    }
+
+    function selectModifier(id) {
+      state.selectedModifier = id;
+      renderModifiers();
+    }
+
+    function speakBuilder() {
+      const current = REGISTER_MODIFIERS.find(m => m.id === state.selectedModifier);
+      speakText(current.sentence, document.getElementById("builderTtsBtn"));
+    }
+
+    /* ------------------------------------------------------------------------
+       10. INTERACTIVE QUIZ ENGINE (TAB 3)
+       ------------------------------------------------------------------------ */
+    function initQuiz() {
+      const filter = document.getElementById("quizFilter").value;
+      let pool = QUIZ_DATA.filter(q => filter === "all" || q.type === filter);
+      // Shuffle options for each question while preserving correct answer tracking
+      state.quizQuestions = pool.map(q => {
+        const indexedOpts = q.options.map((text, idx) => ({ text, isCorrect: idx === q.answer }));
+        for (let i = indexedOpts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indexedOpts[i], indexedOpts[j]] = [indexedOpts[j], indexedOpts[i]];
+        }
+        return { ...q, shuffledOptions: indexedOpts };
+      });
+      state.quizSelections = {};
+      state.quizSubmitted = false;
+      document.getElementById("quizScoreBox").textContent = "";
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById("quizContainer");
+      container.innerHTML = state.quizQuestions.map((q, qIdx) => {
+        const selectedIdx = state.quizSelections[q.id];
+        const safeQ = escapeAttr(q.q.replace("_____", "blank"));
+
+        return `
+          <div class="quiz-card">
+            <div class="quiz-q-header">
+              <div class="quiz-q-text">
+                <span class="tag ${q.type === "register" ? "tag-register" : "tag-level"}" style="margin-right:6px;">
+                  ${q.type === "register" ? "語氣替換" : "學測實戰"}
+                </span>
+                ${qIdx + 1}. ${q.q}
+              </div>
+              <button class="tts-btn sm" onclick="speakText('${safeQ}', this)" title="朗讀題幹">🔊</button>
+            </div>
+
+            <div class="quiz-options">
+              ${q.shuffledOptions.map((opt, oIdx) => {
+                let cls = "quiz-opt";
+                let badge = "";
+                if (!state.quizSubmitted) {
+                  if (selectedIdx === oIdx) cls += " selected";
+                } else {
+                  if (opt.isCorrect) {
+                    cls += " correct";
+                    badge = "✓";
+                  } else if (selectedIdx === oIdx && !opt.isCorrect) {
+                    cls += " wrong";
+                    badge = "✗";
+                  }
+                }
+                return `
+                  <button class="${cls}" onclick="selectQuizOption('${q.id}', ${oIdx})">
+                    <span>(${String.fromCharCode(65 + oIdx)}) ${opt.text}</span>
+                    <span>${badge}</span>
+                  </button>
+                `;
+              }).join("")}
+            </div>
+
+            <div class="quiz-exp ${state.quizSubmitted ? "show" : ""}">
+              <strong>解析：</strong>${q.exp}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function selectQuizOption(qId, oIdx) {
+      if (state.quizSubmitted) return;
+      state.quizSelections[qId] = oIdx;
+      renderQuiz();
+    }
+
+    function submitQuiz() {
+      state.quizSubmitted = true;
+      let score = 0;
+      state.quizQuestions.forEach(q => {
+        const sel = state.quizSelections[q.id];
+        if (sel !== undefined && q.shuffledOptions[sel].isCorrect) score++;
+      });
+      document.getElementById("quizScoreBox").textContent = `得分：${score} / ${state.quizQuestions.length} 題 (${Math.round(score / state.quizQuestions.length * 100)}%)`;
+      renderQuiz();
+    }
+
+    /* ------------------------------------------------------------------------
+       11. WRITING UPGRADE BRIDGE (TAB 4)
+       ------------------------------------------------------------------------ */
+    function loadSampleEssay(num) {
+      const box = document.getElementById("writingInput");
+      if (num === 1) {
+        box.value = "I think social media has a very big effect on teenagers. A lot of students spend time scrolling on their phones, which can be very bad for their sleep. Therefore, schools and parents need to work together to solve this problem.";
+      } else {
+        box.value = "It is very important for everyone to protect the environment. If we learn knowledge about sustainability and help people build green habits, our daily actions will make a very good impact on the planet.";
+      }
+      analyzeWriting();
+    }
+
+    function analyzeWriting() {
+      const text = document.getElementById("writingInput").value;
+      const matches = WRITING_RULES.filter(rule => {
+        const regex = new RegExp("\\b" + escapeRegExp(rule.basic) + "\\b", "i");
+        return regex.test(text);
+      });
+
+      document.getElementById("writingMatchCount").textContent = `偵測到 ${matches.length} 個可升級表達`;
+      const list = document.getElementById("writingSuggestions");
+
+      if (matches.length === 0) {
+        list.innerHTML = `<div style="font-size:0.88rem; color:var(--text-muted); padding:8px 0;">目前草稿中沒有偵測到基礎替換詞，或你已經完成升級囉！</div>`;
+        return;
+      }
+
+      list.innerHTML = matches.map(m => `
+        <div class="suggestion-item">
+          <div>
+            <span style="text-decoration:line-through; color:var(--text-muted);">${m.basic}</span>
+            <span style="margin:0 8px; font-weight:700;">→</span>
+            <strong style="color:var(--accent-upgrade); font-size:1.05rem;">${m.upgrade}</strong>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-top:2px;">${m.note}</div>
+          </div>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <button class="tts-btn sm" onclick="speakText('${escapeAttr(m.upgrade)}', this)" title="聆聽升級詞">🔊</button>
+            <button class="replace-btn" onclick="applyUpgrade('${escapeAttr(m.basic)}', '${escapeAttr(m.upgrade)}')">一鍵替換</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function applyUpgrade(basic, upgrade) {
+      const box = document.getElementById("writingInput");
+      const regex = new RegExp("\\b" + escapeRegExp(basic) + "\\b", "i");
+      box.value = box.value.replace(regex, (match) => {
+        // Preserve capitalization if at start of sentence
+        if (match[0] === match[0].toUpperCase() && upgrade[0] !== upgrade[0].toUpperCase()) {
+          return upgrade.charAt(0).toUpperCase() + upgrade.slice(1);
+        }
+        return upgrade;
+      });
+      analyzeWriting();
+    }
+
+    function speakWriting() {
+      const text = document.getElementById("writingInput").value.trim();
+      if (text) speakText(text, null);
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
