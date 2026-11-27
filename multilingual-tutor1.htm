@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 外語家教 - 任務、翻譯、複習與測驗</title>
+  <title>AI 外語家教 - 設定、任務、翻譯、複習與測驗</title>
   <style>
     :root {
       --bg-color: #f4f6fb;
       --card-bg: #ffffff;
+      --surface-subtle: #f9fafb;
       --primary: #3b6ef6;
       --primary-hover: #2855d4;
       --danger: #dc2626;
@@ -17,7 +18,59 @@
       --border-color: #222222;
       --bubble-tutor: #fffdf5;
       --bubble-user: #eef4ff;
+      --badge-user-bg: #fef3c7;
       --shadow-comic: 4px 4px 0px #222222;
+      --font-scale: 1;
+    }
+
+    /* 主題一：暖陽米白（預設） */
+    body[data-theme="warm"] {
+      --bg-color: #f6f3ec;
+      --card-bg: #fffefb;
+      --surface-subtle: #f5f0e6;
+      --primary: #3b6ef6;
+      --primary-hover: #2855d4;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #222222;
+      --bubble-tutor: #fff9e6;
+      --bubble-user: #eef4ff;
+      --badge-user-bg: #fde68a;
+      --shadow-comic: 4px 4px 0px #222222;
+    }
+
+    /* 主題二：薄荷清新 */
+    body[data-theme="mint"] {
+      --bg-color: #eef7f4;
+      --card-bg: #ffffff;
+      --surface-subtle: #f2fbf8;
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --text-main: #132a2e;
+      --text-muted: #52797a;
+      --border-color: #183236;
+      --bubble-tutor: #f7fffa;
+      --bubble-user: #e6f4f1;
+      --badge-user-bg: #ccfbf1;
+      --shadow-comic: 4px 4px 0px #183236;
+    }
+
+    /* 主題三：深夜護眼 */
+    body[data-theme="dark"] {
+      --bg-color: #12161f;
+      --card-bg: #1b2230;
+      --surface-subtle: #232c3e;
+      --primary: #60a5fa;
+      --primary-hover: #3b82f6;
+      --danger: #f87171;
+      --danger-hover: #ef4444;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-color: #0b0e14;
+      --bubble-tutor: #252f42;
+      --bubble-user: #1e293b;
+      --badge-user-bg: #334155;
+      --shadow-comic: 4px 4px 0px #0b0e14;
     }
 
     * {
@@ -30,10 +83,12 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
       background: var(--bg-color);
       color: var(--text-main);
+      font-size: calc(16px * var(--font-scale));
       min-height: 100vh;
       display: flex;
       justify-content: center;
       padding: 16px;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .app-container {
@@ -68,7 +123,7 @@
       align-items: center;
       gap: 10px;
       padding-bottom: 12px;
-      border-bottom: 2px dashed #d1d5db;
+      border-bottom: 2px dashed var(--text-muted);
     }
 
     .top-actions {
@@ -79,7 +134,7 @@
     }
 
     .app-title {
-      font-size: 1.25rem;
+      font-size: 1.25em;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -90,10 +145,10 @@
       border: 2px solid var(--border-color);
       border-radius: 10px;
       padding: 8px 12px;
-      font-size: 0.92rem;
+      font-size: 0.92em;
       font-weight: 700;
       cursor: pointer;
-      background: #ffffff;
+      background: var(--card-bg);
       color: var(--text-main);
       box-shadow: 2px 2px 0px var(--border-color);
       transition: transform 0.08s ease, background-color 0.15s ease;
@@ -124,16 +179,17 @@
     }
 
     .btn-secondary {
-      background: #f3f4f6;
+      background: var(--surface-subtle);
+      color: var(--text-main);
     }
 
     .btn-secondary:hover:not(:disabled) {
-      background: #e5e7eb;
+      filter: brightness(0.96);
     }
 
     .btn-active-pill {
-      background: #dbeafe;
-      color: #1d4ed8;
+      background: var(--primary);
+      color: #ffffff;
       border-color: var(--border-color);
     }
 
@@ -155,19 +211,39 @@
       background: var(--danger-hover);
     }
 
-    /* API 設定面板 */
-    .api-panel {
-      background: #f9fafb;
+    /* 設定頁面樣式 */
+    .settings-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .settings-card {
+      background: var(--surface-subtle);
       border: 2px solid var(--border-color);
-      border-radius: 12px;
-      padding: 14px;
-      display: none;
+      border-radius: 14px;
+      box-shadow: 3px 3px 0px var(--border-color);
+      padding: 16px;
+      display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
-    .api-panel.open {
-      display: flex;
+    .settings-card-title {
+      font-size: 1.05em;
+      font-weight: 800;
+    }
+
+    .settings-sub-label {
+      font-size: 0.9em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .settings-option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
     .api-row {
@@ -183,17 +259,17 @@
       padding: 9px 12px;
       border: 2px solid var(--border-color);
       border-radius: 8px;
-      font-size: 0.92rem;
-      background: #fff;
+      font-size: 0.92em;
+      background: var(--card-bg);
       color: var(--text-main);
     }
 
     .api-guide {
-      background: #ffffff;
-      border: 1.5px solid #d1d5db;
+      background: var(--card-bg);
+      border: 1.5px solid var(--text-muted);
       border-radius: 10px;
       padding: 12px 14px;
-      font-size: 0.86rem;
+      font-size: 0.86em;
       color: var(--text-main);
       line-height: 1.65;
     }
@@ -219,11 +295,11 @@
     }
 
     .api-safety-box {
-      background: #fffdf5;
-      border: 1.5px solid #e5e7eb;
+      background: var(--bubble-tutor);
+      border: 1.5px solid var(--text-muted);
       border-radius: 10px;
       padding: 12px 14px;
-      font-size: 0.86rem;
+      font-size: 0.86em;
       color: var(--text-main);
       line-height: 1.65;
     }
@@ -231,7 +307,7 @@
     .api-safety-title {
       font-weight: 800;
       margin-bottom: 6px;
-      color: #b45309;
+      color: var(--primary);
     }
 
     .api-safety-box ul {
@@ -243,7 +319,7 @@
     }
 
     .status-text {
-      font-size: 0.88rem;
+      font-size: 0.88em;
       font-weight: 600;
       color: var(--primary);
       min-height: 1.2em;
@@ -265,7 +341,7 @@
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
       overflow: hidden;
-      background: #e5e7eb;
+      background: var(--surface-subtle);
       box-shadow: var(--shadow-comic);
       display: flex;
       align-items: center;
@@ -289,10 +365,15 @@
       padding: 16px 18px;
       box-shadow: var(--shadow-comic);
       min-height: 92px;
-      font-size: 1.06rem;
+      font-size: 1.06em;
       line-height: 1.65;
       white-space: pre-wrap;
       word-break: break-word;
+    }
+
+    .speech-bubble.has-bulb {
+      padding-right: 52px;
+      padding-bottom: 24px;
     }
 
     .speech-bubble.tutor-bubble::before {
@@ -315,6 +396,35 @@
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 10px solid var(--bubble-tutor);
+    }
+
+    /* 右下角 💡 按鈕（不覆蓋翻譯文字） */
+    .bulb-trigger-btn {
+      position: absolute;
+      right: 10px;
+      bottom: 8px;
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 50%;
+      background: var(--card-bg);
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 1.5px 1.5px 0px var(--border-color);
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .bulb-trigger-btn.visible {
+      display: inline-flex;
+    }
+
+    .bulb-trigger-btn:active {
+      transform: translate(1.5px, 1.5px);
+      box-shadow: none;
     }
 
     /* 起始未選任務時，收起人物對話框以下全部內容 */
@@ -348,9 +458,9 @@
       padding: 8px 10px;
       border: 2px solid var(--border-color);
       border-radius: 10px;
-      font-size: 0.92rem;
+      font-size: 0.92em;
       font-weight: 700;
-      background: #fff;
+      background: var(--card-bg);
       color: var(--text-main);
       box-shadow: 2px 2px 0px var(--border-color);
       cursor: pointer;
@@ -361,7 +471,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(17, 24, 39, 0.45);
+      background: rgba(17, 24, 39, 0.5);
       display: none;
       align-items: center;
       justify-content: center;
@@ -373,11 +483,40 @@
       display: flex;
     }
 
+    /* 解說彈窗（💡） */
+    .explanation-modal {
+      width: 100%;
+      max-width: 560px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0px var(--border-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .explanation-body {
+      background: var(--surface-subtle);
+      border: 1.5px solid var(--text-muted);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.95em;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
     /* 主畫面語速微調彈窗 */
     .rate-modal {
       width: 100%;
       max-width: 340px;
-      background: #ffffff;
+      background: var(--card-bg);
+      color: var(--text-main);
       border: 2.5px solid var(--border-color);
       border-radius: 16px;
       box-shadow: 6px 6px 0px var(--border-color);
@@ -389,7 +528,7 @@
     }
 
     .rate-modal-title {
-      font-size: 1.08rem;
+      font-size: 1.08em;
       font-weight: 800;
     }
 
@@ -405,8 +544,9 @@
       height: 44px;
       border: 2px solid var(--border-color);
       border-radius: 12px;
-      background: #f3f4f6;
-      font-size: 1.3rem;
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      font-size: 1.3em;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 2px 2px 0px var(--border-color);
@@ -419,13 +559,13 @@
 
     .rate-value {
       min-width: 72px;
-      font-size: 1.35rem;
+      font-size: 1.35em;
       font-weight: 800;
       color: var(--primary);
     }
 
     .rate-range-note {
-      font-size: 0.82rem;
+      font-size: 0.82em;
       color: var(--text-muted);
     }
 
@@ -440,9 +580,9 @@
       padding: 10px 12px;
       border: 2px solid var(--border-color);
       border-radius: 12px;
-      background: #f3f4f6;
+      background: var(--surface-subtle);
       color: var(--text-main);
-      font-size: 0.98rem;
+      font-size: 0.98em;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 2px 2px 0px var(--border-color);
@@ -465,7 +605,8 @@
       max-width: 560px;
       max-height: 88vh;
       overflow-y: auto;
-      background: #ffffff;
+      background: var(--card-bg);
+      color: var(--text-main);
       border: 2.5px solid var(--border-color);
       border-radius: 16px;
       box-shadow: 6px 6px 0px var(--border-color);
@@ -483,10 +624,10 @@
     }
 
     .prompt-item-card {
-      border: 1.5px solid #d1d5db;
+      border: 1.5px solid var(--text-muted);
       border-radius: 12px;
       padding: 12px;
-      background: #fafafa;
+      background: var(--surface-subtle);
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -500,25 +641,25 @@
     }
 
     .prompt-box-label {
-      font-size: 0.92rem;
+      font-size: 0.92em;
       font-weight: 800;
       color: var(--text-main);
     }
 
     .prompt-sub-label {
-      font-size: 0.8rem;
+      font-size: 0.8em;
       font-weight: 700;
       color: var(--text-muted);
     }
 
     .default-prompt-preview {
-      background: #f3f4f6;
-      border: 1.5px solid #e5e7eb;
+      background: var(--card-bg);
+      border: 1.5px solid var(--text-muted);
       border-radius: 8px;
       padding: 8px 10px;
-      font-size: 0.82rem;
+      font-size: 0.82em;
       line-height: 1.5;
-      color: #374151;
+      color: var(--text-main);
       white-space: pre-wrap;
       max-height: 105px;
       overflow-y: auto;
@@ -531,15 +672,15 @@
       border: 2px solid var(--border-color);
       border-radius: 8px;
       font-family: inherit;
-      font-size: 0.88rem;
+      font-size: 0.88em;
       line-height: 1.5;
       resize: vertical;
       color: var(--text-main);
-      background: #fffdf5;
+      background: var(--bubble-tutor);
     }
 
     .prompt-var-hint {
-      font-size: 0.8rem;
+      font-size: 0.8em;
       color: var(--text-muted);
       line-height: 1.5;
     }
@@ -569,20 +710,21 @@
       flex: 1;
       justify-content: space-between;
       padding: 11px 14px;
-      font-size: 0.98rem;
+      font-size: 0.98em;
     }
 
     .task-badge-soon {
-      font-size: 0.78rem;
+      font-size: 0.78em;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #e5e7eb;
-      color: #4b5563;
+      background: var(--surface-subtle);
+      color: var(--text-muted);
       font-weight: 700;
+      border: 1px solid var(--text-muted);
     }
 
     .task-badge-active {
-      font-size: 0.78rem;
+      font-size: 0.78em;
       padding: 2px 8px;
       border-radius: 999px;
       background: #dbeafe;
@@ -612,12 +754,12 @@
       padding: 0 12px;
       border: 2.5px solid var(--border-color);
       border-radius: 14px;
-      background: #fef3c7;
+      background: var(--badge-user-bg);
       box-shadow: 3px 3px 0px var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
+      font-size: 1.15em;
       font-weight: 800;
       user-select: none;
       flex-shrink: 0;
@@ -664,7 +806,7 @@
       background: var(--bubble-user);
       box-shadow: 3px 3px 0px var(--border-color);
       font-family: inherit;
-      font-size: 1rem;
+      font-size: 1em;
       line-height: 1.55;
       resize: none;
       overflow-y: hidden;
@@ -682,11 +824,11 @@
       bottom: 10px;
       width: 26px;
       height: 26px;
-      border: 1.5px solid #9ca3af;
+      border: 1.5px solid var(--text-muted);
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
-      color: #4b5563;
-      font-size: 0.95rem;
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 0.95em;
       font-weight: 700;
       line-height: 1;
       cursor: pointer;
@@ -699,11 +841,6 @@
 
     .clear-bubble-btn.visible {
       display: flex;
-    }
-
-    .clear-bubble-btn:hover {
-      background: #e5e7eb;
-      color: #111827;
     }
 
     /* 日文語氣三選一列（常體 / 敬體 / 服務業者） */
@@ -727,7 +864,7 @@
       border-radius: 14px;
       background: var(--primary);
       color: #ffffff;
-      font-size: 1rem;
+      font-size: 1em;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 3px 3px 0px var(--border-color);
@@ -753,7 +890,7 @@
     .mode-toolbar {
       margin-top: 14px;
       padding-top: 18px;
-      border-top: 2px dashed #d1d5db;
+      border-top: 2px dashed var(--text-muted);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
@@ -773,7 +910,7 @@
     .date-group {
       border: 2px solid var(--border-color);
       border-radius: 14px;
-      background: #fafafa;
+      background: var(--surface-subtle);
       box-shadow: 3px 3px 0px var(--border-color);
       overflow: hidden;
     }
@@ -784,7 +921,7 @@
       justify-content: space-between;
       gap: 8px;
       padding: 10px 12px;
-      background: #fffdf5;
+      background: var(--bubble-tutor);
     }
 
     .date-toggle-btn {
@@ -792,7 +929,7 @@
       text-align: left;
       background: transparent;
       border: none;
-      font-size: 1rem;
+      font-size: 1em;
       font-weight: 800;
       color: var(--text-main);
       cursor: pointer;
@@ -805,16 +942,17 @@
     .icon-del-btn {
       border: 1.5px solid var(--border-color);
       border-radius: 8px;
-      background: #fff;
+      background: var(--card-bg);
+      color: var(--text-main);
       padding: 4px 8px;
-      font-size: 0.85rem;
+      font-size: 0.85em;
       cursor: pointer;
       line-height: 1.2;
       flex-shrink: 0;
     }
 
     .icon-del-btn:hover {
-      background: #fee2e2;
+      filter: brightness(0.95);
     }
 
     .date-group-body {
@@ -822,8 +960,8 @@
       flex-direction: column;
       gap: 10px;
       padding: 12px;
-      border-top: 1.5px solid #e5e7eb;
-      background: #ffffff;
+      border-top: 1.5px solid var(--text-muted);
+      background: var(--card-bg);
     }
 
     .date-group.open .date-group-body {
@@ -831,10 +969,10 @@
     }
 
     .review-item {
-      border: 1.5px solid #d1d5db;
+      border: 1.5px solid var(--text-muted);
       border-radius: 12px;
       padding: 12px 14px;
-      background: #f9fafb;
+      background: var(--surface-subtle);
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -849,7 +987,7 @@
 
     .review-translated {
       font-weight: 800;
-      font-size: 1.04rem;
+      font-size: 1.04em;
       line-height: 1.5;
       color: var(--text-main);
       word-break: break-word;
@@ -863,7 +1001,7 @@
     }
 
     .review-source {
-      font-size: 0.94rem;
+      font-size: 0.94em;
       color: var(--text-muted);
       line-height: 1.45;
     }
@@ -872,8 +1010,8 @@
       text-align: center;
       padding: 28px 16px;
       color: var(--text-muted);
-      font-size: 0.96rem;
-      border: 2px dashed #d1d5db;
+      font-size: 0.96em;
+      border: 2px dashed var(--text-muted);
       border-radius: 14px;
     }
 
@@ -888,7 +1026,7 @@
       border: 2px solid var(--border-color);
       border-radius: 14px;
       padding: 14px;
-      background: #fafafa;
+      background: var(--surface-subtle);
       box-shadow: 3px 3px 0px var(--border-color);
       display: flex;
       flex-direction: column;
@@ -896,7 +1034,7 @@
     }
 
     .quiz-category-title {
-      font-size: 1.02rem;
+      font-size: 1.02em;
       font-weight: 800;
       color: var(--text-main);
     }
@@ -920,11 +1058,11 @@
       padding: 11px 14px;
       border: 2px solid var(--border-color);
       border-radius: 12px;
-      background: #fffdf5;
+      background: var(--bubble-tutor);
       box-shadow: 2px 2px 0px var(--border-color);
       cursor: pointer;
       font-weight: 700;
-      font-size: 0.96rem;
+      font-size: 0.96em;
     }
 
     .quiz-date-checkbox-row input[type="checkbox"] {
@@ -945,7 +1083,7 @@
     .quiz-progress-label {
       display: flex;
       justify-content: space-between;
-      font-size: 0.92rem;
+      font-size: 0.92em;
       font-weight: 700;
       color: var(--text-main);
     }
@@ -953,7 +1091,7 @@
     .progress-track {
       width: 100%;
       height: 14px;
-      background: #e5e7eb;
+      background: var(--surface-subtle);
       border: 2px solid var(--border-color);
       border-radius: 999px;
       overflow: hidden;
@@ -980,9 +1118,10 @@
       .btn,
       .lang-select {
         padding: 8px 6px;
-        font-size: 0.84rem;
+        font-size: 0.84em;
       }
 
+      .settings-option-grid,
       .ai-quiz-btn-grid {
         grid-template-columns: 1fr;
       }
@@ -996,7 +1135,7 @@
         min-width: 50px;
         height: 44px;
         margin-top: 0;
-        font-size: 1rem;
+        font-size: 1em;
       }
 
       .user-bubble-wrapper {
@@ -1025,7 +1164,7 @@
     }
   </style>
 </head>
-<body>
+<body data-theme="warm">
   <div class="app-container">
     <!-- ==================== 1. 主畫面 ==================== -->
     <div id="mainView" class="view-section active">
@@ -1035,62 +1174,9 @@
         </div>
         <div class="top-actions">
           <button id="openTaskViewBtn" class="btn btn-secondary" type="button">📋 任務</button>
-          <button id="toggleApiBtn" class="btn btn-secondary" type="button">⚙️ API 設定</button>
+          <button id="openSettingsViewBtn" class="btn btn-secondary" type="button">⚙️ 設定</button>
         </div>
       </header>
-
-      <!-- 本地 API 設定區 -->
-      <section id="apiPanel" class="api-panel" aria-label="API 設定">
-        <div class="api-row">
-          <input
-            id="apiKeyInput"
-            class="api-input"
-            type="password"
-            placeholder="貼上你的 Gemini API Key（僅保存在此裝置瀏覽器）"
-            autocomplete="off"
-          />
-          <button id="saveApiBtn" class="btn btn-primary" type="button">儲存金鑰</button>
-          <button id="clearApiBtn" class="btn btn-secondary" type="button">清除</button>
-        </div>
-
-        <div class="api-row">
-          <input
-            id="modelInput"
-            class="api-input"
-            type="text"
-            placeholder="模型名稱（預設 gemini-3.5-flash-lite）"
-          />
-        </div>
-
-        <div class="api-guide">
-          <div class="api-guide-title">💡 如何免費取得並設定 Gemini API Key？</div>
-          <ol>
-            <li>
-              前往
-              <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>
-              並使用你的 Google 帳號登入。
-            </li>
-            <li>
-              在左側選單或首頁點擊 <strong>Get API key</strong>（取得 API 金鑰），建立一組新的 API Key。
-            </li>
-            <li>
-              點擊該金鑰旁的 <strong>Copy（複製）</strong> 圖示。
-            </li>
-            <li>
-              回到本頁上方輸入框，按滑鼠右鍵選擇 <strong>貼上</strong>（或使用快捷鍵 <code>Ctrl+V</code> / <code>Cmd+V</code>），再按 <strong>儲存金鑰</strong> 即可開始使用。
-            </li>
-          </ol>
-        </div>
-
-        <div class="api-safety-box">
-          <div class="api-safety-title">🔒 給你的簡單安全小提醒</div>
-          <ul>
-            <li>你的 API 金鑰就像家裡鑰匙，只會保存在<strong>你現在這台裝置的瀏覽器</strong>裡，不會傳到我們的網站主機，也不會寫進這個網頁檔案中。</li>
-            <li>請使用<strong>你自己的 Google 帳號</strong>申請金鑰，不要使用別人提供的金鑰，也不要隨便把金鑰截圖或貼給他人看。</li>
-            <li>如果是在<strong>學校、圖書館或借用別人的電腦／手機</strong>使用，離開前請記得按一下旁邊的<strong>「清除」</strong>按鈕，把金鑰從這台裝置移除。</li>
-          </ul>
-        </div>
-      </section>
 
       <!-- Tutor 形象與 Speech Bubble -->
       <main class="tutor-section">
@@ -1099,7 +1185,16 @@
           <img id="tutorAvatarMain" class="tutor-avatar-img" src="./female 1.1.gif" alt="Tutor 形象" />
         </div>
 
-        <div id="tutorBubble" class="speech-bubble tutor-bubble">同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。</div>
+        <div class="speech-bubble tutor-bubble has-bulb">
+          <div id="tutorBubbleText">同學好，我是你的AI外語家教，請先點選右上角的設定，然後選擇你希望我執行的任務。</div>
+          <button
+            id="bulbTriggerBtn"
+            class="bulb-trigger-btn"
+            type="button"
+            title="查看翻譯解說"
+            aria-label="查看翻譯解說"
+          >💡</button>
+        </div>
       </main>
 
       <!-- 起始未選任務時，此區塊收起；選擇任務後展開 -->
@@ -1151,7 +1246,96 @@
       </div>
     </div>
 
-    <!-- ==================== 2. 任務選擇頁面 ==================== -->
+    <!-- ==================== 2. 設定頁面（類似任務頁展開方式） ==================== -->
+    <div id="settingsView" class="view-section">
+      <header class="top-bar">
+        <div class="app-title">⚙️ 設定</div>
+        <button id="backFromSettingsBtn" class="btn btn-secondary" type="button">← 返回主畫面</button>
+      </header>
+
+      <div id="settingsStatusText" class="status-text" role="status" aria-live="polite"></div>
+
+      <div class="settings-box">
+        <!-- 項目一：閱讀舒適度（三種字體大小 ＋ 三種主題） -->
+        <section class="settings-card" aria-label="閱讀舒適度設定">
+          <div class="settings-card-title">1. 閱讀舒適度（尤其適合手機螢幕）</div>
+
+          <div class="settings-sub-label">字體大小（三種可調）</div>
+          <div class="settings-option-grid" role="group" aria-label="字體大小選擇">
+            <button class="btn btn-secondary font-size-btn" data-font-size="normal" type="button">標準字體</button>
+            <button class="btn btn-secondary font-size-btn" data-font-size="large" type="button">加大字體</button>
+            <button class="btn btn-secondary font-size-btn" data-font-size="xlarge" type="button">特大字體</button>
+          </div>
+
+          <div class="settings-sub-label">色彩主題（三種可切換）</div>
+          <div class="settings-option-grid" role="group" aria-label="主題切換">
+            <button class="btn btn-secondary theme-btn" data-theme-key="warm" type="button">暖陽米白</button>
+            <button class="btn btn-secondary theme-btn" data-theme-key="mint" type="button">薄荷清新</button>
+            <button class="btn btn-secondary theme-btn" data-theme-key="dark" type="button">深夜護眼</button>
+          </div>
+        </section>
+
+        <!-- 項目二：API 設定 -->
+        <section class="settings-card" aria-label="API 設定">
+          <div class="settings-card-title">2. API 設定</div>
+          <p class="settings-sub-label">
+            目前建議使用 <strong>gemini-3.5-flash-lite</strong>；未來若 Gemini 模型更新或調整，可隨時在下方修改模型名稱並儲存。
+          </p>
+
+          <div class="api-row">
+            <input
+              id="apiKeyInput"
+              class="api-input"
+              type="password"
+              placeholder="貼上你的 Gemini API Key（僅保存在此裝置瀏覽器）"
+              autocomplete="off"
+            />
+            <button id="saveApiBtn" class="btn btn-primary" type="button">儲存設定</button>
+            <button id="clearApiBtn" class="btn btn-secondary" type="button">清除金鑰</button>
+          </div>
+
+          <div class="api-row">
+            <input
+              id="modelInput"
+              class="api-input"
+              type="text"
+              placeholder="模型名稱（建議 gemini-3.5-flash-lite）"
+            />
+          </div>
+
+          <div class="api-guide">
+            <div class="api-guide-title">💡 如何免費取得並設定 Gemini API Key？</div>
+            <ol>
+              <li>
+                前往
+                <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>
+                並使用你的 Google 帳號登入。
+              </li>
+              <li>
+                在左側選單或首頁點擊 <strong>Get API key</strong>（取得 API 金鑰），建立一組新的 API Key。
+              </li>
+              <li>
+                點擊該金鑰旁的 <strong>Copy（複製）</strong> 圖示。
+              </li>
+              <li>
+                回到上方輸入框貼上金鑰，再按 <strong>儲存設定</strong> 即可開始使用。
+              </li>
+            </ol>
+          </div>
+
+          <div class="api-safety-box">
+            <div class="api-safety-title">🔒 給你的簡單安全小提醒</div>
+            <ul>
+              <li>你的 API 金鑰就像家裡鑰匙，只會保存在<strong>你現在這台裝置的瀏覽器</strong>裡，不會傳到我們的網站主機，也不會寫進這個網頁檔案中。</li>
+              <li>請使用<strong>你自己的 Google 帳號</strong>申請金鑰，不要使用別人提供的金鑰，也不要隨便把金鑰截圖或貼給他人看。</li>
+              <li>如果是在<strong>學校、圖書館或借用別人的電腦／手機</strong>使用，離開前請記得按一下<strong>「清除金鑰」</strong>按鈕。</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ==================== 3. 任務選擇頁面 ==================== -->
     <div id="taskView" class="view-section">
       <header class="top-bar">
         <div class="app-title">📋 選擇任務與編輯指令</div>
@@ -1163,7 +1347,7 @@
       <div id="taskListContainer" class="task-list-box"></div>
     </div>
 
-    <!-- ==================== 3. 複習頁面 ==================== -->
+    <!-- ==================== 4. 複習頁面 ==================== -->
     <div id="reviewView" class="view-section">
       <header class="top-bar">
         <div class="app-title">📖 複習紀錄</div>
@@ -1174,7 +1358,7 @@
       <div id="reviewListContainer" class="review-list"></div>
     </div>
 
-    <!-- ==================== 4. 測驗準備頁面（兩大類） ==================== -->
+    <!-- ==================== 5. 測驗準備頁面（兩大類） ==================== -->
     <div id="quizSetupView" class="view-section">
       <header class="top-bar">
         <div class="app-title">📝 選擇測驗模式</div>
@@ -1200,7 +1384,7 @@
       </div>
     </div>
 
-    <!-- ==================== 5. 測驗進行頁面 ==================== -->
+    <!-- ==================== 6. 測驗進行頁面 ==================== -->
     <div id="quizPlayView" class="view-section">
       <header class="top-bar">
         <div class="app-title">📝 翻譯測驗中</div>
@@ -1251,6 +1435,20 @@
         <div class="progress-track">
           <div id="quizProgressFill" class="progress-fill"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💡 翻譯解說視窗（不啟動 TTS） -->
+  <div id="explanationModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="explanationModalTitle">
+    <div class="explanation-modal">
+      <div class="prompt-modal-header">
+        <div id="explanationModalTitle" class="rate-modal-title">💡 翻譯解說</div>
+        <button id="closeExplanationModalBtn" class="btn btn-secondary" type="button">✕</button>
+      </div>
+      <div id="explanationModalBody" class="explanation-body"></div>
+      <div class="prompt-modal-actions">
+        <button id="doneExplanationModalBtn" class="btn btn-primary" type="button">關閉</button>
       </div>
     </div>
   </div>
@@ -1312,11 +1510,20 @@
       languageMode: "multi", // "multi" | "english_only"
       defaultLanguage: "en",
       defaultCustomTaskLanguage: "zh-TW",
-      customChatMaxTurns: 6, // 自訂任務保留最近 6 輪對話記憶
+      customChatMaxTurns: 6,
       initialGreeting:
-        "同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。",
+        "同學好，我是你的AI外語家教，請先點選右上角的設定，然後選擇你希望我執行的任務。",
       customTaskGreeting: "同學好，請問有什麼需要我協助的地方？",
       customTaskPlaceholder: "請輸入想說的話…",
+      fontScales: {
+        normal: 1.0,
+        large: 1.14,
+        xlarge: 1.28
+      },
+      tts: {
+        // 調整「」TTS 片段之間間隔的毫秒數（數值越小停頓越短）
+        quoteSegmentGapMs: 120
+      },
       mainSpeechRate: {
         defaultRate: 1.0,
         min: 0.5,
@@ -1333,6 +1540,8 @@
         model: "ai_tutor_gemini_model_v1",
         language: "ai_tutor_target_lang_v1",
         customLanguage: "ai_tutor_custom_lang_v1",
+        fontSize: "ai_tutor_font_size_v1",
+        theme: "ai_tutor_theme_v1",
         mainSpeechRate: "ai_tutor_main_speech_rate_v1",
         quizSpeechSetting: "ai_tutor_quiz_speech_setting_v1",
         characterId: "ai_tutor_character_id_v1",
@@ -1340,7 +1549,7 @@
       },
       db: {
         name: "AITutorStudyDB",
-        version: 1,
+        version: 2,
         storeName: "translations"
       },
       gemini: {
@@ -1465,10 +1674,6 @@
       }
     };
 
-    /**
-     * 任務註冊表（Task Registry）
-     * 統一使用 {輸出語言} 與 {輸入內容}（測驗批改另含 {題目}、{參考譯文}，翻譯另含 {日文語氣說明}）
-     */
     const TASK_REGISTRY = [
       {
         id: "conversation",
@@ -1509,13 +1714,13 @@
             key: "translate",
             title: "翻譯指令",
             defaultPrompt:
-              "你是一位親切的外語家教，專精協助學習者掌握自然語氣。請將以下輸入的中文句子翻譯成自然道地的{輸出語言}。\n規則：只輸出翻譯後的{輸出語言}內容，不要加多餘解釋、引號或前綴。\n{日文語氣說明}\n原文：{輸入內容}"
+              "你是一位親切的外語家教，專精協助學習者掌握自然語氣。請將「{輸入內容}」翻譯成自然道地的{輸出語言}。\n{日文語氣說明}\n請嚴格依照以下分隔格式回覆，不要在分隔標記外多寫其他字：\n===TRANSLATION===\n只放翻譯後的{輸出語言}句子（不要加解釋或引號）\n===EXPLANATION===\n請以繁體中文說明以下四項：\n1. 替換方案（列出其他自然說法）\n2. 詞彙\n3. 句子結構\n4. 文化差異"
           },
           {
             key: "quiz_grade",
             title: "測驗批改指令",
             defaultPrompt:
-              "你是一位親切且精準的外語家教，正在批改學生的{輸出語言}翻譯測驗。\n請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"isCorrect\": true或false, \"feedback\": \"簡短精準的繁體中文回饋（1~2句話，直接切中重點）\"}\n規則：\n- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確；若要引述{輸出語言}詞句，請用「」包起來。\n- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次；若要引述{輸出語言}詞句，請用「」包起來。\n中文題目：{題目}\n參考譯文：{參考譯文}\n學生作答：{輸入內容}"
+              "你是一位親切且精準的外語家教，正在批改學生的{輸出語言}翻譯測驗。\n請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"isCorrect\": true或false, \"feedback\": \"簡短精準的繁體中文回饋（1~2句話，直接切中重點）\"}\n重要引用規則：\n- 若需引用中文題目的片段，請用『』包起來（例如：『今天天氣』）。\n- 只有引用{輸出語言}的詞句或翻譯時，才用「」包起來（例如：「...」）。\n- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確。\n- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次。\n中文題目：{題目}\n參考譯文：{參考譯文}\n學生作答：{輸入內容}"
           }
         ]
       },
@@ -1549,9 +1754,6 @@
       }
     ];
 
-    /**
-     * 內建題庫 Registry（未來可在此逐步新增內建測驗範圍）
-     */
     const BUILT_IN_QUIZ_BANK = {};
 
     /**
@@ -1595,6 +1797,24 @@
       setCustomLanguage(langCode) {
         if (CUSTOM_CHAT_LANGUAGES[langCode]) {
           localStorage.setItem(APP_CONFIG.storageKeys.customLanguage, langCode);
+        }
+      },
+      getFontSize() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.fontSize);
+        return APP_CONFIG.fontScales[saved] ? saved : "normal";
+      },
+      setFontSize(sizeKey) {
+        if (APP_CONFIG.fontScales[sizeKey]) {
+          localStorage.setItem(APP_CONFIG.storageKeys.fontSize, sizeKey);
+        }
+      },
+      getTheme() {
+        const saved = localStorage.getItem(APP_CONFIG.storageKeys.theme);
+        return ["warm", "mint", "dark"].includes(saved) ? saved : "warm";
+      },
+      setTheme(themeKey) {
+        if (["warm", "mint", "dark"].includes(themeKey)) {
+          localStorage.setItem(APP_CONFIG.storageKeys.theme, themeKey);
         }
       },
       getMainSpeechRate() {
@@ -1692,12 +1912,13 @@
       characterId: StorageManager.getCharacterId(),
       languageCode: StorageManager.getLanguage(),
       customLanguageCode: StorageManager.getCustomLanguage(),
+      fontSize: StorageManager.getFontSize(),
+      theme: StorageManager.getTheme(),
       jpStyle: "polite",
       mainSpeechRate: StorageManager.getMainSpeechRate(),
       quizSpeechSetting: StorageManager.getQuizSpeechSetting(),
       currentTtsLang: "zh-TW",
-      lastTranslation: null,
-      // 自訂任務最近 N 輪對話記憶（每輪包含 user 與 model 兩則）
+      lastTranslation: null, // { sourceText, translatedText, explanation, langCode }
       customChatHistory: [],
       isSpeaking: false,
       isBusy: false,
@@ -1731,12 +1952,19 @@
 
           request.onupgradeneeded = (event) => {
             const db = event.target.result;
+            let store;
             if (!db.objectStoreNames.contains(APP_CONFIG.db.storeName)) {
-              const store = db.createObjectStore(APP_CONFIG.db.storeName, {
+              store = db.createObjectStore(APP_CONFIG.db.storeName, {
                 keyPath: "id",
                 autoIncrement: true
               });
+            } else {
+              store = event.target.transaction.objectStore(APP_CONFIG.db.storeName);
+            }
+            if (!store.indexNames.contains("dateKey")) {
               store.createIndex("dateKey", "dateKey", { unique: false });
+            }
+            if (!store.indexNames.contains("timestamp")) {
               store.createIndex("timestamp", "timestamp", { unique: false });
             }
           };
@@ -1774,7 +2002,7 @@
         });
       },
 
-      async addRecord({ sourceText, translatedText, langCode }) {
+      async addRecord({ sourceText, translatedText, explanation = "", langCode }) {
         const all = await this.getAllRecords();
         const dateKey = this.formatDateKey(new Date());
         const duplicate = all.find(
@@ -1794,7 +2022,8 @@
           timestamp: Date.now(),
           langCode,
           sourceText: sourceText.trim(),
-          translatedText: translatedText.trim()
+          translatedText: translatedText.trim(),
+          explanation: (explanation || "").trim()
         };
 
         return new Promise((resolve, reject) => {
@@ -1841,7 +2070,7 @@
 
     /**
      * =========================================================================
-     * 4. 角色與 TTS 服務（支援說話/停止 Toggle）
+     * 4. 角色與 TTS 服務
      * =========================================================================
      */
     const AvatarController = {
@@ -1877,6 +2106,10 @@
 
     const TTSService = {
       _activeReject: null,
+
+      delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      },
 
       stop() {
         if (typeof this._activeReject === "function") {
@@ -1957,8 +2190,8 @@
           utterance.onerror = finish;
 
           const estimatedMs = Math.max(
-            2200,
-            (cleanText.length * 160) / Math.max(0.5, rate) + 1800
+            1800,
+            (cleanText.length * 145) / Math.max(0.5, rate) + 1200
           );
           safetyTimer = setTimeout(finish, estimatedMs);
 
@@ -1987,6 +2220,10 @@
         }
       },
 
+      /**
+       * 測驗講評專用：支援靜音、測驗語速，並將「」外切繁中、「」內切目標語言
+       * 片段間距由 APP_CONFIG.tts.quoteSegmentGapMs 控制
+       */
       async speakQuizFeedbackWithQuotes(feedbackText, quotedLangCode = "en-US") {
         const raw = (feedbackText || "").trim();
         if (!raw) return;
@@ -2035,6 +2272,9 @@
           for (let i = 0; i < segments.length; i++) {
             if (AppState.quizSpeechSetting.muted) break;
             await this.speakSingleSegment(segments[i].text, segments[i].lang, rate);
+            if (i < segments.length - 1 && APP_CONFIG.tts.quoteSegmentGapMs > 0) {
+              await this.delay(APP_CONFIG.tts.quoteSegmentGapMs);
+            }
           }
         } catch (err) {
           if (err && err.message === "STOPPED_BY_USER") {
@@ -2053,9 +2293,6 @@
      * =========================================================================
      */
     const PromptResolver = {
-      /**
-       * 統一替換 {輸出語言} 與 {輸入內容}（並相容舊變數名稱）
-       */
       resolve(template, {
         outputLang = "",
         inputText = "",
@@ -2080,7 +2317,7 @@
       async callContents(contents) {
         const apiKey = StorageManager.getApiKey();
         if (!apiKey) {
-          throw new Error("尚未設定 Gemini API Key，請先點擊右上角「API 設定」輸入並儲存金鑰。");
+          throw new Error("尚未設定 Gemini API Key，請先點擊右上角「設定」輸入並儲存金鑰。");
         }
 
         const model = StorageManager.getModel();
@@ -2136,6 +2373,32 @@
         return clean;
       },
 
+      parseTranslationResponse(rawText) {
+        const transMarker = "===TRANSLATION===";
+        const expMarker = "===EXPLANATION===";
+
+        const transIdx = rawText.indexOf(transMarker);
+        const expIdx = rawText.indexOf(expMarker);
+
+        if (transIdx !== -1 && expIdx !== -1 && expIdx > transIdx) {
+          const translatedText = rawText
+            .slice(transIdx + transMarker.length, expIdx)
+            .trim();
+          const explanation = rawText
+            .slice(expIdx + expMarker.length)
+            .trim();
+          return {
+            translatedText: translatedText || rawText.trim(),
+            explanation: explanation || "目前尚無額外解說。"
+          };
+        }
+
+        return {
+          translatedText: rawText.trim(),
+          explanation: "目前尚無額外解說。"
+        };
+      },
+
       async translateChineseToTarget(formattedSourceText, targetLangKey, jpStyleKey = "polite") {
         const langInfo = LANGUAGE_REGISTRY[targetLangKey] || LANGUAGE_REGISTRY.en;
         const styleInfo = JP_STYLE_MAP[jpStyleKey] || JP_STYLE_MAP.polite;
@@ -2161,12 +2424,10 @@
           prompt = `${prompt}\n輸入內容：${formattedSourceText}`;
         }
 
-        return this.callSinglePrompt(prompt);
+        const rawText = await this.callSinglePrompt(prompt);
+        return this.parseTranslationResponse(rawText);
       },
 
-      /**
-       * 自訂任務：帶入最近 N 輪對話記憶（不帶翻譯/測驗記憶）
-       */
       async sendCustomChat(userText, outputLangCode) {
         const langInfo =
           CUSTOM_CHAT_LANGUAGES[outputLangCode] || CUSTOM_CHAT_LANGUAGES["zh-TW"];
@@ -2308,6 +2569,20 @@
         return arr;
       },
 
+      applyComfortSettings() {
+        const scale = APP_CONFIG.fontScales[AppState.fontSize] || 1.0;
+        document.documentElement.style.setProperty("--font-scale", String(scale));
+        document.body.setAttribute("data-theme", AppState.theme || "warm");
+
+        document.querySelectorAll(".font-size-btn").forEach((btn) => {
+          btn.classList.toggle("btn-active-pill", btn.dataset.fontSize === AppState.fontSize);
+        });
+
+        document.querySelectorAll(".theme-btn").forEach((btn) => {
+          btn.classList.toggle("btn-active-pill", btn.dataset.themeKey === AppState.theme);
+        });
+      },
+
       syncSpeakToggleButton(isSpeaking) {
         const speakBtn = document.getElementById("speakBtn");
         if (!speakBtn) return;
@@ -2364,14 +2639,14 @@
             CUSTOM_CHAT_LANGUAGES["zh-TW"];
           AppState.currentTtsLang = customLang.ttsLang || charConfig.ttsConfig?.zhLang || "zh-TW";
           AppState.lastTranslation = null;
-          this.setTutorBubble(APP_CONFIG.customTaskGreeting);
+          this.setTutorBubble(APP_CONFIG.customTaskGreeting, false);
           return;
         }
 
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
         AppState.lastTranslation = null;
-        this.setTutorBubble(langInfo.greeting(langInfo.label));
+        this.setTutorBubble(langInfo.greeting(langInfo.label), false);
       },
 
       syncTaskLayoutUI() {
@@ -2381,7 +2656,7 @@
 
         if (!AppState.selectedTaskId) {
           bodyEl.classList.add("collapsed");
-          this.setTutorBubble(APP_CONFIG.initialGreeting);
+          this.setTutorBubble(APP_CONFIG.initialGreeting, false);
           return;
         }
 
@@ -2464,9 +2739,22 @@
         if (el) el.textContent = msg || "";
       },
 
-      setTutorBubble(text) {
-        const bubbleEl = document.getElementById("tutorBubble");
-        if (bubbleEl) bubbleEl.textContent = text;
+      setTutorBubble(text, showBulb = false) {
+        const bubbleTextEl = document.getElementById("tutorBubbleText");
+        const bulbBtn = document.getElementById("bulbTriggerBtn");
+        if (bubbleTextEl) bubbleTextEl.textContent = text;
+        if (bulbBtn) bulbBtn.classList.toggle("visible", Boolean(showBulb));
+      },
+
+      openExplanationModal(title, content) {
+        document.getElementById("explanationModalTitle").textContent = title || "💡 翻譯解說";
+        document.getElementById("explanationModalBody").textContent =
+          content || "目前尚無解說內容。";
+        document.getElementById("explanationModalBackdrop").classList.add("open");
+      },
+
+      closeExplanationModal() {
+        document.getElementById("explanationModalBackdrop").classList.remove("open");
       },
 
       setQuizTutorBubbleWithBoldQuotes(text) {
@@ -2498,10 +2786,6 @@
         document.getElementById("openReviewBtn").disabled = busy;
         document.getElementById("openQuizSetupBtn").disabled = busy;
         document.querySelectorAll(".jp-style-btn").forEach((b) => (b.disabled = busy));
-      },
-
-      closeApiPanel() {
-        document.getElementById("apiPanel").classList.remove("open");
       },
 
       /* -------------------- 任務與多指令編輯 -------------------- */
@@ -2595,7 +2879,7 @@
           resetSingleBtn.type = "button";
           resetSingleBtn.className = "btn btn-secondary";
           resetSingleBtn.style.padding = "4px 8px";
-          resetSingleBtn.style.fontSize = "0.78rem";
+          resetSingleBtn.style.fontSize = "0.78em";
           resetSingleBtn.textContent = "還原此項";
 
           const defaultSub = document.createElement("div");
@@ -2709,9 +2993,6 @@
         this.closeQuizSpeedModal();
       },
 
-      /**
-       * 說話 / 停止 Toggle
-       */
       async handleSpeakOrStopToggle() {
         if (AppState.isSpeaking || ("speechSynthesis" in window && window.speechSynthesis.speaking)) {
           TTSService.stop();
@@ -2719,7 +3000,7 @@
           return;
         }
 
-        const bubbleText = (document.getElementById("tutorBubble")?.textContent || "").trim();
+        const bubbleText = (document.getElementById("tutorBubbleText")?.textContent || "").trim();
         if (!bubbleText) return;
 
         this.setMainBusy(true);
@@ -2755,17 +3036,19 @@
         this.setMainStatus(isCustom ? "家教正在思考..." : "正在翻譯...");
 
         try {
-          let replyText = "";
           if (isCustom) {
-            replyText = await GeminiService.sendCustomChat(rawText, AppState.customLanguageCode);
+            const replyText = await GeminiService.sendCustomChat(rawText, AppState.customLanguageCode);
             AppState.currentTtsLang = ttsLang;
+            this.setTutorBubble(replyText, false);
+            this.setMainStatus("家教正在說話...");
+            await TTSService.speakMain(replyText, AppState.currentTtsLang);
           } else {
             const formattedSourceText = GeminiService.buildFormattedSourceText(
               rawText,
               AppState.languageCode,
               AppState.jpStyle
             );
-            replyText = await GeminiService.translateChineseToTarget(
+            const { translatedText, explanation } = await GeminiService.translateChineseToTarget(
               formattedSourceText,
               AppState.languageCode,
               AppState.jpStyle
@@ -2773,17 +3056,19 @@
             AppState.currentTtsLang = ttsLang;
             AppState.lastTranslation = {
               sourceText: formattedSourceText,
-              translatedText: replyText,
+              translatedText,
+              explanation,
               langCode: AppState.languageCode
             };
-          }
 
-          this.setTutorBubble(replyText);
-          this.setMainStatus("家教正在說話...");
-          await TTSService.speakMain(replyText, AppState.currentTtsLang);
+            // 對話框只顯示翻譯好的句子，右下角顯示 💡
+            this.setTutorBubble(translatedText, true);
+            this.setMainStatus("家教正在說話...");
+            await TTSService.speakMain(translatedText, AppState.currentTtsLang);
+          }
           this.setMainStatus("");
         } catch (error) {
-          this.setTutorBubble(`⚠️ ${error.message}`);
+          this.setTutorBubble(`⚠️ ${error.message}`, false);
           this.setMainStatus("");
           AvatarController.setSpeakingState(false);
         } finally {
@@ -2794,7 +3079,7 @@
       /* -------------------- 存檔與複習功能 -------------------- */
       async handleSaveRecord() {
         const currentInput = document.getElementById("userInput").value.trim();
-        const currentBubble = document.getElementById("tutorBubble").textContent.trim();
+        const currentBubble = document.getElementById("tutorBubbleText").textContent.trim();
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         const greetingText = langInfo.greeting(langInfo.label);
 
@@ -2819,11 +3104,12 @@
           const res = await StudyArchiveDB.addRecord({
             sourceText: formattedSourceText,
             translatedText: currentBubble,
+            explanation: AppState.lastTranslation.explanation || "",
             langCode: AppState.lastTranslation.langCode || AppState.languageCode
           });
 
           if (res.saved) {
-            this.setMainStatus(`已存檔（${res.record.dateKey}・${langInfo.label}）。`);
+            this.setMainStatus(`已存檔（${res.record.dateKey}・${langInfo.label}，含解說）。`);
           } else {
             this.setMainStatus("今天已經存過這組翻譯囉！");
           }
@@ -2867,7 +3153,7 @@
             const toggleBtn = document.createElement("button");
             toggleBtn.type = "button";
             toggleBtn.className = "date-toggle-btn";
-            toggleBtn.innerHTML = `<span>▸</span><span>${dateKey}</span><span style="color:#6b7280;font-size:0.86rem;">(${items.length} 句)</span>`;
+            toggleBtn.innerHTML = `<span>▸</span><span>${dateKey}</span><span style="opacity:0.75;font-size:0.86em;">(${items.length} 句)</span>`;
 
             const delDateBtn = document.createElement("button");
             delDateBtn.type = "button";
@@ -2906,6 +3192,19 @@
 
               const actionsEl = document.createElement("div");
               actionsEl.className = "review-item-actions";
+
+              if (item.explanation && item.explanation.trim()) {
+                const bulbItemBtn = document.createElement("button");
+                bulbItemBtn.type = "button";
+                bulbItemBtn.className = "icon-del-btn";
+                bulbItemBtn.title = "查看解說";
+                bulbItemBtn.setAttribute("aria-label", "查看解說");
+                bulbItemBtn.textContent = "💡";
+                bulbItemBtn.addEventListener("click", () => {
+                  this.openExplanationModal(`💡 解說 — ${item.sourceText}`, item.explanation);
+                });
+                actionsEl.appendChild(bulbItemBtn);
+              }
 
               const speakItemBtn = document.createElement("button");
               speakItemBtn.type = "button";
@@ -3247,6 +3546,80 @@
         apiKeyInput.value = StorageManager.getApiKey();
         modelInput.value = StorageManager.getModel();
 
+        // 設定頁開關與返回
+        document.getElementById("openSettingsViewBtn").addEventListener("click", () => {
+          document.getElementById("settingsStatusText").textContent = "";
+          this.applyComfortSettings();
+          this.switchView("settingsView");
+        });
+
+        document.getElementById("backFromSettingsBtn").addEventListener("click", () => {
+          this.switchView("mainView");
+          this.syncTaskLayoutUI();
+        });
+
+        // 字體大小三種切換
+        document.querySelectorAll(".font-size-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            AppState.fontSize = btn.dataset.fontSize;
+            StorageManager.setFontSize(AppState.fontSize);
+            this.applyComfortSettings();
+            document.getElementById("settingsStatusText").textContent =
+              `已切換字體大小：${btn.textContent}`;
+          });
+        });
+
+        // 主題三種切換
+        document.querySelectorAll(".theme-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            AppState.theme = btn.dataset.themeKey;
+            StorageManager.setTheme(AppState.theme);
+            this.applyComfortSettings();
+            document.getElementById("settingsStatusText").textContent =
+              `已切換主題：${btn.textContent}`;
+          });
+        });
+
+        // API 儲存與清除
+        document.getElementById("saveApiBtn").addEventListener("click", () => {
+          StorageManager.setApiKey(apiKeyInput.value);
+          StorageManager.setModel(modelInput.value);
+          apiKeyInput.value = StorageManager.getApiKey();
+          modelInput.value = StorageManager.getModel();
+          document.getElementById("settingsStatusText").textContent =
+            "已儲存 API 設定。";
+        });
+
+        document.getElementById("clearApiBtn").addEventListener("click", () => {
+          StorageManager.clearApiKey();
+          apiKeyInput.value = "";
+          document.getElementById("settingsStatusText").textContent =
+            "已清除本機儲存的 API Key。";
+        });
+
+        // 💡 解說視窗開關（不啟動 TTS）
+        document.getElementById("bulbTriggerBtn").addEventListener("click", () => {
+          if (!AppState.lastTranslation) return;
+          this.openExplanationModal(
+            "💡 翻譯解說（替換方案・詞彙・句構・文化差異）",
+            AppState.lastTranslation.explanation || "目前尚無解說內容。"
+          );
+        });
+
+        document.getElementById("closeExplanationModalBtn").addEventListener("click", () => {
+          this.closeExplanationModal();
+        });
+
+        document.getElementById("doneExplanationModalBtn").addEventListener("click", () => {
+          this.closeExplanationModal();
+        });
+
+        document.getElementById("explanationModalBackdrop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            this.closeExplanationModal();
+          }
+        });
+
         // 任務頁開關與返回
         document.getElementById("openTaskViewBtn").addEventListener("click", () => {
           document.getElementById("taskStatusText").textContent = "";
@@ -3276,26 +3649,6 @@
 
         document.getElementById("resetAllPromptsBtn").addEventListener("click", () => {
           this.resetAllEditedPrompts();
-        });
-
-        // API 面板開關與儲存收合
-        document.getElementById("toggleApiBtn").addEventListener("click", () => {
-          document.getElementById("apiPanel").classList.toggle("open");
-        });
-
-        document.getElementById("saveApiBtn").addEventListener("click", () => {
-          StorageManager.setApiKey(apiKeyInput.value);
-          StorageManager.setModel(modelInput.value);
-          apiKeyInput.value = StorageManager.getApiKey();
-          modelInput.value = StorageManager.getModel();
-          this.closeApiPanel();
-          this.setMainStatus("已儲存 API 設定並收合視窗。");
-        });
-
-        document.getElementById("clearApiBtn").addEventListener("click", () => {
-          StorageManager.clearApiKey();
-          apiKeyInput.value = "";
-          this.setMainStatus("已清除本機儲存的 API Key。");
         });
 
         // 語言切換
@@ -3372,7 +3725,7 @@
           this.handleSpeakOrStopToggle();
         });
 
-        // 主畫面輸入框自動增高與一鍵清除（清除時一併重置自訂對話記憶）
+        // 主畫面輸入框自動增高與一鍵清除
         const userInputEl = document.getElementById("userInput");
         const clearBubbleBtn = document.getElementById("clearBubbleBtn");
         userInputEl.addEventListener("input", () => {
@@ -3389,7 +3742,7 @@
           userInputEl.focus();
         });
 
-        // 送出（翻譯 或 自訂互動）
+        // 送出
         document.getElementById("sendBtn").addEventListener("click", () => {
           this.handleSendPrimaryAction();
         });
@@ -3477,6 +3830,7 @@
 
       init() {
         AvatarController.preloadImages();
+        this.applyComfortSettings();
         this.refreshLanguageSelectForTask();
         this.syncLanguageUI();
         this.syncJpStyleUI();
