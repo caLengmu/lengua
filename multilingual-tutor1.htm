@@ -18,6 +18,11 @@
       --bubble-tutor: #fffdf5;
       --bubble-user: #eef4ff;
       --shadow-comic: 4px 4px 0px #222222;
+
+      /* 【字體調整參數】複習頁面字體大小設定（可依喜好調整數值） */
+      --review-translated-size: 1.22rem;
+      --review-source-size: 1.08rem;
+      --review-emoji-size: 1.15rem;
     }
 
     * {
@@ -295,6 +300,11 @@
       word-break: break-word;
     }
 
+    .speech-bubble.has-bulb {
+      padding-right: 54px;
+      padding-bottom: 42px;
+    }
+
     .speech-bubble.tutor-bubble::before {
       content: "";
       position: absolute;
@@ -315,6 +325,39 @@
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 10px solid var(--bubble-tutor);
+    }
+
+    /* 右下角 💡 按鈕：不覆蓋答案文字 */
+    .bubble-bulb-btn {
+      position: absolute;
+      right: 10px;
+      bottom: 8px;
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      background: #fef08a;
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0px var(--border-color);
+      transition: transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .bubble-bulb-btn.visible {
+      display: inline-flex;
+    }
+
+    .bubble-bulb-btn:hover {
+      background: #fde047;
+    }
+
+    .bubble-bulb-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: none;
     }
 
     /* 起始未選任務時，收起人物對話框以下全部內容 */
@@ -459,10 +502,11 @@
       color: #ffffff;
     }
 
-    /* 多指令編輯彈窗 */
-    .prompt-modal {
+    /* 多指令編輯彈窗 & 💡 解說彈窗 */
+    .prompt-modal,
+    .insight-modal {
       width: 100%;
-      max-width: 560px;
+      max-width: 580px;
       max-height: 88vh;
       overflow-y: auto;
       background: #ffffff;
@@ -550,6 +594,58 @@
       justify-content: flex-end;
       gap: 8px;
       margin-top: 4px;
+    }
+
+    .insight-section-card {
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fffdf5;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .insight-section-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .alt-option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .alt-option-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      word-break: break-word;
+    }
+
+    .alt-option-main {
+      font-weight: 800;
+      font-size: 1.02rem;
+      color: var(--text-main);
+    }
+
+    .alt-option-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .insight-body-text {
+      font-size: 0.94rem;
+      line-height: 1.65;
+      color: var(--text-main);
+      white-space: pre-wrap;
     }
 
     /* 任務列表樣式 */
@@ -792,7 +888,7 @@
       text-align: left;
       background: transparent;
       border: none;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: var(--text-main);
       cursor: pointer;
@@ -806,8 +902,8 @@
       border: 1.5px solid var(--border-color);
       border-radius: 8px;
       background: #fff;
-      padding: 4px 8px;
-      font-size: 0.85rem;
+      padding: 6px 10px;
+      font-size: var(--review-emoji-size);
       cursor: pointer;
       line-height: 1.2;
       flex-shrink: 0;
@@ -820,8 +916,8 @@
     .date-group-body {
       display: none;
       flex-direction: column;
-      gap: 10px;
-      padding: 12px;
+      gap: 12px;
+      padding: 14px;
       border-top: 1.5px solid #e5e7eb;
       background: #ffffff;
     }
@@ -833,39 +929,42 @@
     .review-item {
       border: 1.5px solid #d1d5db;
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: 14px;
       background: #f9fafb;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .review-item-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
 
     .review-translated {
       font-weight: 800;
-      font-size: 1.04rem;
-      line-height: 1.5;
+      font-size: var(--review-translated-size);
+      line-height: 1.55;
       color: var(--text-main);
       word-break: break-word;
     }
 
-    .review-item-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
+    .review-source {
+      font-size: var(--review-source-size);
+      color: var(--text-muted);
+      line-height: 1.5;
+      word-break: break-word;
     }
 
-    .review-source {
-      font-size: 0.94rem;
-      color: var(--text-muted);
-      line-height: 1.45;
+    /* 複習項目第 3 行：🔊💡 靠左，❌ 靠右避免誤按 */
+    .review-item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 6px;
+      border-top: 1px dashed #e5e7eb;
+    }
+
+    .review-left-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .empty-state {
@@ -1099,7 +1198,16 @@
           <img id="tutorAvatarMain" class="tutor-avatar-img" src="./female 1.1.gif" alt="Tutor 形象" />
         </div>
 
-        <div id="tutorBubble" class="speech-bubble tutor-bubble">同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。</div>
+        <div id="tutorBubble" class="speech-bubble tutor-bubble">
+          <span id="tutorBubbleText">同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。</span>
+          <button
+            id="bulbInsightBtn"
+            class="bubble-bulb-btn"
+            type="button"
+            title="替代方案與深度解說"
+            aria-label="替代方案與深度解說"
+          >💡</button>
+        </div>
       </main>
 
       <!-- 起始未選任務時，此區塊收起；選擇任務後展開 -->
@@ -1255,6 +1363,17 @@
     </div>
   </div>
 
+  <!-- 💡 替代方案與深度解說視窗 -->
+  <div id="insightModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="insightModalTitle">
+    <div class="insight-modal">
+      <div class="prompt-modal-header">
+        <div id="insightModalTitle" class="rate-modal-title">💡 替代方案與深度解說</div>
+        <button id="closeInsightModalBtn" class="btn btn-secondary" type="button">✕</button>
+      </div>
+      <div id="insightModalContent" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+  </div>
+
   <!-- 多指令編輯彈窗 -->
   <div id="promptModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="promptModalTitle">
     <div class="prompt-modal">
@@ -1312,7 +1431,7 @@
       languageMode: "multi", // "multi" | "english_only"
       defaultLanguage: "en",
       defaultCustomTaskLanguage: "zh-TW",
-      customChatMaxTurns: 6, // 自訂任務保留最近 6 輪對話記憶
+      customChatMaxTurns: 6,
       initialGreeting:
         "同學好，我是你的AI外語家教，請先點選右上角的API設定，然後選擇你希望我執行的任務。",
       customTaskGreeting: "同學好，請問有什麼需要我協助的地方？",
@@ -1340,7 +1459,7 @@
       },
       db: {
         name: "AITutorStudyDB",
-        version: 1,
+        version: 2,
         storeName: "translations"
       },
       gemini: {
@@ -1467,7 +1586,6 @@
 
     /**
      * 任務註冊表（Task Registry）
-     * 統一使用 {輸出語言} 與 {輸入內容}（測驗批改另含 {題目}、{參考譯文}，翻譯另含 {日文語氣說明}）
      */
     const TASK_REGISTRY = [
       {
@@ -1503,7 +1621,7 @@
         label: "翻譯",
         enabled: true,
         hintText:
-          "翻譯指令變數：{輸出語言}、{輸入內容}、{日文語氣說明}；批改指令變數：{輸出語言}、{輸入內容}、{題目}、{參考譯文}",
+          "可用變數：{輸出語言}、{輸入內容}、{日文語氣說明}、{目前翻譯}、{題目}、{參考譯文}",
         prompts: [
           {
             key: "translate",
@@ -1516,6 +1634,12 @@
             title: "測驗批改指令",
             defaultPrompt:
               "你是一位親切且精準的外語家教，正在批改學生的{輸出語言}翻譯測驗。\n請判斷學生的作答是否正確表達中文原意（合理同義詞、縮寫差異、大小寫或標點差異都應視為合理正確）。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"isCorrect\": true或false, \"feedback\": \"簡短精準的繁體中文回饋（1~2句話，直接切中重點）\"}\n規則：\n- 若答對（isCorrect 為 true）：用繁體中文簡短稱讚並肯定表達正確；若要引述{輸出語言}詞句，請用「」包起來。\n- 若答錯（isCorrect 為 false）：用繁體中文簡短指出自然道地的說法或關鍵差異並鼓勵再試一次；若要引述{輸出語言}詞句，請用「」包起來。\n中文題目：{題目}\n參考譯文：{參考譯文}\n學生作答：{輸入內容}"
+          },
+          {
+            key: "insight_explain",
+            title: "替代方案與深度解說指令",
+            defaultPrompt:
+              "你是一位專業親切的{輸出語言}外語家教。針對使用者輸入的「{輸入內容}」與目前翻譯「{目前翻譯}」，請提供 2 組自然道地的{輸出語言}替代方案，並用繁體中文針對目前翻譯與這 2 組替代方案提供「詞彙」、「句子結構」、「文化差異」解說。\n請嚴格以純 JSON 格式回覆（不要用 markdown 程式碼區塊包覆），格式如下：\n{\"alternatives\":[{\"text\":\"替代方案1{輸出語言}\",\"usage\":\"簡短情境說明\"},{\"text\":\"替代方案2{輸出語言}\",\"usage\":\"簡短情境說明\"}],\"vocabulary\":\"詞彙解說（繁體中文）\",\"structure\":\"句子結構解說（繁體中文）\",\"culture\":\"文化差異解說（繁體中文）\"}"
           }
         ]
       },
@@ -1550,7 +1674,7 @@
     ];
 
     /**
-     * 內建題庫 Registry（未來可在此逐步新增內建測驗範圍）
+     * 內建題庫 Registry
      */
     const BUILT_IN_QUIZ_BANK = {};
 
@@ -1696,8 +1820,7 @@
       mainSpeechRate: StorageManager.getMainSpeechRate(),
       quizSpeechSetting: StorageManager.getQuizSpeechSetting(),
       currentTtsLang: "zh-TW",
-      lastTranslation: null,
-      // 自訂任務最近 N 輪對話記憶（每輪包含 user 與 model 兩則）
+      lastTranslation: null, // { sourceText, translatedText, langCode, insightData }
       customChatHistory: [],
       isSpeaking: false,
       isBusy: false,
@@ -1774,7 +1897,7 @@
         });
       },
 
-      async addRecord({ sourceText, translatedText, langCode }) {
+      async addRecord({ sourceText, translatedText, langCode, insightData = null }) {
         const all = await this.getAllRecords();
         const dateKey = this.formatDateKey(new Date());
         const duplicate = all.find(
@@ -1794,7 +1917,8 @@
           timestamp: Date.now(),
           langCode,
           sourceText: sourceText.trim(),
-          translatedText: translatedText.trim()
+          translatedText: translatedText.trim(),
+          insightData: insightData || null
         };
 
         return new Promise((resolve, reject) => {
@@ -1803,6 +1927,26 @@
           const req = store.add(record);
           req.onsuccess = () => resolve({ saved: true, id: req.result, record });
           req.onerror = () => reject(new Error("寫入存檔失敗。"));
+        });
+      },
+
+      async updateRecordInsight(id, insightData) {
+        const db = await this.open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(APP_CONFIG.db.storeName, "readwrite");
+          const store = tx.objectStore(APP_CONFIG.db.storeName);
+          const getReq = store.get(id);
+          getReq.onsuccess = () => {
+            const rec = getReq.result;
+            if (!rec) {
+              resolve();
+              return;
+            }
+            rec.insightData = insightData;
+            store.put(rec);
+          };
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(new Error("更新解說存檔失敗。"));
         });
       },
 
@@ -1841,7 +1985,7 @@
 
     /**
      * =========================================================================
-     * 4. 角色與 TTS 服務（支援說話/停止 Toggle）
+     * 4. 角色與 TTS 服務
      * =========================================================================
      */
     const AvatarController = {
@@ -2053,12 +2197,10 @@
      * =========================================================================
      */
     const PromptResolver = {
-      /**
-       * 統一替換 {輸出語言} 與 {輸入內容}（並相容舊變數名稱）
-       */
       resolve(template, {
         outputLang = "",
         inputText = "",
+        currentTranslation = "",
         questionText = "",
         referenceText = "",
         jpStyleNote = ""
@@ -2066,6 +2208,7 @@
         return (template || "")
           .replaceAll("{輸出語言}", outputLang)
           .replaceAll("{輸入內容}", inputText)
+          .replaceAll("{目前翻譯}", currentTranslation)
           .replaceAll("{目標語言}", outputLang)
           .replaceAll("{語言}", outputLang)
           .replaceAll("{原文}", inputText)
@@ -2164,9 +2307,45 @@
         return this.callSinglePrompt(prompt);
       },
 
-      /**
-       * 自訂任務：帶入最近 N 輪對話記憶（不帶翻譯/測驗記憶）
-       */
+      async generateTranslationInsight({ sourceText, translatedText, langCode }) {
+        const langInfo = LANGUAGE_REGISTRY[langCode] || LANGUAGE_REGISTRY.en;
+        const template = StorageManager.getEffectivePrompt("translation", "insight_explain");
+        const prompt = PromptResolver.resolve(template, {
+          outputLang: langInfo.label,
+          inputText: sourceText,
+          currentTranslation: translatedText
+        });
+
+        const rawText = await this.callSinglePrompt(prompt);
+        const cleaned = rawText
+          .replace(/^```json\s*/i, "")
+          .replace(/^```\s*/i, "")
+          .replace(/\s*```$/i, "")
+          .trim();
+
+        const parsed = JSON.parse(cleaned);
+        const alternatives = Array.isArray(parsed.alternatives)
+          ? parsed.alternatives.slice(0, 2).map((alt, idx) => ({
+              text: String(alt?.text || "").trim() || `替代方案 ${idx + 1}`,
+              usage: String(alt?.usage || "").trim()
+            }))
+          : [];
+
+        while (alternatives.length < 2) {
+          alternatives.push({
+            text: translatedText,
+            usage: "自然表達參考"
+          });
+        }
+
+        return {
+          alternatives,
+          vocabulary: String(parsed.vocabulary || "").trim() || "無特別補充。",
+          structure: String(parsed.structure || "").trim() || "無特別補充。",
+          culture: String(parsed.culture || "").trim() || "無特別補充。"
+        };
+      },
+
       async sendCustomChat(userText, outputLangCode) {
         const langInfo =
           CUSTOM_CHAT_LANGUAGES[outputLangCode] || CUSTOM_CHAT_LANGUAGES["zh-TW"];
@@ -2364,14 +2543,14 @@
             CUSTOM_CHAT_LANGUAGES["zh-TW"];
           AppState.currentTtsLang = customLang.ttsLang || charConfig.ttsConfig?.zhLang || "zh-TW";
           AppState.lastTranslation = null;
-          this.setTutorBubble(APP_CONFIG.customTaskGreeting);
+          this.setTutorBubble(APP_CONFIG.customTaskGreeting, false);
           return;
         }
 
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         AppState.currentTtsLang = charConfig.ttsConfig?.zhLang || "zh-TW";
         AppState.lastTranslation = null;
-        this.setTutorBubble(langInfo.greeting(langInfo.label));
+        this.setTutorBubble(langInfo.greeting(langInfo.label), false);
       },
 
       syncTaskLayoutUI() {
@@ -2381,7 +2560,7 @@
 
         if (!AppState.selectedTaskId) {
           bodyEl.classList.add("collapsed");
-          this.setTutorBubble(APP_CONFIG.initialGreeting);
+          this.setTutorBubble(APP_CONFIG.initialGreeting, false);
           return;
         }
 
@@ -2464,9 +2643,13 @@
         if (el) el.textContent = msg || "";
       },
 
-      setTutorBubble(text) {
+      setTutorBubble(text, showBulb = false) {
+        const textEl = document.getElementById("tutorBubbleText");
+        const bulbBtn = document.getElementById("bulbInsightBtn");
         const bubbleEl = document.getElementById("tutorBubble");
-        if (bubbleEl) bubbleEl.textContent = text;
+        if (textEl) textEl.textContent = text;
+        if (bulbBtn) bulbBtn.classList.toggle("visible", Boolean(showBulb));
+        if (bubbleEl) bubbleEl.classList.toggle("has-bulb", Boolean(showBulb));
       },
 
       setQuizTutorBubbleWithBoldQuotes(text) {
@@ -2502,6 +2685,120 @@
 
       closeApiPanel() {
         document.getElementById("apiPanel").classList.remove("open");
+      },
+
+      /* -------------------- 💡 替代方案與深度解說視窗 -------------------- */
+      renderInsightModal({ sourceText, translatedText, langCode, insightData }) {
+        const langInfo = LANGUAGE_REGISTRY[langCode] || LANGUAGE_REGISTRY.en;
+        const container = document.getElementById("insightModalContent");
+        container.innerHTML = "";
+
+        const altCard = document.createElement("div");
+        altCard.className = "insight-section-card";
+
+        const altTitle = document.createElement("div");
+        altTitle.className = "insight-section-title";
+        altTitle.textContent = `替代方案（${langInfo.label}）`;
+        altCard.appendChild(altTitle);
+
+        (insightData.alternatives || []).forEach((alt) => {
+          const row = document.createElement("div");
+          row.className = "alt-option-row";
+
+          const textGroup = document.createElement("div");
+          textGroup.className = "alt-option-text-group";
+
+          const mainLine = document.createElement("div");
+          mainLine.className = "alt-option-main";
+          mainLine.textContent = alt.text;
+
+          const noteLine = document.createElement("div");
+          noteLine.className = "alt-option-note";
+          noteLine.textContent = alt.usage || "";
+
+          textGroup.appendChild(mainLine);
+          if (alt.usage) textGroup.appendChild(noteLine);
+
+          const ttsBtn = document.createElement("button");
+          ttsBtn.type = "button";
+          ttsBtn.className = "icon-del-btn";
+          ttsBtn.title = `以${langInfo.label}朗讀`;
+          ttsBtn.setAttribute("aria-label", `以${langInfo.label}朗讀`);
+          ttsBtn.textContent = "🔊";
+          ttsBtn.addEventListener("click", async () => {
+            await TTSService.speakMain(alt.text, langInfo.ttsLang);
+          });
+
+          row.appendChild(textGroup);
+          row.appendChild(ttsBtn);
+          altCard.appendChild(row);
+        });
+
+        container.appendChild(altCard);
+
+        const blocks = [
+          { title: "詞彙解說", body: insightData.vocabulary },
+          { title: "句子結構", body: insightData.structure },
+          { title: "文化差異", body: insightData.culture }
+        ];
+
+        blocks.forEach((blk) => {
+          const card = document.createElement("div");
+          card.className = "insight-section-card";
+
+          const titleEl = document.createElement("div");
+          titleEl.className = "insight-section-title";
+          titleEl.textContent = blk.title;
+
+          const bodyEl = document.createElement("div");
+          bodyEl.className = "insight-body-text";
+          bodyEl.textContent = blk.body || "無特別補充。";
+
+          card.appendChild(titleEl);
+          card.appendChild(bodyEl);
+          container.appendChild(card);
+        });
+
+        document.getElementById("insightModalTitle").textContent =
+          `💡 解說：${sourceText} → ${translatedText}`;
+        document.getElementById("insightModalBackdrop").classList.add("open");
+      },
+
+      async openMainBulbInsight() {
+        if (!AppState.lastTranslation || AppState.selectedTaskId !== "translation") return;
+
+        const { sourceText, translatedText, langCode, insightData } = AppState.lastTranslation;
+        if (insightData) {
+          this.renderInsightModal({ sourceText, translatedText, langCode, insightData });
+          return;
+        }
+
+        this.setMainBusy(true);
+        this.setMainStatus("正在產生替代方案與深度解說...");
+        try {
+          const generated = await GeminiService.generateTranslationInsight({
+            sourceText,
+            translatedText,
+            langCode
+          });
+          AppState.lastTranslation.insightData = generated;
+          this.setMainStatus("");
+          this.renderInsightModal({
+            sourceText,
+            translatedText,
+            langCode,
+            insightData: generated
+          });
+        } catch (err) {
+          this.setMainStatus(`⚠️ ${err.message}`);
+        } finally {
+          this.setMainBusy(false);
+        }
+      },
+
+      closeInsightModal() {
+        TTSService.stop();
+        document.getElementById("insightModalBackdrop").classList.remove("open");
       },
 
       /* -------------------- 任務與多指令編輯 -------------------- */
@@ -2709,9 +3006,6 @@
         this.closeQuizSpeedModal();
       },
 
-      /**
-       * 說話 / 停止 Toggle
-       */
       async handleSpeakOrStopToggle() {
         if (AppState.isSpeaking || ("speechSynthesis" in window && window.speechSynthesis.speaking)) {
           TTSService.stop();
@@ -2719,7 +3013,7 @@
           return;
         }
 
-        const bubbleText = (document.getElementById("tutorBubble")?.textContent || "").trim();
+        const bubbleText = (document.getElementById("tutorBubbleText")?.textContent || "").trim();
         if (!bubbleText) return;
 
         this.setMainBusy(true);
@@ -2759,6 +3053,7 @@
           if (isCustom) {
             replyText = await GeminiService.sendCustomChat(rawText, AppState.customLanguageCode);
             AppState.currentTtsLang = ttsLang;
+            this.setTutorBubble(replyText, false);
           } else {
             const formattedSourceText = GeminiService.buildFormattedSourceText(
               rawText,
@@ -2774,16 +3069,17 @@
             AppState.lastTranslation = {
               sourceText: formattedSourceText,
               translatedText: replyText,
-              langCode: AppState.languageCode
+              langCode: AppState.languageCode,
+              insightData: null
             };
+            this.setTutorBubble(replyText, true);
           }
 
-          this.setTutorBubble(replyText);
           this.setMainStatus("家教正在說話...");
           await TTSService.speakMain(replyText, AppState.currentTtsLang);
           this.setMainStatus("");
         } catch (error) {
-          this.setTutorBubble(`⚠️ ${error.message}`);
+          this.setTutorBubble(`⚠️ ${error.message}`, false);
           this.setMainStatus("");
           AvatarController.setSpeakingState(false);
         } finally {
@@ -2794,7 +3090,7 @@
       /* -------------------- 存檔與複習功能 -------------------- */
       async handleSaveRecord() {
         const currentInput = document.getElementById("userInput").value.trim();
-        const currentBubble = document.getElementById("tutorBubble").textContent.trim();
+        const currentBubble = (document.getElementById("tutorBubbleText")?.textContent || "").trim();
         const langInfo = LANGUAGE_REGISTRY[AppState.languageCode] || LANGUAGE_REGISTRY.en;
         const greetingText = langInfo.greeting(langInfo.label);
 
@@ -2814,16 +3110,37 @@
           AppState.languageCode,
           AppState.jpStyle
         );
+        const targetLang = AppState.lastTranslation.langCode || AppState.languageCode;
+
+        let insightToSave = AppState.lastTranslation.insightData || null;
+        if (!insightToSave) {
+          this.setMainBusy(true);
+          this.setMainStatus("正在一併產生並儲存 💡 解說資訊...");
+          try {
+            insightToSave = await GeminiService.generateTranslationInsight({
+              sourceText: formattedSourceText,
+              translatedText: currentBubble,
+              langCode: targetLang
+            });
+            AppState.lastTranslation.insightData = insightToSave;
+          } catch (_) {
+            // 若解說產生失敗仍先存檔基本翻譯，複習時可再補產生
+            insightToSave = null;
+          } finally {
+            this.setMainBusy(false);
+          }
+        }
 
         try {
           const res = await StudyArchiveDB.addRecord({
             sourceText: formattedSourceText,
             translatedText: currentBubble,
-            langCode: AppState.lastTranslation.langCode || AppState.languageCode
+            langCode: targetLang,
+            insightData: insightToSave
           });
 
           if (res.saved) {
-            this.setMainStatus(`已存檔（${res.record.dateKey}・${langInfo.label}）。`);
+            this.setMainStatus(`已存檔（${res.record.dateKey}・${langInfo.label}，含 💡 解說）。`);
           } else {
             this.setMainStatus("今天已經存過這組翻譯囉！");
           }
@@ -2867,7 +3184,7 @@
             const toggleBtn = document.createElement("button");
             toggleBtn.type = "button";
             toggleBtn.className = "date-toggle-btn";
-            toggleBtn.innerHTML = `<span>▸</span><span>${dateKey}</span><span style="color:#6b7280;font-size:0.86rem;">(${items.length} 句)</span>`;
+            toggleBtn.innerHTML = `<span>▸</span><span>${dateKey}</span><span style="color:#6b7280;font-size:0.9rem;">(${items.length} 句)</span>`;
 
             const delDateBtn = document.createElement("button");
             delDateBtn.type = "button";
@@ -2897,15 +3214,22 @@
               const itemEl = document.createElement("div");
               itemEl.className = "review-item";
 
-              const topRow = document.createElement("div");
-              topRow.className = "review-item-top";
-
+              // 第 1 行：翻譯答案（粗體放大）
               const translatedEl = document.createElement("div");
               translatedEl.className = "review-translated";
               translatedEl.textContent = item.translatedText;
 
-              const actionsEl = document.createElement("div");
-              actionsEl.className = "review-item-actions";
+              // 第 2 行：(中文原文)（放大）
+              const sourceEl = document.createElement("div");
+              sourceEl.className = "review-source";
+              sourceEl.textContent = `(${item.sourceText})`;
+
+              // 第 3 行：🔊💡 靠左，❌ 靠右避免誤按
+              const footerEl = document.createElement("div");
+              footerEl.className = "review-item-footer";
+
+              const leftActionsEl = document.createElement("div");
+              leftActionsEl.className = "review-left-actions";
 
               const speakItemBtn = document.createElement("button");
               speakItemBtn.type = "button";
@@ -2921,6 +3245,48 @@
                 document.getElementById("reviewStatusText").textContent = "";
               });
 
+              const bulbItemBtn = document.createElement("button");
+              bulbItemBtn.type = "button";
+              bulbItemBtn.className = "icon-del-btn";
+              bulbItemBtn.title = "查看替代方案與解說";
+              bulbItemBtn.setAttribute("aria-label", "查看替代方案與解說");
+              bulbItemBtn.textContent = "💡";
+              bulbItemBtn.addEventListener("click", async () => {
+                if (item.insightData) {
+                  this.renderInsightModal({
+                    sourceText: item.sourceText,
+                    translatedText: item.translatedText,
+                    langCode: item.langCode,
+                    insightData: item.insightData
+                  });
+                  return;
+                }
+
+                document.getElementById("reviewStatusText").textContent =
+                  "正在產生替代方案與解說...";
+                try {
+                  const generated = await GeminiService.generateTranslationInsight({
+                    sourceText: item.sourceText,
+                    translatedText: item.translatedText,
+                    langCode: item.langCode
+                  });
+                  item.insightData = generated;
+                  await StudyArchiveDB.updateRecordInsight(item.id, generated);
+                  document.getElementById("reviewStatusText").textContent = "";
+                  this.renderInsightModal({
+                    sourceText: item.sourceText,
+                    translatedText: item.translatedText,
+                    langCode: item.langCode,
+                    insightData: generated
+                  });
+                } catch (err) {
+                  document.getElementById("reviewStatusText").textContent = `⚠️ ${err.message}`;
+                }
+              });
+
+              leftActionsEl.appendChild(speakItemBtn);
+              leftActionsEl.appendChild(bulbItemBtn);
+
               const delItemBtn = document.createElement("button");
               delItemBtn.type = "button";
               delItemBtn.className = "icon-del-btn";
@@ -2935,18 +3301,12 @@
                 await this.renderReviewList();
               });
 
-              actionsEl.appendChild(speakItemBtn);
-              actionsEl.appendChild(delItemBtn);
+              footerEl.appendChild(leftActionsEl);
+              footerEl.appendChild(delItemBtn);
 
-              topRow.appendChild(translatedEl);
-              topRow.appendChild(actionsEl);
-
-              const sourceEl = document.createElement("div");
-              sourceEl.className = "review-source";
-              sourceEl.textContent = `(${item.sourceText})`;
-
-              itemEl.appendChild(topRow);
+              itemEl.appendChild(translatedEl);
               itemEl.appendChild(sourceEl);
+              itemEl.appendChild(footerEl);
               bodyEl.appendChild(itemEl);
             });
 
@@ -3247,6 +3607,21 @@
         apiKeyInput.value = StorageManager.getApiKey();
         modelInput.value = StorageManager.getModel();
 
+        // 💡 解說按鈕與彈窗
+        document.getElementById("bulbInsightBtn").addEventListener("click", () => {
+          this.openMainBulbInsight();
+        });
+
+        document.getElementById("closeInsightModalBtn").addEventListener("click", () => {
+          this.closeInsightModal();
+        });
+
+        document.getElementById("insightModalBackdrop").addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) {
+            this.closeInsightModal();
+          }
+        });
+
         // 任務頁開關與返回
         document.getElementById("openTaskViewBtn").addEventListener("click", () => {
           document.getElementById("taskStatusText").textContent = "";
@@ -3372,7 +3747,7 @@
           this.handleSpeakOrStopToggle();
         });
 
-        // 主畫面輸入框自動增高與一鍵清除（清除時一併重置自訂對話記憶）
+        // 主畫面輸入框自動增高與一鍵清除
         const userInputEl = document.getElementById("userInput");
         const clearBubbleBtn = document.getElementById("clearBubbleBtn");
         userInputEl.addEventListener("input", () => {
@@ -3389,7 +3764,7 @@
           userInputEl.focus();
         });
 
-        // 送出（翻譯 或 自訂互動）
+        // 送出
         document.getElementById("sendBtn").addEventListener("click", () => {
           this.handleSendPrimaryAction();
         });
